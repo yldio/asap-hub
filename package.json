@@ -145,7 +145,7 @@
     "@types/jest": "29.5.5",
     "@types/react-test-renderer": "18.0.3",
     "@types/uuid": "8.3.4",
-    "@types/webpack": "4.41.33",
+    "@types/webpack": "4.41.34",
     "@yarnpkg/pnpify": "3.1.6",
     "babel-jest": "29.7.0",
     "babel-plugin-lodash": "3.3.4",
@@ -163,7 +163,7 @@
     "jest-watch-select-projects": "2.0.0",
     "jest-watch-suspend": "1.1.2",
     "jest-watch-typeahead": "0.6.5",
-    "nock": "13.3.3",
+    "nock": "13.3.4",
     "node-fetch": "3.0.0-beta.9",
     "prettier": "2.8.8",
     "react-test-renderer": "17.0.2",
@@ -174,5 +174,5 @@
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.4"
 }

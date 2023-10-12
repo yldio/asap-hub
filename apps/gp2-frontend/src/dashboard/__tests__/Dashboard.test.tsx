@@ -7,10 +7,15 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getDashboardStats, getNews } from '../api';
 import { getAlgoliaEvents } from '../../events/api';
 import Dashboard from '../Dashboard';
-import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createEventListAlgoliaResponse,
+  createUserListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaUsers } from '../../users/api';
 
 jest.mock('../api');
 jest.mock('../../events/api');
+jest.mock('../../users/api');
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -39,10 +44,14 @@ const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
 const mockDashboard = getDashboardStats as jest.MockedFunction<
   typeof getDashboardStats
 >;
+const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+  typeof getAlgoliaUsers
+>;
 it('renders dashboard header', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   await renderDashboard({});
   expect(
     await screen.getByRole('heading', { name: 'Dashboard' }),
@@ -53,6 +62,7 @@ it('doesnt render the welcome back banner when its disabled', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   await renderDashboard({
     user: { firstName: 'Tony' },
   });
@@ -65,6 +75,7 @@ it('renders the news when theres at least one news', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   await renderDashboard({});
   expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
 });
@@ -73,6 +84,7 @@ it("renders the upcoming events with events when there's at least one upcoming e
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   await renderDashboard({});
   expect(
     screen.getByRole('heading', { name: 'Upcoming Events' }),

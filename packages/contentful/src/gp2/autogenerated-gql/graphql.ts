@@ -1724,6 +1724,7 @@ export type EventsFilter = {
 
 export type EventsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
 };
 
 export type EventsLinkingCollectionsEntryCollectionArgs = {
@@ -1732,6 +1733,55 @@ export type EventsLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export type EventsLinkingCollectionsOutputsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventsLinkingCollectionsOutputsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum EventsLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AdminNotesAsc = 'adminNotes_ASC',
+  AdminNotesDesc = 'adminNotes_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  SubtypeAsc = 'subtype_ASC',
+  SubtypeDesc = 'subtype_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
 
 export type EventsNotes = {
   json: Scalars['JSON'];
@@ -2998,6 +3048,7 @@ export type Outputs = Entry & {
   linkedFrom?: Maybe<OutputsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
   relatedEntitiesCollection?: Maybe<OutputsRelatedEntitiesCollection>;
+  relatedEventsCollection?: Maybe<OutputsRelatedEventsCollection>;
   relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
   rrid?: Maybe<Scalars['String']>;
   sharingStatus?: Maybe<Scalars['String']>;
@@ -3099,6 +3150,16 @@ export type OutputsRelatedEntitiesCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<OutputsRelatedEntitiesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsRelatedEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputsRelatedEventsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3293,6 +3354,8 @@ export type OutputsFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntities?: InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>;
   relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedEvents?: InputMaybe<CfEventsNestedFilter>;
+  relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputs?: InputMaybe<CfOutputsNestedFilter>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
@@ -3463,6 +3526,62 @@ export type OutputsRelatedEntitiesFilter = {
 };
 
 export type OutputsRelatedEntitiesItem = Projects | WorkingGroups;
+
+export type OutputsRelatedEventsCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum OutputsRelatedEventsCollectionOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
 
 export type OutputsRelatedOutputsCollection = {
   items: Array<Maybe<Outputs>>;
@@ -6685,6 +6804,157 @@ export type CfEventSpeakersNestedFilter = {
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CfEventsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfEventsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfEventsNestedFilter>>>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  copyMeetingLink?: InputMaybe<Scalars['Boolean']>;
+  copyMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  copyMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDateTimeZone?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_contains?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_exists?: InputMaybe<Scalars['Boolean']>;
+  endDateTimeZone_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDateTimeZone_not?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_not_contains?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  eventLink?: InputMaybe<Scalars['String']>;
+  eventLink_contains?: InputMaybe<Scalars['String']>;
+  eventLink_exists?: InputMaybe<Scalars['Boolean']>;
+  eventLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  eventLink_not?: InputMaybe<Scalars['String']>;
+  eventLink_not_contains?: InputMaybe<Scalars['String']>;
+  eventLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleId?: InputMaybe<Scalars['String']>;
+  googleId_contains?: InputMaybe<Scalars['String']>;
+  googleId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleId_not?: InputMaybe<Scalars['String']>;
+  googleId_not_contains?: InputMaybe<Scalars['String']>;
+  googleId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  hidden_exists?: InputMaybe<Scalars['Boolean']>;
+  hidden_not?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
+  meetingLink?: InputMaybe<Scalars['String']>;
+  meetingLink_contains?: InputMaybe<Scalars['String']>;
+  meetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  meetingLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  meetingLink_not?: InputMaybe<Scalars['String']>;
+  meetingLink_not_contains?: InputMaybe<Scalars['String']>;
+  meetingLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  meetingMaterialsPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  meetingMaterialsPermanentlyUnavailable_exists?: InputMaybe<
+    Scalars['Boolean']
+  >;
+  meetingMaterialsPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  meetingMaterials_exists?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  notesUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  notesUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  notesUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  notes_contains?: InputMaybe<Scalars['String']>;
+  notes_exists?: InputMaybe<Scalars['Boolean']>;
+  notes_not_contains?: InputMaybe<Scalars['String']>;
+  presentationPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  presentationPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  presentationPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  presentationUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  presentationUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  presentationUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  presentation_contains?: InputMaybe<Scalars['String']>;
+  presentation_exists?: InputMaybe<Scalars['Boolean']>;
+  presentation_not_contains?: InputMaybe<Scalars['String']>;
+  speakersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDateTimeZone?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_contains?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_exists?: InputMaybe<Scalars['Boolean']>;
+  startDateTimeZone_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDateTimeZone_not?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_not_contains?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  videoRecordingPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  videoRecordingUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  videoRecording_contains?: InputMaybe<Scalars['String']>;
+  videoRecording_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecording_not_contains?: InputMaybe<Scalars['String']>;
+};
+
 export type CfGuideDescriptionNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfGuideDescriptionNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfGuideDescriptionNestedFilter>>>;
@@ -6891,6 +7161,7 @@ export type CfOutputsNestedFilter = {
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
@@ -9341,6 +9612,13 @@ export type OutputsContentDataFragment = Pick<
       >;
     }
   >;
+  relatedEventsCollection?: Maybe<
+    Pick<OutputsRelatedEventsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }
+  >;
   relatedEntitiesCollection?: Maybe<
     Pick<OutputsRelatedEntitiesCollection, 'total'> & {
       items: Array<
@@ -9423,6 +9701,13 @@ export type FetchOutputByIdQuery = {
                 sys: Pick<Sys, 'id'>;
               }
             >
+          >;
+        }
+      >;
+      relatedEventsCollection?: Maybe<
+        Pick<OutputsRelatedEventsCollection, 'total'> & {
+          items: Array<
+            Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
           >;
         }
       >;
@@ -9525,6 +9810,15 @@ export type FetchOutputsQuery = {
                 >;
               }
             >;
+            relatedEventsCollection?: Maybe<
+              Pick<OutputsRelatedEventsCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
             relatedEntitiesCollection?: Maybe<
               Pick<OutputsRelatedEntitiesCollection, 'total'> & {
                 items: Array<
@@ -9622,6 +9916,17 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                relatedEventsCollection?: Maybe<
+                  Pick<OutputsRelatedEventsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<Events, 'title' | 'endDate'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -9736,6 +10041,17 @@ export type FetchOutputsByUserIdQuery = {
                     >;
                   }
                 >;
+                relatedEventsCollection?: Maybe<
+                  Pick<OutputsRelatedEventsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<Events, 'title' | 'endDate'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
                 relatedEntitiesCollection?: Maybe<
                   Pick<OutputsRelatedEntitiesCollection, 'total'> & {
                     items: Array<
@@ -9844,6 +10160,17 @@ export type FetchOutputsByExternalUserIdQuery = {
                     >;
                   }
                 >;
+                relatedEventsCollection?: Maybe<
+                  Pick<OutputsRelatedEventsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<Events, 'title' | 'endDate'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
                 relatedEntitiesCollection?: Maybe<
                   Pick<OutputsRelatedEntitiesCollection, 'total'> & {
                     items: Array<
@@ -9946,6 +10273,17 @@ export type FetchOutputsByProjectIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                relatedEventsCollection?: Maybe<
+                  Pick<OutputsRelatedEventsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<Events, 'title' | 'endDate'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -13054,6 +13392,50 @@ export const OutputsContentDataFragmentDoc = {
                         name: { kind: 'Name', value: 'documentType' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedEventsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endDate' },
+                      },
                     ],
                   },
                 },

@@ -1,24 +1,24 @@
 import {
+  Entry,
+  Environment,
   FetchResearchOutputByIdQuery,
   getContentfulGraphqlClientMockServer,
-  Environment,
-  Entry,
   patch,
 } from '@asap-hub/contentful';
 import { ResearchOutputDataObject } from '@asap-hub/model';
+import {
+  mapOutputVersions,
+  ResearchOutputContentfulDataProvider,
+} from '../../../src/data-providers/contentful/research-output.data-provider';
+import { getEntry } from '../../fixtures/contentful.fixtures';
+import {
+  getContentfulResearchOutputGraphqlResponse,
+  getResearchOutputCreateDataObject,
+  getResearchOutputDataObject,
+  getResearchOutputUpdateDataObject,
+} from '../../fixtures/research-output.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import {
-  ResearchOutputContentfulDataProvider,
-  mapOutputVersions,
-} from '../../../src/data-providers/contentful/research-output.data-provider';
-import {
-  getResearchOutputCreateDataObject,
-  getResearchOutputUpdateDataObject,
-  getContentfulResearchOutputGraphqlResponse,
-  getResearchOutputDataObject,
-} from '../../fixtures/research-output.fixtures';
-import { getEntry } from '../../fixtures/contentful.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),

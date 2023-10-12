@@ -182,12 +182,19 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     return outputEntry.sys.id;
   }
 
-  async update(id: string, data: gp2Model.OutputUpdateDataObject) {
+  async update(
+    id: string,
+    {
+      workingGroupIds,
+      projectIds,
+      mainEntityId,
+      ...data
+    }: gp2Model.OutputUpdateDataObject,
+  ) {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const { workingGroupIds, projectIds, mainEntityId, ...restData } = data;
 
-    const fields = cleanOutput(restData);
+    const fields = cleanOutput(data);
     const result = await patchAndPublish(user, {
       ...fields,
       relatedEntities: getLinkEntities([
@@ -255,6 +262,19 @@ const getRelatedEntities = (relatedEntities?: GraphQLEntities) =>
       },
     );
 
+type GraphQLEvents = NonNullable<
+  OutputItem['relatedEventsCollection']
+>['items'];
+type GraphQLEvent = NonNullable<GraphQLEvents[number]>;
+const getRelatedEvents = (relatedEvents?: GraphQLEvents) =>
+  relatedEvents
+    ?.filter((event): event is GraphQLEvent => event !== null)
+    .map((event) => ({
+      id: event.sys.id,
+      title: event?.title || '',
+      endDate: event.endDate || '',
+    })) || [];
+
 type GraphQLCohorts = NonNullable<
   OutputItem['contributingCohortsCollection']
 >['items'];
@@ -266,6 +286,7 @@ const getCohorts = (cohorts?: GraphQLCohorts) =>
       id: cohort.sys.id,
       name: cohort.name ?? '',
     })) || [];
+
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
 type GraphQLAuthor = NonNullable<GraphQLAuthors[number]>;
 const getAuthors = (authors?: GraphQLAuthors) =>
@@ -323,6 +344,7 @@ export const parseContentfulGraphQLOutput = (
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
   );
+  const relatedEvents = getRelatedEvents(data.relatedEventsCollection?.items);
   const contributingCohorts = getCohorts(
     data.contributingCohortsCollection?.items,
   );
@@ -364,11 +386,12 @@ export const parseContentfulGraphQLOutput = (
     doi: data.doi ?? undefined,
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
-    relatedOutputs,
     projects,
     workingGroups,
     mainEntity,
     contributingCohorts,
+    relatedOutputs,
+    relatedEvents,
   };
 };
 
@@ -392,60 +415,49 @@ const getSearchWhere = (search: string) => {
     );
   return [{ OR: where }];
 };
+const linkEntityValue = (value: string | string[]) =>
+  Array.isArray(value)
+    ? value.map((id) => getLinkEntity(id))
+    : getLinkEntity(value);
 
 const cleanOutput = (
-  outputToUpdate:
-    | gp2Model.OutputUpdateDataObject
-    | gp2Model.OutputCreateDataObject,
+  outputToUpdate: Omit<
+    gp2Model.OutputUpdateDataObject | gp2Model.OutputCreateDataObject,
+    'mainEntityId'
+  >,
 ) =>
   Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
-    if (key === 'authors') {
-      return {
-        ...acc,
-        authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
-          (author) =>
-            getLinkEntity(author.userId || (author.externalUserId as string)),
-        ),
-      };
+    switch (key) {
+      case 'authors':
+        return {
+          ...acc,
+          authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
+            (author) =>
+              getLinkEntity(author.userId || (author.externalUserId as string)),
+          ),
+        };
+      case 'createdBy':
+        return {
+          ...acc,
+          createdBy: linkEntityValue(value as string),
+          updatedBy: linkEntityValue(value as string),
+        };
+      case 'updatedBy':
+        return { ...acc, updatedBy: linkEntityValue(value as string) };
+      case 'tagIds':
+        return { ...acc, tags: linkEntityValue(value as string[]) };
+      case 'contributingCohortIds':
+        return {
+          ...acc,
+          contributingCohorts: linkEntityValue(value as string[]),
+        };
+      case 'relatedOutputIds':
+        return { ...acc, relatedOutputs: linkEntityValue(value as string[]) };
+      case 'relatedEventIds':
+        return { ...acc, relatedEvents: linkEntityValue(value as string[]) };
+      default:
+        return { ...acc, [key]: value };
     }
-    if (key === 'createdBy') {
-      return {
-        ...acc,
-        updatedBy: getLinkEntity(value as string),
-        createdBy: getLinkEntity(value as string),
-      };
-    }
-    if (key === 'updatedBy') {
-      return {
-        ...acc,
-        updatedBy: getLinkEntity(value as string),
-      };
-    }
-    if (key === 'tags') {
-      return {
-        ...acc,
-        tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
-          getLinkEntity(tag.id),
-        ),
-      };
-    }
-    if (key === 'relatedOutputs') {
-      return {
-        ...acc,
-        relatedOutputs: (
-          value as gp2Model.OutputUpdateDataObject['relatedOutputs']
-        ).map((output) => getLinkEntity(output.id)),
-      };
-    }
-    if (key === 'contributingCohorts') {
-      return {
-        ...acc,
-        contributingCohorts: (
-          value as gp2Model.OutputUpdateDataObject['contributingCohorts']
-        )?.map((cohort) => getLinkEntity(cohort.id)),
-      };
-    }
-    return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 
 type OutputsCollection = gp2Contentful.FetchOutputsQuery['outputsCollection'];

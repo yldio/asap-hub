@@ -1,7 +1,7 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
-import OutputDetailPage from './OutputDetailPage';
+import OutputDetailPage from '../OutputDetailPage';
 
 describe('OutputDetailPage', () => {
   it('displays edit button if user is administrator', () => {

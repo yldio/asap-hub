@@ -104,5 +104,4 @@ const ResearchOutputRelatedEventsCard: React.FC<
     />
   </FormCard>
 );
-
 export default ResearchOutputRelatedEventsCard;

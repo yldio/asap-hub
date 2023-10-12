@@ -445,17 +445,17 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   {
                     value: 'Yes',
                     label: 'Yes',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: 'No',
                     label: 'No',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: "Don't Know",
                     label: "Don't Know",
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                 ]}
                 value={newGp2Supported}
@@ -469,9 +469,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 {
                   value: 'GP2 Only',
                   label: 'GP2 Only',
-                  disabled: isAlwaysPublic,
+                  disabled: isAlwaysPublic || isSaving,
                 },
-                { value: 'Public', label: 'Public', disabled: isAlwaysPublic },
+                {
+                  value: 'Public',
+                  label: 'Public',
+                  disabled: isAlwaysPublic || isSaving,
+                },
               ]}
               value={newSharingStatus}
               onChange={setSharingStatus}
@@ -484,6 +488,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={(date) =>
                   setPublishDate(date ? new Date(date) : undefined)
                 }
+                enabled={!isSaving}
                 value={newPublishDate}
                 max={new Date()}
                 getValidationMessage={(e) => getPublishDateValidationMessage(e)}
@@ -681,12 +686,14 @@ const OutputForm: React.FC<OutputFormProps> = ({
             relatedResearch={newRelatedOutputs}
             onChangeRelatedResearch={setRelatedOutputs}
             getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+            isEditMode={true}
           />
           <OutputRelatedEventsCard
             getRelatedEventSuggestions={getRelatedEventSuggestions}
             isSaving={isSaving}
             relatedEvents={newRelatedEvents}
             onChangeRelatedEvents={setRelatedEvents}
+            isEditMode={true}
           />
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>

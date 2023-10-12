@@ -321,6 +321,26 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const isFieldDirty = (original: string = '', current: string) =>
     current !== original;
 
+  const hasIdProperty = (obj: {
+    id?: string;
+    value?: string;
+  }): obj is { id: string } => !!(obj.id as unknown as { id: string });
+
+  const isArrayDirty = (
+    items?: readonly { id: string }[],
+    newItems?: readonly { id: string }[] | readonly { value: string }[],
+  ) =>
+    items
+      ? !items.every(
+          (item, index) =>
+            index ===
+            newItems?.findIndex((newItem) =>
+              hasIdProperty(newItem)
+                ? newItem.id === item.id
+                : newItem.value === item.id,
+            ),
+        )
+      : !!newWorkingGroups?.length;
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||
@@ -329,62 +349,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isFieldDirty(identifierType, newIdentifierType) ||
     isFieldDirty(sharingStatus, newSharingStatus) ||
     isFieldDirty(gp2Supported, newGp2Supported) ||
-    (workingGroups
-      ? !workingGroups.every(
-          (workingGroup, index) =>
-            index ===
-            newWorkingGroups?.findIndex(
-              (newWorkingGroup) => newWorkingGroup.id === workingGroup.id,
-            ),
-        )
-      : !!newWorkingGroups?.length) ||
-    (projects
-      ? !projects.every(
-          (project, index) =>
-            index ===
-            newProjects?.findIndex(
-              (newProject) => newProject.id === project.id,
-            ),
-        )
-      : !!newProjects?.length) ||
-    (tags
-      ? !tags.every(
-          (tag, index) =>
-            index === newTags?.findIndex((newTag) => newTag.id === tag.id),
-        )
-      : !!newTags?.length) ||
-    (contributingCohorts
-      ? !contributingCohorts.every(
-          (cohort, index) =>
-            index ===
-            newCohorts?.findIndex((newCohort) => newCohort.id === cohort.id),
-        )
-      : !!newCohorts?.length) ||
-    (authors
-      ? !authors.every(
-          (author, index) =>
-            index ===
-            newAuthors?.findIndex((newAuthor) => newAuthor.value === author.id),
-        )
-      : !!newAuthors?.length) ||
-    (relatedOutputs
-      ? !relatedOutputs.every(
-          (output, index) =>
-            index ===
-            newRelatedOutputs?.findIndex(
-              (newOutput) => newOutput.value === output.id,
-            ),
-        )
-      : !!newRelatedOutputs?.length) ||
-    (relatedEvents
-      ? !relatedEvents.every(
-          (event, index) =>
-            index ===
-            newRelatedEvents?.findIndex(
-              (newEvent) => newEvent.value === event.id,
-            ),
-        )
-      : !!newRelatedOutputs?.length);
+    isArrayDirty(workingGroups, newWorkingGroups) ||
+    isArrayDirty(projects, newProjects) ||
+    isArrayDirty(tags, newTags) ||
+    isArrayDirty(contributingCohorts, newCohorts) ||
+    isArrayDirty(authors, newAuthors) ||
+    isArrayDirty(relatedOutputs, newRelatedOutputs) ||
+    isArrayDirty(relatedEvents, newRelatedEvents);
   return (
     <Form dirty={isFormDirty}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (

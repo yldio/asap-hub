@@ -24,7 +24,9 @@ export const Normal = () => (
         hasSpeakersToBeAnnounced: !speakers.length,
         eventOwner: <div>GP2 Team</div>,
       }))}
-    totalOfUpcomingEvents={4}
+    totalOfUpcomingEvents={3}
+    pastEvents={gp2.createListEventResponse(3).items}
+    totalOfPastEvents={3}
     latestUsers={gp2.createUsersResponse(3).items}
   />
 );

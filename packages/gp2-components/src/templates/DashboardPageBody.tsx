@@ -14,6 +14,7 @@ import {
   Paragraph,
   pixels,
   RemindersCard,
+  PastEventsDashboardCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
@@ -71,8 +72,10 @@ type DashboardPageBodyProps = {
   news: gp2Model.ListNewsResponse;
   latestStats: gp2Model.StatsDataObject;
   totalOfUpcomingEvents: number;
+  totalOfPastEvents: number;
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
+  pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
   guides?: gp2Model.GuideDataObject[];
   latestUsers: gp2Model.UserResponse[];
 };
@@ -81,8 +84,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
   latestStats,
   totalOfUpcomingEvents,
+  totalOfPastEvents,
   announcements,
   upcomingEvents,
+  pastEvents,
   guides,
   latestUsers,
 }) => {
@@ -146,29 +151,51 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-      {isEnabled('DISPLAY_EVENTS') && (
-        <div>
-          <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-          <div css={infoStyles}>
-            Here are some of the upcoming GP2 Hub events.
-          </div>
-          <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-          {totalOfUpcomingEvents > 3 && (
-            <p css={viewAllStyles}>
-              <Button
-                data-testid="view-upcoming-events"
-                onClick={() =>
-                  history.push({
-                    pathname: gp2Routes.events({}).upcoming({}).$,
-                  })
-                }
-              >
-                View All
-              </Button>
-            </p>
-          )}
+      <div css={columnContainer}>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>
+          Here are some of the upcoming GP2 Hub events.
         </div>
-      )}
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+        {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-upcoming-events"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.events({}).upcoming({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
+      <div css={columnContainer}>
+        <Headline2 styleAsHeading={3}>Past Events</Headline2>
+        <div css={infoStyles}>
+          Explore previous events and learn about what was discussed.
+        </div>
+        <PastEventsDashboardCard
+          events={pastEvents}
+          enabled={isEnabled('DISPLAY_EVENTS')}
+        />
+        {isEnabled('DISPLAY_EVENTS') && totalOfPastEvents > 3 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-past-events"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.events({}).past({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
       <div css={columnContainer}>
         <Headline2>Latest Users</Headline2>
         <Paragraph accent="lead" noMargin>

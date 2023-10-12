@@ -18,6 +18,8 @@ describe('DashboardPageBody', () => {
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
         latestUsers={[]}
+        pastEvents={[]}
+        totalOfPastEvents={0}
       />,
     );
     expect(
@@ -33,6 +35,8 @@ describe('DashboardPageBody', () => {
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
         latestUsers={[]}
+        pastEvents={[]}
+        totalOfPastEvents={0}
       />,
     );
     expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
@@ -52,6 +56,8 @@ describe('DashboardPageBody', () => {
             },
           ]}
           latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -70,6 +76,8 @@ describe('DashboardPageBody', () => {
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
           latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -99,6 +107,8 @@ describe('DashboardPageBody', () => {
               ],
             },
           ]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -118,6 +128,8 @@ describe('DashboardPageBody', () => {
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
           latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -141,6 +153,8 @@ describe('DashboardPageBody', () => {
             }))}
           totalOfUpcomingEvents={1}
           latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -169,6 +183,8 @@ describe('DashboardPageBody', () => {
               }))}
             totalOfUpcomingEvents={4}
             latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
           />
         </Router>,
       );
@@ -206,6 +222,8 @@ describe('DashboardPageBody', () => {
           ]}
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
+          pastEvents={[]}
+          totalOfPastEvents={0}
         />,
       );
       expect(
@@ -227,6 +245,8 @@ describe('DashboardPageBody', () => {
             latestUsers={gp2.createUsersResponse(3).items}
             upcomingEvents={[]}
             totalOfUpcomingEvents={0}
+            pastEvents={[]}
+            totalOfPastEvents={0}
           />
         </Router>,
       );
@@ -239,6 +259,60 @@ describe('DashboardPageBody', () => {
       fireEvent.click(viewAllButton);
 
       expect(pushSpy).toHaveBeenCalledWith({ pathname: '/users' });
+    });
+  });
+
+  describe('Past Events', () => {
+    it('should render past events', async () => {
+      const pastEvents = gp2.createListEventResponse(3, {
+        customTitle: 'TestEvent',
+      }).items;
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          latestUsers={[]}
+          pastEvents={pastEvents}
+          totalOfPastEvents={1}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Past Events' }),
+      ).toBeVisible();
+      expect(screen.getByText('TestEvent 1')).toBeVisible();
+      expect(
+        await screen.queryByTestId('view-past-events'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('should render View All if there are more than 3 past event items', () => {
+      const history = createMemoryHistory();
+      const pushSpy = jest.spyOn(history, 'push');
+      render(
+        <Router history={history}>
+          <DashboardPageBody
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            pastEvents={gp2.createListEventResponse(4).items}
+            totalOfPastEvents={4}
+          />
+        </Router>,
+      );
+
+      expect(
+        screen.getByRole('heading', { name: 'Past Events' }),
+      ).toBeVisible();
+      const viewAllButton = screen.getByTestId('view-past-events');
+      expect(viewAllButton).toBeVisible();
+
+      fireEvent.click(viewAllButton);
+
+      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/past' });
     });
   });
 });

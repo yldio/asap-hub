@@ -48,10 +48,15 @@ const rowStyles = css({
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 type PastEventsDashboardCardProps = {
-  events: EventResponse[];
+  events: Pick<
+    EventResponse,
+    'id' | 'title' | 'startDate' | 'notes' | 'presentation' | 'videoRecording'
+  >[];
+  enabled?: boolean;
 };
 const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
   events,
+  enabled = true,
 }) => (
   <Card>
     <div css={container}>
@@ -64,7 +69,12 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
         ({ id, title, startDate, notes, presentation, videoRecording }) => (
           <div key={id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Event</span>
-            <Link ellipsed href={eventsRoute({}).event({ eventId: id }).$}>
+            <Link
+              ellipsed
+              href={
+                enabled ? eventsRoute({}).event({ eventId: id }).$ : undefined
+              }
+            >
               {title}
             </Link>
             <span css={[titleStyles, rowTitleStyles]}>Meeting Materials</span>

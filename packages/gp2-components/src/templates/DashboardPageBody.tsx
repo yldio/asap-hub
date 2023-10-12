@@ -126,25 +126,29 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       </div>
       {guides && (
-        <Card>
+        <div css={columnContainer}>
           <Headline2>Tools and Tutorials</Headline2>
-          <Paragraph accent="lead">
+          <Paragraph accent="lead" noMargin>
             Here are some quick links to GP2 Hub resources.
           </Paragraph>
-          <Accordion
-            items={guides.map((guide: gp2Model.GuideDataObject) => ({
-              title: guide.title,
-              icon: (
-                <img
-                  src={guide.icon}
-                  alt={guide.title}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              ),
-              description: <GuideDescription blocks={guide.description} />,
-            }))}
-          />
-        </Card>
+          <div css={contentCardsStyles}>
+            <Card>
+              <Accordion
+                items={guides.map((guide: gp2Model.GuideDataObject) => ({
+                  title: guide.title,
+                  icon: (
+                    <img
+                      src={guide.icon}
+                      alt={guide.title}
+                      style={{ verticalAlign: 'middle' }}
+                    />
+                  ),
+                  description: <GuideDescription blocks={guide.description} />,
+                }))}
+              />
+            </Card>
+          </div>
+        </div>
       )}
       {isEnabled('DISPLAY_EVENTS') && (
         <div>

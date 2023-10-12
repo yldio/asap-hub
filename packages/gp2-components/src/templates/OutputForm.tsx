@@ -87,6 +87,9 @@ const getBannerMessage = (
         published ? 'published' : 'saved'
       } successfully.`;
 
+const capitalizeFirstLetter = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
+
 const footerStyles = css({
   display: 'flex',
   gap: rem(24),
@@ -306,7 +309,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     bannerType: 'error' | 'success',
   ) =>
     addNotification({
-      message,
+      message: capitalizeFirstLetter(message),
       page,
       type: bannerType,
     });

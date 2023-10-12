@@ -54,6 +54,13 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       documentType: 'Dataset',
     },
   ],
+  relatedEvents: [
+    {
+      id: 'an-event-id',
+      title: 'an event title',
+      endDate: '2021-12-28T14:00:00.000Z',
+    },
+  ],
   tags: [{ id: 'tag-1', name: 'Cohort' }],
   contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
   mainEntity: {
@@ -87,6 +94,10 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     workingGroups,
     projects,
     mainEntity,
+    contributingCohorts,
+    tags,
+    relatedOutputs,
+    relatedEvents,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -96,6 +107,10 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     projectIds: projects?.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     mainEntityId: mainEntity.id,
+    contributingCohortIds: contributingCohorts.map(({ id }) => id),
+    tagIds: tags.map(({ id }) => id),
+    relatedOutputIds: relatedOutputs.map(({ id }) => id),
+    relatedEventIds: relatedEvents.map(({ id }) => id),
   };
 };
 
@@ -118,6 +133,10 @@ export const getOutputCreateDataObject =
       workingGroups,
       projects,
       mainEntity,
+      tags,
+      contributingCohorts,
+      relatedOutputs,
+      relatedEvents,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -126,7 +145,11 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
+      tagIds: tags.map(({ id }) => id),
       mainEntityId: mainEntity.id,
+      contributingCohortIds: contributingCohorts.map(({ id }) => id),
+      relatedOutputIds: relatedOutputs.map(({ id }) => id),
+      relatedEventIds: relatedEvents.map(({ id }) => id),
     };
   };
 
@@ -232,6 +255,16 @@ export const getContentfulGraphqlOutput = (): NonNullable<
           id: 'cohort-1',
         },
         name: 'Cohort',
+      },
+    ],
+  },
+  relatedEventsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: { id: 'an-event-id' },
+        title: 'an event title',
+        endDate: '2021-12-28T14:00:00.000Z',
       },
     ],
   },

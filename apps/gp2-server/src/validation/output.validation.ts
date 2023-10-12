@@ -142,52 +142,25 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         },
         nullable: true,
       },
-      relatedOutputs: {
+      relatedOutputIds: {
         type: 'array',
-        items: {
-          type: 'object',
-          required: ['id'],
-          properties: {
-            id: { type: 'string' },
-            title: { type: 'string' },
-            documentType: {
-              type: 'string',
-              enum: outputDocumentTypes,
-            },
-            type: {
-              type: 'string',
-              nullable: true,
-              enum: outputTypes,
-            },
-          },
-        },
+        items: { type: 'string' },
       },
-      tags: {
+      relatedEventIds: {
         type: 'array',
-        items: {
-          type: 'object',
-          required: ['id', 'name'],
-          properties: {
-            id: { type: 'string' },
-            name: { type: 'string' },
-          },
-        },
-        nullable: true,
+        items: { type: 'string' },
+      },
+      tagIds: {
+        type: 'array',
+        items: { type: 'string' },
       },
       doi: { type: 'string', nullable: true },
       rrid: { type: 'string', nullable: true },
       accessionNumber: { type: 'string', nullable: true },
       mainEntityId: { type: 'string' },
-      contributingCohorts: {
+      contributingCohortIds: {
         type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-          },
-          required: ['id'],
-        },
-        nullable: true,
+        items: { type: 'string' },
       },
     },
     required: ['documentType', 'title', 'sharingStatus', 'mainEntityId'],

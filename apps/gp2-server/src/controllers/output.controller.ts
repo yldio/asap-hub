@@ -46,47 +46,56 @@ export default class OutputController {
     };
   }
 
-  async create(
-    outputCreateData: OutputCreateData,
-  ): Promise<gp2Model.OutputResponse | null> {
-    await this.validateOutput(outputCreateData);
-
-    const outputCreateDataObject: gp2Model.OutputCreateDataObject = {
-      authors: await this.mapAuthorsPostRequestToId(
-        outputCreateData.authors ?? [],
-      ),
-      addedDate: new Date(Date.now()).toISOString(),
-      createdBy: outputCreateData.createdBy,
-      documentType: outputCreateData.documentType,
-      link: outputCreateData.link,
-      publishDate: outputCreateData.publishDate,
-      subtype: outputCreateData.subtype,
-      title: outputCreateData.title,
-      type: outputCreateData.type,
-      workingGroupIds: outputCreateData.workingGroupIds,
-      projectIds: outputCreateData.projectIds,
-      description: outputCreateData.description,
-      sharingStatus: outputCreateData.sharingStatus,
-      gp2Supported: outputCreateData.gp2Supported,
-      tags: outputCreateData.tags,
-      doi: outputCreateData.doi,
-      rrid: outputCreateData.rrid,
-      accessionNumber: outputCreateData.accessionNumber,
-      relatedOutputs: outputCreateData.relatedOutputs,
-      mainEntityId: outputCreateData.mainEntityId,
-      contributingCohorts: outputCreateData.contributingCohorts,
+  private async parseToDataObject(
+    data: OutputCreateData | OutputUpdateData,
+  ): Promise<
+    Omit<
+      gp2Model.OutputCreateDataObject | gp2Model.OutputUpdateDataObject,
+      'createdBy' | 'updatedBy' | 'addedDate'
+    >
+  > {
+    return {
+      authors: await this.mapAuthorsPostRequestToId(data.authors ?? []),
+      documentType: data.documentType,
+      link: data.link,
+      publishDate: data.publishDate,
+      subtype: data.subtype,
+      title: data.title,
+      type: data.type,
+      description: data.description,
+      sharingStatus: data.sharingStatus,
+      gp2Supported: data.gp2Supported,
+      tagIds: data.tagIds,
+      doi: data.doi,
+      rrid: data.rrid,
+      accessionNumber: data.accessionNumber,
+      workingGroupIds: data.workingGroupIds,
+      projectIds: data.projectIds,
+      mainEntityId: data.mainEntityId,
+      contributingCohortIds: data.contributingCohortIds,
+      relatedOutputIds: data.relatedOutputIds,
+      relatedEventIds: data.relatedEventIds,
     };
+  }
+  async create(
+    data: OutputCreateData,
+  ): Promise<gp2Model.OutputResponse | null> {
+    await this.validateOutput(data);
 
-    const outputId = await this.outputDataProvider.create(
-      outputCreateDataObject,
-    );
+    const dataObject = await this.parseToDataObject(data);
+
+    const outputId = await this.outputDataProvider.create({
+      ...dataObject,
+      createdBy: data.createdBy,
+      addedDate: new Date(Date.now()).toISOString(),
+    });
 
     return this.fetchById(outputId);
   }
 
   async update(
     id: string,
-    outputUpdateData: OutputUpdateData,
+    data: OutputUpdateData,
   ): Promise<gp2Model.OutputResponse | null> {
     const currentOutput = await this.outputDataProvider.fetchById(id);
 
@@ -94,35 +103,15 @@ export default class OutputController {
       throw new NotFoundError(undefined, `output with id ${id} not found`);
     }
 
-    await this.validateOutput(outputUpdateData, id);
+    await this.validateOutput(data, id);
 
-    const outputUpdateDataObject: gp2Model.OutputUpdateDataObject = {
-      authors: await this.mapAuthorsPostRequestToId(
-        outputUpdateData.authors ?? [],
-      ),
+    const dataObject = await this.parseToDataObject(data);
+
+    await this.outputDataProvider.update(id, {
+      ...dataObject,
+      updatedBy: data.updatedBy,
       addedDate: currentOutput.addedDate,
-      documentType: outputUpdateData.documentType,
-      link: outputUpdateData.link,
-      publishDate: outputUpdateData.publishDate,
-      subtype: outputUpdateData.subtype,
-      title: outputUpdateData.title,
-      type: outputUpdateData.type,
-      updatedBy: outputUpdateData.updatedBy,
-      description: outputUpdateData.description,
-      gp2Supported: outputUpdateData.gp2Supported,
-      sharingStatus: outputUpdateData.sharingStatus,
-      tags: outputUpdateData.tags,
-      doi: outputUpdateData.doi,
-      rrid: outputUpdateData.rrid,
-      accessionNumber: outputUpdateData.accessionNumber,
-      relatedOutputs: outputUpdateData.relatedOutputs,
-      projectIds: outputUpdateData.projectIds,
-      workingGroupIds: outputUpdateData.workingGroupIds,
-      mainEntityId: outputUpdateData.mainEntityId,
-      contributingCohorts: outputUpdateData.contributingCohorts,
-    };
-
-    await this.outputDataProvider.update(id, outputUpdateDataObject);
+    });
 
     return this.fetchById(id);
   }

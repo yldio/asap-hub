@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { ContributingCohortDataObject } from './contributing-cohort';
+import { EventDataObject } from './event';
 import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
@@ -97,11 +98,12 @@ export type OutputCoreObject = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
-  tags?: TagDataObject[];
+  tags: TagDataObject[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
+  relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
 };
 
 export type UserAuthor = {
@@ -127,7 +129,7 @@ export type OutputDataObject = OutputCoreObject & {
   lastUpdatedPartial: string;
   workingGroups?: OutputOwner[];
   projects?: OutputOwner[];
-  contributingCohorts?: ContributingCohortDataObject[];
+  contributingCohorts: ContributingCohortDataObject[];
   mainEntity: OutputOwner;
 };
 
@@ -137,22 +139,25 @@ export type AuthorUpsertDataObject =
   | { userId: string; externalUserId?: undefined }
   | { externalUserId: string; userId?: undefined };
 
-export type OutputCreateDataObject = OutputCoreObject & {
+export type OutputUpsertDataObject = Omit<
+  OutputCoreObject,
+  'relatedOutputs' | 'relatedEvents' | 'tags'
+> & {
   authors: AuthorUpsertDataObject[];
-  createdBy: string;
+  tagIds: string[];
   workingGroupIds?: string[];
   projectIds?: string[];
-  mainEntityId?: string;
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntityId: string;
+  contributingCohortIds: string[];
+  relatedOutputIds: string[];
+  relatedEventIds: string[];
+};
+export type OutputCreateDataObject = OutputUpsertDataObject & {
+  createdBy: string;
 };
 
-export type OutputUpdateDataObject = OutputCoreObject & {
-  authors: AuthorUpsertDataObject[];
+export type OutputUpdateDataObject = OutputUpsertDataObject & {
   updatedBy: string;
-  workingGroupIds?: string[];
-  projectIds?: string[];
-  mainEntityId?: string;
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -179,13 +184,14 @@ export type OutputPostRequest = {
   sharingStatus: OutputSharingStatus;
   workingGroupIds?: string[];
   projectIds?: string[];
-  tags?: TagDataObject[];
+  tagIds: string[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
-  relatedOutputs: RelatedOutputs[];
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  contributingCohortIds: string[];
   mainEntityId: string;
+  relatedOutputIds: string[];
+  relatedEventIds: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

@@ -1186,6 +1186,46 @@ input EventsFilter {
 
 type EventsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+enum EventsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 type EventsNotes {
@@ -2154,6 +2194,7 @@ type Outputs implements Entry {
   linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
   publishDate(locale: String): DateTime
   relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
+  relatedEventsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): OutputsRelatedEventsCollection
   relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsRelatedOutputsCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
@@ -2303,6 +2344,8 @@ input OutputsFilter {
   publishDate_not_in: [DateTime]
   relatedEntities: cfrelatedEntitiesMultiTypeNestedFilter
   relatedEntitiesCollection_exists: Boolean
+  relatedEvents: cfEventsNestedFilter
+  relatedEventsCollection_exists: Boolean
   relatedOutputs: cfOutputsNestedFilter
   relatedOutputsCollection_exists: Boolean
   rrid: String
@@ -2456,6 +2499,62 @@ input OutputsRelatedEntitiesFilter {
 }
 
 union OutputsRelatedEntitiesItem = Projects | WorkingGroups
+
+type OutputsRelatedEventsCollection {
+  items: [Events]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum OutputsRelatedEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
 
 type OutputsRelatedOutputsCollection {
   items: [Outputs]!
@@ -4523,6 +4622,149 @@ input cfEventSpeakersNestedFilter {
   user_exists: Boolean
 }
 
+input cfEventsNestedFilter {
+  AND: [cfEventsNestedFilter]
+  OR: [cfEventsNestedFilter]
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  copyMeetingLink: Boolean
+  copyMeetingLink_exists: Boolean
+  copyMeetingLink_not: Boolean
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDateTimeZone: String
+  endDateTimeZone_contains: String
+  endDateTimeZone_exists: Boolean
+  endDateTimeZone_in: [String]
+  endDateTimeZone_not: String
+  endDateTimeZone_not_contains: String
+  endDateTimeZone_not_in: [String]
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  eventLink: String
+  eventLink_contains: String
+  eventLink_exists: Boolean
+  eventLink_in: [String]
+  eventLink_not: String
+  eventLink_not_contains: String
+  eventLink_not_in: [String]
+  googleId: String
+  googleId_contains: String
+  googleId_exists: Boolean
+  googleId_in: [String]
+  googleId_not: String
+  googleId_not_contains: String
+  googleId_not_in: [String]
+  hidden: Boolean
+  hidden_exists: Boolean
+  hidden_not: Boolean
+  hideMeetingLink: Boolean
+  hideMeetingLink_exists: Boolean
+  hideMeetingLink_not: Boolean
+  meetingLink: String
+  meetingLink_contains: String
+  meetingLink_exists: Boolean
+  meetingLink_in: [String]
+  meetingLink_not: String
+  meetingLink_not_contains: String
+  meetingLink_not_in: [String]
+  meetingMaterialsPermanentlyUnavailable: Boolean
+  meetingMaterialsPermanentlyUnavailable_exists: Boolean
+  meetingMaterialsPermanentlyUnavailable_not: Boolean
+  meetingMaterials_exists: Boolean
+  notesPermanentlyUnavailable: Boolean
+  notesPermanentlyUnavailable_exists: Boolean
+  notesPermanentlyUnavailable_not: Boolean
+  notesUpdatedAt: DateTime
+  notesUpdatedAt_exists: Boolean
+  notesUpdatedAt_gt: DateTime
+  notesUpdatedAt_gte: DateTime
+  notesUpdatedAt_in: [DateTime]
+  notesUpdatedAt_lt: DateTime
+  notesUpdatedAt_lte: DateTime
+  notesUpdatedAt_not: DateTime
+  notesUpdatedAt_not_in: [DateTime]
+  notes_contains: String
+  notes_exists: Boolean
+  notes_not_contains: String
+  presentationPermanentlyUnavailable: Boolean
+  presentationPermanentlyUnavailable_exists: Boolean
+  presentationPermanentlyUnavailable_not: Boolean
+  presentationUpdatedAt: DateTime
+  presentationUpdatedAt_exists: Boolean
+  presentationUpdatedAt_gt: DateTime
+  presentationUpdatedAt_gte: DateTime
+  presentationUpdatedAt_in: [DateTime]
+  presentationUpdatedAt_lt: DateTime
+  presentationUpdatedAt_lte: DateTime
+  presentationUpdatedAt_not: DateTime
+  presentationUpdatedAt_not_in: [DateTime]
+  presentation_contains: String
+  presentation_exists: Boolean
+  presentation_not_contains: String
+  speakersCollection_exists: Boolean
+  startDate: DateTime
+  startDateTimeZone: String
+  startDateTimeZone_contains: String
+  startDateTimeZone_exists: Boolean
+  startDateTimeZone_in: [String]
+  startDateTimeZone_not: String
+  startDateTimeZone_not_contains: String
+  startDateTimeZone_not_in: [String]
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  tagsCollection_exists: Boolean
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  videoRecordingPermanentlyUnavailable: Boolean
+  videoRecordingPermanentlyUnavailable_exists: Boolean
+  videoRecordingPermanentlyUnavailable_not: Boolean
+  videoRecordingUpdatedAt: DateTime
+  videoRecordingUpdatedAt_exists: Boolean
+  videoRecordingUpdatedAt_gt: DateTime
+  videoRecordingUpdatedAt_gte: DateTime
+  videoRecordingUpdatedAt_in: [DateTime]
+  videoRecordingUpdatedAt_lt: DateTime
+  videoRecordingUpdatedAt_lte: DateTime
+  videoRecordingUpdatedAt_not: DateTime
+  videoRecordingUpdatedAt_not_in: [DateTime]
+  videoRecording_contains: String
+  videoRecording_exists: Boolean
+  videoRecording_not_contains: String
+}
+
 input cfGuideDescriptionNestedFilter {
   AND: [cfGuideDescriptionNestedFilter]
   OR: [cfGuideDescriptionNestedFilter]
@@ -4727,6 +4969,7 @@ input cfOutputsNestedFilter {
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
   relatedEntitiesCollection_exists: Boolean
+  relatedEventsCollection_exists: Boolean
   relatedOutputsCollection_exists: Boolean
   rrid: String
   rrid_contains: String

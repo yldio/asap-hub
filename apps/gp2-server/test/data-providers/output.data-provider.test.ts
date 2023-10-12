@@ -30,6 +30,9 @@ jest.mock('@asap-hub/contentful', () => ({
 }));
 jest.mock('../../src/utils/logger');
 
+const makeLink = (id?: string) => ({
+  sys: { type: 'Link', linkType: 'Entry', id },
+});
 describe('Outputs data provider', () => {
   const graphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
@@ -133,6 +136,19 @@ describe('Outputs data provider', () => {
           ...expectedResult,
           relatedOutputs: [],
         });
+      });
+    });
+    describe('related events', () => {
+      test('Should default related events to an empty array when missing', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse.relatedEventsCollection = null;
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById('1');
+
+        expect(result!.relatedEvents).toEqual([]);
       });
     });
 
@@ -770,64 +786,27 @@ describe('Outputs data provider', () => {
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
       const {
-        workingGroupIds: __,
+        workingGroupIds: _,
+        relatedOutputIds,
+        relatedEventIds,
         projectIds,
+        tagIds,
+        contributingCohortIds,
         mainEntityId,
         ...fieldsCreated
       } = outputRequest;
       const fields = addLocaleToFields({
         ...fieldsCreated,
-        authors: fieldsCreated.authors.map((author) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: author.externalUserId || author.userId,
-          },
-        })),
-        createdBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: outputRequest.createdBy,
-          },
-        },
-        updatedBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: outputRequest.createdBy,
-          },
-        },
-        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map((id) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id,
-          },
-        })),
-        tags: fieldsCreated.tags?.map((tag) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: tag.id,
-          },
-        })),
-        relatedOutputs: fieldsCreated.relatedOutputs.map((output) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: output.id,
-          },
-        })),
-        contributingCohorts: fieldsCreated.contributingCohorts?.map(
-          (cohort) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: cohort.id,
-            },
-          }),
+        authors: fieldsCreated.authors.map((author) =>
+          makeLink(author.externalUserId || author.userId),
         ),
+        createdBy: makeLink(outputRequest.createdBy),
+        updatedBy: makeLink(outputRequest.createdBy),
+        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map(makeLink),
+        tags: tagIds.map(makeLink),
+        relatedOutputs: relatedOutputIds.map(makeLink),
+        relatedEvents: relatedEventIds.map(makeLink),
+        contributingCohorts: contributingCohortIds.map(makeLink),
       });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,
@@ -853,20 +832,9 @@ describe('Outputs data provider', () => {
         fields: expect.objectContaining({
           authors: {
             'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'some-external-user-id',
-                },
-              },
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'some-user-id',
-                },
-              },
+              makeLink('some-external-user-id'),
+              makeLink('some-user-id'),
+              ,
             ],
           },
         }),
@@ -880,7 +848,7 @@ describe('Outputs data provider', () => {
           ...outputRequest,
           workingGroupIds: undefined,
           projectIds: undefined,
-          mainEntityId: undefined,
+          mainEntityId: undefined as unknown as string,
         }),
       ).rejects.toThrow(/invalid related entities/i);
     });
@@ -928,53 +896,26 @@ describe('Outputs data provider', () => {
 
       await outputDataProvider.update(outputId, outputUpdateData);
 
-      const { projectIds, mainEntityId, ...fieldsUpdated } = outputUpdateData;
+      const {
+        projectIds,
+        relatedEventIds,
+        relatedOutputIds,
+        mainEntityId,
+        contributingCohortIds,
+        tagIds,
+        ...fieldsUpdated
+      } = outputUpdateData;
       const fields = {
         ...fieldsUpdated,
-        authors: outputUpdateData.authors.map((author) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: author.externalUserId || author.userId,
-          },
-        })),
-        updatedBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: outputUpdateData.updatedBy,
-          },
-        },
-        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map((id) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id,
-          },
-        })),
-        tags: outputUpdateData.tags?.map((tag) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: tag.id,
-          },
-        })),
-        relatedOutputs: outputUpdateData.relatedOutputs.map((output) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: output.id,
-          },
-        })),
-        contributingCohorts: outputUpdateData.contributingCohorts?.map(
-          (cohort) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: cohort.id,
-            },
-          }),
+        authors: outputUpdateData.authors.map((author) =>
+          makeLink(author.externalUserId || author.userId),
         ),
+        updatedBy: makeLink(outputUpdateData.updatedBy),
+        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map(makeLink),
+        tags: tagIds.map(makeLink),
+        relatedOutputs: relatedOutputIds.map(makeLink),
+        relatedEvents: relatedEventIds.map(makeLink),
+        contributingCohorts: contributingCohortIds.map(makeLink),
       };
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         ...fields,

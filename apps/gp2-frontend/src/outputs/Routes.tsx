@@ -4,20 +4,19 @@ import { gp2 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
+import OutputDetail from './OutputDetail';
 
 const loadOutputDirectory = () =>
   import(/* webpackChunkName: "output-directory" */ './OutputDirectory');
-const loadShareOutput = () =>
-  import(/* webpackChunkName: "share-output" */ './ShareOutput');
 
 const OutputDirectory = lazy(loadOutputDirectory);
-const ShareOutput = lazy(loadShareOutput);
 
 const Outputs: FC<Record<string, never>> = () => {
-  useEffect(() => {
-    loadOutputDirectory().then(loadShareOutput);
-  }, []);
   const { path } = useRouteMatch();
+
+  useEffect(() => {
+    loadOutputDirectory();
+  }, []);
 
   return (
     <Switch>
@@ -31,9 +30,7 @@ const Outputs: FC<Record<string, never>> = () => {
         </Frame>
       </Route>
       <Route path={path + gp2.outputs({}).output.template}>
-        <Frame title="Output">
-          <ShareOutput />
-        </Frame>
+        <OutputDetail />
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

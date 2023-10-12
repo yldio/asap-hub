@@ -92,7 +92,7 @@ describe('Routes', () => {
     expect(screen.getByText(`${nbHits} results found`)).toBeVisible();
   });
 
-  it('renders a paginated list of news', async () => {
+  it('renders a paginated list of outputs', async () => {
     const nbHits = 40;
     mockGetOutputs.mockResolvedValue(
       createOutputListAlgoliaResponse(pageSize, { nbHits }),

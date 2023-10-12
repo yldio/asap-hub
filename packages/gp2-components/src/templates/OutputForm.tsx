@@ -366,8 +366,25 @@ const OutputForm: React.FC<OutputFormProps> = ({
             index ===
             newAuthors?.findIndex((newAuthor) => newAuthor.value === author.id),
         )
-      : !!newAuthors?.length);
-
+      : !!newAuthors?.length) ||
+    (relatedOutputs
+      ? !relatedOutputs.every(
+          (output, index) =>
+            index ===
+            newRelatedOutputs?.findIndex(
+              (newOutput) => newOutput.value === output.id,
+            ),
+        )
+      : !!newRelatedOutputs?.length) ||
+    (relatedEvents
+      ? !relatedEvents.every(
+          (event, index) =>
+            index ===
+            newRelatedEvents?.findIndex(
+              (newEvent) => newEvent.value === event.id,
+            ),
+        )
+      : !!newRelatedOutputs?.length);
   return (
     <Form dirty={isFormDirty}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (

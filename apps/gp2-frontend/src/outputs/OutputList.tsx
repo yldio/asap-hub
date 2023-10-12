@@ -67,11 +67,7 @@ const OutputList: React.FC<OutputListProps> = ({
       isAdministrator={isAdministrator}
     >
       {items.map((output) => (
-        <OutputCard
-          key={output.id}
-          {...output}
-          isAdministrator={isAdministrator}
-        />
+        <OutputCard key={output.id} {...output} />
       ))}
     </ResultList>
   ) : (

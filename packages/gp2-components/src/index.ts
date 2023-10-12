@@ -77,6 +77,7 @@ export {
   OnboardingPage,
   OnboardingPreview,
   OnboardingWelcome,
+  OutputDetailPage,
   OutputForm,
   OutputPageList,
   OutputsPage,

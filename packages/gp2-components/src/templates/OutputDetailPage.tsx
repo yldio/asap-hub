@@ -1,0 +1,98 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { Link, pixels, editIcon, mail } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+
+import { CtaCard } from '../molecules';
+import { OutputCard } from '../organisms';
+
+const { rem, mobileScreen } = pixels;
+const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
+
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
+  overflow: 'scroll',
+});
+
+const commonStyles = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  width: '100%',
+};
+
+const commonMediaQueries = {
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    ...commonStyles,
+    width: 'auto',
+  },
+};
+
+const buttonsContainer = css({
+  ...commonStyles,
+  flexFlow: 'column',
+  gap: rem(16),
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    width: '100%',
+  },
+});
+
+const leftButtons = css({
+  ...commonStyles,
+  ...commonMediaQueries,
+});
+
+type OutputDetailPageProps = Pick<
+  gp2Model.OutputResponse,
+  | 'addedDate'
+  | 'authors'
+  | 'created'
+  | 'documentType'
+  | 'id'
+  | 'lastUpdatedPartial'
+  | 'link'
+  | 'mainEntity'
+  | 'projects'
+  | 'subtype'
+  | 'title'
+  | 'type'
+  | 'workingGroups'
+> & {
+  isAdministrator: boolean;
+};
+const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
+  isAdministrator,
+  ...output
+}: OutputDetailPageProps) => (
+  <div css={containerStyles}>
+    {isAdministrator ? (
+      <div css={buttonsContainer}>
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              gp2Routing.outputs({}).output({ outputId: output.id }).edit({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            {editIcon} Edit
+          </Link>
+        </div>
+      </div>
+    ) : null}
+    <OutputCard {...output} detailedView />
+    <CtaCard
+      href={createMailTo(INVITE_SUPPORT_EMAIL)}
+      buttonText="Contact Tech Support"
+    >
+      <strong>Have additional questions?</strong>
+      <br /> Reach out to tech support if you need help.
+    </CtaCard>
+  </div>
+);
+export default OutputDetailPage;

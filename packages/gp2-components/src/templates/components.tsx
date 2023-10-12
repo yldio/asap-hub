@@ -20,7 +20,6 @@ const components = {
   },
   Pill: {
     styles: {
-      margin: 0,
       fontSize: rem(14),
       padding: '4px 8px',
       lineHeight: rem(16),

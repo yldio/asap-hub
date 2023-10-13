@@ -1032,7 +1032,7 @@ __metadata:
     serverless-offline: 8.8.1
     serverless-offline-aws-eventbridge: 1
     serverless-offline-ssm: ^6.2.0
-    serverless-s3-sync: 3.1.0
+    serverless-s3-sync: 3.2.0
     serverless-webpack: 5.13.0
     source-map-support: 0.5.21
     stream-json: 1.8.0
@@ -1461,7 +1461,7 @@ __metadata:
     parse-data-url: 3.0.0
     serverless: 3.35.2
     serverless-http: 2.7.0
-    serverless-s3-sync: 3.1.0
+    serverless-s3-sync: 3.2.0
     serverless-webpack: 5.13.0
     source-map-support: 0.5.21
     supertest: 6.3.3
@@ -44583,9 +44583,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless-s3-sync@npm:3.1.0":
-  version: 3.1.0
-  resolution: "serverless-s3-sync@npm:3.1.0"
+"serverless-s3-sync@npm:3.2.0":
+  version: 3.2.0
+  resolution: "serverless-s3-sync@npm:3.2.0"
   dependencies:
     "@auth0/s3": ^1.0.0
     bluebird: ^3.5.4
@@ -44593,7 +44593,7 @@ __metadata:
     minimatch: ^3.0.4
   peerDependencies:
     serverless: ^3.0.0
-  checksum: e9c3ef7301397f39f877e7a63575fd2e2c7abbc9ff5d37da6a066ce981eab89f7a2e099024e338b782efc28e66c763900100628ff57a242d92cce79b13e6249a
+  checksum: b541719019b9f7db9e83dc5cfc60ba5d5bb0ffa205f2cdce06c23579aa7cf33a5c0d44e0a65890b0e7223bfa6e6784543a6d7069d7874af166b2a3810601decb
   languageName: node
   linkType: hard
 

@@ -24,12 +24,13 @@ const listItemStyles = css({
 
 interface PillListProps {
   readonly pills: ReadonlyArray<string>;
+  small?: boolean;
 }
-const PillList: React.FC<PillListProps> = ({ pills }) => (
+const PillList: React.FC<PillListProps> = ({ pills, small = true }) => (
   <ul css={listStyles}>
     {pills.map((pill, i) => (
       <li key={`pill-${i}`} css={listItemStyles}>
-        <Pill>{pill}</Pill>
+        <Pill small={small}>{pill}</Pill>
       </li>
     ))}
   </ul>

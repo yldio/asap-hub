@@ -10,7 +10,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../../events/api';
+import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
 import { getContributingCohorts, getTags } from '../../shared/api';
@@ -50,9 +50,7 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
 const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const mockGetProjectById = getProject as jest.MockedFunction<typeof getProject>;
-const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-  typeof getAlgoliaEvents
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderCreateProjectOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',

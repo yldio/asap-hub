@@ -7,13 +7,13 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { PAGE_SIZE, useSearch } from '../../hooks';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { PAGE_SIZE, useSearch } from '../../hooks';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getAlgoliaEvents } from '../api';
-import { eventsState } from '../state';
+import { getEvents } from '../api';
 import EventDirectory from '../EventDirectory';
 import { EventListProps } from '../EventsList';
+import { eventsState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../hooks/search');
@@ -50,9 +50,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
-const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-  typeof getAlgoliaEvents
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 describe('EventDirectory', () => {
   it('handles filter switching', async () => {
     mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));

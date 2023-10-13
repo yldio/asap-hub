@@ -1,4 +1,4 @@
-import { getAlgoliaEvents } from './events/api';
+import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
 import { getOutputs } from './outputs/api';
 
@@ -27,7 +27,7 @@ export const useRelatedOutputSuggestions = (currentId?: string) => {
 export const useRelatedEventsSuggestions = () => {
   const algoliaClient = useAlgolia();
   return (searchQuery: string) =>
-    getAlgoliaEvents(algoliaClient.client, {
+    getEvents(algoliaClient.client, {
       searchQuery,
       filters: new Set(),
       currentPage: null,

@@ -7,11 +7,11 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../api';
+import { PAGE_SIZE } from '../../hooks';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getEvents } from '../api';
 import EventsList, { EventListProps } from '../EventsList';
 import { eventsState } from '../state';
-import { PAGE_SIZE } from '../../hooks';
 
 jest.mock('../api');
 jest.mock('../calendar/api');
@@ -49,9 +49,7 @@ beforeEach(() => {
 });
 
 describe('EventsList', () => {
-  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-    typeof getAlgoliaEvents
-  >;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
   it('renders events', async () => {
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     await renderList({ currentTime: new Date() });

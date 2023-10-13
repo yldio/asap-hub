@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../../events/api';
+import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { getProjects } from '../../projects/api';
 import { getContributingCohorts, getTags } from '../../shared/api';
@@ -44,9 +44,7 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
 const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
-const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-  typeof getAlgoliaEvents
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderShareOutput = async (
   path: string,

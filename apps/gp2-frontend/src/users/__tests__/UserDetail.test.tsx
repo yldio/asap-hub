@@ -12,15 +12,15 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../../events/api';
+import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getInstitutions, getUser, patchUser } from '../api';
 import UserDetail from '../UserDetail';
-import { getTags, getContributingCohorts } from '../../shared/api';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
@@ -58,9 +58,7 @@ describe('UserDetail', () => {
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
-  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-    typeof getAlgoliaEvents
-  >;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
   const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
   const mockGetInstitutions = getInstitutions as jest.MockedFunction<

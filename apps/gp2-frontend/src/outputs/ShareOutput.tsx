@@ -1,7 +1,7 @@
 import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
-import { NotFoundPage, usePrevious } from '@asap-hub/react-components';
+import { usePrevious } from '@asap-hub/react-components';
 import { useEffect, useState } from 'react';
 import {
   handleError,

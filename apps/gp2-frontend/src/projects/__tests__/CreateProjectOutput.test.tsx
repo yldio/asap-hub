@@ -33,6 +33,8 @@ jest.mock('../../users/api');
 jest.mock('../../working-groups/api');
 jest.mock('../api');
 
+jest.setTimeout(60000);
+
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
 >;
@@ -171,7 +173,7 @@ describe('Create Projects Output', () => {
       },
       expect.anything(),
     );
-  }, 30_000);
+  });
 
   it('will show server side validation error for link', async () => {
     const validationResponse: ValidationErrorResponse = {

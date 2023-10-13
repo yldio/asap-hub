@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/contentful';
 import { DiscoverDataProvider } from '../types';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
-import { parseContentfulGraphQlPages } from './page.data-provider';
 import reducer from '../../utils/reducer';
 import { parseUserToResponse } from '../../controllers/user.controller';
 
@@ -20,12 +19,7 @@ type UserItem = NonNullable<
   NonNullable<NonNullable<DiscoverItem>['membersCollection']>['items']
 >[number];
 
-type PageItem = NonNullable<
-  NonNullable<NonNullable<DiscoverItem>['pagesCollection']>['items']
->[number];
-
 type UserResult = ReturnType<typeof parseContentfulGraphQlUsers>;
-type PageResult = ReturnType<typeof parseContentfulGraphQlPages>;
 
 export class DiscoverContentfulDataProvider implements DiscoverDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
@@ -33,13 +27,11 @@ export class DiscoverContentfulDataProvider implements DiscoverDataProvider {
   async fetch(): Promise<DiscoverDataObject> {
     const { discoverCollection } =
       await this.contentfulClient.request<FetchDiscoverQuery>(FETCH_DISCOVER);
-
     return parseGraphQLDiscover(discoverCollection?.items[0] || null);
   }
 }
 
 const reduceUsers = reducer<UserItem, UserResult>(parseContentfulGraphQlUsers);
-const reducePages = reducer<PageItem, PageResult>(parseContentfulGraphQlPages);
 
 const parseGraphQLDiscover = (
   discover: DiscoverItem | null,
@@ -56,5 +48,4 @@ const parseGraphQLDiscover = (
     discover?.scientificAdvisoryBoardCollection?.items
       ?.reduce(reduceUsers, [])
       .map(parseUserToResponse) ?? [],
-  pages: discover?.pagesCollection?.items?.reduce(reducePages, []) ?? [],
 });

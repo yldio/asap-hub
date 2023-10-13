@@ -26,7 +26,6 @@ const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
 const props: DiscoverResponse = {
   aboutUs: '',
   members: [],
-  pages: [],
   scientificAdvisoryBoard: [],
 };
 

@@ -1,12 +1,12 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -14,15 +14,15 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getAlgoliaEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
-import { getOutputs, updateOutput } from '../api';
-import { getTags, getContributingCohorts } from '../../shared/api';
 import { getAlgoliaProjects } from '../../projects/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
+import { getOutputs, updateOutput } from '../api';
 import ShareOutput from '../ShareOutput';
 
 jest.mock('../api');

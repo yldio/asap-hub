@@ -86,7 +86,7 @@ describe('OutputForm', () => {
     getRelatedOutputSuggestions.mockResolvedValue([
       {
         value: '11',
-        label: 'related output',
+        label: 'some related output',
         documentType: 'GP2 Reports',
       },
     ]);
@@ -94,7 +94,7 @@ describe('OutputForm', () => {
     getRelatedEventSuggestions.mockResolvedValueOnce([
       {
         value: '23',
-        label: 'related event',
+        label: 'some related event',
         endDate: '2021-12-28T14:00:00.000Z',
       },
     ]);
@@ -105,7 +105,14 @@ describe('OutputForm', () => {
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        getRelatedEventSuggestions={getRelatedEventSuggestions}
         workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+        tagSuggestions={[
+          {
+            id: '27',
+            name: 'some tag name',
+          },
+        ]}
       />,
       {
         wrapper: ({ children }) => (
@@ -145,10 +152,11 @@ describe('OutputForm', () => {
     );
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
-    const workingGroups = screen.getByRole('textbox', {
-      name: /working groups/i,
-    });
-    userEvent.click(workingGroups);
+    userEvent.click(
+      screen.getByRole('textbox', {
+        name: /working groups/i,
+      }),
+    );
 
     userEvent.click(screen.getByText('another group'));
     const authors = screen.getByRole('textbox', { name: /Authors/i });
@@ -162,12 +170,20 @@ describe('OutputForm', () => {
 
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
-    const relatedOutputs = screen.getByRole('textbox', {
-      name: /related output/i,
-    });
-    userEvent.click(relatedOutputs);
-    const relatedOutputOption = await screen.findByText(/GP2 Reports/i);
-    userEvent.click(relatedOutputOption);
+    userEvent.click(
+      screen.getByRole('textbox', {
+        name: /related output/i,
+      }),
+    );
+    userEvent.click(await screen.findByText('some related output'));
+    userEvent.click(
+      screen.getByRole('textbox', {
+        name: /related gp2 hub events/i,
+      }),
+    );
+    userEvent.click(await screen.findByText('some related event'));
+    userEvent.click(screen.getByLabelText(/additional tags/i));
+    userEvent.click(screen.getByText('some tag name'));
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -188,8 +204,8 @@ describe('OutputForm', () => {
       mainEntityId: '12',
       workingGroupIds: ['2'],
       relatedOutputIds: ['11'],
-      relatedEventIds: [],
-      tagIds: [],
+      relatedEventIds: ['23'],
+      tagIds: ['27'],
       contributingCohortIds: [],
     });
     expect(addNotification).toHaveBeenCalledWith(

@@ -322,7 +322,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
         ? newProjects.filter(outMainEntity).map(toId)
         : undefined,
     relatedOutputIds: newRelatedOutputs.map(({ value }) => value),
-    relatedEventIds: [],
+    relatedEventIds: newRelatedEvents.map(({ value }) => value),
     ...createIdentifierField(newIdentifierType, identifier),
   };
 

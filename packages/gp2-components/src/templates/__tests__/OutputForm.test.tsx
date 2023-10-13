@@ -219,7 +219,7 @@ describe('OutputForm', () => {
     expect(history.location.pathname).toEqual(`/outputs/ro0`);
   });
 
-  it.only('shows error message because of empty required fields', async () => {
+  it('shows error message because of empty required fields', async () => {
     const getAuthorSuggestions = jest.fn();
     const getRelatedOutputSuggestions = jest.fn();
     const history = createMemoryHistory();
@@ -731,12 +731,17 @@ describe('OutputForm', () => {
 
   describe('validation', () => {
     it('shows error message for missing value title', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
+      render(<OutputForm {...defaultProps} />, {
         wrapper: StaticRouter,
       });
 
+      screen.debug(undefined, 30000);
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
+
+      // screen
+      //   .getAllByText('Please fill out this field.')
+      //   .map((i) => console.log(i.outerHTML));
       expect(screen.getByText('Please fill out this field.')).toBeVisible();
     });
 

@@ -20,7 +20,6 @@ import {
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { Form } from '../organisms';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import {
@@ -30,8 +29,8 @@ import {
   useState,
 } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
-import { OutputIdentifier } from '../organisms/OutputIdentifier';
 import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
+import { Form, OutputIdentifier } from '../organisms';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField } from '../utils';
 import { EntityMappper } from './CreateOutputPage';

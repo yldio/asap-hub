@@ -1,8 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { ValidationErrorResponse } from '@asap-hub/model';
+import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   render,
@@ -153,7 +152,14 @@ describe('ShareOutput', () => {
       new BackendError('example', validationResponse, 400),
     );
 
-    await renderShareOutput(id);
+    await renderShareOutput(getEditPath(id), {
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+      title,
+      link,
+      projects: [{ id: '42', title: 'a title' }],
+    });
+
     userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 

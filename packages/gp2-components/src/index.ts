@@ -41,6 +41,7 @@ export {
   OnboardingPageHeader,
   OpenQuestionsModal,
   OutputCard,
+  OutputIdentifier,
   PageBanner,
   ProjectCard,
   ProjectDetailHeader,

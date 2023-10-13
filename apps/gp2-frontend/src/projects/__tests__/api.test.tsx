@@ -1,17 +1,11 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
 import { PAGE_SIZE } from '../../hooks';
 import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
-import {
-  getAlgoliaProjects,
-  getProject,
-  getProjects,
-  putProjectResources,
-} from '../api';
+import { getProject, getProjects, putProjectResources } from '../api';
 
 jest.mock('../../config');
 
@@ -70,7 +64,7 @@ describe('getAlgoliaProjects', () => {
   };
 
   it('makes a search request with query, default page and page size', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       searchQuery: 'test',
       currentPage: null,
@@ -85,7 +79,7 @@ describe('getAlgoliaProjects', () => {
   });
 
   it('passes page number and page size to request', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       currentPage: 1,
       pageSize: 20,
@@ -99,7 +93,7 @@ describe('getAlgoliaProjects', () => {
   });
 
   it('builds a single status filter query', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       status: ['Active'],
       currentPage: 1,
@@ -114,7 +108,7 @@ describe('getAlgoliaProjects', () => {
   });
 
   it('builds a multiple status filter query', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       status: ['Active', 'Paused'],
       currentPage: 1,
@@ -131,7 +125,7 @@ describe('getAlgoliaProjects', () => {
   });
 
   it('builds a opportunitiesAvailable filter query', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       type: ['Opportunities Available'],
       currentPage: 1,
@@ -148,7 +142,7 @@ describe('getAlgoliaProjects', () => {
   });
 
   it('builds a traineeProject filter query', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       type: ['Trainee Project'],
       currentPage: 1,
@@ -164,7 +158,7 @@ describe('getAlgoliaProjects', () => {
     );
   });
   it('builds a combined status + type filter query', async () => {
-    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+    await getProjects(mockAlgoliaSearchClient, {
       ...options,
       status: ['Active'],
       type: ['Trainee Project'],
@@ -186,54 +180,8 @@ describe('getAlgoliaProjects', () => {
       message: 'Some Error',
     });
     await expect(
-      getAlgoliaProjects(mockAlgoliaSearchClient, options),
+      getProjects(mockAlgoliaSearchClient, options),
     ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
-  });
-});
-
-describe('getProjects', () => {
-  const options: GetListOptions = {
-    searchQuery: '',
-    currentPage: 1,
-    pageSize: 10,
-    filters: new Set(),
-  };
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-    nock.cleanAll();
-  });
-
-  it('returns a successfully fetched projects', async () => {
-    const projectsResponse: gp2Model.ListProjectResponse = {
-      items: [gp2Fixtures.createProjectResponse()],
-      total: 1,
-    };
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/projects')
-      .query({
-        skip: 10,
-        take: 10,
-      })
-      .reply(200, projectsResponse);
-
-    const result = await getProjects('Bearer x', options);
-    expect(result).toEqual(projectsResponse);
-  });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/projects')
-      .query({
-        skip: 10,
-        take: 10,
-      })
-      .reply(500);
-
-    await expect(
-      getProjects('Bearer x', options),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch the projects. Expected status 2xx. Received status 500."`,
-    );
   });
 });
 

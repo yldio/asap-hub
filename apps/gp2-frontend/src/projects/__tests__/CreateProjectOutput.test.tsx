@@ -21,7 +21,7 @@ import {
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getAlgoliaProjects, getProject } from '../api';
+import { getProject, getProjects } from '../api';
 import CreateProjectOutput from '../CreateProjectOutput';
 
 jest.mock('../../events/api.ts');
@@ -47,9 +47,7 @@ const mockGetContributingCohorts =
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const mockGetProjectById = getProject as jest.MockedFunction<typeof getProject>;
 const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<

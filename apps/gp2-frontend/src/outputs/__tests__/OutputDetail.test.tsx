@@ -9,13 +9,13 @@ import { gp2 } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getProjects } from '../../projects/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
+import { getWorkingGroups } from '../../working-groups/api';
+import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutput } from '../api';
 import OutputDetail from '../OutputDetail';
-import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getTags, getContributingCohorts } from '../../shared/api';
-import { getAlgoliaProjects } from '../../projects/api';
-import { getWorkingGroups } from '../../working-groups/api';
 
 jest.mock('../api');
 jest.mock('../../shared/api');
@@ -30,9 +30,7 @@ const mockGetContributingCohorts =
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const renderOutputDetail = async () => {
   render(

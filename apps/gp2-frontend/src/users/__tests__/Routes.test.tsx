@@ -9,7 +9,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaProjects } from '../../projects/api';
+import { getProjects } from '../../projects/api';
 import { getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
@@ -49,8 +49,8 @@ jest.mock('../../working-groups/api');
 jest.mock('../../shared/api');
 describe('Routes', () => {
   it('renders a list of users', async () => {
-    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-      typeof getAlgoliaProjects
+    const mockGetProjects = getProjects as jest.MockedFunction<
+      typeof getProjects
     >;
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
@@ -70,8 +70,8 @@ describe('Routes', () => {
     ).toBeInTheDocument();
   }, 30_000);
   it('renders error message when the request is not a 2XX', async () => {
-    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-      typeof getAlgoliaProjects
+    const mockGetProjects = getProjects as jest.MockedFunction<
+      typeof getProjects
     >;
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<

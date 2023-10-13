@@ -169,6 +169,7 @@ describe('ShareOutput', () => {
         'An Output with this URL already exists. Please enter a different URL.',
       ).length,
     ).toBeGreaterThan(1);
+    expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
     userEvent.type(url, 'a');

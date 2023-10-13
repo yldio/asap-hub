@@ -20,6 +20,7 @@ export type FormStatus =
   | 'validityError';
 
 type FormProps<T> = {
+  validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
   children: (state: {
@@ -34,6 +35,7 @@ type FormProps<T> = {
 const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
+  validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
   const history = useHistory();
@@ -59,7 +61,7 @@ const Form = <T extends void | Record<string, unknown>>({
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (!formRef.current!.reportValidity()) {
+      if (!(formRef.current!.reportValidity() && validate())) {
         setStatus('validityError');
 
         return Promise.resolve(

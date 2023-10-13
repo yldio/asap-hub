@@ -734,14 +734,8 @@ describe('OutputForm', () => {
       render(<OutputForm {...defaultProps} />, {
         wrapper: StaticRouter,
       });
-
-      screen.debug(undefined, 30000);
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-
-      // screen
-      //   .getAllByText('Please fill out this field.')
-      //   .map((i) => console.log(i.outerHTML));
       expect(screen.getByText('Please fill out this field.')).toBeVisible();
     });
 

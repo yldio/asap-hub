@@ -302,7 +302,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
     page: 'output' | 'output-form',
     bannerType: 'error' | 'success',
   ) => {
-    notifications[0] && removeNotification(notifications[0]);
+    if (
+      notifications[0] &&
+      notifications[0]?.message !== capitalizeFirstLetter(message)
+    ) {
+      removeNotification(notifications[0]);
+    }
     addNotification({
       message: capitalizeFirstLetter(message),
       page,

@@ -11238,17 +11238,17 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-shared@npm:^1.2.0, @contentful/field-editor-shared@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "@contentful/field-editor-shared@npm:1.3.1"
+  version: 1.4.2
+  resolution: "@contentful/field-editor-shared@npm:1.4.2"
   dependencies:
     "@contentful/f36-note": ^4.2.8
     "@contentful/f36-tokens": ^4.0.0
     emotion: ^10.0.17
     lodash: ^4.17.15
   peerDependencies:
-    "@contentful/app-sdk": ^4.2.0
+    "@contentful/app-sdk": ^4.17.1
     react: ">=16.8.0"
-  checksum: 605211e561bbf8cfa610d89578239918ca9a6b029b1ceab807b8fb9d35e0b0731d798101e3fc5bbb6ffa8f910c949cf50477866cfbb757c2294e838ad2da1f3d
+  checksum: 75f80c8188d0a9b6b216f3e9fdf81d2ad5f8a00e0d80e222f208ccabfd8472c27b8b6c1ad0298f0d6dbe224842c3d9e0005866d4fac562ee41250dd300c2e924
   languageName: node
   linkType: hard
 

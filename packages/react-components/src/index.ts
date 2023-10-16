@@ -156,6 +156,7 @@ export {
   SharedOutputDropdown,
   SharedOutputDropdownBase,
   SharedResearchCard,
+  SharedResearchDetailsTagsCard,
   SharedResearchListCard,
   SharedResearchMetadata,
   SharedResearchOutputBanners,

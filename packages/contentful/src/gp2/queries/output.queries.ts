@@ -63,6 +63,23 @@ export const outputsContentQueryFragment = gql`
         title
         documentType
         type
+        relatedEntitiesCollection(limit: 1) {
+          items {
+            __typename
+            ... on WorkingGroups {
+              sys {
+                id
+              }
+              title
+            }
+            ... on Projects {
+              sys {
+                id
+              }
+              title
+            }
+          }
+        }
       }
     }
     relatedEventsCollection(limit: 10) {

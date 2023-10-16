@@ -80,11 +80,16 @@ export type DecisionOption = (typeof decisionOptions)[number];
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
 export type OutputSharingStatus = (typeof sharingStatuses)[number];
-type RelatedOutputs = {
+export type RelatedOutputs = {
   id: string;
   title: string;
   type?: OutputType;
   documentType: OutputDocumentType;
+  entity?: {
+    type: 'projects' | 'workingGroups';
+    id: string;
+    title: string;
+  };
 };
 export type OutputCoreObject = {
   addedDate: string;

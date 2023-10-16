@@ -6,6 +6,8 @@ import {
   outputForm,
   outputMaterial,
   outputReport,
+  projectIcon,
+  workingGroupIcon,
 } from '../icons';
 
 export const getIconForDocumentType = (
@@ -27,4 +29,9 @@ export const getIconForDocumentType = (
     default:
       return outputReport;
   }
+};
+
+export const getSourceIcon = (source: 'Project' | 'Working Group') => {
+  if (source === 'Project') return projectIcon;
+  return workingGroupIcon;
 };

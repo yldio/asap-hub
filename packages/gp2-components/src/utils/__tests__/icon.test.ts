@@ -5,8 +5,10 @@ import {
   outputForm,
   outputMaterial,
   outputReport,
+  projectIcon,
+  workingGroupIcon,
 } from '../../icons';
-import { getIconForDocumentType } from '../icon';
+import { getIconForDocumentType, getSourceIcon } from '../icon';
 
 it('tests getIconForDocumentType return the correct icon', () => {
   expect(getIconForDocumentType('Article')).toEqual(outputArticle);
@@ -16,4 +18,9 @@ it('tests getIconForDocumentType return the correct icon', () => {
   expect(getIconForDocumentType('Procedural Form')).toEqual(outputForm);
   expect(getIconForDocumentType('Training Materials')).toEqual(outputMaterial);
   expect(getIconForDocumentType('')).toEqual(outputReport);
+});
+
+it('tests getSourceIcon return the correct icon', () => {
+  expect(getSourceIcon('Project')).toEqual(projectIcon);
+  expect(getSourceIcon('Working Group')).toEqual(workingGroupIcon);
 });

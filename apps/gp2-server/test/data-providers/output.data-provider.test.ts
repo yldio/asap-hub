@@ -81,41 +81,64 @@ describe('Outputs data provider', () => {
       expect(result).toEqual(expectedResult);
     });
     describe('related outputs', () => {
-      test('should return the related output', async () => {
-        const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlClientMock.request.mockResolvedValueOnce({
-          outputs: {
-            ...graphqlResponse,
+      test.each`
+        type               | typename
+        ${`workingGroups`} | ${`WorkingGroups`}
+        ${`projects`}      | ${`Projects`}
+      `(
+        'should return the related output for $type entity',
+        async ({ type, typename }) => {
+          const graphqlResponse = getContentfulGraphqlOutput();
+          graphqlClientMock.request.mockResolvedValueOnce({
+            outputs: {
+              ...graphqlResponse,
 
-            relatedOutputsCollection: {
-              total: 1,
-              items: [
-                {
-                  sys: { id: 'another-output-id' },
-                  title: 'another title',
-                  documentType: 'Article',
-                  type: 'Blog',
+              relatedOutputsCollection: {
+                total: 1,
+                items: [
+                  {
+                    sys: { id: 'another-output-id' },
+                    title: 'another title',
+                    documentType: 'Article',
+                    type: 'Blog',
+                    relatedEntitiesCollection: {
+                      items: [
+                        {
+                          __typename: typename,
+                          sys: {
+                            id: 'entity-1',
+                          },
+                          title: 'Steering Committee',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          });
+
+          const result = await outputDataProvider.fetchById(outputId);
+          const expectedResult = getOutputDataObject();
+
+          expect(result).toEqual({
+            ...expectedResult,
+            relatedOutputs: [
+              {
+                id: 'another-output-id',
+                title: 'another title',
+                documentType: 'Article',
+                type: 'Blog',
+                entity: {
+                  id: 'entity-1',
+                  title: 'Steering Committee',
+                  type,
                 },
-              ],
-            },
-          },
-        });
-
-        const result = await outputDataProvider.fetchById(outputId);
-        const expectedResult = getOutputDataObject();
-
-        expect(result).toEqual({
-          ...expectedResult,
-          relatedOutputs: [
-            {
-              id: 'another-output-id',
-              title: 'another title',
-              documentType: 'Article',
-              type: 'Blog',
-            },
-          ],
-        });
-      });
+              },
+            ],
+          });
+        },
+      );
       test('should default to empty array', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlClientMock.request.mockResolvedValueOnce({

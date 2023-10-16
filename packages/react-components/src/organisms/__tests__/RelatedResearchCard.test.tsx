@@ -32,6 +32,26 @@ it('displays the related research card header and description', () => {
   expect(queryByText('View More Outputs')).toBeNull();
 });
 
+it('displays the related research card header and description passed by props', () => {
+  const { getByText, getByRole, queryByText } = render(
+    <RelatedResearchCard
+      {...props}
+      relatedResearch={[
+        {
+          ...createResearchOutputResponse(),
+        },
+      ]}
+      title="Related Outputs"
+      description="Find out all outputs that contributed to this one."
+    />,
+  );
+  expect(getByRole('heading', { name: 'Related Outputs' })).toBeVisible();
+  expect(
+    getByText('Find out all outputs that contributed to this one.'),
+  ).toBeVisible();
+  expect(queryByText('View More Outputs')).toBeNull();
+});
+
 it('displays the related research links and icons', () => {
   const { getByText, getByRole, getAllByText } = render(
     <RelatedResearchCard
@@ -58,6 +78,68 @@ it('displays the related research links and icons', () => {
   expect(getByRole('link', { name: 'Genetics' })).toHaveAttribute(
     'href',
     '/shared-research/id-1',
+  );
+});
+
+it('displays the related research links and icons given a related research with a working group entity', () => {
+  const { getByText, getByRole, getAllByText } = render(
+    <RelatedResearchCard
+      {...props}
+      relatedResearch={[
+        {
+          id: 'id-1',
+          documentType: 'Article',
+          title: 'Genetics',
+          type: 'Blog',
+          entity: {
+            id: 'wg-1',
+            title: 'Working Group 1',
+            type: 'workingGroups',
+          },
+        },
+      ]}
+      getSourceIcon={jest.fn()}
+    />,
+  );
+  expect(getAllByText('Article').length).toEqual(2);
+  expect(getByText('Blog')).toBeVisible();
+  expect(getByRole('link', { name: 'Working Group 1' })).toHaveAttribute(
+    'href',
+    '/working-groups/wg-1',
+  );
+  expect(getByRole('link', { name: 'Genetics' })).toHaveAttribute(
+    'href',
+    '/outputs/id-1',
+  );
+});
+
+it('displays the related research links and icons given a related research with a project entity', () => {
+  const { getByRole, getByText } = render(
+    <RelatedResearchCard
+      {...props}
+      relatedResearch={[
+        {
+          id: 'id-1',
+          documentType: 'GP2 Reports',
+          title: 'Genetics',
+          entity: {
+            id: 'project-1',
+            title: 'Project 1',
+            type: 'projects',
+          },
+        },
+      ]}
+      getSourceIcon={jest.fn()}
+    />,
+  );
+  expect(getByText('GP2 Reports')).toBeVisible();
+  expect(getByRole('link', { name: 'Project 1' })).toHaveAttribute(
+    'href',
+    '/projects/project-1',
+  );
+  expect(getByRole('link', { name: 'Genetics' })).toHaveAttribute(
+    'href',
+    '/outputs/id-1',
   );
 });
 

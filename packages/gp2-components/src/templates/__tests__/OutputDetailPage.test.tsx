@@ -59,6 +59,73 @@ describe('OutputDetailPage', () => {
     ).toHaveAttribute('href', '/projects/project-id');
   });
 
+  describe('description and tags section', () => {
+    it('handles tags and description omitted', () => {
+      const { queryByText, queryByRole } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={''}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).not.toBeInTheDocument();
+      expect(queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('handles just description provided', () => {
+      const { queryByText, getByText, queryByRole } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={'Test Description'}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).toBeInTheDocument();
+      expect(getByText('Test Description')).toBeVisible();
+      expect(queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('handles just tags provided', () => {
+      const { queryByText, getByText, queryByRole } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={''}
+          tags={[{ id: 'test-id', name: 'TestTag' }]}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).not.toBeInTheDocument();
+      expect(getByText('TestTag')).toBeVisible();
+      expect(queryByRole('separator')).not.toBeInTheDocument();
+    });
+    it('handles tags and description provided', () => {
+      const { queryByText, getByText, queryByRole } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={'Test Description'}
+          tags={[{ id: 'test-id', name: 'TestTag' }]}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).toBeInTheDocument();
+      expect(getByText('TestTag')).toBeVisible();
+      expect(getByText('Test Description')).toBeVisible();
+      expect(queryByRole('separator')).toBeVisible();
+    });
+  });
+
   it('displays contact support footer', () => {
     const { getByText } = render(
       <OutputDetailPage

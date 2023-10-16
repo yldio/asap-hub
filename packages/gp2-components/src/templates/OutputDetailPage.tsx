@@ -5,6 +5,7 @@ import {
   editIcon,
   mail,
   RelatedEventsCard,
+  SharedResearchDetailsTagsCard,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -68,55 +69,67 @@ type OutputDetailPageProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'relatedEvents'
+  | 'description'
+  | 'tags'
 > & {
   isAdministrator: boolean;
 };
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
   ...output
-}: OutputDetailPageProps) => (
-  <PageNotifications page="output">
-    {(notification) => (
-      <article
-        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
-      >
-        <div css={containerStyles}>
-          {isAdministrator ? (
-            <div css={buttonsContainer}>
-              <div css={leftButtons}>
-                <Link
-                  noMargin
-                  href={
-                    gp2Routing
-                      .outputs({})
-                      .output({ outputId: output.id })
-                      .edit({}).$
-                  }
-                  buttonStyle
-                  small
-                  primary
-                >
-                  {editIcon} Edit
-                </Link>
+}: OutputDetailPageProps) => {
+  const tags = output.tags.map((tag) => tag.name);
+  return (
+    <PageNotifications page="output">
+      {(notification) => (
+        <article
+          css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+        >
+          <div css={containerStyles}>
+            {isAdministrator ? (
+              <div css={buttonsContainer}>
+                <div css={leftButtons}>
+                  <Link
+                    noMargin
+                    href={
+                      gp2Routing
+                        .outputs({})
+                        .output({ outputId: output.id })
+                        .edit({}).$
+                    }
+                    buttonStyle
+                    small
+                    primary
+                  >
+                    {editIcon} Edit
+                  </Link>
+                </div>
               </div>
-            </div>
-          ) : null}
-          <OutputCard {...output} detailedView />
-          <RelatedEventsCard
-            relatedEvents={output.relatedEvents}
-            truncateFrom={3}
-            hub="GP2"
-          />
-          <CtaCard
-            href={createMailTo(INVITE_SUPPORT_EMAIL)}
-            buttonText="Contact Tech Support"
-          >
-            <strong>Have additional questions?</strong>
-            <br /> Reach out to tech support if you need help.
-          </CtaCard>
-        </div>
-      </article>
-    )}
-  </PageNotifications>
-);
+            ) : null}
+            <OutputCard {...output} detailedView />
+            {(output.description || !!output.tags.length) && (
+              <SharedResearchDetailsTagsCard
+                tags={tags}
+                displayDescription={!!output.description}
+                descriptionMD={output.description}
+              />
+            )}
+            <RelatedEventsCard
+              relatedEvents={output.relatedEvents}
+              truncateFrom={3}
+              hub="GP2"
+            />
+            <CtaCard
+              href={createMailTo(INVITE_SUPPORT_EMAIL)}
+              buttonText="Contact Tech Support"
+            >
+              <strong>Have additional questions?</strong>
+              <br /> Reach out to tech support if you need help.
+            </CtaCard>
+          </div>
+        </article>
+      )}
+    </PageNotifications>
+  );
+};
 export default OutputDetailPage;

@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
+import PageNotifications from './PageNotifications';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -77,41 +78,51 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
 }: OutputDetailPageProps) => {
   const tags = output.tags.map((tag) => tag.name);
   return (
-    <div css={containerStyles}>
-      {isAdministrator ? (
-        <div css={buttonsContainer}>
-          <div css={leftButtons}>
-            <Link
-              noMargin
-              href={
-                gp2Routing.outputs({}).output({ outputId: output.id }).edit({})
-                  .$
-              }
-              buttonStyle
-              small
-              primary
+    <PageNotifications page="output">
+      {(notification) => (
+        <article
+          css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+        >
+          <div css={containerStyles}>
+            {isAdministrator ? (
+              <div css={buttonsContainer}>
+                <div css={leftButtons}>
+                  <Link
+                    noMargin
+                    href={
+                      gp2Routing
+                        .outputs({})
+                        .output({ outputId: output.id })
+                        .edit({}).$
+                    }
+                    buttonStyle
+                    small
+                    primary
+                  >
+                    {editIcon} Edit
+                  </Link>
+                </div>
+              </div>
+            ) : null}
+            <OutputCard {...output} detailedView />
+            {(output.description || !!output.tags.length) && (
+              <SharedResearchDetailsTagsCard
+                tags={tags}
+                displayDescription={!!output.description}
+                descriptionMD={output.description}
+              />
+            )}
+            <CtaCard
+              href={createMailTo(INVITE_SUPPORT_EMAIL)}
+              buttonText="Contact Tech Support"
             >
-              {editIcon} Edit
-            </Link>
+              <strong>Have additional questions?</strong>
+              <br /> Reach out to tech support if you need help.
+            </CtaCard>
           </div>
-        </div>
-      ) : null}
-      <OutputCard {...output} detailedView />
-      {(output.description || !!output.tags.length) && (
-        <SharedResearchDetailsTagsCard
-          tags={tags}
-          displayDescription={!!output.description}
-          descriptionMD={output.description}
-        />
+        </article>
       )}
-      <CtaCard
-        href={createMailTo(INVITE_SUPPORT_EMAIL)}
-        buttonText="Contact Tech Support"
-      >
-        <strong>Have additional questions?</strong>
-        <br /> Reach out to tech support if you need help.
-      </CtaCard>
-    </div>
+    </PageNotifications>
   );
 };
 export default OutputDetailPage;

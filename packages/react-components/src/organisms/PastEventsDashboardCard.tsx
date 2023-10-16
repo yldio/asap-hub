@@ -72,7 +72,9 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
             <Link
               ellipsed
               href={
-                linksEnabled ? eventsRoute({}).event({ eventId: id }).$ : undefined
+                linksEnabled
+                  ? eventsRoute({}).event({ eventId: id }).$
+                  : undefined
               }
             >
               {title}

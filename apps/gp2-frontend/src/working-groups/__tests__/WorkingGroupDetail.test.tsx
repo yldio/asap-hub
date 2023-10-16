@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../../events/api';
+import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
 import {
   createEventListAlgoliaResponse,
@@ -77,9 +77,7 @@ describe('WorkingGroupDetail', () => {
       typeof putWorkingGroupResources
     >;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
-  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-    typeof getAlgoliaEvents
-  >;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
   const outputs = createOutputListAlgoliaResponse(1);
   outputs.hits[0]!.workingGroups = [

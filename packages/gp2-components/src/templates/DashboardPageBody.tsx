@@ -150,29 +150,30 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
         </div>
       )}
-      {isEnabled('DISPLAY_EVENTS') && (
-        <div>
-          <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-          <div css={infoStyles}>
-            Here are some of the upcoming GP2 Hub events.
-          </div>
-          <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-          {totalOfUpcomingEvents > 3 && (
-            <p css={viewAllStyles}>
-              <Button
-                data-testid="view-upcoming-events"
-                onClick={() =>
-                  history.push({
-                    pathname: gp2Routes.events({}).upcoming({}).$,
-                  })
-                }
-              >
-                View All
-              </Button>
-            </p>
-          )}
+      <div css={columnContainer}>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>
+          Here are some of the upcoming GP2 Hub events.
         </div>
-      )}
+        <DashboardUpcomingEvents
+          upcomingEvents={upcomingEvents}
+          linksEnabled={isEnabled('DISPLAY_EVENTS')}
+        />
+        {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-upcoming-events"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.events({}).upcoming({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
       <div css={columnContainer}>
         <Headline2>Latest Users</Headline2>
         <Paragraph accent="lead" noMargin>

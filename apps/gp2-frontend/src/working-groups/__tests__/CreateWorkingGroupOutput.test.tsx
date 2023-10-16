@@ -10,22 +10,25 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
-import { getTags, getContributingCohorts } from '../../shared/api';
+import { getProjects } from '../../projects/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
-import { getAlgoliaProjects } from '../../projects/api';
 import {
+  createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getWorkingGroup, getWorkingGroups } from '../api';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
 
+jest.mock('../../events/api.ts');
 jest.mock('../../outputs/api');
-jest.mock('../../users/api');
-jest.mock('../../shared/api');
 jest.mock('../../projects/api');
+jest.mock('../../shared/api');
+jest.mock('../../users/api');
 jest.mock('../api');
 
 jest.setTimeout(60_000);
@@ -48,9 +51,8 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
 const mockGetWorkingGroupById = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup
 >;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderCreateWorkingGroupOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -99,6 +101,7 @@ beforeEach(() => {
   mockGetContributingCohorts.mockResolvedValue(gp2.contributingCohortResponse);
   mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
   mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+  mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   mockGetWorkingGroupById.mockResolvedValue(
     gp2.createWorkingGroupResponse({ id: 'working-group-id-1' }),
   );

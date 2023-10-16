@@ -8,6 +8,7 @@ import { TabNav } from '.';
 import { paddingStyles } from '../card';
 
 const headerStyles = css({
+  display: 'grid',
   paddingBottom: 0,
   borderBottom: `1px solid ${steel.rgb}`,
 });

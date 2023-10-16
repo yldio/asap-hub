@@ -388,7 +388,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(relatedOutputs, newRelatedOutputs) ||
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (
-    <Form dirty={isFormDirty}>
+    <Form dirty={isFormDirty} serverErrors={serverValidationErrors}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
@@ -397,6 +397,11 @@ const OutputForm: React.FC<OutputFormProps> = ({
               subtitle={'(required)'}
               value={newTitle}
               customValidationMessage={titleValidationMessage}
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a title.'
+                  : undefined
+              }
               onChange={(newValue) => {
                 clearServerValidationError('/title');
                 setTitle(newValue);
@@ -413,8 +418,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 clearServerValidationError('/link');
                 setLink(newValue);
               }}
-              getValidationMessage={() =>
-                'Please enter a valid URL, starting with http://'
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a valid URL, starting with http://'
+                  : undefined
               }
               customValidationMessage={urlValidationMessage}
               value={newLink ?? ''}
@@ -734,8 +741,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 primary
                 noMargin
                 onClick={async () => {
-                  const output = await getWrappedOnSave(() =>
-                    shareOutput(currentPayload),
+                  const output = await getWrappedOnSave(
+                    () => shareOutput(currentPayload),
+                    (error) => setBannerMessage(error, 'output-form', 'error'),
                   )();
 
                   if (output && typeof output.id === 'string') {

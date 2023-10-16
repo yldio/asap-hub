@@ -736,7 +736,7 @@ describe('OutputForm', () => {
       });
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText('Please fill out this field.')).toBeVisible();
+      expect(screen.getByText('Please enter a title.')).toBeVisible();
     });
 
     it('shows the custom error message for a date in the future', async () => {

@@ -12,12 +12,7 @@ const styles = css({
   overflow: 'auto',
 });
 
-export type FormStatus =
-  | 'initial'
-  | 'isSaving'
-  | 'hasError'
-  | 'hasSaved'
-  | 'validityError';
+export type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';
 
 type FormProps<T> = {
   validate?: () => boolean;
@@ -28,7 +23,8 @@ type FormProps<T> = {
     setRedirectOnSave: (url: string) => void;
     getWrappedOnSave: (
       onSaveFunction: () => Promise<T | void>,
-    ) => () => Promise<T | string>;
+      addNotification: (error: string) => void,
+    ) => () => Promise<T | void>;
     onCancel: () => void;
   }) => ReactNode;
 };
@@ -59,19 +55,21 @@ const Form = <T extends void | Record<string, unknown>>({
   }, [serverErrors]);
 
   const getWrappedOnSave =
-    (onSaveFunction: () => Promise<T | void>) => async () => {
+    (
+      onSaveFunction: () => Promise<T | void>,
+      addNotification: (error: string) => void,
+    ) =>
+    async () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (!(formRef.current!.reportValidity() && validate())) {
-        setStatus('validityError');
-
-        return Promise.resolve(
+        addNotification(
           'There are some errors in the form. Please correct the fields below.',
         );
+        return Promise.resolve();
       }
       setStatus('isSaving');
       try {
         const result = await onSaveFunction();
-
         if (formRef.current && result) {
           setStatus('hasSaved');
         } else {
@@ -81,10 +79,11 @@ const Form = <T extends void | Record<string, unknown>>({
       } catch {
         if (formRef.current) {
           setStatus('hasError');
+          addNotification(
+            'There was an error and we were unable to save your changes. Please try again.',
+          );
         }
-        return Promise.resolve(
-          'There was an error and we were unable to save your changes. Please try again.',
-        );
+        return Promise.resolve();
       }
     };
 

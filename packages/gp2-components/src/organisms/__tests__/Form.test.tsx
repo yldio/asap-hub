@@ -1,11 +1,9 @@
-import {
-  InnerToastContext,
-  NotificationContext,
-} from '@asap-hub/react-context';
+import { NotificationContext } from '@asap-hub/react-context';
 import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
+import { ValidationErrorResponse } from '@asap-hub/model';
 import {
   Link,
   MemoryRouter,
@@ -135,12 +133,16 @@ describe('when saving', () => {
   describe('and the form is invalid', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
+      const addNotification = jest.fn();
       const { getByText } = render(
         <Form {...props} dirty>
           {({ getWrappedOnSave }) => (
             <>
               <input type="text" required />
-              <Button primary onClick={getWrappedOnSave(handleSave)}>
+              <Button
+                primary
+                onClick={getWrappedOnSave(handleSave, addNotification)}
+              >
                 save
               </Button>
             </>
@@ -155,20 +157,44 @@ describe('when saving', () => {
 
     it('does not call onSave when parent validation fails', () => {
       const handleSave = jest.fn(() => Promise.resolve());
+      const addNotificationOnSave = jest.fn();
       const handleValidate = jest.fn(() => false);
+      const serverErrors: ValidationErrorResponse['data'] = [
+        {
+          instancePath: '/link',
+          keyword: 'unique',
+          message: 'must be unique',
+          params: { type: 'string' },
+          schemaPath: '#/properties/link/unique',
+        },
+      ];
       const { getByText } = render(
-        <InnerToastContext.Provider value={jest.fn()}>
-          <Form {...props} validate={handleValidate} dirty>
+        <NotificationContext.Provider
+          value={{
+            notifications: [],
+            addNotification: jest.fn(),
+            removeNotification: jest.fn(),
+          }}
+        >
+          <Form
+            {...props}
+            validate={handleValidate}
+            serverErrors={serverErrors}
+            dirty
+          >
             {({ getWrappedOnSave }) => (
               <>
                 <input type="text" />
-                <Button primary onClick={getWrappedOnSave(handleSave)}>
+                <Button
+                  primary
+                  onClick={getWrappedOnSave(handleSave, addNotificationOnSave)}
+                >
                   save
                 </Button>
               </>
             )}
           </Form>
-        </InnerToastContext.Provider>,
+        </NotificationContext.Provider>,
         { wrapper: StaticRouter },
       );
 
@@ -185,6 +211,7 @@ describe('when saving', () => {
     let handleSave!: jest.MockedFunction<() => Promise<void>>;
     let resolveSave!: () => void;
     let rejectSave!: (error: Error) => void;
+    const addNotificationOnSave = jest.fn();
 
     beforeEach(() => {
       handleSave = jest.fn().mockReturnValue(
@@ -210,7 +237,10 @@ describe('when saving', () => {
                   <Button
                     primary
                     enabled={!isSaving}
-                    onClick={getWrappedOnSave(handleSave)}
+                    onClick={getWrappedOnSave(
+                      handleSave,
+                      addNotificationOnSave,
+                    )}
                   >
                     save
                   </Button>
@@ -290,7 +320,10 @@ describe('when saving', () => {
                     <Button
                       primary
                       enabled={!isSaving}
-                      onClick={getWrappedOnSave(handleSave)}
+                      onClick={getWrappedOnSave(
+                        handleSave,
+                        addNotificationOnSave,
+                      )}
                     >
                       save
                     </Button>
@@ -321,6 +354,11 @@ describe('when saving', () => {
 
         userEvent.click(getByText(/^save/i));
         await waitFor(() => expect(handleSave).toHaveBeenCalled());
+        await waitFor(() =>
+          expect(addNotificationOnSave).toHaveBeenCalledWith(
+            'There was an error and we were unable to save your changes. Please try again.',
+          ),
+        );
       });
 
       it('re-enables the save button', async () => {
@@ -345,5 +383,44 @@ describe('when saving', () => {
         );
       });
     });
+  });
+  it('sets redirect path', async () => {
+    const addNotificationOnSave = jest.fn();
+    const handleSave = jest.fn().mockReturnValue({ field: 'value' });
+    const result = render(
+      <NotificationContext.Provider
+        value={{
+          notifications: [],
+          addNotification: jest.fn(),
+          removeNotification: jest.fn(),
+        }}
+      >
+        <Router history={history}>
+          <Form {...props}>
+            {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
+              <>
+                <Link to={'/another-url'}>Navigate away</Link>
+                <Button
+                  primary
+                  enabled={!isSaving}
+                  onClick={async () => {
+                    await getWrappedOnSave(handleSave, addNotificationOnSave)();
+                    setRedirectOnSave('/another-url');
+                  }}
+                >
+                  save
+                </Button>
+              </>
+            )}
+          </Form>
+        </Router>
+      </NotificationContext.Provider>,
+    );
+
+    const { getByText } = result;
+
+    userEvent.click(getByText(/^save/i));
+
+    await waitFor(() => expect(history.location.pathname).toBe('/another-url'));
   });
 });

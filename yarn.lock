@@ -322,11 +322,11 @@ __metadata:
     "@babel/core": 7.23.2
     "@babel/preset-react": 7.22.15
     "@babel/runtime-corejs3": 7.23.2
-    "@types/auth0-js": 9.21.0
+    "@types/auth0-js": 9.21.1
     "@types/jest": 29.5.5
     "@types/node": 18.17.3
     "@types/pify": 5.0.2
-    auth0-js: 9.22.1
+    auth0-js: 9.23.0
     camelcase: 6.3.0
     pify: 5.0.0
     util: 0.12.5
@@ -16939,10 +16939,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:9.21.0":
-  version: 9.21.0
-  resolution: "@types/auth0-js@npm:9.21.0"
-  checksum: 4af3f5b124153b4e7fcbefa9a6becbf41807236f1feae61c38a97385010ad32efeb1a379fa99d1d3c89abe1ce61a6dc90754720b28ad0674a2d09d5cfa89a2c9
+"@types/auth0-js@npm:9.21.1":
+  version: 9.21.1
+  resolution: "@types/auth0-js@npm:9.21.1"
+  checksum: eccaf42bbf9a1c9466d6771505cf9705fed628eb74d3dcdbb880c1702c40ea3079043cd79b3cab871859f06bc982b68c2be474825abded4c6579fe8afd248215
   languageName: node
   linkType: hard
 
@@ -20965,9 +20965,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:9.22.1":
-  version: 9.22.1
-  resolution: "auth0-js@npm:9.22.1"
+"auth0-js@npm:9.23.0":
+  version: 9.23.0
+  resolution: "auth0-js@npm:9.23.0"
   dependencies:
     base64-js: ^1.5.1
     idtoken-verifier: ^2.2.2
@@ -20977,7 +20977,7 @@ __metadata:
     superagent: ^7.1.5
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 5dd6655df6ffa78982356e8acb059c24b43569921706595d3f5a1ae4f16ce2fa17a7ef3716f16c59ced9260bc25de07815ab7ae5db751e4da721babf93af2fd6
+  checksum: 024d7c872919a5907bac12ff332844139c5a4dd779b5d52e7c57d8a6d6713d7e48726482e211f95b12fb34a189589276c54b36ba6dce8654792a5ef7c212dca7
   languageName: node
   linkType: hard
 

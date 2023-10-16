@@ -133,13 +133,13 @@ const ResearchOutputExtraInformationCard: React.FC<
       )}
 
       <LabeledMultiSelect
-        title="Additional Keywords"
-        description="Increase the discoverability of this output by adding tags."
+        title="Additional Tags"
+        description="Increase the discoverability of this output by adding keywords."
         subtitle="(optional)"
         values={tags.map((tag) => ({ label: tag, value: tag }))}
         enabled={!isSaving}
         suggestions={tagSuggestions}
-        placeholder="Add a keyword (E.g. Cell Biology)"
+        placeholder="Start typing... (E.g. Cell Biology)"
         onChange={(options) => onChangeTags(options.map(({ value }) => value))}
       />
 

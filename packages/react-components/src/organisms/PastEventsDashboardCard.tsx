@@ -52,11 +52,11 @@ type PastEventsDashboardCardProps = {
     EventResponse,
     'id' | 'title' | 'startDate' | 'notes' | 'presentation' | 'videoRecording'
   >[];
-  enabled?: boolean;
+  linksEnabled?: boolean;
 };
 const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
   events,
-  enabled = true,
+  linksEnabled = true,
 }) => (
   <Card>
     <div css={container}>
@@ -72,7 +72,7 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
             <Link
               ellipsed
               href={
-                enabled ? eventsRoute({}).event({ eventId: id }).$ : undefined
+                linksEnabled ? eventsRoute({}).event({ eventId: id }).$ : undefined
               }
             >
               {title}

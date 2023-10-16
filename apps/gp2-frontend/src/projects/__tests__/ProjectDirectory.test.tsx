@@ -10,23 +10,21 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { PAGE_SIZE } from '../../hooks';
 import { useSearch } from '../../hooks/search';
 import {
   createProjectAlgoliaRecord,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getAlgoliaProjects } from '../api';
-import { projectsState } from '../state';
+import { getProjects } from '../api';
 import ProjectDirectory from '../ProjectDirectory';
-import { PAGE_SIZE } from '../../hooks';
+import { projectsState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../hooks/search');
 
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const mockToggleFilter = jest.fn();
 

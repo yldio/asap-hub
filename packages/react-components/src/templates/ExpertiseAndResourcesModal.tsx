@@ -75,7 +75,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
               <LabeledMultiSelect
                 title="Tags"
                 subtitle="(Required)"
-                description="Select 5 to 10 keywords that best apply to your work."
+                description="Select 5 to 10 tags that best apply to your work."
                 placeholder="Start typing…"
                 values={newExpertiseAndResourceTags.map((tag) => ({
                   label: tag,

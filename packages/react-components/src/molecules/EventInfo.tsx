@@ -55,6 +55,7 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
     titleLimit?: number | null;
     eventSpeakers?: React.ReactNode;
     eventTeams?: React.ReactNode;
+    linksEnabled?: boolean;
   };
 
 const EventInfo: React.FC<EventInfoProps> = ({
@@ -64,6 +65,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   eventOwner,
   status,
   titleLimit = TITLE_LIMIT,
+  linksEnabled = true,
   eventSpeakers,
   eventTeams,
   tags,
@@ -76,7 +78,9 @@ const EventInfo: React.FC<EventInfoProps> = ({
   );
 
   const link =
-    status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
+    status === 'Cancelled' || !linksEnabled
+      ? undefined
+      : events({}).event({ eventId: id }).$;
 
   return (
     <div css={cardStyles}>

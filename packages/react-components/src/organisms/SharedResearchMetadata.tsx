@@ -14,15 +14,17 @@ const styles = css({
 type SharedResearchMetadataProps = {
   pills: string[];
   link?: string;
+  small?: boolean;
 };
 
 const SharedResearchMetadata: React.FC<SharedResearchMetadataProps> = ({
   pills,
   link,
+  small = true,
 }) => (
   <div css={styles}>
     <div css={css({ padding: `${rem(4)} 0` })}>
-      <PillList pills={pills} />
+      <PillList small={small} pills={pills} />
     </div>
     {link ? <ExternalLink href={link} label="Access Output" /> : null}
   </div>

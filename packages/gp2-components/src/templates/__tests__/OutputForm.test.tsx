@@ -215,7 +215,7 @@ describe('OutputForm', () => {
         type: 'success',
       }),
     );
-    expect(history.location.pathname).toEqual(`/outputs`);
+    expect(history.location.pathname).toEqual(`/outputs/ro0`);
   });
 
   it('can submit published date', async () => {
@@ -436,7 +436,7 @@ describe('OutputForm', () => {
         tagIds: [],
         contributingCohortIds: [],
       });
-      expect(history.location.pathname).toEqual(`/outputs`);
+      expect(history.location.pathname).toEqual(`/outputs/ro0`);
     });
   });
 

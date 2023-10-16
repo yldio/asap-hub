@@ -292,7 +292,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const setBannerMessage = (message: string) =>
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'outputs',
+      page: 'output',
       type: 'success',
     });
 
@@ -694,8 +694,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   const output = await getWrappedOnSave(() =>
                     shareOutput(currentPayload),
                   )();
-                  if (output) {
-                    const path = gp2Routing.outputs({}).$;
+
+                  if (output && typeof output.id === 'string') {
+                    const path = gp2Routing
+                      .outputs({})
+                      .output({ outputId: output.id }).$;
+
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
                     );

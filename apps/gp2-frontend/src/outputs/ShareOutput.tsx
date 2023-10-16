@@ -1,6 +1,9 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { useRelatedOutputSuggestions } from '../outputs';
+import {
+  useRelatedEventsSuggestions,
+  useRelatedOutputSuggestions,
+} from '../outputs';
 import { useProjects } from '../projects/state';
 import { useContributingCohorts, useTags } from '../shared/state';
 import { useWorkingGroupsState } from '../working-groups/state';
@@ -18,6 +21,7 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
   const shareOutput = useUpdateOutput(output.id);
   const getAuthorSuggestions = useAuthorSuggestions();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions(output.id);
+  const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
   const { items: workingGroupSuggestions } = useWorkingGroupsState();
@@ -39,6 +43,7 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        getRelatedEventSuggestions={getRelatedEventSuggestions}
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}

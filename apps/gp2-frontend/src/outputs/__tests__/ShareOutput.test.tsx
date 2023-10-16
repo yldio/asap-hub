@@ -1,32 +1,35 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { gp2 } from '@asap-hub/fixtures';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
-import { getOutputs, updateOutput } from '../api';
-import { getTags, getContributingCohorts } from '../../shared/api';
-import { getAlgoliaProjects } from '../../projects/api';
+import { getProjects } from '../../projects/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
-import ShareOutput from '../ShareOutput';
 import {
+  createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
+import { getOutputs, updateOutput } from '../api';
+import ShareOutput from '../ShareOutput';
 
 jest.mock('../api');
 jest.mock('../../shared/api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
+jest.mock('../../events/api.ts');
 
 const mockUpdateOutput = updateOutput as jest.MockedFunction<
   typeof updateOutput
@@ -40,13 +43,12 @@ const mockGetContributingCohorts =
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderShareOutput = async (
   path: string,
-  output: gp2Model.OutputBaseResponse = gp2.createOutputResponse(),
+  output: gp2Model.OutputBaseResponse = gp2Fixtures.createOutputResponse(),
 ) => {
   render(
     <RecoilRoot>
@@ -83,12 +85,15 @@ describe('ShareOutput', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
-    mockGetTags.mockResolvedValue(gp2.createTagsResponse());
+    mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
     mockGetContributingCohorts.mockResolvedValue(
-      gp2.contributingCohortResponse,
+      gp2Fixtures.contributingCohortResponse,
     );
-    mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
+    mockGetWorkingGroups.mockResolvedValue(
+      gp2Fixtures.createWorkingGroupsResponse(),
+    );
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();
@@ -102,10 +107,10 @@ describe('ShareOutput', () => {
     const link = 'https://example.com';
     const id = 'output-id';
 
-    mockUpdateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
+    mockUpdateOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
 
     await renderShareOutput(getEditPath(id), {
-      ...gp2.createOutputResponse(),
+      ...gp2Fixtures.createOutputResponse(),
       id,
       title,
       link,

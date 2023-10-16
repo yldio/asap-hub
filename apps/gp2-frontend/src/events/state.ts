@@ -14,7 +14,7 @@ import {
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import { usePaginationParams } from '../hooks/pagination';
-import { EventListOptions, getAlgoliaEvents, getEvent } from './api';
+import { EventListOptions, getEvent, getEvents } from './api';
 
 const eventIndexState = atomFamily<
   | {
@@ -101,7 +101,7 @@ export const useEvents = (options: EventListOptions) => {
   const [events, setEvents] = useRecoilState(eventsState(options));
   const { client } = useAlgolia();
   if (events === undefined) {
-    throw getAlgoliaEvents(client, options)
+    throw getEvents(client, options)
       .then(
         (data): gp2.ListEventResponse => ({
           total: data.nbHits,

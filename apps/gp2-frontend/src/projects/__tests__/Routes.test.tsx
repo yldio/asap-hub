@@ -15,7 +15,7 @@ import {
   createProjectAlgoliaRecord,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getAlgoliaProjects } from '../api';
+import { getProjects } from '../api';
 import Routes from '../Routes';
 
 mockConsoleError();
@@ -45,9 +45,7 @@ beforeEach(() => {
 });
 
 jest.mock('../api');
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 describe('Routes', () => {
   it('renders a list of projects', async () => {
     const firstGroup = gp2.createProjectResponse({

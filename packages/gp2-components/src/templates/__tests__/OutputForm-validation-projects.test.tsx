@@ -14,6 +14,7 @@ describe('OutputForm', () => {
     projectSuggestions: [],
     mainEntityId: '12',
     getRelatedOutputSuggestions: jest.fn(),
+    getRelatedEventSuggestions: jest.fn(),
   };
 
   describe('validation', () => {

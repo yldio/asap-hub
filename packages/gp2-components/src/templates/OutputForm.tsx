@@ -292,7 +292,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const setBannerMessage = (message: string) =>
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'outputs',
+      page: 'output',
       type: 'success',
     });
 

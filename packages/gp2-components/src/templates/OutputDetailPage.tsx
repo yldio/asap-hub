@@ -68,7 +68,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
   ...output
 }: OutputDetailPageProps) => (
-  <PageNotifications page="outputs">
+  <PageNotifications page="output">
     {(notification) => (
       <article
         css={notification ? { position: 'relative', marginTop: rem(48) } : {}}

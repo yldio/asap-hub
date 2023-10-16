@@ -211,7 +211,7 @@ describe('OutputForm', () => {
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
         message: 'Working group code/software published successfully.',
-        page: 'outputs',
+        page: 'output',
         type: 'success',
       }),
     );

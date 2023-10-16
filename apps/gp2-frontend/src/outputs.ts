@@ -1,4 +1,3 @@
-import { getEvents } from './events/api';
 import {
   BackendError,
   validationErrorsAreSupported,
@@ -7,6 +6,7 @@ import {
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
+import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
 import { getOutputs } from './outputs/api';
 

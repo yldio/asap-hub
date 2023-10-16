@@ -70,6 +70,7 @@ const Form = <T extends void | Record<string, unknown>>({
       setStatus('isSaving');
       try {
         const result = await onSaveFunction();
+
         if (formRef.current && result) {
           setStatus('hasSaved');
         } else {

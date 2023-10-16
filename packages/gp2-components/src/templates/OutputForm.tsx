@@ -369,9 +369,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
     );
   }, [serverValidationErrors]);
 
-  const isFieldDirty = (original: string = '', current: string) =>
-    current !== original;
-
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||

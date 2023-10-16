@@ -12,6 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { OutputFormPage } from '@asap-hub/gp2-components';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
@@ -66,7 +67,9 @@ const renderShareOutput = async (
                 }
               >
                 <NotificationMessages>
-                  <ShareOutput output={output} />
+                  <OutputFormPage>
+                    <ShareOutput output={output} />
+                  </OutputFormPage>
                 </NotificationMessages>
               </Route>
             </MemoryRouter>
@@ -132,13 +135,6 @@ describe('ShareOutput', () => {
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
-    mockUpdateOutput.mockResolvedValueOnce({
-      ...gp2Fixtures.createOutputResponse(),
-      id,
-      title,
-      link,
-      projects: [{ id: '42', title: 'a title' }],
-    });
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -148,7 +144,7 @@ describe('ShareOutput', () => {
       ],
     };
 
-    mockUpdateOutput.mockRejectedValue(
+    mockUpdateOutput.mockRejectedValueOnce(
       new BackendError('example', validationResponse, 400),
     );
 
@@ -180,5 +176,31 @@ describe('ShareOutput', () => {
         'An Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeNull();
+  });
+
+  it('will toast server side errors for unknown errors', async () => {
+    const title = 'Output title';
+    const link = 'https://example.com';
+    const id = 'output-id';
+    mockUpdateOutput.mockRejectedValueOnce(new Error('Something went wrong'));
+
+    await renderShareOutput(getEditPath(id), {
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+      title,
+      link,
+      projects: [{ id: '42', title: 'a title' }],
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
+
+    expect(mockUpdateOutput).toHaveBeenCalled();
+    expect(
+      screen.queryByText(
+        'There was an error and we were unable to save your changes. Please try again.',
+      ),
+    ).toBeInTheDocument();
+    expect(window.scrollTo).toBeCalled();
   });
 });

@@ -133,15 +133,15 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
           </Paragraph>
         </div>
         <div css={[rowStyles, gridTitleStyles]}>
-          {tableTitles.map((title) => (
-            <span key={title} css={titleStyles}>
-              {title}
+          {tableTitles.map((headerTitle) => (
+            <span key={headerTitle} css={titleStyles}>
+              {headerTitle}
             </span>
           ))}
         </div>
         {relatedResearch
           .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, title, type, ...output }) => (
+          .map(({ id, documentType, title: outputTitle, type, ...output }) => (
             <div
               key={id}
               css={'entity' in output ? [rowStyles, rowDivider] : [rowStyles]}
@@ -165,7 +165,7 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
                       : gp2Routing.outputs({}).output({ outputId: id }).$
                   }
                 >
-                  {title}
+                  {outputTitle}
                 </Link>
               </p>
               <span css={[titleStyles, rowTitleStyles]}>{tableTitles[2]}</span>

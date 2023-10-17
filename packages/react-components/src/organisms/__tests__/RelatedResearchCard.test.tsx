@@ -94,7 +94,7 @@ it('displays the related research links and icons given a related research with 
           entity: {
             id: 'wg-1',
             title: 'Working Group 1',
-            type: 'workingGroups',
+            type: 'WorkingGroups',
           },
         },
       ]}
@@ -125,7 +125,7 @@ it('displays the related research links and icons given a related research with 
           entity: {
             id: 'project-1',
             title: 'Project 1',
-            type: 'projects',
+            type: 'Projects',
           },
         },
       ]}

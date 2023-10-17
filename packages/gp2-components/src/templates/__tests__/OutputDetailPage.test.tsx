@@ -49,7 +49,7 @@ describe('OutputDetailPage', () => {
             entity: {
               id: 'wg-1',
               title: 'Working Group 1',
-              type: 'workingGroups',
+              type: 'WorkingGroups',
             },
           },
         ]}

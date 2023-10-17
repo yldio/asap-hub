@@ -85,11 +85,7 @@ export type RelatedOutputs = {
   title: string;
   type?: OutputType;
   documentType: OutputDocumentType;
-  entity?: {
-    type: 'projects' | 'workingGroups';
-    id: string;
-    title: string;
-  };
+  entity?: OutputOwner;
 };
 export type OutputCoreObject = {
   addedDate: string;

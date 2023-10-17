@@ -21,6 +21,6 @@ it('tests getIconForDocumentType return the correct icon', () => {
 });
 
 it('tests getSourceIcon return the correct icon', () => {
-  expect(getSourceIcon('Project')).toEqual(projectIcon);
-  expect(getSourceIcon('Working Group')).toEqual(workingGroupIcon);
+  expect(getSourceIcon('Projects')).toEqual(projectIcon);
+  expect(getSourceIcon('WorkingGroups')).toEqual(workingGroupIcon);
 });

@@ -98,7 +98,7 @@ type RelatedResearchCardProp = {
     | gp2.OutputResponse['relatedOutputs'];
   title?: string;
   getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
-  getSourceIcon?: (source: 'Project' | 'Working Group') => EmotionJSX.Element;
+  getSourceIcon?: (source: gp2.OutputOwner['type']) => EmotionJSX.Element;
   tableTitles?: [string, string, string]; // ensuring it has exactly 3 elements
 };
 
@@ -204,16 +204,12 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
                 getSourceIcon && (
                   <div css={paragraphStyle}>
                     <div css={iconStyles}>
-                      {getSourceIcon(
-                        output.entity?.type === 'workingGroups'
-                          ? 'Working Group'
-                          : 'Project',
-                      )}
+                      {getSourceIcon(output.entity?.type)}
                     </div>
                     <Link
                       ellipsed
                       href={
-                        output.entity?.type === 'workingGroups'
+                        output.entity?.type === 'WorkingGroups'
                           ? gp2Routing.workingGroups({}).workingGroup({
                               workingGroupId: output.entity.id,
                             }).$

@@ -330,14 +330,7 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
       entity: relatedEntitiesCollection?.items.length
-        ? {
-            type: (relatedEntitiesCollection?.items[0]?.__typename ===
-            'Projects'
-              ? 'projects'
-              : 'workingGroups') as 'projects' | 'workingGroups',
-            id: relatedEntitiesCollection?.items[0]?.sys.id || '',
-            title: relatedEntitiesCollection?.items[0]?.title || '',
-          }
+        ? getEntity(relatedEntitiesCollection?.items[0])
         : undefined,
     })) || [];
 export const parseContentfulGraphQLOutput = (

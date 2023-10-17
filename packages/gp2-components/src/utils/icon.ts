@@ -1,3 +1,4 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   outputArticle,
@@ -31,7 +32,5 @@ export const getIconForDocumentType = (
   }
 };
 
-export const getSourceIcon = (source: 'Project' | 'Working Group') => {
-  if (source === 'Project') return projectIcon;
-  return workingGroupIcon;
-};
+export const getSourceIcon = (source: gp2Model.OutputOwner['type']) =>
+  source === 'Projects' ? projectIcon : workingGroupIcon;

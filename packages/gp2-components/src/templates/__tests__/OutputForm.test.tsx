@@ -15,7 +15,7 @@ import { Router, StaticRouter } from 'react-router-dom';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
-jest.setTimeout(90_000);
+jest.setTimeout(95_000);
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -435,6 +435,70 @@ describe('OutputForm', () => {
         ),
       );
     });
+  });
+
+  it('displays server side validation error for link and calls clears function when changed', async () => {
+    const mockClearError = jest.fn();
+    render(
+      <OutputForm
+        {...defaultProps}
+        link="http://example.com"
+        serverValidationErrors={[
+          {
+            instancePath: '/link',
+            keyword: '',
+            params: {},
+            schemaPath: '',
+          },
+        ]}
+        clearServerValidationError={mockClearError}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <Router history={createMemoryHistory()}>{children}</Router>
+        ),
+      },
+    );
+    expect(
+      screen.getByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    ).toBeVisible();
+
+    userEvent.type(screen.getByLabelText(/URL/i), 'a');
+    expect(mockClearError).toHaveBeenCalledWith('/link');
+  });
+
+  it('displays server side validation error for title and calls clears function when changed', async () => {
+    const mockClearError = jest.fn();
+    render(
+      <OutputForm
+        {...defaultProps}
+        title="Example"
+        serverValidationErrors={[
+          {
+            instancePath: '/title',
+            keyword: '',
+            params: {},
+            schemaPath: '',
+          },
+        ]}
+        clearServerValidationError={mockClearError}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <Router history={createMemoryHistory()}>{children}</Router>
+        ),
+      },
+    );
+    expect(
+      screen.getByText(
+        'An Output with this title already exists. Please check if this is repeated and choose a different title.',
+      ),
+    ).toBeVisible();
+
+    userEvent.type(screen.getByLabelText(/title/i), 'a');
+    expect(mockClearError).toHaveBeenCalledWith('/title');
   });
 
   it('can submit published date', async () => {

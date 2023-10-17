@@ -29,7 +29,7 @@ it('displays the related research card header and description', () => {
       'Find out all shared research outputs that contributed to this one.',
     ),
   ).toBeVisible();
-  expect(queryByText('View More Outputs')).toBeNull();
+  expect(queryByText('View More Outputs')).not.toBeInTheDocument();
 });
 
 it('displays the related research card header and description passed by props', () => {
@@ -214,7 +214,7 @@ it('displays the view more outputs button', () => {
   );
 
   expect(getByRole('button', { name: 'View More Outputs' })).toBeVisible();
-  expect(queryByText('Last related research output')).toBeNull();
+  expect(queryByText('Last related research output')).not.toBeInTheDocument();
 
   const button = getByRole('button', { name: 'View More Outputs' });
   fireEvent.click(button);

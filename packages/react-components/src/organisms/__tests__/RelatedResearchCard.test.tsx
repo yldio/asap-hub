@@ -9,6 +9,7 @@ import RelatedResearchCard from '../RelatedResearchCard';
 const props: ComponentProps<typeof RelatedResearchCard> = {
   relatedResearch: [],
   description: '',
+  getIconForDocumentType: jest.fn(),
 };
 
 it('displays the related research card header and description', () => {

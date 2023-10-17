@@ -15,5 +15,6 @@ it('tests getIconForDocumentType return the correct icon', () => {
   expect(getIconForDocumentType('Bioinformatics')).toEqual(bioinformatics);
   expect(getIconForDocumentType('Lab Resource')).toEqual(labResource);
   expect(getIconForDocumentType('Grant Document')).toEqual(grantDocument);
-  expect(getIconForDocumentType('')).toEqual(protocol);
+  expect(getIconForDocumentType('Presentation')).toEqual(protocol);
+  expect(getIconForDocumentType('Report')).toEqual(protocol);
 });

@@ -1,4 +1,8 @@
-import { EventResponse, gp2 } from '@asap-hub/model';
+import {
+  EventResponse,
+  gp2,
+  ResearchOutputDocumentType,
+} from '@asap-hub/model';
 import { sharedResearch, network, gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -7,7 +11,6 @@ import { useState } from 'react';
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
-import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 
 const container = css({
   display: 'grid',
@@ -97,7 +100,9 @@ type RelatedResearchCardProp = {
     | EventResponse['relatedResearch']
     | gp2.OutputResponse['relatedOutputs'];
   title?: string;
-  getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
+  getIconForDocumentType:
+    | ((documentType: ResearchOutputDocumentType) => EmotionJSX.Element)
+    | ((documentType: gp2.OutputDocumentType) => EmotionJSX.Element);
   getSourceIcon?: (source: gp2.OutputOwner['type']) => EmotionJSX.Element;
   tableTitles?: [string, string, string]; // ensuring it has exactly 3 elements
 };
@@ -106,8 +111,8 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
   relatedResearch,
   description,
   getSourceIcon,
+  getIconForDocumentType,
   title = 'Related Research',
-  getIconForDocumentType = getIconForDocumentTypeCRN,
   tableTitles = [
     'Document Type',
     'Shared Output Name',
@@ -148,7 +153,7 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
             >
               <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
               <p css={paragraphStyle}>
-                {getIconForDocumentType(documentType)} {documentType}{' '}
+                {getIconForDocumentType(documentType as any)} {documentType}{' '}
                 {documentType === 'Article' && (
                   <Pill accent="gray">{type}</Pill>
                 )}

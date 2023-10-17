@@ -23,6 +23,7 @@ import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
+import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -268,6 +269,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             <RelatedResearchCard
               description="Find out all shared research outputs that contributed to this one."
               relatedResearch={relatedResearch}
+              getIconForDocumentType={getIconForDocumentTypeCRN}
             />
           )}
           {versions.length > 0 && <OutputVersions versions={versions} />}

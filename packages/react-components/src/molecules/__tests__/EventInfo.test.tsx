@@ -79,7 +79,7 @@ it('only links to events that are not cancelled', () => {
   expect(screen.getByText(/My Event/).closest('a')).toHaveAttribute('href');
 
   rerender(<EventInfo {...props} title="My Event" status="Cancelled" />);
-  expect(screen.getByText(/My Event/).closest('a')).not.toHaveAttribute('href');
+  expect(screen.getByText(/My Event/).closest('a')).toBeNull();
 });
 
 it('displays the tags', () => {

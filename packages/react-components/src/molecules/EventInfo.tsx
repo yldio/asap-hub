@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
+import { Headline3 } from '..';
 import { neutral900 } from '../colors';
 import { eventPlaceholderIcon } from '../icons';
 import { largeDesktopScreen, perRem, rem } from '../pixels';
@@ -92,10 +93,17 @@ const EventInfo: React.FC<EventInfoProps> = ({
         )}
       </div>
       <div>
-        <LinkHeadline level={3} styleAsHeading={4} href={link}>
-          {title.substr(0, titleLimit ?? undefined)}
-          {titleLimit && title.length > titleLimit ? '…' : undefined}
-        </LinkHeadline>
+        {link ? (
+          <LinkHeadline level={3} styleAsHeading={4} href={link}>
+            {title.substring(0, titleLimit ?? undefined)}
+            {titleLimit && title.length > titleLimit ? '…' : undefined}
+          </LinkHeadline>
+        ) : (
+          <Headline3 styleAsHeading={4}>
+            {title.substring(0, titleLimit ?? undefined)}
+            {titleLimit && title.length > titleLimit ? '…' : undefined}
+          </Headline3>
+        )}
         <EventTime {...props} />
         <div css={widthStyles}>
           {eventOwner}

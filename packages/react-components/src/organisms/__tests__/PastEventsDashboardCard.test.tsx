@@ -53,5 +53,5 @@ it('renders an event with disabled links', () => {
       linksEnabled={false}
     />,
   );
-  expect(screen.getByText('An Event').closest('a')).not.toHaveAttribute('href');
+  expect(screen.queryByRole('links')).not.toBeInTheDocument();
 });

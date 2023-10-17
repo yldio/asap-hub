@@ -14,7 +14,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-  overflow: 'scroll',
+  overflow: 'auto',
 });
 
 const commonStyles = {

@@ -7,6 +7,7 @@ import { Button, Card, Headline2, Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
 import { formatDateToTimezone } from '../date';
+import { OutputBaseResponse } from '@asap-hub/model/src/gp2';
 
 const container = css({
   display: 'grid',
@@ -75,13 +76,18 @@ const showMoreStyles = css({
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
-type RelatedEventsCardProps = Pick<ResearchOutputResponse, 'relatedEvents'> & {
+type RelatedEventsCardProps = (
+  | Pick<ResearchOutputResponse, 'relatedEvents'>
+  | Pick<OutputBaseResponse, 'relatedEvents'>
+) & {
   truncateFrom?: number;
+  hub?: 'GP2' | 'CRN';
 };
 
 const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
   relatedEvents,
   truncateFrom = Number.POSITIVE_INFINITY,
+  hub = 'CRN',
 }) => {
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = relatedEvents.length > truncateFrom;
@@ -93,15 +99,15 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
           ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
         ]}
       >
-        <Headline2 noMargin>Related CRN Hub Events</Headline2>
+        <Headline2 noMargin>Related {hub} Hub Events</Headline2>
         <div css={descriptionStyles}>
           <Paragraph noMargin accent="lead">
-            Find all CRN Hub events that are related to this output.
+            Find all {hub} Hub events that are related to this output.
           </Paragraph>
         </div>
         {relatedEvents.length === 0 ? (
           <Paragraph noMargin accent="lead">
-            <b>No related CRN Hub events available.</b>
+            <b>No related {hub} Hub events available.</b>
           </Paragraph>
         ) : (
           <div css={gridStyles}>

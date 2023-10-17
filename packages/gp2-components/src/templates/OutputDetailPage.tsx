@@ -1,5 +1,11 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { Link, pixels, editIcon, mail } from '@asap-hub/react-components';
+import {
+  Link,
+  pixels,
+  editIcon,
+  mail,
+  RelatedEventsCard,
+} from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
@@ -61,6 +67,7 @@ type OutputDetailPageProps = Pick<
   | 'title'
   | 'type'
   | 'workingGroups'
+  | 'relatedEvents'
 > & {
   isAdministrator: boolean;
 };
@@ -95,6 +102,11 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
             </div>
           ) : null}
           <OutputCard {...output} detailedView />
+          <RelatedEventsCard
+            relatedEvents={output.relatedEvents}
+            truncateFrom={3}
+            hub="GP2"
+          />
           <CtaCard
             href={createMailTo(INVITE_SUPPORT_EMAIL)}
             buttonText="Contact Tech Support"

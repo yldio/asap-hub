@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, gp2 } from '@asap-hub/model';
 import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
@@ -7,7 +7,6 @@ import { Button, Card, Headline2, Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
 import { formatDateToTimezone } from '../date';
-import { OutputBaseResponse } from '@asap-hub/model/src/gp2';
 
 const container = css({
   display: 'grid',
@@ -78,7 +77,7 @@ const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 type RelatedEventsCardProps = (
   | Pick<ResearchOutputResponse, 'relatedEvents'>
-  | Pick<OutputBaseResponse, 'relatedEvents'>
+  | Pick<gp2.OutputBaseResponse, 'relatedEvents'>
 ) & {
   truncateFrom?: number;
   hub?: 'GP2' | 'CRN';

@@ -4,7 +4,7 @@ module.exports.up = (migration) => {
   const contributingCohorts = migration.editContentType(
     'contributingCohortsMembership',
   );
-  contributingCohorts.deleteContentType('studyLink');
+  contributingCohorts.deleteField('studyLink');
 };
 
 module.exports.down = (migration) => {

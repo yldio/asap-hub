@@ -100,6 +100,20 @@ const containerStyles = css({
   flexDirection: 'column',
   gap: rem(32),
 });
+
+const tooltipTextStyles = css({
+  fontSize: rem(12),
+  margin: 0,
+});
+
+const tooltipBubbleStyles = css({
+  padding: rem(5),
+});
+
+const tooltipTooltipStyles = css({
+  left: '100%',
+});
+
 type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
@@ -497,6 +511,11 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 ]}
                 value={newGp2Supported}
                 onChange={setGp2Supported}
+                tooltipTextStyles={tooltipTextStyles}
+                tooltipBubbleStyles={tooltipBubbleStyles}
+                tooltipTooltipStyles={tooltipTooltipStyles}
+                hasTooltip
+                tooltipText="This option is not available for this document type."
               />
             ) : null}
             <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
@@ -516,6 +535,11 @@ const OutputForm: React.FC<OutputFormProps> = ({
               ]}
               value={newSharingStatus}
               onChange={setSharingStatus}
+              tooltipTextStyles={tooltipTextStyles}
+              tooltipTooltipStyles={tooltipTooltipStyles}
+              tooltipBubbleStyles={tooltipBubbleStyles}
+              hasTooltip
+              tooltipText="This option is not available for this document type."
             />
             {newSharingStatus === 'Public' ? (
               <LabeledDateField

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { ComponentProps, useRef } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import { css } from '@emotion/react';
 
@@ -7,14 +7,21 @@ import { noop } from '../utils';
 import { LabeledRadioButton } from '.';
 import { mobileScreen, perRem } from '../pixels';
 
-export interface LabeledRadioButtonGroupProps<V extends string> {
+export type LabeledRadioButtonGroupProps<V extends string> = {
   readonly title?: string;
   readonly subtitle?: string;
   readonly options: ReadonlyArray<Option<V>>;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
-}
+} & Pick<
+  ComponentProps<typeof LabeledRadioButton>,
+  | 'tooltipTextStyles'
+  | 'tooltipBubbleStyles'
+  | 'hasTooltip'
+  | 'tooltipText'
+  | 'tooltipTooltipStyles'
+>;
 
 const optionListStyles = css({
   display: 'grid',
@@ -38,9 +45,13 @@ export default function LabeledRadioButtonGroup<V extends string>({
   title,
   subtitle,
   options,
-
   value,
   onChange = noop,
+  hasTooltip,
+  tooltipTextStyles,
+  tooltipBubbleStyles,
+  tooltipTooltipStyles,
+  tooltipText,
 }: LabeledRadioButtonGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
   return (
@@ -60,6 +71,11 @@ export default function LabeledRadioButtonGroup<V extends string>({
             title={option.label}
             checked={option.value === value}
             onSelect={() => onChange(option.value)}
+            tooltipBubbleStyles={tooltipBubbleStyles}
+            tooltipTextStyles={tooltipTextStyles}
+            tooltipTooltipStyles={tooltipTooltipStyles}
+            hasTooltip={hasTooltip}
+            tooltipText={tooltipText}
           />
         ))}
       </div>

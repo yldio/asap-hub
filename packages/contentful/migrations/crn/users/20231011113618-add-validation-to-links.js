@@ -8,7 +8,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
       message:
@@ -20,7 +20,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
       message:
@@ -32,7 +32,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
       message:
@@ -44,7 +44,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
     },
@@ -57,7 +57,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
       message:
@@ -69,7 +69,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
       },
       message:
@@ -81,9 +81,8 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
         flags: null,
-        // message: 'This is the custom error 1',
       },
       message: 'This is the custom error 2',
     },
@@ -142,7 +141,5 @@ module.exports.down = (migration) => {
   });
   users.editField('researcherId').validations([]);
 
-  users.changeFieldControl('orcid', 'builtin', 'singleLine', {});
-  users.changeFieldControl('researchGate', 'builtin', 'singleLine', {});
   users.changeFieldControl('researcherId', 'builtin', 'singleLine', {});
 };

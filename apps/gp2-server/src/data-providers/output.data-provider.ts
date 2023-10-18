@@ -375,7 +375,7 @@ export const parseContentfulGraphQLOutput = (
       data.sharingStatus && isSharingStatus(data.sharingStatus)
         ? data.sharingStatus
         : 'GP2 Only',
-    publishDate: data.publishDate,
+    publishDate: data.publishDate ?? undefined,
     addedDate: data.addedDate ?? '',
     lastUpdatedPartial:
       data.lastUpdatedPartial ??

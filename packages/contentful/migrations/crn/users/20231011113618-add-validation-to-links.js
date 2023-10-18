@@ -7,8 +7,7 @@ module.exports.up = (migration) => {
   users.editField('linkedIn').validations([
     {
       regexp: {
-        pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+        pattern: '^https:\\/\\/(www\\.)?linkedin\\.com\\/in\\/[\\w\\-]+\\/?$',
         flags: null,
       },
       message:
@@ -19,8 +18,7 @@ module.exports.up = (migration) => {
   users.editField('twitter').validations([
     {
       regexp: {
-        pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+        pattern: '^https:\\/\\/(www\\.)?twitter\\.com\\/[\\w\\d_]+\\/?$',
         flags: null,
       },
       message:
@@ -31,8 +29,7 @@ module.exports.up = (migration) => {
   users.editField('github').validations([
     {
       regexp: {
-        pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+        pattern: '^https:\\/\\/(www\\.)?github\\.com\\/[\\w\\d\\-]+\\/?$',
         flags: null,
       },
       message:
@@ -44,7 +41,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^https:\\/\\/scholar\\.google\\.com\\/citations\\?user=[\\w\\d\\-_]+',
         flags: null,
       },
     },
@@ -57,7 +54,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^https:\\/\\/orcid\\.org\\/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]\\/?$',
         flags: null,
       },
       message:
@@ -69,7 +66,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          '^https:\\/\\/(www\\.)?researchgate\\.net\\/profile\\/[\\w\\d\\-_]+\\/?$',
         flags: null,
       },
       message:

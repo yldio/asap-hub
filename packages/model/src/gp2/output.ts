@@ -80,6 +80,12 @@ export type DecisionOption = (typeof decisionOptions)[number];
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
 export type OutputSharingStatus = (typeof sharingStatuses)[number];
+
+export type OutputOwner = {
+  id: string;
+  title: string;
+  type?: 'Projects' | 'WorkingGroups';
+};
 export type RelatedOutputs = {
   id: string;
   title: string;
@@ -115,12 +121,6 @@ export type UserAuthor = {
   displayName: string;
   onboarded: boolean;
   avatarUrl?: string;
-};
-
-export type OutputOwner = {
-  id: string;
-  title: string;
-  type?: 'Projects' | 'WorkingGroups';
 };
 export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {

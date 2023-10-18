@@ -70,7 +70,7 @@ it('displays the related research links and icons', () => {
       ]}
     />,
   );
-  expect(getAllByText('Article').length).toEqual(2);
+  expect(getAllByText('Article').length).toEqual(1);
   expect(getByText('Preprint')).toBeVisible();
   expect(getByRole('link', { name: 'Team 1' })).toHaveAttribute(
     'href',
@@ -102,7 +102,7 @@ it('displays the related research links and icons given a related research with 
       getSourceIcon={jest.fn()}
     />,
   );
-  expect(getAllByText('Article').length).toEqual(2);
+  expect(getAllByText('Article').length).toEqual(1);
   expect(getByText('Blog')).toBeVisible();
   expect(getByRole('link', { name: 'Working Group 1' })).toHaveAttribute(
     'href',

@@ -82,12 +82,12 @@ describe('Outputs data provider', () => {
     });
     describe('related outputs', () => {
       test.each`
-        type               | typename
-        ${`workingGroups`} | ${`WorkingGroups`}
-        ${`projects`}      | ${`Projects`}
+        typename
+        ${`WorkingGroups`}
+        ${`Projects`}
       `(
         'should return the related output for $type entity',
-        async ({ type, typename }) => {
+        async ({ typename }) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlClientMock.request.mockResolvedValueOnce({
             outputs: {
@@ -132,7 +132,7 @@ describe('Outputs data provider', () => {
                 entity: {
                   id: 'entity-1',
                   title: 'Steering Committee',
-                  type,
+                  type: typename,
                 },
               },
             ],

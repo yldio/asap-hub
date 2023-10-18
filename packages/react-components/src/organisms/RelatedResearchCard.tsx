@@ -153,7 +153,11 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
             >
               <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
               <p css={paragraphStyle}>
-                {getIconForDocumentType(documentType as any)} {documentType}{' '}
+                {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  getIconForDocumentType(documentType as any)
+                }{' '}
+                {documentType}{' '}
                 {documentType === 'Article' && (
                   <Pill accent="gray">{type}</Pill>
                 )}

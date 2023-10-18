@@ -20,10 +20,10 @@ import {
 } from '../organisms';
 import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import {
+  getIconForDocumentType as getIconForDocumentTypeCRN,
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
-import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,

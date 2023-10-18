@@ -87,6 +87,7 @@ export {
   ProjectsPage,
   ProjectPageList,
   Theme,
+  TagSearchPage,
   UserDetailPage,
   UserOverview,
   UsersPage,

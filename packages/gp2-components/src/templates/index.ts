@@ -23,6 +23,7 @@ export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';
 export { default as ProjectResources } from './ProjectResources';
 export { default as ProjectsPage } from './ProjectsPage';
+export { default as TagSearchPage } from './TagSearchPage';
 export { default as Theme } from './Theme';
 export { default as UserDetailPage } from './UserDetailPage';
 export { default as UserOverview } from './UserOverview';

@@ -393,9 +393,9 @@ export const getContentfulGraphqlUser = (
         contributingCohort: {
           sys: { id: 'cohort-id' },
           name: 'CALYPSO',
+          studyLink: 'http://example.com/study',
         },
         role: 'Investigator',
-        studyLink: 'http://example.com/study',
       },
     ],
   },

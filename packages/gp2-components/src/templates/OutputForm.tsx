@@ -16,6 +16,7 @@ import {
   Markdown,
   noop,
   pixels,
+  ResearchOutputRelatedEventsCard,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
@@ -30,6 +31,7 @@ import {
 } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
 import { OutputIdentifier } from '../organisms/OutputIdentifier';
+import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField } from '../utils';
 import { EntityMappper } from './CreateOutputPage';
@@ -61,6 +63,14 @@ export const getRelatedOutputs = (
     documentType,
   }));
 
+export const getRelatedEvents = (
+  relatedOutputs: gp2Model.OutputResponse['relatedEvents'],
+) =>
+  relatedOutputs.map(({ id, title: label, endDate }) => ({
+    value: id,
+    label,
+    endDate,
+  }));
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
@@ -112,6 +122,11 @@ type OutputFormProps = {
   >[];
   projectSuggestions: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
   mainEntityId: string;
+  getRelatedEventSuggestions: NonNullable<
+    ComponentProps<
+      typeof ResearchOutputRelatedEventsCard
+    >['getRelatedEventSuggestions']
+  >;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -128,10 +143,11 @@ type OutputFormProps = {
     | 'doi'
     | 'rrid'
     | 'accessionNumber'
-    | 'relatedOutputs'
     | 'contributingCohorts'
     | 'workingGroups'
     | 'projects'
+    | 'relatedOutputs'
+    | 'relatedEvents'
   >
 >;
 
@@ -146,6 +162,27 @@ export const getPostAuthors = (
     }
     return { externalUserName: value };
   });
+
+const isFieldDirty = (original: string = '', current: string) =>
+  current !== original;
+
+const hasId = (obj: { id?: string; value?: string }): obj is { id: string } =>
+  !!(obj.id as unknown as { id: string });
+
+const isArrayDirty = (
+  items?: readonly { id: string }[],
+  newItems?: readonly { id: string }[] | readonly { value: string }[],
+) =>
+  items
+    ? !items.every(
+        ({ id }, index) =>
+          index ===
+          newItems?.findIndex(
+            (newItem) => (hasId(newItem) ? newItem.id : newItem.value) === id,
+          ),
+      )
+    : !!newItems?.length;
+const toId = ({ id }: { id: string }) => id;
 
 const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
@@ -167,6 +204,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   rrid,
   accessionNumber,
   relatedOutputs = [],
+  relatedEvents = [],
   getRelatedOutputSuggestions,
   cohortSuggestions,
   contributingCohorts,
@@ -175,6 +213,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   projects,
   workingGroupSuggestions,
   projectSuggestions,
+  getRelatedEventSuggestions,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -216,6 +255,11 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
   >(contributingCohorts || []);
+  const [newRelatedEvents, setRelatedEvents] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
+    >
+  >(getRelatedEvents(relatedEvents));
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -248,11 +292,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const setBannerMessage = (message: string) =>
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'outputs',
+      page: 'output',
       type: 'success',
     });
 
-  const toId = ({ id }: { id: string }) => id;
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
     title: newTitle,
@@ -279,7 +322,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
         ? newProjects.filter(outMainEntity).map(toId)
         : undefined,
     relatedOutputIds: newRelatedOutputs.map(({ value }) => value),
-    relatedEventIds: [],
+    relatedEventIds: newRelatedEvents.map(({ value }) => value),
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -295,9 +338,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
 
-  const isFieldDirty = (original: string = '', current: string) =>
-    current !== original;
-
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||
@@ -306,45 +346,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isFieldDirty(identifierType, newIdentifierType) ||
     isFieldDirty(sharingStatus, newSharingStatus) ||
     isFieldDirty(gp2Supported, newGp2Supported) ||
-    (workingGroups
-      ? !workingGroups.every(
-          (workingGroup, index) =>
-            index ===
-            newWorkingGroups?.findIndex(
-              (newWorkingGroup) => newWorkingGroup.id === workingGroup.id,
-            ),
-        )
-      : !!newWorkingGroups?.length) ||
-    (projects
-      ? !projects.every(
-          (project, index) =>
-            index ===
-            newProjects?.findIndex(
-              (newProject) => newProject.id === project.id,
-            ),
-        )
-      : !!newProjects?.length) ||
-    (tags
-      ? !tags.every(
-          (tag, index) =>
-            index === newTags?.findIndex((newTag) => newTag.id === tag.id),
-        )
-      : !!newTags?.length) ||
-    (contributingCohorts
-      ? !contributingCohorts.every(
-          (cohort, index) =>
-            index ===
-            newCohorts?.findIndex((newCohort) => newCohort.id === cohort.id),
-        )
-      : !!newCohorts?.length) ||
-    (authors
-      ? !authors.every(
-          (author, index) =>
-            index ===
-            newAuthors?.findIndex((newAuthor) => newAuthor.value === author.id),
-        )
-      : !!newAuthors?.length);
-
+    isArrayDirty(workingGroups, newWorkingGroups) ||
+    isArrayDirty(projects, newProjects) ||
+    isArrayDirty(tags, newTags) ||
+    isArrayDirty(contributingCohorts, newCohorts) ||
+    isArrayDirty(authors, newAuthors) ||
+    isArrayDirty(relatedOutputs, newRelatedOutputs) ||
+    isArrayDirty(relatedEvents, newRelatedEvents);
   return (
     <Form dirty={isFormDirty}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
@@ -422,17 +430,17 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   {
                     value: 'Yes',
                     label: 'Yes',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: 'No',
                     label: 'No',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: "Don't Know",
                     label: "Don't Know",
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                 ]}
                 value={newGp2Supported}
@@ -446,9 +454,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 {
                   value: 'GP2 Only',
                   label: 'GP2 Only',
-                  disabled: isAlwaysPublic,
+                  disabled: isAlwaysPublic || isSaving,
                 },
-                { value: 'Public', label: 'Public', disabled: isAlwaysPublic },
+                {
+                  value: 'Public',
+                  label: 'Public',
+                  disabled: isAlwaysPublic || isSaving,
+                },
               ]}
               value={newSharingStatus}
               onChange={setSharingStatus}
@@ -461,6 +473,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={(date) =>
                   setPublishDate(date ? new Date(date) : undefined)
                 }
+                enabled={!isSaving}
                 value={newPublishDate}
                 max={new Date()}
                 getValidationMessage={(e) => getPublishDateValidationMessage(e)}
@@ -658,6 +671,14 @@ const OutputForm: React.FC<OutputFormProps> = ({
             relatedResearch={newRelatedOutputs}
             onChangeRelatedResearch={setRelatedOutputs}
             getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+            isEditMode={true}
+          />
+          <OutputRelatedEventsCard
+            getRelatedEventSuggestions={getRelatedEventSuggestions}
+            isSaving={isSaving}
+            relatedEvents={newRelatedEvents}
+            onChangeRelatedEvents={setRelatedEvents}
+            isEditMode={true}
           />
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>
@@ -673,8 +694,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   const output = await getWrappedOnSave(() =>
                     shareOutput(currentPayload),
                   )();
-                  if (output) {
-                    const path = gp2Routing.outputs({}).$;
+
+                  if (output && typeof output.id === 'string') {
+                    const path = gp2Routing
+                      .outputs({})
+                      .output({ outputId: output.id }).$;
+
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
                     );

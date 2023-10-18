@@ -1,12 +1,12 @@
 import { css, useTheme } from '@emotion/react';
 import {
   ComponentProps,
-  ReactElement,
   MouseEventHandler,
+  ReactElement,
+  ReactNode,
   useCallback,
   useEffect,
   useRef,
-  ReactNode,
 } from 'react';
 import Select, {
   ActionMeta,
@@ -17,20 +17,20 @@ import Select, {
 } from 'react-select';
 import AsyncSelect, { Props as AsyncProps } from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
+import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 import {
   SortableContainer,
   SortableContainerProps,
   SortableElement,
-  SortEndHandler,
   SortableHandle,
+  SortEndHandler,
 } from 'react-sortable-hoc';
-import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 
+import { pixels } from '..';
 import { useValidation, validationMessageStyles } from '../form';
+import { crossIcon } from '../icons';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
-import { crossIcon } from '../icons';
-import { pixels } from '..';
 
 const { rem } = pixels;
 

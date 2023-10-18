@@ -4,16 +4,16 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getDashboardStats, getNews } from '../api';
-import { getAlgoliaEvents } from '../../events/api';
-import Dashboard from '../Dashboard';
+import { getEvents } from '../../events/api';
+import { getAlgoliaUsers } from '../../users/api';
 import {
   createEventListAlgoliaResponse,
   createUserListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getAlgoliaUsers } from '../../users/api';
+import { getDashboardStats, getNews } from '../api';
 import { getOutputs } from '../../outputs/api';
+import Dashboard from '../Dashboard';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -41,9 +41,7 @@ const renderDashboard = async ({ user = {} }: { user?: Partial<User> }) => {
   );
 };
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
-const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-  typeof getAlgoliaEvents
->;
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 const mockDashboard = getDashboardStats as jest.MockedFunction<
   typeof getDashboardStats
 >;

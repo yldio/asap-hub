@@ -1,22 +1,22 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { gp2 } from '@asap-hub/fixtures';
+import { useFlags } from '@asap-hub/react-context';
 import {
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { gp2 } from '@asap-hub/fixtures';
-import { useFlags } from '@asap-hub/react-context';
-import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import Routes from '../Routes';
-import { getAlgoliaEvents } from '../api';
-import { getCalendars } from '../calendar/api';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getEvents } from '../api';
+import { getCalendars } from '../calendar/api';
+import Routes from '../Routes';
 
 jest.mock('../api');
 jest.mock('../calendar/api');
@@ -44,9 +44,7 @@ beforeEach(() => {
 });
 
 describe('Routes', () => {
-  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-    typeof getAlgoliaEvents
-  >;
+  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
   const mockGetCalendars = getCalendars as jest.MockedFunction<
     typeof getCalendars
   >;

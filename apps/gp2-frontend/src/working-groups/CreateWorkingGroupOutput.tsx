@@ -1,7 +1,10 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
-import { useRelatedOutputSuggestions } from '../outputs';
+import {
+  useRelatedOutputSuggestions,
+  useRelatedEventsSuggestions,
+} from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
 import { useProjects } from '../projects/state';
@@ -18,6 +21,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   );
   const createOutput = useCreateOutput();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
+  const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
@@ -47,6 +51,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        getRelatedEventSuggestions={getRelatedEventSuggestions}
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}

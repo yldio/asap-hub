@@ -6,22 +6,6 @@ import {
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-import CreateListApiUrl from '../CreateListApiUrl';
-
-export const getProjects = async (
-  authorization: string,
-  options: GetListOptions,
-): Promise<gp2.ListProjectResponse> => {
-  const resp = await fetch(CreateListApiUrl('projects', options), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch the projects. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
-};
 
 const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
   const statusFilters = status
@@ -38,7 +22,7 @@ const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
 };
 
 export type ProjectListOptions = GetListOptions & gp2.FetchProjectFilter;
-export const getAlgoliaProjects = async (
+export const getProjects = async (
   client: AlgoliaClient<'gp2'>,
   options: ProjectListOptions,
 ) =>

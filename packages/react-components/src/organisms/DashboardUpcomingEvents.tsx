@@ -8,6 +8,7 @@ import { calendarIcon } from '../icons';
 
 type DashboardUpcomingEventsProps = {
   upcomingEvents?: ComponentProps<typeof EventCard>[];
+  linksEnabled?: boolean;
 };
 
 const upcomingEventsWrapper = css({
@@ -25,13 +26,18 @@ const noUpcomingEvents = css({
 
 const DashboardUpcomingEvents: React.FC<DashboardUpcomingEventsProps> = ({
   upcomingEvents,
+  linksEnabled = true,
 }) => (
   <>
     {upcomingEvents && upcomingEvents.length ? (
       <div css={upcomingEventsWrapper}>
         {upcomingEvents.map(({ eventSpeakers, eventTeams, ...event }) => (
           <Fragment key={event.id}>
-            <EventCard {...event} displayToast={false} />
+            <EventCard
+              {...event}
+              displayToast={false}
+              linksEnabled={linksEnabled}
+            />
           </Fragment>
         ))}
       </div>

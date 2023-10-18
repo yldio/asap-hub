@@ -1,17 +1,18 @@
-import { ComponentProps } from 'react';
-import { formatISO, parseISO, format } from 'date-fns';
 import { css } from '@emotion/react';
+import { format, formatISO, parseISO } from 'date-fns';
+import { ComponentProps } from 'react';
 
-import { TextField, Label, Paragraph } from '../atoms';
-import { noop } from '../utils';
-import { perRem } from '../pixels';
+import { Label, Paragraph, TextField } from '../atoms';
 import { lead } from '../colors';
+import { perRem } from '../pixels';
+import { noop } from '../utils';
 
 type LabeledDateFieldProps = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
 
+  readonly enabled?: boolean;
   readonly value?: Date;
   readonly max?: Date;
   readonly onChange?: (newDate: Date | undefined) => void;

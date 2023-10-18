@@ -17183,11 +17183,11 @@ __metadata:
   linkType: soft
 
 "@types/async-retry@npm:^1":
-  version: 1.4.6
-  resolution: "@types/async-retry@npm:1.4.6"
+  version: 1.4.7
+  resolution: "@types/async-retry@npm:1.4.7"
   dependencies:
     "@types/retry": "*"
-  checksum: bdea1cf24816bae5eaefa462f962a04055d8fcdf4949b65685ac17fa9b2da53fa975925817606bcb105e863b3c9b1e2ed14226c3f9bfef2757c15e17146802ca
+  checksum: 26456e25946b8641576d72b8cdd83e677c5419d7909e4f4fd0bc6c994adbba298acd955b5dd2bbcfa47f1efb7183bc3b66c0b7dba77be34d3cb981de259957a7
   languageName: node
   linkType: hard
 

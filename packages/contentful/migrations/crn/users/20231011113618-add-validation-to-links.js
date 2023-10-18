@@ -7,7 +7,8 @@ module.exports.up = (migration) => {
   users.editField('linkedIn').validations([
     {
       regexp: {
-        pattern: '^https:\\/\\/(www\\.)?linkedin\\.com\\/in\\/[\\w\\-]+\\/?$',
+        pattern:
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message:
@@ -18,7 +19,8 @@ module.exports.up = (migration) => {
   users.editField('twitter').validations([
     {
       regexp: {
-        pattern: '^https:\\/\\/(www\\.)?twitter\\.com\\/[\\w\\d_]+\\/?$',
+        pattern:
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message:
@@ -29,7 +31,8 @@ module.exports.up = (migration) => {
   users.editField('github').validations([
     {
       regexp: {
-        pattern: '^https:\\/\\/(www\\.)?github\\.com\\/[\\w\\d\\-]+\\/?$',
+        pattern:
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message:
@@ -41,7 +44,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^https:\\/\\/scholar\\.google\\.com\\/citations\\?user=[\\w\\d\\-_]+',
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
     },
@@ -54,7 +57,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^https:\\/\\/orcid\\.org\\/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]\\/?$',
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message:
@@ -66,7 +69,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^https:\\/\\/(www\\.)?researchgate\\.net\\/profile\\/[\\w\\d\\-_]+\\/?$',
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message:
@@ -78,7 +81,7 @@ module.exports.up = (migration) => {
     {
       regexp: {
         pattern:
-          '^(http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
+          "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         flags: null,
       },
       message: 'This is the custom error 2',

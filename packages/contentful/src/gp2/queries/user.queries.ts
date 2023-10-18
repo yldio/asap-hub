@@ -59,9 +59,9 @@ export const usersContentQueryFragment = gql`
             id
           }
           name
+          studyLink
         }
         role
-        studyLink
       }
     }
     linkedFrom {

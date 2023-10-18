@@ -68,6 +68,9 @@ outputs:
   contentful-app-partial-last-updated:
     description: 'Contentful App Extension Partial Last Updated'
     value: ${{ steps.vars.outputs.contentful-app-partial-last-updated }}
+  contentful-app-auto-populate-date-field:
+    description: 'Contentful App Extension Auto Populate Date Field'
+    value: ${{ steps.vars.outputs.contentful-app-auto-populate-date-field }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

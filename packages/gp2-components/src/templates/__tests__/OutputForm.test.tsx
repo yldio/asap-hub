@@ -211,11 +211,11 @@ describe('OutputForm', () => {
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
         message: 'Working group code/software published successfully.',
-        page: 'outputs',
+        page: 'output',
         type: 'success',
       }),
     );
-    expect(history.location.pathname).toEqual(`/outputs`);
+    expect(history.location.pathname).toEqual(`/outputs/ro0`);
   });
 
   it('can submit published date', async () => {
@@ -436,7 +436,7 @@ describe('OutputForm', () => {
         tagIds: [],
         contributingCohortIds: [],
       });
-      expect(history.location.pathname).toEqual(`/outputs`);
+      expect(history.location.pathname).toEqual(`/outputs/ro0`);
     });
   });
 

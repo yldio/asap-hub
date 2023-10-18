@@ -71,62 +71,32 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          researcherId
-            ? new URL(
-                `https://publons.com/researcher/${researcherId}`,
-              ).toString()
-            : undefined
-        }
+        link={researcherId ? new URL(researcherId).toString() : undefined}
         icon={<ResearcherIdIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          twitter
-            ? new URL(`https://twitter.com/${twitter}`).toString()
-            : undefined
-        }
+        link={twitter ? new URL(twitter).toString() : undefined}
         icon={<TwitterIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          github
-            ? new URL(`https://github.com/${github}`).toString()
-            : undefined
-        }
+        link={github ? new URL(github).toString() : undefined}
         icon={<GithubIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          googleScholar
-            ? `https://scholar.google.co.uk/citations?${new URLSearchParams({
-                user: googleScholar,
-              }).toString()}`
-            : undefined
-        }
+        link={googleScholar ? new URL(googleScholar).toString() : undefined}
         icon={<GoogleScholarIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          researchGate
-            ? new URL(
-                `https://www.researchgate.net/profile/${researchGate}`,
-              ).toString()
-            : undefined
-        }
+        link={researchGate ? new URL(researchGate).toString() : undefined}
         icon={<ResearchGateIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        link={
-          linkedIn
-            ? new URL(`https://www.linkedin.com/in/${linkedIn}`).toString()
-            : undefined
-        }
+        link={linkedIn ? new URL(linkedIn).toString() : undefined}
         icon={<LinkedInIcon />}
         isOwnProfile={isOwnProfile}
       />

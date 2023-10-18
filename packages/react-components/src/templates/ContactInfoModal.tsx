@@ -76,12 +76,24 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
         onSave({
           contactEmail: newEmail || undefined,
           social: {
-            twitter: newTwitter || undefined,
-            researcherId: newResearcherId || undefined,
-            researchGate: newResearchGate || undefined,
-            github: newGithub || undefined,
-            googleScholar: newGoogleScholar || undefined,
-            linkedIn: newLinkedIn || undefined,
+            twitter: newTwitter
+              ? `https://twitter.com/${newTwitter}`
+              : undefined,
+            researcherId: newResearcherId
+              ? `https://publons.com/researcher/${newResearcherId}`
+              : undefined,
+            researchGate: newResearchGate
+              ? `https://www.researchgate.net/profile/${newResearchGate}`
+              : undefined,
+            github: newGithub ? `https://github.com/${newGithub}` : undefined,
+            googleScholar: newGoogleScholar
+              ? `https://scholar.google.co.uk/citations?${new URLSearchParams({
+                  user: googleScholar,
+                }).toString()}`
+              : undefined,
+            linkedIn: newLinkedIn
+              ? `https://www.linkedin.com/in/${newLinkedIn}`
+              : undefined,
             website1: newWebsite1 || undefined,
             website2: newWebsite2 || undefined,
           },

@@ -322,7 +322,7 @@ __metadata:
     "@babel/core": 7.23.2
     "@babel/preset-react": 7.22.15
     "@babel/runtime-corejs3": 7.23.2
-    "@types/auth0-js": 9.21.1
+    "@types/auth0-js": 9.21.2
     "@types/jest": 29.5.5
     "@types/node": 18.17.3
     "@types/pify": 5.0.2
@@ -17198,10 +17198,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:9.21.1":
-  version: 9.21.1
-  resolution: "@types/auth0-js@npm:9.21.1"
-  checksum: eccaf42bbf9a1c9466d6771505cf9705fed628eb74d3dcdbb880c1702c40ea3079043cd79b3cab871859f06bc982b68c2be474825abded4c6579fe8afd248215
+"@types/auth0-js@npm:9.21.2":
+  version: 9.21.2
+  resolution: "@types/auth0-js@npm:9.21.2"
+  checksum: 46ddced309e7ac006645ad130bb1a099ad291058986740c2f7fa4f09103e639faa9e760eee884a7c5a538c98b4e99d1b76ebcf52f1d2cb0a5d09bb3023593c22
   languageName: node
   linkType: hard
 

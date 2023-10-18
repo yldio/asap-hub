@@ -14,24 +14,24 @@ export { RestAdapter } from 'contentful-management';
 
 const cache = new Map<string, Environment>();
 
-const contentfulManagementApiRateLimiter = new RateLimiter({
+export const contentfulManagementApiRateLimiter = new RateLimiter({
   tokensPerInterval: 3,
   interval: 'second',
 });
 
-const contentDeliveryApiRateLimiter = new RateLimiter({
+export const contentDeliveryApiRateLimiter = new RateLimiter({
   tokensPerInterval: 15,
   interval: 'second',
 });
 
-class RateLimitedRestAdapter extends RestAdapter {
+export class RateLimitedRestAdapter extends RestAdapter {
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
     await contentfulManagementApiRateLimiter.removeTokens(1);
     return super.makeRequest(options);
   }
 }
 
-class RateLimitedGraphqlClient extends GraphQLClient {
+export class RateLimitedGraphqlClient extends GraphQLClient {
   request = (async (
     ...args: Parameters<GraphQLClient['request']>
   ): Promise<ReturnType<GraphQLClient['request']>> => {

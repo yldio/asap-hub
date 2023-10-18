@@ -6,11 +6,24 @@ import {
   getRestClient,
   getCDAClient,
   getCPAClient,
+  RateLimitedGraphqlClient,
+  RateLimitedRestAdapter,
+  contentfulManagementApiRateLimiter,
+  contentDeliveryApiRateLimiter,
+  MakeRequestOptions,
 } from '../src/client';
 
 jest.mock('contentful-management');
 jest.mock('graphql-request');
 jest.mock('contentful');
+
+jest.mock('limiter', () => {
+  return {
+    RateLimiter: jest.fn().mockImplementation(() => ({
+      removeTokens: jest.fn(),
+    })),
+  };
+});
 
 describe('graphQL and Rest clients', () => {
   beforeEach(jest.resetAllMocks);
@@ -43,6 +56,7 @@ describe('graphQL and Rest clients', () => {
       expect(contentfulManagement.createClient).toHaveBeenCalledWith({
         apiAdapter: expect.anything(),
       });
+      expect(RateLimitedRestAdapter).toHaveBeenCalledWith({ accessToken });
       expect(getSpaceFn).toHaveBeenCalledWith(spaceId);
       expect(getEnvironment).toHaveBeenCalledWith(environmentId);
     });
@@ -118,6 +132,7 @@ describe('graphQL and Rest clients', () => {
           headers: { authorization: `Bearer ${accessToken}` },
         },
       );
+      expect(RateLimitedGraphqlClient).toHaveBeenCalled();
     });
   });
 
@@ -147,6 +162,26 @@ describe('graphQL and Rest clients', () => {
         environment: environmentId,
       });
     });
+  });
+
+  test('RateLimitedGraphqlClient request method should trigger remove token when called', async () => {
+    const client = new RateLimitedGraphqlClient('url', {});
+
+    await client.request(`query {}`);
+
+    expect(contentDeliveryApiRateLimiter.removeTokens).toHaveBeenCalledWith(1);
+  });
+
+  test('RateLimitedRestAdapter makeRequest method should trigger remove token when called', async () => {
+    const adapter = new RateLimitedRestAdapter({
+      accessToken: 'token',
+    });
+
+    await adapter.makeRequest({} as MakeRequestOptions);
+
+    expect(
+      contentfulManagementApiRateLimiter.removeTokens,
+    ).toHaveBeenCalledWith(1);
   });
 });
 

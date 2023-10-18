@@ -24,6 +24,8 @@ describe('Sentry wrapper correctly calls functions', () => {
       release: currentRevision,
       sampleRate: 1,
     });
-    expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler);
+    expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler, {
+      ignoreSentryErrors: true,
+    });
   });
 });

@@ -43,7 +43,7 @@ const columnContainer = css({
   gridTemplateColumns: '1fr',
 });
 
-const tutorialsCardStyles = css({ padding: `${rem(16)} ${rem(24)}` });
+const tutorialsCardStyles = css({ padding: `0 ${rem(24)}` });
 
 const contentCardsStyles = css({
   display: 'flex',

@@ -5,6 +5,7 @@ export * from './contributing-cohort';
 export * from './controllers';
 export * from './dashboard';
 export * from './data-providers';
+export * from './entity';
 export * from './event';
 export * from './external-user';
 export * from './guides';

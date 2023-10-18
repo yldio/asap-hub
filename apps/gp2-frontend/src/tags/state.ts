@@ -21,7 +21,7 @@ const tagSearchResultsIndexState = atomFamily<
 >({ key: 'tagSearchResultsIndex', default: undefined });
 
 export const tagSearchResultsState = selectorFamily<
-  gp2.ListNewsResponse | Error | undefined,
+  gp2.ListEntityResponse | Error | undefined,
   TagSearchOptions
 >({
   key: 'tagSearchResults',
@@ -34,7 +34,7 @@ export const tagSearchResultsState = selectorFamily<
         }),
       );
       if (index === undefined || index instanceof Error) return index;
-      const results: gp2.NewsResponse[] = [];
+      const results: gp2.ListEntityResponse[] = [];
       for (const id of index.ids) {
         const resultItem = get(tagSearchResultsItemState(id));
         if (resultItem === undefined) return undefined;
@@ -75,29 +75,29 @@ export const tagSearchResultsState = selectorFamily<
 });
 
 export const useTagSearchResults = (options: TagSearchOptions) => {
-  const [news, setNews] = useRecoilState(tagSearchResultsState(options));
+  const [results, setResults] = useRecoilState(tagSearchResultsState(options));
   const { client } = useAlgolia();
-  if (news === undefined) {
+  if (results === undefined) {
     throw getTagSearchResults(client, options)
       .then(
-        (data): gp2.ListNewsResponse => ({
+        (data): gp2.ListEntityResponse => ({
           total: data.nbHits,
           items: data.hits,
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,
         }),
       )
-      .then(setNews)
-      .catch(setNews);
+      .then(setResults)
+      .catch(setResults);
   }
-  if (news instanceof Error) {
-    throw news;
+  if (results instanceof Error) {
+    throw results;
   }
-  return [];
+  return results;
 };
 
 const tagSearchResultsItemState = atomFamily<
-  gp2.NewsResponse | undefined,
+  gp2.ListEntityResponse | undefined,
   string
 >({
   key: 'tagSearchResultsItem',

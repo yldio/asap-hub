@@ -2,15 +2,19 @@ import {
   EmptyState,
   noOutputsIcon,
   OutputCard,
+  ProjectCard,
+  UserCard,
 } from '@asap-hub/gp2-components';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  EventCard,
   ResultList as ResultListComponent,
   SearchAndFilter,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
-import { useOutputs } from '../outputs/state';
+import { useTagSearchResults } from './state';
 
 type ResultListProps = {
   projectId?: string;
@@ -28,14 +32,11 @@ const ResultList: React.FC<ResultListProps> = ({
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 
-  const { items, total } = useOutputs({
+  const { items, total } = useTagSearchResults({
     searchQuery,
     filters,
     currentPage,
     pageSize,
-    projectId,
-    workingGroupId,
-    authorId,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return total || searchQuery ? (
@@ -47,13 +48,46 @@ const ResultList: React.FC<ResultListProps> = ({
       renderPageHref={renderPageHref}
       isAdministrator={isAdministrator}
     >
-      {items.map((output) => (
-        <OutputCard
-          key={output.id}
-          {...output}
-          isAdministrator={isAdministrator}
-        />
-      ))}
+      {
+        items.map((result) => {
+          // eslint-disable-next-line no-underscore-dangle
+          switch (result.__meta.type) {
+            case 'output':
+              return (
+                <OutputCard
+                  key={result.id}
+                  {...(result as gp2Model.OutputResponse)}
+                  isAdministrator={isAdministrator}
+                />
+              );
+            case 'project':
+              return (
+                <ProjectCard
+                  key={result.id}
+                  {...(result as gp2Model.ProjectResponse)}
+                />
+              );
+            case 'event':
+              return (
+                <EventCard
+                  key={result.id}
+                  {...(result as gp2Model.EventResponse)}
+                />
+              );
+            case 'user':
+              return (
+                <UserCard
+                  key={result.id}
+                  {...(result as gp2Model.UserResponse)}
+                />
+              );
+            default:
+              return '';
+          }
+        })
+
+        //   ))
+      }
     </ResultListComponent>
   ) : (
     <EmptyState

@@ -1,4 +1,4 @@
-import { OutputPageList } from '@asap-hub/gp2-components';
+import { TagSearchPageList } from '@asap-hub/gp2-components';
 import { FC } from 'react';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
@@ -6,16 +6,7 @@ import { useSearch } from '../hooks/search';
 import ResultList from './ResultList';
 import { useTagSearchResults } from './state';
 
-type OutputDirectoryProps = {
-  projectId?: string;
-  userId?: string;
-  workingGroupId?: string;
-};
-const OutputDirectory: FC<OutputDirectoryProps> = ({
-  projectId,
-  workingGroupId,
-  userId,
-}) => {
+const TagSearch: FC = () => {
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -35,30 +26,21 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     filters: new Set(),
     currentPage,
     pageSize,
-    workingGroupId,
-    projectId,
-    authorId: userId,
   });
 
   return (
-    <OutputPageList
+    <TagSearchPageList
       searchQuery={searchQuery}
       onChangeSearch={setSearchQuery}
       filters={filterSet}
       onChangeFilter={onChangeFilter}
-      hasOutputs={!!total}
+      hasResults={!!total}
     >
-      <Frame title="Outputs List">
-        <ResultList
-          searchQuery={debouncedSearchQuery}
-          filters={filterSet}
-          workingGroupId={workingGroupId}
-          projectId={projectId}
-          authorId={userId}
-        />
+      <Frame title="Tag Search Results List">
+        <ResultList searchQuery={debouncedSearchQuery} filters={filterSet} />
       </Frame>
-    </OutputPageList>
+    </TagSearchPageList>
   );
 };
 
-export default OutputDirectory;
+export default TagSearch;

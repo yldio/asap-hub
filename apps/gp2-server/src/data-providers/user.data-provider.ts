@@ -14,9 +14,9 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import logger from '../utils/logger';
-import { TagItem, parseTag } from './tag.data-provider';
-import { UserDataProvider } from './types';
+import { parseTag, TagItem } from './tag.data-provider';
 import { parseOrcidWorkFromCMS } from './transformers/users';
+import { UserDataProvider } from './types';
 
 export type UserItem = NonNullable<
   NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
@@ -394,7 +394,9 @@ const parseContributingCohorts = (contributingCohorts: ContributingCohorts) =>
               contributingCohortId: cohort.contributingCohort.sys.id,
               name: cohort.contributingCohort.name ?? '',
               role: cohort.role as gp2Model.UserContributingCohortRole,
-              ...(cohort.studyLink && { studyUrl: cohort.studyLink }),
+              ...(cohort.contributingCohort.studyLink && {
+                studyUrl: cohort.contributingCohort.studyLink,
+              }),
             },
           ]
         : cohorts,

@@ -5,6 +5,7 @@ import { css } from '@emotion/react';
 
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
+import PageNotifications from './PageNotifications';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -13,7 +14,7 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-  overflow: 'scroll',
+  overflow: 'auto',
 });
 
 const commonStyles = {
@@ -67,32 +68,43 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
   ...output
 }: OutputDetailPageProps) => (
-  <div css={containerStyles}>
-    {isAdministrator ? (
-      <div css={buttonsContainer}>
-        <div css={leftButtons}>
-          <Link
-            noMargin
-            href={
-              gp2Routing.outputs({}).output({ outputId: output.id }).edit({}).$
-            }
-            buttonStyle
-            small
-            primary
+  <PageNotifications page="output">
+    {(notification) => (
+      <article
+        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+      >
+        <div css={containerStyles}>
+          {isAdministrator ? (
+            <div css={buttonsContainer}>
+              <div css={leftButtons}>
+                <Link
+                  noMargin
+                  href={
+                    gp2Routing
+                      .outputs({})
+                      .output({ outputId: output.id })
+                      .edit({}).$
+                  }
+                  buttonStyle
+                  small
+                  primary
+                >
+                  {editIcon} Edit
+                </Link>
+              </div>
+            </div>
+          ) : null}
+          <OutputCard {...output} detailedView />
+          <CtaCard
+            href={createMailTo(INVITE_SUPPORT_EMAIL)}
+            buttonText="Contact Tech Support"
           >
-            {editIcon} Edit
-          </Link>
+            <strong>Have additional questions?</strong>
+            <br /> Reach out to tech support if you need help.
+          </CtaCard>
         </div>
-      </div>
-    ) : null}
-    <OutputCard {...output} detailedView />
-    <CtaCard
-      href={createMailTo(INVITE_SUPPORT_EMAIL)}
-      buttonText="Contact Tech Support"
-    >
-      <strong>Have additional questions?</strong>
-      <br /> Reach out to tech support if you need help.
-    </CtaCard>
-  </div>
+      </article>
+    )}
+  </PageNotifications>
 );
 export default OutputDetailPage;

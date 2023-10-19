@@ -1,3 +1,4 @@
+import * as ajvErrors from './ajv-errors';
 import * as authTestUtils from './auth-test-utils';
 import * as mail from './mail';
 import * as pixels from './pixels';
@@ -252,6 +253,6 @@ export {
 } from './templates';
 export * from './theme';
 export { noop } from './utils';
-export { pixels, text, authTestUtils, utils, mail };
+export { pixels, text, authTestUtils, utils, mail, ajvErrors };
 export type { AccentVariant } from './atoms';
 export type { ResearchOutputOption } from './utils';

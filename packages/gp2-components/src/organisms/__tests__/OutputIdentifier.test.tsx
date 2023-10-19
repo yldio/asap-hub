@@ -2,7 +2,7 @@ import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { OutputIdentifier } from '../OutputIdentifier';
+import OutputIdentifier from '../OutputIdentifier';
 
 const props: ComponentProps<typeof OutputIdentifier> = {
   documentType: 'Article',

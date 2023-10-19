@@ -44,6 +44,8 @@ const columnContainer = css({
   gridTemplateColumns: '1fr',
 });
 
+const tutorialsCardStyles = css({ padding: `0 ${rem(24)}` });
+
 const contentCardsStyles = css({
   display: 'flex',
   gap: rem(24),
@@ -131,25 +133,33 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       </div>
       {guides && (
-        <Card>
+        <div css={columnContainer}>
           <Headline2>Tools and Tutorials</Headline2>
-          <Paragraph accent="lead">
+          <Paragraph accent="lead" noMargin>
             Here are some quick links to GP2 Hub resources.
           </Paragraph>
-          <Accordion
-            items={guides.map((guide: gp2Model.GuideDataObject) => ({
-              title: guide.title,
-              icon: (
-                <img
-                  src={guide.icon}
-                  alt={guide.title}
-                  style={{ verticalAlign: 'middle' }}
+          <div css={contentCardsStyles}>
+            <Card padding={false}>
+              <div css={tutorialsCardStyles}>
+                <Accordion
+                  items={guides.map((guide: gp2Model.GuideDataObject) => ({
+                    title: guide.title,
+                    icon: (
+                      <img
+                        src={guide.icon}
+                        alt={guide.title}
+                        style={{ verticalAlign: 'middle' }}
+                      />
+                    ),
+                    description: (
+                      <GuideDescription blocks={guide.description} />
+                    ),
+                  }))}
                 />
-              ),
-              description: <GuideDescription blocks={guide.description} />,
-            }))}
-          />
-        </Card>
+              </div>
+            </Card>
+          </div>
+        </div>
       )}
       <div css={columnContainer}>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>

@@ -25,6 +25,7 @@ const TestNotificationComponent: React.FC = ({ children }) => {
 };
 
 describe('NotificationMessages', () => {
+  window.scrollTo = jest.fn();
   it('renders the children', () => {
     render(<NotificationMessages>text content</NotificationMessages>);
     expect(screen.getByText('text content')).toBeVisible();

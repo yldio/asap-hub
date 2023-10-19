@@ -1,7 +1,8 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
+import { BackendError } from '@asap-hub/frontend-utils';
 import {
   render,
   screen,
@@ -11,6 +12,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { OutputFormPage } from '@asap-hub/gp2-components';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
@@ -65,7 +67,9 @@ const renderShareOutput = async (
                 }
               >
                 <NotificationMessages>
-                  <ShareOutput output={output} />
+                  <OutputFormPage>
+                    <ShareOutput output={output} />
+                  </OutputFormPage>
                 </NotificationMessages>
               </Route>
             </MemoryRouter>
@@ -94,6 +98,7 @@ describe('ShareOutput', () => {
     );
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
+    window.scrollTo = jest.fn();
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();
@@ -124,5 +129,78 @@ describe('ShareOutput', () => {
       expect.objectContaining({ title, link }),
       expect.anything(),
     );
+  });
+
+  it('will show server side validation error for link', async () => {
+    const title = 'Output title';
+    const link = 'https://example.com';
+    const id = 'output-id';
+    const validationResponse: ValidationErrorResponse = {
+      message: 'Validation error',
+      error: 'Bad Request',
+      statusCode: 400,
+      data: [
+        { instancePath: '/link', keyword: '', params: {}, schemaPath: 'link' },
+      ],
+    };
+
+    mockUpdateOutput.mockRejectedValueOnce(
+      new BackendError('example', validationResponse, 400),
+    );
+
+    await renderShareOutput(getEditPath(id), {
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+      title,
+      link,
+      projects: [{ id: '42', title: 'a title' }],
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
+
+    expect(mockUpdateOutput).toHaveBeenCalled();
+    expect(
+      screen.queryAllByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ).length,
+    ).toBeGreaterThan(1);
+    expect(window.scrollTo).toHaveBeenCalled();
+
+    const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
+    userEvent.type(url, 'a');
+    url.blur();
+
+    expect(
+      screen.queryByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    ).toBeNull();
+  });
+
+  it('will toast server side errors for unknown errors', async () => {
+    const title = 'Output title';
+    const link = 'https://example.com';
+    const id = 'output-id';
+    mockUpdateOutput.mockRejectedValueOnce(new Error('Something went wrong'));
+
+    await renderShareOutput(getEditPath(id), {
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+      title,
+      link,
+      projects: [{ id: '42', title: 'a title' }],
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
+
+    expect(mockUpdateOutput).toHaveBeenCalled();
+    expect(
+      screen.queryByText(
+        'There was an error and we were unable to save your changes. Please try again.',
+      ),
+    ).toBeInTheDocument();
+    expect(window.scrollTo).toBeCalled();
   });
 });

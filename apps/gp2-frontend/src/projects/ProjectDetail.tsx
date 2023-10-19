@@ -4,6 +4,7 @@ import {
   ProjectOverview,
   ProjectResources,
   ResourceModal,
+  OutputFormPage,
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
@@ -78,7 +79,9 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
       <Switch>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
-            <CreateProjectOutput />
+            <OutputFormPage>
+              <CreateProjectOutput />
+            </OutputFormPage>
           </Frame>
         </Route>
         <ProjectDetailPage

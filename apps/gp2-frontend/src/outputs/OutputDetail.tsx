@@ -3,7 +3,7 @@ import { FC, lazy, useEffect } from 'react';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { OutputDetailPage } from '@asap-hub/gp2-components';
+import { OutputDetailPage, OutputFormPage } from '@asap-hub/gp2-components';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 
@@ -40,7 +40,9 @@ const OutputDetail: FC = () => {
         path={path + gp2Routing.outputs({}).output({ outputId }).edit.template}
       >
         <Frame title="Edit Output">
-          <ShareOutput output={output} />
+          <OutputFormPage>
+            <ShareOutput output={output} />
+          </OutputFormPage>
         </Frame>
       </Route>
       <Route component={NotFoundPage} />

@@ -14,6 +14,7 @@ import {
   Paragraph,
   pixels,
   RemindersCard,
+  RecentSharedOutputs,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
@@ -25,6 +26,7 @@ import GuideDescription from '../molecules/GuideDescription';
 import { NewsItem } from '../molecules';
 import InfoCard from '../molecules/InfoCard';
 import { DashboardUserCard } from '../organisms';
+import { getIconForDocumentType } from '../utils';
 
 const { rem } = pixels;
 const infoStyles = css({
@@ -76,6 +78,8 @@ type DashboardPageBodyProps = {
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   guides?: gp2Model.GuideDataObject[];
+  recentOutputs: gp2Model.OutputBaseResponse[];
+  totalOutputs: number;
   latestUsers: gp2Model.UserResponse[];
 };
 
@@ -87,6 +91,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   upcomingEvents,
   guides,
   latestUsers,
+  recentOutputs,
+  totalOutputs,
 }) => {
   const { isEnabled } = useFlags();
   const history = useHistory();
@@ -172,6 +178,34 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               onClick={() =>
                 history.push({
                   pathname: gp2Routes.events({}).upcoming({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Recent Outputs</Headline2>
+        <div css={infoStyles}>
+          Explore the latest outputs and learn more about them.
+        </div>
+        <RecentSharedOutputs
+          outputs={recentOutputs}
+          getIconForDocumentType={getIconForDocumentType}
+          getSharedOutputHref={(id: string) =>
+            gp2Routes.outputs({}).output({ outputId: id }).$
+          }
+          tableTitles={['Output', 'Type of Output', 'Date']}
+        />
+        {totalOutputs > 5 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-outputs"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.outputs({}).$,
                 })
               }
             >

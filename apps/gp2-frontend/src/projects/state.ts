@@ -11,8 +11,8 @@ import {
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
-  getAlgoliaProjects,
   getProject,
+  getProjects,
   ProjectListOptions,
   putProjectResources,
 } from './api';
@@ -91,7 +91,7 @@ export const useProjects = (options: ProjectListOptions) => {
   const [projects, setProjects] = useRecoilState(projectsState(options));
   const { client } = useAlgolia();
   if (projects === undefined) {
-    throw getAlgoliaProjects(client, options)
+    throw getProjects(client, options)
       .then(
         (data): gp2.ListProjectResponse => ({
           total: data.nbHits,

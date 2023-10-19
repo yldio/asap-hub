@@ -14,7 +14,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
-import { getAlgoliaProjects } from '../../projects/api';
+import { getProjects } from '../../projects/api';
 import { getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
@@ -43,9 +43,7 @@ const mockGetAlgoliaUsers = getAlgoliaUsers as jest.MockedFunction<
   typeof getAlgoliaUsers
 >;
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
-const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-  typeof getAlgoliaProjects
->;
+const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;

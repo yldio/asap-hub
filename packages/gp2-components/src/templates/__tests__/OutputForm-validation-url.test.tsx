@@ -8,12 +8,13 @@ describe('OutputForm', () => {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
-    getRelatedOutputSuggestions: jest.fn(),
     tagSuggestions: [],
     cohortSuggestions: [],
     workingGroupSuggestions: [],
     projectSuggestions: [],
     mainEntityId: '12',
+    getRelatedOutputSuggestions: jest.fn(),
+    getRelatedEventSuggestions: jest.fn(),
   };
 
   describe('validation', () => {

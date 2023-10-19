@@ -14,6 +14,7 @@ import {
   Paragraph,
   pixels,
   RemindersCard,
+  RecentSharedOutputs,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
@@ -25,6 +26,7 @@ import GuideDescription from '../molecules/GuideDescription';
 import { NewsItem } from '../molecules';
 import InfoCard from '../molecules/InfoCard';
 import { DashboardUserCard } from '../organisms';
+import { getIconForDocumentType } from '../utils';
 
 const { rem } = pixels;
 const infoStyles = css({
@@ -42,6 +44,8 @@ const columnContainer = css({
   display: 'grid',
   gridTemplateColumns: '1fr',
 });
+
+const tutorialsCardStyles = css({ padding: `0 ${rem(24)}` });
 
 const contentCardsStyles = css({
   display: 'flex',
@@ -74,6 +78,8 @@ type DashboardPageBodyProps = {
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   guides?: gp2Model.GuideDataObject[];
+  recentOutputs: gp2Model.OutputBaseResponse[];
+  totalOutputs: number;
   latestUsers: gp2Model.UserResponse[];
 };
 
@@ -85,6 +91,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   upcomingEvents,
   guides,
   latestUsers,
+  recentOutputs,
+  totalOutputs,
 }) => {
   const { isEnabled } = useFlags();
   const history = useHistory();
@@ -126,49 +134,86 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       </div>
       {guides && (
-        <Card>
+        <div css={columnContainer}>
           <Headline2>Tools and Tutorials</Headline2>
-          <Paragraph accent="lead">
+          <Paragraph accent="lead" noMargin>
             Here are some quick links to GP2 Hub resources.
           </Paragraph>
-          <Accordion
-            items={guides.map((guide: gp2Model.GuideDataObject) => ({
-              title: guide.title,
-              icon: (
-                <img
-                  src={guide.icon}
-                  alt={guide.title}
-                  style={{ verticalAlign: 'middle' }}
+          <div css={contentCardsStyles}>
+            <Card padding={false}>
+              <div css={tutorialsCardStyles}>
+                <Accordion
+                  items={guides.map((guide: gp2Model.GuideDataObject) => ({
+                    title: guide.title,
+                    icon: (
+                      <img
+                        src={guide.icon}
+                        alt={guide.title}
+                        style={{ verticalAlign: 'middle' }}
+                      />
+                    ),
+                    description: (
+                      <GuideDescription blocks={guide.description} />
+                    ),
+                  }))}
                 />
-              ),
-              description: <GuideDescription blocks={guide.description} />,
-            }))}
-          />
-        </Card>
-      )}
-      {isEnabled('DISPLAY_EVENTS') && (
-        <div>
-          <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-          <div css={infoStyles}>
-            Here are some of the upcoming GP2 Hub events.
+              </div>
+            </Card>
           </div>
-          <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-          {totalOfUpcomingEvents > 3 && (
-            <p css={viewAllStyles}>
-              <Button
-                data-testid="view-upcoming-events"
-                onClick={() =>
-                  history.push({
-                    pathname: gp2Routes.events({}).upcoming({}).$,
-                  })
-                }
-              >
-                View All
-              </Button>
-            </p>
-          )}
         </div>
       )}
+      <div css={columnContainer}>
+        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+        <div css={infoStyles}>
+          Here are some of the upcoming GP2 Hub events.
+        </div>
+        <DashboardUpcomingEvents
+          upcomingEvents={upcomingEvents}
+          linksEnabled={isEnabled('DISPLAY_EVENTS')}
+        />
+        {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-upcoming-events"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.events({}).upcoming({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
+      <div>
+        <Headline2 styleAsHeading={3}>Recent Outputs</Headline2>
+        <div css={infoStyles}>
+          Explore the latest outputs and learn more about them.
+        </div>
+        <RecentSharedOutputs
+          outputs={recentOutputs}
+          getIconForDocumentType={getIconForDocumentType}
+          getSharedOutputHref={(id: string) =>
+            gp2Routes.outputs({}).output({ outputId: id }).$
+          }
+          tableTitles={['Output', 'Type of Output', 'Date']}
+        />
+        {totalOutputs > 5 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-outputs"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.outputs({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
       <div css={columnContainer}>
         <Headline2>Latest Users</Headline2>
         <Paragraph accent="lead" noMargin>

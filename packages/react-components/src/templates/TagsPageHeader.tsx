@@ -43,7 +43,7 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
       <Display styleAsHeading={2}>Tags Search</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Search for all CRN Hub areas that include selected tags.
+          Search for research outputs that include selected tags.
         </Paragraph>
       </div>
     </div>

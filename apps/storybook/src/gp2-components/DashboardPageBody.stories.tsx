@@ -26,5 +26,7 @@ export const Normal = () => (
       }))}
     totalOfUpcomingEvents={4}
     latestUsers={gp2.createUsersResponse(3).items}
+    recentOutputs={gp2.createListOutputResponse(2).items}
+    totalOutputs={2}
   />
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type Page = 'dashboard' | 'outputs';
+export type Page = 'dashboard' | 'output' | 'output-form';
 
 export type Notification = {
   message: string;

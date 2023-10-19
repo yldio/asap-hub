@@ -1,8 +1,7 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
-  Form,
   FormCard,
   GlobeIcon,
   LabeledDateField,
@@ -16,9 +15,10 @@ import {
   Markdown,
   noop,
   pixels,
+  ResearchOutputRelatedEventsCard,
+  ajvErrors,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
-
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -29,13 +29,15 @@ import {
   useState,
 } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
-import { OutputIdentifier } from '../organisms/OutputIdentifier';
+import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
+import { Form, OutputIdentifier } from '../organisms';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField } from '../utils';
 import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
+const { getAjvErrorForPath } = ajvErrors;
 
 const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Training Materials',
@@ -61,6 +63,14 @@ export const getRelatedOutputs = (
     documentType,
   }));
 
+export const getRelatedEvents = (
+  relatedOutputs: gp2Model.OutputResponse['relatedEvents'],
+) =>
+  relatedOutputs.map(({ id, title: label, endDate }) => ({
+    value: id,
+    label,
+    endDate,
+  }));
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
@@ -71,7 +81,7 @@ const getBannerMessage = (
   } successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  string.charAt(0).toUpperCase() + string.slice(1);
 
 const footerStyles = css({
   display: 'flex',
@@ -94,7 +104,7 @@ type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
-  ) => Promise<gp2Model.OutputResponse | undefined>;
+  ) => Promise<gp2Model.OutputResponse | void>;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
@@ -112,6 +122,13 @@ type OutputFormProps = {
   >[];
   projectSuggestions: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
   mainEntityId: string;
+  getRelatedEventSuggestions: NonNullable<
+    ComponentProps<
+      typeof ResearchOutputRelatedEventsCard
+    >['getRelatedEventSuggestions']
+  >;
+  serverValidationErrors?: ValidationErrorResponse['data'];
+  clearServerValidationError?: (instancePath: string) => void;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -128,10 +145,11 @@ type OutputFormProps = {
     | 'doi'
     | 'rrid'
     | 'accessionNumber'
-    | 'relatedOutputs'
     | 'contributingCohorts'
     | 'workingGroups'
     | 'projects'
+    | 'relatedOutputs'
+    | 'relatedEvents'
   >
 >;
 
@@ -146,6 +164,27 @@ export const getPostAuthors = (
     }
     return { externalUserName: value };
   });
+
+const isFieldDirty = (original: string = '', current: string) =>
+  current !== original;
+
+const hasId = (obj: { id?: string; value?: string }): obj is { id: string } =>
+  !!(obj.id as unknown as { id: string });
+
+const isArrayDirty = (
+  items?: readonly { id: string }[],
+  newItems?: readonly { id: string }[] | readonly { value: string }[],
+) =>
+  items
+    ? !items.every(
+        ({ id }, index) =>
+          index ===
+          newItems?.findIndex(
+            (newItem) => (hasId(newItem) ? newItem.id : newItem.value) === id,
+          ),
+      )
+    : !!newItems?.length;
+const toId = ({ id }: { id: string }) => id;
 
 const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
@@ -167,6 +206,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   rrid,
   accessionNumber,
   relatedOutputs = [],
+  relatedEvents = [],
   getRelatedOutputSuggestions,
   cohortSuggestions,
   contributingCohorts,
@@ -175,6 +215,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
   projects,
   workingGroupSuggestions,
   projectSuggestions,
+  getRelatedEventSuggestions,
+  serverValidationErrors = [],
+  clearServerValidationError = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -212,10 +255,18 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [newProjects, setProjects] = useState<gp2Model.OutputOwner[]>(
     projects || [],
   );
+  const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+  const [titleValidationMessage, setTitleValidationMessage] =
+    useState<string>();
 
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
   >(contributingCohorts || []);
+  const [newRelatedEvents, setRelatedEvents] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
+    >
+  >(getRelatedEvents(relatedEvents));
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -243,16 +294,27 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>(
     doi || rrid || accessionNumber || '',
   );
-  const { addNotification } = useNotificationContext();
+  const { addNotification, removeNotification, notifications } =
+    useNotificationContext();
 
-  const setBannerMessage = (message: string) =>
+  const setBannerMessage = (
+    message: string,
+    page: 'output' | 'output-form',
+    bannerType: 'error' | 'success',
+  ) => {
+    if (
+      notifications[0] &&
+      notifications[0]?.message !== capitalizeFirstLetter(message)
+    ) {
+      removeNotification(notifications[0]);
+    }
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'outputs',
-      type: 'success',
+      page,
+      type: bannerType,
     });
+  };
 
-  const toId = ({ id }: { id: string }) => id;
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
     title: newTitle,
@@ -279,7 +341,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
         ? newProjects.filter(outMainEntity).map(toId)
         : undefined,
     relatedOutputIds: newRelatedOutputs.map(({ value }) => value),
-    relatedEventIds: [],
+    relatedEventIds: newRelatedEvents.map(({ value }) => value),
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -295,8 +357,22 @@ const OutputForm: React.FC<OutputFormProps> = ({
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
 
-  const isFieldDirty = (original: string = '', current: string) =>
-    current !== original;
+  useEffect(() => {
+    setUrlValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/link',
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    );
+    setTitleValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/title',
+        'An Output with this title already exists. Please check if this is repeated and choose a different title.',
+      ),
+    );
+  }, [serverValidationErrors]);
 
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
@@ -306,59 +382,50 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isFieldDirty(identifierType, newIdentifierType) ||
     isFieldDirty(sharingStatus, newSharingStatus) ||
     isFieldDirty(gp2Supported, newGp2Supported) ||
-    (workingGroups
-      ? !workingGroups.every(
-          (workingGroup, index) =>
-            index ===
-            newWorkingGroups?.findIndex(
-              (newWorkingGroup) => newWorkingGroup.id === workingGroup.id,
-            ),
-        )
-      : !!newWorkingGroups?.length) ||
-    (projects
-      ? !projects.every(
-          (project, index) =>
-            index ===
-            newProjects?.findIndex(
-              (newProject) => newProject.id === project.id,
-            ),
-        )
-      : !!newProjects?.length) ||
-    (tags
-      ? !tags.every(
-          (tag, index) =>
-            index === newTags?.findIndex((newTag) => newTag.id === tag.id),
-        )
-      : !!newTags?.length) ||
-    (contributingCohorts
-      ? !contributingCohorts.every(
-          (cohort, index) =>
-            index ===
-            newCohorts?.findIndex((newCohort) => newCohort.id === cohort.id),
-        )
-      : !!newCohorts?.length) ||
-    (authors
-      ? !authors.every(
-          (author, index) =>
-            index ===
-            newAuthors?.findIndex((newAuthor) => newAuthor.value === author.id),
-        )
-      : !!newAuthors?.length);
-
+    isArrayDirty(workingGroups, newWorkingGroups) ||
+    isArrayDirty(projects, newProjects) ||
+    isArrayDirty(tags, newTags) ||
+    isArrayDirty(contributingCohorts, newCohorts) ||
+    isArrayDirty(authors, newAuthors) ||
+    isArrayDirty(relatedOutputs, newRelatedOutputs) ||
+    isArrayDirty(relatedEvents, newRelatedEvents);
   return (
-    <Form dirty={isFormDirty}>
+    <Form dirty={isFormDirty} serverErrors={serverValidationErrors}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
+            <LabeledTextField
+              title={'Title'}
+              subtitle={'(required)'}
+              value={newTitle}
+              customValidationMessage={titleValidationMessage}
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a title.'
+                  : undefined
+              }
+              onChange={(newValue) => {
+                clearServerValidationError('/title');
+                setTitle(newValue);
+              }}
+              required
+              enabled={!isSaving}
+            />
             <LabeledTextField
               title="URL"
               subtitle={'(required)'}
               required
               pattern={urlExpression}
-              onChange={setLink}
-              getValidationMessage={() =>
-                'Please enter a valid URL, starting with http://'
+              onChange={(newValue) => {
+                clearServerValidationError('/link');
+                setLink(newValue);
+              }}
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a valid URL, starting with http://'
+                  : undefined
               }
+              customValidationMessage={urlValidationMessage}
               value={newLink ?? ''}
               enabled={!isSaving}
               labelIndicator={<GlobeIcon />}
@@ -390,14 +457,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={setSubtype}
               />
             )}
-            <LabeledTextField
-              title={'Title'}
-              subtitle={'(required)'}
-              value={newTitle}
-              onChange={setTitle}
-              required
-              enabled={!isSaving}
-            />
+
             <LabeledTextArea
               title="Description"
               subtitle="(required)"
@@ -422,17 +482,17 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   {
                     value: 'Yes',
                     label: 'Yes',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: 'No',
                     label: 'No',
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                   {
                     value: "Don't Know",
                     label: "Don't Know",
-                    disabled: isGP2SupportedAlwaysTrue,
+                    disabled: isGP2SupportedAlwaysTrue || isSaving,
                   },
                 ]}
                 value={newGp2Supported}
@@ -446,9 +506,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 {
                   value: 'GP2 Only',
                   label: 'GP2 Only',
-                  disabled: isAlwaysPublic,
+                  disabled: isAlwaysPublic || isSaving,
                 },
-                { value: 'Public', label: 'Public', disabled: isAlwaysPublic },
+                {
+                  value: 'Public',
+                  label: 'Public',
+                  disabled: isAlwaysPublic || isSaving,
+                },
               ]}
               value={newSharingStatus}
               onChange={setSharingStatus}
@@ -461,6 +525,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={(date) =>
                   setPublishDate(date ? new Date(date) : undefined)
                 }
+                enabled={!isSaving}
                 value={newPublishDate}
                 max={new Date()}
                 getValidationMessage={(e) => getPublishDateValidationMessage(e)}
@@ -658,6 +723,14 @@ const OutputForm: React.FC<OutputFormProps> = ({
             relatedResearch={newRelatedOutputs}
             onChangeRelatedResearch={setRelatedOutputs}
             getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+            isEditMode={true}
+          />
+          <OutputRelatedEventsCard
+            getRelatedEventSuggestions={getRelatedEventSuggestions}
+            isSaving={isSaving}
+            relatedEvents={newRelatedEvents}
+            onChangeRelatedEvents={setRelatedEvents}
+            isEditMode={true}
           />
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>
@@ -670,13 +743,20 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 primary
                 noMargin
                 onClick={async () => {
-                  const output = await getWrappedOnSave(() =>
-                    shareOutput(currentPayload),
+                  const output = await getWrappedOnSave(
+                    () => shareOutput(currentPayload),
+                    (error) => setBannerMessage(error, 'output-form', 'error'),
                   )();
-                  if (output) {
-                    const path = gp2Routing.outputs({}).$;
+
+                  if (output && typeof output.id === 'string') {
+                    const path = gp2Routing
+                      .outputs({})
+                      .output({ outputId: output.id }).$;
+
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
+                      'output',
+                      'success',
                     );
                     setRedirectOnSave(path);
                   }
@@ -684,7 +764,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 }}
                 enabled={!isSaving}
               >
-                {title ? 'Save' : 'Publish'}
+                {title !== undefined ? 'Save' : 'Publish'}
               </Button>
             </div>
           </div>

@@ -97,7 +97,7 @@ export interface OutputIdentifierProps {
   enabled?: boolean;
 }
 
-export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
+const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
   identifierType = gp2.OutputIdentifierType.Empty,
   setIdentifierType = noop,
   identifier = '',
@@ -186,3 +186,5 @@ export const OutputIdentifierField: React.FC<OutputIdentifierFieldProps> = ({
     </>
   );
 };
+
+export default OutputIdentifier;

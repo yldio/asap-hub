@@ -22,5 +22,5 @@ export const sentryWrapperFactory =
       release: config.currentRevision,
     });
 
-    return Sentry.AWSLambda.wrapHandler(handler);
+    return Sentry.AWSLambda.wrapHandler(handler, { ignoreSentryErrors: true });
   };

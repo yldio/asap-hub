@@ -764,6 +764,7 @@ export type ContributingCohorts = Entry & {
   contentfulMetadata: ContentfulMetadata;
   linkedFrom?: Maybe<ContributingCohortsLinkingCollections>;
   name?: Maybe<Scalars['String']>;
+  studyLink?: Maybe<Scalars['String']>;
   sys: Sys;
 };
 
@@ -774,6 +775,11 @@ export type ContributingCohortsLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
 export type ContributingCohortsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
+export type ContributingCohortsStudyLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -795,6 +801,13 @@ export type ContributingCohortsFilter = {
   name_not?: InputMaybe<Scalars['String']>;
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink?: InputMaybe<Scalars['String']>;
+  studyLink_contains?: InputMaybe<Scalars['String']>;
+  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
+  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink_not?: InputMaybe<Scalars['String']>;
+  studyLink_not_contains?: InputMaybe<Scalars['String']>;
+  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -839,8 +852,6 @@ export type ContributingCohortsLinkingCollectionsOutputsCollectionArgs = {
 export enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StudyLinkAsc = 'studyLink_ASC',
-  StudyLinkDesc = 'studyLink_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -896,7 +907,6 @@ export type ContributingCohortsMembership = Entry & {
   contributingCohort?: Maybe<ContributingCohorts>;
   linkedFrom?: Maybe<ContributingCohortsMembershipLinkingCollections>;
   role?: Maybe<Scalars['String']>;
-  studyLink?: Maybe<Scalars['String']>;
   sys: Sys;
 };
 
@@ -914,11 +924,6 @@ export type ContributingCohortsMembershipLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
 export type ContributingCohortsMembershipRoleArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
-export type ContributingCohortsMembershipStudyLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -942,13 +947,6 @@ export type ContributingCohortsMembershipFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  studyLink?: InputMaybe<Scalars['String']>;
-  studyLink_contains?: InputMaybe<Scalars['String']>;
-  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
-  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  studyLink_not?: InputMaybe<Scalars['String']>;
-  studyLink_not_contains?: InputMaybe<Scalars['String']>;
-  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -1036,8 +1034,6 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
 export enum ContributingCohortsMembershipOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StudyLinkAsc = 'studyLink_ASC',
-  StudyLinkDesc = 'studyLink_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1051,6 +1047,8 @@ export enum ContributingCohortsMembershipOrder {
 export enum ContributingCohortsOrder {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
+  StudyLinkAsc = 'studyLink_ASC',
+  StudyLinkDesc = 'studyLink_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3254,6 +3252,8 @@ export type OutputsContributingCohortsCollection = {
 export enum OutputsContributingCohortsCollectionOrder {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
+  StudyLinkAsc = 'studyLink_ASC',
+  StudyLinkDesc = 'studyLink_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5554,8 +5554,6 @@ export type UsersContributingCohortsCollection = {
 export enum UsersContributingCohortsCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StudyLinkAsc = 'studyLink_ASC',
-  StudyLinkDesc = 'studyLink_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6765,13 +6763,6 @@ export type CfContributingCohortsMembershipNestedFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  studyLink?: InputMaybe<Scalars['String']>;
-  studyLink_contains?: InputMaybe<Scalars['String']>;
-  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
-  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  studyLink_not?: InputMaybe<Scalars['String']>;
-  studyLink_not_contains?: InputMaybe<Scalars['String']>;
-  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -6786,6 +6777,13 @@ export type CfContributingCohortsNestedFilter = {
   name_not?: InputMaybe<Scalars['String']>;
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink?: InputMaybe<Scalars['String']>;
+  studyLink_contains?: InputMaybe<Scalars['String']>;
+  studyLink_exists?: InputMaybe<Scalars['Boolean']>;
+  studyLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  studyLink_not?: InputMaybe<Scalars['String']>;
+  studyLink_not_contains?: InputMaybe<Scalars['String']>;
+  studyLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -10907,9 +10905,11 @@ export type UsersContentDataFragment = Pick<
   contributingCohortsCollection?: Maybe<{
     items: Array<
       Maybe<
-        Pick<ContributingCohortsMembership, 'role' | 'studyLink'> & {
+        Pick<ContributingCohortsMembership, 'role'> & {
           contributingCohort?: Maybe<
-            Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }
+            Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+              sys: Pick<Sys, 'id'>;
+            }
           >;
         }
       >
@@ -11036,9 +11036,11 @@ export type FetchUserByIdQuery = {
       contributingCohortsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<ContributingCohortsMembership, 'role' | 'studyLink'> & {
+            Pick<ContributingCohortsMembership, 'role'> & {
               contributingCohort?: Maybe<
-                Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }
+                Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+                  sys: Pick<Sys, 'id'>;
+                }
               >;
             }
           >
@@ -11175,9 +11177,9 @@ export type FetchUsersQuery = {
             contributingCohortsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<ContributingCohortsMembership, 'role' | 'studyLink'> & {
+                  Pick<ContributingCohortsMembership, 'role'> & {
                     contributingCohort?: Maybe<
-                      Pick<ContributingCohorts, 'name'> & {
+                      Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                         sys: Pick<Sys, 'id'>;
                       }
                     >;
@@ -14236,14 +14238,14 @@ export const UsersContentDataFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'studyLink' },
+                            },
                           ],
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'studyLink' },
-                      },
                     ],
                   },
                 },

@@ -1,11 +1,6 @@
-import { pixels } from '@asap-hub/react-components';
-
 import { workingGroupsImage } from '../images';
 import { mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
-import PageNotifications from './PageNotifications';
-
-const { rem } = pixels;
 
 const bannerProps = {
   image: workingGroupsImage,
@@ -15,15 +10,9 @@ const bannerProps = {
 };
 
 const OutputsPage: React.FC = ({ children }) => (
-  <PageNotifications page="outputs">
-    {(notification) => (
-      <article
-        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
-      >
-        <PageBanner {...bannerProps}></PageBanner>
-        <main css={mainStyles}>{children}</main>
-      </article>
-    )}
-  </PageNotifications>
+  <article>
+    <PageBanner {...bannerProps}></PageBanner>
+    <main css={mainStyles}>{children}</main>
+  </article>
 );
 export default OutputsPage;

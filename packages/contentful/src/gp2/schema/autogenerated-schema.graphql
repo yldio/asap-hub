@@ -539,6 +539,7 @@ type ContributingCohorts implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ContributingCohortsLinkingCollections
   name(locale: String): String
+  studyLink(locale: String): String
   sys: Sys!
 }
 
@@ -560,6 +561,13 @@ input ContributingCohortsFilter {
   name_not: String
   name_not_contains: String
   name_not_in: [String]
+  studyLink: String
+  studyLink_contains: String
+  studyLink_exists: Boolean
+  studyLink_in: [String]
+  studyLink_not: String
+  studyLink_not_contains: String
+  studyLink_not_in: [String]
   sys: SysFilter
 }
 
@@ -572,8 +580,6 @@ type ContributingCohortsLinkingCollections {
 enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
   role_ASC
   role_DESC
-  studyLink_ASC
-  studyLink_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -629,7 +635,6 @@ type ContributingCohortsMembership implements Entry {
   contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
   linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
   role(locale: String): String
-  studyLink(locale: String): String
   sys: Sys!
 }
 
@@ -653,13 +658,6 @@ input ContributingCohortsMembershipFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
-  studyLink: String
-  studyLink_contains: String
-  studyLink_exists: Boolean
-  studyLink_in: [String]
-  studyLink_not: String
-  studyLink_not_contains: String
-  studyLink_not_in: [String]
   sys: SysFilter
 }
 
@@ -726,8 +724,6 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
 enum ContributingCohortsMembershipOrder {
   role_ASC
   role_DESC
-  studyLink_ASC
-  studyLink_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -741,6 +737,8 @@ enum ContributingCohortsMembershipOrder {
 enum ContributingCohortsOrder {
   name_ASC
   name_DESC
+  studyLink_ASC
+  studyLink_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2246,6 +2244,8 @@ type OutputsContributingCohortsCollection {
 enum OutputsContributingCohortsCollectionOrder {
   name_ASC
   name_DESC
+  studyLink_ASC
+  studyLink_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3637,8 +3637,6 @@ type UsersContributingCohortsCollection {
 enum UsersContributingCohortsCollectionOrder {
   role_ASC
   role_DESC
-  studyLink_ASC
-  studyLink_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4583,13 +4581,6 @@ input cfContributingCohortsMembershipNestedFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
-  studyLink: String
-  studyLink_contains: String
-  studyLink_exists: Boolean
-  studyLink_in: [String]
-  studyLink_not: String
-  studyLink_not_contains: String
-  studyLink_not_in: [String]
   sys: SysFilter
 }
 
@@ -4604,6 +4595,13 @@ input cfContributingCohortsNestedFilter {
   name_not: String
   name_not_contains: String
   name_not_in: [String]
+  studyLink: String
+  studyLink_contains: String
+  studyLink_exists: Boolean
+  studyLink_in: [String]
+  studyLink_not: String
+  studyLink_not_contains: String
+  studyLink_not_in: [String]
   sys: SysFilter
 }
 

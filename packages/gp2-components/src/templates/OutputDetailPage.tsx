@@ -124,7 +124,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               hub="GP2"
             />
             <OutputAdditionalInformationCard {...output} />
-          <CtaCard
+            <CtaCard
               href={createMailTo(INVITE_SUPPORT_EMAIL)}
               buttonText="Contact Tech Support"
             >

@@ -200,12 +200,13 @@ export type FetchOutputSearchFilter = {
   documentType?: OutputDocumentType[];
 };
 export type FetchOutputFilter = FetchOutputSearchFilter & {
-  title?: string;
-  link?: string;
-  workingGroupId?: string;
-  projectId?: string;
   authorId?: string;
+  eventId?: string;
   externalAuthorId?: string;
+  link?: string;
+  projectId?: string;
+  title?: string;
+  workingGroupId?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

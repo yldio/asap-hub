@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react';
 import {
   EmptyState,
   noOutputsIcon,
@@ -12,7 +13,7 @@ import {
   SearchAndFilter,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { ComponentProps } from 'react';
+import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
 
@@ -71,7 +72,7 @@ const ResultList: React.FC<ResultListProps> = ({
               return (
                 <EventCard
                   key={result.id}
-                  {...(result as gp2Model.EventResponse)}
+                  {...eventMapper(result as gp2Model.EventResponse)}
                 />
               );
             case 'user':
@@ -79,6 +80,7 @@ const ResultList: React.FC<ResultListProps> = ({
                 <UserCard
                   key={result.id}
                   {...(result as gp2Model.UserResponse)}
+                  tags={result.tags.map((tag) => tag.name)}
                 />
               );
             default:

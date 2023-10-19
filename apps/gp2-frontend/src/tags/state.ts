@@ -34,7 +34,7 @@ export const tagSearchResultsState = selectorFamily<
         }),
       );
       if (index === undefined || index instanceof Error) return index;
-      const results: gp2.ListEntityResponse[] = [];
+      const results: gp2.EntityResponse[] = [];
       for (const id of index.ids) {
         const resultItem = get(tagSearchResultsItemState(id));
         if (resultItem === undefined) return undefined;
@@ -97,7 +97,7 @@ export const useTagSearchResults = (options: TagSearchOptions) => {
 };
 
 const tagSearchResultsItemState = atomFamily<
-  gp2.ListEntityResponse | undefined,
+  gp2.EntityResponse | undefined,
   string
 >({
   key: 'tagSearchResultsItem',

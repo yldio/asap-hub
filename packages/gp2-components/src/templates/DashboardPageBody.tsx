@@ -156,10 +156,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Here are some of the upcoming GP2 Hub events.
         </div>
-        <DashboardUpcomingEvents
-          upcomingEvents={upcomingEvents}
-          linksEnabled={isEnabled('DISPLAY_EVENTS')}
-        />
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
         {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
           <p css={viewAllStyles}>
             <Button
@@ -182,7 +179,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
         <PastEventsDashboardCard
           events={pastEvents}
-          linksEnabled={isEnabled('DISPLAY_EVENTS')}
         />
         {isEnabled('DISPLAY_EVENTS') && totalOfPastEvents > 3 && (
           <p css={viewAllStyles}>

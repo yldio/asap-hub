@@ -52,11 +52,9 @@ type PastEventsDashboardCardProps = {
     EventResponse,
     'id' | 'title' | 'startDate' | 'notes' | 'presentation' | 'videoRecording'
   >[];
-  linksEnabled?: boolean;
 };
 const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
   events,
-  linksEnabled = true,
 }) => (
   <Card>
     <div css={container}>
@@ -69,13 +67,9 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
         ({ id, title, startDate, notes, presentation, videoRecording }) => (
           <div key={id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Event</span>
-            {linksEnabled ? (
-              <Link ellipsed href={eventsRoute({}).event({ eventId: id }).$}>
-                {title}
-              </Link>
-            ) : (
-              <span>{title}</span>
-            )}
+            <Link ellipsed href={eventsRoute({}).event({ eventId: id }).$}>
+              {title}
+            </Link>
             <span css={[titleStyles, rowTitleStyles]}>Meeting Materials</span>
             <div>
               <MaterialAvailability

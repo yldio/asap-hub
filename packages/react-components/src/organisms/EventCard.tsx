@@ -30,7 +30,6 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
   > & {
     displayToast?: boolean;
     hasSpeakersToBeAnnounced: boolean;
-    linksEnabled?: boolean;
   };
 
 const buttonStyle = css({
@@ -50,7 +49,6 @@ const EventCard: React.FC<EventCardProps> = ({
   status,
   displayToast = true,
   hasSpeakersToBeAnnounced,
-  linksEnabled = true,
   ...props
 }) => {
   const considerStartedAfter = subMinutes(
@@ -144,7 +142,7 @@ const EventCard: React.FC<EventCardProps> = ({
 
   return (
     <ToastCard {...toastCardProps(displayToast)}>
-      <EventInfo {...props} status={status} linksEnabled={linksEnabled} />
+      <EventInfo {...props} status={status} />
     </ToastCard>
   );
 };

@@ -73,6 +73,7 @@ export const parseContentfulGraphQlContributingCohorts = (
   // https://www.contentfulcommunity.com/t/why-do-required-fields-appear-as-nullable-in-the-graphql-graph/4079/4
   id: item.sys.id ?? '',
   name: item.name ?? '',
+  studyLink: item.studyLink ?? undefined,
 });
 
 const createAndPublishContributingCohort = async (

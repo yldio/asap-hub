@@ -16,13 +16,13 @@ import {
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ProjectPayload } from '../event-bus';
+import { EventPayload } from '../event-bus';
 
 export const indexOutputEventHandler = (
   outputController: OutputController,
   algoliaClient: AlgoliaClient<'gp2'>,
 ): ((
-  event: EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
+  event: EventBridgeEvent<gp2Model.EventEvent, EventPayload>,
 ) => Promise<void>) => {
   const processingFunction = createProcessingFunction(
     algoliaClient,

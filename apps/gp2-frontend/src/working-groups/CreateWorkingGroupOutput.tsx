@@ -1,7 +1,11 @@
+import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
+import { ValidationErrorResponse } from '@asap-hub/model';
+import { usePrevious } from '@asap-hub/react-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { FC } from 'react';
+import { useEffect, useState, FC } from 'react';
 import {
+  handleError,
   useRelatedOutputSuggestions,
   useRelatedEventsSuggestions,
 } from '../outputs';
@@ -39,6 +43,15 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
     title: workingGroup?.title || '',
   };
 
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+  const previousErrors = usePrevious(errors);
+
+  useEffect(() => {
+    if (previousErrors && previousErrors?.length < errors.length) {
+      window.scrollTo(0, 0);
+    }
+  }, [errors.length, previousErrors]);
+
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -46,7 +59,11 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
     >
       <OutputForm
         entityType="workingGroup"
-        shareOutput={createOutput}
+        shareOutput={async (output) =>
+          createOutput(output).catch(
+            handleError(['/link', '/title'], setErrors),
+          )
+        }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
@@ -57,6 +74,10 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         projectSuggestions={projectSuggestions}
         mainEntityId={workingGroupId}
         workingGroups={[mainEntity]}
+        serverValidationErrors={errors}
+        clearServerValidationError={(instancePath: string) =>
+          setErrors(clearAjvErrorForPath(errors, instancePath))
+        }
       />
     </CreateOutputPage>
   );

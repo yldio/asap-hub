@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PageNotifications from '../PageNotifications';
 
+window.scrollTo = jest.fn();
 describe('PageNotifications', () => {
   const renderPageNotifications = (
     props = { page: 'dashboard' as const },

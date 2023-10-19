@@ -15,6 +15,7 @@ export { default as OnboardingPage } from './OnboardingPage';
 export { default as OnboardingPreview } from './OnboardingPreview';
 export { default as OnboardingWelcome } from './OnboardingWelcome';
 export { default as OutputDetailPage } from './OutputDetailPage';
+export { default as OutputFormPage } from './OutputFormPage';
 export { default as OutputForm } from './OutputForm';
 export { default as OutputPageList } from './OutputPageList';
 export { default as OutputsPage } from './OutputsPage';

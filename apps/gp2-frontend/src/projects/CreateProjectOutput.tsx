@@ -1,10 +1,13 @@
+import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { ValidationErrorResponse, gp2 as gp2Model } from '@asap-hub/model';
+import { usePrevious } from '@asap-hub/react-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { FC } from 'react';
+import { useEffect, useState, FC } from 'react';
 import {
-  useRelatedEventsSuggestions,
+  handleError,
   useRelatedOutputSuggestions,
+  useRelatedEventsSuggestions,
 } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { useContributingCohorts, useTags } from '../shared/state';
@@ -50,6 +53,15 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
     title: project?.title || '',
   };
 
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+  const previousErrors = usePrevious(errors);
+
+  useEffect(() => {
+    if (previousErrors && previousErrors?.length < errors.length) {
+      window.scrollTo(0, 0);
+    }
+  }, [errors.length, previousErrors]);
+
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -57,7 +69,11 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
     >
       <OutputForm
         entityType="project"
-        shareOutput={createOutput}
+        shareOutput={async (output) =>
+          createOutput(output).catch(
+            handleError(['/link', '/title'], setErrors),
+          )
+        }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
@@ -68,6 +84,10 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         projectSuggestions={projectSuggestions}
         projects={[mainEntity]}
         mainEntityId={projectId}
+        serverValidationErrors={errors}
+        clearServerValidationError={(instancePath: string) =>
+          setErrors(clearAjvErrorForPath(errors, instancePath))
+        }
       />
     </CreateOutputPage>
   );

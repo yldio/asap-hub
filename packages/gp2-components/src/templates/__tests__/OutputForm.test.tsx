@@ -1,10 +1,11 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
-import { NotificationContext } from '@asap-hub/react-context';
+import { NotificationContext, Notification } from '@asap-hub/react-context';
 import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -14,7 +15,7 @@ import { Router, StaticRouter } from 'react-router-dom';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
-jest.setTimeout(60_000);
+jest.setTimeout(95_000);
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -210,12 +211,294 @@ describe('OutputForm', () => {
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: 'Working group code/software published successfully.',
+        message: 'Working group Code/Software published successfully.',
         page: 'output',
         type: 'success',
       }),
     );
     expect(history.location.pathname).toEqual(`/outputs/ro0`);
+  });
+
+  describe('shows notification messages because of empty required fields', () => {
+    const getAuthorSuggestions = jest.fn();
+    const getRelatedOutputSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    const removeNotification = jest.fn();
+    beforeEach(() => {
+      jest.resetAllMocks();
+      getAuthorSuggestions.mockResolvedValue([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
+          },
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+        {
+          author: {
+            ...gp2Fixtures.createExternalUserResponse(),
+            displayName: 'Chris Reed',
+          },
+          label: 'Chris Reed (Non CRN)',
+          value: 'u1',
+        },
+      ]);
+      getRelatedOutputSuggestions.mockResolvedValue([
+        {
+          value: '11',
+          label: 'related output',
+          documentType: 'GP2 Reports',
+        },
+      ]);
+      shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+
+      render(
+        <OutputForm
+          {...defaultProps}
+          documentType="Code/Software"
+          shareOutput={shareOutput}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+          workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+        />,
+        {
+          wrapper: ({ children }) => (
+            <NotificationContext.Provider
+              value={{
+                notifications: [],
+                addNotification,
+                removeNotification,
+              }}
+            >
+              <Router history={history}>{children}</Router>
+            </NotificationContext.Provider>
+          ),
+        },
+      );
+    });
+
+    it('shows error message because of empty required fields', async () => {
+      userEvent.click(screen.getByRole('button', { name: /publish/i }));
+      expect(
+        await screen.findByRole('button', { name: /publish/i }),
+      ).toBeEnabled();
+
+      expect(shareOutput).not.toHaveBeenCalled();
+      expect(removeNotification).not.toHaveBeenCalled();
+      await waitFor(() =>
+        expect(addNotification).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message:
+              'There are some errors in the form. Please correct the fields below.',
+            page: 'output-form',
+            type: 'error',
+          }),
+        ),
+      );
+    });
+
+    it('does not remove notification if error remains', async () => {
+      userEvent.click(screen.getByRole('button', { name: /publish/i }));
+      expect(
+        await screen.findByRole('button', { name: /publish/i }),
+      ).toBeEnabled();
+
+      userEvent.click(screen.getByRole('button', { name: /publish/i }));
+      expect(
+        await screen.findByRole('button', { name: /publish/i }),
+      ).toBeEnabled();
+
+      expect(removeNotification).not.toHaveBeenCalled();
+    });
+  });
+  describe('shows error notifications', () => {
+    const getAuthorSuggestions = jest.fn();
+    const getRelatedOutputSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const notifications: Notification[] = [];
+    const addNotification = jest.fn();
+    const removeNotification = jest.fn();
+    beforeEach(() => {
+      jest.resetAllMocks();
+      getAuthorSuggestions.mockResolvedValue([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
+          },
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+        {
+          author: {
+            ...gp2Fixtures.createExternalUserResponse(),
+            displayName: 'Chris Reed',
+          },
+          label: 'Chris Reed (Non CRN)',
+          value: 'u1',
+        },
+      ]);
+      getRelatedOutputSuggestions.mockResolvedValue([
+        {
+          value: '11',
+          label: 'related output',
+          documentType: 'GP2 Reports',
+        },
+      ]);
+      shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
+      render(
+        <OutputForm
+          {...defaultProps}
+          shareOutput={shareOutput}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+          workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+          {...gp2Fixtures.createOutputResponse()}
+          link="https://example.com/output"
+          publishDate="2020-03-04"
+        />,
+        {
+          wrapper: ({ children }) => (
+            <NotificationContext.Provider
+              value={{
+                notifications,
+                addNotification,
+                removeNotification,
+              }}
+            >
+              <Router history={history}>{children}</Router>
+            </NotificationContext.Provider>
+          ),
+        },
+      );
+    });
+    it('shows error message because of unkown error', async () => {
+      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      expect(
+        await screen.findByRole('button', { name: /save/i }),
+      ).toBeEnabled();
+
+      expect(shareOutput).toHaveBeenCalled();
+      await waitFor(() =>
+        expect(addNotification).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message:
+              'There was an error and we were unable to save your changes. Please try again.',
+            page: 'output-form',
+            type: 'error',
+          }),
+        ),
+      );
+    });
+
+    it('changes notification if another error', async () => {
+      addNotification.mockImplementationOnce((not: Notification) =>
+        notifications.push(not),
+      );
+      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      expect(
+        await screen.findByRole('button', { name: /save/i }),
+      ).toBeEnabled();
+
+      await waitFor(() =>
+        expect(addNotification).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message:
+              'There was an error and we were unable to save your changes. Please try again.',
+            page: 'output-form',
+            type: 'error',
+          }),
+        ),
+      );
+
+      userEvent.clear(screen.getByRole('textbox', { name: /title/i }));
+
+      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      expect(
+        await screen.findByRole('button', { name: /save/i }),
+      ).toBeEnabled();
+
+      expect(removeNotification).toHaveBeenCalled();
+
+      await waitFor(() =>
+        expect(addNotification).toHaveBeenCalledWith(
+          expect.objectContaining({
+            message:
+              'There are some errors in the form. Please correct the fields below.',
+            page: 'output-form',
+            type: 'error',
+          }),
+        ),
+      );
+    });
+  });
+
+  it('displays server side validation error for link and calls clears function when changed', async () => {
+    const mockClearError = jest.fn();
+    render(
+      <OutputForm
+        {...defaultProps}
+        link="http://example.com"
+        serverValidationErrors={[
+          {
+            instancePath: '/link',
+            keyword: '',
+            params: {},
+            schemaPath: '',
+          },
+        ]}
+        clearServerValidationError={mockClearError}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <Router history={createMemoryHistory()}>{children}</Router>
+        ),
+      },
+    );
+    expect(
+      screen.getByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    ).toBeVisible();
+
+    userEvent.type(screen.getByLabelText(/URL/i), 'a');
+    expect(mockClearError).toHaveBeenCalledWith('/link');
+  });
+
+  it('displays server side validation error for title and calls clears function when changed', async () => {
+    const mockClearError = jest.fn();
+    render(
+      <OutputForm
+        {...defaultProps}
+        title="Example"
+        serverValidationErrors={[
+          {
+            instancePath: '/title',
+            keyword: '',
+            params: {},
+            schemaPath: '',
+          },
+        ]}
+        clearServerValidationError={mockClearError}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <Router history={createMemoryHistory()}>{children}</Router>
+        ),
+      },
+    );
+    expect(
+      screen.getByText(
+        'An Output with this title already exists. Please check if this is repeated and choose a different title.',
+      ),
+    ).toBeVisible();
+
+    userEvent.type(screen.getByLabelText(/title/i), 'a');
+    expect(mockClearError).toHaveBeenCalledWith('/title');
   });
 
   it('can submit published date', async () => {
@@ -581,13 +864,12 @@ describe('OutputForm', () => {
 
   describe('validation', () => {
     it('shows error message for missing value title', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
+      render(<OutputForm {...defaultProps} />, {
         wrapper: StaticRouter,
       });
-
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText('Please fill out this field.')).toBeVisible();
+      expect(screen.getByText('Please enter a title.')).toBeVisible();
     });
 
     it('shows the custom error message for a date in the future', async () => {

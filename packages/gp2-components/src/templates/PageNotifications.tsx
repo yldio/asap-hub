@@ -24,6 +24,10 @@ const PageNotifications: React.FC<PageNotificationsProps> = ({
     () => () => displayNotification && removeNotification(displayNotification),
     [displayNotification, removeNotification],
   );
+
+  useEffect(() => {
+    displayNotification && window.scrollTo(0, 0);
+  }, [displayNotification]);
   return (
     <>
       {displayNotification && (

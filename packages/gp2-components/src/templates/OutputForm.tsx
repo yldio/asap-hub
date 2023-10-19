@@ -1,8 +1,7 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
-  Form,
   FormCard,
   GlobeIcon,
   LabeledDateField,
@@ -17,9 +16,9 @@ import {
   noop,
   pixels,
   ResearchOutputRelatedEventsCard,
+  ajvErrors,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
-
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -30,14 +29,15 @@ import {
   useState,
 } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
-import { OutputIdentifier } from '../organisms/OutputIdentifier';
 import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
+import { Form, OutputIdentifier } from '../organisms';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField } from '../utils';
 import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
+const { getAjvErrorForPath } = ajvErrors;
 
 const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Training Materials',
@@ -81,7 +81,7 @@ const getBannerMessage = (
   } successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  string.charAt(0).toUpperCase() + string.slice(1);
 
 const footerStyles = css({
   display: 'flex',
@@ -104,7 +104,7 @@ type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
-  ) => Promise<gp2Model.OutputResponse | undefined>;
+  ) => Promise<gp2Model.OutputResponse | void>;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
@@ -127,6 +127,8 @@ type OutputFormProps = {
       typeof ResearchOutputRelatedEventsCard
     >['getRelatedEventSuggestions']
   >;
+  serverValidationErrors?: ValidationErrorResponse['data'];
+  clearServerValidationError?: (instancePath: string) => void;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -214,6 +216,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
   workingGroupSuggestions,
   projectSuggestions,
   getRelatedEventSuggestions,
+  serverValidationErrors = [],
+  clearServerValidationError = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -251,6 +255,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [newProjects, setProjects] = useState<gp2Model.OutputOwner[]>(
     projects || [],
   );
+  const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+  const [titleValidationMessage, setTitleValidationMessage] =
+    useState<string>();
 
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
@@ -287,14 +294,26 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>(
     doi || rrid || accessionNumber || '',
   );
-  const { addNotification } = useNotificationContext();
+  const { addNotification, removeNotification, notifications } =
+    useNotificationContext();
 
-  const setBannerMessage = (message: string) =>
+  const setBannerMessage = (
+    message: string,
+    page: 'output' | 'output-form',
+    bannerType: 'error' | 'success',
+  ) => {
+    if (
+      notifications[0] &&
+      notifications[0]?.message !== capitalizeFirstLetter(message)
+    ) {
+      removeNotification(notifications[0]);
+    }
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'output',
-      type: 'success',
+      page,
+      type: bannerType,
     });
+  };
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
@@ -338,6 +357,23 @@ const OutputForm: React.FC<OutputFormProps> = ({
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
 
+  useEffect(() => {
+    setUrlValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/link',
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    );
+    setTitleValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/title',
+        'An Output with this title already exists. Please check if this is repeated and choose a different title.',
+      ),
+    );
+  }, [serverValidationErrors]);
+
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||
@@ -354,19 +390,42 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(relatedOutputs, newRelatedOutputs) ||
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (
-    <Form dirty={isFormDirty}>
+    <Form dirty={isFormDirty} serverErrors={serverValidationErrors}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
+            <LabeledTextField
+              title={'Title'}
+              subtitle={'(required)'}
+              value={newTitle}
+              customValidationMessage={titleValidationMessage}
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a title.'
+                  : undefined
+              }
+              onChange={(newValue) => {
+                clearServerValidationError('/title');
+                setTitle(newValue);
+              }}
+              required
+              enabled={!isSaving}
+            />
             <LabeledTextField
               title="URL"
               subtitle={'(required)'}
               required
               pattern={urlExpression}
-              onChange={setLink}
-              getValidationMessage={() =>
-                'Please enter a valid URL, starting with http://'
+              onChange={(newValue) => {
+                clearServerValidationError('/link');
+                setLink(newValue);
+              }}
+              getValidationMessage={(validationState) =>
+                validationState.valueMissing || validationState.patternMismatch
+                  ? 'Please enter a valid URL, starting with http://'
+                  : undefined
               }
+              customValidationMessage={urlValidationMessage}
               value={newLink ?? ''}
               enabled={!isSaving}
               labelIndicator={<GlobeIcon />}
@@ -398,14 +457,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={setSubtype}
               />
             )}
-            <LabeledTextField
-              title={'Title'}
-              subtitle={'(required)'}
-              value={newTitle}
-              onChange={setTitle}
-              required
-              enabled={!isSaving}
-            />
+
             <LabeledTextArea
               title="Description"
               subtitle="(required)"
@@ -691,8 +743,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 primary
                 noMargin
                 onClick={async () => {
-                  const output = await getWrappedOnSave(() =>
-                    shareOutput(currentPayload),
+                  const output = await getWrappedOnSave(
+                    () => shareOutput(currentPayload),
+                    (error) => setBannerMessage(error, 'output-form', 'error'),
                   )();
 
                   if (output && typeof output.id === 'string') {
@@ -702,6 +755,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
 
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
+                      'output',
+                      'success',
                     );
                     setRedirectOnSave(path);
                   }
@@ -709,7 +764,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 }}
                 enabled={!isSaving}
               >
-                {title ? 'Save' : 'Publish'}
+                {title !== undefined ? 'Save' : 'Publish'}
               </Button>
             </div>
           </div>

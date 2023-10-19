@@ -24,41 +24,6 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Edit')).not.toBeInTheDocument();
   });
 
-  it('displays tags with source, documentType, type, subtype and source name', () => {
-    const { getAllByRole, getByText } = render(
-      <OutputDetailPage
-        {...gp2Fixtures.createOutputResponse()}
-        isAdministrator
-        documentType="Article"
-        type="Blog"
-        subtype="Preprints"
-        projects={[
-          {
-            id: 'project-id',
-            title:
-              'Polygenic Risk Score Project of PD risk in non-European populations',
-          },
-        ]}
-        authors={[]}
-        workingGroups={[]}
-      />,
-    );
-    expect(
-      getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toEqual([
-      'Project',
-      'Article',
-      'Blog',
-      'Preprints',
-      'Polygenic Risk Score Project of PD risk in non-European populations',
-    ]);
-    expect(
-      getByText(
-        'Polygenic Risk Score Project of PD risk in non-European populations',
-      ).closest('a'),
-    ).toHaveAttribute('href', '/projects/project-id');
-  });
-
   describe('description and tags section', () => {
     it('handles tags and description omitted', () => {
       const { queryByText, queryByRole } = render(

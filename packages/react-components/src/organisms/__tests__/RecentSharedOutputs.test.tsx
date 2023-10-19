@@ -12,11 +12,13 @@ it('renders the table research outputs', () => {
       outputs={[
         {
           ...createResearchOutputResponse(),
+
           title: 'Test title',
           addedDate: date,
           documentType: 'Article',
         },
       ]}
+      getIconForDocumentType={jest.fn()}
     />,
   );
   expect(getByRole('link', { name: 'Test title' })).toBeVisible();
@@ -36,6 +38,7 @@ it('falls back to created date if addedDate is undefined', () => {
           created: '2022-01-01',
         },
       ]}
+      getIconForDocumentType={jest.fn()}
     />,
   );
   expect(

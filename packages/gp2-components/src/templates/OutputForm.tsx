@@ -32,7 +32,7 @@ import { buttonWrapperStyle, mobileQuery } from '../layout';
 import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
 import { Form, OutputIdentifier } from '../organisms';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
-import { createIdentifierField } from '../utils';
+import { createIdentifierField, getIconForDocumentType } from '../utils';
 import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
@@ -723,6 +723,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
             relatedResearch={newRelatedOutputs}
             onChangeRelatedResearch={setRelatedOutputs}
             getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+            getIconForDocumentType={getIconForDocumentType}
             isEditMode={true}
           />
           <OutputRelatedEventsCard

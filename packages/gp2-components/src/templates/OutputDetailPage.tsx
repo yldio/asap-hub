@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
+import OutputAdditionalInformationCard from '../organisms/OutputAdditionalInformationCard';
 import PageNotifications from './PageNotifications';
 
 const { rem, mobileScreen } = pixels;
@@ -68,6 +69,9 @@ type OutputDetailPageProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'relatedEvents'
+  | 'sharingStatus'
+  | 'gp2Supported'
+  | 'publishDate'
 > & {
   isAdministrator: boolean;
 };
@@ -107,6 +111,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
             truncateFrom={3}
             hub="GP2"
           />
+          <OutputAdditionalInformationCard {...output} />
           <CtaCard
             href={createMailTo(INVITE_SUPPORT_EMAIL)}
             buttonText="Contact Tech Support"

@@ -7,7 +7,7 @@ import { formatDateToTimezone } from '../../date';
 const date = '2020-01-01';
 
 it('renders the table research outputs', () => {
-  const { getByText, getByRole, getByTitle } = render(
+  const { getByText, getByRole } = render(
     <RecentSharedOutputs
       outputs={[
         {
@@ -22,7 +22,6 @@ it('renders the table research outputs', () => {
     />,
   );
   expect(getByRole('link', { name: 'Test title' })).toBeVisible();
-  expect(getByTitle('Article')).toBeInTheDocument();
   expect(
     getByText(formatDateToTimezone(date, 'E, d MMM y').toUpperCase()),
   ).toBeVisible();

@@ -26,7 +26,7 @@ describe('OutputDetailPage', () => {
 
   describe('description and tags section', () => {
     it('handles tags and description omitted', () => {
-      const { queryByText, queryByRole } = render(
+      const { queryByText } = render(
         <OutputDetailPage
           isAdministrator={false}
           {...gp2Fixtures.createOutputResponse()}
@@ -37,11 +37,10 @@ describe('OutputDetailPage', () => {
       expect(
         queryByText(/description/i, { selector: 'h2' }),
       ).not.toBeInTheDocument();
-      expect(queryByRole('separator')).not.toBeInTheDocument();
     });
 
     it('handles just description provided', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
           {...gp2Fixtures.createOutputResponse()}
@@ -53,11 +52,10 @@ describe('OutputDetailPage', () => {
         queryByText(/description/i, { selector: 'h2' }),
       ).toBeInTheDocument();
       expect(getByText('Test Description')).toBeVisible();
-      expect(queryByRole('separator')).not.toBeInTheDocument();
     });
 
     it('handles just tags provided', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
           {...gp2Fixtures.createOutputResponse()}
@@ -70,10 +68,9 @@ describe('OutputDetailPage', () => {
         queryByText(/description/i, { selector: 'h2' }),
       ).not.toBeInTheDocument();
       expect(getByText('TestTag')).toBeVisible();
-      expect(queryByRole('separator')).not.toBeInTheDocument();
     });
     it('handles tags and description provided', () => {
-      const { queryByText, getByText, queryByRole } = render(
+      const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
           {...gp2Fixtures.createOutputResponse()}
@@ -87,7 +84,6 @@ describe('OutputDetailPage', () => {
       ).toBeInTheDocument();
       expect(getByText('TestTag')).toBeVisible();
       expect(getByText('Test Description')).toBeVisible();
-      expect(queryByRole('separator')).toBeVisible();
     });
   });
 

@@ -193,9 +193,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Explore previous events and learn about what was discussed.
         </div>
-        <PastEventsDashboardCard
-          events={pastEvents}
-        />
+        <PastEventsDashboardCard events={pastEvents} />
         {isEnabled('DISPLAY_EVENTS') && totalOfPastEvents > 3 && (
           <p css={viewAllStyles}>
             <Button

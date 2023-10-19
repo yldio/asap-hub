@@ -81,60 +81,57 @@ type OutputDetailPageProps = Pick<
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
   ...output
-}: OutputDetailPageProps) => {
-  const tags = output.tags.map((tag) => tag.name);
-  return (
-    <PageNotifications page="output">
-      {(notification) => (
-        <article
-          css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
-        >
-          <div css={containerStyles}>
-            {isAdministrator ? (
-              <div css={buttonsContainer}>
-                <div css={leftButtons}>
-                  <Link
-                    noMargin
-                    href={
-                      gp2Routing
-                        .outputs({})
-                        .output({ outputId: output.id })
-                        .edit({}).$
-                    }
-                    buttonStyle
-                    small
-                    primary
-                  >
-                    {editIcon} Edit
-                  </Link>
-                </div>
+}: OutputDetailPageProps) => (
+  <PageNotifications page="output">
+    {(notification) => (
+      <article
+        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+      >
+        <div css={containerStyles}>
+          {isAdministrator ? (
+            <div css={buttonsContainer}>
+              <div css={leftButtons}>
+                <Link
+                  noMargin
+                  href={
+                    gp2Routing
+                      .outputs({})
+                      .output({ outputId: output.id })
+                      .edit({}).$
+                  }
+                  buttonStyle
+                  small
+                  primary
+                >
+                  {editIcon} Edit
+                </Link>
               </div>
-            ) : null}
-            <OutputCard {...output} detailedView />
-            {(output.description || !!output.tags.length) && (
-              <SharedResearchDetailsTagsCard
-                tags={tags}
-                displayDescription={!!output.description}
-                descriptionMD={output.description}
-              />
-            )}
-            <RelatedEventsCard
-              relatedEvents={output.relatedEvents}
-              truncateFrom={3}
-              hub="GP2"
+            </div>
+          ) : null}
+          <OutputCard {...output} detailedView />
+          {(output.description || !!output.tags.length) && (
+            <SharedResearchDetailsTagsCard
+              tags={output.tags.map((tag) => tag.name)}
+              displayDescription={!!output.description}
+              descriptionMD={output.description}
             />
-            <OutputAdditionalInformationCard {...output} />
-            <CtaCard
-              href={createMailTo(INVITE_SUPPORT_EMAIL)}
-              buttonText="Contact Tech Support"
-            >
-              <strong>Have additional questions?</strong>
-              <br /> Reach out to tech support if you need help.
-            </CtaCard>
-          </div>
-        </article>
-      )}
-    </PageNotifications>
-  );
-};
+          )}
+          <RelatedEventsCard
+            relatedEvents={output.relatedEvents}
+            truncateFrom={3}
+            hub="GP2"
+          />
+          <OutputAdditionalInformationCard {...output} />
+          <CtaCard
+            href={createMailTo(INVITE_SUPPORT_EMAIL)}
+            buttonText="Contact Tech Support"
+          >
+            <strong>Have additional questions?</strong>
+            <br /> Reach out to tech support if you need help.
+          </CtaCard>
+        </div>
+      </article>
+    )}
+  </PageNotifications>
+);
 export default OutputDetailPage;

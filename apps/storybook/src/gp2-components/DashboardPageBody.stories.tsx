@@ -28,5 +28,7 @@ export const Normal = () => (
     pastEvents={gp2.createListEventResponse(3).items}
     totalOfPastEvents={3}
     latestUsers={gp2.createUsersResponse(3).items}
+    recentOutputs={gp2.createListOutputResponse(2).items}
+    totalOutputs={2}
   />
 );

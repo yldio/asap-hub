@@ -20,6 +20,8 @@ describe('DashboardPageBody', () => {
         latestUsers={[]}
         pastEvents={[]}
         totalOfPastEvents={0}
+        recentOutputs={[]}
+        totalOutputs={0}
       />,
     );
     expect(
@@ -37,6 +39,8 @@ describe('DashboardPageBody', () => {
         latestUsers={[]}
         pastEvents={[]}
         totalOfPastEvents={0}
+        recentOutputs={[]}
+        totalOutputs={0}
       />,
     );
     expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
@@ -58,6 +62,8 @@ describe('DashboardPageBody', () => {
           latestUsers={[]}
           pastEvents={[]}
           totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -78,6 +84,8 @@ describe('DashboardPageBody', () => {
           latestUsers={[]}
           pastEvents={[]}
           totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -93,6 +101,8 @@ describe('DashboardPageBody', () => {
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
           latestUsers={[]}
+          recentOutputs={[]}
+          totalOutputs={0}
           guides={[
             {
               id: '123',
@@ -130,6 +140,8 @@ describe('DashboardPageBody', () => {
           latestUsers={[]}
           pastEvents={[]}
           totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -155,6 +167,8 @@ describe('DashboardPageBody', () => {
           latestUsers={[]}
           pastEvents={[]}
           totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -185,6 +199,8 @@ describe('DashboardPageBody', () => {
             latestUsers={[]}
             pastEvents={[]}
             totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
           />
         </Router>,
       );
@@ -224,6 +240,8 @@ describe('DashboardPageBody', () => {
           totalOfUpcomingEvents={0}
           pastEvents={[]}
           totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -247,6 +265,8 @@ describe('DashboardPageBody', () => {
             totalOfUpcomingEvents={0}
             pastEvents={[]}
             totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
           />
         </Router>,
       );
@@ -276,6 +296,8 @@ describe('DashboardPageBody', () => {
           latestUsers={[]}
           pastEvents={pastEvents}
           totalOfPastEvents={1}
+          recentOutputs={[]}
+          totalOutputs={0}
         />,
       );
       expect(
@@ -300,6 +322,8 @@ describe('DashboardPageBody', () => {
             latestUsers={[]}
             pastEvents={gp2.createListEventResponse(4).items}
             totalOfPastEvents={4}
+            recentOutputs={[]}
+            totalOutputs={0}
           />
         </Router>,
       );
@@ -313,6 +337,80 @@ describe('DashboardPageBody', () => {
       fireEvent.click(viewAllButton);
 
       expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/past' });
+    });
+  });
+
+  describe('Recent Outputs', () => {
+    it('should render outputs if there is any', async () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          latestUsers={[]}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          pastEvents={[]}
+          totalOfPastEvents={0}
+          recentOutputs={[
+            {
+              ...gp2.createOutputResponse(),
+              id: 'output-1',
+              title: 'Output 1',
+              documentType: 'GP2 Reports',
+              addedDate: '2023-10-11T09:00:00Z',
+            },
+            {
+              ...gp2.createOutputResponse(),
+              id: 'output-2',
+              title: 'Output 2',
+              documentType: 'Training Materials',
+              addedDate: '2023-10-09T09:00:00Z',
+            },
+          ]}
+          totalOutputs={2}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Recent Outputs' }),
+      ).toBeVisible();
+      expect(screen.getByText('Output 1')).toBeVisible();
+      expect(screen.getAllByText('GP2 Reports').length).toBeGreaterThan(0);
+      expect(screen.getByText('WED, 11 OCT 2023')).toBeVisible();
+
+      expect(screen.getByText('Output 2')).toBeVisible();
+      expect(screen.getAllByText('Training Materials').length).toBeGreaterThan(
+        0,
+      );
+      expect(screen.getByText('MON, 9 OCT 2023')).toBeVisible();
+    });
+
+    it('should render View All', () => {
+      const history = createMemoryHistory();
+      const pushSpy = jest.spyOn(history, 'push');
+      render(
+        <Router history={history}>
+          <DashboardPageBody
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            latestUsers={[]}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={gp2.createListOutputResponse(9).items}
+            totalOutputs={9}
+          />
+        </Router>,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Recent Outputs' }),
+      ).toBeVisible();
+      const viewAllButton = screen.getByTestId('view-outputs');
+      expect(viewAllButton).toBeVisible();
+
+      fireEvent.click(viewAllButton);
+
+      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/outputs' });
     });
   });
 });

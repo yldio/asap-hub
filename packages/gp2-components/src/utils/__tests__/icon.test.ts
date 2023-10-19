@@ -6,7 +6,7 @@ import {
   outputMaterial,
   outputReport,
 } from '../../icons';
-import { getIconForDocumentType } from '../OutputRelatedResearchCard';
+import { getIconForDocumentType } from '../icon';
 
 it('tests getIconForDocumentType return the correct icon', () => {
   expect(getIconForDocumentType('Article')).toEqual(outputArticle);

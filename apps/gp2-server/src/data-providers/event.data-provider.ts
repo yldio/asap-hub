@@ -14,7 +14,7 @@ import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
-import { TagItem, parseTag } from './tag.data-provider';
+import { parseTag, TagItem } from './tag.data-provider';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -415,7 +415,7 @@ const getEventDataObject = (
     .filter((item): item is gp2Model.EventDataObject => item !== null);
 
   return {
-    total: items.length,
+    total: eventsCollection.total,
     items,
   };
 };

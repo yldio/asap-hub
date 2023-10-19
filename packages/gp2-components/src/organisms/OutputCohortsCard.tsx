@@ -11,19 +11,19 @@ import {
   colors,
 } from '@asap-hub/react-components';
 
-const { perRem, tabletScreen } = pixels;
+const { rem, tabletScreen } = pixels;
 const { charcoal, lead } = colors;
 
 const container = css({
   display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const descriptionStyles = css({
-  marginTop: `${24 / perRem}em`,
-  marginBottom: `${12 / perRem}em`,
+  marginTop: rem(24),
+  marginBottom: rem(12),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${32 / perRem}em`,
+    marginBottom: rem(32),
   },
 });
 
@@ -31,13 +31,13 @@ const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${16 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(16),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
@@ -46,8 +46,8 @@ const gridStyles = css({
   display: 'grid',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: 'auto max-content',
-    columnGap: `${15 / perRem}em`,
-    rowGap: `${16 / perRem}em`,
+    columnGap: rem(15),
+    rowGap: rem(16),
   },
 });
 
@@ -57,7 +57,7 @@ const paragraphStyle = css({
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row',
-  gap: `${6 / perRem}em`,
+  gap: rem(6),
   color: lead.rgb,
 });
 

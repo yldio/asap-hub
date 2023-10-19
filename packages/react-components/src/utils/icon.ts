@@ -2,12 +2,12 @@ import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import {
-  protocol,
   article,
-  dataset,
   bioinformatics,
-  labResource,
+  dataset,
   grantDocument,
+  labResource,
+  protocol,
 } from '../icons';
 
 const icons: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {

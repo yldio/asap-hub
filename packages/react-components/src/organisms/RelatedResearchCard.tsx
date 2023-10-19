@@ -1,16 +1,12 @@
-import {
-  EventResponse,
-  gp2,
-  ResearchOutputDocumentType,
-} from '@asap-hub/model';
-import { sharedResearch, network, gp2 as gp2Routing } from '@asap-hub/routing';
+import { EventResponse, gp2 } from '@asap-hub/model';
+import { gp2 as gp2Routing, network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
+import { perRem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
@@ -94,20 +90,26 @@ const iconStyles = css({
   marginRight: `${9 / perRem}em`,
 });
 
-type RelatedResearchCardProp = {
-  description: string;
-  relatedResearch:
+type RelatedResearchCardProp<
+  T extends
     | EventResponse['relatedResearch']
-    | gp2.OutputResponse['relatedOutputs'];
+    | gp2.OutputResponse['relatedOutputs'],
+> = {
+  description: string;
+  relatedResearch: T;
   title?: string;
-  getIconForDocumentType:
-    | ((documentType: ResearchOutputDocumentType) => EmotionJSX.Element)
-    | ((documentType: gp2.OutputDocumentType) => EmotionJSX.Element);
+  getIconForDocumentType: (
+    documentType: T[number]['documentType'],
+  ) => EmotionJSX.Element;
   getSourceIcon?: (source: gp2.OutputOwner['type']) => EmotionJSX.Element;
-  tableTitles?: [string, string, string]; // ensuring it has exactly 3 elements
+  tableTitles?: [string, string, string];
 };
 
-const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
+const RelatedResearchCard = <
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2.OutputResponse['relatedOutputs'],
+>({
   relatedResearch,
   description,
   getSourceIcon,
@@ -118,7 +120,7 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
     'Shared Output Name',
     'Team or Working Group',
   ],
-}) => {
+}: RelatedResearchCardProp<T>) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = relatedResearch.length > 5;
@@ -153,11 +155,7 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
             >
               <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
               <p css={paragraphStyle}>
-                {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  getIconForDocumentType(documentType as any)
-                }{' '}
-                {documentType}{' '}
+                {getIconForDocumentType(documentType)} {documentType}{' '}
                 {documentType === 'Article' && (
                   <Pill accent="gray">{type}</Pill>
                 )}

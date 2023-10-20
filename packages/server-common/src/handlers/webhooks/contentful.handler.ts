@@ -83,6 +83,7 @@ export const contentfulHandlerFactory = (
         ) {
           return undefined;
         }
+        logger.error('Error while fetching entry', error);
         throw error;
       }
     };

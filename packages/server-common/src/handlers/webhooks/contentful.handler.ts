@@ -91,6 +91,8 @@ export const contentfulHandlerFactory = (
     try {
       await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
     } catch (error) {
+      logger.error('Error during polling the entry', error);
+
       // skip if the entry is not found as it may have been deleted
       if (!(error instanceof Error && error.message === 'Not found')) {
         if (error instanceof Error) {

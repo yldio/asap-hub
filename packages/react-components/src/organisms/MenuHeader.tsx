@@ -28,12 +28,6 @@ const menuButtonStyles = css({
   justifyContent: 'stretch',
   alignItems: 'stretch',
 });
-const headerSpaceStyles = css({
-  width: `${menuButtonWidth}px`,
-  [crossQuery]: {
-    display: 'none',
-  },
-});
 
 interface MenuHeaderProps {
   enabled?: boolean;
@@ -50,7 +44,6 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({
       <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>
     <Header enabled={enabled} />
-    <div role="presentation" css={[headerSpaceStyles]} />
   </div>
 );
 export default MenuHeader;

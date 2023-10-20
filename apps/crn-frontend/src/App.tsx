@@ -10,6 +10,7 @@ import {
   GoogleTagManager,
   ToastStack,
   UtilityBar,
+  LoadingLayout,
 } from '@asap-hub/react-components';
 import { staticPages, welcome, logout } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -121,7 +122,7 @@ const App: FC<Record<string, never>> = () => {
                           <Signin />
                         </Frame>
                       ) : (
-                        <Frame title={null}>
+                        <Frame title={null} fallback={<LoadingLayout />}>
                           <AuthenticatedApp />
                         </Frame>
                       )

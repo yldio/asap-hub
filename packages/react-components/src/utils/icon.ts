@@ -1,31 +1,26 @@
+import { ResearchOutputDocumentType } from '@asap-hub/model';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import {
-  protocol,
   article,
-  dataset,
   bioinformatics,
-  labResource,
+  dataset,
   grantDocument,
+  labResource,
+  protocol,
 } from '../icons';
 
-export const getIconForDocumentType = (
-  documentType: string,
-): EmotionJSX.Element => {
-  switch (documentType) {
-    case 'Protocol':
-      return protocol;
-    case 'Article':
-      return article;
-    case 'Dataset':
-      return dataset;
-    case 'Bioinformatics':
-      return bioinformatics;
-    case 'Lab Resource':
-      return labResource;
-    case 'Grant Document':
-      return grantDocument;
-    default:
-      return protocol;
-  }
+const icons: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
+  Protocol: protocol,
+  Article: article,
+  Dataset: dataset,
+  Bioinformatics: bioinformatics,
+  'Lab Resource': labResource,
+  'Grant Document': grantDocument,
+  Presentation: protocol,
+  Report: protocol,
 };
+
+export const getIconForDocumentType = (
+  documentType: ResearchOutputDocumentType,
+): EmotionJSX.Element => icons[documentType];

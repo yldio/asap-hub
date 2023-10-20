@@ -1,3 +1,4 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   outputArticle,
@@ -6,25 +7,22 @@ import {
   outputForm,
   outputMaterial,
   outputReport,
+  projectIcon,
+  workingGroupIcon,
 } from '../icons';
 
-export const getIconForDocumentType = (
-  documentType: string,
-): EmotionJSX.Element => {
-  switch (documentType) {
-    case 'Article':
-      return outputArticle;
-    case 'Code/Software':
-      return outputCode;
-    case 'Dataset':
-      return outputDataset;
-    case 'GP2 Reports':
-      return outputReport;
-    case 'Procedural Form':
-      return outputForm;
-    case 'Training Materials':
-      return outputMaterial;
-    default:
-      return outputReport;
-  }
+const icons: Record<gp2Model.OutputDocumentType, EmotionJSX.Element> = {
+  Article: outputArticle,
+  'Code/Software': outputCode,
+  Dataset: outputDataset,
+  'GP2 Reports': outputReport,
+  'Procedural Form': outputForm,
+  'Training Materials': outputMaterial,
 };
+
+export const getIconForDocumentType = (
+  documentType: gp2Model.OutputDocumentType,
+): EmotionJSX.Element => icons[documentType];
+
+export const getSourceIcon = (source: gp2Model.OutputOwner['type']) =>
+  source === 'Projects' ? projectIcon : workingGroupIcon;

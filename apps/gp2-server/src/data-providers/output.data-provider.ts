@@ -324,11 +324,14 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
         output.documentType !== null &&
         output.title !== null,
     )
-    .map(({ sys, documentType, title, type }) => ({
+    .map(({ sys, documentType, title, type, relatedEntitiesCollection }) => ({
       id: sys.id,
       title: title ?? '',
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
+      entity: relatedEntitiesCollection?.items.length
+        ? getEntity(relatedEntitiesCollection?.items[0])
+        : undefined,
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,

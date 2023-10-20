@@ -1,3 +1,4 @@
+import { EventResponse, gp2 as gp2Model } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { ComponentPropsWithRef } from 'react';
@@ -7,11 +8,7 @@ import { Pill } from '../atoms';
 import { charcoal } from '../colors';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { perRem } from '../pixels';
-import {
-  noop,
-  ResearchOutputOption,
-  getIconForDocumentType as getIconForDocumentTypeCRN,
-} from '../utils';
+import { noop, ResearchOutputOption } from '../utils';
 
 const optionStyles = (showPill: boolean) =>
   css({
@@ -34,7 +31,11 @@ const iconStyles = css({
   },
 });
 
-type ResearchOutputRelatedResearchProps = {
+type ResearchOutputRelatedResearchProps<
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2Model.OutputResponse['relatedOutputs'],
+> = {
   readonly relatedResearch: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputOption>
   >['values'];
@@ -48,12 +49,16 @@ type ResearchOutputRelatedResearchProps = {
   readonly isSaving: boolean;
   isEditMode?: boolean;
   description?: string;
-  getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
+  getIconForDocumentType: (
+    documentType: T[number]['documentType'],
+  ) => EmotionJSX.Element;
 };
 
-const ResearchOutputRelatedResearchCard: React.FC<
-  ResearchOutputRelatedResearchProps
-> = ({
+const ResearchOutputRelatedResearchCard = <
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2Model.OutputResponse['relatedOutputs'],
+>({
   relatedResearch,
   getRelatedResearchSuggestions = noop,
   onChangeRelatedResearch = noop,
@@ -61,8 +66,8 @@ const ResearchOutputRelatedResearchCard: React.FC<
   isEditMode,
   description = `List all resources that were important to the creation of this output.
       Only published outputs on the CRN Hub will be available below.`,
-  getIconForDocumentType = getIconForDocumentTypeCRN,
-}) => (
+  getIconForDocumentType,
+}: ResearchOutputRelatedResearchProps<T>) => (
   <FormCard title="Are there any related outputs?" description={description}>
     <LabeledMultiSelect<ResearchOutputOption>
       title="Related Outputs"

@@ -1,4 +1,4 @@
-import { RelatedResearchCard } from '@asap-hub/react-components';
+import { RelatedResearchCard, article } from '@asap-hub/react-components';
 import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
@@ -32,6 +32,7 @@ export const Normal = () => (
         number('Additional related research', 0),
       ).items,
     ]}
+    getIconForDocumentType={() => article}
     description={text('Description', 'Find out all shared research outputs.')}
   />
 );

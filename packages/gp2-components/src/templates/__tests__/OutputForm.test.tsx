@@ -59,165 +59,203 @@ describe('OutputForm', () => {
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
   });
-  it('publish the form', async () => {
-    const getAuthorSuggestions = jest.fn();
-    const getRelatedOutputSuggestions = jest.fn();
-    const getRelatedEventSuggestions = jest.fn();
-    const history = createMemoryHistory();
-    const shareOutput = jest.fn();
-    const addNotification = jest.fn();
-    getAuthorSuggestions.mockResolvedValue([
-      {
-        author: {
-          ...gp2Fixtures.createUserResponse(),
-          displayName: 'Chris Blue',
-        },
-        label: 'Chris Blue',
-        value: 'u2',
-      },
-      {
-        author: {
-          ...gp2Fixtures.createExternalUserResponse(),
-          displayName: 'Chris Reed',
-        },
-        label: 'Chris Reed (Non CRN)',
-        value: 'u1',
-      },
-    ]);
-    getRelatedOutputSuggestions.mockResolvedValue([
-      {
-        value: '11',
-        label: 'some related output',
-        documentType: 'GP2 Reports',
-      },
-    ]);
-    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
-    getRelatedEventSuggestions.mockResolvedValueOnce([
-      {
-        value: '23',
-        label: 'some related event',
-        endDate: '2021-12-28T14:00:00.000Z',
-      },
-    ]);
-    render(
-      <OutputForm
-        {...defaultProps}
-        documentType="Code/Software"
-        shareOutput={shareOutput}
-        getAuthorSuggestions={getAuthorSuggestions}
-        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
-        getRelatedEventSuggestions={getRelatedEventSuggestions}
-        workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
-        tagSuggestions={[
-          {
-            id: '27',
-            name: 'some tag name',
+  it.each`
+    entityType        | entityText         | notificationMessage                                      | entity
+    ${'workingGroup'} | ${'working group'} | ${'Working group Code/Software published successfully.'} | ${{ workingGroups: [{ id: '12', title: 'a WG title' }], projects: [] }}
+    ${'project'}      | ${'project'}       | ${'Project Code/Software published successfully.'}       | ${{ projects: [{ id: '12', title: 'a project title' }], workingGroups: [] }}
+  `(
+    'publish the form for entity $entityType',
+    async ({ entityType, entityText, entity, notificationMessage }) => {
+      const getAuthorSuggestions = jest.fn();
+      const getRelatedOutputSuggestions = jest.fn();
+      const getRelatedEventSuggestions = jest.fn();
+      const history = createMemoryHistory();
+      const shareOutput = jest.fn();
+      const addNotification = jest.fn();
+      getAuthorSuggestions.mockResolvedValue([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
           },
-        ]}
-      />,
-      {
-        wrapper: ({ children }) => (
-          <NotificationContext.Provider
-            value={{
-              notifications: [],
-              addNotification,
-              removeNotification: jest.fn(),
-            }}
-          >
-            <Router history={history}>{children}</Router>
-          </NotificationContext.Provider>
-        ),
-      },
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const gp2Supported = screen.getByRole('group', {
-      name: /has this output been supported by gp2?/i,
-    });
-    userEvent.click(within(gp2Supported).getByRole('radio', { name: /yes/i }));
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'GP2 Only' }),
-    );
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
-    userEvent.click(
-      screen.getByRole('textbox', {
-        name: /working groups/i,
-      }),
-    );
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+        {
+          author: {
+            ...gp2Fixtures.createExternalUserResponse(),
+            displayName: 'Chris Reed',
+          },
+          label: 'Chris Reed (Non CRN)',
+          value: 'u1',
+        },
+      ]);
+      getRelatedOutputSuggestions.mockResolvedValue([
+        {
+          value: '11',
+          label: 'some related output',
+          documentType: 'GP2 Reports',
+        },
+      ]);
+      shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+      getRelatedEventSuggestions.mockResolvedValueOnce([
+        {
+          value: '23',
+          label: 'some related event',
+          endDate: '2021-12-28T14:00:00.000Z',
+        },
+      ]);
+      const { container } = render(
+        <OutputForm
+          {...defaultProps}
+          {...entity}
+          entityType={entityType}
+          documentType="Code/Software"
+          shareOutput={shareOutput}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+          getRelatedEventSuggestions={getRelatedEventSuggestions}
+          workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+          projectSuggestions={[{ id: '3', title: 'another project' }]}
+          tagSuggestions={[
+            {
+              id: '27',
+              name: 'some tag name',
+            },
+          ]}
+        />,
+        {
+          wrapper: ({ children }) => (
+            <NotificationContext.Provider
+              value={{
+                notifications: [],
+                addNotification,
+                removeNotification: jest.fn(),
+              }}
+            >
+              <Router history={history}>{children}</Router>
+            </NotificationContext.Provider>
+          ),
+        },
+      );
+      userEvent.type(
+        screen.getByRole('textbox', { name: /title/i }),
+        'output title',
+      );
+      userEvent.type(
+        screen.getByRole('textbox', { name: /url/i }),
+        'https://example.com',
+      );
+      userEvent.type(
+        screen.getByRole('textbox', { name: /description/i }),
+        'An interesting article',
+      );
+      const gp2Supported = screen.getByRole('group', {
+        name: /has this output been supported by gp2?/i,
+      });
+      userEvent.click(
+        within(gp2Supported).getByRole('radio', { name: /yes/i }),
+      );
+      const sharingStatus = screen.getByRole('group', {
+        name: /sharing status?/i,
+      });
+      userEvent.click(
+        within(sharingStatus).getByRole('radio', { name: 'GP2 Only' }),
+      );
+      userEvent.click(
+        screen.getByRole('textbox', { name: /identifier type/i }),
+      );
+      userEvent.click(screen.getByText(/^none/i));
+      userEvent.click(
+        screen.getByRole('textbox', {
+          name: /working groups/i,
+        }),
+      );
 
-    userEvent.click(screen.getByText('another group'));
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
+      userEvent.click(screen.getByText('another group'));
 
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
+      userEvent.click(
+        screen.getByRole('textbox', {
+          name: /projects/i,
+        }),
+      );
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(
-      screen.getByRole('textbox', {
-        name: /related output/i,
-      }),
-    );
-    userEvent.click(await screen.findByText('some related output'));
-    userEvent.click(
-      screen.getByRole('textbox', {
-        name: /related gp2 hub events/i,
-      }),
-    );
-    userEvent.click(await screen.findByText('some related event'));
-    userEvent.click(screen.getByLabelText(/additional tags/i));
-    userEvent.click(screen.getByText('some tag name'));
-    userEvent.click(screen.getByRole('button', { name: /publish/i }));
-    expect(
-      await screen.findByRole('button', { name: /publish/i }),
-    ).toBeEnabled();
+      userEvent.click(screen.getByText('another project'));
 
-    expect(shareOutput).toHaveBeenCalledWith({
-      title: 'output title',
-      link: 'https://example.com',
-      documentType: 'Code/Software',
-      description: 'An interesting article',
-      gp2Supported: 'Yes',
-      sharingStatus: 'GP2 Only',
-      authors: [
-        { externalUserId: 'u1' },
-        { userId: 'u2' },
-        { externalUserName: 'Alex White' },
-      ],
-      mainEntityId: '12',
-      workingGroupIds: ['2'],
-      relatedOutputIds: ['11'],
-      relatedEventIds: ['23'],
-      tagIds: ['27'],
-      contributingCohortIds: [],
-    });
-    expect(addNotification).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: 'Working group Code/Software published successfully.',
-        page: 'output',
-        type: 'success',
-      }),
-    );
-    expect(history.location.pathname).toEqual(`/outputs/ro0`);
-  });
+      const authors = screen.getByRole('textbox', { name: /Authors/i });
+      userEvent.click(authors);
+
+      userEvent.click(await screen.findByText(/Chris Reed/i));
+      userEvent.click(authors);
+      userEvent.click(screen.getByText('Chris Blue'));
+      userEvent.click(authors);
+      userEvent.type(authors, 'Alex White');
+
+      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      userEvent.click(screen.getAllByText('Alex White')[1]!);
+      userEvent.click(
+        screen.getByRole('textbox', {
+          name: /related output/i,
+        }),
+      );
+      userEvent.click(await screen.findByText('some related output'));
+      userEvent.click(
+        screen.getByRole('textbox', {
+          name: /related gp2 hub events/i,
+        }),
+      );
+      userEvent.click(await screen.findByText('some related event'));
+      userEvent.click(screen.getByLabelText(/additional tags/i));
+      userEvent.click(screen.getByText('some tag name'));
+
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
+
+      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+
+      expect(
+        screen.getByText('Publish output for the whole hub?'),
+      ).toBeVisible();
+      expect(container).toHaveTextContent(
+        `All ${entityText} members listed on this output will be notified and all GP2 members will be able to access it. If you need to unpublish this output, please contact techsupport@gp2.org.`,
+      );
+
+      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+
+      await waitFor(() => {
+        expect(shareOutput).toHaveBeenCalledWith({
+          title: 'output title',
+          link: 'https://example.com',
+          documentType: 'Code/Software',
+          description: 'An interesting article',
+          gp2Supported: 'Yes',
+          sharingStatus: 'GP2 Only',
+          authors: [
+            { externalUserId: 'u1' },
+            { userId: 'u2' },
+            { externalUserName: 'Alex White' },
+          ],
+          mainEntityId: '12',
+          workingGroupIds: ['2'],
+          projectIds: ['3'],
+          relatedOutputIds: ['11'],
+          relatedEventIds: ['23'],
+          tagIds: ['27'],
+          contributingCohortIds: [],
+        });
+      });
+
+      expect(addNotification).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: notificationMessage,
+          page: 'output',
+          type: 'success',
+        }),
+      );
+      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+    },
+  );
 
   describe('shows notification messages because of empty required fields', () => {
     const getAuthorSuggestions = jest.fn();
@@ -281,10 +319,8 @@ describe('OutputForm', () => {
     });
 
     it('shows error message because of empty required fields', async () => {
-      userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      expect(
-        await screen.findByRole('button', { name: /publish/i }),
-      ).toBeEnabled();
+      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       expect(shareOutput).not.toHaveBeenCalled();
       expect(removeNotification).not.toHaveBeenCalled();
@@ -301,15 +337,23 @@ describe('OutputForm', () => {
     });
 
     it('does not remove notification if error remains', async () => {
-      userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      expect(
-        await screen.findByRole('button', { name: /publish/i }),
-      ).toBeEnabled();
+      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-      userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      expect(
-        await screen.findByRole('button', { name: /publish/i }),
-      ).toBeEnabled();
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+      });
+
+      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+      });
 
       expect(removeNotification).not.toHaveBeenCalled();
     });
@@ -581,29 +625,126 @@ describe('OutputForm', () => {
     userEvent.click(screen.getAllByText('Alex White')[1]!);
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText('None'));
-    userEvent.click(screen.getByRole('button', { name: /publish/i }));
-    expect(
-      await screen.findByRole('button', { name: /publish/i }),
-    ).toBeEnabled();
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-    expect(shareOutput).toHaveBeenCalledWith({
-      title: 'output title',
-      link: 'https://example.com',
-      documentType: 'Procedural Form',
-      description: 'An interesting article',
-      sharingStatus: 'Public',
-      publishDate: new Date('2022-03-24').toISOString(),
-      authors: [
-        { externalUserId: 'u1' },
-        { userId: 'u2' },
-        { externalUserName: 'Alex White' },
-      ],
-      mainEntityId: '12',
-      workingGroupIds: [],
-      relatedOutputIds: [],
-      relatedEventIds: [],
-      tagIds: [],
-      contributingCohortIds: [],
+    await waitFor(() => {
+      expect(shareOutput).toHaveBeenCalledWith({
+        title: 'output title',
+        link: 'https://example.com',
+        documentType: 'Procedural Form',
+        description: 'An interesting article',
+        sharingStatus: 'Public',
+        publishDate: new Date('2022-03-24').toISOString(),
+        authors: [
+          { externalUserId: 'u1' },
+          { userId: 'u2' },
+          { externalUserName: 'Alex White' },
+        ],
+        mainEntityId: '12',
+        workingGroupIds: [],
+        relatedOutputIds: [],
+        relatedEventIds: [],
+        tagIds: [],
+        contributingCohortIds: [],
+      });
+    });
+  });
+
+  it('closes the publish modal when user clicks on cancel', async () => {
+    const getAuthorSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+    render(
+      <OutputForm
+        {...defaultProps}
+        shareOutput={shareOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      'output title',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /url/i }),
+      'https://example.com',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /description/i }),
+      'An interesting article',
+    );
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status?/i,
+    });
+    userEvent.click(
+      within(sharingStatus).getByRole('radio', { name: 'Public' }),
+    );
+    fireEvent.change(
+      screen.getByLabelText(/public repository published date/i),
+      {
+        target: { value: '2022-03-24' },
+      },
+    );
+    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    userEvent.click(authors);
+
+    userEvent.click(await screen.findByText(/Chris Reed/i));
+    userEvent.click(authors);
+    userEvent.click(screen.getByText('Chris Blue'));
+    userEvent.click(authors);
+    userEvent.type(authors, 'Alex White');
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getAllByText('Alex White')[1]!);
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText('None'));
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+
+    expect(screen.getByText('Publish output for the whole hub?')).toBeVisible();
+
+    userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Cancel',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -697,27 +838,27 @@ describe('OutputForm', () => {
       );
       userEvent.click(screen.getByText('None'));
 
-      userEvent.click(screen.getByRole('button', { name: /publish/i }));
-      expect(
-        await screen.findByRole('button', { name: /publish/i }),
-      ).toBeEnabled();
+      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-      expect(shareOutput).toHaveBeenCalledWith({
-        title: 'output title',
-        link: 'https://example.com',
-        documentType: 'Article',
-        type: 'Research',
-        subtype: 'Published',
-        description: 'Research description',
-        gp2Supported: "Don't Know",
-        sharingStatus: 'GP2 Only',
-        authors: [{ userId: 'u2' }],
-        mainEntityId: '12',
-        workingGroupIds: [],
-        relatedOutputIds: [],
-        relatedEventIds: [],
-        tagIds: [],
-        contributingCohortIds: [],
+      await waitFor(() => {
+        expect(shareOutput).toHaveBeenCalledWith({
+          title: 'output title',
+          link: 'https://example.com',
+          documentType: 'Article',
+          type: 'Research',
+          subtype: 'Published',
+          description: 'Research description',
+          gp2Supported: "Don't Know",
+          sharingStatus: 'GP2 Only',
+          authors: [{ userId: 'u2' }],
+          mainEntityId: '12',
+          workingGroupIds: [],
+          relatedOutputIds: [],
+          relatedEventIds: [],
+          tagIds: [],
+          contributingCohortIds: [],
+        });
       });
       expect(history.location.pathname).toEqual(`/outputs/ro0`);
     });
@@ -984,6 +1125,50 @@ describe('OutputForm', () => {
       expect(
         screen.queryByRole('textbox', { name: /cohorts/i }),
       ).not.toBeInTheDocument();
+    });
+
+    it('does not display publish modal when editing and clicks save', async () => {
+      const publishDate = '2020-03-04';
+      const title = 'Output Title';
+      const link = 'https://example.com/output';
+      const { authors } = gp2Fixtures.createOutputResponse();
+      authors[0]!.displayName = 'Tony Stark';
+      const history = createMemoryHistory();
+      const addNotification = jest.fn();
+      const output = {
+        ...defaultProps,
+        ...gp2Fixtures.createOutputResponse(),
+        publishDate,
+        title,
+        link,
+        authors,
+        tags: [{ id: 'tag-1', name: 'Tag' }],
+        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+        documentType: 'Dataset' as gp2.OutputDocumentType,
+      };
+      render(<OutputForm {...output} />, {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      });
+
+      userEvent.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(defaultProps.shareOutput).toHaveBeenCalled();
+      });
     });
   });
 

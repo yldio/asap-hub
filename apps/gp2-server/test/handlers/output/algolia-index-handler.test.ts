@@ -32,12 +32,12 @@ describe('Output index handler', () => {
       type: 'output',
     });
   });
-  test('Should fetch the output and create three records in Algolia when research-output is created and own and foreign related ROs are created', async () => {
+  test('Should fetch the output and create two records in Algolia when output is created and own and foreign related ROs are created', async () => {
     const outputResponse = getOutputResponse();
 
     const relatedOutputResponse = getOutputResponse();
     relatedOutputResponse.id = 'ro-1236';
-    relatedOutputResponse.title = 'Foreign related research output';
+    relatedOutputResponse.title = 'Foreign related output';
     relatedOutputResponse.documentType = 'Code/Software';
 
     outputResponse.relatedOutputs = [
@@ -55,17 +55,17 @@ describe('Output index handler', () => {
     await indexHandler(createEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: expect.objectContaining(outputResponse),
       type: 'output',
     });
-    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: expect.objectContaining(relatedOutputResponse),
       type: 'output',
     });
   });
 
-  test('Should populate the _tags field before saving the research output to Algolia', async () => {
+  test('Should populate the _tags field before saving the output to Algolia', async () => {
     const outputResponse = getOutputResponse();
     outputResponse.tags = [{ id: '1', name: 'output tag' }];
     outputResponse.relatedOutputs = [];

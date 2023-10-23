@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
+import { Headline3 } from '..';
 import { neutral900 } from '../colors';
 import { eventPlaceholderIcon } from '../icons';
 import { largeDesktopScreen, perRem, rem } from '../pixels';
@@ -55,7 +56,6 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
     titleLimit?: number | null;
     eventSpeakers?: React.ReactNode;
     eventTeams?: React.ReactNode;
-    linksEnabled?: boolean;
   };
 
 const EventInfo: React.FC<EventInfoProps> = ({
@@ -65,7 +65,6 @@ const EventInfo: React.FC<EventInfoProps> = ({
   eventOwner,
   status,
   titleLimit = TITLE_LIMIT,
-  linksEnabled = true,
   eventSpeakers,
   eventTeams,
   tags,
@@ -78,9 +77,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   );
 
   const link =
-    status === 'Cancelled' || !linksEnabled
-      ? undefined
-      : events({}).event({ eventId: id }).$;
+    status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
 
   return (
     <div css={cardStyles}>
@@ -92,10 +89,17 @@ const EventInfo: React.FC<EventInfoProps> = ({
         )}
       </div>
       <div>
-        <LinkHeadline level={3} styleAsHeading={4} href={link}>
-          {title.substr(0, titleLimit ?? undefined)}
-          {titleLimit && title.length > titleLimit ? '…' : undefined}
-        </LinkHeadline>
+        {link ? (
+          <LinkHeadline level={3} styleAsHeading={4} href={link}>
+            {title.substring(0, titleLimit ?? undefined)}
+            {titleLimit && title.length > titleLimit ? '…' : undefined}
+          </LinkHeadline>
+        ) : (
+          <Headline3 styleAsHeading={4}>
+            {title.substring(0, titleLimit ?? undefined)}
+            {titleLimit && title.length > titleLimit ? '…' : undefined}
+          </Headline3>
+        )}
         <EventTime {...props} />
         <div css={widthStyles}>
           {eventOwner}

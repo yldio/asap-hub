@@ -48,7 +48,10 @@ const rowStyles = css({
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 type PastEventsDashboardCardProps = {
-  events: EventResponse[];
+  events: Pick<
+    EventResponse,
+    'id' | 'title' | 'startDate' | 'notes' | 'presentation' | 'videoRecording'
+  >[];
 };
 const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
   events,

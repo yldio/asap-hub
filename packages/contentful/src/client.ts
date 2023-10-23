@@ -1,5 +1,12 @@
+/* eslint-disable max-classes-per-file */
 import { createClient as createCDAClient } from 'contentful';
-import { Adapter, createClient, Environment } from 'contentful-management';
+import {
+  createClient,
+  Environment,
+  MakeRequestOptions,
+  RestAdapter,
+} from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import { GraphQLClient } from 'graphql-request';
 
 export type { MakeRequestOptions } from 'contentful-management';
@@ -7,11 +14,36 @@ export { RestAdapter } from 'contentful-management';
 
 const cache = new Map<string, Environment>();
 
+export const contentfulManagementApiRateLimiter = new RateLimiter({
+  tokensPerInterval: 3,
+  interval: 'second',
+});
+
+export const contentDeliveryApiRateLimiter = new RateLimiter({
+  tokensPerInterval: 15,
+  interval: 'second',
+});
+
+export class RateLimitedRestAdapter extends RestAdapter {
+  async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
+    await contentfulManagementApiRateLimiter.removeTokens(1);
+    return super.makeRequest(options);
+  }
+}
+
+export class RateLimitedGraphqlClient extends GraphQLClient {
+  request = (async (
+    ...args: Parameters<GraphQLClient['request']>
+  ): Promise<ReturnType<GraphQLClient['request']>> => {
+    await contentDeliveryApiRateLimiter.removeTokens(1);
+    return super.request(...args);
+  }) as GraphQLClient['request'];
+}
+
 export type CreateClientParams = {
   space: string;
   environment: string;
   accessToken: string;
-  apiAdapter?: Adapter;
 };
 
 type CreatePreviewClientParams = {
@@ -24,7 +56,7 @@ export const getGraphQLClient = ({
   accessToken,
   environment,
 }: CreateClientParams) =>
-  new GraphQLClient(
+  new RateLimitedGraphqlClient(
     `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`,
     {
       errorPolicy: 'ignore',
@@ -32,28 +64,24 @@ export const getGraphQLClient = ({
         authorization: `Bearer ${accessToken}`,
       },
     },
-  );
+  ) as GraphQLClient;
 
 export const getRestClient = async ({
   space: spaceId,
   accessToken,
   environment: environmentId,
-  apiAdapter,
 }: CreateClientParams): Promise<Environment> => {
   const key = `${accessToken}-${spaceId}-${environmentId}`;
   const cached = cache.get(key);
   if (cached) {
     return cached;
   }
-  const client = createClient(
-    apiAdapter
-      ? {
-          apiAdapter,
-        }
-      : {
-          accessToken,
-        },
-  );
+  const client = createClient({
+    apiAdapter: new RateLimitedRestAdapter({
+      accessToken,
+    }),
+  });
+
   const space = await client.getSpace(spaceId);
   const environment = await space.getEnvironment(environmentId);
   cache.set(key, environment);

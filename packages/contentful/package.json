@@ -38,6 +38,7 @@
     "graphql": "15.8.0",
     "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6",
+    "limiter": "^2.1.0",
     "minimist": "^1.2.8"
   },
   "devDependencies": {

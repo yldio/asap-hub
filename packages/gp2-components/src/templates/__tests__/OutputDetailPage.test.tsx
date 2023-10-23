@@ -87,6 +87,53 @@ describe('OutputDetailPage', () => {
     });
   });
 
+  it('displays the related research card when data provided', () => {
+    const { queryByText, getByText, rerender } = render(
+      <OutputDetailPage
+        {...gp2Fixtures.createOutputResponse()}
+        isAdministrator
+        documentType="Article"
+        relatedOutputs={[]}
+      />,
+    );
+    expect(queryByText(/Related Outputs/i)).not.toBeInTheDocument();
+
+    rerender(
+      <OutputDetailPage
+        {...gp2Fixtures.createOutputResponse()}
+        isAdministrator
+        documentType="Article"
+        relatedOutputs={[
+          {
+            id: 'id1',
+            title: 'Related research article',
+            type: 'Blog',
+            documentType: 'Article',
+            entity: {
+              id: 'wg-1',
+              title: 'Working Group 1',
+              type: 'WorkingGroups',
+            },
+          },
+        ]}
+      />,
+    );
+    expect(getByText('Related Outputs')).toBeVisible();
+    expect(
+      getByText('Find all outputs that contributed to this one.'),
+    ).toBeVisible();
+    expect(getByText(/Related research article/i)).toBeVisible();
+    expect(getByText(/Related research article/i).closest('a')).toHaveAttribute(
+      'href',
+      '/outputs/id1',
+    );
+    expect(getByText(/Working Group 1/i)).toBeVisible();
+    expect(getByText(/Working Group 1/i).closest('a')).toHaveAttribute(
+      'href',
+      '/working-groups/wg-1',
+    );
+  });
+
   it('displays contact support footer', () => {
     const { getByText } = render(
       <OutputDetailPage

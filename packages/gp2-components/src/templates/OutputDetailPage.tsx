@@ -5,6 +5,7 @@ import {
   editIcon,
   mail,
   RelatedEventsCard,
+  RelatedResearchCard,
   SharedResearchDetailsTagsCard,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -13,7 +14,9 @@ import { css } from '@emotion/react';
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
 import OutputAdditionalInformationCard from '../organisms/OutputAdditionalInformationCard';
+import OutputCohortsCard from '../organisms/OutputCohortsCard';
 import PageNotifications from './PageNotifications';
+import { getIconForDocumentType, getSourceIcon } from '../utils';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -65,6 +68,7 @@ type OutputDetailPageProps = Pick<
   | 'link'
   | 'mainEntity'
   | 'projects'
+  | 'relatedOutputs'
   | 'subtype'
   | 'title'
   | 'type'
@@ -73,6 +77,7 @@ type OutputDetailPageProps = Pick<
   | 'sharingStatus'
   | 'gp2Supported'
   | 'publishDate'
+  | 'contributingCohorts'
   | 'description'
   | 'tags'
 > & {
@@ -116,6 +121,20 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               descriptionMD={output.description}
             />
           )}
+
+          <OutputCohortsCard contributingCohorts={output.contributingCohorts} />
+
+          {output.relatedOutputs?.length > 0 && (
+            <RelatedResearchCard
+              title="Related Outputs"
+              description="Find all outputs that contributed to this one."
+              relatedResearch={output.relatedOutputs}
+              getIconForDocumentType={getIconForDocumentType}
+              getSourceIcon={getSourceIcon}
+              tableTitles={['Type of Output', 'Output Name', 'Source Type']}
+            />
+          )}
+
           <RelatedEventsCard
             relatedEvents={output.relatedEvents}
             truncateFrom={3}

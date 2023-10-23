@@ -14,6 +14,7 @@ import {
   Paragraph,
   pixels,
   RemindersCard,
+  PastEventsDashboardCard,
   RecentSharedOutputs,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -75,8 +76,10 @@ type DashboardPageBodyProps = {
   news: gp2Model.ListNewsResponse;
   latestStats: gp2Model.StatsDataObject;
   totalOfUpcomingEvents: number;
+  totalOfPastEvents: number;
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
+  pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
   guides?: gp2Model.GuideDataObject[];
   recentOutputs: gp2Model.OutputBaseResponse[];
   totalOutputs: number;
@@ -87,8 +90,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
   latestStats,
   totalOfUpcomingEvents,
+  totalOfPastEvents,
   announcements,
   upcomingEvents,
+  pastEvents,
   guides,
   latestUsers,
   recentOutputs,
@@ -167,10 +172,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Here are some of the upcoming GP2 Hub events.
         </div>
-        <DashboardUpcomingEvents
-          upcomingEvents={upcomingEvents}
-          linksEnabled={isEnabled('DISPLAY_EVENTS')}
-        />
+        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
         {isEnabled('DISPLAY_EVENTS') && totalOfUpcomingEvents > 3 && (
           <p css={viewAllStyles}>
             <Button
@@ -186,12 +188,33 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </p>
         )}
       </div>
+      <div css={columnContainer}>
+        <Headline2 styleAsHeading={3}>Past Events</Headline2>
+        <div css={infoStyles}>
+          Explore previous events and learn about what was discussed.
+        </div>
+        <PastEventsDashboardCard events={pastEvents} />
+        {isEnabled('DISPLAY_EVENTS') && totalOfPastEvents > 3 && (
+          <p css={viewAllStyles}>
+            <Button
+              data-testid="view-past-events"
+              onClick={() =>
+                history.push({
+                  pathname: gp2Routes.events({}).past({}).$,
+                })
+              }
+            >
+              View All
+            </Button>
+          </p>
+        )}
+      </div>
       <div>
         <Headline2 styleAsHeading={3}>Recent Outputs</Headline2>
         <div css={infoStyles}>
           Explore the latest outputs and learn more about them.
         </div>
-        <RecentSharedOutputs
+        <RecentSharedOutputs<gp2Model.OutputResponse['relatedOutputs']>
           outputs={recentOutputs}
           getIconForDocumentType={getIconForDocumentType}
           getSharedOutputHref={(id: string) =>

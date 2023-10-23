@@ -1,4 +1,4 @@
-import { gp2, ResearchOutputResponse } from '@asap-hub/model';
+import { EventResponse, gp2, ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -7,7 +7,6 @@ import { Card, Link } from '../atoms';
 import { formatDateToTimezone } from '../date';
 import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
-import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 
 const container = css({
   display: 'grid',
@@ -64,19 +63,29 @@ const getSharedOutputHrefCRN = (id: string) =>
     researchOutputId: id,
   }).$;
 
-type RecentSharedOutputProp = {
+type RecentSharedOutputProp<
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2.OutputResponse['relatedOutputs'],
+> = {
   outputs?: ResearchOutputResponse[] | gp2.OutputBaseResponse[];
-  getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
+  getIconForDocumentType: (
+    documentType: T[number]['documentType'],
+  ) => EmotionJSX.Element;
   getSharedOutputHref?: (id: string) => string;
-  tableTitles?: [string, string, string]; // ensuring it has exactly 3 elements
+  tableTitles?: [string, string, string];
 };
 
-const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({
+const RecentSharedOutputs = <
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2.OutputResponse['relatedOutputs'],
+>({
   outputs,
-  getIconForDocumentType = getIconForDocumentTypeCRN,
+  getIconForDocumentType,
   getSharedOutputHref = getSharedOutputHrefCRN,
   tableTitles = ['Shared Output', 'Type of Output', 'Date Added'],
-}) => (
+}: RecentSharedOutputProp<T>) => (
   <Card>
     <div css={container}>
       <div css={[rowStyles, gridTitleStyles]}>

@@ -63,6 +63,23 @@ export const outputsContentQueryFragment = gql`
         title
         documentType
         type
+        relatedEntitiesCollection(limit: 1) {
+          items {
+            __typename
+            ... on WorkingGroups {
+              sys {
+                id
+              }
+              title
+            }
+            ... on Projects {
+              sys {
+                id
+              }
+              title
+            }
+          }
+        }
       }
     }
     relatedEventsCollection(limit: 10) {
@@ -103,6 +120,7 @@ export const outputsContentQueryFragment = gql`
           id
         }
         name
+        studyLink
       }
     }
   }
@@ -200,6 +218,25 @@ export const FETCH_OUTPUTS_BY_EXTERNAL_USER_ID = gql`
 export const FETCH_OUTPUTS_BY_PROJECT_ID = gql`
   query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {
     projects(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;
+
+export const FETCH_OUTPUTS_BY_EVENT_ID = gql`
+  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {
+    events(id: $id) {
       sys {
         id
       }

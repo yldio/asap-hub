@@ -3,6 +3,7 @@ import { ListResponse } from '../common';
 export type ContributingCohortDataObject = {
   id: string;
   name: string;
+  studyLink?: string;
 };
 export type ListContributingCohortDataObject =
   ListResponse<ContributingCohortDataObject>;

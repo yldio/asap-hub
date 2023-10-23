@@ -1,11 +1,11 @@
-import React, { ComponentProps, useState } from 'react';
-import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch, tags as tagRoute } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+import React, { ComponentProps, useState } from 'react';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
-import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import { CtaCard } from '../molecules';
 import {
   ConfirmModal,
@@ -19,8 +19,9 @@ import {
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
 } from '../organisms';
-import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
+import { perRem } from '../pixels';
 import {
+  getIconForDocumentType as getIconForDocumentTypeCRN,
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
@@ -241,6 +242,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             <RelatedResearchCard
               description="Find out all shared research outputs that contributed to this one."
               relatedResearch={relatedResearch}
+              getIconForDocumentType={getIconForDocumentTypeCRN}
             />
           )}
           {versions.length > 0 && <OutputVersions versions={versions} />}

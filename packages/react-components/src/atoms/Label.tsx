@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { css } from '@emotion/react';
 import { v4 as uuidV4 } from 'uuid';
-import { noop } from '../utils';
 
 const containerStyles = css({
   display: 'flex',
@@ -17,22 +16,19 @@ interface LabelProps {
   readonly children: React.ReactNode;
   readonly forContent: (id: string) => React.ReactNode;
   readonly trailing?: boolean;
-  readonly onHover?: () => void;
-  readonly onLeave?: () => void;
+  readonly title?: string;
 }
 const Label: React.FC<LabelProps> = ({
   children,
   forContent,
   trailing = false,
-  onHover = noop,
-  onLeave = noop,
+  title,
 }) => {
   const contentId = useRef(uuidV4());
   return (
     <div
       css={containerStyles}
-      onMouseOver={onHover}
-      onMouseLeave={onLeave}
+      title={title}
       data-testid={`label-${contentId.current}`}
     >
       {trailing || <label htmlFor={contentId.current}>{children}</label>}

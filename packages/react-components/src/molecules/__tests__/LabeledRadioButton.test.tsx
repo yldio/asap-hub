@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import LabeledRadioButton from '../LabeledRadioButton';
 
@@ -19,22 +18,12 @@ describe('tooltip', () => {
         groupName="Airport"
         title="Heathrow"
         disabled
-        hasTooltip
         tooltipText="Tooltip"
       />,
     );
   });
-  it('renders tooltip when exists and is disabled', async () => {
-    expect(screen.getByText(/tooltip/i)).toBeInTheDocument();
-    expect(screen.getByText(/tooltip/i)).not.toBeVisible();
-  });
-  it('shows and hides on hover/unhover', () => {
-    userEvent.hover(screen.getByTestId('label-12'));
 
-    expect(screen.getByText(/tooltip/i)).toBeVisible();
-
-    userEvent.unhover(screen.getByTestId('label-12'));
-
-    expect(screen.getByText(/tooltip/i)).not.toBeVisible();
+  it('has title attribute', async () => {
+    expect(screen.getByTestId('label-12')).toHaveAttribute('title', 'Tooltip');
   });
 });

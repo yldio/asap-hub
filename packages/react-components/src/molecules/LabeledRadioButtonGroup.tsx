@@ -14,14 +14,7 @@ export type LabeledRadioButtonGroupProps<V extends string> = {
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
-} & Pick<
-  ComponentProps<typeof LabeledRadioButton>,
-  | 'tooltipTextStyles'
-  | 'tooltipBubbleStyles'
-  | 'hasTooltip'
-  | 'tooltipText'
-  | 'tooltipTooltipStyles'
->;
+} & Pick<ComponentProps<typeof LabeledRadioButton>, 'tooltipText'>;
 
 const optionListStyles = css({
   display: 'grid',
@@ -47,10 +40,6 @@ export default function LabeledRadioButtonGroup<V extends string>({
   options,
   value,
   onChange = noop,
-  hasTooltip,
-  tooltipTextStyles,
-  tooltipBubbleStyles,
-  tooltipTooltipStyles,
   tooltipText,
 }: LabeledRadioButtonGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
@@ -71,10 +60,6 @@ export default function LabeledRadioButtonGroup<V extends string>({
             title={option.label}
             checked={option.value === value}
             onSelect={() => onChange(option.value)}
-            tooltipBubbleStyles={tooltipBubbleStyles}
-            tooltipTextStyles={tooltipTextStyles}
-            tooltipTooltipStyles={tooltipTooltipStyles}
-            hasTooltip={hasTooltip}
             tooltipText={tooltipText}
           />
         ))}

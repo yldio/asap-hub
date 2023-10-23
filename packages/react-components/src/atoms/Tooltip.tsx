@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 
 import { themes } from '../theme';
 import { perRem, tabletScreen } from '../pixels';
@@ -71,16 +71,12 @@ interface TooltipProps {
   shown?: boolean;
   maxContent?: boolean;
   bottom?: string;
-  overrideTooltipStyles?: SerializedStyles;
-  overrideBubbleStyles?: SerializedStyles;
 }
 const Tooltip: React.FC<TooltipProps> = ({
   children,
   shown = false,
   maxContent = false,
   bottom,
-  overrideTooltipStyles,
-  overrideBubbleStyles,
 }) => (
   <span css={positionerStyles}>
     <span
@@ -89,10 +85,9 @@ const Tooltip: React.FC<TooltipProps> = ({
         shown || { display: 'none' },
         maxContent && { width: 'max-content' },
         bottom && { bottom },
-        overrideTooltipStyles,
       ]}
     >
-      <span role="tooltip" css={[bubbleStyles, overrideBubbleStyles]}>
+      <span role="tooltip" css={bubbleStyles}>
         {children}
       </span>
       <span role="presentation" css={[themes.dark, presentationStyles]} />

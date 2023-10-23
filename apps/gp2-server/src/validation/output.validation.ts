@@ -29,6 +29,7 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
         properties: {
           workingGroupId: { type: 'string', nullable: true },
           projectId: { type: 'string', nullable: true },
+          eventId: { type: 'string', nullable: true },
           authorId: {
             type: 'string',
             nullable: true,

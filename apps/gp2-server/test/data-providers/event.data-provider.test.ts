@@ -110,6 +110,19 @@ describe('Events Contentful Data Provider', () => {
       });
     });
 
+    test('Should return the total of records ', async () => {
+      const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
+      contentfulGraphQLResponse.eventsCollection!.total = 11;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const { total } = await eventDataProvider.fetch({});
+
+      expect(total).toEqual(11);
+    });
+
     test('Should apply the filter to remove hidden events by default', async () => {
       const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(

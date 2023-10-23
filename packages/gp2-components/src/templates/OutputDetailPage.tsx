@@ -5,13 +5,16 @@ import {
   editIcon,
   mail,
   RelatedEventsCard,
+  RelatedResearchCard,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
+import OutputAdditionalInformationCard from '../organisms/OutputAdditionalInformationCard';
 import PageNotifications from './PageNotifications';
+import { getIconForDocumentType, getSourceIcon } from '../utils';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -63,11 +66,15 @@ type OutputDetailPageProps = Pick<
   | 'link'
   | 'mainEntity'
   | 'projects'
+  | 'relatedOutputs'
   | 'subtype'
   | 'title'
   | 'type'
   | 'workingGroups'
   | 'relatedEvents'
+  | 'sharingStatus'
+  | 'gp2Supported'
+  | 'publishDate'
 > & {
   isAdministrator: boolean;
 };
@@ -102,11 +109,23 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
             </div>
           ) : null}
           <OutputCard {...output} detailedView />
+
+          {output.relatedOutputs?.length > 0 && (
+            <RelatedResearchCard
+              title="Related Outputs"
+              description="Find all outputs that contributed to this one."
+              relatedResearch={output.relatedOutputs}
+              getIconForDocumentType={getIconForDocumentType}
+              getSourceIcon={getSourceIcon}
+              tableTitles={['Type of Output', 'Output Name', 'Source Type']}
+            />
+          )}
           <RelatedEventsCard
             relatedEvents={output.relatedEvents}
             truncateFrom={3}
             hub="GP2"
           />
+          <OutputAdditionalInformationCard {...output} />
           <CtaCard
             href={createMailTo(INVITE_SUPPORT_EMAIL)}
             buttonText="Contact Tech Support"

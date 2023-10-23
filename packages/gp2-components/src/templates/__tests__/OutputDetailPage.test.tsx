@@ -24,39 +24,51 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Edit')).not.toBeInTheDocument();
   });
 
-  it('displays tags with source, documentType, type, subtype and source name', () => {
-    const { getAllByRole, getByText } = render(
+  it('displays the related research card when data provided', () => {
+    const { queryByText, getByText, rerender } = render(
       <OutputDetailPage
         {...gp2Fixtures.createOutputResponse()}
         isAdministrator
         documentType="Article"
-        type="Blog"
-        subtype="Preprints"
-        projects={[
-          {
-            id: 'project-id',
-            title:
-              'Polygenic Risk Score Project of PD risk in non-European populations',
-          },
-        ]}
-        authors={[]}
-        workingGroups={[]}
+        relatedOutputs={[]}
       />,
     );
+    expect(queryByText(/Related Outputs/i)).not.toBeInTheDocument();
+
+    rerender(
+      <OutputDetailPage
+        {...gp2Fixtures.createOutputResponse()}
+        isAdministrator
+        documentType="Article"
+        relatedOutputs={[
+          {
+            id: 'id1',
+            title: 'Related research article',
+            type: 'Blog',
+            documentType: 'Article',
+            entity: {
+              id: 'wg-1',
+              title: 'Working Group 1',
+              type: 'WorkingGroups',
+            },
+          },
+        ]}
+      />,
+    );
+    expect(getByText('Related Outputs')).toBeVisible();
     expect(
-      getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toEqual([
-      'Project',
-      'Article',
-      'Blog',
-      'Preprints',
-      'Polygenic Risk Score Project of PD risk in non-European populations',
-    ]);
-    expect(
-      getByText(
-        'Polygenic Risk Score Project of PD risk in non-European populations',
-      ).closest('a'),
-    ).toHaveAttribute('href', '/projects/project-id');
+      getByText('Find all outputs that contributed to this one.'),
+    ).toBeVisible();
+    expect(getByText(/Related research article/i)).toBeVisible();
+    expect(getByText(/Related research article/i).closest('a')).toHaveAttribute(
+      'href',
+      '/outputs/id1',
+    );
+    expect(getByText(/Working Group 1/i)).toBeVisible();
+    expect(getByText(/Working Group 1/i).closest('a')).toHaveAttribute(
+      'href',
+      '/working-groups/wg-1',
+    );
   });
 
   it('displays contact support footer', () => {

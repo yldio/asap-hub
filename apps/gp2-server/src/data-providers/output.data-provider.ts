@@ -79,6 +79,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
         filter.externalAuthorId,
       );
     }
+
+    if (filter?.eventId) {
+      return this.fetchOutputsByEventId(take, skip, filter.eventId);
+    }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
@@ -137,6 +141,18 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       id,
     });
     return projects?.linkedFrom?.outputsCollection;
+  }
+
+  private async fetchOutputsByEventId(take: number, skip: number, id: string) {
+    const { events } = await this.graphQLClient.request<
+      gp2Contentful.FetchOutputsByEventIdQuery,
+      gp2Contentful.FetchOutputsByEventIdQueryVariables
+    >(gp2Contentful.FETCH_OUTPUTS_BY_EVENT_ID, {
+      limit: take,
+      skip,
+      id,
+    });
+    return events?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByWorkingGroupId(
@@ -324,11 +340,14 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
         output.documentType !== null &&
         output.title !== null,
     )
-    .map(({ sys, documentType, title, type }) => ({
+    .map(({ sys, documentType, title, type, relatedEntitiesCollection }) => ({
       id: sys.id,
       title: title ?? '',
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
+      entity: relatedEntitiesCollection?.items.length
+        ? getEntity(relatedEntitiesCollection?.items[0])
+        : undefined,
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
@@ -375,7 +394,7 @@ export const parseContentfulGraphQLOutput = (
       data.sharingStatus && isSharingStatus(data.sharingStatus)
         ? data.sharingStatus
         : 'GP2 Only',
-    publishDate: data.publishDate,
+    publishDate: data.publishDate ?? undefined,
     addedDate: data.addedDate ?? '',
     lastUpdatedPartial:
       data.lastUpdatedPartial ??

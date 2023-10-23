@@ -15,6 +15,7 @@ import {
   CalendarList,
   RelatedResearchCard,
 } from '../organisms';
+import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -79,6 +80,7 @@ const EventPage: React.FC<EventPageProps> = ({
         <RelatedResearchCard
           description="Find out all shared research outputs that are related to this event."
           relatedResearch={relatedResearch}
+          getIconForDocumentType={getIconForDocumentTypeCRN}
         />
       )}
       {displayCalendar && (

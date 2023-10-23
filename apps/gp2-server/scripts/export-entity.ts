@@ -42,7 +42,7 @@ export const exportEntity = async (
 
     total = records.total;
 
-    if (page != 1) {
+    if (page != 1 && records.items.length) {
       await file.write(',\n');
     }
 

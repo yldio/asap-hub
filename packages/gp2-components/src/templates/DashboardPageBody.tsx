@@ -214,7 +214,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Explore the latest outputs and learn more about them.
         </div>
-        <RecentSharedOutputs
+        <RecentSharedOutputs<gp2Model.OutputResponse['relatedOutputs']>
           outputs={recentOutputs}
           getIconForDocumentType={getIconForDocumentType}
           getSharedOutputHref={(id: string) =>

@@ -22,6 +22,7 @@ describe('Output index handler', () => {
 
   test('Should fetch the output and create a record in Algolia when output is created', async () => {
     const outputResponse = getOutputResponse();
+    outputResponse.relatedOutputs = [];
     outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
 
     await indexHandler(createEvent('42'));
@@ -31,10 +32,43 @@ describe('Output index handler', () => {
       type: 'output',
     });
   });
+  test('Should fetch the output and create two records in Algolia when output is created and own and foreign related ROs are created', async () => {
+    const outputResponse = getOutputResponse();
 
-  test('Should populate the _tags field before saving the research output to Algolia', async () => {
+    const relatedOutputResponse = getOutputResponse();
+    relatedOutputResponse.id = 'ro-1236';
+    relatedOutputResponse.title = 'Foreign related output';
+    relatedOutputResponse.documentType = 'Code/Software';
+
+    outputResponse.relatedOutputs = [
+      {
+        id: relatedOutputResponse.id,
+        title: relatedOutputResponse.title,
+        documentType: relatedOutputResponse.documentType,
+      },
+    ];
+
+    outputControllerMock.fetchById
+      .mockResolvedValueOnce(outputResponse)
+      .mockResolvedValueOnce(relatedOutputResponse);
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining(outputResponse),
+      type: 'output',
+    });
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining(relatedOutputResponse),
+      type: 'output',
+    });
+  });
+
+  test('Should populate the _tags field before saving the output to Algolia', async () => {
     const outputResponse = getOutputResponse();
     outputResponse.tags = [{ id: '1', name: 'output tag' }];
+    outputResponse.relatedOutputs = [];
     outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
 
     await indexHandler(createEvent('42'));
@@ -46,6 +80,7 @@ describe('Output index handler', () => {
 
   test('Should fetch the output and create a record in Algolia when output is updated', async () => {
     const outputResponse = getOutputResponse();
+    outputResponse.relatedOutputs = [];
     outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
 
     await indexHandler(updateEvent('42'));
@@ -117,6 +152,7 @@ describe('Output index handler', () => {
       const id = '42';
       const outputResponse = {
         ...getOutputResponse(),
+        relatedOutputs: [],
         id,
       };
 
@@ -139,6 +175,7 @@ describe('Output index handler', () => {
       const id = '42';
       const outputResponse = {
         ...getOutputResponse(),
+        relatedOutputs: [],
         id,
       };
 

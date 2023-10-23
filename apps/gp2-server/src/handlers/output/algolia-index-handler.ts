@@ -53,7 +53,10 @@ export const indexOutputHandler =
     };
 
     try {
-      await reindexOutput(event.detail.resourceId);
+      const output = await reindexOutput(event.detail.resourceId);
+      for (const relatedOutput of output.relatedOutputs) {
+        await reindexOutput(relatedOutput.id);
+      }
     } catch (e) {
       log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {

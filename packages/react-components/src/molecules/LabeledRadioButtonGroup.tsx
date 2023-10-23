@@ -60,7 +60,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
             title={option.label}
             checked={option.value === value}
             onSelect={() => onChange(option.value)}
-            tooltipText={tooltipText}
+            tooltipText={option.disabled ? tooltipText : undefined}
           />
         ))}
       </div>

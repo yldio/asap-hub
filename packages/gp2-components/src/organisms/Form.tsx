@@ -70,7 +70,7 @@ const Form = <T extends void | Record<string, unknown>>({
         return Promise.resolve();
       }
 
-      if (!!onDisplayModal) {
+      if (onDisplayModal) {
         onDisplayModal();
         return Promise.resolve();
       }

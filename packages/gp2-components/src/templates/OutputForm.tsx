@@ -100,6 +100,7 @@ const containerStyles = css({
   flexDirection: 'column',
   gap: rem(32),
 });
+
 type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
@@ -482,7 +483,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   {
                     value: 'Yes',
                     label: 'Yes',
-                    disabled: isGP2SupportedAlwaysTrue || isSaving,
+                    disabled: isSaving,
                   },
                   {
                     value: 'No',
@@ -497,6 +498,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 ]}
                 value={newGp2Supported}
                 onChange={setGp2Supported}
+                tooltipText="This option is not available for this document type."
               />
             ) : null}
             <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
@@ -511,11 +513,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 {
                   value: 'Public',
                   label: 'Public',
-                  disabled: isAlwaysPublic || isSaving,
+                  disabled: isSaving,
                 },
               ]}
               value={newSharingStatus}
               onChange={setSharingStatus}
+              tooltipText="This option is not available for this document type."
             />
             {newSharingStatus === 'Public' ? (
               <LabeledDateField

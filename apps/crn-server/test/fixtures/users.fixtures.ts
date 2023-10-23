@@ -17,7 +17,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const fetchUserResponseDataObject = (): UserDataObject => ({
-  avatarUrl: `${baseUrl}/api/assets/${appName}/squidex-asset-id`,
+  avatarUrl: `${baseUrl}/api/assets/${appName}/contentful-asset-id`,
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'tony@stark.com',
   expertiseAndResourceDescription: 'some expertiseAndResourceTags',

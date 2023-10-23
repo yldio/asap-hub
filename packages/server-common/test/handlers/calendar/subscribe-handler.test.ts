@@ -17,7 +17,6 @@ describe('Subscription', () => {
 
   test.each`
     cms             | address
-    ${'squidex'}    | ${'webhook/events'}
     ${'contentful'} | ${'webhook/events/contentful'}
   `('404 - should return empty resourceId', async ({ address, cms }) => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);

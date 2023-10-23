@@ -6,7 +6,7 @@ type Config = {
   asapApiUrl: string;
   googleApiToken: string;
   googleApiUrl: string;
-  cms?: 'contentful' | 'squidex';
+  cms?: 'contentful';
 };
 
 export const subscribeToEventChangesFactory =

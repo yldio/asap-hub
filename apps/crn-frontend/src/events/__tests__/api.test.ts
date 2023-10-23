@@ -10,7 +10,7 @@ import {
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getEvent, getEvents, getSquidexUrl } from '../api';
+import { getEvent, getEvents } from '../api';
 
 jest.mock('../../config');
 
@@ -249,30 +249,6 @@ describe('getEvents', () => {
         page: 0,
       },
       false,
-    );
-  });
-});
-
-describe('getSquidexUrl', () => {
-  const options: GetEventListOptions = {
-    searchQuery: '',
-    currentPage: 1,
-    pageSize: 10,
-    filters: new Set(),
-    after: new Date('2021-01-01T12:00:00').toString(),
-  };
-
-  it('returns the user or team url', () => {
-    options.constraint = { teamId: 'team-1' };
-    expect(getSquidexUrl(options).toString()).toEqual(
-      'http://api/events?take=10&skip=10',
-    );
-  });
-
-  it('returns the interest group url if the constraint contains interest group id', () => {
-    options.constraint = { interestGroupId: 'group-1' };
-    expect(getSquidexUrl(options).toString()).toEqual(
-      'http://api/interest-groups/group-1/events?take=10&skip=10',
     );
   });
 });

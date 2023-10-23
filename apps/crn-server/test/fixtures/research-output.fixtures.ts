@@ -196,7 +196,7 @@ export const getResearchOutputCreateDataObject =
       lastUpdatedPartial: _lastUpdatedPartial,
       created: _created,
       contactEmails: _contactEmails,
-      workingGroups: _workingGroups, // @TODO send this data to squidex once the schema has changed (1/2)
+      workingGroups: _workingGroups,
       published: _published,
       versions: _versions,
       ...researchOutputPostRequest

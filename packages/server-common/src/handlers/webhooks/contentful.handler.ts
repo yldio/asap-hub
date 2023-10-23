@@ -83,7 +83,7 @@ export const contentfulHandlerFactory = (
         ) {
           return undefined;
         }
-        logger.error('Error while fetching entry', error);
+        logger.error(error, 'Error while fetching entry');
         throw error;
       }
     };
@@ -91,7 +91,7 @@ export const contentfulHandlerFactory = (
     try {
       await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
     } catch (error) {
-      logger.error('Error during polling the entry', error);
+      logger.error(error, 'Error during polling the entry');
 
       // skip if the entry is not found as it may have been deleted
       if (!(error instanceof Error && error.message === 'Not found')) {

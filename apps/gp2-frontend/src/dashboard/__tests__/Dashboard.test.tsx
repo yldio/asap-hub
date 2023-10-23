@@ -54,6 +54,7 @@ const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 it('renders dashboard header', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   mockGetOutputs.mockResolvedValueOnce(createOutputListAlgoliaResponse(2));
@@ -65,6 +66,7 @@ it('renders dashboard header', async () => {
 
 it('doesnt render the welcome back banner when its disabled', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
@@ -80,6 +82,7 @@ it('doesnt render the welcome back banner when its disabled', async () => {
 it('renders the news when theres at least one news', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   mockGetOutputs.mockResolvedValueOnce(createOutputListAlgoliaResponse(2));
@@ -89,6 +92,7 @@ it('renders the news when theres at least one news', async () => {
 
 it("renders the upcoming events with events when there's at least one upcoming event", async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));

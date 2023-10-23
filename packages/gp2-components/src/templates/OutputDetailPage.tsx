@@ -13,6 +13,7 @@ import { css } from '@emotion/react';
 import { CtaCard } from '../molecules';
 import { OutputCard } from '../organisms';
 import OutputAdditionalInformationCard from '../organisms/OutputAdditionalInformationCard';
+import OutputCohortsCard from '../organisms/OutputCohortsCard';
 import PageNotifications from './PageNotifications';
 import { getIconForDocumentType, getSourceIcon } from '../utils';
 
@@ -75,6 +76,7 @@ type OutputDetailPageProps = Pick<
   | 'sharingStatus'
   | 'gp2Supported'
   | 'publishDate'
+  | 'contributingCohorts'
 > & {
   isAdministrator: boolean;
 };
@@ -110,6 +112,8 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
           ) : null}
           <OutputCard {...output} detailedView />
 
+          <OutputCohortsCard contributingCohorts={output.contributingCohorts} />
+
           {output.relatedOutputs?.length > 0 && (
             <RelatedResearchCard
               title="Related Outputs"
@@ -120,6 +124,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               tableTitles={['Type of Output', 'Output Name', 'Source Type']}
             />
           )}
+
           <RelatedEventsCard
             relatedEvents={output.relatedEvents}
             truncateFrom={3}

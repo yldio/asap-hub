@@ -301,6 +301,7 @@ const getCohorts = (cohorts?: GraphQLCohorts) =>
     .map((cohort) => ({
       id: cohort.sys.id,
       name: cohort.name ?? '',
+      studyLink: cohort.studyLink ?? undefined,
     })) || [];
 
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];

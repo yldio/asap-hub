@@ -7,6 +7,7 @@ export const contributingCohortsContentQueryFragment = gql`
       id
     }
     name
+    studyLink
   }
 `;
 

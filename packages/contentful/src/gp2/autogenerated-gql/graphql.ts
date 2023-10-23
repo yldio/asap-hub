@@ -7690,7 +7690,7 @@ export type FetchCalendarsQuery = {
 
 export type ContributingCohortsContentDataFragment = Pick<
   ContributingCohorts,
-  'name'
+  'name' | 'studyLink'
 > & { sys: Pick<Sys, 'id'> };
 
 export type FetchContributingCohortsQueryVariables = Exact<{
@@ -7706,7 +7706,11 @@ export type FetchContributingCohortsQuery = {
   contributingCohortsCollection?: Maybe<
     Pick<ContributingCohortsCollection, 'total'> & {
       items: Array<
-        Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+        Maybe<
+          Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
       >;
     }
   >;
@@ -9647,7 +9651,11 @@ export type OutputsContentDataFragment = Pick<
   contributingCohortsCollection?: Maybe<
     Pick<OutputsContributingCohortsCollection, 'total'> & {
       items: Array<
-        Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+        Maybe<
+          Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
       >;
     }
   >;
@@ -9754,7 +9762,11 @@ export type FetchOutputByIdQuery = {
       contributingCohortsCollection?: Maybe<
         Pick<OutputsContributingCohortsCollection, 'total'> & {
           items: Array<
-            Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<
+              Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+                sys: Pick<Sys, 'id'>;
+              }
+            >
           >;
         }
       >;
@@ -9877,7 +9889,9 @@ export type FetchOutputsQuery = {
               Pick<OutputsContributingCohortsCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }
+                    Pick<ContributingCohorts, 'name' | 'studyLink'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
                   >
                 >;
               }
@@ -10006,7 +10020,7 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                   Pick<OutputsContributingCohortsCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<ContributingCohorts, 'name'> & {
+                        Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -10139,7 +10153,7 @@ export type FetchOutputsByUserIdQuery = {
                   Pick<OutputsContributingCohortsCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<ContributingCohorts, 'name'> & {
+                        Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -10272,7 +10286,7 @@ export type FetchOutputsByExternalUserIdQuery = {
                   Pick<OutputsContributingCohortsCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<ContributingCohorts, 'name'> & {
+                        Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -10405,7 +10419,7 @@ export type FetchOutputsByProjectIdQuery = {
                   Pick<OutputsContributingCohortsCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<ContributingCohorts, 'name'> & {
+                        Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -10488,6 +10502,20 @@ export type FetchOutputsByEventIdQuery = {
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
                           sys: Pick<Sys, 'id'>;
+                          relatedEntitiesCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                | ({ __typename: 'Projects' } & Pick<
+                                    Projects,
+                                    'title'
+                                  > & { sys: Pick<Sys, 'id'> })
+                                | ({ __typename: 'WorkingGroups' } & Pick<
+                                    WorkingGroups,
+                                    'title'
+                                  > & { sys: Pick<Sys, 'id'> })
+                              >
+                            >;
+                          }>;
                         }
                       >
                     >;
@@ -10524,7 +10552,7 @@ export type FetchOutputsByEventIdQuery = {
                   Pick<OutputsContributingCohortsCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<ContributingCohorts, 'name'> & {
+                        Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -12552,6 +12580,7 @@ export const ContributingCohortsContentDataFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'studyLink' } },
         ],
       },
     },
@@ -13883,6 +13912,10 @@ export const OutputsContentDataFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'studyLink' },
+                      },
                     ],
                   },
                 },

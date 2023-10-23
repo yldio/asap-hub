@@ -4,6 +4,7 @@ import * as mail from './mail';
 import * as pixels from './pixels';
 import * as text from './text';
 import * as utils from './utils';
+import * as colors from './colors';
 
 export * from './button';
 export * from './appearance';
@@ -253,6 +254,6 @@ export {
 } from './templates';
 export * from './theme';
 export { noop } from './utils';
-export { pixels, text, authTestUtils, utils, mail, ajvErrors };
+export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
 export type { ResearchOutputOption } from './utils';

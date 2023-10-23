@@ -120,6 +120,7 @@ export const outputsContentQueryFragment = gql`
           id
         }
         name
+        studyLink
       }
     }
   }

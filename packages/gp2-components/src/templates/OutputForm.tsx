@@ -483,7 +483,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   {
                     value: 'Yes',
                     label: 'Yes',
-                    disabled: isGP2SupportedAlwaysTrue || isSaving,
+                    disabled: isSaving,
                   },
                   {
                     value: 'No',
@@ -513,7 +513,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 {
                   value: 'Public',
                   label: 'Public',
-                  disabled: isAlwaysPublic || isSaving,
+                  disabled: isSaving,
                 },
               ]}
               value={newSharingStatus}

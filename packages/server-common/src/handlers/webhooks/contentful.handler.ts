@@ -42,16 +42,22 @@ type Config = {
   environment: string;
   accessToken: string;
 };
-export const contentfulHandlerFactory =
-  (
-    webhookAuthenticationToken: string,
-    eventBridge: EventBridge,
-    config: Config,
-    logger: Logger,
-  ): ((
-    request: lambda.Request<ContentfulWebhookPayload>,
-  ) => Promise<{ statusCode: number }>) =>
-  async (request) => {
+
+export const contentfulHandlerFactory = (
+  webhookAuthenticationToken: string,
+  eventBridge: EventBridge,
+  config: Config,
+  logger: Logger,
+): ((
+  request: lambda.Request<ContentfulWebhookPayload>,
+) => Promise<{ statusCode: number }>) => {
+  const cdaClient = getCDAClient({
+    accessToken: config.accessToken,
+    space: config.space,
+    environment: config.environment,
+  });
+
+  return async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
     logger.debug(`request: ${JSON.stringify(request)}`);
 
@@ -63,11 +69,7 @@ export const contentfulHandlerFactory =
       throw new Error('Invalid payload');
     }
     const entryVersion = detail.sys.revision;
-    const cdaClient = getCDAClient({
-      accessToken: config.accessToken,
-      space: config.space,
-      environment: config.environment,
-    });
+
     const fetchEntryById = async () => {
       try {
         const entry = await cdaClient.getEntry(detail.resourceId);
@@ -81,6 +83,7 @@ export const contentfulHandlerFactory =
         ) {
           return undefined;
         }
+        logger.error('Error while fetching entry', error);
         throw error;
       }
     };
@@ -88,6 +91,8 @@ export const contentfulHandlerFactory =
     try {
       await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
     } catch (error) {
+      logger.error('Error during polling the entry', error);
+
       // skip if the entry is not found as it may have been deleted
       if (!(error instanceof Error && error.message === 'Not found')) {
         if (error instanceof Error) {
@@ -131,3 +136,4 @@ export const contentfulHandlerFactory =
       };
     }
   };
+};

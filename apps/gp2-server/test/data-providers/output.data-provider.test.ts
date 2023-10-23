@@ -17,7 +17,6 @@ import { getEntry } from '../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlOutput,
   getContentfulOutputsGraphqlResponse,
-  getListOutputDataObject,
   getOutputCreateDataObject,
   getOutputDataObject,
   getOutputUpdateDataObject,
@@ -59,7 +58,33 @@ describe('Outputs data provider', () => {
     test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetchById(outputId);
 
-      expect(result).toMatchObject(getOutputDataObject());
+      expect(result).toMatchObject({
+        ...getOutputDataObject(),
+        relatedOutputs: [
+          {
+            documentType: 'Dataset',
+            entity: {
+              id: '42',
+              title: 'A Project',
+              type: 'Projects',
+            },
+            id: 'another-output-id',
+            title: 'another title',
+            type: 'Research',
+          },
+          {
+            documentType: 'Article',
+            entity: {
+              id: '42',
+              title: 'A Project',
+              type: 'Projects',
+            },
+            id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+            title: 'Test Proposal 1234',
+            type: 'Research',
+          },
+        ],
+      });
     });
     test('Should return null when the output is not found', async () => {
       graphqlClientMock.request.mockResolvedValueOnce({
@@ -93,22 +118,43 @@ describe('Outputs data provider', () => {
             outputs: {
               ...graphqlResponse,
 
+              linkedFrom: {
+                outputsCollection: {
+                  items: [
+                    {
+                      sys: { id: 'related-output-id' },
+                      title: 'Related Article',
+                      documentType: 'Dataset',
+                      relatedEntitiesCollection: {
+                        items: [
+                          {
+                            __typename: typename,
+                            sys: {
+                              id: 'entity-2',
+                            },
+                            title: 'Polygenic Risk',
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
               relatedOutputsCollection: {
                 total: 1,
                 items: [
                   {
                     sys: { id: 'another-output-id' },
-                    title: 'another title',
-                    documentType: 'Article',
-                    type: 'Blog',
+                    title: 'Related Article',
+                    documentType: 'Dataset',
                     relatedEntitiesCollection: {
                       items: [
                         {
                           __typename: typename,
                           sys: {
-                            id: 'entity-1',
+                            id: 'entity-2',
                           },
-                          title: 'Steering Committee',
+                          title: 'Polygenic Risk',
                         },
                       ],
                     },
@@ -125,15 +171,24 @@ describe('Outputs data provider', () => {
             ...expectedResult,
             relatedOutputs: [
               {
-                id: 'another-output-id',
-                title: 'another title',
-                documentType: 'Article',
-                type: 'Blog',
+                documentType: 'Dataset',
                 entity: {
-                  id: 'entity-1',
-                  title: 'Steering Committee',
+                  id: 'entity-2',
+                  title: 'Polygenic Risk',
                   type: typename,
                 },
+                id: 'another-output-id',
+                title: 'Related Article',
+              },
+              {
+                documentType: 'Dataset',
+                entity: {
+                  id: 'entity-2',
+                  title: 'Polygenic Risk',
+                  type: typename,
+                },
+                id: 'related-output-id',
+                title: 'Related Article',
               },
             ],
           });
@@ -526,7 +581,38 @@ describe('Outputs data provider', () => {
     test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetch({});
 
-      expect(result).toMatchObject(getListOutputDataObject());
+      expect(result).toMatchObject({
+        total: 1,
+        items: [
+          {
+            ...getOutputDataObject(),
+            relatedOutputs: [
+              {
+                documentType: 'Dataset',
+                entity: {
+                  id: '42',
+                  title: 'A Project',
+                  type: 'Projects',
+                },
+                id: 'another-output-id',
+                title: 'another title',
+                type: 'Research',
+              },
+              {
+                documentType: 'Article',
+                entity: {
+                  id: '42',
+                  title: 'A Project',
+                  type: 'Projects',
+                },
+                id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+                title: 'Test Proposal 1234',
+                type: 'Research',
+              },
+            ],
+          },
+        ],
+      });
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {

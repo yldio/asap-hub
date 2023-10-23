@@ -15,21 +15,19 @@ const LabeledRadioButton: React.FC<LabeledRadioButtonProps> = ({
   title,
   tooltipText,
   ...radioButtonProps
-}) => {
-  return (
-    <Label
-      trailing
-      forContent={(id) => <RadioButton {...radioButtonProps} id={id} />}
-      title={tooltipText}
+}) => (
+  <Label
+    trailing
+    forContent={(id) => <RadioButton {...radioButtonProps} id={id} />}
+    title={tooltipText}
+  >
+    <Paragraph
+      noMargin
+      styles={radioButtonProps.disabled ? disabledStyles : undefined}
     >
-      <Paragraph
-        noMargin
-        styles={radioButtonProps.disabled ? disabledStyles : undefined}
-      >
-        {title}
-      </Paragraph>
-    </Label>
-  );
-};
+      {title}
+    </Paragraph>
+  </Label>
+);
 
 export default LabeledRadioButton;

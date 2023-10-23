@@ -24,6 +24,7 @@ type FormProps<T> = {
     getWrappedOnSave: (
       onSaveFunction: () => Promise<T | void>,
       addNotification: (error: string) => void,
+      onDisplayModal: (() => void) | null,
     ) => () => Promise<T | void>;
     onCancel: () => void;
   }) => ReactNode;
@@ -58,6 +59,7 @@ const Form = <T extends void | Record<string, unknown>>({
     (
       onSaveFunction: () => Promise<T | void>,
       addNotification: (error: string) => void,
+      onDisplayModal: (() => void) | null,
     ) =>
     async () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -67,6 +69,12 @@ const Form = <T extends void | Record<string, unknown>>({
         );
         return Promise.resolve();
       }
+
+      if (!!onDisplayModal) {
+        onDisplayModal();
+        return Promise.resolve();
+      }
+
       setStatus('isSaving');
       try {
         const result = await onSaveFunction();

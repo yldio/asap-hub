@@ -320,7 +320,6 @@ describe('OutputForm', () => {
 
     it('shows error message because of empty required fields', async () => {
       userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       expect(shareOutput).not.toHaveBeenCalled();
       expect(removeNotification).not.toHaveBeenCalled();
@@ -336,24 +335,18 @@ describe('OutputForm', () => {
       );
     });
 
-    it('does not remove notification if error remains', async () => {
+    it('does not remove notification if error remains', () => {
       userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-      await waitFor(() => {
-        expect(
-          screen.queryByText('Publish output for the whole hub?'),
-        ).not.toBeInTheDocument();
-      });
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
 
       userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-      await waitFor(() => {
-        expect(
-          screen.queryByText('Publish output for the whole hub?'),
-        ).not.toBeInTheDocument();
-      });
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
 
       expect(removeNotification).not.toHaveBeenCalled();
     });

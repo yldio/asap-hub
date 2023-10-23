@@ -398,10 +398,18 @@ const OutputForm: React.FC<OutputFormProps> = ({
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => {
         const isEditing = title !== undefined;
 
-        const save = async () => {
+        const save = async (skipPublishModal: boolean = false) => {
+          const displayModalFn =
+            !isEditing && !skipPublishModal
+              ? () => {
+                  setDisplayPublishModal(true);
+                }
+              : null;
+
           const output = await getWrappedOnSave(
             () => shareOutput(currentPayload),
             (error) => setBannerMessage(error, 'output-form', 'error'),
+            displayModalFn,
           )();
 
           if (output && typeof output.id === 'string') {
@@ -428,7 +436,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onCancel={() => setDisplayPublishModal(false)}
                 confirmText="Publish Output"
                 onSave={async () => {
-                  const result = await save();
+                  const skipPublishModal = true;
+                  const result = await save(skipPublishModal);
                   if (!result) {
                     setDisplayPublishModal(false);
                   }
@@ -809,14 +818,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   </Button>
                 </div>
                 <div css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}>
-                  <Button
-                    primary
-                    noMargin
-                    onClick={
-                      isEditing ? save : () => setDisplayPublishModal(true)
-                    }
-                    enabled={!isSaving}
-                  >
+                  <Button primary noMargin onClick={save} enabled={!isSaving}>
                     {isEditing ? 'Save' : 'Publish'}
                   </Button>
                 </div>

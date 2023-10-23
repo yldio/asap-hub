@@ -24,6 +24,69 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Edit')).not.toBeInTheDocument();
   });
 
+  describe('description and tags section', () => {
+    it('handles tags and description omitted', () => {
+      const { queryByText } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={''}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('handles just description provided', () => {
+      const { queryByText, getByText } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={'Test Description'}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).not.toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).toBeInTheDocument();
+      expect(getByText('Test Description')).toBeVisible();
+    });
+
+    it('handles just tags provided', () => {
+      const { queryByText, getByText } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={''}
+          tags={[{ id: 'test-id', name: 'TestTag' }]}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).not.toBeInTheDocument();
+      expect(getByText('TestTag')).toBeVisible();
+    });
+    it('handles tags and description provided', () => {
+      const { queryByText, getByText } = render(
+        <OutputDetailPage
+          isAdministrator={false}
+          {...gp2Fixtures.createOutputResponse()}
+          description={'Test Description'}
+          tags={[{ id: 'test-id', name: 'TestTag' }]}
+        />,
+      );
+      expect(queryByText(/tags/i, { selector: 'h2' })).toBeInTheDocument();
+      expect(
+        queryByText(/description/i, { selector: 'h2' }),
+      ).toBeInTheDocument();
+      expect(getByText('TestTag')).toBeVisible();
+      expect(getByText('Test Description')).toBeVisible();
+    });
+  });
+
   it('displays the related research card when data provided', () => {
     const { queryByText, getByText, rerender } = render(
       <OutputDetailPage

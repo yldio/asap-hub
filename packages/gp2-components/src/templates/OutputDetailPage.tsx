@@ -6,6 +6,7 @@ import {
   mail,
   RelatedEventsCard,
   RelatedResearchCard,
+  SharedResearchDetailsTagsCard,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -77,6 +78,8 @@ type OutputDetailPageProps = Pick<
   | 'gp2Supported'
   | 'publishDate'
   | 'contributingCohorts'
+  | 'description'
+  | 'tags'
 > & {
   isAdministrator: boolean;
 };
@@ -111,6 +114,13 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
             </div>
           ) : null}
           <OutputCard {...output} detailedView />
+          {(output.description || !!output.tags.length) && (
+            <SharedResearchDetailsTagsCard
+              tags={output.tags.map((tag) => tag.name)}
+              displayDescription={!!output.description}
+              descriptionMD={output.description}
+            />
+          )}
 
           <OutputCohortsCard contributingCohorts={output.contributingCohorts} />
 

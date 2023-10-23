@@ -232,3 +232,22 @@ export const FETCH_OUTPUTS_BY_PROJECT_ID = gql`
   }
   ${outputsContentQueryFragment}
 `;
+
+export const FETCH_OUTPUTS_BY_EVENT_ID = gql`
+  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {
+    events(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;

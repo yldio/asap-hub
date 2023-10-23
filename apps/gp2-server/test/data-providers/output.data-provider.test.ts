@@ -760,6 +760,23 @@ describe('Outputs data provider', () => {
           },
         );
       });
+      test('filter by event', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            eventId: 'event-id',
+          },
+        });
+
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_OUTPUTS_BY_EVENT_ID,
+          {
+            limit: 8,
+            skip: 0,
+            id: 'event-id',
+          },
+        );
+      });
       test('filter by authors', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,

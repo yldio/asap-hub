@@ -67,6 +67,8 @@ const documents = {
     types.FetchOutputsByExternalUserIdDocument,
   '\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n':
     types.FetchOutputsByProjectIdDocument,
+  '\n  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {\n    events(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n':
+    types.FetchOutputsByEventIdDocument,
   '\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n':
     types.PageContentDataFragmentDoc,
   '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n':
@@ -287,6 +289,12 @@ export function gql(
 export function gql(
   source: '\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {\n    events(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {\n    events(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

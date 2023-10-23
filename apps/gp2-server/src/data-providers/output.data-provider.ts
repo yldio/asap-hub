@@ -79,6 +79,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
         filter.externalAuthorId,
       );
     }
+
+    if (filter?.eventId) {
+      return this.fetchOutputsByEventId(take, skip, filter.eventId);
+    }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
@@ -137,6 +141,18 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       id,
     });
     return projects?.linkedFrom?.outputsCollection;
+  }
+
+  private async fetchOutputsByEventId(take: number, skip: number, id: string) {
+    const { events } = await this.graphQLClient.request<
+      gp2Contentful.FetchOutputsByEventIdQuery,
+      gp2Contentful.FetchOutputsByEventIdQueryVariables
+    >(gp2Contentful.FETCH_OUTPUTS_BY_EVENT_ID, {
+      limit: take,
+      skip,
+      id,
+    });
+    return events?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByWorkingGroupId(

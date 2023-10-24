@@ -644,6 +644,105 @@ describe('OutputForm', () => {
     });
   });
 
+  it('closes the publish modal when user clicks on publish and there are server side errors', async () => {
+    const getAuthorSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+
+    shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
+
+    render(
+      <OutputForm
+        {...defaultProps}
+        shareOutput={shareOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      'output title',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /url/i }),
+      'https://example.com',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /description/i }),
+      'An interesting article',
+    );
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status?/i,
+    });
+    userEvent.click(
+      within(sharingStatus).getByRole('radio', { name: 'Public' }),
+    );
+    fireEvent.change(
+      screen.getByLabelText(/public repository published date/i),
+      {
+        target: { value: '2022-03-24' },
+      },
+    );
+    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    userEvent.click(authors);
+
+    userEvent.click(await screen.findByText(/Chris Reed/i));
+    userEvent.click(authors);
+    userEvent.click(screen.getByText('Chris Blue'));
+    userEvent.click(authors);
+    userEvent.type(authors, 'Alex White');
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getAllByText('Alex White')[1]!);
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText('None'));
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+
+    expect(screen.getByText('Publish output for the whole hub?')).toBeVisible();
+
+    userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Publish Output',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Publish output for the whole hub?'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   it('closes the publish modal when user clicks on cancel', async () => {
     const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();

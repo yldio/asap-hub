@@ -57,9 +57,9 @@ export const getAllFilters = (
     : typeFilters;
 
   const workingGroupFilter = workingGroup
-    ? `workingGroup.id:"${workingGroup}"`
+    ? `workingGroups.id:"${workingGroup}"`
     : '';
-  const projectFilter = project ? `project.id:"${project}"` : '';
+  const projectFilter = project ? `projects.id:"${project}"` : '';
   const authorFilter = author ? `authors.id:"${author}"` : '';
 
   return [

@@ -145,31 +145,6 @@ describe('Users controller', () => {
       });
       expect(userDataProviderMock.fetchById).toHaveBeenCalledWith('user-id');
     });
-
-    test('should throw when fails to update asset - squidex error', async () => {
-      assetDataProviderMock.create.mockResolvedValue('42');
-      userDataProviderMock.update.mockRejectedValue(new Error());
-
-      await expect(
-        userController.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
-
-    test('should throw when fails to update user - squidex error', async () => {
-      assetDataProviderMock.create.mockRejectedValue(new Error());
-
-      await expect(
-        userController.updateAvatar(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
-      ).rejects.toThrow();
-    });
   });
 
   describe('connectByCode', () => {

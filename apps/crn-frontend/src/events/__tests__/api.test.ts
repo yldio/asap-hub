@@ -3,10 +3,7 @@ import {
   createEventResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
-import {
-  GetEventListOptions,
-  getEventListOptions,
-} from '@asap-hub/frontend-utils';
+import { getEventListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';

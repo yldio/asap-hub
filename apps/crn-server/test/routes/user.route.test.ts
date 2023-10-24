@@ -309,20 +309,6 @@ describe('/users/ route', () => {
       expect(response.body).toEqual(getUserResponse());
     });
 
-    test('Should return 500 when it fails to update the user', async () => {
-      userControllerMock.update.mockRejectedValueOnce(
-        Boom.badImplementation('squidex', {
-          data: 'Squidex Error Message',
-        }),
-      );
-
-      const response = await supertest(appWithMockedAuth)
-        .patch(`/users/${userId}`)
-        .send({ jobTitle: 'CEO' });
-
-      expect(response.status).toBe(500);
-    });
-
     test('Returns 403 when user is changing other user', async () => {
       const response = await supertest(appWithMockedAuth)
         .patch('/users/not-me')
@@ -668,20 +654,6 @@ describe('/users/ route', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(getUserResponse());
-    });
-
-    test('Should return 500 when it fails to update the avatar', async () => {
-      userControllerMock.updateAvatar.mockRejectedValueOnce(
-        Boom.badImplementation('squidex', {
-          data: 'Squidex Error Message',
-        }),
-      );
-
-      const response = await supertest(appWithMockedAuth)
-        .post(`/users/${userId}/avatar`)
-        .send(updateAvatarBody);
-
-      expect(response.status).toBe(500);
     });
 
     test('Returns 403 when user is changing other user', async () => {

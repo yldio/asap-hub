@@ -6,7 +6,6 @@ import {
 } from '@asap-hub/frontend-utils';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-import createListApiUrl from '../CreateListApiUrl';
 
 export const getEvents = async (
   algoliaClient: AlgoliaClient<'crn'>,

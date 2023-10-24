@@ -1,5 +1,6 @@
 import {
   EditResourceModal,
+  OutputFormPage,
   ResourceModal,
   WorkingGroupDetailPage,
   WorkingGroupOverview,
@@ -80,7 +81,9 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
       <Switch>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
-            <CreateWorkingGroupOutput />
+            <OutputFormPage>
+              <CreateWorkingGroupOutput />
+            </OutputFormPage>
           </Frame>
         </Route>
         <WorkingGroupDetailPage

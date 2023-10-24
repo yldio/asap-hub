@@ -72,7 +72,6 @@ describe('Discover data provider', () => {
     test('defaults entries to empty arrays if no value is found', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         ...getContentfulGraphqlDiscoverResponse({
-          pagesCollection: null,
           membersCollection: null,
           scientificAdvisoryBoardCollection: null,
           membersTeam: null,
@@ -84,7 +83,6 @@ describe('Discover data provider', () => {
 
       expect(result).toEqual({
         members: [],
-        pages: [],
         scientificAdvisoryBoard: [],
         membersTeamId: undefined,
         aboutUs: '',
@@ -116,7 +114,6 @@ describe('Discover data provider', () => {
 
       expect(result).toEqual({
         members: [],
-        pages: [],
         scientificAdvisoryBoard: [],
         membersTeamId: undefined,
         aboutUs: '',
@@ -134,7 +131,6 @@ describe('Discover data provider', () => {
 
       expect(result).toEqual({
         members: [],
-        pages: [],
         scientificAdvisoryBoard: [],
         membersTeamId: undefined,
         aboutUs: '',

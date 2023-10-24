@@ -10077,131 +10077,6 @@ export type FetchDiscoverQuery = {
   discoverCollection?: Maybe<{
     items: Array<
       Maybe<{
-        pagesCollection?: Maybe<{
-          items: Array<
-            Maybe<
-              Pick<
-                Pages,
-                'title' | 'path' | 'shortText' | 'link' | 'linkText'
-              > & {
-                sys: Pick<Sys, 'id'>;
-                text?: Maybe<
-                  Pick<PagesText, 'json'> & {
-                    links: {
-                      entries: {
-                        inline: Array<
-                          Maybe<
-                            | ({ __typename: 'Calendars' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Dashboard' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Discover' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'EventSpeakers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Events' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'ExternalAuthors' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'ExternalTools' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'GuideCollections' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'GuideContent' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Guides' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Icon' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'InterestGroupLeaders' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'InterestGroups' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Labs' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                })
-                            | ({ __typename: 'Migration' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'News' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Pages' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'ResearchOutputVersions' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'ResearchOutputs' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'ResearchTags' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'TeamMembership' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Teams' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Tutorials' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'Users' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'WorkingGroupDeliverables' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'WorkingGroupLeaders' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'WorkingGroupMembers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                            | ({ __typename: 'WorkingGroups' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
-                          >
-                        >;
-                      };
-                      assets: {
-                        block: Array<
-                          Maybe<
-                            Pick<
-                              Asset,
-                              | 'url'
-                              | 'description'
-                              | 'contentType'
-                              | 'width'
-                              | 'height'
-                            > & { sys: Pick<Sys, 'id'> }
-                          >
-                        >;
-                      };
-                    };
-                  }
-                >;
-              }
-            >
-          >;
-        }>;
         aboutUs?: Maybe<
           Pick<DiscoverAboutUs, 'json'> & {
             links: {
@@ -21744,38 +21619,6 @@ export const FetchDiscoverDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'pagesCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'FragmentSpread',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'PageContent',
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'aboutUs' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -22024,7 +21867,6 @@ export const FetchDiscoverDocument = {
         ],
       },
     },
-    ...PageContentFragmentDoc.definitions,
     ...PartialUsersContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;

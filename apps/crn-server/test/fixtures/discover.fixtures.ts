@@ -70,24 +70,6 @@ export const getDiscoverDataObject = (): DiscoverDataObject => ({
   members: getDiscoverMembersResponse(),
   membersTeamId: 'uuid-team-1',
   scientificAdvisoryBoard: getDiscoverMembersResponse('sab-'),
-  pages: [
-    {
-      id: 'uuid-pages-1',
-      path: '',
-      title: 'Title',
-      text: '<p>Content</p>',
-      link: 'https://hub.asap.science',
-      linkText: 'ASAP Hub',
-      shortText: 'Short text',
-    },
-    {
-      id: 'uuid-pages-2',
-      path: '',
-      title: 'Title',
-      shortText: 'Short text',
-      text: '<p>Content</p>',
-    },
-  ],
 });
 
 export const getDiscoverResponse = (): DiscoverResponse =>
@@ -130,76 +112,6 @@ export const getContentfulGraphqlDiscoverMembers = () => [
 export const getContentfulGraphqlDiscover = (props = {}) => ({
   membersCollection: {
     items: getContentfulGraphqlDiscoverMembers(),
-  },
-  pagesCollection: {
-    items: [
-      {
-        sys: {
-          id: 'uuid-pages-1',
-        },
-        link: 'https://hub.asap.science',
-        linkText: 'ASAP Hub',
-        title: 'Title',
-        text: {
-          json: {
-            nodeType: 'document',
-            data: {},
-            content: [
-              {
-                nodeType: 'paragraph',
-                data: {},
-                content: [
-                  { nodeType: 'text', value: 'Content', marks: [], data: {} },
-                ],
-              },
-            ],
-          },
-          links: {
-            entries: {
-              inline: [],
-            },
-            assets: {
-              block: [],
-            },
-          },
-        },
-        shortText: 'Short text',
-        path: null,
-      },
-      {
-        sys: {
-          id: 'uuid-pages-2',
-        },
-        link: null,
-        linkText: null,
-        title: 'Title',
-        text: {
-          json: {
-            nodeType: 'document',
-            data: {},
-            content: [
-              {
-                nodeType: 'paragraph',
-                data: {},
-                content: [
-                  { nodeType: 'text', value: 'Content', marks: [], data: {} },
-                ],
-              },
-            ],
-          },
-          links: {
-            entries: {
-              inline: [],
-            },
-            assets: {
-              block: [],
-            },
-          },
-        },
-        shortText: 'Short text',
-        path: null,
-      },
-    ],
   },
   membersTeam: {
     sys: {

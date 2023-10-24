@@ -79,6 +79,21 @@ describe('Contentful event webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
+  test('Should log an error when it fails to fetch the entry from Contentful and then retry', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, headers);
+
+    mockGetEntry.mockRejectedValueOnce(new Error());
+
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(200);
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.any(Error),
+      'Error while fetching entry',
+    );
+  });
+
   test('Should throw an error when the request has an invalid authentication token', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const invalidAuthHeaders = { authorization: 'invalid-token' };

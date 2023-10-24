@@ -11432,17 +11432,19 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.15.0
-  resolution: "@contentful/field-editor-reference@npm:5.15.0"
+  version: 5.18.0
+  resolution: "@contentful/field-editor-reference@npm:5.18.0"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
     "@contentful/f36-tokens": ^4.0.0
-    "@contentful/field-editor-shared": ^1.3.1
+    "@contentful/field-editor-shared": ^1.4.2
     "@contentful/mimetype": ^1.4.0
+    "@dnd-kit/core": ^6.0.8
+    "@dnd-kit/modifiers": ^6.0.1
+    "@dnd-kit/sortable": ^7.0.2
     "@tanstack/react-query": ^4.3.9
     "@types/deep-equal": ^1.0.1
-    array-move: ^3.0.0
     constate: 3.2.0
     contentful-management: ^10.14.0
     deep-equal: 2.2.2
@@ -11451,16 +11453,15 @@ __metadata:
     moment: ^2.20.0
     p-queue: ^4.0.0
     react-intersection-observer: 9.4.0
-    react-sortable-hoc: ^2.0.0
     type-fest: 2.17.0
   peerDependencies:
-    "@contentful/app-sdk": ^4.2.0
+    "@contentful/app-sdk": ^4.17.1
     react: ">=16.8.0"
-  checksum: ad6a746214c8afd8403c58978c438f25878608a83e92aa0320128963f1a8dcbf22faadb2b179e9fd321d860af84bb61021b6dc3630a43cd59de844338719e52f
+  checksum: 63b25773ed9b45b86ca7cc4be9f8c19b086ba7f32c912220cf0fc9c851b3ca67736224657b3be000900166d0014872d84d026e85f31f1bd2b51879034399703b
   languageName: node
   linkType: hard
 
-"@contentful/field-editor-shared@npm:^1.2.0, @contentful/field-editor-shared@npm:^1.3.1":
+"@contentful/field-editor-shared@npm:^1.2.0, @contentful/field-editor-shared@npm:^1.4.2":
   version: 1.4.2
   resolution: "@contentful/field-editor-shared@npm:1.4.2"
   dependencies:
@@ -11737,6 +11738,68 @@ __metadata:
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
   checksum: 2176d301cc258ea5c2324402997cf8134ebb212469c0d397591636cea8d3c02f2b3cf9fd58dcb748c7a0dade77ebdc1b10284fa63e608c033a1db52fddc69918
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/accessibility@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "@dnd-kit/accessibility@npm:3.0.1"
+  dependencies:
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 0afc2c0fce9a1c107453620ca0da1778f182d340e74ffbc6e369ef0ac8943cafb929d3a6c0891d9b915aa23b2b92137ff4fad958f43118466586d8129a3359d5
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/core@npm:^6.0.8":
+  version: 6.0.8
+  resolution: "@dnd-kit/core@npm:6.0.8"
+  dependencies:
+    "@dnd-kit/accessibility": ^3.0.0
+    "@dnd-kit/utilities": ^3.2.1
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: abe48ff7395f84fd8c15e6c8b13da4df153dc1f1076096d783acd0c25539516c77e4854ea59be6621dde55739cb0df1d62924ad069df3267fe05ad90ef729b2f
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/modifiers@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "@dnd-kit/modifiers@npm:6.0.1"
+  dependencies:
+    "@dnd-kit/utilities": ^3.2.1
+    tslib: ^2.0.0
+  peerDependencies:
+    "@dnd-kit/core": ^6.0.6
+    react: ">=16.8.0"
+  checksum: cd31715aac81baa2398558dc7c877a483d1c4c41cdb2f466557fdc41bb742db5cd1b34b3b84332b94ac4a2835e7e5a0e28c64e621936e976399788f1dd029ea4
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/sortable@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "@dnd-kit/sortable@npm:7.0.2"
+  dependencies:
+    "@dnd-kit/utilities": ^3.2.0
+    tslib: ^2.0.0
+  peerDependencies:
+    "@dnd-kit/core": ^6.0.7
+    react: ">=16.8.0"
+  checksum: 4ce705aceb15766a0deefe25a9d95a87e9413c3fb9088ea3eb0962e57f844895000117fcec7c0944a0d4ae4e1e889cfa69e3d3778164d4d23115fb1edb218283
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/utilities@npm:^3.2.0, @dnd-kit/utilities@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "@dnd-kit/utilities@npm:3.2.1"
+  dependencies:
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 038fd5cc1328bf4c9dca17cd48046e5a687bbf9d904c7197f851aab869ab52d9dee2734b2e255256fd6158245acd00063a23deed962c7673c0fadfbf061f04ca
   languageName: node
   linkType: hard
 
@@ -20767,13 +20830,6 @@ __metadata:
     get-intrinsic: ^1.1.3
     is-string: ^1.0.7
   checksum: f22f8cd8ba8a6448d91eebdc69f04e4e55085d09232b5216ee2d476dab3ef59984e8d1889e662c6a0ed939dcb1b57fd05b2c0209c3370942fc41b752c82a2ca5
-  languageName: node
-  linkType: hard
-
-"array-move@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "array-move@npm:3.0.1"
-  checksum: 4b550fe07f89750e5830be6e0b0165e5900a8d087ac51c4f7bf8cac6f87b4e96dfda05629cb962cdc33f64a3b0be49ee783595d74ccd2278e5a588fc436481d0
   languageName: node
   linkType: hard
 
@@ -42138,7 +42194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-sortable-hoc@npm:2.0.0, react-sortable-hoc@npm:^2.0.0":
+"react-sortable-hoc@npm:2.0.0":
   version: 2.0.0
   resolution: "react-sortable-hoc@npm:2.0.0"
   dependencies:

@@ -247,7 +247,7 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!._tags).toEqual(['Alumni Member']);
+      expect(result!.membershipStatus).toEqual(['Alumni Member']);
     });
 
     test('should tag non-alumni users', async () => {
@@ -259,7 +259,7 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!._tags).toEqual(['CRN Member']);
+      expect(result!.membershipStatus).toEqual(['CRN Member']);
     });
 
     test('should fall back to `firstPublishedAt` if `createdDate` does not exist', async () => {

@@ -1,7 +1,7 @@
 import {
-  activeUserTag,
+  activeUserMembershipStatus,
   FetchUsersOptions,
-  inactiveUserTag,
+  inactiveUserMembershipStatus,
   InterestGroupMembership,
   isUserDegree,
   isUserRole,
@@ -315,7 +315,11 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 
   return {
     id: item.sys.id,
-    _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
+    membershipStatus: [
+      item.alumniSinceDate
+        ? inactiveUserMembershipStatus
+        : activeUserMembershipStatus,
+    ],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.lastUpdated,
     workingGroups,

@@ -12,7 +12,7 @@ import {
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
-  userTags,
+  userMembershipStatus,
 } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
@@ -44,24 +44,24 @@ export const getUsers = async (
   algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
-  const isTagFilter = (filter: string) =>
-    (userTags as unknown as string[]).includes(filter);
+  const isMembershipStatusFilter = (filter: string) =>
+    (userMembershipStatus as unknown as string[]).includes(filter);
   const filterArray = Array.from(filters);
 
-  const tagFilters = filterArray
-    .filter(isTagFilter)
-    .map((filter) => `_tags:"${filter}"`)
+  const membershipStatusFilter = filterArray
+    .filter(isMembershipStatusFilter)
+    .map((filter) => `membershipStatus:"${filter}"`)
     .join(' OR ');
 
   const roleFilters = filterArray
-    .filter((filter) => !isTagFilter(filter))
+    .filter((filter) => !isMembershipStatusFilter(filter))
     .map((filter) => `teams.role:"${filter}"`)
     .join(' OR ');
 
   const algoliaFilters =
-    tagFilters && roleFilters
-      ? `(${tagFilters}) AND (${roleFilters})`
-      : tagFilters || roleFilters;
+    membershipStatusFilter && roleFilters
+      ? `(${membershipStatusFilter}) AND (${roleFilters})`
+      : membershipStatusFilter || roleFilters;
 
   const result = await algoliaClient.search(['user'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,

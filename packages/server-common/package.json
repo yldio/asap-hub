@@ -42,7 +42,7 @@
     "pino-http": "8.3.3",
     "pino-lambda": "4.2.1",
     "pino-noir": "2.2.1",
-    "pino-pretty": "^9.1.1",
+    "pino-pretty": "10.2.3",
     "pump": "3.0.0",
     "source-map-support": "0.5.21",
     "through2-concurrent": "2.0.0",

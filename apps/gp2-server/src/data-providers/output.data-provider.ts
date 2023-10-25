@@ -357,9 +357,10 @@ export const parseContentfulGraphQLOutput = (
   const type = getType(documentType, data.type);
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
-  const relatedOutputs = getRelatedOutputs(
-    data.relatedOutputsCollection?.items,
-  );
+  const relatedOutputs = [
+    ...getRelatedOutputs(data.relatedOutputsCollection?.items),
+    ...getRelatedOutputs(data.linkedFrom?.outputsCollection?.items),
+  ];
   const mainEntity = getEntity(data.relatedEntitiesCollection?.items[0]);
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,

@@ -2,6 +2,34 @@
 
 import { gql } from 'graphql-tag';
 
+export const relatedOutputQueryFragment = gql`
+  fragment RelatedOutputData on Outputs {
+    sys {
+      id
+    }
+    title
+    documentType
+    type
+    relatedEntitiesCollection(limit: 1) {
+      items {
+        __typename
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
+        }
+        ... on Projects {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
+  }
+`;
+
 export const outputsContentQueryFragment = gql`
   fragment OutputsContentData on Outputs {
     sys {
@@ -55,30 +83,14 @@ export const outputsContentQueryFragment = gql`
       }
     }
     relatedOutputsCollection(limit: 10) {
-      total
       items {
-        sys {
-          id
-        }
-        title
-        documentType
-        type
-        relatedEntitiesCollection(limit: 1) {
-          items {
-            __typename
-            ... on WorkingGroups {
-              sys {
-                id
-              }
-              title
-            }
-            ... on Projects {
-              sys {
-                id
-              }
-              title
-            }
-          }
+        ...RelatedOutputData
+      }
+    }
+    linkedFrom {
+      outputsCollection(limit: 50, order: [addedDate_ASC]) {
+        items {
+          ...RelatedOutputData
         }
       }
     }
@@ -124,6 +136,7 @@ export const outputsContentQueryFragment = gql`
       }
     }
   }
+  ${relatedOutputQueryFragment}
 `;
 
 export const FETCH_OUTPUT_BY_ID = gql`

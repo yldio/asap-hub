@@ -9562,6 +9562,25 @@ export type FetchNewsQuery = {
   >;
 };
 
+export type RelatedOutputDataFragment = Pick<
+  Outputs,
+  'title' | 'documentType' | 'type'
+> & {
+  sys: Pick<Sys, 'id'>;
+  relatedEntitiesCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+      >
+    >;
+  }>;
+};
+
 export type OutputsContentDataFragment = Pick<
   Outputs,
   | 'title'
@@ -9603,8 +9622,30 @@ export type OutputsContentDataFragment = Pick<
       items: Array<Maybe<Pick<Tags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
     }
   >;
-  relatedOutputsCollection?: Maybe<
-    Pick<OutputsRelatedOutputsCollection, 'total'> & {
+  relatedOutputsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+          sys: Pick<Sys, 'id'>;
+          relatedEntitiesCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                | ({ __typename: 'WorkingGroups' } & Pick<
+                    WorkingGroups,
+                    'title'
+                  > & { sys: Pick<Sys, 'id'> })
+              >
+            >;
+          }>;
+        }
+      >
+    >;
+  }>;
+  linkedFrom?: Maybe<{
+    outputsCollection?: Maybe<{
       items: Array<
         Maybe<
           Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -9625,8 +9666,8 @@ export type OutputsContentDataFragment = Pick<
           }
         >
       >;
-    }
-  >;
+    }>;
+  }>;
   relatedEventsCollection?: Maybe<
     Pick<OutputsRelatedEventsCollection, 'total'> & {
       items: Array<
@@ -9712,8 +9753,30 @@ export type FetchOutputByIdQuery = {
           items: Array<Maybe<Pick<Tags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
         }
       >;
-      relatedOutputsCollection?: Maybe<
-        Pick<OutputsRelatedOutputsCollection, 'total'> & {
+      relatedOutputsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+              sys: Pick<Sys, 'id'>;
+              relatedEntitiesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                          sys: Pick<Sys, 'id'>;
+                        })
+                    | ({ __typename: 'WorkingGroups' } & Pick<
+                        WorkingGroups,
+                        'title'
+                      > & { sys: Pick<Sys, 'id'> })
+                  >
+                >;
+              }>;
+            }
+          >
+        >;
+      }>;
+      linkedFrom?: Maybe<{
+        outputsCollection?: Maybe<{
           items: Array<
             Maybe<
               Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -9735,8 +9798,8 @@ export type FetchOutputByIdQuery = {
               }
             >
           >;
-        }
-      >;
+        }>;
+      }>;
       relatedEventsCollection?: Maybe<
         Pick<OutputsRelatedEventsCollection, 'total'> & {
           items: Array<
@@ -9836,8 +9899,31 @@ export type FetchOutputsQuery = {
                 >;
               }
             >;
-            relatedOutputsCollection?: Maybe<
-              Pick<OutputsRelatedOutputsCollection, 'total'> & {
+            relatedOutputsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                    sys: Pick<Sys, 'id'>;
+                    relatedEntitiesCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | ({ __typename: 'Projects' } & Pick<
+                              Projects,
+                              'title'
+                            > & { sys: Pick<Sys, 'id'> })
+                          | ({ __typename: 'WorkingGroups' } & Pick<
+                              WorkingGroups,
+                              'title'
+                            > & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                  }
+                >
+              >;
+            }>;
+            linkedFrom?: Maybe<{
+              outputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
                     Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -9859,8 +9945,8 @@ export type FetchOutputsQuery = {
                     }
                   >
                 >;
-              }
-            >;
+              }>;
+            }>;
             relatedEventsCollection?: Maybe<
               Pick<OutputsRelatedEventsCollection, 'total'> & {
                 items: Array<
@@ -9964,8 +10050,31 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                     >;
                   }
                 >;
-                relatedOutputsCollection?: Maybe<
-                  Pick<OutputsRelatedOutputsCollection, 'total'> & {
+                relatedOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                        sys: Pick<Sys, 'id'>;
+                        relatedEntitiesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'Projects' } & Pick<
+                                  Projects,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'WorkingGroups' } & Pick<
+                                  WorkingGroups,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }>;
+                linkedFrom?: Maybe<{
+                  outputsCollection?: Maybe<{
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -9987,8 +10096,8 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                         }
                       >
                     >;
-                  }
-                >;
+                  }>;
+                }>;
                 relatedEventsCollection?: Maybe<
                   Pick<OutputsRelatedEventsCollection, 'total'> & {
                     items: Array<
@@ -10097,8 +10206,31 @@ export type FetchOutputsByUserIdQuery = {
                     >;
                   }
                 >;
-                relatedOutputsCollection?: Maybe<
-                  Pick<OutputsRelatedOutputsCollection, 'total'> & {
+                relatedOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                        sys: Pick<Sys, 'id'>;
+                        relatedEntitiesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'Projects' } & Pick<
+                                  Projects,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'WorkingGroups' } & Pick<
+                                  WorkingGroups,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }>;
+                linkedFrom?: Maybe<{
+                  outputsCollection?: Maybe<{
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -10120,8 +10252,8 @@ export type FetchOutputsByUserIdQuery = {
                         }
                       >
                     >;
-                  }
-                >;
+                  }>;
+                }>;
                 relatedEventsCollection?: Maybe<
                   Pick<OutputsRelatedEventsCollection, 'total'> & {
                     items: Array<
@@ -10230,8 +10362,31 @@ export type FetchOutputsByExternalUserIdQuery = {
                     >;
                   }
                 >;
-                relatedOutputsCollection?: Maybe<
-                  Pick<OutputsRelatedOutputsCollection, 'total'> & {
+                relatedOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                        sys: Pick<Sys, 'id'>;
+                        relatedEntitiesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'Projects' } & Pick<
+                                  Projects,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'WorkingGroups' } & Pick<
+                                  WorkingGroups,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }>;
+                linkedFrom?: Maybe<{
+                  outputsCollection?: Maybe<{
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -10253,8 +10408,8 @@ export type FetchOutputsByExternalUserIdQuery = {
                         }
                       >
                     >;
-                  }
-                >;
+                  }>;
+                }>;
                 relatedEventsCollection?: Maybe<
                   Pick<OutputsRelatedEventsCollection, 'total'> & {
                     items: Array<
@@ -10363,8 +10518,31 @@ export type FetchOutputsByProjectIdQuery = {
                     >;
                   }
                 >;
-                relatedOutputsCollection?: Maybe<
-                  Pick<OutputsRelatedOutputsCollection, 'total'> & {
+                relatedOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                        sys: Pick<Sys, 'id'>;
+                        relatedEntitiesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'Projects' } & Pick<
+                                  Projects,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'WorkingGroups' } & Pick<
+                                  WorkingGroups,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }>;
+                linkedFrom?: Maybe<{
+                  outputsCollection?: Maybe<{
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -10386,8 +10564,8 @@ export type FetchOutputsByProjectIdQuery = {
                         }
                       >
                     >;
-                  }
-                >;
+                  }>;
+                }>;
                 relatedEventsCollection?: Maybe<
                   Pick<OutputsRelatedEventsCollection, 'total'> & {
                     items: Array<
@@ -10496,8 +10674,31 @@ export type FetchOutputsByEventIdQuery = {
                     >;
                   }
                 >;
-                relatedOutputsCollection?: Maybe<
-                  Pick<OutputsRelatedOutputsCollection, 'total'> & {
+                relatedOutputsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                        sys: Pick<Sys, 'id'>;
+                        relatedEntitiesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'Projects' } & Pick<
+                                  Projects,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'WorkingGroups' } & Pick<
+                                  WorkingGroups,
+                                  'title'
+                                > & { sys: Pick<Sys, 'id'> })
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }>;
+                linkedFrom?: Maybe<{
+                  outputsCollection?: Maybe<{
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
@@ -10519,8 +10720,8 @@ export type FetchOutputsByEventIdQuery = {
                         }
                       >
                     >;
-                  }
-                >;
+                  }>;
+                }>;
                 relatedEventsCollection?: Maybe<
                   Pick<OutputsRelatedEventsCollection, 'total'> & {
                     items: Array<
@@ -13401,6 +13602,124 @@ export const NewsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<NewsContentDataFragment, unknown>;
+export const RelatedOutputDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RelatedOutputData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Outputs' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'documentType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedEntitiesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'WorkingGroups' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Projects' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<RelatedOutputDataFragment, unknown>;
 export const OutputsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13613,7 +13932,6 @@ export const OutputsContentDataFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'items' },
@@ -13621,124 +13939,53 @@ export const OutputsContentDataFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'RelatedOutputData' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '60' },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'order' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [{ kind: 'EnumValue', value: 'addedDate_ASC' }],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
+                        name: { kind: 'Name', value: 'items' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'documentType' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                      {
-                        kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'relatedEntitiesCollection',
-                        },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '1' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: '__typename' },
-                                  },
-                                  {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                      kind: 'NamedType',
-                                      name: {
-                                        kind: 'Name',
-                                        value: 'WorkingGroups',
-                                      },
-                                    },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'title',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'InlineFragment',
-                                    typeCondition: {
-                                      kind: 'NamedType',
-                                      name: { kind: 'Name', value: 'Projects' },
-                                    },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'title',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'RelatedOutputData',
                               },
                             },
                           ],
@@ -13925,6 +14172,7 @@ export const OutputsContentDataFragmentDoc = {
         ],
       },
     },
+    ...RelatedOutputDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<OutputsContentDataFragment, unknown>;
 export const PageContentDataFragmentDoc = {

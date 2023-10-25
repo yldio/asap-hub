@@ -4,7 +4,7 @@ import {
   UserDataObject,
   UserPatchRequest,
   UserResponse,
-  inactiveUserTag,
+  inactiveUserMembershipStatus,
   UserEvent,
   WebhookDetail,
 } from '@asap-hub/model';
@@ -65,7 +65,7 @@ export const updateAvatarBody: { avatar: string } = {
 };
 
 export const getUserResponse = (): UserResponse => ({
-  _tags: [inactiveUserTag],
+  membershipStatus: [inactiveUserMembershipStatus],
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   id: 'user-id-1',
@@ -136,7 +136,7 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     getUserResponse(),
     {
-      _tags: [inactiveUserTag],
+      membershipStatus: [inactiveUserMembershipStatus],
       id: 'user-id-2',
       alumniLocation: 'some alumni location',
       alumniSinceDate: '2020-09-23T20:45:22Z',
@@ -220,7 +220,7 @@ export const userPatchRequest: UserPatchRequest = {
 };
 
 export const getUserDataObject = (): UserDataObject => ({
-  _tags: [inactiveUserTag],
+  membershipStatus: [inactiveUserMembershipStatus],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -303,7 +303,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     connections,
     alumniLocation,
     alumniSinceDate,
-    _tags,
+    membershipStatus,
     ...createDataObject
   } = getUserDataObject();
 

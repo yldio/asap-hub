@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 import {
   TeamRole,
   Role,
-  UserTag,
-  activeUserTag,
-  inactiveUserTag,
+  UserMembershipStatus,
+  activeUserMembershipStatus,
+  inactiveUserMembershipStatus,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
@@ -57,7 +57,9 @@ type NetworkPageHeaderProps = {
   showSearch?: boolean;
 };
 
-const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
+const userFilters: ReadonlyArray<
+  Option<TeamRole | Role | UserMembershipStatus> | Title
+> = [
   { title: 'TEAM ROLES' },
   { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
   { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
@@ -67,8 +69,8 @@ const userFilters: ReadonlyArray<Option<TeamRole | Role | UserTag> | Title> = [
   { label: 'ASAP Staff', value: 'ASAP Staff' },
   { label: 'SAB', value: 'Scientific Advisory Board' },
   { title: 'TYPE OF USERS' },
-  { label: activeUserTag, value: activeUserTag },
-  { label: inactiveUserTag, value: inactiveUserTag },
+  { label: activeUserMembershipStatus, value: activeUserMembershipStatus },
+  { label: inactiveUserMembershipStatus, value: inactiveUserMembershipStatus },
 ];
 
 const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [

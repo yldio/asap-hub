@@ -22,7 +22,6 @@ export const useCurrentUserRoleGP2 = (
   entityId: string | undefined,
   entityType: 'WorkingGroups' | 'Projects' | undefined,
 ) => {
-  if (!entityId || !entityType) return undefined;
   const user = useCurrentUserGP2();
   return user
     ? entityType === 'Projects'

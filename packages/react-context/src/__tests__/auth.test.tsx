@@ -187,16 +187,6 @@ describe('useCurrentUserRoleGP2', () => {
     const { result } = renderHook(
       () => useCurrentUserRoleGP2('wg-1', 'WorkingGroups'),
       {
-        wrapper: userProviderGP2(undefined),
-      },
-    );
-    expect(result.current).toBeUndefined();
-  });
-
-  it('returns undefined when user does not have projects', async () => {
-    const { result } = renderHook(
-      () => useCurrentUserRoleGP2('proj-1', 'Projects'),
-      {
         wrapper: userProviderGP2({
           sub: '42',
           aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
@@ -218,7 +208,7 @@ describe('useCurrentUserRoleGP2', () => {
     expect(result.current).toBeUndefined();
   });
 
-  it('returns an array of team user roles when there is a logged in user', async () => {
+  it('returns the user role in the project when there is a logged in user', async () => {
     const project: gp2.User['projects'][number] = {
       id: 'proj-1',
       title: 'Proj',

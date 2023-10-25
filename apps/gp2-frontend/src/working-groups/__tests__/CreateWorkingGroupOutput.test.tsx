@@ -3,6 +3,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -146,35 +147,36 @@ describe('Create WorkingGroup Output', () => {
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: /publish/i }));
-    expect(
-      await screen.findByRole('button', { name: /publish/i }),
-    ).toBeEnabled();
-    expect(mockCreateOutput).toHaveBeenCalledWith(
-      {
-        title,
-        link,
-        description: 'An interesting article',
-        sharingStatus: 'GP2 Only',
-        documentType: 'Procedural Form',
-        authors: [
-          {
-            userId: '1',
-          },
-          {
-            externalUserId: '2',
-          },
-        ],
-        workingGroupIds: [],
-        projectIds: undefined,
-        mainEntityId: 'working-group-id-1',
-        tagIds: [],
-        contributingCohortIds: [],
-        relatedOutputIds: [],
-        relatedEventIds: [],
-      },
-      expect.anything(),
-    );
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+
+    await waitFor(() => {
+      expect(mockCreateOutput).toHaveBeenCalledWith(
+        {
+          title,
+          link,
+          description: 'An interesting article',
+          sharingStatus: 'GP2 Only',
+          documentType: 'Procedural Form',
+          authors: [
+            {
+              userId: '1',
+            },
+            {
+              externalUserId: '2',
+            },
+          ],
+          workingGroupIds: [],
+          projectIds: undefined,
+          mainEntityId: 'working-group-id-1',
+          tagIds: [],
+          contributingCohortIds: [],
+          relatedOutputIds: [],
+          relatedEventIds: [],
+        },
+        expect.anything(),
+      );
+    });
   });
 
   it('will show server side validation error for link', async () => {
@@ -207,13 +209,11 @@ describe('Create WorkingGroup Output', () => {
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: /publish/i }));
-
-    expect(
-      await screen.findByRole('button', { name: /publish/i }),
-    ).toBeEnabled();
-
-    expect(mockCreateOutput).toHaveBeenCalled();
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await waitFor(() => {
+      expect(mockCreateOutput).toHaveBeenCalled();
+    });
     expect(
       screen.queryAllByText(
         'An Output with this URL already exists. Please enter a different URL.',

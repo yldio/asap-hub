@@ -2,6 +2,7 @@ export {
   getUserClaimKey,
   useCurrentUserCRN,
   useCurrentUserGP2,
+  useCurrentUserRoleGP2,
   useCurrentUserTeamRolesCRN,
 } from './auth';
 export {

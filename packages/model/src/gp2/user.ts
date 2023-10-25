@@ -51,7 +51,7 @@ export type UserPosition = {
   institution: string;
 };
 
-type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
+export type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
 export type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
   members: UserProjectMember[];
 };
@@ -59,7 +59,7 @@ export type UserWorkingGroupMember = Pick<
   WorkingGroupMember,
   'userId' | 'role'
 >;
-type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
+export type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
   members: UserWorkingGroupMember[];
 };
 

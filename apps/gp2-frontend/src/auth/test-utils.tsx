@@ -37,6 +37,8 @@ const createAuth0 = (
       lastName: 'Doe',
       algoliaApiKey: 'test-api-key',
       role: 'Network Collaborator',
+      projects: [],
+      workingGroups: [],
       ...user,
     };
     auth0User = {

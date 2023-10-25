@@ -34,8 +34,14 @@ const parseCommonUserMetadata = ({
   avatarUrl,
   onboarded,
 });
-const parseGP2UserMetadata = ({ role }: gp2Model.UserMetadataResponse) => ({
+const parseGP2UserMetadata = ({
   role,
+  workingGroups,
+  projects,
+}: gp2Model.UserMetadataResponse) => ({
+  role,
+  workingGroups,
+  projects,
 });
 const parseTeam = ({ id, displayName, role, inactiveSinceDate }: UserTeam) => ({
   id,

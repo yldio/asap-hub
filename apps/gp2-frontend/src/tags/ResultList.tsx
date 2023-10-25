@@ -17,7 +17,7 @@ import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
 
-type ResultListProps = {
+export type ResultListProps = {
   projectId?: string;
   workingGroupId?: string;
   authorId?: string;
@@ -58,7 +58,6 @@ const ResultList: React.FC<ResultListProps> = ({
                 <OutputCard
                   key={result.id}
                   {...(result as gp2Model.OutputResponse)}
-                  isAdministrator={isAdministrator}
                 />
               );
             case 'project':
@@ -75,14 +74,11 @@ const ResultList: React.FC<ResultListProps> = ({
                   {...eventMapper(result as gp2Model.EventResponse)}
                 />
               );
-            case 'user':
-              return (
-                <UserCard
-                  key={result.id}
-                  {...(result as gp2Model.UserResponse)}
-                  tags={result.tags.map((tag) => tag.name)}
-                />
-              );
+            case 'user': {
+              const data = result as gp2Model.UserResponse;
+              const tags = data.tags.map((tag) => tag.name);
+              return <UserCard key={result.id} {...data} tags={tags} />;
+            }
             default:
               return '';
           }

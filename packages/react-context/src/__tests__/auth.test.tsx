@@ -173,11 +173,46 @@ describe('useCurrentUserGP2', () => {
 });
 
 describe('useCurrentUserRoleGP2', () => {
-  it('returnsundefined when there is no current user', async () => {
+  it('returns undefined when there is no current user', async () => {
     const { result } = renderHook(
       () => useCurrentUserRoleGP2('proj-1', 'Projects'),
       {
         wrapper: userProviderGP2(undefined),
+      },
+    );
+    expect(result.current).toBeUndefined();
+  });
+
+  it('returns undefined when entity is not Projects', async () => {
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('wg-1', 'WorkingGroups'),
+      {
+        wrapper: userProviderGP2(undefined),
+      },
+    );
+    expect(result.current).toBeUndefined();
+  });
+
+  it('returns undefined when user does not have projects', async () => {
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('proj-1', 'Projects'),
+      {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: {
+            id: 'testuser',
+            onboarded: true,
+            email: 'john.doe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            displayName: 'John Doe',
+            projects: [],
+            algoliaApiKey: 'asdasda',
+            workingGroups: [],
+            role: 'Trainee',
+          },
+        }),
       },
     );
     expect(result.current).toBeUndefined();

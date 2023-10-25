@@ -1,4 +1,4 @@
-import { User } from '@asap-hub/auth';
+import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -24,7 +24,11 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-const renderDashboard = async ({ user = {} }: { user?: Partial<User> }) => {
+const renderDashboard = async ({
+  user = {},
+}: {
+  user?: Partial<gp2Auth.User>;
+}) => {
   render(
     <Suspense fallback="loading">
       <RecoilRoot>

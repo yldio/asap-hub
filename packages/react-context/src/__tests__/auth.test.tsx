@@ -214,7 +214,7 @@ describe('useCurrentUserRoleGP2', () => {
         }),
       },
     );
-    expect(result.current).toEqual(['Project manager']);
+    expect(result.current).toEqual('Project manager');
   });
 });
 describe('useCurrentUserTeamRoles', () => {

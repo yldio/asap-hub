@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import {
   EmptyState,
-  noOutputsIcon,
+  tag,
   OutputCard,
   ProjectCard,
   UserCard,
@@ -42,7 +42,7 @@ const ResultList: React.FC<ResultListProps> = ({
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return total || searchQuery ? (
     <ResultListComponent
-      icon={noOutputsIcon}
+      icon={tag}
       numberOfItems={total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
@@ -89,10 +89,10 @@ const ResultList: React.FC<ResultListProps> = ({
     </ResultListComponent>
   ) : (
     <EmptyState
-      icon={noOutputsIcon}
-      title={'No outputs available.'}
+      icon={tag}
+      title={'Explore any tags.'}
       description={
-        'When a working group or project has an associated output, it will be listed here.'
+        'All GP2 Hub areas with the selected tags will be listed on this page.'
       }
     />
   );

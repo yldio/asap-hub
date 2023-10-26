@@ -27,9 +27,11 @@ export const getDashboard = async (
 export const getReminders = async (
   authorization: string,
 ): Promise<ListReminderResponse> => {
+  const timezone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || getTimezone(new Date());
   const resp = await fetch(
     `${API_BASE_URL}/reminders?${new URLSearchParams({
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timezone,
     })}`,
     {
       headers: {
@@ -45,4 +47,21 @@ export const getReminders = async (
     );
   }
   return resp.json();
+};
+
+export const getTimezone = (date: Date) => {
+  const offset = date.getTimezoneOffset();
+  // The number of minutes returned by getTimezoneOffset() is positive if the local time zone is behind UTC,
+  // and negative if the local time zone is ahead of UTC. For example, for UTC+10, -600 will be returned.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#negative_values_and_positive_values
+
+  if (offset > 0) {
+    return `UTC-${offset / 60}`;
+  }
+
+  if (offset < 0) {
+    return `UTC+${offset / -60}`;
+  }
+
+  return 'UTC';
 };

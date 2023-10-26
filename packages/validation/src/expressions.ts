@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 
-
 export const urlExpression =
   "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
 

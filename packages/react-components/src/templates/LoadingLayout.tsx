@@ -24,7 +24,7 @@ const animation = (width: string, height: string) =>
       '&:before': {
         content: '""',
         transform: 'skewX(-45deg)',
-        backgroundImage: `linear-gradient(90deg, #eee 0px, rgba(255,255,255,.6) calc(${shineWidth}/2), #eee ${shineWidth})`,
+        backgroundImage: `linear-gradient(90deg, #eee 0px, rgba(255,255,255,.3) calc(${shineWidth}/2), #eee ${shineWidth})`,
         position: 'absolute',
         backgroundRepeat: 'repeat-x',
         left: `calc((${width}/2) + ${shineWidth} * -1)`,
@@ -52,7 +52,7 @@ const menuContainerStyles = css({
 
 const userButtonContainerStyles = css({
   display: `grid`,
-  gridTemplateColumns: `${rem(88)} ${rem(40)} 1fr`,
+  gridTemplateColumns: `auto auto auto`,
   columnGap: rem(16),
   paddingRight: rem(24),
 });
@@ -105,13 +105,13 @@ export const LoadingUserButton: React.FC<Record<string, never>> = () => (
   <div css={userButtonContainerStyles}>
     <div css={menuTextStyles} />
     <div css={avatarStyles} />
-    <div css={[iconStyles, { marginLeft: rem(15) }]} />
+    <div css={[iconStyles, { marginLeft: rem(6) }]} />
   </div>
 );
 
 export const LoadingMenu: React.FC<Record<string, never>> = () => (
   <div css={menuContainerStyles}>
-    {Array.from({ length: 5 }).map((_, i) => (
+    {Array.from({ length: 6 }).map((_, i) => (
       <div key={`menu-row-${i}`} css={menuRowStyles}>
         <div css={iconStyles} />
         <div css={menuTextStyles} />

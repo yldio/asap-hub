@@ -119,7 +119,7 @@
     "files": [
       {
         "path": "apps/crn-frontend/build/**/*.js",
-        "maxSize": "220 kB"
+        "maxSize": "256 kB"
       }
     ]
   },

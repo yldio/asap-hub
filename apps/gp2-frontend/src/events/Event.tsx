@@ -12,7 +12,6 @@ import Frame from '../Frame';
 const Event: React.FC = () => {
   const { eventId } = useRouteParams(gp2.events({}).event);
   const event = useEventById(eventId);
-  console.log(event);
 
   if (event) {
     return (

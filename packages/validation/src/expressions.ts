@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 
-// remember to update link patterns in the squidex schema
 
 export const urlExpression =
   "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";

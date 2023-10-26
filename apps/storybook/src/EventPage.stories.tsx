@@ -1,4 +1,4 @@
-import { EventPage } from '@asap-hub/react-components';
+import { EventPage, getIconForDocumentType } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { boolean, number } from '@storybook/addon-knobs';
 
@@ -22,5 +22,6 @@ export const Normal = () => (
     hideMeetingLink={boolean('Hide Meeting Link', false)}
     eventOwner={<div>ASAP Team</div>}
     displayCalendar={boolean('display calendar', true)}
+    getIconForDocumentType={() => getIconForDocumentType('Article')}
   />
 );

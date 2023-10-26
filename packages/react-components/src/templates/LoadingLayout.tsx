@@ -30,12 +30,12 @@ const animation = (width: string, height: string) =>
         left: `calc((${width}/2) + ${shineWidth} * -1)`,
         width: shineWidth,
         height: '100%',
-        animation: `${shine(width, shineWidth)} 1s infinite`,
+        animation: `${shine(width)} 1s infinite`,
       },
     },
   });
 
-const shine = (width: string, shineWidth: string) => keyframes`
+const shine = (width: string) => keyframes`
   0% {
     left: calc( (${width} / 2) + ${shineWidth} * -1);
   }

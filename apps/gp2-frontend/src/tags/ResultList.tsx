@@ -42,7 +42,7 @@ const ResultList: React.FC<ResultListProps> = ({
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return total || searchQuery ? (
     <ResultListComponent
-      icon={tag}
+      icon={tagIcon}
       numberOfItems={total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import {
   EmptyState,
-  tag,
+  tag as tagIcon,
   OutputCard,
   ProjectCard,
   UserCard,
@@ -49,47 +49,43 @@ const ResultList: React.FC<ResultListProps> = ({
       renderPageHref={renderPageHref}
       isAdministrator={isAdministrator}
     >
-      {
-        items.map((result) => {
-          // eslint-disable-next-line no-underscore-dangle
-          switch (result.__meta.type) {
-            case 'output':
-              return (
-                <OutputCard
-                  key={result.id}
-                  {...(result as gp2Model.OutputResponse)}
-                />
-              );
-            case 'project':
-              return (
-                <ProjectCard
-                  key={result.id}
-                  {...(result as gp2Model.ProjectResponse)}
-                />
-              );
-            case 'event':
-              return (
-                <EventCard
-                  key={result.id}
-                  {...eventMapper(result as gp2Model.EventResponse)}
-                />
-              );
-            case 'user': {
-              const data = result as gp2Model.UserResponse;
-              const tags = data.tags.map((tag) => tag.name);
-              return <UserCard key={result.id} {...data} tags={tags} />;
-            }
-            default:
-              return '';
+      {items.map((result) => {
+        // eslint-disable-next-line no-underscore-dangle
+        switch (result.__meta.type) {
+          case 'output':
+            return (
+              <OutputCard
+                key={result.id}
+                {...(result as gp2Model.OutputResponse)}
+              />
+            );
+          case 'project':
+            return (
+              <ProjectCard
+                key={result.id}
+                {...(result as gp2Model.ProjectResponse)}
+              />
+            );
+          case 'event':
+            return (
+              <EventCard
+                key={result.id}
+                {...eventMapper(result as gp2Model.EventResponse)}
+              />
+            );
+          case 'user': {
+            const data = result as gp2Model.UserResponse;
+            const tags = data.tags.map((tag) => tag.name);
+            return <UserCard key={result.id} {...data} tags={tags} />;
           }
-        })
-
-        //   ))
-      }
+          default:
+            return '';
+        }
+      })}
     </ResultListComponent>
   ) : (
     <EmptyState
-      icon={tag}
+      icon={tagIcon}
       title={'Explore any tags.'}
       description={
         'All GP2 Hub areas with the selected tags will be listed on this page.'

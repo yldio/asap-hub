@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { neutral300 } from '../colors';
 import { Header } from '../molecules';
 import { rem } from '../pixels';
@@ -10,6 +10,39 @@ import {
   styles,
   userButtonStyles,
 } from './Layout';
+
+const shineWidth = '70px';
+const animation = (width: string, height: string) =>
+  css({
+    width,
+    height,
+    overflow: 'hidden',
+
+    '&:empty': {
+      position: 'relative',
+
+      '&:before': {
+        content: '""',
+        transform: 'skewX(-45deg)',
+        backgroundImage: `linear-gradient(90deg, #eee 0px, rgba(255,255,255,.6) calc(${shineWidth}/2), #eee ${shineWidth})`,
+        position: 'absolute',
+        backgroundRepeat: 'repeat-x',
+        left: `calc((${width}/2) + ${shineWidth} * -1)`,
+        width: shineWidth,
+        height: '100%',
+        animation: `${shine(width, shineWidth)} 1s infinite`,
+      },
+    },
+  });
+
+const shine = (width: string, shineWidth: string) => keyframes`
+  0% {
+    left: calc( (${width} / 2) + ${shineWidth} * -1);
+  }
+  100% {
+    left: calc(3/2 * ${width});
+  }
+`;
 
 const menuContainerStyles = css({
   display: 'grid',
@@ -30,29 +63,38 @@ const menuRowStyles = css({
   gridTemplateColumns: 'min-content 1fr',
 });
 
-const iconStyles = css({
-  width: rem(24),
-  height: rem(24),
-  backgroundColor: neutral300.rgb,
-  borderRadius: rem(4),
-  alignSelf: 'center',
-});
+const iconStyles = [
+  css({
+    width: rem(24),
+    height: rem(24),
+    backgroundColor: neutral300.rgb,
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation(rem(24), rem(24)),
+];
 
-const avatarStyles = css({
-  width: rem(48),
-  height: rem(48),
-  backgroundColor: neutral300.rgb,
-  borderRadius: '50%',
-  alignSelf: 'center',
-});
+const avatarStyles = [
+  css({
+    width: rem(48),
+    height: rem(48),
+    backgroundColor: neutral300.rgb,
+    borderRadius: '50%',
+    alignSelf: 'center',
+  }),
+  animation(rem(48), rem(48)),
+];
 
-const menuTextStyles = css({
-  width: '100%',
-  height: rem(18),
-  backgroundColor: neutral300.rgb,
-  borderRadius: rem(4),
-  alignSelf: 'center',
-});
+const menuTextStyles = [
+  css({
+    width: '100%',
+    height: rem(18),
+    backgroundColor: neutral300.rgb,
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation(rem(100), rem(18)),
+];
 
 const searchIconContainerStyles = css({
   display: 'flex',

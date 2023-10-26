@@ -8,7 +8,6 @@ import {
   NewsDataObject,
   NewsResponse,
 } from '@asap-hub/model';
-import { appName, baseUrl } from '../../src/config';
 
 export const getContentfulGraphqlNews = (): NonNullable<
   NonNullable<FetchNewsQuery['newsCollection']>['items'][number]
@@ -45,7 +44,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
   },
   publishDate: '2020-09-08T16:35:28.000Z',
   thumbnail: {
-    url: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+    url: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
   },
 });
 
@@ -62,7 +61,7 @@ export const getNewsDataObject = (): NewsDataObject => ({
   frequency: 'News Articles',
   shortText: 'Short text of news 1',
   text: '<p>text</p>',
-  thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+  thumbnail: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
 });
 

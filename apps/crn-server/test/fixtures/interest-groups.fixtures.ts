@@ -11,7 +11,6 @@ import {
   WebhookDetail,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
-import { appName, baseUrl } from '../../src/config';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getContentfulGraphqlTeam } from './teams.fixtures';
 
@@ -25,7 +24,7 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "JT's Group",
       tags: ['coding'],
-      thumbnail: `${baseUrl}/api/assets/${appName}/uuid-thumbnail-1`,
+      thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
       description: 'A test Group',
       tools: {
         slack: 'https://example.com/secure-comms',
@@ -151,7 +150,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   lastModifiedDate: '2020-12-11T15:06:26.000Z',
   name: "JT's Group",
   tags: ['coding'],
-  thumbnail: `${baseUrl}/api/assets/${appName}/uuid-thumbnail-1`,
+  thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   description: 'A test Group',
   tools: {
     slack: 'https://example.com/secure-comms',
@@ -243,7 +242,7 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
   name: "JT's Group",
   tags: ['coding'],
   thumbnail: {
-    url: `${baseUrl}/api/assets/${appName}/uuid-thumbnail-1`,
+    url: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   },
   description: 'A test Group',
   slack: 'https://example.com/secure-comms',

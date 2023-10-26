@@ -5,7 +5,6 @@ import {
   ListTutorialsResponse,
 } from '@asap-hub/model';
 import { TutorialsContentFragment } from '@asap-hub/contentful';
-import { appName, baseUrl } from '../../src/config';
 
 export const getTutorialsDataObject = (): TutorialsDataObject => ({
   id: 'tutorial-1',
@@ -14,7 +13,7 @@ export const getTutorialsDataObject = (): TutorialsDataObject => ({
   text: '<p>text</p>',
   link: 'https://parkinsonsroadmap.org/#',
   linkText: 'ASAP',
-  thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+  thumbnail: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
   authors: [],
   teams: [{ id: 'team-id-0', displayName: 'Team A' }],
@@ -89,7 +88,7 @@ export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {
     link: 'https://parkinsonsroadmap.org/#',
     linkText: 'ASAP',
     thumbnail: {
-      url: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+      url: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
     },
     sharingStatus: 'Network Only',
     relatedTutorialsCollection: {

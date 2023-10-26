@@ -6,8 +6,10 @@ import {
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { ExternalUserContentfulDataProvider } from '../../src/data-providers/external-user.data-provider';
+import { ExternalUserDataProvider } from '../../src/data-providers/types';
 import { getEntry } from '../fixtures/contentful.fixtures';
 import {
+  getContentfulGraphql,
   getContentfulGraphqlExternalUser,
   getContentfulGraphqlExternalUsersResponse,
   getExternalUserCreateDataObject,
@@ -158,11 +160,41 @@ describe('External User Contentful Data Provider', () => {
     });
   });
 
-  describe('Fetch-by-id method', () => {
-    test('not implemented', async () => {
-      await expect(
-        externalUsersDataProviderMockGraphql.fetchById(),
-      ).rejects.toThrow();
+  describe('FetchById', () => {
+    test('Should fetch the externak user from contentful graphql', async () => {
+      const contentfulGraphqlClientMockServer =
+        getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
+      const externalUserDataProviderWithMockServer: ExternalUserDataProvider =
+        new ExternalUserContentfulDataProvider(
+          contentfulGraphqlClientMockServer,
+          contentfulRestClientMock,
+        );
+      const result = await externalUserDataProviderWithMockServer.fetchById(
+        'user-id',
+      );
+
+      expect(result).toMatchObject(getExternalUserDataObject());
+    });
+    test('Should return null when the user is not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+
+      const result = await externalUserDataProvider.fetchById(
+        'external-user-id',
+      );
+      expect(result).toBeNull();
+    });
+    test('Should return the user when it finds it', async () => {
+      const mockResponse = getContentfulGraphqlExternalUser();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        externalUsers: mockResponse,
+      });
+
+      const result = await externalUserDataProvider.fetchById(
+        'external-user-id',
+      );
+      expect(result).toEqual(getExternalUserDataObject());
     });
   });
 

@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { FetchOptions } from '@asap-hub/model';
 import ExternalUsers from '../../src/controllers/external-user.controller';
 import {
@@ -7,7 +8,9 @@ import {
 import { externalUserDataProviderMock } from '../mocks/external-user.data-provider.mock';
 
 describe('External Users controller', () => {
-  const userController = new ExternalUsers(externalUserDataProviderMock);
+  const externalUserController = new ExternalUsers(
+    externalUserDataProviderMock,
+  );
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -19,7 +22,7 @@ describe('External Users controller', () => {
         total: 1,
         items: [getExternalUserDataObject()],
       });
-      const result = await userController.fetch({});
+      const result = await externalUserController.fetch({});
 
       const expectedUser = getExternalUserResponse();
       expect(result).toEqual({ items: [expectedUser], total: 1 });
@@ -30,7 +33,7 @@ describe('External Users controller', () => {
         total: 0,
         items: [],
       });
-      const result = await userController.fetch({});
+      const result = await externalUserController.fetch({});
 
       expect(result).toEqual({ items: [], total: 0 });
     });
@@ -46,9 +49,31 @@ describe('External Users controller', () => {
         skip: 5,
         search: 'something',
       };
-      await userController.fetch(params);
+      await externalUserController.fetch(params);
 
       expect(externalUserDataProviderMock.fetch).toHaveBeenCalledWith(params);
+    });
+  });
+
+  describe('FetchById', () => {
+    beforeEach(jest.resetAllMocks);
+
+    test('Should throw when external user is not found', async () => {
+      externalUserDataProviderMock.fetchById.mockResolvedValue(null);
+
+      await expect(
+        externalUserController.fetchById('not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should return the external user when it finds it', async () => {
+      const externalUser = getExternalUserDataObject();
+      externalUserDataProviderMock.fetchById.mockResolvedValue(
+        getExternalUserDataObject(),
+      );
+      const result = await externalUserController.fetchById(externalUser.id);
+
+      expect(result).toEqual(getExternalUserResponse());
     });
   });
 });

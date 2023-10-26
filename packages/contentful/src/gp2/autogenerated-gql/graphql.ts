@@ -9513,6 +9513,21 @@ export type FetchExternalUsersQuery = {
   >;
 };
 
+export type FetchExternalUserByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchExternalUserByIdQuery = {
+  externalUsers?: Maybe<
+    Pick<ExternalUsers, 'name' | 'orcid'> & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+    }
+  >;
+};
+
 export type NewsContentDataFragment = Pick<
   News,
   'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
@@ -17117,6 +17132,61 @@ export const FetchExternalUsersDocument = {
 } as unknown as DocumentNode<
   FetchExternalUsersQuery,
   FetchExternalUsersQueryVariables
+>;
+export const FetchExternalUserByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalUserById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalUsers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ExternalUsersContentData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalUsersContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalUserByIdQuery,
+  FetchExternalUserByIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

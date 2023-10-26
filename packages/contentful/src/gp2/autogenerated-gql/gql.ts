@@ -47,6 +47,8 @@ const documents = {
     types.ExternalUsersContentDataFragmentDoc,
   '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n':
     types.FetchExternalUsersDocument,
+  '\n  query FetchExternalUserById($id: String!) {\n    externalUsers(id: $id) {\n      ...ExternalUsersContentData\n    }\n  }\n  \n':
+    types.FetchExternalUserByIdDocument,
   '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n':
     types.NewsContentDataFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
@@ -231,6 +233,12 @@ export function gql(
 export function gql(
   source: '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchExternalUserById($id: String!) {\n    externalUsers(id: $id) {\n      ...ExternalUsersContentData\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchExternalUserById($id: String!) {\n    externalUsers(id: $id) {\n      ...ExternalUsersContentData\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

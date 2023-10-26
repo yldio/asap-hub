@@ -51,9 +51,17 @@ export class ExternalUserContentfulDataProvider
     };
   }
 
-  async fetchById(): Promise<null> {
-    throw new Error('Method not implemented.');
+  async fetchById(id: string) {
+    const outputGraphqlResponse = await this.graphQLClient.request<
+      gp2Contentful.FetchExternalUserByIdQuery,
+      gp2Contentful.FetchExternalUserByIdQueryVariables
+    >(gp2Contentful.FETCH_EXTERNAL_USER_BY_ID, { id });
+
+    const { externalUsers } = outputGraphqlResponse;
+
+    return externalUsers ? parseGraphQLExternalUser(externalUsers) : null;
   }
+
   async create(input: gp2Model.ExternalUserCreateDataObject) {
     const environment = await this.getRestClient();
 

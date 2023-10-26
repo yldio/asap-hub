@@ -7,11 +7,12 @@ import {
   handleError,
   useRelatedOutputSuggestions,
   useRelatedEventsSuggestions,
+  useAuthorSuggestions,
 } from '../outputs';
 import { useProjects } from '../projects/state';
 import { useContributingCohorts, useTags } from '../shared/state';
 import { useWorkingGroupsState } from '../working-groups/state';
-import { useAuthorSuggestions, useUpdateOutput } from './state';
+import { useUpdateOutput } from './state';
 
 interface ShareOutputProps {
   output: gp2Model.OutputBaseResponse;

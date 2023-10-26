@@ -14,6 +14,7 @@ import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
+import { getRelatedOutputs } from './output.data-provider';
 import { parseTag, TagItem } from './tag.data-provider';
 import {
   getContentfulEventMaterial,
@@ -349,6 +350,10 @@ export const parseGraphQLEvent = (
     item.tagsCollection?.items
       .filter((tag): tag is TagItem => tag !== null)
       .map(parseTag) ?? [];
+  const relatedOutputs = getRelatedOutputs(
+    item.linkedFrom?.outputsCollection?.items,
+  );
+  console.log(relatedOutputs);
 
   return {
     id,
@@ -396,6 +401,7 @@ export const parseGraphQLEvent = (
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup: calendar.workingGroups?.[0],
     project: calendar.projects?.[0],
+    relatedOutputs,
   };
 };
 

@@ -175,6 +175,41 @@ export const eventsContentQueryFragment = gql`
         }
       }
     }
+    linkedFrom {
+      outputsCollection(limit: 50, order: [addedDate_ASC]) {
+        items {
+          ...EventRelatedOutputData
+        }
+      }
+    }
+  }
+`;
+
+export const eventRelatedOutputQueryFragment = gql`
+  fragment EventRelatedOutputData on Outputs {
+    sys {
+      id
+    }
+    title
+    documentType
+    type
+    relatedEntitiesCollection(limit: 1) {
+      items {
+        __typename
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
+        }
+        ... on Projects {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
   }
 `;
 

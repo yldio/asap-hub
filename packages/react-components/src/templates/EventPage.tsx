@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { BasicEvent, EventResponse } from '@asap-hub/model';
+import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
 import { EventInfo, BackLink } from '../molecules';
@@ -15,7 +15,8 @@ import {
   CalendarList,
   RelatedResearchCard,
 } from '../organisms';
-import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
+
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -25,7 +26,11 @@ const cardsStyles = css({
   rowGap: `${36 / perRem}em`,
 });
 
-type EventPageProps = ComponentProps<typeof EventInfo> &
+type EventPageProps<
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2.OutputResponse['relatedOutputs'],
+> = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
   ComponentProps<typeof EventAbout> &
   Pick<
@@ -38,12 +43,21 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'hideMeetingLink'
     | 'calendar'
   > & {
-    readonly relatedResearch?: EventResponse['relatedResearch'];
+    readonly relatedResearch?: T;
     readonly backHref?: string;
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
+    readonly titleOutputs?: string;
+    readonly descriptionOutput?: string;
+    readonly getIconForDocumentType: (
+      documentType: T[number]['documentType'],
+    ) => EmotionJSX.Element;
   };
-const EventPage: React.FC<EventPageProps> = ({
+const EventPage = <
+  T extends
+    | EventResponse['relatedResearch']
+    | gp2.OutputResponse['relatedOutputs'],
+>({
   backHref,
   lastModifiedDate,
   calendar,
@@ -52,8 +66,11 @@ const EventPage: React.FC<EventPageProps> = ({
   displayCalendar,
   children,
   relatedResearch,
+  titleOutputs,
+  descriptionOutput,
+  getIconForDocumentType,
   ...props
-}) => (
+}: EventPageProps<T>) => (
   <div
     css={({ components }) => [
       containerStyles,
@@ -78,9 +95,13 @@ const EventPage: React.FC<EventPageProps> = ({
       {eventConversation}
       {relatedResearch && relatedResearch?.length > 0 && (
         <RelatedResearchCard
-          description="Find out all shared research outputs that are related to this event."
+          title={titleOutputs}
+          description={
+            descriptionOutput ||
+            'Find out all shared research outputs that are related to this event.'
+          }
           relatedResearch={relatedResearch}
-          getIconForDocumentType={getIconForDocumentTypeCRN}
+          getIconForDocumentType={getIconForDocumentType}
         />
       )}
       {displayCalendar && (

@@ -14,6 +14,7 @@ const props: ComponentProps<typeof EventPage> = {
   eventConversation: <div>ASAP Team</div>,
   displayCalendar: false,
   backHref: '/prev',
+  getIconForDocumentType: jest.fn(),
 };
 
 it('renders the event info', () => {

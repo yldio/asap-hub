@@ -414,6 +414,49 @@ describe('User data provider', () => {
       });
     });
 
+    test('should filter out team memberships not linked to a user', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teamMembershipCollection: {
+          total: 3,
+          items: [
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 1,
+                  items: [{ ...getContentfulGraphqlUser(), firstName: 'Alan' }],
+                },
+              },
+            },
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 0,
+                  items: [],
+                },
+              },
+            },
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 1,
+                  items: [
+                    { ...getContentfulGraphqlUser(), firstName: 'Brady' },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      const result = await userDataProvider.fetch({ filter: { teamId: 'A' } });
+      expect(result!.total).toEqual(2);
+      expect(result!.items.map((item) => item.firstName)).toEqual([
+        'Alan',
+        'Brady',
+      ]);
+    });
+
     describe('query parameters', () => {
       beforeEach(() => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({

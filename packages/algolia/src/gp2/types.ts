@@ -27,4 +27,8 @@ export type Payload =
   | {
       data: gp2Model.UserResponse;
       type: typeof USER_ENTITY_TYPE;
+    }
+  | {
+      data: gp2Model.ExternalUserResponse;
+      type: typeof EXTERNAL_USER_ENTITY_TYPE;
     };

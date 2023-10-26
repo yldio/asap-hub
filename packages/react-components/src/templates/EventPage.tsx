@@ -33,6 +33,10 @@ type EventPageProps<
   ComponentProps<typeof JoinEvent> &
   ComponentProps<typeof EventAbout> &
   Pick<
+    ComponentProps<typeof RelatedResearchCard>,
+    'getSourceIcon' | 'tableTitles'
+  > &
+  Pick<
     BasicEvent,
     | 'lastModifiedDate'
     | 'notes'
@@ -68,6 +72,8 @@ const EventPage = <
   titleOutputs,
   descriptionOutput,
   getIconForDocumentType,
+  getSourceIcon,
+  tableTitles,
   ...props
 }: EventPageProps<T>) => (
   <div
@@ -101,6 +107,8 @@ const EventPage = <
           }
           relatedResearch={relatedResearch}
           getIconForDocumentType={getIconForDocumentType}
+          getSourceIcon={getSourceIcon}
+          tableTitles={tableTitles}
         />
       )}
       {displayCalendar && (

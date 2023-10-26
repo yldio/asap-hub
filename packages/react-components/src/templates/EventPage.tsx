@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { EventInfo, BackLink } from '../molecules';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -15,8 +16,6 @@ import {
   CalendarList,
   RelatedResearchCard,
 } from '../organisms';
-
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,

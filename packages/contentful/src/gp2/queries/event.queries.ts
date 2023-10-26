@@ -2,6 +2,34 @@
 
 import { gql } from 'graphql-tag';
 
+export const eventRelatedOutputQueryFragment = gql`
+  fragment EventRelatedOutputData on Outputs {
+    sys {
+      id
+    }
+    title
+    documentType
+    type
+    relatedEntitiesCollection(limit: 1) {
+      items {
+        __typename
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
+        }
+        ... on Projects {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
+  }
+`;
+
 export const eventsContentQueryFragment = gql`
   fragment EventsContentData on Events {
     sys {
@@ -183,34 +211,7 @@ export const eventsContentQueryFragment = gql`
       }
     }
   }
-`;
-
-export const eventRelatedOutputQueryFragment = gql`
-  fragment EventRelatedOutputData on Outputs {
-    sys {
-      id
-    }
-    title
-    documentType
-    type
-    relatedEntitiesCollection(limit: 1) {
-      items {
-        __typename
-        ... on WorkingGroups {
-          sys {
-            id
-          }
-          title
-        }
-        ... on Projects {
-          sys {
-            id
-          }
-          title
-        }
-      }
-    }
-  }
+  ${eventRelatedOutputQueryFragment}
 `;
 
 export const FETCH_EVENT_BY_ID = gql`

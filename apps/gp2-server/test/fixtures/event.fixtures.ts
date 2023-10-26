@@ -10,6 +10,7 @@ export const getContentfulGraphql = () => ({
   Events: () => getContentfulGraphqlEvent(),
   ProjectsCollection: () => getContentfulProjectsCollection(),
   WorkingGroupsCollection: () => getContentfulWorkingGroupsCollection(),
+  OutputsCollection: () => getContentfulOutputsCollection(),
 });
 
 export const getContentfulGraphqlEvent = (): NonNullable<
@@ -220,6 +221,22 @@ export const getContentfulGraphqlEvent = (): NonNullable<
       },
     ],
   },
+  linkedFrom: {
+    outputsCollection: {
+      items: getContentfulOutputsCollection().items,
+    },
+  },
+});
+
+export const getContentfulOutputsCollection = () => ({
+  total: 1,
+  items: [
+    {
+      sys: { id: '7' },
+      title: 'a output title',
+      documentType: 'Article',
+    },
+  ],
 });
 
 export const getContentfulProjectsCollection = () => ({
@@ -382,6 +399,9 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   speakers: [getEventSpeaker()],
   workingGroup: { id: '11', title: 'a working group title' },
   project: { id: '7', title: 'a project title' },
+  relatedOutputs: [
+    { id: '7', title: 'a output title', documentType: 'Article' },
+  ],
 });
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({

@@ -7766,6 +7766,25 @@ export type FetchDashboardQuery = {
   >;
 };
 
+export type EventRelatedOutputDataFragment = Pick<
+  Outputs,
+  'title' | 'documentType' | 'type'
+> & {
+  sys: Pick<Sys, 'id'>;
+  relatedEntitiesCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+      >
+    >;
+  }>;
+};
+
 export type EventsContentDataFragment = Pick<
   Events,
   | 'description'
@@ -8025,25 +8044,6 @@ export type EventsContentDataFragment = Pick<
         >
       >;
     }>;
-  }>;
-};
-
-export type EventRelatedOutputDataFragment = Pick<
-  Outputs,
-  'title' | 'documentType' | 'type'
-> & {
-  sys: Pick<Sys, 'id'>;
-  relatedEntitiesCollection?: Maybe<{
-    items: Array<
-      Maybe<
-        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-      >
-    >;
   }>;
 };
 

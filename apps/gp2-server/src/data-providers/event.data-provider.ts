@@ -353,7 +353,6 @@ export const parseGraphQLEvent = (
   const relatedOutputs = getRelatedOutputs(
     item.linkedFrom?.outputsCollection?.items,
   );
-  console.log(relatedOutputs);
 
   return {
     id,

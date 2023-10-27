@@ -58,7 +58,7 @@ export const styles = css({
     grid: `
       "header     user-button search-button" max-content
       "main-menu  content           content" 1fr
-      "footer     footer            footer"  auto / max-content 1fr`,
+      "footer     footer            footer"  auto / max-content 1fr 72px`,
   },
 });
 
@@ -125,7 +125,9 @@ export const menuStyles = css({
   flexDirection: 'column',
   maxWidth: '100vw',
   [drawerQuery]: {
+    maxWidth: rem(302),
     gridRow: `main-menu/-1`,
+    gridColumn: 'main-menu/-2',
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,

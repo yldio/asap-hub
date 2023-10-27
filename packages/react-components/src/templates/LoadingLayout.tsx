@@ -1,6 +1,10 @@
 import { css, keyframes } from '@emotion/react';
 import { neutral300 } from '../colors';
 import { Header } from '../molecules';
+import {
+  menuButtonStyles,
+  styles as menuButtonContainer,
+} from '../organisms/MenuHeader';
 import { rem } from '../pixels';
 import {
   contentStyles,
@@ -123,7 +127,12 @@ export const LoadingMenu: React.FC<Record<string, never>> = () => (
 const LoadingLayout: React.FC<Record<string, never>> = () => (
   <article css={styles}>
     <div css={headerStyles}>
-      <Header enabled={false} />
+      <div css={menuButtonContainer}>
+        <div css={[menuButtonStyles, { justifyContent: 'center' }]}>
+          <div css={iconStyles} />
+        </div>
+        <Header enabled={false} />
+      </div>
     </div>
     <div css={userButtonStyles}>
       <LoadingUserButton />

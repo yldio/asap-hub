@@ -7,7 +7,7 @@ import { steel } from '../colors';
 
 const menuButtonWidth = 72;
 
-const styles = css({
+export const styles = css({
   display: 'flex',
   [crossQuery]: {
     flexDirection: 'column',
@@ -15,7 +15,7 @@ const styles = css({
   },
 });
 
-const menuButtonStyles = css({
+export const menuButtonStyles = css({
   [crossQuery]: {
     display: 'none',
   },

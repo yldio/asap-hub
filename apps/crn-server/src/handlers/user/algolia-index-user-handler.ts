@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { UserEvent } from '@asap-hub/model';
+import { UserEvent, UserResponse } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
@@ -29,7 +29,10 @@ export const indexUserHandler =
 
       if (user.onboarded && user.role !== 'Hidden') {
         await algoliaClient.save({
-          data: user,
+          data: {
+            ...user,
+            _tags: user.expertiseAndResourceTags,
+          } as UserResponse & { _tags: string[] },
           type: 'user',
         });
 

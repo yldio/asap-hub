@@ -1,9 +1,14 @@
-import { ListResearchOutputResponse } from '@asap-hub/model';
+import {
+  ListEventResponse,
+  ListExternalAuthorResponse,
+  ListResearchOutputResponse,
+  ListUserResponse,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
-import { ResultList, SharedResearchCard } from '../organisms';
+import { PeopleCard, ResultList, SharedResearchCard } from '../organisms';
 import { perRem } from '../pixels';
 
 const wrapperStyle = css({
@@ -30,7 +35,12 @@ const MessageBody: React.FC<{ title: string; body: string }> = ({
 );
 
 interface TagsPageBodyProps {
-  readonly results: ListResearchOutputResponse['items'];
+  readonly results: (
+    | ListUserResponse['items'][number]
+    | ListResearchOutputResponse['items'][number]
+    | ListExternalAuthorResponse['items'][number]
+    | ListEventResponse['items'][number]
+  )[];
   readonly numberOfItems: number;
   readonly numberOfPages: number;
   readonly currentPage: number;
@@ -56,11 +66,25 @@ const TagsPageBody: React.FC<TagsPageBodyProps> = ({
       />
     }
   >
-    {results.map((data) => (
-      <div key={data.id}>
-        <SharedResearchCard {...data} />
-      </div>
-    ))}
+    {results.map((data) => {
+      if ('documentType' in data) {
+        return (
+          <div key={data.id}>
+            <SharedResearchCard {...data} />
+          </div>
+        );
+      }
+
+      if ('expertiseAndResourceTags' in data) {
+        return (
+          <div key={data.id}>
+            <PeopleCard {...data} />
+          </div>
+        );
+      }
+
+      return null;
+    })}
   </ResultList>
 );
 

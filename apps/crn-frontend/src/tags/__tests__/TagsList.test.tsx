@@ -15,7 +15,7 @@ const renderTags = async (): Promise<RenderResult> =>
           <Suspense fallback="Loading...">
             <MemoryRouter initialEntries={['/']}>
               <Route path="/">
-                <TagList />
+                <TagList entities={['research-output', 'user']} />
               </Route>
             </MemoryRouter>
           </Suspense>

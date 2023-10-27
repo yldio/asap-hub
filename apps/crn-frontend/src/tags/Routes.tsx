@@ -1,3 +1,4 @@
+import { EntityResponses } from '@asap-hub/algolia';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -11,6 +12,11 @@ const Routes: React.FC<Record<string, never>> = () => {
   const { client } = useAlgolia();
   const { tags, setTags } = useSearch();
 
+  const entities: Array<keyof EntityResponses['crn']> = [
+    'research-output',
+    'user',
+  ];
+
   return (
     <Switch>
       <Route exact path={path}>
@@ -19,7 +25,7 @@ const Routes: React.FC<Record<string, never>> = () => {
           setTags={setTags}
           loadTags={async (tagQuery) => {
             const searchedTags = await client.searchForTagValues(
-              ['research-output'],
+              entities,
               tagQuery,
               { tagFilters: tags },
             );
@@ -30,7 +36,7 @@ const Routes: React.FC<Record<string, never>> = () => {
           }}
         >
           <Frame title="Search">
-            <Tags />
+            <Tags entities={entities} />
           </Frame>
         </TagsPage>
       </Route>

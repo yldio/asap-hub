@@ -139,11 +139,12 @@ export class UserContentfulDataProvider implements UserDataProvider {
         id: options.filter.teamId,
       });
       const users =
-        teamMembershipCollection?.items?.map(
-          (item) => item?.linkedFrom?.usersCollection?.items[0],
-        ) || [];
+        teamMembershipCollection?.items
+          ?.map((item) => item?.linkedFrom?.usersCollection?.items[0])
+          .filter((item) => !!item) || [];
+
       return {
-        total: teamMembershipCollection?.total || 0,
+        total: users.length,
         items: users,
       };
     }

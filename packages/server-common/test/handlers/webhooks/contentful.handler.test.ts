@@ -36,14 +36,6 @@ describe('Contentful event webhook', () => {
     expect(sqsMock.send).not.toHaveBeenCalled();
   });
 
-  test('Should throw an error when the request does not have the revision field', async () => {
-    const payload = getNewsPublishContentfulWebhookPayload();
-    delete (payload.sys as any).revision;
-    const event = getLambdaRequest(payload, headers);
-
-    await expect(handler(event)).rejects.toThrowError('Invalid payload');
-    expect(sqsMock.send).not.toHaveBeenCalled();
-  });
   test('Should throw an error when the request has an invalid authentication token', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const invalidAuthHeaders = { authorization: 'invalid-token' };

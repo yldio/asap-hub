@@ -29,7 +29,7 @@
     "@asap-hub/validation": "workspace:*",
     "@aws-sdk/client-eventbridge": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",
-    "@aws-sdk/client-sqs": "^3.436.0",
+    "@aws-sdk/client-sqs": "^3.437.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "@hapi/boom": "9.1.4",
     "@sentry/serverless": "6.19.7",

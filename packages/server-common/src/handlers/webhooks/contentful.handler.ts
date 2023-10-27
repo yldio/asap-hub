@@ -1,7 +1,7 @@
 import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
-import { SendMessageCommand, SQS } from '@aws-sdk/client-sqs';
+import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import { Logger } from '../../utils';
 import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
@@ -38,7 +38,7 @@ type Config = {
 export const contentfulHandlerFactory =
   (
     webhookAuthenticationToken: string,
-    sqs: SQS,
+    sqs: SQSClient,
     config: Config,
     logger: Logger,
   ): ((

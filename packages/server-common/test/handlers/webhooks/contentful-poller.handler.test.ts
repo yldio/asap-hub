@@ -95,7 +95,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0].body,
+          Detail: payload.Records[0]!.body,
         },
       ],
     });
@@ -165,7 +165,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsUnpublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0].body,
+          Detail: payload.Records[0]!.body,
         },
       ],
     });
@@ -198,7 +198,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0].body,
+          Detail: payload.Records[0]!.body,
         },
       ],
     });

@@ -14,22 +14,20 @@ type RecursivePartial<T> = {
 export const getLambdaRequest = <T>(
   payload: T,
   headers: Record<string, string>,
-): lambda.Request<T> => {
-  return {
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    method: 'post',
-    payload,
-    rawPayload: JSON.stringify(payload),
-  };
-};
+): lambda.Request<T> => ({
+  headers: {
+    'Content-Type': 'application/json',
+    ...headers,
+  },
+  method: 'post',
+  payload,
+  rawPayload: JSON.stringify(payload),
+});
 
 export const getApiGatewayEvent = (
   event: RecursivePartial<APIGatewayProxyEventV2> = {},
-): APIGatewayProxyEventV2 => {
-  return {
+): APIGatewayProxyEventV2 =>
+  ({
     headers: {
       'Content-Type': 'application/json',
       Accept: '*/*',
@@ -63,8 +61,7 @@ export const getApiGatewayEvent = (
       typeof event.body === 'object'
         ? JSON.stringify(event.body || {})
         : event.body,
-  } as APIGatewayProxyEventV2;
-};
+  } as APIGatewayProxyEventV2);
 
 export const createEventBridgeScheduledEventMock = (): EventBridgeEvent<
   'Scheduled Event',

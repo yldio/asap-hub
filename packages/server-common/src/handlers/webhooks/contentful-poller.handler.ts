@@ -29,9 +29,9 @@ export const contentfulPollerHandlerFactory = (
     try {
       await Promise.all(
         sqsEvent.payload.Records.map(async (record: SQSRecord) => {
-          const detailTypeAttribute = record.messageAttributes['DetailType'];
+          const detailTypeAttribute = record.messageAttributes.DetailType;
           const detailType = detailTypeAttribute?.stringValue;
-          const actionAttribute = record.messageAttributes['Action'];
+          const actionAttribute = record.messageAttributes.Action;
           const action = actionAttribute?.stringValue;
           const detail = JSON.parse(record.body);
           if (!(detail.sys.revision && detailType && action)) {
@@ -84,8 +84,6 @@ export const contentfulPollerHandlerFactory = (
               config.eventBus
             } detail Type: ${detailType} detail: ${JSON.stringify(detail)}`,
           );
-
-          return;
         }),
       );
     } catch (err) {

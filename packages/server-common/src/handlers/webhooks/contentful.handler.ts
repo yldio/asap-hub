@@ -35,15 +35,16 @@ type Config = {
   contentfulPollerQueueUrl: string;
 };
 
-export const contentfulHandlerFactory = (
-  webhookAuthenticationToken: string,
-  sqs: SQS,
-  config: Config,
-  logger: Logger,
-): ((
-  request: lambda.Request<ContentfulWebhookPayload>,
-) => Promise<{ statusCode: number }>) => {
-  return async (request) => {
+export const contentfulHandlerFactory =
+  (
+    webhookAuthenticationToken: string,
+    sqs: SQS,
+    config: Config,
+    logger: Logger,
+  ): ((
+    request: lambda.Request<ContentfulWebhookPayload>,
+  ) => Promise<{ statusCode: number }>) =>
+  async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
     logger.debug(`request: ${JSON.stringify(request)}`);
     const detailType = getDetailTypeFromRequest(request);
@@ -87,4 +88,3 @@ export const contentfulHandlerFactory = (
       };
     }
   };
-};

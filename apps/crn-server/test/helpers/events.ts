@@ -1,3 +1,4 @@
+import { framework as lambda } from '@asap-hub/services-common';
 import {
   APIGatewayProxyEventV2,
   Context,
@@ -92,3 +93,16 @@ export const createHandlerContext = () =>
     logGroupName: 'some-log-group',
     logStreamName: 'some-log-stream',
   } as Context);
+
+export const getLambdaRequest = <T>(
+  payload: T,
+  headers: Record<string, string>,
+): lambda.Request<T> => ({
+  headers: {
+    'Content-Type': 'application/json',
+    ...headers,
+  },
+  method: 'post',
+  payload,
+  rawPayload: JSON.stringify(payload),
+});

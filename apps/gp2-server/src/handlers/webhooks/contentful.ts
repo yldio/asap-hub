@@ -22,7 +22,7 @@ export const contentfulWebhookFactory = (sqs: SQSClient): lambda.Handler => {
   return lambda.http(handler);
 };
 
-const sqs = new SQSClient({});
+const sqs = new SQSClient();
 
 export const handler: Handler<APIGatewayEvent> = sentryWrapper(
   contentfulWebhookFactory(sqs),

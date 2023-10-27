@@ -144,7 +144,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
           .filter((item) => !!item) || [];
 
       return {
-        total: users.length
+        total: users.length,
         items: users,
       };
     }

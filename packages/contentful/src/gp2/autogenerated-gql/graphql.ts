@@ -1805,6 +1805,8 @@ export type EventsNotesLinks = {
 
 export type EventsNotesResources = {
   block: Array<ResourceLink>;
+  hyperlink: Array<ResourceLink>;
+  inline: Array<ResourceLink>;
 };
 
 export enum EventsOrder {
@@ -1880,6 +1882,8 @@ export type EventsPresentationLinks = {
 
 export type EventsPresentationResources = {
   block: Array<ResourceLink>;
+  hyperlink: Array<ResourceLink>;
+  inline: Array<ResourceLink>;
 };
 
 export type EventsSpeakersCollection = {
@@ -1946,6 +1950,8 @@ export type EventsVideoRecordingLinks = {
 
 export type EventsVideoRecordingResources = {
   block: Array<ResourceLink>;
+  hyperlink: Array<ResourceLink>;
+  inline: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
@@ -3801,6 +3807,8 @@ export type PagesTextLinks = {
 
 export type PagesTextResources = {
   block: Array<ResourceLink>;
+  hyperlink: Array<ResourceLink>;
+  inline: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
@@ -6433,6 +6441,8 @@ export type WorkingGroupsDescriptionLinks = {
 
 export type WorkingGroupsDescriptionResources = {
   block: Array<ResourceLink>;
+  hyperlink: Array<ResourceLink>;
+  inline: Array<ResourceLink>;
 };
 
 export type WorkingGroupsFilter = {
@@ -7764,25 +7774,6 @@ export type FetchDashboardQuery = {
       >;
     }
   >;
-};
-
-export type EventRelatedOutputDataFragment = Pick<
-  Outputs,
-  'title' | 'documentType' | 'type'
-> & {
-  sys: Pick<Sys, 'id'>;
-  relatedEntitiesCollection?: Maybe<{
-    items: Array<
-      Maybe<
-        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-      >
-    >;
-  }>;
 };
 
 export type EventsContentDataFragment = Pick<
@@ -12938,12 +12929,12 @@ export const ContributingCohortsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
-export const EventRelatedOutputDataFragmentDoc = {
+export const RelatedOutputDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventRelatedOutputData' },
+      name: { kind: 'Name', value: 'RelatedOutputData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Outputs' },
@@ -13055,7 +13046,7 @@ export const EventRelatedOutputDataFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<EventRelatedOutputDataFragment, unknown>;
+} as unknown as DocumentNode<RelatedOutputDataFragment, unknown>;
 export const EventsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13816,7 +13807,7 @@ export const EventsContentDataFragmentDoc = {
                               kind: 'FragmentSpread',
                               name: {
                                 kind: 'Name',
-                                value: 'EventRelatedOutputData',
+                                value: 'RelatedOutputData',
                               },
                             },
                           ],
@@ -13831,7 +13822,7 @@ export const EventsContentDataFragmentDoc = {
         ],
       },
     },
-    ...EventRelatedOutputDataFragmentDoc.definitions,
+    ...RelatedOutputDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EventsContentDataFragment, unknown>;
 export const ExternalUsersContentDataFragmentDoc = {
@@ -13921,124 +13912,6 @@ export const NewsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<NewsContentDataFragment, unknown>;
-export const RelatedOutputDataFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'RelatedOutputData' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'Outputs' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'sys' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-              ],
-            },
-          },
-          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'documentType' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'relatedEntitiesCollection' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '1' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: '__typename' },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'WorkingGroups' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'InlineFragment',
-                        typeCondition: {
-                          kind: 'NamedType',
-                          name: { kind: 'Name', value: 'Projects' },
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'sys' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<RelatedOutputDataFragment, unknown>;
 export const OutputsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [

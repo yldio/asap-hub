@@ -179,7 +179,7 @@ export const eventsContentQueryFragment = gql`
     linkedFrom {
       outputsCollection(limit: 50, order: [addedDate_ASC]) {
         items {
-          ...EventRelatedOutputData
+          ...RelatedOutputData
         }
       }
     }

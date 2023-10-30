@@ -1,4 +1,5 @@
 import { User } from '@asap-hub/auth';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -14,6 +15,8 @@ import { getTagSearchResults } from '../api';
 import Routes from '../Routes';
 
 jest.mock('../api');
+
+mockConsoleError();
 
 afterEach(() => {
   jest.resetAllMocks();
@@ -64,5 +67,13 @@ describe('Routes', () => {
 
     expect(screen.getByText('Event 0')).toBeVisible();
     expect(screen.getByText('Output 1')).toBeVisible();
+  });
+
+  it('renders error message when the request is not a 2XX', async () => {
+    mockGetTagSearchResults.mockRejectedValue(new Error('error'));
+
+    await renderPage({});
+    expect(mockGetTagSearchResults).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

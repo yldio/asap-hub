@@ -35,4 +35,13 @@ describe('getTagSearchResults', () => {
       expect.objectContaining({ hitsPerPage: 10, page: 0 }),
     );
   });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getTagSearchResults(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
+  });
 });

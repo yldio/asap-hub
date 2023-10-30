@@ -18,7 +18,7 @@ import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
 
 export type ResultListProps = {
-  filters: Set<gp2Model.EntityType>;
+  filters?: Set<gp2Model.EntityType>;
 } & Pick<ComponentProps<typeof SearchAndFilter>, 'searchQuery'>;
 const ResultList: React.FC<ResultListProps> = ({
   searchQuery,

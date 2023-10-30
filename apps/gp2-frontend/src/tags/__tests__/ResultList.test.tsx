@@ -61,13 +61,13 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createEventListAlgoliaResponse(1),
     );
-    await renderList({ searchQuery: '', filters: new Set() });
+    await renderList({ searchQuery: '' });
     expect(screen.getByRole('link', { name: 'Event 0' })).toBeInTheDocument();
   });
 
   it('renders users', async () => {
     mockGetTagSearchResults.mockResolvedValue(createUserListAlgoliaResponse(1));
-    await renderList({ searchQuery: '', filters: new Set() });
+    await renderList({ searchQuery: '' });
     expect(
       screen.getByRole('link', { name: 'Tony Stark 0, PhD' }),
     ).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createProjectListAlgoliaResponse(1),
     );
-    await renderList({ searchQuery: '', filters: new Set() });
+    await renderList({ searchQuery: '' });
     expect(
       screen.getByRole('link', { name: 'Project Title' }),
     ).toBeInTheDocument();

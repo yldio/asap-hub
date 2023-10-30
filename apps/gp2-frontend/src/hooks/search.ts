@@ -7,6 +7,7 @@ import { usePaginationParams } from './pagination';
 type Filter = {
   filter?: string[];
 } & gp2.FetchProjectFilter &
+  gp2.FetchTagSearchFilter &
   gp2.FetchUsersSearchFilter &
   gp2.FetchOutputSearchFilter &
   gp2.FetchEventSearchFilter &

@@ -13,21 +13,17 @@ import {
   SearchAndFilter,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { EntityType } from '@asap-hub/model/build/gp2';
 import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
 
 export type ResultListProps = {
-  projectId?: string;
-  workingGroupId?: string;
-  authorId?: string;
-} & Pick<ComponentProps<typeof SearchAndFilter>, 'filters' | 'searchQuery'>;
+  filters: Set<EntityType>;
+} & Pick<ComponentProps<typeof SearchAndFilter>, 'searchQuery'>;
 const ResultList: React.FC<ResultListProps> = ({
   searchQuery,
   filters = new Set(),
-  projectId,
-  workingGroupId,
-  authorId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const currentUser = useCurrentUserGP2();
@@ -35,7 +31,7 @@ const ResultList: React.FC<ResultListProps> = ({
 
   const { items, total } = useTagSearchResults({
     searchQuery,
-    filters,
+    entityType: filters,
     currentPage,
     pageSize,
   });

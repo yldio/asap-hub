@@ -1,4 +1,5 @@
 import { ListResponse } from '../common';
+import { EntityType } from './entity';
 
 export type TagDataObject = {
   id: string;
@@ -11,3 +12,7 @@ export type TagResponse = TagDataObject;
 export type ListTagsResponse = ListResponse<TagResponse>;
 
 export type TagCreateDataObject = Omit<TagDataObject, 'id'>;
+
+export type FetchTagSearchFilter = {
+  entityType?: EntityType[];
+};

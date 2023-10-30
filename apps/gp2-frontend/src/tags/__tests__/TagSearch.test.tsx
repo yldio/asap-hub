@@ -25,7 +25,7 @@ const renderList = async (searchQuery = '') => {
           tagSearchResultsState({
             searchQuery,
             currentPage: 0,
-            filters: new Set(),
+            entityType: new Set(),
             pageSize: PAGE_SIZE,
           }),
         );
@@ -72,6 +72,6 @@ describe('TagSearch', () => {
         name: 'Outputs',
       }),
     );
-    expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'documentType');
+    expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'entityType');
   });
 });

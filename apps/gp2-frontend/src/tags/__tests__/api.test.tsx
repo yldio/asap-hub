@@ -1,7 +1,6 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { PAGE_SIZE } from '../../hooks';
-import { getTagSearchResults } from '../api';
+import { getTagSearchResults, TagSearchOptions } from '../api';
 
 describe('getTagSearchResults', () => {
   const mockAlgoliaSearchClient = {
@@ -14,14 +13,14 @@ describe('getTagSearchResults', () => {
     mockAlgoliaSearchClient.search = jest.fn().mockResolvedValue({});
   });
 
-  const options: GetListOptions = {
-    filters: new Set<string>(),
+  const options: TagSearchOptions = {
+    entityType: new Set(),
     pageSize: PAGE_SIZE,
     currentPage: 0,
     searchQuery: '',
   };
 
-  it('makes a search request with query, default page and page size', async () => {
+  it('makes a search request with query, no filter set, default page and page size', async () => {
     await getTagSearchResults(mockAlgoliaSearchClient, {
       ...options,
       searchQuery: 'test',
@@ -43,5 +42,21 @@ describe('getTagSearchResults', () => {
     await expect(
       getTagSearchResults(mockAlgoliaSearchClient, options),
     ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
+  });
+
+  it('handle filtering', async () => {
+    await getTagSearchResults(mockAlgoliaSearchClient, {
+      ...options,
+      entityType: new Set(['event']),
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenCalledWith(
+      ['event'],
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
   });
 });

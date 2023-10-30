@@ -1,14 +1,14 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { EntityType } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 
 export type TagSearchOptions = Omit<GetListOptions, 'filters'> & {
-  entityType: Set<EntityType>;
+  entityType: Set<gp2.EntityType>;
 };
 
-export const getItemTypes = (types: EntityType[]) => {
+export const getItemTypes = (types: gp2.EntityType[]) => {
   if (types.length === 0) {
-    return ['event', 'news', 'output', 'project', 'user'] as EntityType[];
+    return ['event', 'news', 'output', 'project', 'user'] as gp2.EntityType[];
   }
   return types;
 };

@@ -13,13 +13,13 @@ import {
   SearchAndFilter,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { EntityType } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
 
 export type ResultListProps = {
-  filters: Set<EntityType>;
+  filters: Set<gp2.EntityType>;
 } & Pick<ComponentProps<typeof SearchAndFilter>, 'searchQuery'>;
 const ResultList: React.FC<ResultListProps> = ({
   searchQuery,

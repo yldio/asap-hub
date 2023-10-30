@@ -14,7 +14,6 @@ const Tags: React.FC<TagsProps> = ({ entities }) => {
     filters,
     currentPage,
     pageSize,
-    noResultsWithoutCriteria: true,
     tags,
   });
 

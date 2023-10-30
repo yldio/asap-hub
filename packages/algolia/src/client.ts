@@ -184,3 +184,7 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     }
   }
 }
+
+export type CRNTagEntities = keyof EntityResponses['crn'];
+
+export type CRNTagEntitiesList = Array<CRNTagEntities>;

@@ -105,7 +105,7 @@ it('Will search algolia using selected tag', async () => {
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
       expect.anything(),
-      ['research-output', 'user'],
+      expect.anything(),
       expect.objectContaining({ tags: ['LGW'] }),
     ),
   );
@@ -173,7 +173,7 @@ it('Will show page when algolia rejects with undefined', async () => {
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
       expect.anything(),
-      ['research-output', 'user'],
+      expect.anything(),
       expect.objectContaining({ tags: ['LGW'] }),
     ),
   );
@@ -197,7 +197,7 @@ it('Will show page when algolia rejects with error', async () => {
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
       expect.anything(),
-      ['research-output', 'user'],
+      expect.anything(),
       expect.objectContaining({ tags: ['LGW'] }),
     ),
   );

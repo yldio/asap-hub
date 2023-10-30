@@ -34,6 +34,20 @@ const MessageBody: React.FC<{ title: string; body: string }> = ({
   </main>
 );
 
+const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
+  ...data
+}) => {
+  if ('keywords' in data) {
+    return <SharedResearchCard {...data} />;
+  }
+
+  if ('expertiseAndResourceTags' in data) {
+    return <PeopleCard {...data} />;
+  }
+
+  return null;
+};
+
 interface TagsPageBodyProps {
   readonly results: (
     | ListUserResponse['items'][number]
@@ -66,25 +80,11 @@ const TagsPageBody: React.FC<TagsPageBodyProps> = ({
       />
     }
   >
-    {results.map((data) => {
-      if ('documentType' in data) {
-        return (
-          <div key={data.id}>
-            <SharedResearchCard {...data} />
-          </div>
-        );
-      }
-
-      if ('expertiseAndResourceTags' in data) {
-        return (
-          <div key={data.id}>
-            <PeopleCard {...data} />
-          </div>
-        );
-      }
-
-      return null;
-    })}
+    {results.map((data) => (
+      <div key={data.id}>
+        <EntityCard {...data} />
+      </div>
+    ))}
   </ResultList>
 );
 

@@ -126,7 +126,6 @@ export const useTagSearch = <ResponsesKey extends keyof EntityResponses['crn']>(
 
   if (tagSearch === undefined) {
     if (
-      options.noResultsWithoutCriteria &&
       options.searchQuery === '' &&
       options.filters.size === 0 &&
       (options.tags?.length ?? 0) === 0

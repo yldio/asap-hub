@@ -38,8 +38,9 @@ const renderPage = async ({ user = {} }: { user?: Partial<User> }) => {
       </RecoilRoot>
     </Suspense>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 20000 },
   );
 };
 

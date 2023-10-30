@@ -123,7 +123,7 @@ const RelatedResearchCard = <
 }: RelatedResearchCardProp<T>) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
-  const displayShowMoreButton = relatedResearch.length > 5;
+  const displayShowMoreButton = relatedResearch.length > 3;
 
   return (
     <Card padding={false}>

@@ -1,34 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
-
-export const eventRelatedOutputQueryFragment = gql`
-  fragment EventRelatedOutputData on Outputs {
-    sys {
-      id
-    }
-    title
-    documentType
-    type
-    relatedEntitiesCollection(limit: 1) {
-      items {
-        __typename
-        ... on WorkingGroups {
-          sys {
-            id
-          }
-          title
-        }
-        ... on Projects {
-          sys {
-            id
-          }
-          title
-        }
-      }
-    }
-  }
-`;
+import { relatedOutputQueryFragment } from './output.queries';
 
 export const eventsContentQueryFragment = gql`
   fragment EventsContentData on Events {
@@ -211,7 +184,7 @@ export const eventsContentQueryFragment = gql`
       }
     }
   }
-  ${eventRelatedOutputQueryFragment}
+  ${relatedOutputQueryFragment}
 `;
 
 export const FETCH_EVENT_BY_ID = gql`

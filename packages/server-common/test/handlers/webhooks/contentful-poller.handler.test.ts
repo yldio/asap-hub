@@ -7,8 +7,8 @@ import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulPollerHandlerFactory } from '../../../src/handlers/webhooks';
 import {
   getNewsPublishContentfulPollerPayload,
+  getNewsPublishContentfulPollerRecord,
   getNewsPublishContentfulWebhookPayload,
-  newsPublishContentfulPollerRecord,
 } from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
@@ -84,7 +84,7 @@ describe('Contentful poller webhook', () => {
     const webHookPayload = getNewsPublishContentfulWebhookPayload();
     delete (webHookPayload.sys as any).revision;
     const payload = getNewsPublishContentfulPollerPayload({
-      ...newsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord,
       body: JSON.stringify(webHookPayload),
     });
     const event = getLambdaRequest(payload, headers);
@@ -96,10 +96,10 @@ describe('Contentful poller webhook', () => {
     expect(statusCode).toStrictEqual(500);
   });
   test('Should error when there is no Detail Type', async () => {
-    const { messageAttributes } = newsPublishContentfulPollerRecord();
+    const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.DetailType;
     const payload = getNewsPublishContentfulPollerPayload({
-      ...newsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord,
       messageAttributes,
     });
     const event = getLambdaRequest(payload, headers);
@@ -112,10 +112,10 @@ describe('Contentful poller webhook', () => {
   });
 
   test('Should error when there is no Action', async () => {
-    const { messageAttributes } = newsPublishContentfulPollerRecord();
+    const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.Action;
     const payload = getNewsPublishContentfulPollerPayload({
-      ...newsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord,
       messageAttributes,
     });
     const event = getLambdaRequest(payload, headers);
@@ -186,7 +186,7 @@ describe('Contentful poller webhook', () => {
     mockGetEntry.mockRejectedValue(
       new Error('The resource could not be found'),
     );
-    const record = newsPublishContentfulPollerRecord;
+    const record = getNewsPublishContentfulPollerRecord();
     const payload = getNewsPublishContentfulPollerPayload({
       ...record,
       messageAttributes: {

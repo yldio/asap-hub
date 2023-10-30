@@ -59,7 +59,7 @@ export class TutorialContentfulDataProvider implements TutorialDataProvider {
         ...searchTerms.map((term) => ({ teams: { displayName: term } })),
       ];
     }
-    const { discoverCollection } = await this.contentfulClient.request<
+    const { tutorialsCollection } = await this.contentfulClient.request<
       FetchTutorialsQuery,
       FetchTutorialsQueryVariables
     >(FETCH_TUTORIALS, {
@@ -68,18 +68,9 @@ export class TutorialContentfulDataProvider implements TutorialDataProvider {
       where: searchTerms.length ? where : null,
     });
 
-    const trainingCollection = discoverCollection?.items[0]?.trainingCollection;
-
-    if (!trainingCollection) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
     return {
-      total: trainingCollection.total,
-      items: cleanArray(trainingCollection?.items).map(
+      total: tutorialsCollection?.total || 0,
+      items: cleanArray(tutorialsCollection?.items).map(
         parseContentfulGraphQlTutorials,
       ),
     };

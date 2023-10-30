@@ -9,7 +9,6 @@ import { TutorialsDataObject } from '@asap-hub/model';
 import {
   getTutorialsDataObject,
   getContentfulGraphqlTutorial,
-  getListTutorialsDataObject,
 } from '../../fixtures/tutorials.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulGraphqlDiscover } from '../../fixtures/discover.fixtures';
@@ -19,7 +18,6 @@ describe('Tutorials data provider', () => {
   const dataProvider: TutorialDataProvider = new TutorialContentfulDataProvider(
     contentfulGraphqlClientMock,
   );
-
   const graphqlTutorialResponse = getContentfulGraphqlTutorial();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
@@ -38,14 +36,38 @@ describe('Tutorials data provider', () => {
         return graphqlTutorialResponse.relatedTutorialsCollection;
       },
     });
+
   const dataProviderWithMockServer: TutorialDataProvider =
     new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);
 
   describe('Fetch', () => {
     test('should fetch a list of tutorials', async () => {
-      const result = await dataProviderWithMockServer.fetch({});
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorialsCollection: {
+          total: 1,
+          items: [
+            {
+              ...getContentfulGraphqlTutorial(),
+              relatedTutorialsCollection: { items: [] },
+              linkedFrom: {
+                tutorialsCollection: { items: [] },
+              },
+            },
+          ],
+        },
+      });
+      const result = await dataProvider.fetch({});
+      const expected = {
+        total: 1,
+        items: [
+          {
+            ...getTutorialsDataObject(),
+            relatedTutorials: [],
+          },
+        ],
+      };
 
-      expect(result).toEqual(getListTutorialsDataObject());
+      expect(result).toEqual(expected);
     });
 
     test('should return an empty response if there is no result', async () => {

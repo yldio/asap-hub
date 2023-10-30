@@ -214,6 +214,18 @@ const serverlessConfig: AWS = {
             Action: ['cloudfront:CreateInvalidation'],
             Resource: ['*'],
           },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
+              'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
+            },
+          },
         ],
       },
     },
@@ -736,6 +748,26 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
+        CONTENTFUL_POLLER_QUEUE_URL: {
+          Ref: 'ContentfulPollerQueue',
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    contentfulWebhookPoller: {
+      handler: './src/handlers/webhooks/contentful-poller.handler',
+      reservedConcurrency: 2,
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
+            },
+            maximumConcurrency: 2,
+          },
+        },
+      ],
+      environment: {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: eventBusSourceContentful,
         SENTRY_DSN: sentryDsnHandlers,
@@ -743,6 +775,7 @@ const serverlessConfig: AWS = {
           contentfulWebhookAuthenticationToken,
       },
     },
+
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',
       timeout: 120,
@@ -1362,6 +1395,24 @@ const serverlessConfig: AWS = {
               Ref: `SubscribeCalendarContentfulDLQ`,
             },
           ],
+        },
+      },
+      ContentfulPollerQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'ContentfulPollerQueue',
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['ContentfulPollerQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      ContentfulPollerQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'ContentfulPollerQueueDLQ',
         },
       },
       ApiGatewayAlarm5xx: {

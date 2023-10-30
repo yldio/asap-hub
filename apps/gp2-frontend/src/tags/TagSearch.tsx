@@ -1,5 +1,5 @@
 import { TagSearchPageList } from '@asap-hub/gp2-components';
-import { EntityType } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
@@ -16,7 +16,7 @@ const TagSearch: FC = () => {
     toggleFilter,
   } = useSearch(['entityType']);
 
-  const filterSet = new Set<EntityType>(filters.entityType);
+  const filterSet = new Set<gp2.EntityType>(filters.entityType);
   const onChangeFilter = (filter: string) => {
     toggleFilter(filter, 'entityType');
   };

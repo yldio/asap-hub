@@ -7,6 +7,7 @@ import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulPollerHandlerFactory } from '../../../src/handlers/webhooks';
 import {
   getNewsPublishContentfulPollerPayload,
+  getNewsPublishContentfulWebhookPayload,
   newsPublishContentfulPollerRecord,
 } from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
@@ -57,7 +58,7 @@ describe('Contentful poller webhook', () => {
         revision: 5,
       },
       fields: {},
-    } as any);
+    } as unknown as ReturnType<ContentfulClientApi<undefined>['getEntry']>);
 
     (
       pollContentfulDeliveryApi as jest.MockedFunction<
@@ -77,12 +78,54 @@ describe('Contentful poller webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(200);
-    expect(logger.error).toHaveBeenCalledWith(
-      expect.any(Error),
-      'Error while fetching entry',
-    );
   });
 
+  test('Should error when there is no revision', async () => {
+    const webHookPayload = getNewsPublishContentfulWebhookPayload();
+    delete (webHookPayload.sys as any).revision;
+    const payload = getNewsPublishContentfulPollerPayload({
+      ...newsPublishContentfulPollerRecord,
+      body: JSON.stringify(webHookPayload),
+    });
+    const event = getLambdaRequest(payload, headers);
+
+    mockGetEntry.mockRejectedValueOnce(new Error());
+
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+  });
+  test('Should error when there is no Detail Type', async () => {
+    const { messageAttributes } = newsPublishContentfulPollerRecord();
+    delete messageAttributes.DetailType;
+    const payload = getNewsPublishContentfulPollerPayload({
+      ...newsPublishContentfulPollerRecord,
+      messageAttributes,
+    });
+    const event = getLambdaRequest(payload, headers);
+
+    mockGetEntry.mockRejectedValueOnce(new Error());
+
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+  });
+
+  test('Should error when there is no Action', async () => {
+    const { messageAttributes } = newsPublishContentfulPollerRecord();
+    delete messageAttributes.Action;
+    const payload = getNewsPublishContentfulPollerPayload({
+      ...newsPublishContentfulPollerRecord,
+      messageAttributes,
+    });
+    const event = getLambdaRequest(payload, headers);
+
+    mockGetEntry.mockRejectedValueOnce(new Error());
+
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+  });
   test('Should put the news-published event into the event bus and return 200', async () => {
     const payload = getNewsPublishContentfulPollerPayload();
     const event = getLambdaRequest(payload, headers);

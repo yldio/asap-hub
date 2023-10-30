@@ -87,7 +87,7 @@ export const getNewsPublishContentfulWebhookPayload =
       },
     },
   });
-export const newsPublishContentfulPollerRecord: SQSRecord = {
+export const newsPublishContentfulPollerRecord = (): SQSRecord => ({
   messageId: '42',
   receiptHandle: 'a handle',
   body: JSON.stringify(getNewsPublishContentfulWebhookPayload()),
@@ -108,13 +108,13 @@ export const newsPublishContentfulPollerRecord: SQSRecord = {
   eventSource: '',
   eventSourceARN: '',
   awsRegion: '',
-};
+});
 export const getNewsPublishContentfulPollerPayload = (
   overrides: Partial<SQSRecord> = {},
 ): SQSEvent => ({
   Records: [
     {
-      ...newsPublishContentfulPollerRecord,
+      ...newsPublishContentfulPollerRecord(),
       ...overrides,
     },
   ],

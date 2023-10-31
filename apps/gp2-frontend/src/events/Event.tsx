@@ -1,7 +1,12 @@
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 
-import { EventSpeakers, EventOwner } from '@asap-hub/gp2-components';
+import {
+  EventSpeakers,
+  EventOwner,
+  getIconForDocumentType,
+  getSourceIcon,
+} from '@asap-hub/gp2-components';
 import { useEventById } from './state';
 import Frame from '../Frame';
 
@@ -14,7 +19,13 @@ const Event: React.FC = () => {
       <Frame title={event.title}>
         <EventPage
           {...event}
+          titleOutputs="Related Outputs"
+          descriptionOutput="Find all outputs that contributed to this event."
           tags={event.tags.map((t) => t.name)}
+          relatedResearch={event.relatedOutputs}
+          getIconForDocumentType={getIconForDocumentType}
+          tableTitles={['Type of Output', 'Output Name', 'Source Type']}
+          getSourceIcon={getSourceIcon}
           displayCalendar={true}
           eventOwner={
             <EventOwner

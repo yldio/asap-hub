@@ -4,6 +4,7 @@ import { CalendarResponse } from './calendar';
 import { TagDataObject } from './tag';
 import { ProjectResponse } from './project';
 import { WorkingGroupResponse } from './working-group';
+import { RelatedOutputs } from './output';
 
 export interface EventSpeakerUser {
   id: string;
@@ -27,6 +28,7 @@ export interface EventDataObject extends Omit<BasicEvent, 'tags'> {
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
   tags: TagDataObject[];
+  relatedOutputs?: RelatedOutputs[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;

@@ -333,7 +333,7 @@ type GraphQLOutputs = NonNullable<
   OutputItem['relatedOutputsCollection']
 >['items'];
 type GraphQLOutput = NonNullable<GraphQLOutputs[number]>;
-const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
+export const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
   outputs
     ?.filter(
       (output): output is GraphQLOutput =>

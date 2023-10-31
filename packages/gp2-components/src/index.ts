@@ -2,6 +2,7 @@ export * as authTestUtils from './auth-test-utils';
 export * from './icons';
 export * from './images';
 export * from './messages';
+export * from './utils';
 export {
   CardWithBackground,
   CollapsibleTable,

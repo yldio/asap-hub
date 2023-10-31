@@ -254,7 +254,7 @@ export {
   WorkingGroupPageHeader,
 } from './templates';
 export * from './theme';
-export { noop } from './utils';
+export { noop, getIconForDocumentType } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
 export type { ResearchOutputOption } from './utils';

@@ -1250,6 +1250,8 @@ type EventsNotesLinks {
 
 type EventsNotesResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 enum EventsOrder {
@@ -1325,6 +1327,8 @@ type EventsPresentationLinks {
 
 type EventsPresentationResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 type EventsSpeakersCollection {
@@ -1391,6 +1395,8 @@ type EventsVideoRecordingLinks {
 
 type EventsVideoRecordingResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
@@ -2732,6 +2738,8 @@ type PagesTextLinks {
 
 type PagesTextResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
@@ -4284,6 +4292,8 @@ type WorkingGroupsDescriptionLinks {
 
 type WorkingGroupsDescriptionResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 input WorkingGroupsFilter {

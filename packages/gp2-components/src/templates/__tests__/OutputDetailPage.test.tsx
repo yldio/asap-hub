@@ -8,6 +8,7 @@ describe('OutputDetailPage', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator
+        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );
@@ -18,6 +19,7 @@ describe('OutputDetailPage', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator={false}
+        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );
@@ -29,6 +31,7 @@ describe('OutputDetailPage', () => {
       const { queryByText } = render(
         <OutputDetailPage
           isAdministrator={false}
+          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={''}
         />,
@@ -43,6 +46,7 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
+          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={'Test Description'}
         />,
@@ -58,6 +62,7 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
+          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={''}
           tags={[{ id: 'test-id', name: 'TestTag' }]}
@@ -73,6 +78,7 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
+          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={'Test Description'}
           tags={[{ id: 'test-id', name: 'TestTag' }]}
@@ -92,6 +98,7 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         {...gp2Fixtures.createOutputResponse()}
         isAdministrator
+        isAssociationMember={false}
         documentType="Article"
         relatedOutputs={[]}
       />,
@@ -102,6 +109,7 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         {...gp2Fixtures.createOutputResponse()}
         isAdministrator
+        isAssociationMember={false}
         documentType="Article"
         relatedOutputs={[
           {
@@ -138,6 +146,7 @@ describe('OutputDetailPage', () => {
     const { getByText } = render(
       <OutputDetailPage
         isAdministrator
+        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );

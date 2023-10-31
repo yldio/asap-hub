@@ -183,9 +183,9 @@ describe('useCurrentUserRoleGP2', () => {
     expect(result.current).toBeUndefined();
   });
 
-  it('returns undefined when entity is not Projects', async () => {
+  it('returns undefined when entity is not Projects or WorkingGroups', async () => {
     const { result } = renderHook(
-      () => useCurrentUserRoleGP2('wg-1', 'WorkingGroups'),
+      () => useCurrentUserRoleGP2('wg-1', undefined),
       {
         wrapper: userProviderGP2({
           sub: '42',
@@ -240,6 +240,35 @@ describe('useCurrentUserRoleGP2', () => {
       },
     );
     expect(result.current).toEqual('Project manager');
+  });
+  it('returns the user role in a working group when there is a logged in user', async () => {
+    const workingGroup: gp2.User['workingGroups'][number] = {
+      id: 'wg-1',
+      title: 'WorkingGroup1',
+      members: [{ role: 'Lead', userId: 'testuser' }],
+    };
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('wg-1', 'WorkingGroups'),
+      {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: {
+            id: 'testuser',
+            onboarded: true,
+            email: 'john.doe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            displayName: 'John Doe',
+            projects: [],
+            algoliaApiKey: 'asdasda',
+            workingGroups: [workingGroup],
+            role: 'Trainee',
+          },
+        }),
+      },
+    );
+    expect(result.current).toEqual('Lead');
   });
 });
 describe('useCurrentUserTeamRoles', () => {

@@ -30,6 +30,16 @@ export const useCurrentUserRoleGP2 = (
           ?.members.filter(
             (member: gp2Model.UserProjectMember) => member.userId === user.id,
           )[0]?.role
+      : entityType === 'WorkingGroups'
+      ? user.workingGroups
+          .filter(
+            (workingGroup: gp2Model.UserWorkingGroup) =>
+              workingGroup.id === entityId,
+          )[0]
+          ?.members.filter(
+            (member: gp2Model.UserWorkingGroupMember) =>
+              member.userId === user.id,
+          )[0]?.role
       : undefined
     : undefined;
 };

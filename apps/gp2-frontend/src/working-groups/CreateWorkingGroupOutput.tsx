@@ -1,6 +1,6 @@
 import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
-import { ValidationErrorResponse } from '@asap-hub/model';
+import { ValidationErrorResponse, gp2 as gp2Model } from '@asap-hub/model';
 import { usePrevious } from '@asap-hub/react-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { useEffect, useState, FC } from 'react';
@@ -17,7 +17,13 @@ import { useWorkingGroupById, useWorkingGroupsState } from './state';
 
 const { workingGroups } = gp2Routing;
 
-const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
+type CreateWorkingGroupOutputProps = {
+  researchOutputData?: gp2Model.OutputBaseResponse;
+};
+
+const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
+  researchOutputData,
+}) => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
 
   const { outputDocumentType } = useRouteParams(
@@ -54,7 +60,10 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
 
   return (
     <CreateOutputPage
-      documentType={documentTypeMapper[outputDocumentType]}
+      documentType={
+        researchOutputData?.documentType ||
+        documentTypeMapper[outputDocumentType]
+      }
       entityType="workingGroup"
     >
       <OutputForm
@@ -78,6 +87,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         clearServerValidationError={(instancePath: string) =>
           setErrors(clearAjvErrorForPath(errors, instancePath))
         }
+        {...researchOutputData}
       />
     </CreateOutputPage>
   );

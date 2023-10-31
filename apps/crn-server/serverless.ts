@@ -1400,7 +1400,8 @@ const serverlessConfig: AWS = {
       ContentfulPollerQueue: {
         Type: 'AWS::SQS::Queue',
         Properties: {
-          QueueName: 'ContentfulPollerQueue',
+          QueueName:
+            '${self:service}-${self:provider.stage}-contentful-poller-queue',
           RedrivePolicy: {
             maxReceiveCount: 5,
             deadLetterTargetArn: {
@@ -1412,7 +1413,8 @@ const serverlessConfig: AWS = {
       ContentfulPollerQueueDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
-          QueueName: 'ContentfulPollerQueueDLQ',
+          QueueName:
+            '${self:service}-${self:provider.stage}-contentful-poller-queue-dlq',
         },
       },
       ApiGatewayAlarm5xx: {

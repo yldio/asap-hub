@@ -27,6 +27,7 @@ export const contentfulPollerHandlerFactory = (
 
   return async (sqsEvent) => {
     try {
+      logger.debug(`sqsEvent: ${JSON.stringify(sqsEvent)}`);
       await Promise.all(
         sqsEvent.payload.Records.map(async (record: SQSRecord) => {
           const detailTypeAttribute = record.messageAttributes.DetailType;

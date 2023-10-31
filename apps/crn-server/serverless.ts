@@ -755,7 +755,7 @@ const serverlessConfig: AWS = {
       },
     },
     contentfulWebhookPoller: {
-      handler: './src/handlers/webhooks/contentful-poller.handler',
+      handler: './src/handlers/webhooks/webhook-contentful-poller.handler',
       reservedConcurrency: 2,
       events: [
         {

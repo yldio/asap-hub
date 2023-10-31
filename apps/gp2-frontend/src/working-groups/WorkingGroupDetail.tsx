@@ -11,12 +11,18 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
-import { useOutputs } from '../outputs/state';
+import { useOutputById, useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
@@ -34,6 +40,26 @@ const loadOutputDirectory = () =>
     /* webpackChunkName: "working-group-output-directory" */ '../outputs/OutputDirectory'
   );
 const OutputDirectory = lazy(loadOutputDirectory);
+
+const DuplicateOutput: FC = () => {
+  const { outputId } = useParams<{ outputId: string }>();
+  const output = useOutputById(outputId);
+  if (output && output.workingGroups?.[0]?.id) {
+    return (
+      <OutputFormPage>
+        <CreateWorkingGroupOutput
+          researchOutputData={{
+            ...output,
+            id: '',
+            link: undefined,
+            title: `Copy of ${output.title}`,
+          }}
+        />
+      </OutputFormPage>
+    );
+  }
+  return <NotFoundPage />;
+};
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
@@ -60,6 +86,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
   const resourcesRoute = workingGroupRoute.workspace({});
   const createOutputRoute = workingGroupRoute.createOutput;
+  const duplicateOutputRoute = workingGroupRoute.duplicateOutput;
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
@@ -68,6 +95,8 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const resources = resourcesRoute.$;
   const upcoming = workingGroupRoute.upcoming({}).$;
   const past = workingGroupRoute.past({}).$;
+
+  const canDuplicateResearchOutput = isAdministrator || isWorkingGroupMember;
 
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
@@ -86,6 +115,13 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             </OutputFormPage>
           </Frame>
         </Route>
+        {canDuplicateResearchOutput && (
+          <Route exact path={path + duplicateOutputRoute.template}>
+            <Frame title="Duplicate Output">
+              <DuplicateOutput />
+            </Frame>
+          </Route>
+        )}
         <WorkingGroupDetailPage
           {...workingGroup}
           isWorkingGroupMember={isWorkingGroupMember}

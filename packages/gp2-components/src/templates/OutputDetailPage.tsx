@@ -3,6 +3,7 @@ import {
   Link,
   pixels,
   editIcon,
+  duplicateIcon,
   mail,
   RelatedEventsCard,
   RelatedResearchCard,
@@ -82,9 +83,11 @@ type OutputDetailPageProps = Pick<
   | 'tags'
 > & {
   isAdministrator: boolean;
+  isAssociationMember: boolean;
 };
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
+  isAssociationMember,
   ...output
 }: OutputDetailPageProps) => (
   <PageNotifications page="output">
@@ -93,8 +96,8 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
         css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
       >
         <div css={containerStyles}>
-          {isAdministrator ? (
-            <div css={buttonsContainer}>
+          <div css={buttonsContainer}>
+            {isAdministrator && (
               <div css={leftButtons}>
                 <Link
                   noMargin
@@ -111,8 +114,37 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   {editIcon} Edit
                 </Link>
               </div>
-            </div>
-          ) : null}
+            )}
+            {(isAdministrator || isAssociationMember) && (
+              <div css={leftButtons}>
+                <Link
+                  noMargin
+                  href={
+                    output.workingGroups && output.workingGroups[0]?.id
+                      ? gp2Routing
+                          .workingGroups({})
+                          .workingGroup({
+                            workingGroupId: output.workingGroups[0].id,
+                          })
+                          .duplicateOutput({
+                            outputId: output.id,
+                          }).$
+                      : output.projects && output.projects[0]?.id
+                      ? gp2Routing
+                          .projects({})
+                          .project({ projectId: output.projects[0].id })
+                          .duplicateOutput({ outputId: output.id }).$
+                      : undefined
+                  }
+                  buttonStyle
+                  small
+                  primary
+                >
+                  {duplicateIcon} Duplicate
+                </Link>
+              </div>
+            )}
+          </div>
           <OutputCard {...output} detailedView />
           {(output.description || !!output.tags.length) && (
             <SharedResearchDetailsTagsCard
@@ -153,4 +185,5 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
     )}
   </PageNotifications>
 );
+
 export default OutputDetailPage;

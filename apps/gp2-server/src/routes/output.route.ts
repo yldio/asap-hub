@@ -44,7 +44,13 @@ export const outputRouteFactory = (
     const { body, loggedInUser } = req;
     const createRequest = validateOutputPostRequestParameters(body);
 
-    if (!loggedInUser || !hasCreateUpdateOutputPermissions(loggedInUser)) {
+    if (
+      !loggedInUser ||
+      !hasCreateUpdateOutputPermissions(
+        loggedInUser,
+        createRequest.mainEntityId,
+      )
+    ) {
       throw Boom.forbidden();
     }
 
@@ -62,7 +68,13 @@ export const outputRouteFactory = (
     const { outputId } = validateOutputParameters(params);
     const updateRequest = validateOutputPutRequestParameters(body);
 
-    if (!loggedInUser || !hasCreateUpdateOutputPermissions(loggedInUser)) {
+    if (
+      !loggedInUser ||
+      !hasCreateUpdateOutputPermissions(
+        loggedInUser,
+        updateRequest.mainEntityId,
+      )
+    ) {
       throw Boom.forbidden();
     }
 
@@ -77,5 +89,13 @@ export const outputRouteFactory = (
 
   return outputRoutes;
 };
-const hasCreateUpdateOutputPermissions = (user: gp2Model.UserResponse) =>
-  user.role === 'Administrator';
+const hasCreateUpdateOutputPermissions = (
+  user: gp2Model.UserResponse,
+  entityId?: string,
+) =>
+  user.role === 'Administrator' ||
+  user.projects
+    .filter((proj: gp2Model.UserProject) => proj.id === entityId)[0]
+    ?.members.filter(
+      (member: gp2Model.UserProjectMember) => member.userId === user.id,
+    )[0]?.role === 'Project manager';

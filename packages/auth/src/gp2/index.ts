@@ -11,4 +11,6 @@ export type User = Pick<
   | 'avatarUrl'
   | 'role'
   | 'algoliaApiKey'
+  | 'workingGroups'
+  | 'projects'
 >;

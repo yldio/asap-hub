@@ -137,6 +137,25 @@ describe('/outputs/ route', () => {
       expect(response.status).toBe(403);
     });
 
+    test('Should allow user to create output because of role in project', async () => {
+      const createOutputRequest = getOutputPostRequest();
+
+      outputControllerMock.create.mockResolvedValueOnce(outputResponse);
+      const { app: projApp } = getApp({ projectRole: 'Project manager' });
+      const response = await supertest(projApp)
+        .post('/outputs/')
+        .send({ ...createOutputRequest, mainEntityId: 'proj-1' })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(201);
+      expect(outputControllerMock.create).toBeCalledWith({
+        ...createOutputRequest,
+        mainEntityId: 'proj-1',
+        createdBy: 'user-id-0',
+      });
+      expect(response.body).toEqual(outputResponse);
+    });
+
     test('Should return a 500 error when creating a output fails due to server error', async () => {
       const output = getOutputPostRequest();
 
@@ -351,6 +370,24 @@ describe('/outputs/ route', () => {
       expect(response.status).toBe(403);
     });
 
+    test('Should allow user to update output because of role in project', async () => {
+      outputControllerMock.update.mockResolvedValueOnce(outputResponse);
+
+      const { app: projApp } = getApp({ projectRole: 'Project manager' });
+      const response = await supertest(projApp)
+        .put('/outputs/abc123')
+        .send({ ...outputPutRequest, mainEntityId: 'proj-1' })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(outputControllerMock.update).toBeCalledWith('abc123', {
+        ...outputPutRequest,
+        mainEntityId: 'proj-1',
+        updatedBy: 'user-id-0',
+      });
+      expect(response.body).toEqual(outputResponse);
+    });
+
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app)
@@ -525,12 +562,28 @@ describe('/outputs/ route', () => {
   });
 });
 
-const getApp = ({ role }: { role?: gp2.UserResponse['role'] } = {}) => {
+const getApp = ({
+  role,
+  projectRole,
+}: {
+  role?: gp2.UserResponse['role'];
+  projectRole?: gp2.ProjectMemberRole;
+} = {}) => {
   const loggedInUserId = 'user-id-0';
   const loggedUser: gp2.UserResponse = {
     ...getUserResponse(),
     id: loggedInUserId,
     ...(role && { role }),
+    ...(projectRole && {
+      projects: [
+        {
+          id: 'proj-1',
+          title: 'a title',
+          status: 'Active',
+          members: [{ userId: loggedInUserId, role: projectRole }],
+        },
+      ],
+    }),
   };
   const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
   const authHandlerMock: AuthHandler = (req, _res, next) => {

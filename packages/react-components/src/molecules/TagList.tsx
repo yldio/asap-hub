@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { tags as tagsRoute } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { Tag } from '../atoms';
@@ -102,7 +103,7 @@ const TagList: React.FC<TagListProps> = ({
           ]}
         >
           {typeof tag === 'string' ? (
-            <Tag title={tag} enabled={enabled}>
+            <Tag title={tag} href={tagsRoute({ tag }).$} enabled={enabled}>
               {tag}
             </Tag>
           ) : (

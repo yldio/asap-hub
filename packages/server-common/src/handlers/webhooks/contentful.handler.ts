@@ -33,13 +33,13 @@ const getDetailFromRequest = (
 });
 type Config = {
   contentfulPollerQueueUrl: string;
+  webhookAuthenticationToken: string;
 };
 
 export const contentfulHandlerFactory =
   (
-    webhookAuthenticationToken: string,
     sqs: SQSClient,
-    config: Config,
+    { webhookAuthenticationToken, contentfulPollerQueueUrl }: Config,
     logger: Logger,
   ): ((
     request: lambda.Request<ContentfulWebhookPayload>,
@@ -53,7 +53,7 @@ export const contentfulHandlerFactory =
 
     try {
       const command = new SendMessageCommand({
-        QueueUrl: config.contentfulPollerQueueUrl,
+        QueueUrl: contentfulPollerQueueUrl,
         MessageAttributes: {
           DetailType: {
             DataType: 'String',
@@ -68,9 +68,9 @@ export const contentfulHandlerFactory =
       });
       await sqs.send(command);
       logger.debug(
-        `Event added to queue ${
-          config.contentfulPollerQueueUrl
-        } detail Type: ${detailType} detail: ${JSON.stringify(detail)}`,
+        `Event added to queue ${contentfulPollerQueueUrl} detail Type: ${detailType} detail: ${JSON.stringify(
+          detail,
+        )}`,
       );
 
       return {
@@ -78,7 +78,7 @@ export const contentfulHandlerFactory =
       };
     } catch (err) {
       logger.error(
-        `An error occurred putting onto the SQS ${config.contentfulPollerQueueUrl}`,
+        `An error occurred putting onto the SQS ${contentfulPollerQueueUrl}`,
       );
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);

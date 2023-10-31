@@ -748,6 +748,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+          contentfulWebhookAuthenticationToken,
         CONTENTFUL_POLLER_QUEUE_URL: {
           Ref: 'ContentfulPollerQueue',
         },
@@ -771,8 +773,6 @@ const serverlessConfig: AWS = {
         EVENT_BUS: 'asap-events-${self:provider.stage}',
         EVENT_SOURCE: eventBusSourceContentful,
         SENTRY_DSN: sentryDsnHandlers,
-        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
-          contentfulWebhookAuthenticationToken,
       },
     },
 

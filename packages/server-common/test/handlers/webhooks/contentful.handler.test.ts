@@ -11,16 +11,15 @@ describe('Contentful event webhook', () => {
   const sqsMock = {
     send: jest.fn(),
   } as unknown as jest.Mocked<SQS>;
-  const contentfulWebhookAuthenticationToken =
-    'contentful-webhook-authentication-token';
+  const webhookAuthenticationToken = 'contentful-webhook-authentication-token';
   const headers = {
-    authorization: contentfulWebhookAuthenticationToken,
+    authorization: webhookAuthenticationToken,
     'x-contentful-topic': 'ContentManagement.Entry.publish',
   };
   const handler = contentfulHandlerFactory(
-    contentfulWebhookAuthenticationToken,
     sqsMock,
     {
+      webhookAuthenticationToken,
       contentfulPollerQueueUrl,
     },
     logger,
@@ -86,9 +85,9 @@ describe('Contentful event webhook', () => {
       .fn()
       .mockRejectedValue(new Error('error message from send'));
     const handlerWithError = contentfulHandlerFactory(
-      contentfulWebhookAuthenticationToken,
       sqsMock,
       {
+        webhookAuthenticationToken,
         contentfulPollerQueueUrl,
       },
       logger,

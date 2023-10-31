@@ -5,16 +5,16 @@ import { APIGatewayEvent, Handler } from 'aws-lambda';
 import 'source-map-support/register';
 import {
   contentfulPollerQueueUrl,
-  contentfulWebhookAuthenticationToken,
+  contentfulWebhookAuthenticationToken as webhookAuthenticationToken,
 } from '../../config';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const contentfulWebhookFactory = (sqs: SQSClient): lambda.Handler => {
   const handler = contentfulHandlerFactory(
-    contentfulWebhookAuthenticationToken,
     sqs,
     {
+      webhookAuthenticationToken,
       contentfulPollerQueueUrl,
     },
     logger,

@@ -17,13 +17,13 @@ import { tagSearchResultsState } from '../state';
 jest.mock('../api');
 jest.mock('../../hooks/search');
 
-const renderList = async (searchQuery = '') => {
+const renderList = async (tags = []) => {
   render(
     <RecoilRoot
       initializeState={({ reset }) => {
         reset(
           tagSearchResultsState({
-            searchQuery,
+            tags: [],
             currentPage: 0,
             entityType: new Set(),
             pageSize: PAGE_SIZE,
@@ -64,9 +64,11 @@ describe('TagSearch', () => {
       searchQuery: '',
       debouncedSearchQuery: '',
       setSearchQuery: jest.fn(),
+      tags: [],
+      setTags: jest.fn(),
     }));
 
-    await renderList('');
+    await renderList();
     userEvent.click(
       screen.getByRole('checkbox', {
         name: 'Outputs',

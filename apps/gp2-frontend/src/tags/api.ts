@@ -2,8 +2,12 @@ import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 
-export type TagSearchOptions = Omit<GetListOptions, 'filters'> & {
+export type TagSearchOptions = Omit<
+  GetListOptions,
+  'filters' | 'searchQuery'
+> & {
   entityType: Set<gp2.EntityType>;
+  tags: string[];
 };
 
 export const getItemTypes = (types: gp2.EntityType[]) => {
@@ -18,7 +22,8 @@ export const getTagSearchResults = async (
   options: TagSearchOptions,
 ) =>
   client
-    .search(getItemTypes(Array.from(options.entityType)), options.searchQuery, {
+    .search(getItemTypes(Array.from(options.entityType)), '', {
+      tagFilters: options.tags,
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
     })

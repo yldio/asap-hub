@@ -17,21 +17,25 @@ describe('getTagSearchResults', () => {
     entityType: new Set(),
     pageSize: PAGE_SIZE,
     currentPage: 0,
-    searchQuery: '',
+    tags: [],
   };
 
   it('makes a search request with query, no filter set, default page and page size', async () => {
     await getTagSearchResults(mockAlgoliaSearchClient, {
       ...options,
-      searchQuery: 'test',
+      tags: ['test'],
       currentPage: null,
       pageSize: null,
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenCalledWith(
       ['event', 'news', 'output', 'project', 'user'],
-      'test',
-      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+      '',
+      expect.objectContaining({
+        hitsPerPage: 10,
+        page: 0,
+        tagFilters: ['test'],
+      }),
     );
   });
 
@@ -48,15 +52,19 @@ describe('getTagSearchResults', () => {
     await getTagSearchResults(mockAlgoliaSearchClient, {
       ...options,
       entityType: new Set(['event']),
-      searchQuery: 'test',
+      tags: ['test'],
       currentPage: null,
       pageSize: null,
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenCalledWith(
       ['event'],
-      'test',
-      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+      '',
+      expect.objectContaining({
+        hitsPerPage: 10,
+        page: 0,
+        tagFilters: ['test'],
+      }),
     );
   });
 });

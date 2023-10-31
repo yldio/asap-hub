@@ -1,9 +1,20 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { SearchAndFilter } from '@asap-hub/react-components';
+import {
+  noop,
+  SearchAndFilter,
+  MultiSelect,
+  searchIcon,
+  Filter,
+  pixels,
+} from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 type TagSearchPageListProps = {
   hasResults: boolean;
+  tags?: string[];
+  setTags?: (tags: string[]) => void;
+  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
 } & Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
@@ -27,6 +38,13 @@ const outputFilters: ReadonlyArray<Option<gp2Model.EntityType> | Title> = [
   { value: 'project', label: 'Projects' },
 ];
 
+const styles = css({
+  display: 'grid',
+  gridTemplateColumns: 'auto min-content',
+  gridColumnGap: `${18 / pixels.perRem}em`,
+  alignItems: 'end',
+});
+
 const TagSearchPageList: React.FC<TagSearchPageListProps> = ({
   children,
   filters,
@@ -34,17 +52,31 @@ const TagSearchPageList: React.FC<TagSearchPageListProps> = ({
   onChangeSearch,
   searchQuery,
   hasResults,
+  tags = [],
+  loadTags = noop,
+  setTags = noop,
 }) => (
   <>
     {hasResults && (
-      <SearchAndFilter
-        onChangeSearch={onChangeSearch}
-        searchPlaceholder="Search for any tags..."
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filterOptions={outputFilters}
-        filters={filters}
-      />
+      <div role="search" css={styles}>
+        <MultiSelect
+          leftIndicator={searchIcon}
+          noOptionsMessage={() => 'No results found'}
+          loadOptions={loadTags}
+          onChange={(items) => setTags(items.map(({ value }) => value))}
+          values={tags.map((tag) => ({
+            label: tag,
+            value: tag,
+          }))}
+          key={tags.join(',')} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
+          placeholder="Search for any tags..."
+        />
+        <Filter
+          filters={filters}
+          onChangeFilter={onChangeFilter}
+          filterOptions={outputFilters}
+        />
+      </div>
     )}
     <main>{children}</main>
   </>

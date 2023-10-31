@@ -27,6 +27,19 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
     {} as Filter,
   );
 
+  const replaceArrayParams = (paramName: string, values: string[]) => {
+    const newUrlParams = new URLSearchParams(history.location.search);
+    newUrlParams.delete(paramName);
+    values.forEach((v) => newUrlParams.append(paramName, v));
+    history.replace({ search: newUrlParams.toString() });
+  };
+
+  const tags = currentUrlParams.getAll('tag');
+  const setTags = (newTags: string[]) => {
+    resetPagination();
+    replaceArrayParams('tag', newTags);
+  };
+
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
   const toggleFilter = (filter: string, filterName: keyof Filter) => {
@@ -84,5 +97,7 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
     toggleFilter,
     updateFilters,
     changeLocation,
+    tags,
+    setTags,
   };
 };

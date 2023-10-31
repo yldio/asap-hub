@@ -63,6 +63,8 @@ describe('EventDirectory', () => {
       searchQuery: '',
       debouncedSearchQuery: '',
       setSearchQuery: jest.fn(),
+      tags: [],
+      setTags: jest.fn(),
     }));
 
     await renderList({ currentTime: new Date(), searchQuery: '' });

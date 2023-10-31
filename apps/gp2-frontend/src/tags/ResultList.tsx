@@ -16,6 +16,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
+import { useSearch } from '../hooks';
 
 export type ResultListProps = {
   filters?: Set<gp2Model.EntityType>;
@@ -28,8 +29,9 @@ const ResultList: React.FC<ResultListProps> = ({
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 
+  const { tags } = useSearch();
   const { items, total } = useTagSearchResults({
-    searchQuery,
+    tags,
     entityType: filters,
     currentPage,
     pageSize,
@@ -70,8 +72,8 @@ const ResultList: React.FC<ResultListProps> = ({
             );
           case 'user': {
             const data = result as gp2Model.UserResponse;
-            const tags = data.tags.map((tag) => tag.name);
-            return <UserCard key={result.id} {...data} tags={tags} />;
+            const tagData = data.tags.map((tag) => tag.name);
+            return <UserCard key={result.id} {...data} tags={tagData} />;
           }
           default:
             return '';

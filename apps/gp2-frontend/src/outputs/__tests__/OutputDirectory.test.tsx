@@ -54,6 +54,8 @@ const renderOutputDirectory = async ({
     searchQuery,
     debouncedSearchQuery: searchQuery,
     setSearchQuery: jest.fn(),
+    tags: [],
+    setTags: jest.fn(),
   }));
 
   render(

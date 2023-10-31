@@ -31,7 +31,7 @@ export const getUserDataObject = (): UserDataObject => ({
   interestGroups: [],
 });
 
-export const orcidWorksResponse: ORCIDWorksResponse = {
+export const getOrcidWorksResponse = (): ORCIDWorksResponse => ({
   'last-modified-date': { value: 1594690575911 },
   group: [
     {
@@ -103,7 +103,7 @@ export const orcidWorksResponse: ORCIDWorksResponse = {
     },
   ],
   path: '/0000-0001-9045-0723/works',
-};
+});
 
 export const orcidWorksDeserialisedExpectation: OrcidWork[] = [
   {

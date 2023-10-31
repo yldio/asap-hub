@@ -44,7 +44,7 @@ export const getUserResponse = (): UserResponse => ({
     'expertise 5',
   ],
   questions: ['Question 1', 'Question 2'],
-  avatarUrl: `https://test.com/api/assets/asap-dev/squidex-asset-id`,
+  avatarUrl: `https://test.com/api/assets/asap-dev/contentful-asset-id`,
   role: 'Grantee',
   biography: 'Biography',
   labs: [

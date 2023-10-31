@@ -12,12 +12,11 @@ import {
   ContentfulWebhookPayload,
   FetchUserByIdQuery,
 } from '@asap-hub/contentful';
-import { appName, baseUrl } from '../../src/config';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const fetchUserResponseDataObject = (): UserDataObject => ({
-  avatarUrl: `${baseUrl}/api/assets/${appName}/squidex-asset-id`,
+  avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'tony@stark.com',
   expertiseAndResourceDescription: 'some expertiseAndResourceTags',

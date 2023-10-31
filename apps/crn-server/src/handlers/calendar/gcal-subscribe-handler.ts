@@ -34,7 +34,6 @@ export const webhookHandler = calendarCreatedContentfulHandlerFactory(
     asapApiUrl,
     googleApiToken,
     googleApiUrl,
-    cms: 'contentful',
   }),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
     googleApiUrl,

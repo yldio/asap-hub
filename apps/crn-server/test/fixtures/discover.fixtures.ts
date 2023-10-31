@@ -3,7 +3,6 @@ import {
   DiscoverResponse,
   UserResponse,
 } from '@asap-hub/model';
-import { appName, baseUrl } from '../../src/config';
 
 const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
   {
@@ -27,7 +26,7 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
     lastModifiedDate: '2020-10-15T17:55:21Z',
     teams: [],
     social: {},
-    avatarUrl: `${baseUrl}/api/assets/${appName}/${prefix}uuid-1`,
+    avatarUrl: `https://www.contentful.com/api/assets/asap-crn/${prefix}uuid-1`,
     role: 'Guest',
     responsibilities: undefined,
     reachOut: undefined,
@@ -93,7 +92,7 @@ export const getContentfulGraphqlDiscoverMembers = () => [
     lastName: 'Doe',
     email: 'john@example.com',
     avatar: {
-      url: `${baseUrl}/api/assets/${appName}/uuid-1`,
+      url: `https://www.contentful.com/api/assets/asap-crn/uuid-1`,
     },
   },
   {
@@ -130,7 +129,7 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
         lastName: 'sab-Doe',
         email: 'sab-john@example.com',
         avatar: {
-          url: `${baseUrl}/api/assets/${appName}/sab-uuid-1`,
+          url: `https://www.contentful.com/api/assets/asap-crn/sab-uuid-1`,
         },
         lastUpdated: '2020-10-15T17:55:21Z',
       },

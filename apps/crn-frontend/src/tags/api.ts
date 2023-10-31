@@ -1,11 +1,11 @@
-import { AlgoliaClient, EntityResponses } from '@asap-hub/algolia';
+import { AlgoliaClient, CRNTagSearchEntities } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
 export type TagSearchListOptions = GetListOptions & {
   tags: string[];
 };
 
-export const getTagSearch = <ResponsesKey extends keyof EntityResponses['crn']>(
+export const getTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   client: AlgoliaClient<'crn'>,
   entityTypes: ResponsesKey[],
   options: TagSearchListOptions,

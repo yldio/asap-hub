@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
+import { AlgoliaSearchClient, CRNTagSearchEntities } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import nock from 'nock';
@@ -19,10 +19,8 @@ const options: GetListOptions = {
   searchQuery: '',
 };
 
-type Entities = Array<keyof EntityResponses['crn']>;
-
 describe('getTagSearch', () => {
-  const entityTypes: Entities = ['research-output', 'user'];
+  const entityTypes: CRNTagSearchEntities[] = ['research-output', 'user'];
 
   const mockAlgoliaSearchClient = {
     search: jest

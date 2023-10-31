@@ -1,9 +1,12 @@
 import { getEventListOptions, SearchFrame } from '@asap-hub/frontend-utils';
 import { EventConstraint, ListEventResponse } from '@asap-hub/model';
-import { EventSearch, EventsList } from '@asap-hub/react-components';
+import {
+  EventSearch,
+  EventsList,
+  eventMapper,
+} from '@asap-hub/react-components';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useEvents } from '../events/state';
-import { eventMapper } from '../events/EventList';
 
 type EventsEmbedListProps = {
   readonly currentTime: Date;

@@ -1563,6 +1563,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-components@workspace:packages/react-components"
   dependencies:
+    "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

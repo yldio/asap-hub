@@ -1,6 +1,6 @@
+import { CRNTagSearchEntities } from '@asap-hub/algolia';
 import {
   ListEventResponse,
-  ListExternalAuthorResponse,
   ListResearchOutputResponse,
   ListUserResponse,
 } from '@asap-hub/model';
@@ -8,8 +8,15 @@ import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
-import { PeopleCard, ResultList, SharedResearchCard } from '../organisms';
+import { ErrorCard } from '../molecules';
+import {
+  EventCard,
+  PeopleCard,
+  ResultList,
+  SharedResearchCard,
+} from '../organisms';
 import { perRem } from '../pixels';
+import { eventMapper } from '..';
 
 const wrapperStyle = css({
   textAlign: 'center',
@@ -34,25 +41,42 @@ const MessageBody: React.FC<{ title: string; body: string }> = ({
   </main>
 );
 
+export enum TagFieldByEntity {
+  'research-output' = 'keywords',
+  user = 'expertiseAndResourceTags',
+  event = 'calendar',
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const assert = <T extends never>() => undefined;
+type TypeEqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>;
+
 const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
   ...data
-}) => {
-  if ('keywords' in data) {
+}): JSX.Element => {
+  assert<
+    TypeEqualityGuard<keyof typeof TagFieldByEntity, CRNTagSearchEntities>
+  >;
+
+  if (TagFieldByEntity['research-output'] in data) {
     return <SharedResearchCard {...data} />;
   }
 
-  if ('expertiseAndResourceTags' in data) {
+  if (TagFieldByEntity.user in data) {
     return <PeopleCard {...data} />;
   }
 
-  return null;
+  if (TagFieldByEntity.event in data) {
+    return <EventCard {...eventMapper(data)} />;
+  }
+
+  return <ErrorCard />;
 };
 
 interface TagsPageBodyProps {
   readonly results: (
     | ListUserResponse['items'][number]
     | ListResearchOutputResponse['items'][number]
-    | ListExternalAuthorResponse['items'][number]
     | ListEventResponse['items'][number]
   )[];
   readonly numberOfItems: number;

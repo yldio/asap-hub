@@ -38,6 +38,8 @@ it('renders a list of cards', () => {
         },
         { ...createUserResponse(), displayName: 'John Doe', degree: 'PhD' },
         { ...createEventResponse(), title: 'ASAP Collaborative Meeting' },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { id: 'unknown-id', name: 'unknown card' } as any,
       ]}
     />,
   );
@@ -46,8 +48,8 @@ it('renders a list of cards', () => {
 
   expect(screen.getByText('John Doe, PhD')).toBeVisible();
 
-  // events will be implemented in the future
-  expect(
-    screen.queryByText('ASAP Collaborative Meeting'),
-  ).not.toBeInTheDocument();
+  expect(screen.getByText('ASAP Collaborative Meeting')).toBeInTheDocument();
+
+  expect(screen.getByText('Something went wrong!')).toBeInTheDocument();
+  expect(screen.queryByText('unknown card')).not.toBeInTheDocument();
 });

@@ -1,8 +1,10 @@
-import { EMPTY_ALGOLIA_RESPONSE, EntityResponses } from '@asap-hub/algolia';
+import {
+  CRNTagSearchEntities,
+  EMPTY_ALGOLIA_RESPONSE,
+} from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   EventResponse,
-  ExternalAuthorResponse,
   ListResponse,
   ResearchOutputResponse,
   UserResponse,
@@ -23,11 +25,7 @@ type RefreshTagSearchListOptions = GetListOptions & {
   refreshToken: number;
 };
 
-type TagSearchResponse =
-  | ResearchOutputResponse
-  | UserResponse
-  | ExternalAuthorResponse
-  | EventResponse;
+type TagSearchResponse = ResearchOutputResponse | UserResponse | EventResponse;
 
 const tagSearchIndexState = atomFamily<
   | {
@@ -117,7 +115,7 @@ export const tagSearchListState = atomFamily<
   default: tagSearchState,
 });
 
-export const useTagSearch = <ResponsesKey extends keyof EntityResponses['crn']>(
+export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   entityTypes: ResponsesKey[],
   options: TagSearchListOptions,
 ) => {

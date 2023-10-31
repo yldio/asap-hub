@@ -1,4 +1,4 @@
-import { CRNTagEntitiesList } from '@asap-hub/algolia';
+import { CRNTagSearchEntitiesList } from '@asap-hub/algolia';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -12,7 +12,7 @@ const Routes: React.FC<Record<string, never>> = () => {
   const { client } = useAlgolia();
   const { tags, setTags } = useSearch();
 
-  const entities: CRNTagEntitiesList = ['research-output', 'user'];
+  const entities: CRNTagSearchEntitiesList = ['research-output', 'user'];
 
   return (
     <Switch>

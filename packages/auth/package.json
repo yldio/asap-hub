@@ -20,6 +20,6 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@auth0/auth0-spa-js": "1.22.6",
-    "@types/node": "18.17.3"
+    "@types/node": "18.18.8"
   }
 }

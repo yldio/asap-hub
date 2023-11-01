@@ -8,7 +8,6 @@ import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
-import { ErrorCard } from '../molecules';
 import {
   EventCard,
   PeopleCard,
@@ -66,11 +65,7 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
     return <PeopleCard {...data} />;
   }
 
-  if (TagFieldByEntity.event in data) {
-    return <EventCard {...eventMapper(data)} />;
-  }
-
-  return <ErrorCard />;
+  return <EventCard {...eventMapper(data)} />;
 };
 
 interface TagsPageBodyProps {

@@ -8,7 +8,10 @@ import {
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import {
+  useCurrentUserGP2,
+  useCurrentUserRoleGP2,
+} from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import {
@@ -83,6 +86,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
   const isAdministrator = currentUser?.role === 'Administrator';
+  const userRole = useCurrentUserRoleGP2(projectId, 'Projects');
   const projectRoute = projects({}).project({ projectId });
   const createOutputRoute = projectRoute.createOutput;
   const duplicateOutputRoute = projectRoute.duplicateOutput;
@@ -101,8 +105,8 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,
   });
+  const canDuplicateOutput = isAdministrator || userRole === 'Project manager';
 
-  const canDuplicateResearchOutput = isAdministrator || isProjectMember;
   if (project) {
     return (
       <Switch>
@@ -113,7 +117,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             </OutputFormPage>
           </Frame>
         </Route>
-        {canDuplicateResearchOutput && (
+        {canDuplicateOutput && (
           <Route exact path={path + duplicateOutputRoute.template}>
             <Frame title="Duplicate Output">
               <DuplicateOutput />

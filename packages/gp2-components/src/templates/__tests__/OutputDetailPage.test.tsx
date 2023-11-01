@@ -4,26 +4,26 @@ import { render } from '@testing-library/react';
 import OutputDetailPage from '../OutputDetailPage';
 
 describe('OutputDetailPage', () => {
-  it('displays edit button if user is administrator', () => {
+  it('displays edit and duplicate buttons if user is administrator', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator
-        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );
     expect(queryByTitle('Edit')).toBeInTheDocument();
+    expect(queryByTitle('Duplicate')).toBeInTheDocument();
   });
 
-  it('does not display edit button if user is not administrator', () => {
+  it('does not display edit and duplicate buttons if user is not administrator', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator={false}
-        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );
     expect(queryByTitle('Edit')).not.toBeInTheDocument();
+    expect(queryByTitle('Duplicate')).not.toBeInTheDocument();
   });
 
   describe('description and tags section', () => {
@@ -31,7 +31,6 @@ describe('OutputDetailPage', () => {
       const { queryByText } = render(
         <OutputDetailPage
           isAdministrator={false}
-          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={''}
         />,
@@ -46,7 +45,6 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
-          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={'Test Description'}
         />,
@@ -62,7 +60,6 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
-          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={''}
           tags={[{ id: 'test-id', name: 'TestTag' }]}
@@ -78,7 +75,6 @@ describe('OutputDetailPage', () => {
       const { queryByText, getByText } = render(
         <OutputDetailPage
           isAdministrator={false}
-          isAssociationMember={false}
           {...gp2Fixtures.createOutputResponse()}
           description={'Test Description'}
           tags={[{ id: 'test-id', name: 'TestTag' }]}
@@ -98,7 +94,6 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         {...gp2Fixtures.createOutputResponse()}
         isAdministrator
-        isAssociationMember={false}
         documentType="Article"
         relatedOutputs={[]}
       />,
@@ -109,7 +104,6 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         {...gp2Fixtures.createOutputResponse()}
         isAdministrator
-        isAssociationMember={false}
         documentType="Article"
         relatedOutputs={[
           {
@@ -146,7 +140,6 @@ describe('OutputDetailPage', () => {
     const { getByText } = render(
       <OutputDetailPage
         isAdministrator
-        isAssociationMember={false}
         {...gp2Fixtures.createOutputResponse()}
       />,
     );

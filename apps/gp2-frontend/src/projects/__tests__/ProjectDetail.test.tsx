@@ -1,5 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { ProjectMember } from '@asap-hub/model/build/gp2';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -13,33 +14,41 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
-import { getOutputs } from '../../outputs/api';
+import { getOutputs, getOutput } from '../../outputs/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
+import { getWorkingGroups } from '../../working-groups/api';
 import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
+  createProjectAlgoliaRecord,
+  createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getProject, putProjectResources } from '../api';
+import { getProject, getProjects, putProjectResources } from '../api';
 import ProjectDetail from '../ProjectDetail';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
 jest.mock('../../events/api');
+jest.mock('../../shared/api');
+jest.mock('../../working-groups/api');
 
 const renderProjectDetail = async ({
   id,
   userId,
   route,
   role = 'Trainee',
+  projects = [],
 }: {
   id: string;
   userId?: string;
   route?: string;
   role?: gp2Model.UserRole;
+  projects?: gp2Model.UserProject[];
 }) => {
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{ id: userId, role }}>
+        <Auth0Provider user={{ id: userId, role, projects }}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
@@ -66,6 +75,18 @@ const renderProjectDetail = async ({
 
 describe('ProjectDetail', () => {
   const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
+  const mockGetProjects = getProjects as jest.MockedFunction<
+    typeof getProjects
+  >;
+  const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
+  const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+  const mockGetContributingCohorts =
+    getContributingCohorts as jest.MockedFunction<
+      typeof getContributingCohorts
+    >;
+  const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+    typeof getWorkingGroups
+  >;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockPutProjectResources = putProjectResources as jest.MockedFunction<
     typeof putProjectResources
@@ -453,5 +474,85 @@ describe('ProjectDetail', () => {
     await renderProjectDetail({ id: project.id });
     expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
     expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();
+  });
+
+  describe('Duplicate Output', () => {
+    it('allows a user who is an Administrator or Project Manager to duplicate an output', async () => {
+      const project = {
+        ...gp2Fixtures.createProjectResponse(),
+        members: [
+          {
+            userId: '23',
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Project manager',
+          },
+        ] as ProjectMember[],
+      };
+      const output = gp2Fixtures.createOutputResponse();
+      mockGetProject.mockResolvedValue(project);
+      mockGetOutput.mockResolvedValueOnce({
+        ...output,
+        title: 'Test Output',
+        projects: [project],
+      });
+      mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
+      mockGetContributingCohorts.mockResolvedValueOnce(
+        gp2Fixtures.contributingCohortResponse,
+      );
+      mockGetWorkingGroups.mockResolvedValue(
+        gp2Fixtures.createWorkingGroupsResponse(),
+      );
+      mockGetProjects.mockResolvedValue(
+        createProjectListAlgoliaResponse(1, {
+          hits: [
+            createProjectAlgoliaRecord(
+              gp2Fixtures.createProjectResponse(project),
+            ),
+          ],
+        }),
+      );
+
+      await renderProjectDetail({
+        id: project.id,
+        userId: '23',
+        route: gp2Routing
+          .projects({})
+          .project({ projectId: project.id })
+          .duplicateOutput({ outputId: output.id }).$,
+        projects: [project],
+      });
+
+      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+        'Copy of Test Output',
+      );
+      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+    });
+
+    it('will show a page not found if output does not exist', async () => {
+      const project = gp2Fixtures.createProjectResponse();
+      mockGetProject.mockResolvedValueOnce({
+        ...project,
+        members: [
+          {
+            userId: '23',
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Project manager',
+          },
+        ],
+      });
+      mockGetOutput.mockResolvedValueOnce(undefined);
+      await renderProjectDetail({
+        id: project.id,
+        userId: '23',
+        route: gp2Routing
+          .projects({})
+          .project({ projectId: project.id })
+          .duplicateOutput({ outputId: 'test-id' }).$,
+        projects: [project],
+      });
+      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+    });
   });
 });

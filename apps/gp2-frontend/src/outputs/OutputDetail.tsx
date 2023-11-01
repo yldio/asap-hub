@@ -29,8 +29,6 @@ const OutputDetail: FC = () => {
   const isAdministrator =
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
 
-  const isAssociationMember = userRole !== undefined;
-
   useEffect(() => {
     loadShareOutput();
   }, []);
@@ -43,11 +41,7 @@ const OutputDetail: FC = () => {
     <Switch>
       <Route exact path={path}>
         <Frame title="Output">
-          <OutputDetailPage
-            isAdministrator={isAdministrator}
-            isAssociationMember={isAssociationMember}
-            {...output}
-          />
+          <OutputDetailPage isAdministrator={isAdministrator} {...output} />
         </Frame>
       </Route>
       <Route

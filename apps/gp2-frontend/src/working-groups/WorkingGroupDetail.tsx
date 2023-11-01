@@ -96,8 +96,6 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const upcoming = workingGroupRoute.upcoming({}).$;
   const past = workingGroupRoute.past({}).$;
 
-  const canDuplicateResearchOutput = isAdministrator || isWorkingGroupMember;
-
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
@@ -115,7 +113,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             </OutputFormPage>
           </Frame>
         </Route>
-        {canDuplicateResearchOutput && (
+        {isAdministrator && (
           <Route exact path={path + duplicateOutputRoute.template}>
             <Frame title="Duplicate Output">
               <DuplicateOutput />

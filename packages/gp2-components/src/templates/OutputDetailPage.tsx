@@ -83,11 +83,9 @@ type OutputDetailPageProps = Pick<
   | 'tags'
 > & {
   isAdministrator: boolean;
-  isAssociationMember: boolean;
 };
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
-  isAssociationMember,
   ...output
 }: OutputDetailPageProps) => (
   <PageNotifications page="output">
@@ -96,8 +94,8 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
         css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
       >
         <div css={containerStyles}>
-          <div css={buttonsContainer}>
-            {isAdministrator && (
+          {isAdministrator ? (
+            <div css={buttonsContainer}>
               <div css={leftButtons}>
                 <Link
                   noMargin
@@ -114,8 +112,6 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   {editIcon} Edit
                 </Link>
               </div>
-            )}
-            {(isAdministrator || isAssociationMember) && (
               <div css={leftButtons}>
                 <Link
                   noMargin
@@ -143,8 +139,8 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   {duplicateIcon} Duplicate
                 </Link>
               </div>
-            )}
-          </div>
+            </div>
+          ) : null}
           <OutputCard {...output} detailedView />
           {(output.description || !!output.tags.length) && (
             <SharedResearchDetailsTagsCard

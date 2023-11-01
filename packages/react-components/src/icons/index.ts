@@ -110,3 +110,4 @@ export { default as VersionIcon } from './version';
 export { default as WarningIcon } from './warning';
 export { default as warningTransparentIcon } from './warning-transparent';
 export { default as WorkingGroupsIcon } from './working-groups';
+export { default as asapLogoMobile } from './asap-logo-mobile';

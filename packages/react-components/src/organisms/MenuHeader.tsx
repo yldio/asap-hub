@@ -7,7 +7,7 @@ import { steel } from '../colors';
 
 const menuButtonWidth = 72;
 
-const styles = css({
+export const styles = css({
   display: 'flex',
   [crossQuery]: {
     flexDirection: 'column',
@@ -15,7 +15,7 @@ const styles = css({
   },
 });
 
-const menuButtonStyles = css({
+export const menuButtonStyles = css({
   [crossQuery]: {
     display: 'none',
   },
@@ -27,12 +27,6 @@ const menuButtonStyles = css({
   display: 'flex',
   justifyContent: 'stretch',
   alignItems: 'stretch',
-});
-const headerSpaceStyles = css({
-  width: `${menuButtonWidth}px`,
-  [crossQuery]: {
-    display: 'none',
-  },
 });
 
 interface MenuHeaderProps {
@@ -50,7 +44,6 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({
       <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>
     <Header enabled={enabled} />
-    <div role="presentation" css={[headerSpaceStyles]} />
   </div>
 );
 export default MenuHeader;

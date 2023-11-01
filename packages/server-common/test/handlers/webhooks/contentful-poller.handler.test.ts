@@ -10,7 +10,6 @@ import {
   getNewsPublishContentfulPollerRecord,
   getNewsPublishContentfulWebhookPayload,
 } from '../../fixtures/news.fixtures';
-import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
 const mockGetEntry: jest.MockedFunction<
@@ -31,12 +30,6 @@ describe('Contentful poller webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn(),
   } as unknown as jest.Mocked<EventBridge>;
-  const contentfulWebhookAuthenticationToken =
-    'contentful-webhook-authentication-token';
-  const headers = {
-    authorization: contentfulWebhookAuthenticationToken,
-    'x-contentful-topic': 'ContentManagement.Entry.publish',
-  };
   const handler = contentfulPollerHandlerFactory(
     evenBridgeMock,
     {
@@ -70,8 +63,7 @@ describe('Contentful poller webhook', () => {
   });
 
   test('Should log an error when it fails to fetch the entry from Contentful and then retry', async () => {
-    const payload = getNewsPublishContentfulPollerPayload();
-    const event = getLambdaRequest(payload, headers);
+    const event = getNewsPublishContentfulPollerPayload();
 
     mockGetEntry.mockRejectedValueOnce(new Error());
 
@@ -83,11 +75,10 @@ describe('Contentful poller webhook', () => {
   test('Should error when there is no revision', async () => {
     const webHookPayload = getNewsPublishContentfulWebhookPayload();
     delete (webHookPayload.sys as any).revision;
-    const payload = getNewsPublishContentfulPollerPayload({
+    const event = getNewsPublishContentfulPollerPayload({
       ...getNewsPublishContentfulPollerRecord,
       body: JSON.stringify(webHookPayload),
     });
-    const event = getLambdaRequest(payload, headers);
 
     mockGetEntry.mockRejectedValueOnce(new Error());
 
@@ -98,11 +89,10 @@ describe('Contentful poller webhook', () => {
   test('Should error when there is no Detail Type', async () => {
     const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.DetailType;
-    const payload = getNewsPublishContentfulPollerPayload({
+    const event = getNewsPublishContentfulPollerPayload({
       ...getNewsPublishContentfulPollerRecord,
       messageAttributes,
     });
-    const event = getLambdaRequest(payload, headers);
 
     mockGetEntry.mockRejectedValueOnce(new Error());
 
@@ -114,11 +104,10 @@ describe('Contentful poller webhook', () => {
   test('Should error when there is no Action', async () => {
     const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.Action;
-    const payload = getNewsPublishContentfulPollerPayload({
+    const event = getNewsPublishContentfulPollerPayload({
       ...getNewsPublishContentfulPollerRecord,
       messageAttributes,
     });
-    const event = getLambdaRequest(payload, headers);
 
     mockGetEntry.mockRejectedValueOnce(new Error());
 
@@ -127,8 +116,7 @@ describe('Contentful poller webhook', () => {
     expect(statusCode).toStrictEqual(500);
   });
   test('Should put the news-published event into the event bus and return 200', async () => {
-    const payload = getNewsPublishContentfulPollerPayload();
-    const event = getLambdaRequest(payload, headers);
+    const event = getNewsPublishContentfulPollerPayload();
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(200);
@@ -138,7 +126,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0]!.body,
+          Detail: event.Records[0]!.body,
         },
       ],
     });
@@ -148,7 +136,7 @@ describe('Contentful poller webhook', () => {
   });
 
   test('Should log errors when they occur', async () => {
-    const payload = getNewsPublishContentfulPollerPayload();
+    const event = getNewsPublishContentfulPollerPayload();
     evenBridgeMock.putEvents = jest
       .fn()
       .mockRejectedValue(new Error('error message from putEvents'));
@@ -163,7 +151,6 @@ describe('Contentful poller webhook', () => {
       },
       logger,
     );
-    const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handlerWithError(event);
     expect(logger.error).toBeCalledTimes(2);
     expect(logger.error).nthCalledWith(
@@ -187,7 +174,7 @@ describe('Contentful poller webhook', () => {
       new Error('The resource could not be found'),
     );
     const record = getNewsPublishContentfulPollerRecord();
-    const payload = getNewsPublishContentfulPollerPayload({
+    const event = getNewsPublishContentfulPollerPayload({
       ...record,
       messageAttributes: {
         ...record.messageAttributes,
@@ -198,7 +185,6 @@ describe('Contentful poller webhook', () => {
         Action: { dataType: 'String', stringValue: 'unpublish' },
       },
     });
-    const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(200);
@@ -208,7 +194,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsUnpublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0]!.body,
+          Detail: event.Records[0]!.body,
         },
       ],
     });
@@ -230,8 +216,7 @@ describe('Contentful poller webhook', () => {
       fields: {},
     } as any);
 
-    const payload = getNewsPublishContentfulPollerPayload();
-    const event = getLambdaRequest(payload, headers);
+    const event = getNewsPublishContentfulPollerPayload();
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(200);
@@ -241,7 +226,7 @@ describe('Contentful poller webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: payload.Records[0]!.body,
+          Detail: event.Records[0]!.body,
         },
       ],
     });
@@ -251,8 +236,7 @@ describe('Contentful poller webhook', () => {
   });
 
   test('Should return 500 when polling fails for a reason other than the not-found error', async () => {
-    const payload = getNewsPublishContentfulPollerPayload();
-    const event = getLambdaRequest(payload, headers);
+    const event = getNewsPublishContentfulPollerPayload();
     (
       pollContentfulDeliveryApi as jest.MockedFunction<
         typeof pollContentfulDeliveryApi

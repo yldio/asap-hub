@@ -1,5 +1,4 @@
 import { getCDAClient, pollContentfulDeliveryApi } from '@asap-hub/contentful';
-import { framework as lambda } from '@asap-hub/services-common';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { SQSEvent, SQSRecord } from 'aws-lambda';
 import { Logger } from '../../utils';
@@ -16,9 +15,7 @@ export const contentfulPollerHandlerFactory = (
   eventBridge: EventBridge,
   config: Config,
   logger: Logger,
-): ((
-  sqsEvent: lambda.Request<SQSEvent>,
-) => Promise<{ statusCode: number }>) => {
+): ((sqsEvent: SQSEvent) => Promise<{ statusCode: number }>) => {
   const cdaClient = getCDAClient({
     accessToken: config.accessToken,
     space: config.space,
@@ -29,7 +26,7 @@ export const contentfulPollerHandlerFactory = (
     try {
       logger.debug(`sqsEvent: ${JSON.stringify(sqsEvent)}`);
       await Promise.all(
-        sqsEvent.payload.Records.map(async (record: SQSRecord) => {
+        sqsEvent.Records.map(async (record: SQSRecord) => {
           const detailTypeAttribute = record.messageAttributes.DetailType;
           const detailType = detailTypeAttribute?.stringValue;
           const actionAttribute = record.messageAttributes.Action;

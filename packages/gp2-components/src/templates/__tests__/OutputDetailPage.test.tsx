@@ -26,6 +26,39 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Duplicate')).not.toBeInTheDocument();
   });
 
+  it('uses project duplicate output route if output is linked to a project', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByRole } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        projects={[{ id: 'proj-id', title: 'Test Project', type: 'Projects' }]}
+      />,
+    );
+    expect(getByRole('link', { name: /Duplicate/i })).toHaveAttribute(
+      'href',
+      `/projects/proj-id/duplicate/${output.id}`,
+    );
+  });
+
+  it('uses working group duplicate output route if output is linked to a working group', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByRole } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        workingGroups={[
+          { id: 'wg-id', title: 'Test WG', type: 'WorkingGroups' },
+        ]}
+      />,
+    );
+
+    expect(getByRole('link', { name: /Duplicate/i })).toHaveAttribute(
+      'href',
+      `/working-groups/wg-id/duplicate/${output.id}`,
+    );
+  });
+
   describe('description and tags section', () => {
     it('handles tags and description omitted', () => {
       const { queryByText } = render(

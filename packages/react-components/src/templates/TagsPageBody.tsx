@@ -1,9 +1,5 @@
 import { CRNTagSearchEntities } from '@asap-hub/algolia';
-import {
-  ListEventResponse,
-  ListResearchOutputResponse,
-  ListUserResponse,
-} from '@asap-hub/model';
+import { TagSearchResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
@@ -69,11 +65,7 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 };
 
 interface TagsPageBodyProps {
-  readonly results: (
-    | ListUserResponse['items'][number]
-    | ListResearchOutputResponse['items'][number]
-    | ListEventResponse['items'][number]
-  )[];
+  readonly results: TagSearchResponse[];
   readonly numberOfItems: number;
   readonly numberOfPages: number;
   readonly currentPage: number;

@@ -3,12 +3,7 @@ import {
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import {
-  EventResponse,
-  ListResponse,
-  ResearchOutputResponse,
-  UserResponse,
-} from '@asap-hub/model';
+import { TagSearchResponse, ListResponse } from '@asap-hub/model';
 
 import {
   atom,
@@ -24,8 +19,6 @@ import { getTagSearch, TagSearchListOptions } from './api';
 type RefreshTagSearchListOptions = GetListOptions & {
   refreshToken: number;
 };
-
-type TagSearchResponse = ResearchOutputResponse | UserResponse | EventResponse;
 
 const tagSearchIndexState = atomFamily<
   | {

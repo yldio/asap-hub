@@ -21,6 +21,23 @@ export const contentfulPollerHandlerFactory = (
     space: config.space,
     environment: config.environment,
   });
+  const fetchEntryById = (id: string, action: string) => async () => {
+    try {
+      const entry = await cdaClient.getEntry(id);
+      logger.debug(`entry ${JSON.stringify(entry)}`);
+      return entry;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.match(/The resource could not be found/) &&
+        action === 'unpublish'
+      ) {
+        return undefined;
+      }
+      logger.error(error, `Error while fetching entry ${id}`);
+      throw error;
+    }
+  };
 
   return async (sqsEvent) => {
     try {
@@ -37,27 +54,16 @@ export const contentfulPollerHandlerFactory = (
       }
       const entryVersion = detail.sys.revision;
 
-      const fetchEntryById = async () => {
-        try {
-          const entry = await cdaClient.getEntry(detail.resourceId);
-          logger.debug(`entry ${JSON.stringify(entry)}`);
-          return entry;
-        } catch (error) {
-          if (
-            error instanceof Error &&
-            error.message.match(/The resource could not be found/) &&
-            action === 'unpublish'
-          ) {
-            return undefined;
-          }
-          logger.error(error, 'Error while fetching entry');
-          throw error;
-        }
-      };
       try {
-        await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
+        await pollContentfulDeliveryApi(
+          fetchEntryById(detail.resourceId, action),
+          entryVersion,
+        );
       } catch (error) {
-        logger.error(error, 'Error during polling the entry');
+        logger.error(
+          error,
+          `Error during polling the entry ${detail.resourceId}`,
+        );
 
         // skip if the entry is not found as it may have been deleted
         if (!(error instanceof Error && error.message === 'Not found')) {

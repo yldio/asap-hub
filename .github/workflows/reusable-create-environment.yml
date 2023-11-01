@@ -154,7 +154,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
@@ -218,7 +218,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.gp2-algolia-index != 'gp2-hub_dev' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX

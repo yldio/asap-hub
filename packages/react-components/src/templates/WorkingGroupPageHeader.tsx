@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
 import { paper, pine, steel } from '../colors';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { networkPageLayoutPaddingStyle } from '../layout';
 import {
   UserAvatarList,
   TabNav,
@@ -29,7 +29,7 @@ import { createMailTo } from '../mail';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: networkPageLayoutPaddingStyle,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 

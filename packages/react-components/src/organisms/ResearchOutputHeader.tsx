@@ -8,13 +8,23 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const visualHeaderStyles = css({
-  marginBottom: `${30 / perRem}em`,
+const headerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
+    60 / perRem
   }em `,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+  marginBottom: `${30 / perRem}em`,
+  display: 'flex',
+  justifyContent: 'center',
+});
+
+const contentStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  maxWidth: `${800 / perRem}em`,
+  width: '100%',
+  justifyContent: 'center',
 });
 
 const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
@@ -117,8 +127,8 @@ const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
   documentType,
   workingGroupAssociation,
 }) => (
-  <header>
-    <div css={visualHeaderStyles}>
+  <header css={headerStyles}>
+    <div css={contentStyles}>
       <Display styleAsHeading={2}>
         {
           headerTextMap[workingGroupAssociation ? 'WorkingGroup' : 'Team'][
@@ -128,7 +138,9 @@ const ResearchOutputHeader: React.FC<ResearchOutputHeaderProps> = ({
       </Display>
       <div>
         {subheaderRecord[documentType] && (
-          <Paragraph accent="lead">{subheaderRecord[documentType]}</Paragraph>
+          <Paragraph noMargin accent="lead">
+            {subheaderRecord[documentType]}
+          </Paragraph>
         )}
       </div>
     </div>

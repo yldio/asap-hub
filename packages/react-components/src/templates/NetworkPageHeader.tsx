@@ -12,8 +12,8 @@ import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { charcoal, lead, paper, steel } from '../colors';
 import {
-  contentSidePaddingWithNavigation,
-  networkContentTopPadding,
+  networkPageLayoutPaddingStyle,
+  defaultPageLayoutPaddingStyle,
 } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
@@ -27,7 +27,7 @@ import {
 import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${defaultPageLayoutPaddingStyle} 0`,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
@@ -41,9 +41,7 @@ const iconStyles = css({
 });
 
 const controlsStyles = css({
-  padding: `${networkContentTopPadding} ${contentSidePaddingWithNavigation(
-    8,
-  )} 0`,
+  padding: `${networkPageLayoutPaddingStyle} 0`,
 });
 
 type Page = 'users' | 'interest-groups' | 'teams' | 'working-groups';

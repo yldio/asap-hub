@@ -23,7 +23,9 @@ export const contentfulPollerHandlerFactory = (
   });
   const fetchEntryById = (id: string, action: string) => async () => {
     try {
-      const entry = await cdaClient.getEntry(id);
+      const entry = await cdaClient.getEntry(id, {
+        include: 1,
+      });
       logger.debug(`entry ${JSON.stringify(entry)}`);
       return entry;
     } catch (error) {
@@ -49,10 +51,10 @@ export const contentfulPollerHandlerFactory = (
       const detailType = record.messageAttributes.DetailType?.stringValue;
       const action = record.messageAttributes.Action?.stringValue;
       const detail = JSON.parse(record.body);
-      if (!(detail.sys.revision && detailType && action)) {
+      const entryVersion = detail.sys.revision;
+      if (!(entryVersion && detailType && action)) {
         throw new Error('Invalid payload');
       }
-      const entryVersion = detail.sys.revision;
 
       try {
         await pollContentfulDeliveryApi(

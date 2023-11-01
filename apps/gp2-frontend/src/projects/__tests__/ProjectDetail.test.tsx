@@ -1,6 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { ProjectMember } from '@asap-hub/model/build/gp2';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -487,7 +486,7 @@ describe('ProjectDetail', () => {
             lastName: 'Stark',
             role: 'Project manager',
           },
-        ] as ProjectMember[],
+        ] as gp2Model.ProjectMember[],
       };
       const output = gp2Fixtures.createOutputResponse();
       mockGetProject.mockResolvedValue(project);
@@ -530,9 +529,8 @@ describe('ProjectDetail', () => {
     });
 
     it('will show a page not found if output does not exist', async () => {
-      const project = gp2Fixtures.createProjectResponse();
-      mockGetProject.mockResolvedValueOnce({
-        ...project,
+      const project = {
+        ...gp2Fixtures.createProjectResponse(),
         members: [
           {
             userId: '23',
@@ -540,8 +538,9 @@ describe('ProjectDetail', () => {
             lastName: 'Stark',
             role: 'Project manager',
           },
-        ],
-      });
+        ] as gp2Model.ProjectMember[],
+      };
+      mockGetProject.mockResolvedValueOnce(project);
       mockGetOutput.mockResolvedValueOnce(undefined);
       await renderProjectDetail({
         id: project.id,

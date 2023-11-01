@@ -28,7 +28,6 @@ on:
         required: true
       CRN_CI_PR_AUTH0_CLIENT_SECRET:
         description: 'CRN CI PR Auth0 Client Secret'
-        required: true
       CRN_AUTH0_SHARED_SECRET:
         description: 'CRN Auth0 Shared Secret'
         required: true
@@ -58,7 +57,6 @@ on:
         required: false
       GP2_CI_PR_AUTH0_CLIENT_SECRET:
         description: 'GP2 CI PR Auth0 Client Secret'
-        required: true
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true

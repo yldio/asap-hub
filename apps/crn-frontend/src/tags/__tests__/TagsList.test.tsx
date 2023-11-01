@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import { WhenReady, Auth0Provider } from '../../auth/test-utils';
 
 import TagList from '../TagsList';
+import { entities } from '../Routes';
 
 const renderTags = async (): Promise<RenderResult> =>
   render(
@@ -15,7 +16,7 @@ const renderTags = async (): Promise<RenderResult> =>
           <Suspense fallback="Loading...">
             <MemoryRouter initialEntries={['/']}>
               <Route path="/">
-                <TagList entities={['research-output', 'user']} />
+                <TagList entities={entities} />
               </Route>
             </MemoryRouter>
           </Suspense>

@@ -22,7 +22,7 @@ import { useAlgolia } from '../../hooks/algolia';
 import { getTagSearch } from '../api';
 import { refreshTagSearchIndex } from '../state';
 
-import Routes from '../Routes';
+import Routes, { entities } from '../Routes';
 
 jest.mock('../api');
 jest.mock('../../hooks/algolia', () => ({
@@ -84,11 +84,9 @@ it('allows typing in tag queries', async () => {
   userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
   await waitFor(() => {
-    expect(mockSearchForTagValues).toHaveBeenCalledWith(
-      ['research-output', 'user'],
-      'test123',
-      { tagFilters: [] },
-    );
+    expect(mockSearchForTagValues).toHaveBeenCalledWith(entities, 'test123', {
+      tagFilters: [],
+    });
   });
 });
 

@@ -163,6 +163,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
+        if: ${{ steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:
@@ -203,6 +204,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
+        if: ${{ steps.setup.outputs.gp2-algolia-index != 'gp2-hub_dev' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:

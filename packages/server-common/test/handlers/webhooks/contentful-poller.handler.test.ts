@@ -6,6 +6,7 @@ import { WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulPollerHandlerFactory } from '../../../src/handlers/webhooks';
 import {
+  getNewsContentfulPollerPayload,
   getNewsPublishContentfulPollerPayload,
   getNewsPublishContentfulPollerRecord,
   getNewsPublishContentfulWebhookPayload,
@@ -85,6 +86,9 @@ describe('Contentful poller webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/Invalid payload/i),
+    );
   });
   test('Should error when there is no Detail Type', async () => {
     const { messageAttributes } = getNewsPublishContentfulPollerRecord();
@@ -99,6 +103,9 @@ describe('Contentful poller webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/Invalid payload/i),
+    );
   });
 
   test('Should error when there is no Action', async () => {
@@ -114,6 +121,9 @@ describe('Contentful poller webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/Invalid payload/i),
+    );
   });
   test('Should put the news-published event into the event bus and return 200', async () => {
     const event = getNewsPublishContentfulPollerPayload();
@@ -247,6 +257,24 @@ describe('Contentful poller webhook', () => {
     expect(statusCode).toStrictEqual(500);
     expect(logger.error).toBeCalledWith(
       expect.stringMatching(/The error message\: some error/i),
+    );
+  });
+  test('Should error when there are no records', async () => {
+    const event = getNewsContentfulPollerPayload(0);
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
+    );
+  });
+  test('Should error when there are more than 1 record', async () => {
+    const event = getNewsContentfulPollerPayload(2);
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
     );
   });
 });

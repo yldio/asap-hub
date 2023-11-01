@@ -765,6 +765,7 @@ const serverlessConfig: AWS = {
             arn: {
               'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
             },
+            batchSize: 1,
             maximumConcurrency: 2,
           },
         },

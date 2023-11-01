@@ -87,8 +87,10 @@ export const getNewsPublishContentfulWebhookPayload =
       },
     },
   });
-export const getNewsPublishContentfulPollerRecord = (): SQSRecord => ({
-  messageId: '42',
+export const getNewsPublishContentfulPollerRecord = (
+  messageId = '42',
+): SQSRecord => ({
+  messageId,
   receiptHandle: 'a handle',
   body: JSON.stringify(getNewsPublishContentfulWebhookPayload()),
   attributes: {
@@ -118,6 +120,11 @@ export const getNewsPublishContentfulPollerPayload = (
       ...overrides,
     },
   ],
+});
+export const getNewsContentfulPollerPayload = (items: number): SQSEvent => ({
+  Records: Array.from({ length: items }, (_, idx) =>
+    getNewsPublishContentfulPollerRecord(`${idx}`),
+  ),
 });
 
 export const getNewsUnpublishContentfulWebhookPayload =

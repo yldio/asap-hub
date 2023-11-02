@@ -14,13 +14,4 @@ describe('TagSearchPageList', () => {
     render(<TagSearchPageList {...props}>Content</TagSearchPageList>);
     expect(screen.getByRole('search')).toBeVisible();
   });
-
-  it('does not render the header when hasResults is false', () => {
-    render(
-      <TagSearchPageList {...props} hasResults={false}>
-        Content
-      </TagSearchPageList>,
-    );
-    expect(screen.queryByRole('search')).not.toBeInTheDocument();
-  });
 });

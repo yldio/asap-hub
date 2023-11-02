@@ -20,8 +20,16 @@ export const getItemTypes = (types: gp2.EntityType[]) => {
 export const getTagSearchResults = async (
   client: AlgoliaClient<'gp2'>,
   options: TagSearchOptions,
-) =>
-  client
+) => {
+  if (options.tags.length == 0) {
+    return Promise.resolve({
+      hits: [],
+      nbHits: 0,
+      queryID: undefined,
+      index: undefined,
+    });
+  }
+  return client
     .search(getItemTypes(Array.from(options.entityType)), '', {
       tagFilters: options.tags,
       page: options.currentPage ?? 0,
@@ -30,3 +38,4 @@ export const getTagSearchResults = async (
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });
+};

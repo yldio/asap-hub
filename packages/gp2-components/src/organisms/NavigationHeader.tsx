@@ -3,11 +3,15 @@ import {
   crossQuery,
   drawerQuery,
   MenuButton,
+  info100,
   steel,
   pixels,
   noop,
+  NavigationLink,
+  tagSearchIcon,
+  silver,
 } from '@asap-hub/react-components';
-
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { HeaderLogo } from '../molecules';
@@ -17,9 +21,16 @@ import UserNavigation from './UserNavigation';
 const { rem } = pixels;
 const menuButtonWidth = 72;
 
-const navigationHeaderstyles = css({
+const mainContainerStyles = css({
   padding: 0,
   display: 'flex',
+  flexDirection: 'row',
+});
+
+const navigationHeaderStyles = css({
+  padding: 0,
+  display: 'flex',
+  flexGrow: 1,
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -61,6 +72,26 @@ const bottomBorderStyles = css({
   ...ceruleanFernGradientStyles,
 });
 
+const searchButtonAreaStyles = css({
+  gridArea: 'search-button',
+  boxSizing: 'border-box',
+  borderBottom: `1px solid ${steel.rgb}`,
+  borderLeft: `1px solid ${steel.rgb}`,
+  background: `${info100.rgb}`,
+  display: 'flex',
+  alignItems: 'center',
+  '&:hover': {
+    background: `${silver.rgb}`,
+  },
+});
+const searchIconStyles = css({
+  width: rem(48),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+});
+
 type NavigationHeaderProps = {
   menuShown: boolean;
   onToggleMenu: (menuOpen: boolean) => void;
@@ -71,17 +102,27 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   ...userNavigationProps
 }) => (
   <header>
-    <div css={[navigationHeaderstyles]}>
-      <div css={[menuButtonStyles]}>
-        <MenuButton open={menuShown} onClick={() => onToggleMenu(!menuShown)} />
-      </div>
-      <HeaderLogo />
-      <div css={desktopNavigationStyles}>
-        <MainNavigation />
-      </div>
+    <div css={[mainContainerStyles]}>
+      <div css={[navigationHeaderStyles]}>
+        <div css={[menuButtonStyles]}>
+          <MenuButton
+            open={menuShown}
+            onClick={() => onToggleMenu(!menuShown)}
+          />
+        </div>
+        <HeaderLogo />
+        <div css={desktopNavigationStyles}>
+          <MainNavigation />
+        </div>
 
-      <div css={desktopNavigationStyles}>
-        <UserNavigation {...userNavigationProps} />
+        <div css={desktopNavigationStyles}>
+          <UserNavigation {...userNavigationProps} />
+        </div>
+      </div>
+      <div css={searchButtonAreaStyles}>
+        <NavigationLink squareBorder href={gp2Routing.tags({}).$}>
+          <div css={searchIconStyles}>{tagSearchIcon}</div>
+        </NavigationLink>
       </div>
     </div>
     <div css={[bottomBorderStyles, desktopNavigationStyles]} />

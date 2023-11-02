@@ -2,12 +2,10 @@ import { TagSearchPageList } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import Frame from '../Frame';
-import { usePaginationParams } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 import { useSearch } from '../hooks/search';
 import { getItemTypes } from './api';
 import ResultList from './ResultList';
-import { useTagSearchResults } from './state';
 
 const TagSearch: FC = () => {
   const {
@@ -23,16 +21,8 @@ const TagSearch: FC = () => {
     toggleFilter(filter, 'entityType');
   };
 
-  const { currentPage, pageSize } = usePaginationParams();
-
   const { client } = useAlgolia();
   const { tags, setTags } = useSearch();
-  const { total } = useTagSearchResults({
-    tags,
-    entityType: filterSet,
-    currentPage,
-    pageSize,
-  });
 
   return (
     <TagSearchPageList
@@ -40,7 +30,6 @@ const TagSearch: FC = () => {
       onChangeSearch={setSearchQuery}
       filters={filterSet}
       onChangeFilter={onChangeFilter}
-      hasResults={!!total}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {

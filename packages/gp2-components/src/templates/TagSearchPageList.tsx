@@ -11,7 +11,6 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 type TagSearchPageListProps = {
-  hasResults: boolean;
   tags?: string[];
   setTags?: (tags: string[]) => void;
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
@@ -51,33 +50,30 @@ const TagSearchPageList: React.FC<TagSearchPageListProps> = ({
   onChangeFilter,
   onChangeSearch,
   searchQuery,
-  hasResults,
   tags = [],
   loadTags = noop,
   setTags = noop,
 }) => (
   <>
-    {hasResults && (
-      <div role="search" css={styles}>
-        <MultiSelect
-          leftIndicator={searchIcon}
-          noOptionsMessage={() => 'No results found'}
-          loadOptions={loadTags}
-          onChange={(items) => setTags(items.map(({ value }) => value))}
-          values={tags.map((tag) => ({
-            label: tag,
-            value: tag,
-          }))}
-          key={tags.join(',')} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
-          placeholder="Search for any tags..."
-        />
-        <Filter
-          filters={filters}
-          onChangeFilter={onChangeFilter}
-          filterOptions={outputFilters}
-        />
-      </div>
-    )}
+    <div role="search" css={styles}>
+      <MultiSelect
+        leftIndicator={searchIcon}
+        noOptionsMessage={() => 'No results found'}
+        loadOptions={loadTags}
+        onChange={(items) => setTags(items.map(({ value }) => value))}
+        values={tags.map((tag) => ({
+          label: tag,
+          value: tag,
+        }))}
+        key={tags.join(',')} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
+        placeholder="Search for any tags..."
+      />
+      <Filter
+        filters={filters}
+        onChangeFilter={onChangeFilter}
+        filterOptions={outputFilters}
+      />
+    </div>
     <main>{children}</main>
   </>
 );

@@ -36,7 +36,10 @@ export const contentfulPollerHandlerFactory = (
       ) {
         return undefined;
       }
-      logger.error(error, `Error while fetching entry ${id}`);
+      logger.error(`Error while fetching entry ${id}`);
+      if (error instanceof Error) {
+        logger.error(`The error message: ${error.message}`);
+      }
       throw error;
     }
   };

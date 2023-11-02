@@ -126,6 +126,11 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Get Algolia Keys
         id: algolia-keys
         if: ${{ inputs.environment-name=='Branch' }}
@@ -154,7 +159,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.crn-algolia-index != steps.setup-dev.outputs.crn-algolia-index && steps.setup.outputs.crn-algolia-index != steps.setup-prod.outputs.crn-algolia-index }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
@@ -190,6 +195,11 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Get Algolia Keys
         id: algolia-keys
         if: ${{ inputs.environment-name=='Branch' }}
@@ -218,7 +228,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.gp2-algolia-index != 'gp2-hub_dev' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && steps.setup.outputs.gp2-algolia-index != steps.setup-dev.outputs.gp2-algolia-index && steps.setup.outputs.gp2-algolia-index != steps.setup-prod.outputs.gp2-algolia-index }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX

@@ -74,6 +74,16 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -83,7 +93,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.crn-contentful-env-id }}
       - name: Contentful Webhook Teardown
-        if: ${{ steps.setup.outputs.crn-contentful-env-id != 'Development' }}
+        if: ${{ steps.setup.outputs.crn-contentful-env-id != steps.setup-dev.outputs.crn-contentful-env-id && steps.setup.outputs.crn-contentful-env-id != steps.setup-prod.outputs.crn-contentful-env-id }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -114,6 +124,16 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -123,7 +143,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.gp2-contentful-env-id }}
       - name: Contentful Webhook Teardown
-        if: ${{ steps.setup.outputs.gp2-contentful-env-id != 'Development' }}
+        if: ${{ steps.setup.outputs.gp2-contentful-env-id != steps.setup-dev.outputs.gp2-contentful-env-id && steps.setup.outputs.gp2-contentful-env-id != steps.setup-prod.outputs.gp2-contentful-env-id }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -153,6 +173,16 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys
@@ -165,7 +195,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
-        if: ${{ steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' }}
+        if: ${{ steps.setup.outputs.crn-algolia-index != steps.setup-dev.outputs.crn-algolia-index && steps.setup.outputs.crn-algolia-index != steps.setup-prod.outputs.crn-algolia-index }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:
@@ -194,6 +224,16 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Setup Prod Environment
+        id: setup-prod
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys
@@ -206,7 +246,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
-        if: ${{ steps.setup.outputs.gp2-algolia-index != 'gp2-hub_dev' }}
+        if: ${{ steps.setup.outputs.gp2-algolia-index != steps.setup-dev.outputs.gp2-algolia-index && steps.setup.outputs.gp2-algolia-index != steps.setup-prod.outputs.gp2-algolia-index }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:

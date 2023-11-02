@@ -59,6 +59,7 @@
     "start:gp2": "yarn start:frontend:gp2 & yarn start:backend:gp2",
     "start:storybook": "yarn workspace @asap-hub/storybook start",
     "test": "LANG=en_US TZ=UTC jest",
+    "test:bun": "bun test .spec.",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
     "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",

@@ -25,8 +25,6 @@ export const contentfulPollerHandlerFactory = (
     try {
       return await cdaClient.getEntry(id);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
       if (
         error instanceof Error &&
         error.message.match(/The resource could not be found/) &&

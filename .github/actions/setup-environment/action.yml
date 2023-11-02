@@ -283,11 +283,21 @@ runs:
           echo "gp2-app-url=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
           echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
 
-          echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-          
-          echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
+          if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
+            echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
+            echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "$GP2_CREATE_CONTENTFUL_PR_ENV" = true ]; then
+            echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "gp2-algolia-index=gp2-hub_dev" >> $GITHUB_OUTPUT
+            echo "gp2-contentful-env-id=Development" >> $GITHUB_OUTPUT
+          fi
 
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT

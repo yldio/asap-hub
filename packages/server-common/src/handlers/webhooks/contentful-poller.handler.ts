@@ -23,12 +23,10 @@ export const contentfulPollerHandlerFactory = (
   });
   const fetchEntryById = (id: string, action: string) => async () => {
     try {
-      const entry = await cdaClient.getEntry(id, {
-        include: 1,
-      });
-      logger.debug(`entry ${JSON.stringify(entry)}`);
-      return entry;
+      return await cdaClient.getEntry(id);
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
       if (
         error instanceof Error &&
         error.message.match(/The resource could not be found/) &&

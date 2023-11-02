@@ -12,7 +12,6 @@ import {
   getNewsPublishContentfulWebhookPayload,
 } from '../../fixtures/news.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-
 const mockGetEntry: jest.MockedFunction<
   ContentfulClientApi<undefined>['getEntry']
 > = jest.fn();

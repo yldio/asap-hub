@@ -52,7 +52,7 @@ const DuplicateOutput: FC = () => {
     return (
       <OutputFormPage>
         <CreateProjectOutput
-          researchOutputData={{
+          outputData={{
             ...output,
             id: '',
             link: undefined,

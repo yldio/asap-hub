@@ -32,7 +32,7 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         isAdministrator
         {...output}
-        projects={[{ id: 'proj-id', title: 'Test Project', type: 'Projects' }]}
+        mainEntity={{ id: 'proj-id', title: 'Test Project', type: 'Projects' }}
       />,
     );
     expect(getByRole('link', { name: /Duplicate/i })).toHaveAttribute(
@@ -47,9 +47,7 @@ describe('OutputDetailPage', () => {
       <OutputDetailPage
         isAdministrator
         {...output}
-        workingGroups={[
-          { id: 'wg-id', title: 'Test WG', type: 'WorkingGroups' },
-        ]}
+        mainEntity={{ id: 'wg-id', title: 'Test WG', type: 'WorkingGroups' }}
       />,
     );
 

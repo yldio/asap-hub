@@ -29,12 +29,10 @@ export const documentTypeMapper: Record<
 };
 
 type CreateProjectOutputProps = {
-  researchOutputData?: gp2Model.OutputBaseResponse;
+  outputData?: gp2Model.OutputBaseResponse;
 };
 
-const CreateProjectOutput: FC<CreateProjectOutputProps> = ({
-  researchOutputData,
-}) => {
+const CreateProjectOutput: FC<CreateProjectOutputProps> = ({ outputData }) => {
   const { projectId } = useRouteParams(projects({}).project);
   const { outputDocumentType } = useRouteParams(
     projects({}).project({ projectId }).createOutput,
@@ -71,8 +69,7 @@ const CreateProjectOutput: FC<CreateProjectOutputProps> = ({
   return (
     <CreateOutputPage
       documentType={
-        researchOutputData?.documentType ||
-        documentTypeMapper[outputDocumentType]
+        outputData?.documentType || documentTypeMapper[outputDocumentType]
       }
       entityType="project"
     >
@@ -97,7 +94,7 @@ const CreateProjectOutput: FC<CreateProjectOutputProps> = ({
         clearServerValidationError={(instancePath: string) =>
           setErrors(clearAjvErrorForPath(errors, instancePath))
         }
-        {...researchOutputData}
+        {...outputData}
       />
     </CreateOutputPage>
   );

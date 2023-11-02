@@ -48,7 +48,7 @@ const DuplicateOutput: FC = () => {
     return (
       <OutputFormPage>
         <CreateWorkingGroupOutput
-          researchOutputData={{
+          outputData={{
             ...output,
             id: '',
             link: undefined,

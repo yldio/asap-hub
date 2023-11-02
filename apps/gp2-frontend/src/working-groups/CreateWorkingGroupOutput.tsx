@@ -18,11 +18,11 @@ import { useWorkingGroupById, useWorkingGroupsState } from './state';
 const { workingGroups } = gp2Routing;
 
 type CreateWorkingGroupOutputProps = {
-  researchOutputData?: gp2Model.OutputBaseResponse;
+  outputData?: gp2Model.OutputBaseResponse;
 };
 
 const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
-  researchOutputData,
+  outputData,
 }) => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
 
@@ -61,8 +61,7 @@ const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
   return (
     <CreateOutputPage
       documentType={
-        researchOutputData?.documentType ||
-        documentTypeMapper[outputDocumentType]
+        outputData?.documentType || documentTypeMapper[outputDocumentType]
       }
       entityType="workingGroup"
     >
@@ -87,7 +86,7 @@ const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
         clearServerValidationError={(instancePath: string) =>
           setErrors(clearAjvErrorForPath(errors, instancePath))
         }
-        {...researchOutputData}
+        {...outputData}
       />
     </CreateOutputPage>
   );

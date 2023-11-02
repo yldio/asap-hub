@@ -116,19 +116,19 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                 <Link
                   noMargin
                   href={
-                    output.workingGroups && output.workingGroups[0]?.id
+                    output.mainEntity.type === 'WorkingGroups'
                       ? gp2Routing
                           .workingGroups({})
                           .workingGroup({
-                            workingGroupId: output.workingGroups[0].id,
+                            workingGroupId: output.mainEntity.id,
                           })
                           .duplicateOutput({
                             outputId: output.id,
                           }).$
-                      : output.projects && output.projects[0]?.id
+                      : output.mainEntity.type === 'Projects'
                       ? gp2Routing
                           .projects({})
-                          .project({ projectId: output.projects[0].id })
+                          .project({ projectId: output.mainEntity.id })
                           .duplicateOutput({ outputId: output.id }).$
                       : undefined
                   }

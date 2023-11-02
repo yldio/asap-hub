@@ -16,6 +16,7 @@ const {
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_SPACE_ID,
+  CONTENTFUL_POLLER_QUEUE_URL,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   CRN_API_URL,
   CRN_MEETING_MATERIALS_DRIVE,
@@ -59,6 +60,8 @@ export const contentfulManagementAccessToken =
 export const contentfulPreviewAccessToken =
   CONTENTFUL_PREVIEW_ACCESS_TOKEN || 'contentful-preview-access-token';
 export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
+export const contentfulPollerQueueUrl =
+  CONTENTFUL_POLLER_QUEUE_URL || 'contentful-poller-queue-url';
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
   'contentful-webhook-authentication-token';

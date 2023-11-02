@@ -1,11 +1,7 @@
-import {
-  ContentfulWebhookPayload,
-  getCDAClient,
-  pollContentfulDeliveryApi,
-} from '@asap-hub/contentful';
+import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
-import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import { Logger } from '../../utils';
 import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
@@ -36,89 +32,45 @@ const getDetailFromRequest = (
   ...request.payload,
 });
 type Config = {
-  eventBus: string;
-  eventSource: string;
-  space: string;
-  environment: string;
-  accessToken: string;
+  contentfulPollerQueueUrl: string;
+  webhookAuthenticationToken: string;
 };
 
-export const contentfulHandlerFactory = (
-  webhookAuthenticationToken: string,
-  eventBridge: EventBridge,
-  config: Config,
-  logger: Logger,
-): ((
-  request: lambda.Request<ContentfulWebhookPayload>,
-) => Promise<{ statusCode: number }>) => {
-  const cdaClient = getCDAClient({
-    accessToken: config.accessToken,
-    space: config.space,
-    environment: config.environment,
-  });
-
-  return async (request) => {
+export const contentfulHandlerFactory =
+  (
+    sqs: SQSClient,
+    { webhookAuthenticationToken, contentfulPollerQueueUrl }: Config,
+    logger: Logger,
+  ): ((
+    request: lambda.Request<ContentfulWebhookPayload>,
+  ) => Promise<{ statusCode: number }>) =>
+  async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
     logger.debug(`request: ${JSON.stringify(request)}`);
-
     const detailType = getDetailTypeFromRequest(request);
     const detail = getDetailFromRequest(request);
     const action = getActionFromRequest(request);
 
-    if (!detail.sys.revision) {
-      throw new Error('Invalid payload');
-    }
-    const entryVersion = detail.sys.revision;
-
-    const fetchEntryById = async () => {
-      try {
-        const entry = await cdaClient.getEntry(detail.resourceId);
-        logger.debug(`entry ${JSON.stringify(entry)}`);
-        return entry;
-      } catch (error) {
-        if (
-          error instanceof Error &&
-          error.message.match(/The resource could not be found/) &&
-          action === 'unpublish'
-        ) {
-          return undefined;
-        }
-        logger.error(error, 'Error while fetching entry');
-        throw error;
-      }
-    };
-
     try {
-      await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
-    } catch (error) {
-      logger.error(error, 'Error during polling the entry');
-
-      // skip if the entry is not found as it may have been deleted
-      if (!(error instanceof Error && error.message === 'Not found')) {
-        if (error instanceof Error) {
-          logger.error(`The error message: ${error.message}`);
-        }
-        return {
-          statusCode: 500,
-        };
-      }
-    }
-
-    try {
-      await eventBridge.putEvents({
-        Entries: [
-          {
-            EventBusName: config.eventBus,
-            Source: config.eventSource,
-            DetailType: detailType,
-            Detail: JSON.stringify(detail),
+      const command = new SendMessageCommand({
+        QueueUrl: contentfulPollerQueueUrl,
+        MessageAttributes: {
+          DetailType: {
+            DataType: 'String',
+            StringValue: detailType,
           },
-        ],
+          Action: {
+            DataType: 'String',
+            StringValue: action,
+          },
+        },
+        MessageBody: JSON.stringify(detail),
       });
+      await sqs.send(command);
       logger.debug(
-        `Event added to ${
-          config.eventBus
-        } detail Type: ${detailType} detail: ${JSON.stringify(detail)}`,
+        `Event added to queue ${contentfulPollerQueueUrl} detail Type: ${detailType} detail: ${JSON.stringify(
+          detail,
+        )}`,
       );
 
       return {
@@ -126,7 +78,7 @@ export const contentfulHandlerFactory = (
       };
     } catch (err) {
       logger.error(
-        `An error occurred putting onto the event bus ${config.eventBus}`,
+        `An error occurred putting onto the SQS ${contentfulPollerQueueUrl}`,
       );
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
@@ -136,4 +88,3 @@ export const contentfulHandlerFactory = (
       };
     }
   };
-};

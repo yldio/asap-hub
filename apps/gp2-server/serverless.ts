@@ -165,6 +165,18 @@ const serverlessConfig: AWS = {
             Action: ['cloudfront:CreateInvalidation'],
             Resource: ['*'],
           },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
+              'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
+            },
+          },
         ],
       },
     },
@@ -734,12 +746,32 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
+          contentfulWebhookAuthenticationToken,
+        CONTENTFUL_POLLER_QUEUE_URL: {
+          Ref: 'ContentfulPollerQueue',
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    contentfulWebhookPoller: {
+      handler: './src/handlers/webhooks/contentful-poller.handler',
+      reservedConcurrency: 2,
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
+            },
+            batchSize: 1,
+            maximumConcurrency: 2,
+          },
+        },
+      ],
+      environment: {
         EVENT_BUS: eventBus,
         EVENT_SOURCE: eventBusSource,
         SENTRY_DSN: sentryDsnHandlers,
-        CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
-        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
-          contentfulWebhookAuthenticationToken,
       },
     },
     eventsUpdated: {
@@ -1308,6 +1340,26 @@ const serverlessConfig: AWS = {
               Ref: `SubscribeCalendarDLQ`,
             },
           ],
+        },
+      },
+      ContentfulPollerQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-contentful-poller-queue',
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['ContentfulPollerQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      ContentfulPollerQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-contentful-poller-queue-dlq',
         },
       },
     },

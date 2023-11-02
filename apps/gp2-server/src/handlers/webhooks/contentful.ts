@@ -1,39 +1,29 @@
 import { contentfulHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { SQSClient } from '@aws-sdk/client-sqs';
 import { APIGatewayEvent, Handler } from 'aws-lambda';
 import 'source-map-support/register';
 import {
-  contentfulEnvId,
-  contentfulAccessToken,
-  contentfulSpaceId,
-  contentfulWebhookAuthenticationToken,
-  eventBus,
-  eventSource,
+  contentfulPollerQueueUrl,
+  contentfulWebhookAuthenticationToken as webhookAuthenticationToken,
 } from '../../config';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-export const contentfulWebhookFactory = (
-  eventBridge: EventBridge,
-): lambda.Handler => {
+export const contentfulWebhookFactory = (sqs: SQSClient): lambda.Handler => {
   const handler = contentfulHandlerFactory(
-    contentfulWebhookAuthenticationToken,
-    eventBridge,
+    sqs,
     {
-      eventBus,
-      eventSource,
-      accessToken: contentfulAccessToken,
-      environment: contentfulEnvId,
-      space: contentfulSpaceId,
+      webhookAuthenticationToken,
+      contentfulPollerQueueUrl,
     },
     logger,
   );
   return lambda.http(handler);
 };
 
-const eventBridge = new EventBridge({});
+const sqs = new SQSClient();
 
 export const handler: Handler<APIGatewayEvent> = sentryWrapper(
-  contentfulWebhookFactory(eventBridge),
+  contentfulWebhookFactory(sqs),
 );

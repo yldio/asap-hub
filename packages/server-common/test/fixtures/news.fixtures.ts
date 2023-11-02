@@ -2,6 +2,8 @@ import {
   ContentfulWebhookPublishPayload,
   ContentfulWebhookUnpublishPayload,
 } from '@asap-hub/contentful';
+import { WebhookDetailType } from '@asap-hub/model';
+import { SQSEvent, SQSRecord } from 'aws-lambda';
 
 export const getNewsPublishContentfulWebhookPayload =
   (): ContentfulWebhookPublishPayload<'news'> => ({
@@ -85,6 +87,45 @@ export const getNewsPublishContentfulWebhookPayload =
       },
     },
   });
+export const getNewsPublishContentfulPollerRecord = (
+  messageId = '42',
+): SQSRecord => ({
+  messageId,
+  receiptHandle: 'a handle',
+  body: JSON.stringify(getNewsPublishContentfulWebhookPayload()),
+  attributes: {
+    ApproximateReceiveCount: '1',
+    SentTimestamp: '',
+    SenderId: '11',
+    ApproximateFirstReceiveTimestamp: '',
+  },
+  messageAttributes: {
+    DetailType: {
+      dataType: 'String',
+      stringValue: 'NewsPublished' satisfies WebhookDetailType,
+    },
+    Action: { dataType: 'String', stringValue: 'publish' },
+  },
+  md5OfBody: '',
+  eventSource: '',
+  eventSourceARN: '',
+  awsRegion: '',
+});
+export const getNewsPublishContentfulPollerPayload = (
+  overrides: Partial<SQSRecord> = {},
+): SQSEvent => ({
+  Records: [
+    {
+      ...getNewsPublishContentfulPollerRecord(),
+      ...overrides,
+    },
+  ],
+});
+export const getNewsContentfulPollerPayload = (items: number): SQSEvent => ({
+  Records: Array.from({ length: items }, (_, idx) =>
+    getNewsPublishContentfulPollerRecord(`${idx}`),
+  ),
+});
 
 export const getNewsUnpublishContentfulWebhookPayload =
   (): ContentfulWebhookUnpublishPayload<'news'> => ({

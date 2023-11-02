@@ -25,7 +25,7 @@ describe('User index handler', () => {
       event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
+      data: expect.objectContaining(userResponse),
       type: 'user',
     });
   });
@@ -37,7 +37,7 @@ describe('User index handler', () => {
     await indexHandler(updateEvent());
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
+      data: expect.objectContaining(userResponse),
       type: 'user',
     });
   });
@@ -108,6 +108,27 @@ describe('User index handler', () => {
     );
   });
 
+  test('Should populate _tags field before saving the user to Algolia', async () => {
+    const event = createEvent();
+    const userResponse = getUserResponse();
+    userResponse.expertiseAndResourceTags = [
+      'Bitopertin',
+      'A53T',
+      'Adapter ligation',
+    ];
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: {
+        ...userResponse,
+        _tags: ['Bitopertin', 'A53T', 'Adapter ligation'],
+      },
+      type: 'user',
+    });
+  });
+
   test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
     userControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
@@ -152,7 +173,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
+        data: expect.objectContaining(userResponse),
         type: 'user',
       });
     });
@@ -172,7 +193,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
+        data: expect.objectContaining(userResponse),
         type: 'user',
       });
     });

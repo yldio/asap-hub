@@ -7,6 +7,7 @@ import * as utils from './utils';
 import * as colors from './colors';
 
 export * from './button';
+export * from './event-mapper';
 export * from './appearance';
 export {
   accents,

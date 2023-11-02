@@ -1,10 +1,17 @@
-import { ListResearchOutputResponse } from '@asap-hub/model';
+import { CRNTagSearchEntities } from '@asap-hub/algolia';
+import { TagSearchResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
-import { ResultList, SharedResearchCard } from '../organisms';
+import {
+  EventCard,
+  PeopleCard,
+  ResultList,
+  SharedResearchCard,
+} from '../organisms';
 import { perRem } from '../pixels';
+import { eventMapper } from '..';
 
 const wrapperStyle = css({
   textAlign: 'center',
@@ -29,8 +36,36 @@ const MessageBody: React.FC<{ title: string; body: string }> = ({
   </main>
 );
 
+export enum TagFieldByEntity {
+  'research-output' = 'keywords',
+  user = 'expertiseAndResourceTags',
+  event = 'calendar',
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const assert = <T extends never>() => undefined;
+type TypeEqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>;
+
+const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
+  ...data
+}): JSX.Element => {
+  assert<
+    TypeEqualityGuard<keyof typeof TagFieldByEntity, CRNTagSearchEntities>
+  >;
+
+  if (TagFieldByEntity['research-output'] in data) {
+    return <SharedResearchCard {...data} />;
+  }
+
+  if (TagFieldByEntity.user in data) {
+    return <PeopleCard {...data} />;
+  }
+
+  return <EventCard {...eventMapper(data)} />;
+};
+
 interface TagsPageBodyProps {
-  readonly results: ListResearchOutputResponse['items'];
+  readonly results: TagSearchResponse[];
   readonly numberOfItems: number;
   readonly numberOfPages: number;
   readonly currentPage: number;
@@ -58,7 +93,7 @@ const TagsPageBody: React.FC<TagsPageBodyProps> = ({
   >
     {results.map((data) => (
       <div key={data.id}>
-        <SharedResearchCard {...data} />
+        <EntityCard {...data} />
       </div>
     ))}
   </ResultList>

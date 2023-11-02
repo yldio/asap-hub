@@ -112,5 +112,12 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
     };
   }
 
+  if (type === 'user' && 'expertiseAndResourceTags' in record) {
+    return {
+      ...payload,
+      _tags: record.expertiseAndResourceTags,
+    };
+  }
+
   return payload;
 };

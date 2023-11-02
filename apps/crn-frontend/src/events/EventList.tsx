@@ -1,10 +1,4 @@
-import {
-  EventsList,
-  EventOwner,
-  EventTeams,
-  EventNumberOfSpeakers,
-} from '@asap-hub/react-components';
-import { EventResponse } from '@asap-hub/model';
+import { EventsList, eventMapper } from '@asap-hub/react-components';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents, usePrefetchEvents } from './state';
@@ -17,24 +11,6 @@ type EventListProps = {
 
   readonly searchQuery: string;
 };
-
-export const eventMapper = ({
-  speakers,
-  interestGroup,
-  workingGroup,
-  ...event
-}: EventResponse) => ({
-  ...event,
-  hasSpeakersToBeAnnounced: !!(
-    speakers.length === 0 ||
-    speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
-  ),
-  eventTeams: <EventTeams speakers={speakers} />,
-  eventSpeakers: <EventNumberOfSpeakers speakers={speakers} />,
-  eventOwner: (
-    <EventOwner interestGroup={interestGroup} workingGroup={workingGroup} />
-  ),
-});
 
 const EventList: React.FC<EventListProps> = ({
   currentTime,

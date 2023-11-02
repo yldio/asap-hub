@@ -87,7 +87,7 @@ describe('Index Users on Lab event handler', () => {
     await indexHandler(updateEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
-      mapPayload(getUserResponse()),
+      mapPayload(expect.objectContaining(getUserResponse())),
     ]);
   });
 
@@ -102,7 +102,9 @@ describe('Index Users on Lab event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items.map(mapPayload),
+        usersResponse.items.map((item) =>
+          mapPayload(expect.objectContaining(item)),
+        ),
       );
     },
   );
@@ -124,11 +126,15 @@ describe('Index Users on Lab event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items.map(mapPayload),
+          usersResponse.items.map((item) =>
+            mapPayload(expect.objectContaining(item)),
+          ),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items.map(mapPayload),
+          usersResponse.items.map((item) =>
+            mapPayload(expect.objectContaining(item)),
+          ),
         );
       },
     );

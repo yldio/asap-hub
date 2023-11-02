@@ -1,0 +1,20 @@
+import { EventResponse } from '@asap-hub/model';
+import { EventNumberOfSpeakers, EventOwner, EventTeams } from './molecules';
+
+export const eventMapper = ({
+  speakers,
+  interestGroup,
+  workingGroup,
+  ...event
+}: EventResponse) => ({
+  ...event,
+  hasSpeakersToBeAnnounced: !!(
+    speakers.length === 0 ||
+    speakers.find((speaker) => 'team' in speaker && !('user' in speaker))
+  ),
+  eventTeams: <EventTeams speakers={speakers} />,
+  eventSpeakers: <EventNumberOfSpeakers speakers={speakers} />,
+  eventOwner: (
+    <EventOwner interestGroup={interestGroup} workingGroup={workingGroup} />
+  ),
+});

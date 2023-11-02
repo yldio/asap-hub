@@ -1,6 +1,6 @@
 import { ComponentProps, FC } from 'react';
 import { User } from '@asap-hub/auth';
-import { DashboardPageBody } from '@asap-hub/react-components';
+import { DashboardPageBody, eventMapper } from '@asap-hub/react-components';
 import { activeUserMembershipStatus } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
@@ -8,7 +8,6 @@ import { useEvents } from '../events/state';
 import { useGuidesByCollection } from '../guides/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
-import { eventMapper } from '../events/EventList';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,

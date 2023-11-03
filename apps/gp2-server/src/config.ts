@@ -26,6 +26,7 @@ const {
   EVENT_SOURCE,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   GOOGLE_API_TOKEN,
+  GOOGLE_CALENDER_EVENT_QUEUE_URL,
   GP2_API_URL,
   LOG_ENABLED,
   LOG_LEVEL,
@@ -65,6 +66,8 @@ export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
 export const contentfulPollerQueueUrl =
   CONTENTFUL_POLLER_QUEUE_URL || 'contentful-poller-queue-url';
+export const googleCalenderEventQueueUrl =
+  GOOGLE_CALENDER_EVENT_QUEUE_URL || 'google-calendar-event-queue-url';
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';

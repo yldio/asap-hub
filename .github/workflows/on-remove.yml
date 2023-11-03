@@ -102,10 +102,11 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.crn-contentful-env-id }}
       - name: Contentful Webhook Teardown
-        if: ${{ steps.setup.outputs.crn-contentful-env-id != steps.setup-dev.outputs.crn-contentful-env-id && steps.setup.outputs.crn-contentful-env-id != steps.setup-prod.outputs.crn-contentful-env-id }}
+        if: ${{ steps.setup.outputs.crn-on-branch-env }}
         id: contentful-webhook-teardown
         shell: bash
-        run: yarn workspace @asap-hub/contentful space:remove-webhook
+        # run: yarn workspace @asap-hub/contentful space:remove-webhook
+        run: echo remove-webhook $CONTENTFUL_ENVIRONMENT
         env:
           CONTENTFUL_ENVIRONMENT: ${{ steps.setup.outputs.crn-contentful-env-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
@@ -206,9 +207,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
-        if: ${{ steps.setup.outputs.crn-algolia-index != steps.setup-dev.outputs.crn-algolia-index && steps.setup.outputs.crn-algolia-index != steps.setup-prod.outputs.crn-algolia-index }}
+        if: ${{ steps.setup.outputs.crn-on-branch-env }}
         run: |
-          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
+          # yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
+          echo "delete $ALGOLIA_INDEX"
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

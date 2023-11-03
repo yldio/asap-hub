@@ -1,30 +1,14 @@
-import { CalendarDataProvider, gp2 } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
+import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import Boom from '@hapi/boom';
-import { Logger, SyncCalendar } from '../../utils';
+import { Logger } from '../../utils';
 
+type Config = { googleApiToken: string; googleCalenderEventQueueUrl: string };
 export const webhookEventUpdatedHandlerFactory = (
-  calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
-  syncCalendar: SyncCalendar,
+  sqs: SQSClient,
+  { googleApiToken, googleCalenderEventQueueUrl }: Config,
   logger: Logger,
-  { googleApiToken }: { googleApiToken: string },
 ): lambda.Handler => {
-  const getCalendar = async (resourceId: string) => {
-    let calendars;
-    try {
-      calendars = await calendarDataProvider.fetch({
-        resourceId,
-      });
-    } catch (error) {
-      logger.error(error, 'Error fetching calendar');
-      throw Boom.badGateway();
-    }
-    if (!calendars.items[0]) {
-      throw Boom.notFound();
-    }
-    const [calendar] = calendars.items;
-    return calendar;
-  };
   return lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
@@ -41,29 +25,41 @@ export const webhookEventUpdatedHandlerFactory = (
     if (!resourceId) {
       throw Boom.badRequest('Missing x-goog-resource-id header');
     }
+    const channelId = request.headers['x-goog-channel-id'];
 
-    const calendar = await getCalendar(resourceId);
+    try {
+      const command = new SendMessageCommand({
+        QueueUrl: googleCalenderEventQueueUrl,
+        MessageAttributes: {
+          ResourceId: {
+            DataType: 'String',
+            StringValue: resourceId,
+          },
+          ChannelId: {
+            DataType: 'String',
+            StringValue: channelId,
+          },
+        },
+        MessageBody: '',
+      });
+      await sqs.send(command);
+      logger.debug(
+        `Event added to queue ${googleCalenderEventQueueUrl} resourceId: ${resourceId} channelId: ${channelId}`,
+      );
 
-    const cmsCalendarId = calendar.id;
-    const { googleCalendarId } = calendar;
-    const syncToken = calendar.syncToken || undefined;
-
-    const nextSyncToken = await syncCalendar(
-      googleCalendarId,
-      cmsCalendarId,
-      syncToken,
-    );
-
-    if (nextSyncToken) {
-      await calendarDataProvider
-        .update(cmsCalendarId, { syncToken: nextSyncToken })
-        .catch((err) => {
-          logger.error(err, 'Error updating syncToken');
-        });
+      return {
+        statusCode: 200,
+      };
+    } catch (err) {
+      logger.error(
+        `An error occurred putting onto the SQS ${googleCalenderEventQueueUrl}`,
+      );
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+      return {
+        statusCode: 500,
+      };
     }
-
-    return {
-      statusCode: 200,
-    };
   });
 };

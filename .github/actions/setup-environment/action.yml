@@ -7,6 +7,12 @@ inputs:
   pr-number:
     description: 'The PR number'
     required: true
+  crn-create-env:
+    description: 'Setup a dedicated CRN environment'
+    required: false
+  gp2-create-env:
+    description: 'Setup a dedicated GP2 environment'
+    required: false
 outputs:
   app-release:
     description: 'App Release'
@@ -271,8 +277,8 @@ runs:
             echo "crn-ci-auth0-client-id=WHi7btcaXqs2lJnvVyp6SP12onYNbkIA" >> $GITHUB_OUTPUT
             echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
           fi
-          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') }}
-          GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') }}
+          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') || inputs.crn-create-env }}
+          GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
 
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
@@ -284,9 +290,11 @@ runs:
           echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
 
           if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
+            echo "setting up dedicated PR env"
             echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           else
+            echo "setting up PR pointing to DEV env"
             echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
           fi

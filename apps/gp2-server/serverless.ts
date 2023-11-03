@@ -800,7 +800,6 @@ const serverlessConfig: AWS = {
       },
     },
     eventsUpdated: {
-      timeout: 900,
       handler: './src/handlers/webhooks/events-updated.handler',
       events: [
         {
@@ -811,8 +810,29 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        GOOGLE_CALENDER_EVENT_QUEUE_URL: {
+          Ref: 'GoogleCalendarEventQueue',
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    eventsUpdatedProcess: {
+      timeout: 900,
+      handler: './src/handlers/webhooks/events-updated-process.handler',
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
+            },
+            batchSize: 1,
+            maximumConcurrency: 2,
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
@@ -1385,6 +1405,26 @@ const serverlessConfig: AWS = {
         Properties: {
           QueueName:
             '${self:service}-${self:provider.stage}-contentful-poller-queue-dlq',
+        },
+      },
+      GoogleCalendarEventQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-google-calendar-event-queue',
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['ContentfulPollerQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      GoogleCalendarEventQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-google-calendar-event-queue-dlq',
         },
       },
     },

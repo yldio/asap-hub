@@ -239,6 +239,12 @@ outputs:
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}
+  crn-on-branch-env:
+    description: 'Whether the crn Contentful environment being used is a PR environment'
+    value: ${{ steps.vars.outputs.crn-on-branch-env }}
+  gp2-on-branch-env:
+    description: 'Whether the gp2 Contentful environment being used is a PR environment'
+    value: ${{ steps.vars.outputs.gp2-on-branch-env }}
 runs:
   using: 'composite'
   steps:
@@ -277,8 +283,12 @@ runs:
             echo "crn-ci-auth0-client-id=WHi7btcaXqs2lJnvVyp6SP12onYNbkIA" >> $GITHUB_OUTPUT
             echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
           fi
+
           CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') || inputs.crn-create-env }}
           GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
+          
+          echo "crn-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
+          echo "gp2-on-branch-env=$GP2_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
 
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT

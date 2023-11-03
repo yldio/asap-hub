@@ -42,7 +42,8 @@
     "startDateTimestamp",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "publishingEntity"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -63,7 +64,8 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "_tags"
+    "_tags",
+    "publishingEntity"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

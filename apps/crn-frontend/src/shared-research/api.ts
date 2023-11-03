@@ -8,6 +8,9 @@ import {
   FetchResearchTagsOptions,
   ListResponse,
   ResearchOutputDocumentType,
+  researchOutputDocumentTypes,
+  ResearchOutputPublishingEntities,
+  ResearchOutputPublishingEntitiesValues,
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
@@ -59,44 +62,44 @@ export const getResearchOutput = async (
   return resp.json();
 };
 
-export const researchOutputDocumentTypeFilters: Record<
-  ResearchOutputDocumentType,
-  { filter: string }
-> = {
-  'Grant Document': { filter: 'documentType:"Grant Document"' },
-  Presentation: { filter: 'documentType:Presentation' },
-  Protocol: { filter: 'documentType:Protocol' },
-  Dataset: { filter: 'documentType:Dataset' },
-  Bioinformatics: { filter: 'documentType:Bioinformatics' },
-  'Lab Resource': { filter: 'documentType:"Lab Resource"' },
-  Article: { filter: 'documentType:Article' },
-  Report: { filter: 'documentType:Report' },
-};
-
-export const getTypeFilters = (filters: Set<string>): string =>
-  Object.entries(researchOutputDocumentTypeFilters)
-    .reduce<string[]>(
-      (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
-      [],
-    )
-    .join(' OR ');
-
 export const getAllFilters = (
   filters: Set<string>,
   teamId?: string,
   userId?: string,
   workingGroupId?: string,
 ) => {
-  const typeFilters = getTypeFilters(filters);
-  const typeFiltersWithParenthesis = typeFilters
-    ? `(${getTypeFilters(filters)})`
-    : typeFilters;
+  const filterArray = Array.from(filters);
+  const isSourceFilter = (filter: string) =>
+    ResearchOutputPublishingEntitiesValues.includes(
+      filter as ResearchOutputPublishingEntities,
+    );
+  const sourceFilter = filterArray
+    .filter(isSourceFilter)
+    .map((filter) => `publishingEntity:"${filter}"`)
+    .join(' OR ');
+
+  const isDocumentTypeFilter = (filter: string) =>
+    researchOutputDocumentTypes.includes(filter as ResearchOutputDocumentType);
+
+  const documentTypesFilter = filterArray
+    .filter((filter) => isDocumentTypeFilter(filter))
+    .map((filter) => `documentType:"${filter}"`)
+    .join(' OR ');
+
+  const algoliaFilters =
+    sourceFilter && documentTypesFilter
+      ? `(${sourceFilter}) AND (${documentTypesFilter})`
+      : sourceFilter
+      ? `(${sourceFilter})`
+      : documentTypesFilter
+      ? `(${documentTypesFilter})`
+      : '';
 
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
   const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';
 
-  return [typeFiltersWithParenthesis, teamFilter, authorFilter, wgFilter]
+  return [algoliaFilters, teamFilter, authorFilter, wgFilter]
     .filter(Boolean)
     .join(' AND ');
 };

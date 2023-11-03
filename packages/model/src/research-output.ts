@@ -69,6 +69,10 @@ export type ResearchOutputPublishingEntities =
 
 export type ResearchOutputType = (typeof researchOutputTypes)[number];
 
+export type ResearchOutputFilterOptionTypes =
+  | ResearchOutputPublishingEntities
+  | ResearchOutputDocumentType;
+
 export const researchOutputDocumentTypeToType: Record<
   ResearchOutputDocumentType,
   Set<ResearchOutputType>
@@ -257,6 +261,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
   statusChangedAt?: string;
+  publishingEntity: ResearchOutputPublishingEntities;
 };
 
 export type ResearchOutputDraftDataObject = Omit<

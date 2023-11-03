@@ -352,6 +352,7 @@ const parseGraphQLResearchOutput = (
       isSharingStatus(researchOutputs.sharingStatus)
         ? researchOutputs.sharingStatus
         : 'Network Only',
+    publishingEntity: researchOutputs.workingGroup ? 'Working Group' : 'Team',
     workingGroups: researchOutputs.workingGroup
       ? [
           {

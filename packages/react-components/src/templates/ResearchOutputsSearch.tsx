@@ -1,4 +1,4 @@
-import { ResearchOutputDocumentType } from '@asap-hub/model';
+import { ResearchOutputFilterOptionTypes } from '@asap-hub/model';
 import { SearchAndFilter } from '../organisms';
 import { Option, Title } from '../organisms/CheckboxGroup';
 
@@ -10,8 +10,12 @@ export type ResearchOutputsSearchProps = {
 };
 
 export const researchOutputFilters: ReadonlyArray<
-  Option<ResearchOutputDocumentType> | Title
+  Option<ResearchOutputFilterOptionTypes> | Title
 > = [
+  { title: 'SOURCE' },
+  { label: 'Teams', value: 'Team' },
+  { label: 'Working Groups', value: 'Working Group' },
+
   { title: 'TYPE OF OUTPUTS' },
   { label: 'Article', value: 'Article' },
   { label: 'Bioinformatics', value: 'Bioinformatics' },

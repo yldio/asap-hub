@@ -8,8 +8,8 @@ export const webhookEventUpdatedHandlerFactory = (
   sqs: SQSClient,
   { googleApiToken, googleCalenderEventQueueUrl }: Config,
   logger: Logger,
-): lambda.Handler => {
-  return lambda.http(async (request) => {
+): lambda.Handler =>
+  lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
     const channelToken = request.headers['x-goog-channel-token'];
@@ -62,4 +62,3 @@ export const webhookEventUpdatedHandlerFactory = (
       };
     }
   });
-};

@@ -24,18 +24,18 @@ describe('Event Webhook', () => {
     const event = getApiGatewayEvent();
     event.headers['x-goog-channel-token'] = undefined;
 
-    const res = (await handler(event)) as APIGatewayProxyResult;
+    const { statusCode } = (await handler(event)) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(401);
+    expect(statusCode).toStrictEqual(401);
   });
 
   test('Should return 403 when x-goog-channel-token does not match the token from the config', async () => {
     const event = getApiGatewayEvent();
     event.headers['x-goog-channel-token'] = 'not-the-same-token';
 
-    const res = (await handler(event)) as APIGatewayProxyResult;
+    const { statusCode } = (await handler(event)) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(403);
+    expect(statusCode).toStrictEqual(403);
   });
 
   test('Should return 400 when x-goog-resource-id is not set', async () => {
@@ -43,9 +43,9 @@ describe('Event Webhook', () => {
     event.headers['x-goog-channel-token'] = googleApiToken;
     event.headers['x-goog-resource-id'] = undefined;
 
-    const res = (await handler(event)) as APIGatewayProxyResult;
+    const { statusCode } = (await handler(event)) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(400);
+    expect(statusCode).toStrictEqual(400);
   });
   test('Should put the event into the SQS and return 200', async () => {
     const resourceId = 'google-resource-id';
@@ -75,5 +75,33 @@ describe('Event Webhook', () => {
     expect(logger.debug).toBeCalledWith(
       expect.stringMatching(/Event added to queue queue-url/i),
     );
+  });
+  test('Should log errors when they occur', async () => {
+    const resourceId = 'google-resource-id';
+    const channelId = 'aa760553-8aa4-45d3-824a-8e167bcaa630';
+    const payload = googlePayload(googleApiToken, resourceId, channelId);
+    sqsMock.send = jest
+      .fn()
+      .mockRejectedValue(new Error('error message from send'));
+    const handlerWithError = webhookEventUpdatedHandlerFactory(
+      sqsMock,
+      { googleApiToken, googleCalenderEventQueueUrl },
+      logger,
+    );
+    const { statusCode } = (await handlerWithError(
+      payload,
+    )) as APIGatewayProxyResult;
+    expect(logger.error).toBeCalledTimes(2);
+    expect(logger.error).nthCalledWith(
+      1,
+      expect.stringMatching(
+        /An error occurred putting onto the SQS queue-url/i,
+      ),
+    );
+    expect(logger.error).nthCalledWith(
+      2,
+      expect.stringMatching(/The error message\: error message from send/i),
+    );
+    expect(statusCode).toStrictEqual(500);
   });
 });

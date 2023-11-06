@@ -16,11 +16,24 @@ const project = (() => {
     { outputDocumentType: outputDocumentTypeParser },
     {},
   );
+  const duplicateOutput = route(
+    '/duplicate/:outputId',
+    { outputId: stringParser },
+    {},
+  );
 
   return route(
     '/:projectId',
     { projectId: stringParser },
-    { overview, workspace, upcoming, past, outputs, createOutput },
+    {
+      overview,
+      workspace,
+      upcoming,
+      past,
+      outputs,
+      createOutput,
+      duplicateOutput,
+    },
   );
 })();
 

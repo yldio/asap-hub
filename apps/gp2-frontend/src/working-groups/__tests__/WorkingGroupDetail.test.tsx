@@ -13,17 +13,27 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
-import { getOutputs } from '../../outputs/api';
+import { getOutputs, getOutput } from '../../outputs/api';
+import { getProjects } from '../../projects/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
+  createProjectAlgoliaRecord,
+  createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getWorkingGroup, putWorkingGroupResources } from '../api';
+import {
+  getWorkingGroup,
+  getWorkingGroups,
+  putWorkingGroupResources,
+} from '../api';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
 jest.mock('../../events/api');
+jest.mock('../../shared/api');
+jest.mock('../../projects/api');
 
 const renderWorkingGroupDetail = async ({
   id,
@@ -78,6 +88,19 @@ describe('WorkingGroupDetail', () => {
     >;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+
+  const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
+  const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+  const mockGetContributingCohorts =
+    getContributingCohorts as jest.MockedFunction<
+      typeof getContributingCohorts
+    >;
+  const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+    typeof getWorkingGroups
+  >;
+  const mockGetProjects = getProjects as jest.MockedFunction<
+    typeof getProjects
+  >;
 
   const outputs = createOutputListAlgoliaResponse(1);
   outputs.hits[0]!.workingGroups = [
@@ -468,5 +491,67 @@ describe('WorkingGroupDetail', () => {
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
     expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();
+  });
+
+  describe('Duplicate Output', () => {
+    it('allows a user who is an Administrator to duplicate an output', async () => {
+      const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+
+      mockGetWorkingGroup.mockResolvedValue(workingGroup);
+
+      const output = gp2Fixtures.createOutputResponse();
+
+      mockGetOutput.mockResolvedValueOnce({
+        ...output,
+        title: 'Test Output',
+        workingGroups: [workingGroup],
+      });
+      mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
+      mockGetContributingCohorts.mockResolvedValueOnce(
+        gp2Fixtures.contributingCohortResponse,
+      );
+      mockGetWorkingGroups.mockResolvedValue(
+        gp2Fixtures.createWorkingGroupsResponse(),
+      );
+      mockGetProjects.mockResolvedValue(
+        createProjectListAlgoliaResponse(1, {
+          hits: [
+            createProjectAlgoliaRecord(gp2Fixtures.createProjectResponse()),
+          ],
+        }),
+      );
+
+      await renderWorkingGroupDetail({
+        id: workingGroup.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroup.id })
+          .duplicateOutput({ outputId: output.id }).$,
+      });
+
+      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+        'Copy of Test Output',
+      );
+      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+    });
+
+    it('will show a page not found if output does not exist', async () => {
+      const workingGroup = gp2Fixtures.createWorkingGroupResponse();
+      mockGetWorkingGroup.mockResolvedValue(workingGroup);
+
+      mockGetOutput.mockResolvedValueOnce(undefined);
+      await renderWorkingGroupDetail({
+        id: workingGroup.id,
+        userId: '23',
+        role: 'Administrator',
+        route: gp2Routing
+          .workingGroups({})
+          .workingGroup({ workingGroupId: workingGroup.id })
+          .duplicateOutput({ outputId: 'test-id' }).$,
+      });
+      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+    });
   });
 });

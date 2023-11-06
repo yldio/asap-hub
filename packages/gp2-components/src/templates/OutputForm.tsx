@@ -396,7 +396,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   return (
     <Form dirty={isFormDirty} serverErrors={serverValidationErrors}>
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => {
-        const isEditing = title !== undefined;
+        const isEditing = link !== undefined;
 
         const save = async (skipPublishModal: boolean = false) => {
           const displayModalFn =

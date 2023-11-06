@@ -8,15 +8,24 @@ import {
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import {
+  useCurrentUserGP2,
+  useCurrentUserRoleGP2,
+} from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useParams,
+  useRouteMatch,
+} from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
-import { useOutputs } from '../outputs/state';
+import { useOutputById, useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
 
 const { projects } = gp2Routing;
@@ -35,6 +44,26 @@ const loadOutputDirectory = () =>
     /* webpackChunkName: "project-output-directory" */ '../outputs/OutputDirectory'
   );
 const OutputDirectory = lazy(loadOutputDirectory);
+
+const DuplicateOutput: FC = () => {
+  const { outputId } = useParams<{ outputId: string }>();
+  const output = useOutputById(outputId);
+  if (output && output.projects?.[0]?.id) {
+    return (
+      <OutputFormPage>
+        <CreateProjectOutput
+          outputData={{
+            ...output,
+            id: '',
+            link: undefined,
+            title: `Copy of ${output.title}`,
+          }}
+        />
+      </OutputFormPage>
+    );
+  }
+  return <NotFoundPage />;
+};
 
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
@@ -57,8 +86,10 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
   const isAdministrator = currentUser?.role === 'Administrator';
+  const userRole = useCurrentUserRoleGP2(projectId, 'Projects');
   const projectRoute = projects({}).project({ projectId });
   const createOutputRoute = projectRoute.createOutput;
+  const duplicateOutputRoute = projectRoute.duplicateOutput;
   const workspaceRoute = projectRoute.workspace({});
   const editRoute = workspaceRoute.edit({});
   const add = isAdministrator ? workspaceRoute.add({}).$ : undefined;
@@ -74,6 +105,8 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,
   });
+  const canDuplicateOutput = isAdministrator || userRole === 'Project manager';
+
   if (project) {
     return (
       <Switch>
@@ -84,6 +117,13 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             </OutputFormPage>
           </Frame>
         </Route>
+        {canDuplicateOutput && (
+          <Route exact path={path + duplicateOutputRoute.template}>
+            <Frame title="Duplicate Output">
+              <DuplicateOutput />
+            </Frame>
+          </Route>
+        )}
         <ProjectDetailPage
           isProjectMember={isProjectMember}
           isAdministrator={isAdministrator}

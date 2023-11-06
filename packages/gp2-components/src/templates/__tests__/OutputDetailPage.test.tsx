@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import OutputDetailPage from '../OutputDetailPage';
 
 describe('OutputDetailPage', () => {
-  it('displays edit button if user is administrator', () => {
+  it('displays edit and duplicate buttons if user is administrator', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator
@@ -12,9 +12,10 @@ describe('OutputDetailPage', () => {
       />,
     );
     expect(queryByTitle('Edit')).toBeInTheDocument();
+    expect(queryByTitle('Duplicate')).toBeInTheDocument();
   });
 
-  it('does not display edit button if user is not administrator', () => {
+  it('does not display edit and duplicate buttons if user is not administrator', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator={false}
@@ -22,6 +23,53 @@ describe('OutputDetailPage', () => {
       />,
     );
     expect(queryByTitle('Edit')).not.toBeInTheDocument();
+    expect(queryByTitle('Duplicate')).not.toBeInTheDocument();
+  });
+
+  it('uses project duplicate output route if output is linked to a project', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByRole } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        mainEntity={{ id: 'proj-id', title: 'Test Project', type: 'Projects' }}
+      />,
+    );
+    expect(getByRole('link', { name: /Duplicate/i })).toHaveAttribute(
+      'href',
+      `/projects/proj-id/duplicate/${output.id}`,
+    );
+  });
+
+  it('uses working group duplicate output route if output is linked to a working group', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByRole } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        mainEntity={{ id: 'wg-id', title: 'Test WG', type: 'WorkingGroups' }}
+      />,
+    );
+
+    expect(getByRole('link', { name: /Duplicate/i })).toHaveAttribute(
+      'href',
+      `/working-groups/wg-id/duplicate/${output.id}`,
+    );
+  });
+
+  it('does not have a url if output owner type is undefined', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByText } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        mainEntity={{ id: 'wg-id', title: 'Test WG' }}
+      />,
+    );
+
+    expect(
+      getByText(/Duplicate/i, { selector: 'span' }).closest('a'),
+    ).not.toHaveAttribute('href');
   });
 
   describe('description and tags section', () => {

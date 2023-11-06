@@ -2180,6 +2180,134 @@ enum NewsOrder {
   type_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion)"""
+type OutputVersion implements Entry {
+  addedDate(locale: String): DateTime
+  contentfulMetadata: ContentfulMetadata!
+  documentType(locale: String): String
+  link(locale: String): String
+  linkedFrom(allowedLocales: [String]): OutputVersionLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+  type(locale: String): String
+}
+
+type OutputVersionCollection {
+  items: [OutputVersion]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input OutputVersionFilter {
+  AND: [OutputVersionFilter]
+  OR: [OutputVersionFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  contentfulMetadata: ContentfulMetadataFilter
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type OutputVersionLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputVersionLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum OutputVersionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""
 type Outputs implements Entry {
   accessionNumber(locale: String): String
@@ -2208,6 +2336,7 @@ type Outputs implements Entry {
   title(locale: String): String
   type(locale: String): String
   updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  versionsCollection(limit: Int = 100, locale: String, order: [OutputsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputVersionFilter): OutputsVersionsCollection
 }
 
 type OutputsAuthorsCollection {
@@ -2394,6 +2523,8 @@ input OutputsFilter {
   type_not_in: [String]
   updatedBy: cfUsersNestedFilter
   updatedBy_exists: Boolean
+  versions: cfOutputVersionNestedFilter
+  versionsCollection_exists: Boolean
 }
 
 type OutputsLinkingCollections {
@@ -2626,6 +2757,34 @@ enum OutputsTagsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type OutputsVersionsCollection {
+  items: [OutputVersion]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum OutputsVersionsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
@@ -3139,6 +3298,8 @@ type Query {
   milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
   news(id: String!, locale: String, preview: Boolean): News
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
+  outputVersion(id: String!, locale: String, preview: Boolean): OutputVersion
+  outputVersionCollection(limit: Int = 100, locale: String, order: [OutputVersionOrder], preview: Boolean, skip: Int = 0, where: OutputVersionFilter): OutputVersionCollection
   outputs(id: String!, locale: String, preview: Boolean): Outputs
   outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
@@ -4893,6 +5054,50 @@ input cfMilestonesNestedFilter {
   title_not_in: [String]
 }
 
+input cfOutputVersionNestedFilter {
+  AND: [cfOutputVersionNestedFilter]
+  OR: [cfOutputVersionNestedFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  contentfulMetadata: ContentfulMetadataFilter
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
 input cfOutputsNestedFilter {
   AND: [cfOutputsNestedFilter]
   OR: [cfOutputsNestedFilter]
@@ -5017,6 +5222,7 @@ input cfOutputsNestedFilter {
   type_not_contains: String
   type_not_in: [String]
   updatedBy_exists: Boolean
+  versionsCollection_exists: Boolean
 }
 
 input cfProjectMembershipNestedFilter {

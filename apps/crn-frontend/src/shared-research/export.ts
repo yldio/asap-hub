@@ -31,6 +31,7 @@ export const researchOutputToCSV = (
   subtype: output.subtype,
   addedDate: output.addedDate,
   lastUpdatedPartial: output.lastUpdatedPartial,
+  publishingEntity: output.publishingEntity,
   teams: output.teams
     .map((team) => team.displayName)
     .sort(caseInsensitive)

@@ -1,6 +1,6 @@
 import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
-  inactiveUserTag,
+  inactiveUserMembershipStatus,
   InstitutionsResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
@@ -125,20 +125,20 @@ describe('getUsers', () => {
   it('can filter the users by tag', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
-      filters: new Set([inactiveUserTag]),
+      filters: new Set([inactiveUserMembershipStatus]),
     });
     expect(search).toHaveBeenCalledWith(['user'], '', {
-      filters: `_tags:"${inactiveUserTag}"`,
+      filters: `membershipStatus:"${inactiveUserMembershipStatus}"`,
     });
   });
 
   it('can filter the users by tag and role', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
-      filters: new Set([inactiveUserTag, 'Project Manager']),
+      filters: new Set([inactiveUserMembershipStatus, 'Project Manager']),
     });
     expect(search).toHaveBeenCalledWith(['user'], '', {
-      filters: `(_tags:"${inactiveUserTag}") AND (teams.role:"Project Manager")`,
+      filters: `(membershipStatus:"${inactiveUserMembershipStatus}") AND (teams.role:"Project Manager")`,
     });
   });
 

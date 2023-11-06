@@ -79,6 +79,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
         filter.externalAuthorId,
       );
     }
+
+    if (filter?.eventId) {
+      return this.fetchOutputsByEventId(take, skip, filter.eventId);
+    }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
@@ -137,6 +141,18 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       id,
     });
     return projects?.linkedFrom?.outputsCollection;
+  }
+
+  private async fetchOutputsByEventId(take: number, skip: number, id: string) {
+    const { events } = await this.graphQLClient.request<
+      gp2Contentful.FetchOutputsByEventIdQuery,
+      gp2Contentful.FetchOutputsByEventIdQueryVariables
+    >(gp2Contentful.FETCH_OUTPUTS_BY_EVENT_ID, {
+      limit: take,
+      skip,
+      id,
+    });
+    return events?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByWorkingGroupId(
@@ -285,6 +301,7 @@ const getCohorts = (cohorts?: GraphQLCohorts) =>
     .map((cohort) => ({
       id: cohort.sys.id,
       name: cohort.name ?? '',
+      studyLink: cohort.studyLink ?? undefined,
     })) || [];
 
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
@@ -316,7 +333,7 @@ type GraphQLOutputs = NonNullable<
   OutputItem['relatedOutputsCollection']
 >['items'];
 type GraphQLOutput = NonNullable<GraphQLOutputs[number]>;
-const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
+export const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
   outputs
     ?.filter(
       (output): output is GraphQLOutput =>
@@ -324,11 +341,14 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
         output.documentType !== null &&
         output.title !== null,
     )
-    .map(({ sys, documentType, title, type }) => ({
+    .map(({ sys, documentType, title, type, relatedEntitiesCollection }) => ({
       id: sys.id,
       title: title ?? '',
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
+      entity: relatedEntitiesCollection?.items.length
+        ? getEntity(relatedEntitiesCollection?.items[0])
+        : undefined,
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
@@ -337,9 +357,10 @@ export const parseContentfulGraphQLOutput = (
   const type = getType(documentType, data.type);
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
-  const relatedOutputs = getRelatedOutputs(
-    data.relatedOutputsCollection?.items,
-  );
+  const relatedOutputs = [
+    ...getRelatedOutputs(data.relatedOutputsCollection?.items),
+    ...getRelatedOutputs(data.linkedFrom?.outputsCollection?.items),
+  ];
   const mainEntity = getEntity(data.relatedEntitiesCollection?.items[0]);
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
@@ -375,7 +396,7 @@ export const parseContentfulGraphQLOutput = (
       data.sharingStatus && isSharingStatus(data.sharingStatus)
         ? data.sharingStatus
         : 'GP2 Only',
-    publishDate: data.publishDate,
+    publishDate: data.publishDate ?? undefined,
     addedDate: data.addedDate ?? '',
     lastUpdatedPartial:
       data.lastUpdatedPartial ??

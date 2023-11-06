@@ -2,6 +2,34 @@
 
 import { gql } from 'graphql-tag';
 
+export const relatedOutputQueryFragment = gql`
+  fragment RelatedOutputData on Outputs {
+    sys {
+      id
+    }
+    title
+    documentType
+    type
+    relatedEntitiesCollection(limit: 1) {
+      items {
+        __typename
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
+        }
+        ... on Projects {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
+  }
+`;
+
 export const outputsContentQueryFragment = gql`
   fragment OutputsContentData on Outputs {
     sys {
@@ -55,14 +83,15 @@ export const outputsContentQueryFragment = gql`
       }
     }
     relatedOutputsCollection(limit: 10) {
-      total
       items {
-        sys {
-          id
+        ...RelatedOutputData
+      }
+    }
+    linkedFrom {
+      outputsCollection(limit: 50, order: [addedDate_ASC]) {
+        items {
+          ...RelatedOutputData
         }
-        title
-        documentType
-        type
       }
     }
     relatedEventsCollection(limit: 10) {
@@ -103,9 +132,11 @@ export const outputsContentQueryFragment = gql`
           id
         }
         name
+        studyLink
       }
     }
   }
+  ${relatedOutputQueryFragment}
 `;
 
 export const FETCH_OUTPUT_BY_ID = gql`
@@ -200,6 +231,25 @@ export const FETCH_OUTPUTS_BY_EXTERNAL_USER_ID = gql`
 export const FETCH_OUTPUTS_BY_PROJECT_ID = gql`
   query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {
     projects(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;
+
+export const FETCH_OUTPUTS_BY_EVENT_ID = gql`
+  query FetchOutputsByEventId($id: String!, $limit: Int, $skip: Int) {
+    events(id: $id) {
       sys {
         id
       }

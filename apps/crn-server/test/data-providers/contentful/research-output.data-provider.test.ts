@@ -686,6 +686,7 @@ describe('Research Outputs Data Provider', () => {
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
       expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
+      expectedResult.publishingEntity = 'Working Group';
 
       expect(result).toEqual(expectedResult);
     });

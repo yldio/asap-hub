@@ -30,6 +30,7 @@ const researchOutputResponse: Omit<
       displayName: 'Jakobsson, J',
     },
   ],
+  publishingEntity: 'Working Group',
   workingGroups: [
     {
       id: 'wg-123',

@@ -19,7 +19,6 @@ import {
   WebhookDetail,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
-import { appName, baseUrl } from '../../src/config';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getInterestGroupResponse } from './interest-groups.fixtures';
 import { getWorkingGroupResponse } from './working-groups.fixtures';
@@ -434,7 +433,7 @@ export const getEventDataObject = (
       url: 'https://link.pt/additional-material',
     },
   ],
-  thumbnail: `${baseUrl}/api/assets/${appName}/uuid-thumbnail-2`,
+  thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-2`,
   calendar: {
     color: '#125A12',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',

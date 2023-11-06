@@ -247,7 +247,7 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!._tags).toEqual(['Alumni Member']);
+      expect(result!.membershipStatus).toEqual(['Alumni Member']);
     });
 
     test('should tag non-alumni users', async () => {
@@ -259,7 +259,7 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
 
-      expect(result!._tags).toEqual(['CRN Member']);
+      expect(result!.membershipStatus).toEqual(['CRN Member']);
     });
 
     test('should fall back to `firstPublishedAt` if `createdDate` does not exist', async () => {
@@ -412,6 +412,49 @@ describe('User data provider', () => {
         total: 0,
         items: [],
       });
+    });
+
+    test('should filter out team memberships not linked to a user', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teamMembershipCollection: {
+          total: 3,
+          items: [
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 1,
+                  items: [{ ...getContentfulGraphqlUser(), firstName: 'Alan' }],
+                },
+              },
+            },
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 0,
+                  items: [],
+                },
+              },
+            },
+            {
+              linkedFrom: {
+                usersCollection: {
+                  total: 1,
+                  items: [
+                    { ...getContentfulGraphqlUser(), firstName: 'Brady' },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      const result = await userDataProvider.fetch({ filter: { teamId: 'A' } });
+      expect(result!.total).toEqual(2);
+      expect(result!.items.map((item) => item.firstName)).toEqual([
+        'Alan',
+        'Brady',
+      ]);
     });
 
     describe('query parameters', () => {

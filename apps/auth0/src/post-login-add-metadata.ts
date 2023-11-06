@@ -9,6 +9,8 @@ import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import { Auth0PostLoginEventWithSecrets } from './types';
 
+/* eslint-disable no-console */
+
 type Auth0UserResponse = UserMetadataResponse | gp2Model.UserMetadataResponse;
 
 const isUserMetadataResponse = (
@@ -34,8 +36,14 @@ const parseCommonUserMetadata = ({
   avatarUrl,
   onboarded,
 });
-const parseGP2UserMetadata = ({ role }: gp2Model.UserMetadataResponse) => ({
+const parseGP2UserMetadata = ({
   role,
+  workingGroups,
+  projects,
+}: gp2Model.UserMetadataResponse) => ({
+  role,
+  workingGroups,
+  projects,
 });
 const parseTeam = ({ id, displayName, role, inactiveSinceDate }: UserTeam) => ({
   id,
@@ -92,6 +100,9 @@ export const onExecutePostLogin = async (
 ) => {
   try {
     const [apiUrl, redirect_uri] = getApiUrls(event);
+    console.log(
+      `requesting metadata from ${apiUrl}/webhook/users/${event.user.user_id}`,
+    );
     const response = await got(
       `${apiUrl}/webhook/users/${event.user.user_id}`,
       {
@@ -115,7 +126,9 @@ export const onExecutePostLogin = async (
         user,
       );
     }
+    console.log(`Success user metadata: ${JSON.stringify(user)}`);
   } catch (err) {
+    console.log(`Error: ${JSON.stringify(err)}`);
     const errorMessage =
       err instanceof Error ? err.message : 'Unexpected Error';
 

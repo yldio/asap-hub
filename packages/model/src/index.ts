@@ -19,6 +19,7 @@ export * from './page';
 export * from './reminder';
 export * from './research-output';
 export * from './research-tag';
+export * from './tag';
 export * from './team';
 export * from './tutorials';
 export * from './user';

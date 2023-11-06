@@ -2,6 +2,7 @@ import {
   EventConversation,
   EventOwner,
   EventPage,
+  getIconForDocumentType,
   NotFoundPage,
   SpeakerList,
 } from '@asap-hub/react-components';
@@ -23,6 +24,7 @@ const Event: React.FC = () => {
           {...event}
           backHref={backHref}
           onRefresh={refreshEvent}
+          getIconForDocumentType={getIconForDocumentType}
           displayCalendar={
             event.interestGroup === undefined || event.interestGroup.active
           }

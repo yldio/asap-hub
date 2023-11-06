@@ -1,6 +1,5 @@
 import { DashboardDataObject, DashboardResponse } from '@asap-hub/model';
 import { FetchDashboardQuery as FetchDashboardQueryContentful } from '@asap-hub/contentful';
-import { appName, baseUrl } from '../../src/config';
 import { getContentfulNewsGraphqlResponse } from './news.fixtures';
 import { getContentfulPagesGraphqlResponse } from './page.fixtures';
 
@@ -23,7 +22,7 @@ export const getDashboardDataObject = (): DashboardDataObject => ({
       id: 'news-1',
       shortText: 'Short text of news 1',
       text: '<p>text</p>',
-      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
+      thumbnail: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
       title: 'News 1',
       frequency: 'News Articles',
     },

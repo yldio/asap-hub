@@ -1,18 +1,9 @@
-import {
-  ContentfulWebhookPayload,
-  ContentfulWebhookPublishPayload,
-  ContentfulWebhookUnpublishPayload,
-} from '@asap-hub/contentful';
-import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
-import { EventBridge } from '@aws-sdk/client-eventbridge';
+import { ContentfulWebhookPayload } from '@asap-hub/contentful';
+import { SQSClient } from '@aws-sdk/client-sqs';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { eventBus, eventSource } from '../../../src/config';
+import { contentfulWebhookAuthenticationToken } from '../../../src/config';
 import { contentfulWebhookFactory } from '../../../src/handlers/webhooks/webhook-contentful';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
-import {
-  getTeamPublishContentfulWebhookPayload,
-  getTeamUnpublishContentfulWebhookPayload,
-} from '../../fixtures/teams.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 
 jest.mock('@asap-hub/contentful', () => ({
@@ -27,15 +18,12 @@ jest.mock('@asap-hub/contentful', () => ({
     }),
   }),
 }));
-jest.mock('../../../src/utils/logger');
 
 describe('Contentful event webhook', () => {
-  const evenBridgeMock = {
-    putEvents: jest.fn(),
-  } as unknown as jest.Mocked<EventBridge>;
-  const contentfulWebhookAuthenticationToken =
-    'contentful-webhook-authentication-token';
-  const handler = contentfulWebhookFactory(evenBridgeMock);
+  const sqsClientMock = {
+    send: jest.fn(),
+  } as unknown as jest.Mocked<SQSClient>;
+  const handler = contentfulWebhookFactory(sqsClientMock);
 
   beforeEach(jest.resetAllMocks);
 
@@ -62,82 +50,13 @@ describe('Contentful event webhook', () => {
     expect(res.statusCode).toStrictEqual(403);
   });
 
-  test('Should put the team-published event into the event bus and return 200', async () => {
-    const payload = getTeamPublishContentfulWebhookPayload();
-    const event = createContentfulWebhookEvent(payload);
-    const res = (await handler(event)) as APIGatewayProxyResult;
-
-    const expectedDetail: WebhookDetail<
-      ContentfulWebhookPublishPayload<'teams'>
-    > = {
-      resourceId: payload.sys.id,
-      ...payload,
-    };
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsPublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(expectedDetail),
-        },
-      ],
-    });
-  });
-
-  test('Should put the team-unpublished event into the event bus and return 200', async () => {
-    const payload = getTeamUnpublishContentfulWebhookPayload();
-    const event = createContentfulWebhookEvent(
-      payload,
-      'ContentManagement.Entry.unpublish',
-    );
-    const res = (await handler(event)) as APIGatewayProxyResult;
-
-    const expectedDetail: WebhookDetail<
-      ContentfulWebhookUnpublishPayload<'teams'>
-    > = {
-      resourceId: payload.sys.id,
-      ...payload,
-    };
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsUnpublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(expectedDetail),
-        },
-      ],
-    });
-  });
-
   test('Should put the news-published event into the event bus and return 200', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = createContentfulWebhookEvent(payload);
     const res = (await handler(event)) as APIGatewayProxyResult;
 
-    const expectedDetail: WebhookDetail<
-      ContentfulWebhookPublishPayload<'news'>
-    > = {
-      resourceId: payload.sys.id,
-      ...payload,
-    };
-
     expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'NewsPublished' satisfies WebhookDetailType,
-          Detail: JSON.stringify(expectedDetail),
-        },
-      ],
-    });
+    expect(sqsClientMock.send).toHaveBeenCalled();
   });
 
   const createContentfulWebhookEvent = (

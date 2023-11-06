@@ -80,11 +80,18 @@ export type DecisionOption = (typeof decisionOptions)[number];
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
 export type OutputSharingStatus = (typeof sharingStatuses)[number];
-type RelatedOutputs = {
+
+export type OutputOwner = {
+  id: string;
+  title: string;
+  type?: 'Projects' | 'WorkingGroups';
+};
+export type RelatedOutputs = {
   id: string;
   title: string;
   type?: OutputType;
   documentType: OutputDocumentType;
+  entity?: OutputOwner;
 };
 export type OutputCoreObject = {
   addedDate: string;
@@ -114,12 +121,6 @@ export type UserAuthor = {
   displayName: string;
   onboarded: boolean;
   avatarUrl?: string;
-};
-
-export type OutputOwner = {
-  id: string;
-  title: string;
-  type?: 'Projects' | 'WorkingGroups';
 };
 export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {
@@ -200,12 +201,13 @@ export type FetchOutputSearchFilter = {
   documentType?: OutputDocumentType[];
 };
 export type FetchOutputFilter = FetchOutputSearchFilter & {
-  title?: string;
-  link?: string;
-  workingGroupId?: string;
-  projectId?: string;
   authorId?: string;
+  eventId?: string;
   externalAuthorId?: string;
+  link?: string;
+  projectId?: string;
+  title?: string;
+  workingGroupId?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

@@ -1,18 +1,22 @@
+import { CRNTagSearchEntitiesList } from '@asap-hub/algolia';
 import { TagsPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
-import { useResearchOutputs } from '../shared-research/state';
+import { useTagSearch } from './state';
 
-const Tags: React.FC<Record<string, never>> = () => {
+type TagsProps = {
+  entities: CRNTagSearchEntitiesList;
+};
+const Tags: React.FC<TagsProps> = ({ entities }) => {
   const { tags, searchQuery, filters } = useSearch();
   const { currentPage, pageSize } = usePaginationParams();
-  const { items, total } = useResearchOutputs({
+  const { items, total } = useTagSearch(entities, {
     searchQuery,
     filters,
     currentPage,
     pageSize,
-    noResultsWithoutCriteria: true,
     tags,
   });
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <TagsPageBody

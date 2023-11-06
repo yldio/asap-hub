@@ -17,7 +17,6 @@ import { getEntry } from '../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlOutput,
   getContentfulOutputsGraphqlResponse,
-  getListOutputDataObject,
   getOutputCreateDataObject,
   getOutputDataObject,
   getOutputUpdateDataObject,
@@ -59,7 +58,33 @@ describe('Outputs data provider', () => {
     test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetchById(outputId);
 
-      expect(result).toMatchObject(getOutputDataObject());
+      expect(result).toMatchObject({
+        ...getOutputDataObject(),
+        relatedOutputs: [
+          {
+            documentType: 'Dataset',
+            entity: {
+              id: '42',
+              title: 'A Project',
+              type: 'Projects',
+            },
+            id: 'another-output-id',
+            title: 'another title',
+            type: 'Research',
+          },
+          {
+            documentType: 'Article',
+            entity: {
+              id: '42',
+              title: 'A Project',
+              type: 'Projects',
+            },
+            id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+            title: 'Test Proposal 1234',
+            type: 'Research',
+          },
+        ],
+      });
     });
     test('Should return null when the output is not found', async () => {
       graphqlClientMock.request.mockResolvedValueOnce({
@@ -81,41 +106,94 @@ describe('Outputs data provider', () => {
       expect(result).toEqual(expectedResult);
     });
     describe('related outputs', () => {
-      test('should return the related output', async () => {
-        const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlClientMock.request.mockResolvedValueOnce({
-          outputs: {
-            ...graphqlResponse,
+      test.each`
+        typename
+        ${`WorkingGroups`}
+        ${`Projects`}
+      `(
+        'should return the related output for $type entity',
+        async ({ typename }) => {
+          const graphqlResponse = getContentfulGraphqlOutput();
+          graphqlClientMock.request.mockResolvedValueOnce({
+            outputs: {
+              ...graphqlResponse,
 
-            relatedOutputsCollection: {
-              total: 1,
-              items: [
-                {
-                  sys: { id: 'another-output-id' },
-                  title: 'another title',
-                  documentType: 'Article',
-                  type: 'Blog',
+              linkedFrom: {
+                outputsCollection: {
+                  items: [
+                    {
+                      sys: { id: 'related-output-id' },
+                      title: 'Related Article',
+                      documentType: 'Dataset',
+                      relatedEntitiesCollection: {
+                        items: [
+                          {
+                            __typename: typename,
+                            sys: {
+                              id: 'entity-2',
+                            },
+                            title: 'Polygenic Risk',
+                          },
+                        ],
+                      },
+                    },
+                  ],
                 },
-              ],
+              },
+              relatedOutputsCollection: {
+                total: 1,
+                items: [
+                  {
+                    sys: { id: 'another-output-id' },
+                    title: 'Related Article',
+                    documentType: 'Dataset',
+                    relatedEntitiesCollection: {
+                      items: [
+                        {
+                          __typename: typename,
+                          sys: {
+                            id: 'entity-2',
+                          },
+                          title: 'Polygenic Risk',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
             },
-          },
-        });
+          });
 
-        const result = await outputDataProvider.fetchById(outputId);
-        const expectedResult = getOutputDataObject();
+          const result = await outputDataProvider.fetchById(outputId);
+          const expectedResult = getOutputDataObject();
 
-        expect(result).toEqual({
-          ...expectedResult,
-          relatedOutputs: [
-            {
-              id: 'another-output-id',
-              title: 'another title',
-              documentType: 'Article',
-              type: 'Blog',
-            },
-          ],
-        });
-      });
+          expect(result).toEqual({
+            ...expectedResult,
+            relatedOutputs: [
+              {
+                documentType: 'Dataset',
+                entity: {
+                  id: 'entity-2',
+                  title: 'Polygenic Risk',
+                  type: typename,
+                },
+                id: 'another-output-id',
+                title: 'Related Article',
+              },
+              {
+                documentType: 'Dataset',
+                entity: {
+                  id: 'entity-2',
+                  title: 'Polygenic Risk',
+                  type: typename,
+                },
+                id: 'related-output-id',
+                title: 'Related Article',
+              },
+            ],
+          });
+        },
+      );
       test('should default to empty array', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlClientMock.request.mockResolvedValueOnce({
@@ -503,7 +581,38 @@ describe('Outputs data provider', () => {
     test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetch({});
 
-      expect(result).toMatchObject(getListOutputDataObject());
+      expect(result).toMatchObject({
+        total: 1,
+        items: [
+          {
+            ...getOutputDataObject(),
+            relatedOutputs: [
+              {
+                documentType: 'Dataset',
+                entity: {
+                  id: '42',
+                  title: 'A Project',
+                  type: 'Projects',
+                },
+                id: 'another-output-id',
+                title: 'another title',
+                type: 'Research',
+              },
+              {
+                documentType: 'Article',
+                entity: {
+                  id: '42',
+                  title: 'A Project',
+                  type: 'Projects',
+                },
+                id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+                title: 'Test Proposal 1234',
+                type: 'Research',
+              },
+            ],
+          },
+        ],
+      });
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {
@@ -734,6 +843,23 @@ describe('Outputs data provider', () => {
             limit: 8,
             skip: 0,
             id: 'project-id',
+          },
+        );
+      });
+      test('filter by event', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            eventId: 'event-id',
+          },
+        });
+
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_OUTPUTS_BY_EVENT_ID,
+          {
+            limit: 8,
+            skip: 0,
+            id: 'event-id',
           },
         );
       });

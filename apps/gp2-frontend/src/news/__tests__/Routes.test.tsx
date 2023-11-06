@@ -1,4 +1,4 @@
-import { User } from '@asap-hub/auth';
+import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -22,7 +22,7 @@ afterEach(() => {
 const mockGetNews = getAlgoliaNews as jest.MockedFunction<
   typeof getAlgoliaNews
 >;
-const renderNews = async ({ user = {} }: { user?: Partial<User> }) => {
+const renderNews = async ({ user = {} }: { user?: Partial<gp2Auth.User> }) => {
   render(
     <Suspense fallback="loading">
       <RecoilRoot>

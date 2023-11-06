@@ -9,6 +9,7 @@ import ResearchOutputRelatedResearchCard from '../ResearchOutputRelatedResearchC
 const props: ComponentProps<typeof ResearchOutputRelatedResearchCard> = {
   relatedResearch: [],
   isSaving: false,
+  getIconForDocumentType: jest.fn(),
 };
 
 it('renders the contributors card form', async () => {

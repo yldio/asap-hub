@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { isEnabled } from '@asap-hub/flags';
 import {
   DecisionOption,
+  EventResponse,
   ResearchOutputDocumentType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
@@ -31,6 +32,7 @@ import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelate
 
 import {
   getDecision,
+  getIconForDocumentType,
   getIdentifierType,
   getOwnRelatedResearchLinks,
   getPayload,
@@ -544,11 +546,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   isEditMode={!!researchOutputData}
                   authorsRequired={authorsRequired}
                 />
-                <ResearchOutputRelatedResearchCard
+                <ResearchOutputRelatedResearchCard<
+                  EventResponse['relatedResearch']
+                >
                   isSaving={isSaving}
                   relatedResearch={relatedResearch}
                   onChangeRelatedResearch={setRelatedResearch}
                   getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+                  getIconForDocumentType={getIconForDocumentType}
                   isEditMode={!!researchOutputData}
                 />
                 <ResearchOutputRelatedEventsCard

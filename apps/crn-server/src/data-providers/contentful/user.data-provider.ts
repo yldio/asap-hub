@@ -1,7 +1,7 @@
 import {
-  activeUserTag,
+  activeUserMembershipStatus,
   FetchUsersOptions,
-  inactiveUserTag,
+  inactiveUserMembershipStatus,
   InterestGroupMembership,
   isUserDegree,
   isUserRole,
@@ -139,11 +139,12 @@ export class UserContentfulDataProvider implements UserDataProvider {
         id: options.filter.teamId,
       });
       const users =
-        teamMembershipCollection?.items?.map(
-          (item) => item?.linkedFrom?.usersCollection?.items[0],
-        ) || [];
+        teamMembershipCollection?.items
+          ?.map((item) => item?.linkedFrom?.usersCollection?.items[0])
+          .filter((item) => !!item) || [];
+
       return {
-        total: teamMembershipCollection?.total || 0,
+        total: users.length,
         items: users,
       };
     }
@@ -315,7 +316,11 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 
   return {
     id: item.sys.id,
-    _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
+    membershipStatus: [
+      item.alumniSinceDate
+        ? inactiveUserMembershipStatus
+        : activeUserMembershipStatus,
+    ],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.lastUpdated,
     workingGroups,

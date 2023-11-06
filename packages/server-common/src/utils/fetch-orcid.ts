@@ -42,7 +42,7 @@ interface ORCIDWork {
         value?: string;
       } | null;
       'media-type': string | null;
-    };
+    } | null;
     visibility: string;
     path: string;
     'display-index': string;
@@ -76,9 +76,9 @@ export const transformOrcidWorks = (orcidWorks: {
           title: work['work-summary'][0]?.title.title.value,
           type: work['work-summary'][0]?.type,
           publicationDate: {
-            year: work['work-summary'][0]?.['publication-date'].year?.value,
-            month: work['work-summary'][0]?.['publication-date'].month?.value,
-            day: work['work-summary'][0]?.['publication-date'].day?.value,
+            year: work['work-summary'][0]?.['publication-date']?.year?.value,
+            month: work['work-summary'][0]?.['publication-date']?.month?.value,
+            day: work['work-summary'][0]?.['publication-date']?.day?.value,
           },
           lastModifiedDate: `${work['last-modified-date'].value}`,
         }),

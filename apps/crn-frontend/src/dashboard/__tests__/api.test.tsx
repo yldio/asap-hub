@@ -1,7 +1,7 @@
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getDashboard, getReminders } from '../api';
+import { getDashboard, getReminders, getTimezone } from '../api';
 
 jest.mock('../../config');
 
@@ -81,5 +81,37 @@ describe('getReminders', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch reminders. Expected status 2xx. Received status 500."`,
     );
+  });
+});
+
+describe('getTimezone', () => {
+  it('returns UTC+{hours} for timezone ahead of UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return -600;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC+10');
+  });
+
+  it('returns UTC-{hours} for timezone behind of UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return 180;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC-3');
+  });
+
+  it('returns UTC for timezone equal to UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return 0;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC');
   });
 });

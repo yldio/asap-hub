@@ -1,14 +1,13 @@
 import { ComponentProps, FC } from 'react';
 import { User } from '@asap-hub/auth';
-import { DashboardPageBody } from '@asap-hub/react-components';
-import { activeUserTag } from '@asap-hub/model';
+import { DashboardPageBody, eventMapper } from '@asap-hub/react-components';
+import { activeUserMembershipStatus } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents } from '../events/state';
 import { useGuidesByCollection } from '../guides/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
-import { eventMapper } from '../events/EventList';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,
@@ -46,7 +45,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
 
   const recommendedUsers = useUsers({
     searchQuery: '',
-    filters: new Set([activeUserTag]),
+    filters: new Set([activeUserMembershipStatus]),
     currentPage: 0,
     pageSize: 3,
   }).items;

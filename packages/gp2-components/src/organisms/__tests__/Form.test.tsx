@@ -19,6 +19,8 @@ const props: ComponentProps<typeof Form> = {
   children: () => null,
 };
 
+const onDisplayModal = null;
+
 let getUserConfirmation!: jest.MockedFunction<
   (message: string, callback: (confirmed: boolean) => void) => void
 >;
@@ -134,6 +136,7 @@ describe('when saving', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
       const addNotification = jest.fn();
+
       const { getByText } = render(
         <Form {...props} dirty>
           {({ getWrappedOnSave }) => (
@@ -141,7 +144,11 @@ describe('when saving', () => {
               <input type="text" required />
               <Button
                 primary
-                onClick={getWrappedOnSave(handleSave, addNotification)}
+                onClick={getWrappedOnSave(
+                  handleSave,
+                  addNotification,
+                  onDisplayModal,
+                )}
               >
                 save
               </Button>
@@ -187,7 +194,11 @@ describe('when saving', () => {
                 <input type="text" />
                 <Button
                   primary
-                  onClick={getWrappedOnSave(handleSave, addNotificationOnSave)}
+                  onClick={getWrappedOnSave(
+                    handleSave,
+                    addNotificationOnSave,
+                    onDisplayModal,
+                  )}
                 >
                   save
                 </Button>
@@ -240,6 +251,7 @@ describe('when saving', () => {
                     onClick={getWrappedOnSave(
                       handleSave,
                       addNotificationOnSave,
+                      onDisplayModal,
                     )}
                   >
                     save
@@ -323,6 +335,7 @@ describe('when saving', () => {
                       onClick={getWrappedOnSave(
                         handleSave,
                         addNotificationOnSave,
+                        onDisplayModal,
                       )}
                     >
                       save
@@ -404,7 +417,11 @@ describe('when saving', () => {
                   primary
                   enabled={!isSaving}
                   onClick={async () => {
-                    await getWrappedOnSave(handleSave, addNotificationOnSave)();
+                    await getWrappedOnSave(
+                      handleSave,
+                      addNotificationOnSave,
+                      onDisplayModal,
+                    )();
                     setRedirectOnSave('/another-url');
                   }}
                 >
@@ -422,5 +439,52 @@ describe('when saving', () => {
     userEvent.click(getByText(/^save/i));
 
     await waitFor(() => expect(history.location.pathname).toBe('/another-url'));
+  });
+
+  it('calls onDisplayModal when provided', async () => {
+    const addNotificationOnSave = jest.fn();
+    const handleSave = jest.fn().mockReturnValue({ field: 'value' });
+    const onDisplayModalFn = jest.fn();
+    const result = render(
+      <NotificationContext.Provider
+        value={{
+          notifications: [],
+          addNotification: jest.fn(),
+          removeNotification: jest.fn(),
+        }}
+      >
+        <Router history={history}>
+          <Form {...props}>
+            {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
+              <>
+                <Link to={'/another-url'}>Navigate away</Link>
+                <Button
+                  primary
+                  enabled={!isSaving}
+                  onClick={async () => {
+                    await getWrappedOnSave(
+                      handleSave,
+                      addNotificationOnSave,
+                      onDisplayModalFn,
+                    )();
+                    setRedirectOnSave('/another-url');
+                  }}
+                >
+                  save
+                </Button>
+              </>
+            )}
+          </Form>
+        </Router>
+      </NotificationContext.Provider>,
+    );
+
+    const { getByText } = result;
+
+    userEvent.click(getByText(/^save/i));
+    await waitFor(() => {
+      expect(onDisplayModalFn).toHaveBeenCalled();
+    });
+    expect(handleSave).not.toHaveBeenCalled();
   });
 });

@@ -3,7 +3,6 @@ import {
   DiscoverResponse,
   UserResponse,
 } from '@asap-hub/model';
-import { appName, baseUrl } from '../../src/config';
 
 const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
   {
@@ -27,7 +26,7 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
     lastModifiedDate: '2020-10-15T17:55:21Z',
     teams: [],
     social: {},
-    avatarUrl: `${baseUrl}/api/assets/${appName}/${prefix}uuid-1`,
+    avatarUrl: `https://www.contentful.com/api/assets/asap-crn/${prefix}uuid-1`,
     role: 'Guest',
     responsibilities: undefined,
     reachOut: undefined,
@@ -70,24 +69,6 @@ export const getDiscoverDataObject = (): DiscoverDataObject => ({
   members: getDiscoverMembersResponse(),
   membersTeamId: 'uuid-team-1',
   scientificAdvisoryBoard: getDiscoverMembersResponse('sab-'),
-  pages: [
-    {
-      id: 'uuid-pages-1',
-      path: '',
-      title: 'Title',
-      text: '<p>Content</p>',
-      link: 'https://hub.asap.science',
-      linkText: 'ASAP Hub',
-      shortText: 'Short text',
-    },
-    {
-      id: 'uuid-pages-2',
-      path: '',
-      title: 'Title',
-      shortText: 'Short text',
-      text: '<p>Content</p>',
-    },
-  ],
 });
 
 export const getDiscoverResponse = (): DiscoverResponse =>
@@ -111,7 +92,7 @@ export const getContentfulGraphqlDiscoverMembers = () => [
     lastName: 'Doe',
     email: 'john@example.com',
     avatar: {
-      url: `${baseUrl}/api/assets/${appName}/uuid-1`,
+      url: `https://www.contentful.com/api/assets/asap-crn/uuid-1`,
     },
   },
   {
@@ -131,76 +112,6 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
   membersCollection: {
     items: getContentfulGraphqlDiscoverMembers(),
   },
-  pagesCollection: {
-    items: [
-      {
-        sys: {
-          id: 'uuid-pages-1',
-        },
-        link: 'https://hub.asap.science',
-        linkText: 'ASAP Hub',
-        title: 'Title',
-        text: {
-          json: {
-            nodeType: 'document',
-            data: {},
-            content: [
-              {
-                nodeType: 'paragraph',
-                data: {},
-                content: [
-                  { nodeType: 'text', value: 'Content', marks: [], data: {} },
-                ],
-              },
-            ],
-          },
-          links: {
-            entries: {
-              inline: [],
-            },
-            assets: {
-              block: [],
-            },
-          },
-        },
-        shortText: 'Short text',
-        path: null,
-      },
-      {
-        sys: {
-          id: 'uuid-pages-2',
-        },
-        link: null,
-        linkText: null,
-        title: 'Title',
-        text: {
-          json: {
-            nodeType: 'document',
-            data: {},
-            content: [
-              {
-                nodeType: 'paragraph',
-                data: {},
-                content: [
-                  { nodeType: 'text', value: 'Content', marks: [], data: {} },
-                ],
-              },
-            ],
-          },
-          links: {
-            entries: {
-              inline: [],
-            },
-            assets: {
-              block: [],
-            },
-          },
-        },
-        shortText: 'Short text',
-        path: null,
-      },
-    ],
-  },
   membersTeam: {
     sys: {
       id: 'uuid-team-1',
@@ -218,7 +129,7 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
         lastName: 'sab-Doe',
         email: 'sab-john@example.com',
         avatar: {
-          url: `${baseUrl}/api/assets/${appName}/sab-uuid-1`,
+          url: `https://www.contentful.com/api/assets/asap-crn/sab-uuid-1`,
         },
         lastUpdated: '2020-10-15T17:55:21Z',
       },

@@ -30,7 +30,7 @@ const outputIndexState = atomFamily<
   | undefined,
   OutputListOptions
 >({
-  key: 'researchOutputIndex',
+  key: 'outputIndex',
   default: undefined,
 });
 export const outputsState = selectorFamily<

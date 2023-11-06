@@ -1,19 +1,20 @@
 import { css } from '@emotion/react';
 
 import { asapPaddedImage, asapPaddedWhiteImage } from '../images';
+import { asapLogoMobile } from '../icons';
 import { paper } from '../colors';
 import { Link } from '../atoms';
+import { mobileScreen } from '../pixels';
 
 const height = '72px';
 
-const containerStyles = (enabled: boolean) =>
-  css({
-    height,
-    flexGrow: 1,
-    boxSizing: 'border-box',
-    display: 'flex',
-    justifyContent: 'center',
-  });
+const containerStyles = css({
+  height,
+  flexGrow: 1,
+  boxSizing: 'border-box',
+  display: 'flex',
+  justifyContent: 'center',
+});
 const containerOpaqueStyles = css({
   backgroundColor: paper.rgb,
 });
@@ -24,6 +25,18 @@ const logoStyles = css({
   alignItems: 'center',
   svg: {
     height: '32px',
+  },
+});
+
+const logoMobileStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+const logoDesktopStyles = css({
+  display: 'none',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'inherit',
   },
 });
 
@@ -38,13 +51,16 @@ const Header: React.FC<HeaderProps> = ({
   transparent = false,
   logoHref = '/',
 }) => (
-  <header
-    css={[containerStyles(enabled), transparent || containerOpaqueStyles]}
-  >
+  <header css={[containerStyles, transparent || containerOpaqueStyles]}>
     <Link href={enabled ? logoHref : undefined}>
-      <span css={logoStyles}>
-        {transparent ? asapPaddedWhiteImage : asapPaddedImage}
-      </span>
+      <div css={logoDesktopStyles}>
+        <span css={logoStyles}>
+          {transparent ? asapPaddedWhiteImage : asapPaddedImage}
+        </span>
+      </div>
+      <div css={logoMobileStyles}>
+        <span css={logoStyles}>{asapLogoMobile}</span>
+      </div>
     </Link>
   </header>
 );

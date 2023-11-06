@@ -16,6 +16,7 @@ const {
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_SPACE_ID,
+  CONTENTFUL_POLLER_QUEUE_URL,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   CRN_API_URL,
   CRN_MEETING_MATERIALS_DRIVE,
@@ -37,25 +38,18 @@ const {
   REGION,
   SENTRY_DSN,
   SES_REGION,
-  SQUIDEX_APP_NAME,
-  SQUIDEX_BASE_URL,
-  SQUIDEX_CLIENT_ID,
-  SQUIDEX_CLIENT_SECRET,
-  SQUIDEX_SHARED_SECRET,
 } = process.env;
 
 export const algoliaApiKey = ALGOLIA_API_KEY || '';
 export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
 export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
 export const algoliaIndex = ALGOLIA_INDEX || 'asap-hub_dev';
-export const appName = SQUIDEX_APP_NAME || 'asap-local';
+export const appName = 'asap-local';
 export const asapApiUrl = CRN_API_URL || 'http://localhost:3333';
 export const auth0Audience = AUTH0_AUDIENCE || '';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';
-export const baseUrl = SQUIDEX_BASE_URL || 'http://localhost:4004';
-export const clientId = SQUIDEX_CLIENT_ID || 'squidex-client-id';
-export const clientSecret = SQUIDEX_CLIENT_SECRET || 'squidex-client-secret';
+export const baseUrl = 'http://localhost:4004';
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
@@ -66,6 +60,8 @@ export const contentfulManagementAccessToken =
 export const contentfulPreviewAccessToken =
   CONTENTFUL_PREVIEW_ACCESS_TOKEN || 'contentful-preview-access-token';
 export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
+export const contentfulPollerQueueUrl =
+  CONTENTFUL_POLLER_QUEUE_URL || 'contentful-poller-queue-url';
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
   'contentful-webhook-authentication-token';
@@ -94,8 +90,6 @@ export const sentryDsn = SENTRY_DSN;
 export const sentryTraceSampleRate = 0.2;
 export const sesEndpoint = AWS_SES_ENDPOINT;
 export const sesRegion = SES_REGION || 'eu-west-1';
-export const squidexSharedSecret =
-  SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
 export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;

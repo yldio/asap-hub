@@ -7,7 +7,7 @@ import {
 } from '../../src/utils/fetch-orcid';
 import {
   orcidWorksDeserialisedExpectation,
-  orcidWorksResponse,
+  getOrcidWorksResponse,
 } from '../fixtures/users.fixtures';
 
 describe('Fetch ORCID utils', () => {
@@ -17,9 +17,9 @@ describe('Fetch ORCID utils', () => {
     test('Should return the data from ORCID API as JSON', async () => {
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
-        .reply(200, orcidWorksResponse);
+        .reply(200, getOrcidWorksResponse());
 
-      expect(await fetchOrcidProfile(orcid)).toEqual(orcidWorksResponse);
+      expect(await fetchOrcidProfile(orcid)).toEqual(getOrcidWorksResponse());
     });
   });
 
@@ -27,7 +27,7 @@ describe('Fetch ORCID utils', () => {
     test('Should transform the ORCID works data', async () => {
       expect(
         await transformOrcidWorks(
-          orcidWorksResponse as {
+          getOrcidWorksResponse() as {
             [K in keyof ORCIDWorksResponse]: NonNullable<ORCIDWorksResponse[K]>;
           },
         ),
@@ -36,11 +36,25 @@ describe('Fetch ORCID utils', () => {
         works: orcidWorksDeserialisedExpectation,
       });
     });
+
+    test('Should handle null publication date', async () => {
+      const orcidWorksResponseNoPublicationDate = getOrcidWorksResponse();
+      orcidWorksResponseNoPublicationDate.group[0]['work-summary'][0][
+        'publication-date'
+      ] = null;
+
+      const result = await transformOrcidWorks(
+        orcidWorksResponseNoPublicationDate as {
+          [K in keyof ORCIDWorksResponse]: NonNullable<ORCIDWorksResponse[K]>;
+        },
+      );
+      expect(result.works[0].publicationDate).toEqual({});
+    });
   });
 
   describe('isValidOrcidResponse type guard', () => {
     test('Should recognise a non-nullable ORCID works response', () => {
-      expect(isValidOrcidResponse(orcidWorksResponse)).toBe(true);
+      expect(isValidOrcidResponse(getOrcidWorksResponse())).toBe(true);
     });
   });
 });

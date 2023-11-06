@@ -46,7 +46,9 @@ export const syncEventFactory =
     logger.debug({ googleEvent }, 'google event');
 
     if (googleEvent.organizer?.email !== googleCalendarId) {
-      logger.error('The calendar is not the organiser of the event');
+      logger.error(
+        `The calendar is not the organiser of the event. Google Event Id: ${googleEvent.id}. Organizer: ${googleEvent.organizer?.email}. GoogleCalendarId: ${googleCalendarId}`,
+      );
       throw new Error('Invalid organiser');
     }
 

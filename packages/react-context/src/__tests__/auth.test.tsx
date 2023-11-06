@@ -5,6 +5,7 @@ import {
   getUserClaimKey,
   useCurrentUserCRN,
   useCurrentUserGP2,
+  useCurrentUserRoleGP2,
   useCurrentUserTeamRolesCRN,
 } from '../auth';
 import {
@@ -30,6 +31,25 @@ const userProvider =
       >
         {children}
       </Auth0ContextCRN.Provider>
+    );
+  };
+
+const userProviderGP2 =
+  (user: Auth0User<gp2.User> | undefined): React.FC =>
+  ({ children }) => {
+    const ctx = useAuth0GP2();
+
+    return (
+      <Auth0ContextGP2.Provider
+        value={{
+          ...ctx,
+          loading: false,
+          isAuthenticated: true,
+          user,
+        }}
+      >
+        {children}
+      </Auth0ContextGP2.Provider>
     );
   };
 
@@ -99,24 +119,6 @@ describe('useCurrentUser', () => {
 });
 
 describe('useCurrentUserGP2', () => {
-  const userProviderGP2 =
-    (user: Auth0User<gp2.User> | undefined): React.FC =>
-    ({ children }) => {
-      const ctx = useAuth0GP2();
-
-      return (
-        <Auth0ContextGP2.Provider
-          value={{
-            ...ctx,
-            loading: false,
-            isAuthenticated: true,
-            user,
-          }}
-        >
-          {children}
-        </Auth0ContextGP2.Provider>
-      );
-    };
   it('returns null when there is no Auth0 user', async () => {
     const { result } = renderHook(useCurrentUserGP2);
     expect(result.current).toBe(null);
@@ -161,10 +163,83 @@ describe('useCurrentUserGP2', () => {
           displayName: 'John Doe',
           role: 'Network Collaborator',
           algoliaApiKey: 'asdasda',
+          projects: [],
+          workingGroups: [],
         },
       }),
     });
     expect(result.current).toHaveProperty('id', 'testuser');
+  });
+});
+
+describe('useCurrentUserRoleGP2', () => {
+  it('returns undefined when there is no current user', async () => {
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('proj-1', 'Projects'),
+      {
+        wrapper: userProviderGP2(undefined),
+      },
+    );
+    expect(result.current).toBeUndefined();
+  });
+
+  it('returns undefined when entity is not Projects', async () => {
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('wg-1', 'WorkingGroups'),
+      {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: {
+            id: 'testuser',
+            onboarded: true,
+            email: 'john.doe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            displayName: 'John Doe',
+            projects: [],
+            algoliaApiKey: 'asdasda',
+            workingGroups: [],
+            role: 'Trainee',
+          },
+        }),
+      },
+    );
+    expect(result.current).toBeUndefined();
+  });
+
+  it('returns the user role in the project when there is a logged in user', async () => {
+    const project: gp2.User['projects'][number] = {
+      id: 'proj-1',
+      title: 'Proj',
+      status: 'Active',
+      members: [
+        { role: 'Project manager', userId: 'testuser' },
+        { role: 'Contributor', userId: '2' },
+      ],
+    };
+    const { result } = renderHook(
+      () => useCurrentUserRoleGP2('proj-1', 'Projects'),
+      {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: {
+            id: 'testuser',
+            onboarded: true,
+            email: 'john.doe@example.com',
+            firstName: 'John',
+            lastName: 'Doe',
+            displayName: 'John Doe',
+            projects: [project],
+            algoliaApiKey: 'asdasda',
+            workingGroups: [],
+            role: 'Trainee',
+          },
+        }),
+      },
+    );
+    expect(result.current).toEqual('Project manager');
   });
 });
 describe('useCurrentUserTeamRoles', () => {

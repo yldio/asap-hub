@@ -13,6 +13,7 @@ import {
   ListResearchOutputResponse,
   NewsResponse,
   GuideDataObject,
+  EventResponse,
 } from '@asap-hub/model';
 import {
   NewsSection,
@@ -27,7 +28,7 @@ import { Link, Headline2, Card, Paragraph, Icon } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
 import { externalLinkIcon } from '../icons';
-import { isInternalLink } from '../utils';
+import { getIconForDocumentType, isInternalLink } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -155,7 +156,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={infoStyles}>
           Explore and learn more about the latest Shared Research.
         </div>
-        <RecentSharedOutputs outputs={recentSharedOutputs?.items} />
+        <RecentSharedOutputs<EventResponse['relatedResearch']>
+          getIconForDocumentType={getIconForDocumentType}
+          outputs={recentSharedOutputs?.items}
+        />
         {recentSharedOutputs && recentSharedOutputs.total > 5 && (
           <p css={viewAllStyles} data-testid="view-recent-shared-outputs">
             <Link href={sharedResearch({}).$}>View All →</Link>

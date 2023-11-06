@@ -59,6 +59,7 @@ export {
 } from './SharedOutputDropdown';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';
+export { default as SharedResearchDetailsTagsCard } from './SharedResearchDetailsTagsCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';
 export { default as SharedResearchOutputBanners } from './SharedResearchOutputBanners';

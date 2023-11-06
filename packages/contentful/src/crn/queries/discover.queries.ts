@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
-import { pagesContentQueryFragment } from './pages.queries';
 
 const usersContentQueryFragment = gql`
   fragment PartialUsersContent on Users {
@@ -27,11 +26,6 @@ export const FETCH_DISCOVER = gql`
   query FetchDiscover {
     discoverCollection(limit: 1, order: sys_publishedAt_DESC) {
       items {
-        pagesCollection(limit: 20) {
-          items {
-            ...PageContent
-          }
-        }
         aboutUs {
           json
           links {
@@ -78,6 +72,5 @@ export const FETCH_DISCOVER = gql`
       }
     }
   }
-  ${pagesContentQueryFragment}
   ${usersContentQueryFragment}
 `;

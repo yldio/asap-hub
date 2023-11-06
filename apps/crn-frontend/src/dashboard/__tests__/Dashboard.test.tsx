@@ -7,7 +7,7 @@ import {
   createListUserResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { activeUserTag } from '@asap-hub/model';
+import { activeUserMembershipStatus } from '@asap-hub/model';
 import { MemoryRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
@@ -190,7 +190,7 @@ it('renders latest users filtered by active users', async () => {
   expect(mockGetUsers).toBeCalledWith(
     expect.anything(),
     expect.objectContaining({
-      filters: new Set([activeUserTag]),
+      filters: new Set([activeUserMembershipStatus]),
       pageSize: 3,
     }),
   );

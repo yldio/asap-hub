@@ -3,8 +3,12 @@ import {
   ContentfulWebhookPublishPayload,
   gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
-import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
-import { EventBridgeEvent } from 'aws-lambda';
+import {
+  gp2 as gp2Model,
+  WebhookDetail,
+  WebhookDetailType,
+} from '@asap-hub/model';
+import { EventBridgeEvent, SQSEvent, SQSRecord } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getContentfulGraphqlNews = (): NonNullable<
@@ -138,6 +142,39 @@ export const getNewsPublishContentfulWebhookPayload =
       },
     },
   });
+
+export const newsPublishContentfulPollerRecord: SQSRecord = {
+  messageId: '42',
+  receiptHandle: 'a handle',
+  body: JSON.stringify(getNewsPublishContentfulWebhookPayload()),
+  attributes: {
+    ApproximateReceiveCount: '1',
+    SentTimestamp: '',
+    SenderId: '11',
+    ApproximateFirstReceiveTimestamp: '',
+  },
+  messageAttributes: {
+    DetailType: {
+      dataType: 'String',
+      stringValue: 'NewsPublished' satisfies WebhookDetailType,
+    },
+    Action: { dataType: 'String', stringValue: 'publish' },
+  },
+  md5OfBody: '',
+  eventSource: '',
+  eventSourceARN: '',
+  awsRegion: '',
+};
+export const getNewsPublishContentfulPollerPayload = (
+  overrides: Partial<SQSRecord> = {},
+): SQSEvent => ({
+  Records: [
+    {
+      ...newsPublishContentfulPollerRecord,
+      ...overrides,
+    },
+  ],
+});
 
 export const getNewsWebhookPayload = (
   id: string,

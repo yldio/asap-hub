@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { relatedOutputQueryFragment } from './output.queries';
 
 export const eventsContentQueryFragment = gql`
   fragment EventsContentData on Events {
@@ -175,7 +176,15 @@ export const eventsContentQueryFragment = gql`
         }
       }
     }
+    linkedFrom {
+      outputsCollection(limit: 50, order: [addedDate_ASC]) {
+        items {
+          ...RelatedOutputData
+        }
+      }
+    }
   }
+  ${relatedOutputQueryFragment}
 `;
 
 export const FETCH_EVENT_BY_ID = gql`

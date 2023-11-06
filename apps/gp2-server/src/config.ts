@@ -13,6 +13,7 @@ const {
   CONTENTFUL_ENV_ID,
   CONTENTFUL_HOST,
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  CONTENTFUL_POLLER_QUEUE_URL,
   CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
@@ -62,6 +63,8 @@ export const environment = ENVIRONMENT
   : 'development';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';
+export const contentfulPollerQueueUrl =
+  CONTENTFUL_POLLER_QUEUE_URL || 'contentful-poller-queue-url';
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';

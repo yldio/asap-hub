@@ -25,6 +25,7 @@ export { default as InterestGroupProfileAbout } from './InterestGroupProfileAbou
 export { default as InterestGroupProfileHeader } from './InterestGroupProfileHeader';
 export { default as InterestGroupProfilePage } from './InterestGroupProfilePage';
 export { default as Layout } from './Layout';
+export { default as LoadingLayout } from './LoadingLayout';
 export { default as NetworkInterestGroups } from './NetworkInterestGroups';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';

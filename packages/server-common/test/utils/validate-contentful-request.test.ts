@@ -3,7 +3,7 @@ import { validateContentfulRequest } from '../../src/utils/validate-contentful-r
 
 const authenticationToken = 'shared_secret';
 
-describe('Verifies Squidex webhook payload signature', () => {
+describe('Verifies Contentful webhook payload signature', () => {
   test('throws 403 when authorization header is not defined', async () => {
     expect(() =>
       validateContentfulRequest(

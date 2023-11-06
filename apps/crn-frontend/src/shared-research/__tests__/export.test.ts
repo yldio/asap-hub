@@ -85,6 +85,7 @@ describe('researchOutputToCSV', () => {
       published: true,
       statusChangedBy: 'John Doe',
       isInReview: true,
+      publishingEntity: 'Working Group',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

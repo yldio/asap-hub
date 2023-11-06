@@ -4,7 +4,7 @@ import {
   UserDataObject,
   UserPatchRequest,
   UserResponse,
-  inactiveUserTag,
+  inactiveUserMembershipStatus,
   UserEvent,
   WebhookDetail,
 } from '@asap-hub/model';
@@ -12,12 +12,11 @@ import {
   ContentfulWebhookPayload,
   FetchUserByIdQuery,
 } from '@asap-hub/contentful';
-import { appName, baseUrl } from '../../src/config';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
 export const fetchUserResponseDataObject = (): UserDataObject => ({
-  avatarUrl: `${baseUrl}/api/assets/${appName}/squidex-asset-id`,
+  avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'tony@stark.com',
   expertiseAndResourceDescription: 'some expertiseAndResourceTags',
@@ -65,7 +64,7 @@ export const updateAvatarBody: { avatar: string } = {
 };
 
 export const getUserResponse = (): UserResponse => ({
-  _tags: [inactiveUserTag],
+  membershipStatus: [inactiveUserMembershipStatus],
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   id: 'user-id-1',
@@ -136,7 +135,7 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     getUserResponse(),
     {
-      _tags: [inactiveUserTag],
+      membershipStatus: [inactiveUserMembershipStatus],
       id: 'user-id-2',
       alumniLocation: 'some alumni location',
       alumniSinceDate: '2020-09-23T20:45:22Z',
@@ -220,7 +219,7 @@ export const userPatchRequest: UserPatchRequest = {
 };
 
 export const getUserDataObject = (): UserDataObject => ({
-  _tags: [inactiveUserTag],
+  membershipStatus: [inactiveUserMembershipStatus],
   id: 'user-id-1',
   biography: 'some bio',
   onboarded: true,
@@ -303,7 +302,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     connections,
     alumniLocation,
     alumniSinceDate,
-    _tags,
+    membershipStatus,
     ...createDataObject
   } = getUserDataObject();
 

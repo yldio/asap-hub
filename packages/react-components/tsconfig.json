@@ -10,6 +10,7 @@
   },
   "include": ["src"],
   "references": [
+    { "path": "../algolia" },
     { "path": "../auth" },
     { "path": "../dom-test-utils" },
     { "path": "../fixtures" },

@@ -22,6 +22,7 @@ import { usePrevious } from '../hooks';
 import { searchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
+import { LoadingUserButton, LoadingMenu } from './LoadingLayout';
 
 const UserMenuButton = lazy(
   () =>
@@ -42,7 +43,7 @@ const UserNavigation = lazy(
     ),
 );
 
-const styles = css({
+export const styles = css({
   position: 'relative',
   height: '100%',
   minHeight: '100vh',
@@ -57,11 +58,11 @@ const styles = css({
     grid: `
       "header     user-button search-button" max-content
       "main-menu  content           content" 1fr
-      "footer     footer            footer"  auto / max-content 1fr`,
+      "footer     footer            footer"  auto / max-content 1fr 72px`,
   },
 });
 
-const headerStyles = css({
+export const headerStyles = css({
   gridArea: 'header',
 
   boxSizing: 'border-box',
@@ -73,7 +74,7 @@ const headerMenuShownStyles = css({
   },
 });
 
-const contentStyles = css({
+export const contentStyles = css({
   gridRow: 'header-end / -2',
   gridColumn: '1 / -1',
   [crossQuery]: {
@@ -102,7 +103,7 @@ const overlayMenuShownStyles = css({
   visibility: 'visible',
 });
 
-const userButtonStyles = css({
+export const userButtonStyles = css({
   [drawerQuery]: {
     display: 'none',
   },
@@ -115,7 +116,7 @@ const userButtonStyles = css({
   alignContent: 'center',
 });
 
-const menuStyles = css({
+export const menuStyles = css({
   backgroundColor: paper.rgb,
   gridRow: `main-menu`,
   gridColumnStart: '1',
@@ -124,7 +125,9 @@ const menuStyles = css({
   flexDirection: 'column',
   maxWidth: '100vw',
   [drawerQuery]: {
+    maxWidth: rem(302),
     gridRow: `main-menu/-1`,
+    gridColumn: 'main-menu/-2',
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
@@ -147,7 +150,7 @@ const mainMenuStyles = css({
   },
 });
 
-const searchButtonAreaStyles = css({
+export const searchButtonAreaStyles = css({
   gridArea: 'search-button',
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
@@ -237,7 +240,7 @@ const Layout: FC<LayoutProps> = ({
           />
         </div>
         <div css={userButtonStyles}>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<LoadingUserButton />}>
             <UserMenuButton
               onClick={() => setMenuShown(!menuShown)}
               open={menuShown}
@@ -258,7 +261,7 @@ const Layout: FC<LayoutProps> = ({
         </div>
         <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
           <div css={[mainMenuStyles]}>
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<LoadingMenu />}>
               <MainNavigation userOnboarded={userNavProps.userOnboarded} />
             </Suspense>
           </div>

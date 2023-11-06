@@ -4,8 +4,10 @@ import * as mail from './mail';
 import * as pixels from './pixels';
 import * as text from './text';
 import * as utils from './utils';
+import * as colors from './colors';
 
 export * from './button';
+export * from './event-mapper';
 export * from './appearance';
 export {
   accents,
@@ -158,6 +160,7 @@ export {
   SharedOutputDropdown,
   SharedOutputDropdownBase,
   SharedResearchCard,
+  SharedResearchDetailsTagsCard,
   SharedResearchListCard,
   SharedResearchMetadata,
   SharedResearchOutputBanners,
@@ -208,6 +211,7 @@ export {
   InterestGroupProfileAbout,
   InterestGroupProfilePage,
   Layout,
+  LoadingLayout,
   NetworkInterestGroups,
   NetworkPage,
   NetworkPeople,
@@ -253,7 +257,7 @@ export {
   WorkingGroupPageHeader,
 } from './templates';
 export * from './theme';
-export { noop } from './utils';
-export { pixels, text, authTestUtils, utils, mail, ajvErrors };
+export { noop, getIconForDocumentType } from './utils';
+export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
 export type { ResearchOutputOption } from './utils';

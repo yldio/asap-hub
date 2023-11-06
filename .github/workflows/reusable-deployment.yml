@@ -26,6 +26,8 @@ on:
       CRN_CI_AUTH0_CLIENT_SECRET:
         description: 'CRN CI Auth0 Client Secret'
         required: true
+      CRN_CI_PR_AUTH0_CLIENT_SECRET:
+        description: 'CRN CI PR Auth0 Client Secret'
       CRN_AUTH0_SHARED_SECRET:
         description: 'CRN Auth0 Shared Secret'
         required: true
@@ -53,6 +55,8 @@ on:
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
         required: false
+      GP2_CI_PR_AUTH0_CLIENT_SECRET:
+        description: 'GP2 CI PR Auth0 Client Secret'
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true
@@ -376,6 +380,20 @@ jobs:
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
+
+      - name: Deploy CRN PR
+        if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.auth0-label == 'true' }}
+        run: yarn workspace @asap-hub/auth0 deploy --debug
+        env:
+          AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_PR_AUTH0_CLIENT_SECRET  }}
+          AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          APPLICATION_NAME: crn
+          BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
+          API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
+
       - name: Deploy CRN
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug
@@ -388,6 +406,20 @@ jobs:
           API_URL: ${{ steps.setup.outputs.crn-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
           AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
+
+      - name: Deploy GP2 PR
+        if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.auth0-label == 'true' }}
+        run: yarn workspace @asap-hub/auth0 deploy --debug
+        env:
+          AUTH0_CLIENT_SECRET: ${{ secrets.GP2_CI_PR_AUTH0_CLIENT_SECRET  }}
+          AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-ci-auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
+          APPLICATION_NAME: gp2
+          BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.gp2-base-pr-app-domain }}
+          API_URL: ${{ steps.setup.outputs.gp2-api-url }}
+          AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}
+
       - name: Deploy GP2
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug

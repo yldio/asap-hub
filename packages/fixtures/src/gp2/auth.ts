@@ -9,4 +9,6 @@ export const createAuthUser = (): gp2.User => ({
   lastName: 'Parker',
   role: 'Trainee',
   algoliaApiKey: 'test-mock-key',
+  projects: [],
+  workingGroups: [],
 });

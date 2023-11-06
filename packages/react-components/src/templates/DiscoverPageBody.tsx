@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { DiscoverResponse } from '@asap-hub/model';
 
-import { PagesSection, HelpSection } from '../organisms';
+import { HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 
 const styles = css({
@@ -10,9 +10,8 @@ const styles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-const DiscoverPageBody: React.FC<DiscoverResponse> = ({ pages }) => (
+const DiscoverPageBody: React.FC<DiscoverResponse> = () => (
   <div css={styles}>
-    <PagesSection title={'Grantee Guidance'} pages={pages} />
     <HelpSection />
   </div>
 );

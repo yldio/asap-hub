@@ -184,3 +184,10 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     }
   }
 }
+
+export type CRNEntities = keyof EntityResponses['crn'];
+
+// we don't show external author cards
+export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author'>;
+
+export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;

@@ -13,7 +13,6 @@ import {
   vminLinearCalc,
   largeDesktopScreen,
   mobileScreen,
-  smallDesktopScreen,
 } from '../pixels';
 import { NavigationLink } from '../atoms';
 import {
@@ -24,22 +23,6 @@ import {
   newsIcon,
   calendarIcon,
 } from '../icons';
-
-const containerStyles = css({
-  minWidth: `max(${vminLinearCalc(
-    mobileScreen,
-    312,
-    smallDesktopScreen,
-    228,
-    'px',
-  )}, ${vminLinearCalc(
-    smallDesktopScreen,
-    228,
-    largeDesktopScreen,
-    258,
-    'px',
-  )})`,
-});
 
 const listStyles = css({
   listStyle: 'none',
@@ -63,7 +46,7 @@ export interface MainNavigationProps {
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
-  <nav css={containerStyles}>
+  <nav>
     <ul css={listStyles}>
       <li>
         <NavigationLink

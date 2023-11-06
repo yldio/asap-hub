@@ -151,7 +151,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: 'project.id:"12345"',
+        filters: 'projects.id:"12345"',
       }),
     );
   });
@@ -167,7 +167,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:"Article") AND project.id:"12345"',
+        filters: '(documentType:"Article") AND projects.id:"12345"',
       }),
     );
   });
@@ -184,7 +184,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:"GP2 Reports" OR documentType:"Article") AND project.id:"12345"',
+          '(documentType:"GP2 Reports" OR documentType:"Article") AND projects.id:"12345"',
       }),
     );
   });
@@ -198,7 +198,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: 'workingGroup.id:"12345"',
+        filters: 'workingGroups.id:"12345"',
       }),
     );
   });
@@ -214,7 +214,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:"Article") AND workingGroup.id:"12345"',
+        filters: '(documentType:"Article") AND workingGroups.id:"12345"',
       }),
     );
   });
@@ -231,7 +231,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:"GP2 Reports" OR documentType:"Article") AND workingGroup.id:"12345"',
+          '(documentType:"GP2 Reports" OR documentType:"Article") AND workingGroups.id:"12345"',
       }),
     );
   });

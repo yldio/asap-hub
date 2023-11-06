@@ -1,12 +1,12 @@
-import React, { ComponentProps, useState } from 'react';
-import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch, tags as tagRoute } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+import React, { ComponentProps, useState } from 'react';
 
-import { Card, Divider, Headline2, Link, Markdown, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { Card, Headline2, Link, Markdown } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { CtaCard, TagList } from '../molecules';
+import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
+import { CtaCard } from '../molecules';
 import {
   ConfirmModal,
   OutputVersions,
@@ -14,12 +14,14 @@ import {
   RelatedResearchCard,
   RichText,
   SharedResearchAdditionalInformationCard,
+  SharedResearchDetailsTagsCard,
   SharedResearchOutputBanners,
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
 } from '../organisms';
-import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
+import { perRem } from '../pixels';
 import {
+  getIconForDocumentType as getIconForDocumentTypeCRN,
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
@@ -96,6 +98,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ];
 
   const hasDescription = description || descriptionMD;
+  const displayDescription = hasDescription && !isGrantDocument;
   const hasUsageNotes = usageNotes || usageNotesMD;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
@@ -217,43 +220,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             published={published}
             isInReview={isInReview}
           />
-          {((hasDescription && !isGrantDocument) || !!tags.length) && (
-            <Card>
-              {hasDescription && !isGrantDocument && (
-                <div css={{ paddingBottom: `${12 / perRem}em` }}>
-                  <Headline2 styleAsHeading={4}>Description</Headline2>
-                  <Markdown value={descriptionMD}></Markdown>
-                  {descriptionMD === '' && (
-                    <RichText poorText text={description} />
-                  )}
-                </div>
-              )}
-              {hasDescription && !isGrantDocument && !!tags.length && (
-                <Divider />
-              )}
-              {!!tags.length && (
-                <>
-                  <Headline2 styleAsHeading={4}>Tags</Headline2>
-                  <div
-                    css={{
-                      marginTop: `${12 / perRem}em`,
-                      marginBottom: `${24 / perRem}em`,
-                    }}
-                  >
-                    <Paragraph noMargin accent="lead">
-                      Explore keywords related to skills, techniques, resources,
-                      and tools.
-                    </Paragraph>
-                  </div>
-                  <TagList
-                    tags={tags.map((tag) => ({
-                      tag,
-                      href: tagRoute({ tag }).$,
-                    }))}
-                  />
-                </>
-              )}
-            </Card>
+          {(displayDescription || !!tags.length) && (
+            <SharedResearchDetailsTagsCard
+              tags={tags}
+              displayDescription={!!displayDescription}
+              description={description}
+              descriptionMD={descriptionMD}
+              getTagsHref={(tag: string) => tagRoute({ tag }).$}
+            />
           )}
           {!isGrantDocument && hasUsageNotes && (
             <Card>
@@ -268,6 +242,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             <RelatedResearchCard
               description="Find out all shared research outputs that contributed to this one."
               relatedResearch={relatedResearch}
+              getIconForDocumentType={getIconForDocumentTypeCRN}
             />
           )}
           {versions.length > 0 && <OutputVersions versions={versions} />}

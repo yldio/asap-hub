@@ -38,6 +38,7 @@
     "graphql": "15.8.0",
     "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6",
+    "limiter": "^2.1.0",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
@@ -52,7 +53,7 @@
     "@types/async-retry": "^1",
     "@types/jest": "29.5.5",
     "@types/minimist": "^1",
-    "@types/node": "18.17.3",
+    "@types/node": "18.18.8",
     "contentful-cli": "1.19.1",
     "graphql-typescript-integration": "1.2.1",
     "prettier": "2.8.8",

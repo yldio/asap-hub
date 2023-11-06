@@ -7,10 +7,13 @@ import { WorkingGroupMembership } from './working-group';
 export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
 export type Role = (typeof userRole)[number];
 
-export const activeUserTag = 'CRN Member';
-export const inactiveUserTag = 'Alumni Member';
-export const userTags = [activeUserTag, inactiveUserTag] as const;
-export type UserTag = (typeof userTags)[number];
+export const activeUserMembershipStatus = 'CRN Member';
+export const inactiveUserMembershipStatus = 'Alumni Member';
+export const userMembershipStatus = [
+  activeUserMembershipStatus,
+  inactiveUserMembershipStatus,
+] as const;
+export type UserMembershipStatus = (typeof userMembershipStatus)[number];
 
 export const userDegree = [
   'BA',
@@ -68,7 +71,7 @@ export interface Connection {
 }
 
 export interface UserDataObject extends Invitee {
-  _tags?: UserTag[];
+  membershipStatus?: UserMembershipStatus[];
   alumniLocation?: string;
   alumniSinceDate?: string;
   connections?: Connection[];

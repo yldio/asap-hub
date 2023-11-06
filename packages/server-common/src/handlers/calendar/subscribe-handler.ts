@@ -6,14 +6,13 @@ type Config = {
   asapApiUrl: string;
   googleApiToken: string;
   googleApiUrl: string;
-  cms?: 'contentful' | 'squidex';
 };
 
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
-    { asapApiUrl, googleApiToken, googleApiUrl, cms }: Config,
+    { asapApiUrl, googleApiToken, googleApiUrl }: Config,
   ) =>
   async (
     calendarId: string,
@@ -35,10 +34,7 @@ export const subscribeToEventChangesFactory =
       id: subscriptionId,
       token: googleApiToken,
       type: 'web_hook',
-      address:
-        cms === 'contentful'
-          ? `${asapApiUrl}/webhook/events/contentful`
-          : `${asapApiUrl}/webhook/events`,
+      address: `${asapApiUrl}/webhook/events/contentful`,
       params: {
         // 30 days, which is a maximum TTL
         ttl,

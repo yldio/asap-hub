@@ -16,15 +16,21 @@ interface LabelProps {
   readonly children: React.ReactNode;
   readonly forContent: (id: string) => React.ReactNode;
   readonly trailing?: boolean;
+  readonly title?: string;
 }
 const Label: React.FC<LabelProps> = ({
   children,
   forContent,
   trailing = false,
+  title,
 }) => {
   const contentId = useRef(uuidV4());
   return (
-    <div css={containerStyles}>
+    <div
+      css={containerStyles}
+      title={title}
+      data-testid={`label-${contentId.current}`}
+    >
       {trailing || <label htmlFor={contentId.current}>{children}</label>}
       {forContent(contentId.current)}
       {trailing && <label htmlFor={contentId.current}>{children}</label>}

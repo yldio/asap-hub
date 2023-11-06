@@ -10,12 +10,14 @@
     "authors.id",
     "__meta.type",
     "teams.role",
+    "membershipStatus",
     "speakers.user.id",
     "speakers.team.id",
     "status",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "publishingEntity"
   ],
   "attributesToIndex": [
     "displayName",
@@ -31,6 +33,7 @@
     "labs.name",
     "teams.role",
     "teams.displayName",
+    "membershipStatus",
     "authors.displayName",
     "authors.firstName",
     "degree",
@@ -54,6 +57,7 @@
     "startDateTimestamp",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "publishingEntity"
   ]
 }

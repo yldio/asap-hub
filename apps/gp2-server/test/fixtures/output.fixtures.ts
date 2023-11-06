@@ -68,6 +68,15 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
     title: 'A Project',
     type: 'Projects',
   },
+  versions: [
+    {
+      id: '1',
+      addedDate: '',
+      title: 'Version 1',
+      documentType: 'Dataset',
+      link: 'https://version1.com',
+    },
+  ],
 });
 
 export const getListOutputDataObject =
@@ -264,6 +273,20 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         sys: { id: 'an-event-id' },
         title: 'an event title',
         endDate: '2021-12-28T14:00:00.000Z',
+      },
+    ],
+  },
+  versionsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: '1',
+        },
+        addedDate: '',
+        title: 'Version 1',
+        documentType: 'Dataset',
+        link: 'https://version1.com',
       },
     ],
   },

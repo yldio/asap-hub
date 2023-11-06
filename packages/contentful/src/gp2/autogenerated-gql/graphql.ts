@@ -10153,16 +10153,18 @@ export type OutputsContentDataFragment = Pick<
       >;
     }
   >;
-  versionsCollection?: Maybe<{
-    items: Array<
-      Maybe<
-        Pick<
-          OutputVersion,
-          'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-        > & { sys: Pick<Sys, 'id'> }
-      >
-    >;
-  }>;
+  versionsCollection?: Maybe<
+    Pick<OutputsVersionsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            OutputVersion,
+            'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }
+  >;
 };
 
 export type FetchOutputByIdQueryVariables = Exact<{
@@ -10296,16 +10298,18 @@ export type FetchOutputByIdQuery = {
           >;
         }
       >;
-      versionsCollection?: Maybe<{
-        items: Array<
-          Maybe<
-            Pick<
-              OutputVersion,
-              'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-            > & { sys: Pick<Sys, 'id'> }
-          >
-        >;
-      }>;
+      versionsCollection?: Maybe<
+        Pick<OutputsVersionsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                OutputVersion,
+                'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }
+      >;
     }
   >;
 };
@@ -10455,16 +10459,18 @@ export type FetchOutputsQuery = {
                 >;
               }
             >;
-            versionsCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<
-                    OutputVersion,
-                    'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                  > & { sys: Pick<Sys, 'id'> }
-                >
-              >;
-            }>;
+            versionsCollection?: Maybe<
+              Pick<OutputsVersionsCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      OutputVersion,
+                      'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
           }
         >
       >;
@@ -10619,16 +10625,22 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                     >;
                   }
                 >;
-                versionsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<
-                        OutputVersion,
-                        'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                      > & { sys: Pick<Sys, 'id'> }
-                    >
-                  >;
-                }>;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -10785,16 +10797,22 @@ export type FetchOutputsByUserIdQuery = {
                     >;
                   }
                 >;
-                versionsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<
-                        OutputVersion,
-                        'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                      > & { sys: Pick<Sys, 'id'> }
-                    >
-                  >;
-                }>;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -10951,16 +10969,22 @@ export type FetchOutputsByExternalUserIdQuery = {
                     >;
                   }
                 >;
-                versionsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<
-                        OutputVersion,
-                        'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                      > & { sys: Pick<Sys, 'id'> }
-                    >
-                  >;
-                }>;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -11117,16 +11141,22 @@ export type FetchOutputsByProjectIdQuery = {
                     >;
                   }
                 >;
-                versionsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<
-                        OutputVersion,
-                        'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                      > & { sys: Pick<Sys, 'id'> }
-                    >
-                  >;
-                }>;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -11283,16 +11313,22 @@ export type FetchOutputsByEventIdQuery = {
                     >;
                   }
                 >;
-                versionsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<
-                        OutputVersion,
-                        'title' | 'documentType' | 'type' | 'addedDate' | 'link'
-                      > & { sys: Pick<Sys, 'id'> }
-                    >
-                  >;
-                }>;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -14762,6 +14798,7 @@ export const OutputsContentDataFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'items' },

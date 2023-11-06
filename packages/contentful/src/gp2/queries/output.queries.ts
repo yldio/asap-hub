@@ -136,6 +136,7 @@ export const outputsContentQueryFragment = gql`
       }
     }
     versionsCollection {
+      total
       items {
         sys {
           id

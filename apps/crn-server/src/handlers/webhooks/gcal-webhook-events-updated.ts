@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { webhookEventUpdatedHandlerFactory } from '@asap-hub/server-common';
 import { SQSClient } from '@aws-sdk/client-sqs';
 import { Handler } from 'aws-lambda';

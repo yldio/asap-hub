@@ -1,4 +1,3 @@
-import { User } from '@asap-hub/auth';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -25,11 +24,11 @@ afterEach(() => {
 const mockGetTagSearchResults = getTagSearchResults as jest.MockedFunction<
   typeof getTagSearchResults
 >;
-const renderPage = async ({ user = {} }: { user?: Partial<User> }) => {
+const renderPage = async () => {
   render(
     <Suspense fallback="loading">
       <RecoilRoot>
-        <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
+        <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/tags']}>
               <Route path="/tags">
@@ -52,7 +51,7 @@ describe('Routes', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createAlgoliaResponse<'output'>([]),
     );
-    await renderPage({});
+    await renderPage();
     expect(screen.getByRole('heading', { name: 'Tags Search' })).toBeVisible();
   });
 
@@ -63,7 +62,7 @@ describe('Routes', () => {
     ]);
 
     mockGetTagSearchResults.mockResolvedValue(items);
-    await renderPage({});
+    await renderPage();
 
     expect(screen.getByText('Event 0')).toBeVisible();
     expect(screen.getByText('Output 1')).toBeVisible();
@@ -72,7 +71,7 @@ describe('Routes', () => {
   it('renders error message when the request is not a 2XX', async () => {
     mockGetTagSearchResults.mockRejectedValue(new Error('error'));
 
-    await renderPage({});
+    await renderPage();
     expect(mockGetTagSearchResults).toHaveBeenCalled();
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });

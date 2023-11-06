@@ -83,16 +83,6 @@ jobs:
         with:
           environment-name: Branch
           crn-create-env: ${{inputs.crn-create-env}}
-      - name: Setup Dev Environment
-        id: setup-dev
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Development
-      - name: Setup Prod Environment
-        id: setup-prod
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Production
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -105,8 +95,7 @@ jobs:
         if: ${{ steps.setup.outputs.crn-on-branch-env == 'true' }}
         id: contentful-webhook-teardown
         shell: bash
-        # run: yarn workspace @asap-hub/contentful space:remove-webhook
-        run: echo remove-webhook $CONTENTFUL_ENVIRONMENT
+        run: yarn workspace @asap-hub/contentful space:remove-webhook
         env:
           CONTENTFUL_ENVIRONMENT: ${{ steps.setup.outputs.crn-contentful-env-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
@@ -135,16 +124,6 @@ jobs:
         with:
           environment-name: Branch
           gp2-create-env: ${{inputs.gp2-create-env}}
-      - name: Setup Dev Environment
-        id: setup-dev
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Development
-      - name: Setup Prod Environment
-        id: setup-prod
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Production
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -185,16 +164,6 @@ jobs:
         with:
           environment-name: Branch
           crn-create-env: ${{inputs.crn-create-env}}
-      - name: Setup Dev Environment
-        id: setup-dev
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Development
-      - name: Setup Prod Environment
-        id: setup-prod
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Production
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys
@@ -209,8 +178,7 @@ jobs:
       - name: Delete the index
         if: ${{ steps.setup.outputs.crn-on-branch-env == 'true'}}
         run: |
-          # yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
-          echo "delete $ALGOLIA_INDEX"
+          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
@@ -238,16 +206,6 @@ jobs:
         with:
           environment-name: Branch
           gp2-create-env: ${{inputs.gp2-create-env}}
-      - name: Setup Dev Environment
-        id: setup-dev
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Development
-      - name: Setup Prod Environment
-        id: setup-prod
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Production
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys

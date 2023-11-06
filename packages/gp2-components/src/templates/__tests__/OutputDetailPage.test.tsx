@@ -57,6 +57,21 @@ describe('OutputDetailPage', () => {
     );
   });
 
+  it('does not have a url if output owner type is undefined', () => {
+    const output = gp2Fixtures.createOutputResponse();
+    const { getByText } = render(
+      <OutputDetailPage
+        isAdministrator
+        {...output}
+        mainEntity={{ id: 'wg-id', title: 'Test WG' }}
+      />,
+    );
+
+    expect(
+      getByText(/Duplicate/i, { selector: 'span' }).closest('a'),
+    ).not.toHaveAttribute('href');
+  });
+
   describe('description and tags section', () => {
     it('handles tags and description omitted', () => {
       const { queryByText } = render(

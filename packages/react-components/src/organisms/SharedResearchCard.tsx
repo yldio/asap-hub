@@ -24,6 +24,7 @@ const titleStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
+  | 'publishingEntity'
   | 'published'
   | 'addedDate'
   | 'authors'
@@ -52,12 +53,13 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   documentType,
   link,
   published,
+  publishingEntity,
   isInReview,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
       pills={[
-        workingGroups ? 'Working Group' : 'Team',
+        publishingEntity,
         ...(documentType ? [documentType] : []),
         ...(type ? [type] : []),
       ]}

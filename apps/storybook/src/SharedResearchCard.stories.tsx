@@ -35,6 +35,7 @@ export const Normal = () => (
         ? [createWorkingGroupResponse()]
         : undefined
     }
+    publishingEntity="Working Group"
     published={boolean('published', true)}
     isInReview={boolean('Is in review', false)}
   />

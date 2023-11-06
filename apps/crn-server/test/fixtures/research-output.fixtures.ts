@@ -86,6 +86,7 @@ export const getResearchOutputDataObject =
       { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
     ],
+    publishingEntity: 'Team',
     workingGroups: [],
     methods: ['Activity Assay'],
     organisms: ['Rat'],
@@ -151,6 +152,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     published: _published,
     relatedEvents,
     versions: _versions,
+    publishingEntity: _publishingEntity,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -199,6 +201,7 @@ export const getResearchOutputCreateDataObject =
       workingGroups: _workingGroups,
       published: _published,
       versions: _versions,
+      publishingEntity: _publishingEntity,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 

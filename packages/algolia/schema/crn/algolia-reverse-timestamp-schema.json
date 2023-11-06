@@ -16,7 +16,8 @@
     "status",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "publishingEntity"
   ],
   "attributesToIndex": [
     "displayName",
@@ -56,6 +57,7 @@
     "startDateTimestamp",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "publishingEntity"
   ]
 }

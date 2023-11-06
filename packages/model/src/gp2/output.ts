@@ -1,4 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
+import { ResearchOutputVersion } from '../research-output';
 import { ContributingCohortDataObject } from './contributing-cohort';
 import { EventDataObject } from './event';
 import { ExternalUserResponse } from './external-user';
@@ -111,6 +112,7 @@ export type OutputCoreObject = {
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
   relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
+  versions?: ResearchOutputVersion[];
 };
 
 export type UserAuthor = {

@@ -2,6 +2,7 @@ import { BasicEvent } from '@asap-hub/model';
 import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { tags as tagRoute } from '@asap-hub/routing';
 
 import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';
@@ -107,7 +108,12 @@ const EventInfo: React.FC<EventInfoProps> = ({
           {eventSpeakers}
           {tags.length > 0 && (
             <div css={listItemStyles}>
-              <TagList tags={tags} max={3} />
+              <TagList
+                tags={tags.map((name) => ({
+                  tag: name,
+                  href: tagRoute({ tag: name }).$,
+                }))}
+              />
             </div>
           )}
         </div>

@@ -39,5 +39,5 @@ export { default as speakerIcon } from './speaker-icon';
 export { default as userCircleIcon } from './user-circle-icon';
 export { default as userIcon } from './user-icon';
 export { default as usersIcon } from './users-icon';
-export { default as tag } from './tag';
+export { default as tagIcon } from './tag';
 export { default as workingGroupIcon } from './working-group-icon';

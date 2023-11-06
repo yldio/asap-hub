@@ -1,5 +1,11 @@
-import { route } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
-const tags = route('/tags', {}, {});
+const tags = route(
+  '/tags&:tag?',
+  {
+    tag: stringParser,
+  },
+  {},
+);
 
 export default tags;

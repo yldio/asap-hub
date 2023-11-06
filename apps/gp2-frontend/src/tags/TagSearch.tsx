@@ -8,13 +8,9 @@ import { getItemTypes } from './api';
 import ResultList from './ResultList';
 
 const TagSearch: FC = () => {
-  const {
-    searchQuery,
-    debouncedSearchQuery,
-    setSearchQuery,
-    filters,
-    toggleFilter,
-  } = useSearch(['entityType']);
+  const { searchQuery, setSearchQuery, filters, toggleFilter } = useSearch([
+    'entityType',
+  ]);
 
   const filterSet = new Set<gp2.EntityType>(filters.entityType);
   const onChangeFilter = (filter: string) => {
@@ -45,7 +41,7 @@ const TagSearch: FC = () => {
       }}
     >
       <Frame title="Tag Search Results List">
-        <ResultList searchQuery={debouncedSearchQuery} filters={filterSet} />
+        <ResultList filters={filterSet} />
       </Frame>
     </TagSearchPageList>
   );

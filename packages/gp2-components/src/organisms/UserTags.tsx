@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { tags as tagRoute } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   TagList,
   UserProfilePlaceholderCard,
@@ -24,9 +24,9 @@ const UserTags: React.FC<UserTagsProps> = ({ tags, editHref }) => (
       </UserProfilePlaceholderCard>
     ) : (
       <TagList
-        tags={tags.map((k) => ({
-          tag: k.name,
-          href: tagRoute({ tag: k.name }).$,
+        tags={tags.map(({ name }) => ({
+          tag: name,
+          href: gp2Routing.tags({ tag: name }).$,
         }))}
       />
     )}

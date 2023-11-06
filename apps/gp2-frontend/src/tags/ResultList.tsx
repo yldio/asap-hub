@@ -1,7 +1,6 @@
-import { ComponentProps } from 'react';
 import {
   EmptyState,
-  tag as tagIcon,
+  tagIcon,
   OutputCard,
   ProjectCard,
   UserCard,
@@ -10,7 +9,6 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   EventCard,
   ResultList as ResultListComponent,
-  SearchAndFilter,
 } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { eventMapper } from '../events/EventsList';
@@ -20,11 +18,8 @@ import { useSearch } from '../hooks';
 
 export type ResultListProps = {
   filters?: Set<gp2Model.EntityType>;
-} & Pick<ComponentProps<typeof SearchAndFilter>, 'searchQuery'>;
-const ResultList: React.FC<ResultListProps> = ({
-  searchQuery,
-  filters = new Set(),
-}) => {
+};
+const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
@@ -37,7 +32,7 @@ const ResultList: React.FC<ResultListProps> = ({
     pageSize,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-  return total || searchQuery ? (
+  return total && tags.length > 0 ? (
     <ResultListComponent
       icon={tagIcon}
       numberOfItems={total}

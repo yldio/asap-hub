@@ -1,5 +1,4 @@
 import { FetchOptions, ListResponse } from '../common';
-import { ResearchOutputVersion } from '../research-output';
 import { ContributingCohortDataObject } from './contributing-cohort';
 import { EventDataObject } from './event';
 import { ExternalUserResponse } from './external-user';
@@ -94,6 +93,16 @@ export type RelatedOutputs = {
   documentType: OutputDocumentType;
   entity?: OutputOwner;
 };
+
+export type OutputVersionCoreObject = Pick<
+  OutputCoreObject,
+  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
+>;
+
+export type OutputVersion = OutputVersionCoreObject & {
+  id: string;
+};
+
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -112,7 +121,7 @@ export type OutputCoreObject = {
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
   relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
-  versions?: ResearchOutputVersion[];
+  versions?: OutputVersion[];
 };
 
 export type UserAuthor = {
@@ -195,6 +204,7 @@ export type OutputPostRequest = {
   mainEntityId: string;
   relatedOutputIds: string[];
   relatedEventIds: string[];
+  versionIds?: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

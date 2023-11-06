@@ -77,6 +77,13 @@ export const tagSearchResultsState = selectorFamily<
 export const useTagSearchResults = (options: TagSearchOptions) => {
   const [results, setResults] = useRecoilState(tagSearchResultsState(options));
   const { client } = useAlgolia();
+  if (options.tags.length === 0)
+    return {
+      total: 0,
+      items: [],
+      algoliaQueryId: '',
+      algoliaIndexName: '',
+    };
   if (results === undefined) {
     throw getTagSearchResults(client, options)
       .then(

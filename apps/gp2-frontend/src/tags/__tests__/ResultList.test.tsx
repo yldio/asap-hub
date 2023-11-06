@@ -28,7 +28,7 @@ const renderList = async (props: ResultListProps, searchQuery = '') => {
       initializeState={({ reset }) => {
         reset(
           tagSearchResultsState({
-            searchQuery,
+            tags: [],
             currentPage: 0,
             entityType: new Set(),
             pageSize: PAGE_SIZE,

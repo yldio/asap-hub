@@ -712,6 +712,31 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexExternalUser: {
+      handler: './src/handlers/external-user/algolia-index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'ExternalUsersPublished',
+                'ExternalUsersUpdated',
+                'ExternalUsersUnpublished',
+                'ExternalUsersDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+
     updateEventsMeetingLink: {
       handler:
         './src/handlers/event/update-events-meeting-link-handler.handler',

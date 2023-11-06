@@ -8,8 +8,9 @@ import {
   handleError,
   useRelatedOutputSuggestions,
   useRelatedEventsSuggestions,
+  useAuthorSuggestions,
 } from '../outputs';
-import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
+import { useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
 import { useProjects } from '../projects/state';
 import { useTags, useContributingCohorts } from '../shared/state';

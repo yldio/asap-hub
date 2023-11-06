@@ -17,7 +17,7 @@ import { getEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
 import { getContributingCohorts, getTags } from '../../shared/api';
-import { getExternalUsers, getUsers } from '../../users/api';
+import { getUsersAndExternalUsers } from '../../users/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
   createEventListAlgoliaResponse,
@@ -39,10 +39,6 @@ jest.setTimeout(60000);
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
 >;
-const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
-const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
-  typeof getExternalUsers
->;
 
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
@@ -56,6 +52,10 @@ const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 
 const mockGetProjectById = getProject as jest.MockedFunction<typeof getProject>;
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+const mockGetUsersAndExternalUsers =
+  getUsersAndExternalUsers as jest.MockedFunction<
+    typeof getUsersAndExternalUsers
+  >;
 
 const renderCreateProjectOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -109,13 +109,12 @@ describe('Create Projects Output', () => {
     mockGetProjectById.mockResolvedValue(
       gp2.createProjectResponse({ id: 'project-id-1' }),
     );
-    mockGetUsers.mockResolvedValue({
-      total: 1,
-      items: [gp2.createUserResponse({ displayName: 'Tony Stark', id: '1' })],
-    });
-    mockGetExternalUsers.mockResolvedValue({
-      total: 1,
-      items: [{ displayName: 'Steve Rogers', id: '2' }],
+    mockGetUsersAndExternalUsers.mockResolvedValue({
+      items: [
+        gp2.createUserResponse({ displayName: 'Tony Stark', id: '1' }),
+        { displayName: 'Steve Rogers', id: '2' },
+      ],
+      total: 2,
     });
     window.scrollTo = jest.fn();
   });
@@ -139,7 +138,7 @@ describe('Create Projects Output', () => {
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
-    userEvent.click(screen.getByText(/Tony Stark/i));
+    userEvent.click(screen.getByText('Tony Stark'));
     userEvent.click(authors);
     userEvent.click(screen.getByText(/Steve Rogers \(/i));
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
@@ -202,7 +201,7 @@ describe('Create Projects Output', () => {
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
-    userEvent.click(screen.getByText(/Tony Stark/i));
+    userEvent.click(screen.getByText('Tony Stark'));
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();

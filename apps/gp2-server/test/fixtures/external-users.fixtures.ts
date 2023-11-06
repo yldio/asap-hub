@@ -117,3 +117,7 @@ export const getExternalUserEvent = (
   WebhookDetail<ContentfulWebhookPayload<'externalUser'>>
 > =>
   createEventBridgeEventMock(getExternalUserWebhookPayload(id), eventType, id);
+
+export const getContentfulGraphql = (props = {}) => ({
+  ExternalUsers: () => getContentfulGraphqlExternalUser(),
+});

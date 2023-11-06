@@ -10,7 +10,6 @@ import {
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
-import { getExternalUsers, getUsers } from '../users/api';
 import {
   createOutput,
   getOutput,
@@ -160,24 +159,5 @@ export const useUpdateOutput = (id: string) => {
     setRefresh(refresh + 1);
     setPatchedOutput(output);
     return output;
-  };
-};
-
-export const useAuthorSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-
-  return async (search: string) => {
-    const users = await getUsers({ search, skip: 0, take: 10 }, authorization);
-    const externalUsers = await getExternalUsers(
-      { search, skip: 0, take: 10 },
-      authorization,
-    );
-    return [...users.items, ...externalUsers.items]
-      .map((author) => ({
-        author,
-        label: author.displayName,
-        value: author.id,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
   };
 };

@@ -9,6 +9,7 @@ import {
 import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
 import { getOutputs } from './outputs/api';
+import { getUsersAndExternalUsers } from './users/api';
 
 export const useRelatedOutputSuggestions = (currentId?: string) => {
   const algoliaClient = useAlgolia();
@@ -49,6 +50,27 @@ export const useRelatedEventsSuggestions = () => {
       })),
     );
 };
+
+export const useAuthorSuggestions = () => {
+  const algoliaClient = useAlgolia();
+
+  return (searchQuery: string) =>
+    getUsersAndExternalUsers(algoliaClient.client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 100,
+      filters: new Set(),
+    })
+      .then(({ items }) => items)
+      .then((items) =>
+        items.map((author) => ({
+          author,
+          label: author.displayName,
+          value: author.id,
+        })),
+      );
+};
+
 export const handleError =
   (
     supportedErrors: string[],

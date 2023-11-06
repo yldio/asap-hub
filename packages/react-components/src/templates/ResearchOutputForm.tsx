@@ -16,7 +16,7 @@ import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { useRouteMatch } from 'react-router-dom';
 
-import { contentSidePaddingWithNavigation } from '../layout';
+import { defaultPageLayoutPaddingStyle } from '../layout';
 import {
   ConfirmModal,
   Form,
@@ -86,9 +86,7 @@ type ResearchOutputFormProps = Pick<
   };
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
+  padding: defaultPageLayoutPaddingStyle,
 });
 
 const contentStyles = css({

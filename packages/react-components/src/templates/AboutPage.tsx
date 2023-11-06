@@ -1,12 +1,11 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
 import AboutPageHeader from './AboutPageHeader';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { defaultPageLayoutPaddingStyle } from '../layout';
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: defaultPageLayoutPaddingStyle,
 });
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader>;

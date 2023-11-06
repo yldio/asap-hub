@@ -5,7 +5,10 @@ import { network } from '@asap-hub/routing';
 
 import { paper, lead, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
-import { contentSidePaddingWithNavigation } from '../layout';
+import {
+  contentSidePaddingWithNavigation,
+  networkPageLayoutPaddingStyle,
+} from '../layout';
 import { Display, Link, StateTag, TabLink } from '../atoms';
 import { inactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabNav } from '../molecules';
@@ -14,7 +17,7 @@ import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${networkPageLayoutPaddingStyle} 0`,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 const belowHeadlineStyles = css({

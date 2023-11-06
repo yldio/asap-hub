@@ -13,11 +13,11 @@ jobs:
     environment: Branch
     outputs:
       crn-contentful-env: ${{ steps.setup.outputs.crn-contentful-env-id }}
-      crn-on-branch-env: ${{ steps.setup.outputs.on-branch-env }}
+      crn-on-branch-env: ${{ steps.setup.outputs.crn-on-branch-env }}
       crn-contentful-env-exists: ${{ steps.get-crn-contentful-state.outputs.contentful-env-exists }}
       crn-contentful-limit-reached: ${{ steps.get-crn-contentful-state.outputs.contentful-limit-reached }}
       gp2-contentful-env: ${{ steps.setup.outputs.gp2-contentful-env-id }}
-      gp2-on-branch-env: ${{ steps.setup.outputs.on-branch-env }}
+      gp2-on-branch-env: ${{ steps.setup.outputs.gp2-on-branch-env }}
       gp2-contentful-env-exists: ${{ steps.get-gp2-contentful-state.outputs.contentful-env-exists }}
       gp2-contentful-limit-reached: ${{ steps.get-gp2-contentful-state.outputs.contentful-limit-reached }}
     steps:

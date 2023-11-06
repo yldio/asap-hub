@@ -177,6 +177,18 @@ const serverlessConfig: AWS = {
               'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
             },
           },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
+              'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
+            },
+          },
         ],
       },
     },

@@ -1445,6 +1445,7 @@ const serverlessConfig: AWS = {
         Properties: {
           QueueName:
             '${self:service}-${self:provider.stage}-google-calendar-event-queue',
+          VisibilityTimeout: 300,
           RedrivePolicy: {
             maxReceiveCount: 5,
             deadLetterTargetArn: {

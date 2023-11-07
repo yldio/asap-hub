@@ -167,7 +167,7 @@ jobs:
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_${{github.run_id}}_temp'
           app: 'gp2'
-          entity-type: 'external-users'
+          entity-type: 'external-user'
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

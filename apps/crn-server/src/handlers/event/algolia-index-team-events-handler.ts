@@ -1,4 +1,8 @@
-import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import {
+  AlgoliaClient,
+  algoliaSearchClientFactory,
+  Payload,
+} from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
@@ -24,12 +28,12 @@ export const indexTeamEventsHandler = (
   eventController: EventController,
   algoliaClient: AlgoliaClient<'crn'>,
 ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) => {
-  const processingFunction = createProcessingFunction(
+  const processingFunction = createProcessingFunction<Payload, 'event'>(
     algoliaClient,
     'event',
     logger,
     eventFilter,
-    addTagsToEvents,
+    addTagsToEvents<Payload>,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

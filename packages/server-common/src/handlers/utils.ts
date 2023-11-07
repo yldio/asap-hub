@@ -5,7 +5,12 @@ import {
   Payload,
   SavePayload,
 } from '@asap-hub/algolia';
-import { EventResponse, ListResponse, UserResponse } from '@asap-hub/model';
+import {
+  EventDataObject,
+  EventResponse,
+  ListResponse,
+  UserResponse,
+} from '@asap-hub/model';
 import { Logger } from '../utils';
 
 type PayloadType<T> = T extends SavePayload ? T['type'] : never;
@@ -26,6 +31,9 @@ export const createProcessingFunction =
     type: Type,
     logger: Logger,
     filterFunction: (item: T['data']) => boolean = () => true,
+    addTagsToEventFunction?: (
+      item: EventDataObject,
+    ) => EventDataObject & { _tags: string[] },
   ) =>
   async (found: ListResponse<T['data']>) => {
     logger.info(
@@ -33,13 +41,19 @@ export const createProcessingFunction =
     );
 
     try {
-      const payload = found.items.filter(filterFunction).map(
-        (data) =>
-          ({
-            data,
+      const payload = found.items.filter(filterFunction).map((data) => {
+        if (isEventResponse(data)) {
+          return {
+            data: addTagsToEventFunction ? addTagsToEventFunction(data) : data,
             type,
-          } as SavePayload),
-      );
+          } as SavePayload;
+        }
+
+        return {
+          data,
+          type,
+        } as SavePayload;
+      });
       logger.debug(`trying to save: ${JSON.stringify(payload, null, 2)}`);
       await algoliaClient.saveMany(payload);
     } catch (err) {

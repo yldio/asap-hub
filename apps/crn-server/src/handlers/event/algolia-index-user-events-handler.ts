@@ -18,6 +18,7 @@ import Events from '../../controllers/event.controller';
 import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { addTagsToEvents } from './helper';
 
 export const indexUserEventsHandler = (
   eventController: EventController,
@@ -28,6 +29,7 @@ export const indexUserEventsHandler = (
     'event',
     logger,
     eventFilter,
+    addTagsToEvents,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

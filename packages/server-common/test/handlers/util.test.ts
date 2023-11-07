@@ -38,8 +38,44 @@ describe('utils', () => {
         filter,
       );
       processingFunction(users);
-      expect(filter).toBeCalled();
+      expect(filter).toHaveBeenCalled();
     });
+
+    test('the addTagsToEventFunction is called when present and processing events', () => {
+      const algoliaClient = getAlgoliaSearchClientMock();
+      const events = {
+        total: 1,
+        items: [getEventResponse({ hidden: false })],
+      };
+      const filter = jest.fn().mockReturnValue(true);
+      const addTagsToEventFunction = jest.fn();
+      const processingFunction = createProcessingFunction(
+        algoliaClient,
+        'user',
+        logger,
+        filter,
+        addTagsToEventFunction,
+      );
+      processingFunction(events);
+      expect(addTagsToEventFunction).toHaveBeenCalled();
+    });
+
+    test('the addTagsToEventFunction is not called even though is present but not processing events', () => {
+      const algoliaClient = getAlgoliaSearchClientMock();
+      const users = getListUserResponse();
+      const filter = jest.fn().mockReturnValue(true);
+      const addTagsToEventFunction = jest.fn();
+      const processingFunction = createProcessingFunction(
+        algoliaClient,
+        'event',
+        logger,
+        filter,
+        addTagsToEventFunction,
+      );
+      processingFunction(users);
+      expect(addTagsToEventFunction).not.toHaveBeenCalled();
+    });
+
     test('Should throw the algolia error when saving the record fails', async () => {
       const algoliaError = new Error('ERROR');
       const algoliaClient = getAlgoliaSearchClientMock();

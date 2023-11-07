@@ -10,6 +10,7 @@ import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { EventPayload } from '../event-bus';
+import { addTagsToEvents } from './helper';
 
 export const indexEventHandler =
   (
@@ -27,7 +28,7 @@ export const indexEventHandler =
         throw notFound();
       }
       await algoliaClient.save({
-        data: crnEvent,
+        data: addTagsToEvents(crnEvent),
         type: 'event',
       });
 

@@ -81,7 +81,35 @@ describe('Index Events on Team event handler', () => {
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {
         type: 'event',
-        data: { ...getEventDataObject(), id: 'event-2', hidden: false },
+        data: {
+          ...getEventDataObject(),
+          _tags: [],
+          id: 'event-2',
+          hidden: false,
+        },
+      },
+    ]);
+  });
+
+  test('Should save event with _tags', async () => {
+    eventControllerMock.fetch.mockResolvedValueOnce({
+      total: 1,
+      items: [
+        {
+          ...getEventDataObject(),
+          tags: ['Proteins', 'Cell Biology'],
+        },
+      ],
+    });
+
+    await indexHandler(getTeamUpdateEvent('team-id'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        type: 'event',
+        data: expect.objectContaining({
+          _tags: ['Proteins', 'Cell Biology'],
+        }),
       },
     ]);
   });
@@ -102,7 +130,9 @@ describe('Index Events on Team event handler', () => {
         take: 8,
       });
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        listEventResponse.items.map(mapPayload),
+        listEventResponse.items
+          .map(mapPayload)
+          .map((item) => ({ ...item, data: { ...item.data, _tags: [] } })),
       );
     },
   );

@@ -119,5 +119,12 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
     };
   }
 
+  if (type === 'event' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
   return payload;
 };

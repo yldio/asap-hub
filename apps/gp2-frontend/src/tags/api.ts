@@ -11,6 +11,7 @@ export type TagSearchOptions = Omit<
 };
 
 export const getItemTypes = (types: gp2.EntityType[]) => {
+  console.log('git', types);
   if (types.length === 0) {
     return ['event', 'news', 'output', 'project', 'user'] as gp2.EntityType[];
   }

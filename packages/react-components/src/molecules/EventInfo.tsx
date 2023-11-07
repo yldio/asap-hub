@@ -1,8 +1,7 @@
 import { BasicEvent } from '@asap-hub/model';
-import { events } from '@asap-hub/routing';
+import { events, tags as tagRoute } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { tags as tagRoute } from '@asap-hub/routing';
 
 import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';

@@ -34,7 +34,7 @@ const renderList = async (tags = []) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/events']}>
+            <MemoryRouter initialEntries={['/tags?tag=test']}>
               <TagSearch />
             </MemoryRouter>
           </WhenReady>
@@ -48,13 +48,13 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
-const mockGetEvents = getTagSearchResults as jest.MockedFunction<
+const mockGetTags = getTagSearchResults as jest.MockedFunction<
   typeof getTagSearchResults
 >;
 
 describe('TagSearch', () => {
   it('handles filter switching', async () => {
-    mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+    mockGetTags.mockResolvedValue(createEventListAlgoliaResponse(1));
     const mockToggleFilter = jest.fn();
     mockUseSearch.mockImplementation(() => ({
       changeLocation: jest.fn(),

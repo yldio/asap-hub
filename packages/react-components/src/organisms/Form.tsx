@@ -11,6 +11,7 @@ const styles = css({
   display: 'grid',
   gridTemplateRows: 'max-content 1fr',
   overflow: 'auto',
+  justifyContent: 'center',
 });
 
 type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';

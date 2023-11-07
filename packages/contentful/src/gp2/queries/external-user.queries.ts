@@ -36,3 +36,12 @@ export const FETCH_EXTERNAL_USERS = gql`
   }
   ${externalUsersContentQueryFragment}
 `;
+
+export const FETCH_EXTERNAL_USER_BY_ID = gql`
+  query FetchExternalUserById($id: String!) {
+    externalUsers(id: $id) {
+      ...ExternalUsersContentData
+    }
+  }
+  ${externalUsersContentQueryFragment}
+`;

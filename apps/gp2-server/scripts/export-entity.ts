@@ -6,6 +6,7 @@ import News from '../src/controllers/news.controller';
 import Outputs from '../src/controllers/output.controller';
 import Projects from '../src/controllers/project.controller';
 import Users from '../src/controllers/user.controller';
+import ExternalUsers from '../src/controllers/external-user.controller';
 import { AssetContentfulDataProvider } from '../src/data-providers/asset.data-provider';
 import { EventContentfulDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalUserContentfulDataProvider } from '../src/data-providers/external-user.data-provider';
@@ -90,12 +91,14 @@ const getController = (entity: keyof EntityResponsesGP2) => {
     getContentfulRestClientFactory,
   );
   const newsDataProvider = new NewsContentfulDataProvider(graphQLClient);
+
   const controllerMap = {
     output: new Outputs(outputDataProvider, externalUserDataProvider),
     project: new Projects(projectDataProvider),
     event: new Events(eventDataProvider),
     user: new Users(userDataProvider, assetDataProvider),
     news: new News(newsDataProvider),
+    'external-user': new ExternalUsers(externalUserDataProvider),
   };
 
   return controllerMap[entity];

@@ -4,12 +4,12 @@ import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 import { Pill, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { perRem } from '../pixels';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { defaultPageLayoutPaddingStyle } from '../layout';
 import { formatDate } from '../date';
 import { ExternalLink } from '../molecules';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: defaultPageLayoutPaddingStyle,
 });
 
 const footerContainer = css({

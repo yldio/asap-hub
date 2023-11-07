@@ -86,3 +86,10 @@ export const getContributingCohorts = jest.fn(
     },
   ],
 );
+
+export const getUsersAndExternalUsers = jest.fn(
+  async (): Promise<gp2.ListUserResponse | gp2.ListExternalUserResponse> => ({
+    items: [],
+    total: 0,
+  }),
+);

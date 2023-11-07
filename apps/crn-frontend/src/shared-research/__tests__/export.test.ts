@@ -13,7 +13,7 @@ import { Stringifier } from 'csv-stringify';
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   algoliaResultsToStream,
-  MAX_SQUIDEX_RESULTS,
+  MAX_CONTENTFUL_RESULTS,
   researchOutputToCSV,
   squidexResultsToStream,
 } from '../export';
@@ -248,7 +248,7 @@ describe('squidexResultsToStream', () => {
               title: `${parameters.currentPage}`,
             },
           ],
-          total: 3 * MAX_SQUIDEX_RESULTS,
+          total: 3 * MAX_CONTENTFUL_RESULTS,
         }),
       (a) => a,
     );
@@ -282,7 +282,7 @@ describe('squidexResultsToStream', () => {
               title: 'a',
             },
           ],
-          total: 2 * MAX_SQUIDEX_RESULTS,
+          total: 2 * MAX_CONTENTFUL_RESULTS,
         }),
       (a: ResearchOutputResponse) => ({ title: `${a.title}-b` }),
     );

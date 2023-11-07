@@ -21,7 +21,7 @@ import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import {
   MAX_ALGOLIA_RESULTS,
-  MAX_SQUIDEX_RESULTS,
+  MAX_CONTENTFUL_RESULTS,
 } from '../../../shared-research/export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -242,7 +242,7 @@ it('triggers draft research output export with custom file name', async () => {
         draftsOnly: true,
         userAssociationMember: true,
         currentPage: 0,
-        pageSize: MAX_SQUIDEX_RESULTS,
+        pageSize: MAX_CONTENTFUL_RESULTS,
       },
       expect.anything(),
     ),

@@ -29,11 +29,24 @@ const workingGroup = (() => {
     { outputDocumentType: outputDocumentTypeParser },
     {},
   );
+  const duplicateOutput = route(
+    '/duplicate/:outputId',
+    { outputId: stringParser },
+    {},
+  );
 
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { overview, workspace, outputs, upcoming, past, createOutput },
+    {
+      overview,
+      workspace,
+      outputs,
+      upcoming,
+      past,
+      createOutput,
+      duplicateOutput,
+    },
   );
 })();
 

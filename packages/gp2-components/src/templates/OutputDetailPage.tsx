@@ -3,6 +3,7 @@ import {
   Link,
   pixels,
   editIcon,
+  duplicateIcon,
   mail,
   RelatedEventsCard,
   RelatedResearchCard,
@@ -111,6 +112,33 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   {editIcon} Edit
                 </Link>
               </div>
+              <div css={leftButtons}>
+                <Link
+                  noMargin
+                  href={
+                    output.mainEntity.type === 'WorkingGroups'
+                      ? gp2Routing
+                          .workingGroups({})
+                          .workingGroup({
+                            workingGroupId: output.mainEntity.id,
+                          })
+                          .duplicateOutput({
+                            outputId: output.id,
+                          }).$
+                      : output.mainEntity.type === 'Projects'
+                      ? gp2Routing
+                          .projects({})
+                          .project({ projectId: output.mainEntity.id })
+                          .duplicateOutput({ outputId: output.id }).$
+                      : undefined
+                  }
+                  buttonStyle
+                  small
+                  primary
+                >
+                  {duplicateIcon} Duplicate
+                </Link>
+              </div>
             </div>
           ) : null}
           <OutputCard {...output} detailedView />
@@ -153,4 +181,5 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
     )}
   </PageNotifications>
 );
+
 export default OutputDetailPage;

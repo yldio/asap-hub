@@ -187,3 +187,26 @@ export const getInstitutions = async ({
   }
   return resp.json();
 };
+
+export const getUsersAndExternalUsers = async (
+  algoliaClient: AlgoliaClient<'gp2'>,
+  { searchQuery, currentPage, pageSize }: GetListOptions,
+): Promise<gp2.ListUserResponse | gp2.ListExternalUserResponse> => {
+  const result = await algoliaClient.search(
+    ['user', 'external-user'],
+    searchQuery,
+    {
+      filters: undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+      restrictSearchableAttributes: ['displayName'],
+    },
+  );
+
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
+};

@@ -88,7 +88,7 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_${{github.run_id}}_temp'
-          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') || (inputs.entity == 'projects' && 'project') || (inputs.entity == 'events' && 'event') || (inputs.entity == 'users' && 'user') || (inputs.entity == 'news' && 'news') }}
+          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') || (inputs.entity == 'projects' && 'project') || (inputs.entity == 'events' && 'event') || (inputs.entity == 'users' && 'user') || (inputs.entity == 'news' && 'news') || (inputs.entity == 'external-users' && 'external-user') }}
       - name: Import Outputs (OUTPUTS | ALL)
         if: ${{ inputs.entity == 'outputs' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
@@ -154,6 +154,20 @@ jobs:
           algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_${{github.run_id}}_temp'
           app: 'gp2'
           entity-type: 'news'
+          contentful-env: ${{ inputs.contentful-environment-id }}
+          contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          data-store: 'contentful'
+      - name: Import External Users (EXTERNAL-USERS | ALL)
+        if: ${{ inputs.entity == 'external-users' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_${{github.run_id}}_temp'
+          app: 'gp2'
+          entity-type: 'external-user'
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

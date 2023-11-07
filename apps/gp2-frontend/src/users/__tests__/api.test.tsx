@@ -1,11 +1,14 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model, InstitutionsResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { PAGE_SIZE } from '../../hooks';
-import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createAlgoliaResponse,
+  createUserListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import {
   createUserApiUrl,
   getAlgoliaUsers,
@@ -13,11 +16,16 @@ import {
   getInstitutions,
   getUser,
   getUsers,
+  getUsersAndExternalUsers,
   patchUser,
   postUserAvatar,
 } from '../api';
 
 jest.mock('../../config');
+
+type Search = () => Promise<
+  ClientSearchResponse<'gp2', 'user' | 'external-user'>
+>;
 
 beforeEach(() => nock.cleanAll());
 describe('getUser', () => {
@@ -468,6 +476,93 @@ describe('postUserAvatar', () => {
       postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update avatar for user with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getUsersAndExternalUsers', () => {
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'gp2'>;
+
+  const defaultOptions: GetListOptions = {
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  };
+
+  beforeEach(() => {
+    const userResponse = gp2Fixtures.createUserResponse();
+    const algoliaUsersResponse = createAlgoliaResponse([
+      {
+        ...userResponse,
+        objectID: userResponse.id,
+        __meta: { type: 'user' },
+      },
+    ]);
+
+    const externalUserResponse = {
+      id: '1234-external-user',
+      displayName: '1234 external user',
+    };
+
+    const alogliaExternalUsersResponse = createAlgoliaResponse([
+      {
+        ...externalUserResponse,
+        objectID: externalUserResponse.id,
+        __meta: { type: 'external-user' },
+      },
+    ]);
+
+    search.mockReset();
+    search.mockResolvedValue({
+      ...algoliaUsersResponse,
+      hits: [
+        ...algoliaUsersResponse.hits,
+        ...alogliaExternalUsersResponse.hits,
+      ],
+    });
+  });
+
+  it('will not filter users nor external-users by default', async () => {
+    await getUsersAndExternalUsers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user', 'external-user'],
+      '',
+      expect.objectContaining({
+        filters: undefined,
+      }),
+    );
+  });
+
+  it('will not default to not specifying page and limits hits per page by default', async () => {
+    await getUsersAndExternalUsers(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user', 'external-user'],
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('will pass the search query to algolia', async () => {
+    await getUsersAndExternalUsers(algoliaSearchClient, {
+      ...defaultOptions,
+      searchQuery: 'Hello World!',
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user', 'external-user'],
+      'Hello World!',
+      expect.objectContaining({}),
     );
   });
 });

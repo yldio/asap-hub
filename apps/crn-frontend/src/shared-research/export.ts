@@ -11,8 +11,8 @@ import { isInternalUser } from '@asap-hub/validation';
 import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
-// https://github.com/Squidex/squidex/blob/master/backend/src/Squidex/appsettings.json#L266
-export const MAX_SQUIDEX_RESULTS = 200;
+// Max Complexity 11000. Research Outputs are the most complex entity. 554 11000/554 = 19.8. 15 seems safe.
+export const MAX_CONTENTFUL_RESULTS = 15;
 
 type ResearchOutputCSV = Record<
   keyof Omit<
@@ -147,11 +147,11 @@ export const squidexResultsToStream = async <T>(
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
       currentPage,
-      pageSize: MAX_SQUIDEX_RESULTS,
+      pageSize: MAX_CONTENTFUL_RESULTS,
     });
     data.items.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
-    morePages = currentPage * MAX_SQUIDEX_RESULTS < data.total;
+    morePages = currentPage * MAX_CONTENTFUL_RESULTS < data.total;
   }
   csvStream.end();
 };

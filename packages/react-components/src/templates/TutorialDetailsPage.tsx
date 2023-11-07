@@ -4,7 +4,7 @@ import { TutorialsResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Divider, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
-import { contentSidePaddingWithNavigation } from '../layout';
+import { defaultPageLayoutPaddingStyle } from '../layout';
 import { TagList } from '../molecules';
 import {
   RelatedTutorialsCard,
@@ -16,7 +16,7 @@ import {
 } from '../organisms';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: defaultPageLayoutPaddingStyle,
 });
 
 const tagsContainer = css({

@@ -22,13 +22,13 @@ import { tagSearchResultsState } from '../state';
 
 jest.mock('../api');
 
-const renderList = async (props: ResultListProps, tags?: string[]) => {
+const renderList = async (props: ResultListProps, tag?: string) => {
   render(
     <RecoilRoot
       initializeState={({ reset }) => {
         reset(
           tagSearchResultsState({
-            tags: tags || [],
+            tags: [],
             currentPage: 0,
             entityType: new Set(),
             pageSize: PAGE_SIZE,
@@ -39,7 +39,7 @@ const renderList = async (props: ResultListProps, tags?: string[]) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/events']}>
+            <MemoryRouter initialEntries={[tag ? `/tags?tag=${tag}` : '/tags']}>
               <ResultList {...props} />
             </MemoryRouter>
           </WhenReady>
@@ -61,13 +61,13 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createEventListAlgoliaResponse(1),
     );
-    await renderList({}, ['test']);
+    await renderList({}, 'test');
     expect(screen.getByRole('link', { name: 'Event 0' })).toBeInTheDocument();
   });
 
   it('renders users', async () => {
     mockGetTagSearchResults.mockResolvedValue(createUserListAlgoliaResponse(1));
-    await renderList({}, ['test']);
+    await renderList({}, 'test');
     expect(
       screen.getByRole('link', { name: 'Tony Stark 0, PhD' }),
     ).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createProjectListAlgoliaResponse(1),
     );
-    await renderList({}, ['test']);
+    await renderList({}, 'test');
     expect(
       screen.getByRole('link', { name: 'Project Title' }),
     ).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createOutputListAlgoliaResponse(1),
     );
-    await renderList({ filters: new Set() }, ['test']);
+    await renderList({ filters: new Set() }, 'test');
     expect(screen.getByRole('link', { name: 'Output 1' })).toBeInTheDocument();
   });
 
@@ -95,7 +95,7 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createNewsListAlgoliaResponse(1, 1),
     );
-    await renderList({ filters: new Set() }, ['test']);
+    await renderList({ filters: new Set() }, 'test');
     expect(
       screen.queryByRole('link', { name: 'News 1' }),
     ).not.toBeInTheDocument();
@@ -105,7 +105,7 @@ describe('ResultList', () => {
     mockGetTagSearchResults.mockResolvedValue(
       createAlgoliaResponse<'event'>([]),
     );
-    await renderList({ filters: new Set() }, []);
+    await renderList({ filters: new Set() });
     expect(
       screen.getByRole('heading', { name: 'Explore any tags.' }),
     ).toBeInTheDocument();

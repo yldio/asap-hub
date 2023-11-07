@@ -792,6 +792,7 @@ const serverlessConfig: AWS = {
     },
     contentfulWebhookPoller: {
       handler: './src/handlers/webhooks/webhook-contentful-poller.handler',
+      timeout: 20,
       reservedConcurrency: 2,
       events: [
         {

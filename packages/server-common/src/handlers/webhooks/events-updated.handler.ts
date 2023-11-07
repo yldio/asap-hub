@@ -40,7 +40,7 @@ export const webhookEventUpdatedHandlerFactory = (
             StringValue: channelId,
           },
         },
-        MessageBody: '',
+        MessageBody: JSON.stringify(request),
       });
       await sqs.send(command);
       logger.debug(

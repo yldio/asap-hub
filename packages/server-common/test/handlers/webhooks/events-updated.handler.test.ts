@@ -66,7 +66,7 @@ describe('Event Webhook', () => {
           StringValue: channelId,
         },
       },
-      MessageBody: '',
+      MessageBody: expect.any(String),
     });
     expect(sqsMock.send).toHaveBeenCalledWith({
       ...expectedCommand,

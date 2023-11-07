@@ -131,7 +131,7 @@ export const parseComponents = {
 
 export const parseTagNames = (poorText = false) =>
   poorText
-    ? ['a', 'p', 'br']
+    ? ['a', 'p', 'br', 'sub', 'sup']
     : [
         ...Object.keys(parseComponents),
         // text modifiers with default UA styling

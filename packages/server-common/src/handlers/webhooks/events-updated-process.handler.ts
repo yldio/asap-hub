@@ -44,14 +44,22 @@ export const webhookEventUpdatedProcessHandlerFactory = (
 
       const calendar = await getCalendar(resourceId);
 
-      const cmsCalendarId = calendar.id;
-      const { googleCalendarId } = calendar;
-      const syncToken = calendar.syncToken || undefined;
+      const {
+        googleCalendarId,
+        id: cmsCalendarId,
+        syncToken,
+        channelId: currentChannelId,
+      } = calendar;
 
+      if (channelId !== currentChannelId) {
+        return {
+          statusCode: 200,
+        };
+      }
       const nextSyncToken = await syncCalendar(
         googleCalendarId,
         cmsCalendarId,
-        syncToken,
+        syncToken || undefined,
       );
 
       if (nextSyncToken) {

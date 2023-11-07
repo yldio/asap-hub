@@ -65,6 +65,20 @@ export const ButtonStyledIcon = () => (
   </Link>
 );
 
+export const MinimumButtonStyledIconAndText = () => (
+  <div style={{ width: 'min-content' }}>
+    <Link
+      href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+      buttonStyle
+      primary={boolean('Primary', true)}
+      small={boolean('Small', false)}
+    >
+      <OrcidIcon />
+      {text('Text', 'Text')}
+    </Link>
+  </div>
+);
+
 export const ButtonStyledIconAndText = () => (
   <Link
     href={text('Destination', 'https://www.parkinsonsroadmap.org/')}

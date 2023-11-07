@@ -13,7 +13,7 @@ import {
   tin,
   TransparentColor,
 } from './colors';
-import { formTargetWidth, mobileScreen, perRem } from './pixels';
+import { formTargetWidth, mobileScreen, perRem, rem } from './pixels';
 
 export const activePrimaryBackgroundColorDefault = color(122, 210, 169, 0.18);
 
@@ -61,16 +61,22 @@ const largeStyles = css({
     width: 'auto',
   },
   '> svg + span': {
-    marginLeft: `${10 / perRem}em`,
+    marginLeft: rem(10),
+  },
+  ':has(> svg + span)': {
+    paddingLeft: `${(24 - borderWidth) / perRem}em`,
   },
   '> span + svg': {
-    marginLeft: `${10 / perRem}em`,
+    marginLeft: rem(10),
+  },
+  ':has(> span + svg )': {
+    paddingRight: `${(24 - borderWidth) / perRem}em`,
   },
 
   paddingTop: `${(15 - borderWidth) / perRem}em`,
   paddingBottom: `${(15 - borderWidth) / perRem}em`,
-  paddingLeft: `${(20 - borderWidth) / perRem}em`,
-  paddingRight: `${(20 - borderWidth) / perRem}em`,
+  paddingLeft: `${(32 - borderWidth) / perRem}em`,
+  paddingRight: `${(32 - borderWidth) / perRem}em`,
 });
 
 const largeWithSpaceStyles = css({
@@ -90,16 +96,22 @@ const smallStyles = css({
     width: 'auto',
   },
   '> svg + span': {
-    marginLeft: `${6 / perRem}em`,
+    marginLeft: rem(6),
+  },
+  ':has(> svg + span)': {
+    paddingLeft: rem(8 - borderWidth),
   },
   '> span + svg': {
-    marginLeft: `${6 / perRem}em`,
+    marginLeft: rem(6),
+  },
+  ':has(> span + svg )': {
+    paddingRight: rem(8 - borderWidth),
   },
 
   paddingTop: `${(6 - borderWidth) / perRem}em`,
   paddingBottom: `${(6 - borderWidth) / perRem}em`,
-  paddingLeft: `${(15 - borderWidth) / perRem}em`,
-  paddingRight: `${(15 - borderWidth) / perRem}em`,
+  paddingLeft: `${(16 - borderWidth) / perRem}em`,
+  paddingRight: `${(16 - borderWidth) / perRem}em`,
 });
 
 const largeTextOnlyStyles = css({

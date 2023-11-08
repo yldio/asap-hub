@@ -26,6 +26,7 @@ export const createProcessingFunction =
     type: Type,
     logger: Logger,
     filterFunction: (item: T['data']) => boolean = () => true,
+    addTagsFunction?: (item: T['data']) => T['data'] & { _tags: string[] },
   ) =>
   async (found: ListResponse<T['data']>) => {
     logger.info(
@@ -36,7 +37,7 @@ export const createProcessingFunction =
       const payload = found.items.filter(filterFunction).map(
         (data) =>
           ({
-            data,
+            data: addTagsFunction ? addTagsFunction(data) : data,
             type,
           } as SavePayload),
       );

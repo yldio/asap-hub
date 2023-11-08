@@ -1,4 +1,8 @@
-import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import {
+  AlgoliaClient,
+  algoliaSearchClientFactory,
+  Payload,
+} from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
@@ -18,16 +22,18 @@ import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
+import { addTagsFunction } from '../helper';
 
 export const indexTeamEventsHandler = (
   eventController: EventController,
   algoliaClient: AlgoliaClient<'crn'>,
 ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) => {
-  const processingFunction = createProcessingFunction(
+  const processingFunction = createProcessingFunction<Payload, 'event'>(
     algoliaClient,
     'event',
     logger,
     eventFilter,
+    addTagsFunction<Payload>,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

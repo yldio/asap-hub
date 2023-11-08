@@ -18,6 +18,24 @@ describe('Event index handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
+  test('Should populate _tags field before saving the event to Algolia', async () => {
+    const event = createEventContentful();
+    const eventResponse = getEventResponse();
+    const tags = ['Blood', 'LRRK2'];
+    eventResponse.tags = tags;
+
+    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+
+    await indexHandler(event);
+    expect(eventControllerMock.fetchById).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: { ...eventResponse, _tags: tags },
+      type: 'event',
+    });
+  });
+
   test('Should fetch the external author and create a record in Algolia when the external author is created in Contentful', async () => {
     const event = createEventContentful();
     const eventResponse = getEventResponse();
@@ -28,7 +46,7 @@ describe('Event index handler', () => {
       event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: eventResponse,
+      data: expect.objectContaining(eventResponse),
       type: 'event',
     });
   });
@@ -40,7 +58,7 @@ describe('Event index handler', () => {
     await indexHandler(updateEvent());
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: eventResponse,
+      data: expect.objectContaining(eventResponse),
       type: 'event',
     });
   });
@@ -142,7 +160,10 @@ describe('Event index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(eventResponse);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        ...eventResponse,
+        data: { ...eventResponse.data, _tags: [] },
+      });
     });
 
     test('receives the events created and updated in reverse order', async () => {
@@ -159,7 +180,10 @@ describe('Event index handler', () => {
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith(eventResponse);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+        ...eventResponse,
+        data: { ...eventResponse.data, _tags: [] },
+      });
     });
 
     test('receives the events created and unpublished in correct order', async () => {

@@ -7,7 +7,11 @@ import Tags from './TagsList';
 import { useAlgolia } from '../hooks/algolia';
 import { useSearch } from '../hooks';
 
-export const entities: CRNTagSearchEntitiesList = ['research-output', 'user'];
+export const entities: CRNTagSearchEntitiesList = [
+  'research-output',
+  'user',
+  'event',
+];
 
 const Routes: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();

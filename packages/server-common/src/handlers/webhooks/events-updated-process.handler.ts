@@ -52,6 +52,9 @@ export const webhookEventUpdatedProcessHandlerFactory = (
       } = calendar;
 
       if (channelId !== currentChannelId) {
+        logger.debug(
+          `channel Ids do not match: ${channelId} - ${currentChannelId}`,
+        );
         return {
           statusCode: 200,
         };

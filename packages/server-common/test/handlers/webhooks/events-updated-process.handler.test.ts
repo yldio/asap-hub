@@ -25,7 +25,7 @@ describe('Event Webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
     );
   });
@@ -34,7 +34,7 @@ describe('Event Webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
     );
   });
@@ -87,7 +87,7 @@ describe('Event Webhook', () => {
     expect(statusCode).toStrictEqual(500);
   });
 
-  test('Should return 200 when the channel ids are different but not sync the calendar', async () => {
+  test('Should return 200 when the channel ids are different but not sync the calendar and log', async () => {
     calendarDataProviderMock.fetch.mockResolvedValueOnce(
       getListCalendarDataObject({ channelId: '42' }),
     );
@@ -98,8 +98,11 @@ describe('Event Webhook', () => {
     const { statusCode } = await handler(event);
 
     expect(statusCode).toStrictEqual(200);
-    expect(syncCalendarMock).not.toBeCalled();
+    expect(syncCalendarMock).not.toHaveBeenCalled();
     expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
+    expect(logger.debug).toHaveBeenCalledWith(
+      expect.stringMatching(/channel Ids do not match/i),
+    );
   });
 
   test('Should return 200 and save nextSyncToken when it receives one from google', async () => {

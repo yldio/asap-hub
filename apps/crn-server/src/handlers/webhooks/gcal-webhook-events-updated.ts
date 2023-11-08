@@ -1,37 +1,17 @@
-import {
-  getJWTCredentialsFactory,
-  syncCalendarFactory,
-  syncEventFactory,
-  webhookEventUpdatedHandlerFactory,
-} from '@asap-hub/server-common';
+/* istanbul ignore file */
+import { webhookEventUpdatedHandlerFactory } from '@asap-hub/server-common';
+import { SQSClient } from '@aws-sdk/client-sqs';
 import { Handler } from 'aws-lambda';
-import {
-  googleApiCredentialsSecretId,
-  googleApiToken,
-  region,
-} from '../../config';
-import Events from '../../controllers/event.controller';
-import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
-import { getEventDataProvider } from '../../dependencies/events.dependencies';
+import { googleApiToken, googleCalenderEventQueueUrl } from '../../config';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-const getJWTCredentials = getJWTCredentialsFactory({
-  googleApiCredentialsSecretId,
-  region,
-});
-
-const syncCalendar = syncCalendarFactory(
-  syncEventFactory(new Events(getEventDataProvider()), logger),
-  getJWTCredentials,
-  logger,
-);
+const sqs = new SQSClient({});
 
 export const handler: Handler = sentryWrapper(
   webhookEventUpdatedHandlerFactory(
-    getCalendarDataProvider(),
-    syncCalendar,
+    sqs,
+    { googleApiToken, googleCalenderEventQueueUrl },
     logger,
-    { googleApiToken },
   ),
 );

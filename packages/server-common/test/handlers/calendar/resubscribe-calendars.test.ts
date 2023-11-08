@@ -75,11 +75,15 @@ describe('Resubscribe calendar handler', () => {
   });
 
   test('Should get the list of calendars, unsubscribe each and subscribe again', async () => {
-    const calendarDataObject1 = getCalendarDataObject();
+    const calendarDataObject1 = {
+      ...getCalendarDataObject(),
+      channelId: undefined,
+    };
     const calendarDataObject2 = {
       ...getCalendarDataObject(),
       id: 'uuid2',
       resourceId: 'resource-id-2',
+      channelId: undefined,
     };
 
     calendarDataProviderMock.fetch.mockResolvedValueOnce({
@@ -112,11 +116,15 @@ describe('Resubscribe calendar handler', () => {
   });
 
   test('Should use `getCalendarId` function if provided when unsubscribing and subscribing', async () => {
-    const calendarDataObject1 = getCalendarDataObject();
+    const calendarDataObject1 = {
+      ...getCalendarDataObject(),
+      channelId: undefined,
+    };
     const calendarDataObject2 = {
       ...getCalendarDataObject(),
       id: 'uuid2',
       resourceId: 'resource-id-2',
+      channelId: undefined,
     };
 
     calendarDataProviderMock.fetch.mockResolvedValueOnce({

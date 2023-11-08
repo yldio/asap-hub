@@ -76,11 +76,9 @@ describe('Contentful poller webhook', () => {
     const webHookPayload = getNewsPublishContentfulWebhookPayload();
     delete (webHookPayload.sys as any).revision;
     const event = getNewsPublishContentfulPollerPayload({
-      ...getNewsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord(),
       body: JSON.stringify(webHookPayload),
     });
-
-    mockGetEntry.mockRejectedValueOnce(new Error());
 
     const { statusCode } = await handler(event);
 
@@ -93,11 +91,9 @@ describe('Contentful poller webhook', () => {
     const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.DetailType;
     const event = getNewsPublishContentfulPollerPayload({
-      ...getNewsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord(),
       messageAttributes,
     });
-
-    mockGetEntry.mockRejectedValueOnce(new Error());
 
     const { statusCode } = await handler(event);
 
@@ -111,11 +107,9 @@ describe('Contentful poller webhook', () => {
     const { messageAttributes } = getNewsPublishContentfulPollerRecord();
     delete messageAttributes.Action;
     const event = getNewsPublishContentfulPollerPayload({
-      ...getNewsPublishContentfulPollerRecord,
+      ...getNewsPublishContentfulPollerRecord(),
       messageAttributes,
     });
-
-    mockGetEntry.mockRejectedValueOnce(new Error());
 
     const { statusCode } = await handler(event);
 

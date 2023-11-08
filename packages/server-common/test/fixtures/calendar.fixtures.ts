@@ -6,6 +6,7 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
   syncToken: 'sync-token',
   resourceId: 'resource-id',
+  channelId: '47',
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
@@ -13,7 +14,9 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   workingGroups: [{ id: '123', complete: false }],
 });
 
-export const getListCalendarDataObject = (): ListCalendarDataObject => ({
+export const getListCalendarDataObject = (
+  overrides: Partial<CalendarDataObject> = {},
+): ListCalendarDataObject => ({
   total: 1,
-  items: [getCalendarDataObject()],
+  items: [{ ...getCalendarDataObject(), ...overrides }],
 });

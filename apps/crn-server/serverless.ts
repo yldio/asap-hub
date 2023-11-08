@@ -224,6 +224,18 @@ const serverlessConfig: AWS = {
               'Fn::GetAtt': ['ContentfulPollerQueue', 'Arn'],
             },
           },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
+              'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
+            },
+          },
         ],
       },
     },
@@ -618,7 +630,6 @@ const serverlessConfig: AWS = {
       },
     },
     gcalEventsUpdatedContentful: {
-      timeout: 300,
       handler: './src/handlers/webhooks/gcal-webhook-events-updated.handler',
       events: [
         {
@@ -629,12 +640,35 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        GOOGLE_CALENDER_EVENT_QUEUE_URL: {
+          Ref: 'GoogleCalendarEventQueue',
+        },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    gcalEventsUpdatedContentfulProcess: {
+      timeout: 300,
+      handler:
+        './src/handlers/webhooks/gcal-webhook-events-updated-process.handler',
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
+            },
+            batchSize: 1,
+            maximumConcurrency: 2,
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
       },
     },
+
     invalidateCache: {
       handler: './src/handlers/invalidate-cache/invalidate-handler.handler',
       events: [
@@ -739,6 +773,7 @@ const serverlessConfig: AWS = {
     },
     contentfulWebhookPoller: {
       handler: './src/handlers/webhooks/webhook-contentful-poller.handler',
+      timeout: 20,
       reservedConcurrency: 2,
       events: [
         {
@@ -1396,6 +1431,27 @@ const serverlessConfig: AWS = {
         Properties: {
           QueueName:
             '${self:service}-${self:provider.stage}-contentful-poller-queue-dlq',
+        },
+      },
+      GoogleCalendarEventQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-google-calendar-event-queue',
+          VisibilityTimeout: 300,
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['ContentfulPollerQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      GoogleCalendarEventQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-google-calendar-event-queue-dlq',
         },
       },
       ApiGatewayAlarm5xx: {

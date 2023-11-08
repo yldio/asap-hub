@@ -1,6 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
-import { EventController, EventEvent } from '@asap-hub/model';
+import { EventController, EventDataObject, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { notFound, isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -10,7 +10,7 @@ import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { EventPayload } from '../event-bus';
-import { addTagsToEvents } from './helper';
+import { addTagsFunction } from '../helper';
 
 export const indexEventHandler =
   (
@@ -28,7 +28,7 @@ export const indexEventHandler =
         throw notFound();
       }
       await algoliaClient.save({
-        data: addTagsToEvents(crnEvent),
+        data: addTagsFunction(crnEvent) as EventDataObject,
         type: 'event',
       });
 

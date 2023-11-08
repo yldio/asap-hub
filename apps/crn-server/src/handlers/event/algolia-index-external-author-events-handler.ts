@@ -22,7 +22,7 @@ import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorPayload } from '../event-bus';
-import { addTagsToEvents } from './helper';
+import { addTagsFunction } from '../helper';
 
 export const indexExternalAuthorEventsHandler = (
   eventController: EventController,
@@ -35,7 +35,7 @@ export const indexExternalAuthorEventsHandler = (
     'event',
     logger,
     eventFilter,
-    addTagsToEvents<Payload>,
+    addTagsFunction<Payload>,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

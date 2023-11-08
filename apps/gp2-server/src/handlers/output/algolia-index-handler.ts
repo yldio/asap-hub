@@ -32,7 +32,7 @@ export const indexOutputHandler =
         ) {
           await algoliaClient.remove(event.detail.resourceId);
           log.debug(`Removed output ${event.detail.resourceId}`);
-          return;
+          return undefined;
         }
         const output = await outputController.fetchById(id);
         log.debug(`Fetched output ${output.id}`);

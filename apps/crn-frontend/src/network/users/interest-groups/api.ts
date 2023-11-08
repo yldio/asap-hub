@@ -1,8 +1,5 @@
 import { ListInterestGroupResponse } from '@asap-hub/model';
-import {
-  createSentryHeaders,
-  createFeatureFlagHeaders,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 
@@ -14,7 +11,6 @@ export const getUserInterestGroups = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

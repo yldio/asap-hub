@@ -130,7 +130,6 @@ const serverlessConfig: AWS = {
         allowedHeaders: [
           'authorization',
           'x-transaction-id',
-          'x-contentful-enabled',
           'content-type',
           'accept',
           'origin',
@@ -158,7 +157,6 @@ const serverlessConfig: AWS = {
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
-      IS_CONTENTFUL_ENABLED: 'true',
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
@@ -338,7 +336,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     gcalResubscribeCalendarsContentful: {
@@ -354,7 +351,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     syncUserOrcidContentful: {
@@ -375,7 +371,6 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     inviteUserContentful: {
@@ -401,7 +396,6 @@ const serverlessConfig: AWS = {
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexResearchOutput: {
@@ -427,7 +421,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexUser: {
@@ -453,7 +446,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexExternalAuthor: {
@@ -479,7 +471,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexEvents: {
@@ -502,7 +493,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexUserEvents: {
@@ -527,7 +517,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexExternalUserEvents: {
@@ -553,7 +542,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexTeamEvents: {
@@ -578,7 +566,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexGroupEvents: {
@@ -604,7 +591,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexLabUsers: {
@@ -629,7 +615,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     gcalEventsUpdatedContentful: {
@@ -648,7 +633,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     invalidateCache: {
@@ -695,7 +679,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexTeamUsers: {
@@ -715,7 +698,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     updateContentfulWorkingGroupDeliverables: {
@@ -734,7 +716,6 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     contentfulWebhook: {
@@ -787,7 +768,6 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     sendSlackAlert: {

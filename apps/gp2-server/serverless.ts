@@ -872,7 +872,6 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
   },

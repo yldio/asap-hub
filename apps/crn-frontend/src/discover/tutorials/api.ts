@@ -1,8 +1,5 @@
 import { ListTutorialsResponse, TutorialsResponse } from '@asap-hub/model';
-import {
-  createFeatureFlagHeaders,
-  GetListOptions,
-} from '@asap-hub/frontend-utils';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 
@@ -26,7 +23,7 @@ export const getTutorialById = async (
   authorization: string,
 ): Promise<TutorialsResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/tutorials/${id}`, {
-    headers: { authorization, ...createFeatureFlagHeaders() },
+    headers: { authorization },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

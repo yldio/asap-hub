@@ -1,8 +1,5 @@
 import { DiscoverResponse } from '@asap-hub/model';
-import {
-  createSentryHeaders,
-  createFeatureFlagHeaders,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 
 export const getDiscover = async (
@@ -12,7 +9,6 @@ export const getDiscover = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

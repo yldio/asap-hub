@@ -1,6 +1,5 @@
 import { AlgoliaClient, getEventFilters } from '@asap-hub/algolia';
 import {
-  createFeatureFlagHeaders,
   createSentryHeaders,
   GetEventListOptions,
 } from '@asap-hub/frontend-utils';
@@ -47,7 +46,6 @@ export const getEvent = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

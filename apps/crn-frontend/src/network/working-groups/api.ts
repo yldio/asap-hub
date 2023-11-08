@@ -1,8 +1,4 @@
-import {
-  createFeatureFlagHeaders,
-  createSentryHeaders,
-  GetListOptions,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
@@ -20,7 +16,6 @@ export const getWorkingGroups = async (
       headers: {
         authorization,
         ...createSentryHeaders(),
-        ...createFeatureFlagHeaders(),
       },
     },
   );
@@ -41,7 +36,6 @@ export const getWorkingGroup = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

@@ -2,7 +2,6 @@ import {
   BackendError,
   createSentryHeaders,
   GetListOptions,
-  createFeatureFlagHeaders,
 } from '@asap-hub/frontend-utils';
 import {
   ListLabsResponse,
@@ -24,7 +23,6 @@ export const getTeam = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {
@@ -46,7 +44,6 @@ export const getTeams = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
 
@@ -69,7 +66,6 @@ export const patchTeam = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(patch),
   });
@@ -91,7 +87,6 @@ export const createResearchOutput = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(researchOutput),
   });
@@ -123,7 +118,6 @@ export const updateTeamResearchOutput = async (
         authorization,
         'content-type': 'application/json',
         ...createSentryHeaders(),
-        ...createFeatureFlagHeaders(),
       },
       body: JSON.stringify(researchOutput),
     },
@@ -151,7 +145,6 @@ export const getLabs = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

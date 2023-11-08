@@ -188,9 +188,6 @@ outputs:
   gp2-contentful-space-id:
     description: 'GP2 Contentful Space ID'
     value: ${{ steps.vars.outputs.gp2-contentful-space-id }}
-  gp2-contentful-enabled:
-    description: 'Is GP2 data fetched from Contentful'
-    value: ${{ steps.vars.outputs.gp2-contentful-enabled }}
   gp2-hostname:
     description: 'GP2 Hostname'
     value: ${{ steps.vars.outputs.gp2-hostname }}
@@ -206,9 +203,6 @@ outputs:
   gp2-ses-region:
     description: 'GP2 SES Region'
     value: ${{ steps.vars.outputs.gp2-ses-region }}
-  is-contentful-enabled:
-    description: 'Is the data fetched from Contentful'
-    value: ${{ steps.vars.outputs.is-contentful-enabled }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

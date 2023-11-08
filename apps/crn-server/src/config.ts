@@ -84,7 +84,6 @@ export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const googleApiUrl = 'https://www.googleapis.com/';
 export const googleCalenderEventQueueUrl =
   GOOGLE_CALENDER_EVENT_QUEUE_URL || 'google-calendar-event-queue-url';
-export const isContentfulEnabled = true;
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';

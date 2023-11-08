@@ -1,9 +1,5 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
-import {
-  createFeatureFlagHeaders,
-  createSentryHeaders,
-  GetListOptions,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ExternalAuthorResponse,
   InstitutionsResponse,
@@ -25,7 +21,6 @@ export const getUser = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
 
@@ -111,7 +106,6 @@ export const patchUser = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(patch),
   });
@@ -134,7 +128,6 @@ export const postUserAvatar = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(post),
   });

@@ -2,11 +2,7 @@ import {
   ListInterestGroupResponse,
   InterestGroupResponse,
 } from '@asap-hub/model';
-import {
-  GetListOptions,
-  createSentryHeaders,
-  createFeatureFlagHeaders,
-} from '@asap-hub/frontend-utils';
+import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 
@@ -20,7 +16,6 @@ export const getInterestGroups = async (
       headers: {
         authorization,
         ...createSentryHeaders(),
-        ...createFeatureFlagHeaders(),
       },
     },
   );
@@ -40,7 +35,6 @@ export const getInterestGroup = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

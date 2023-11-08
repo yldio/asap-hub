@@ -1,9 +1,5 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import {
-  createFeatureFlagHeaders,
-  createSentryHeaders,
-  GetListOptions,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   FetchResearchTagsOptions,
   ListResponse,
@@ -48,7 +44,6 @@ export const getResearchOutput = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {
@@ -165,7 +160,6 @@ export const getResearchTags = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
 

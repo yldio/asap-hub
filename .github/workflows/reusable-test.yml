@@ -128,7 +128,6 @@ jobs:
           CONTENTFUL_ENV_ID: integration-${{ github.run_id }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-          IS_CONTENTFUL_ENABLED: true
       - name: Delete app
         shell: bash
         if: always()

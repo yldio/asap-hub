@@ -1,7 +1,4 @@
-import {
-  createSentryHeaders,
-  createFeatureFlagHeaders,
-} from '@asap-hub/frontend-utils';
+import { createSentryHeaders } from '@asap-hub/frontend-utils';
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
@@ -13,7 +10,6 @@ export const getDashboard = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {
@@ -37,7 +33,6 @@ export const getReminders = async (
       headers: {
         authorization,
         ...createSentryHeaders(),
-        ...createFeatureFlagHeaders(),
       },
     },
   );

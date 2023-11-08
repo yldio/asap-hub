@@ -67,11 +67,10 @@ export const transformOrcidWorks = (orcidWorks: {
     works: orcidWorks.group.map((work) =>
       JSON.parse(
         JSON.stringify({
-          doi:
-            // get first external-id with url value
-            work['external-ids']['external-id'].find(
-              (e: ORCIDExternalId) => e['external-id-url']?.value,
-            )?.['external-id-url']?.value,
+          doi: // get first external-id with url value
+          work['external-ids']['external-id'].find(
+            (e: ORCIDExternalId) => e['external-id-url']?.value,
+          )?.['external-id-url']?.value,
           id: `${work['work-summary'][0]?.['put-code']}`,
           title: work['work-summary'][0]?.title.title.value,
           type: work['work-summary'][0]?.type,

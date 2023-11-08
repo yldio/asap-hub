@@ -38,7 +38,7 @@ export const createProcessingFunction =
           ({
             data,
             type,
-          } as SavePayload),
+          }) as SavePayload,
       );
       logger.debug(`trying to save: ${JSON.stringify(payload, null, 2)}`);
       await algoliaClient.saveMany(payload);

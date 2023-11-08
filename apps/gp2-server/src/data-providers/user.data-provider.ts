@@ -208,53 +208,56 @@ export class UserContentfulDataProvider implements UserDataProvider {
 }
 
 const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
-  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
-    if (key === 'avatar') {
-      return {
-        ...acc,
-        avatar: {
-          sys: {
-            type: 'Link',
-            linkType: 'Asset',
-            id: value,
+  Object.entries(userToUpdate).reduce(
+    (acc, [key, value]) => {
+      if (key === 'avatar') {
+        return {
+          ...acc,
+          avatar: {
+            sys: {
+              type: 'Link',
+              linkType: 'Asset',
+              id: value,
+            },
           },
-        },
-      };
-    }
-    if (key === 'social') {
-      // the frontend only sends the fields which have values defined
-      // so need to default all social keys to null to allow unsetting
-      return {
-        ...acc,
-        twitter: null,
-        linkedIn: null,
-        github: null,
-        researcherId: null,
-        googleScholar: null,
-        researchGate: null,
-        ...(value as UserSocialLinks),
-      };
-    }
+        };
+      }
+      if (key === 'social') {
+        // the frontend only sends the fields which have values defined
+        // so need to default all social keys to null to allow unsetting
+        return {
+          ...acc,
+          twitter: null,
+          linkedIn: null,
+          github: null,
+          researcherId: null,
+          googleScholar: null,
+          researchGate: null,
+          ...(value as UserSocialLinks),
+        };
+      }
 
-    if (key === 'telephone') {
-      return {
-        ...acc,
-        telephoneNumber: (value as gp2Model.UserUpdateDataObject['telephone'])
-          ?.number,
-        telephoneCountryCode: (
-          value as gp2Model.UserUpdateDataObject['telephone']
-        )?.countryCode,
-      };
-    }
-    if (key === 'connections') {
-      const connections = userToUpdate.connections || [];
-      return {
-        ...acc,
-        connections: connections.map(({ code }) => code),
-      };
-    }
-    return { ...acc, [key]: value };
-  }, {} as { [key: string]: unknown });
+      if (key === 'telephone') {
+        return {
+          ...acc,
+          telephoneNumber: (value as gp2Model.UserUpdateDataObject['telephone'])
+            ?.number,
+          telephoneCountryCode: (
+            value as gp2Model.UserUpdateDataObject['telephone']
+          )?.countryCode,
+        };
+      }
+      if (key === 'connections') {
+        const connections = userToUpdate.connections || [];
+        return {
+          ...acc,
+          connections: connections.map(({ code }) => code),
+        };
+      }
+      return { ...acc, [key]: value };
+    },
+    {} as { [key: string]: unknown },
+  );
 
 export const parseUserToDataObject = (
   user: UserItem,

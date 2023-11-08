@@ -237,9 +237,8 @@ describe('Working Groups data provider', () => {
   describe('Fetch-by-id method', () => {
     test('Should fetch the workingGroup from Contentful GraphQl', async () => {
       const workingGroupId = 'workingGroup-id-0';
-      const result = await workingGroupDataProviderMock.fetchById(
-        workingGroupId,
-      );
+      const result =
+        await workingGroupDataProviderMock.fetchById(workingGroupId);
 
       expect(result).toMatchObject(getWorkingGroupDataObject());
     });

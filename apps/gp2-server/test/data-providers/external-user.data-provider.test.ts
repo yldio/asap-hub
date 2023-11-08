@@ -169,9 +169,8 @@ describe('External User Contentful Data Provider', () => {
           contentfulGraphqlClientMockServer,
           contentfulRestClientMock,
         );
-      const result = await externalUserDataProviderWithMockServer.fetchById(
-        'user-id',
-      );
+      const result =
+        await externalUserDataProviderWithMockServer.fetchById('user-id');
 
       expect(result).toMatchObject(getExternalUserDataObject());
     });
@@ -180,9 +179,8 @@ describe('External User Contentful Data Provider', () => {
         users: null,
       });
 
-      const result = await externalUserDataProvider.fetchById(
-        'external-user-id',
-      );
+      const result =
+        await externalUserDataProvider.fetchById('external-user-id');
       expect(result).toBeNull();
     });
     test('Should return the user when it finds it', async () => {
@@ -191,9 +189,8 @@ describe('External User Contentful Data Provider', () => {
         externalUsers: mockResponse,
       });
 
-      const result = await externalUserDataProvider.fetchById(
-        'external-user-id',
-      );
+      const result =
+        await externalUserDataProvider.fetchById('external-user-id');
       expect(result).toEqual(getExternalUserDataObject());
     });
   });

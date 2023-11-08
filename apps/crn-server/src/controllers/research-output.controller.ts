@@ -34,9 +34,8 @@ export default class ResearchOutputController {
   ) {}
 
   async fetchById(researchOutputId: string): Promise<ResearchOutputResponse> {
-    const researchOutput = await this.researchOutputDataProvider.fetchById(
-      researchOutputId,
-    );
+    const researchOutput =
+      await this.researchOutputDataProvider.fetchById(researchOutputId);
     if (!researchOutput) {
       throw new NotFoundError(
         undefined,

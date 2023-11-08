@@ -88,7 +88,7 @@ export const createHandlerContext = () =>
     awsRequestId: 'aws-request-id',
     logGroupName: 'some-log-group',
     logStreamName: 'some-log-stream',
-  } as Context);
+  }) as Context;
 
 export const getLambdaRequest = <T>(
   payload: T,

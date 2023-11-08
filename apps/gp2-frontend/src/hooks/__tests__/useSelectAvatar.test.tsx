@@ -48,27 +48,26 @@ const wrapper =
       auth0User?: Auth0User<gp2.User>,
     ) => Partial<Auth0<gp2.User>>,
   ): React.FC =>
-  ({ children }) =>
-    (
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <ToastContext.Provider value={mockToast}>
-            <Auth0Provider
-              user={{ id: user?.id, onboarded: user?.onboarded }}
-              auth0Overrides={auth0Overrides}
-            >
-              <WhenReady>
-                <MemoryRouter
-                  initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
-                >
-                  {children}
-                </MemoryRouter>
-              </WhenReady>
-            </Auth0Provider>
-          </ToastContext.Provider>
-        </Suspense>
-      </RecoilRoot>
-    );
+  ({ children }) => (
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <ToastContext.Provider value={mockToast}>
+          <Auth0Provider
+            user={{ id: user?.id, onboarded: user?.onboarded }}
+            auth0Overrides={auth0Overrides}
+          >
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
+              >
+                {children}
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </ToastContext.Provider>
+      </Suspense>
+    </RecoilRoot>
+  );
 
 describe('useSelectAvatar', () => {
   const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));

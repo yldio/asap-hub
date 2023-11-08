@@ -33,13 +33,20 @@ export const indexOutputHandler =
           ...output,
           _tags: getTagsNames(output.tags),
         };
+        if (
+          event['detail-type'] === 'OutputsDeleted' ||
+          event['detail-type'] === 'OutputsUnpublished'
+        ) {
+          await algoliaClient.remove(output.id);
+          log.debug(`Removed output ${output.id}`);
+        } else {
+          await algoliaClient.save({
+            data,
+            type: 'output',
+          });
 
-        await algoliaClient.save({
-          data,
-          type: 'output',
-        });
-
-        log.debug(`Saved output ${output.id}`);
+          log.debug(`Saved output ${output.id}`);
+        }
 
         return output;
       } catch (e) {

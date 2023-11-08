@@ -26,6 +26,14 @@ export const indexOutputHandler =
 
     const reindexOutput = async (id: string) => {
       try {
+        if (
+          event['detail-type'] === 'OutputsDeleted' ||
+          event['detail-type'] === 'OutputsUnpublished'
+        ) {
+          await algoliaClient.remove(event.detail.resourceId);
+          log.debug(`Removed output ${event.detail.resourceId}`);
+          return;
+        }
         const output = await outputController.fetchById(id);
         log.debug(`Fetched output ${output.id}`);
 
@@ -33,20 +41,13 @@ export const indexOutputHandler =
           ...output,
           _tags: getTagsNames(output.tags),
         };
-        if (
-          event['detail-type'] === 'OutputsDeleted' ||
-          event['detail-type'] === 'OutputsUnpublished'
-        ) {
-          await algoliaClient.remove(output.id);
-          log.debug(`Removed output ${output.id}`);
-        } else {
-          await algoliaClient.save({
-            data,
-            type: 'output',
-          });
 
-          log.debug(`Saved output ${output.id}`);
-        }
+        await algoliaClient.save({
+          data,
+          type: 'output',
+        });
+
+        log.debug(`Saved output ${output.id}`);
 
         return output;
       } catch (e) {
@@ -61,8 +62,10 @@ export const indexOutputHandler =
 
     try {
       const output = await reindexOutput(event.detail.resourceId);
-      for (const relatedOutput of output.relatedOutputs) {
-        await reindexOutput(relatedOutput.id);
+      if (output) {
+        for (const relatedOutput of output.relatedOutputs) {
+          await reindexOutput(relatedOutput.id);
+        }
       }
     } catch (e) {
       log.error(e, `Error while reindexing output ${event.detail.resourceId}`);

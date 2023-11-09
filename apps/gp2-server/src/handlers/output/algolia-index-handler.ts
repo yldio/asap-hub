@@ -2,7 +2,6 @@ import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
-import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import OutputController from '../../controllers/output.controller';
 import { ExternalUserContentfulDataProvider } from '../../data-providers/external-user.data-provider';

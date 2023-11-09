@@ -24,11 +24,6 @@ export const indexOutputHandler =
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 
-    const removeOutput = async (id: string) => {
-      await algoliaClient.remove(id);
-      log.debug(`Removed output ${id}`);
-    };
-
     const reindexOutput = async (id: string) => {
       try {
         const output = await outputController.fetchById(id);
@@ -47,8 +42,9 @@ export const indexOutputHandler =
         log.debug(`Saved output ${output.id}`);
         return output;
       } catch (e) {
-        log.error(e, `Error while reindexing output ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        log.error(e, `Error while reindexing output (fetch) ${id}`);
+        if (isBoom(e)) {
+          log.error(`Error code: ${e.output.statusCode}`);
           log.error(`Output ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -57,25 +53,23 @@ export const indexOutputHandler =
     };
 
     try {
-      if (
-        event['detail-type'] === 'OutputsDeleted' ||
-        event['detail-type'] === 'OutputsUnpublished'
-      ) {
-        await removeOutput(event.detail.resourceId);
-        // update outputs that had the removed/unpublished entry as related outputs
-        const relatedOutputs = await outputController.fetch({
-          filter: { relatedOutputId: event.detail.resourceId },
-          includeDrafts: true,
-        });
-        for (const relatedOutput of relatedOutputs.items) {
-          await reindexOutput(relatedOutput.id);
-        }
-      } else {
-        const output = await reindexOutput(event.detail.resourceId);
-        for (const relatedOutput of output.relatedOutputs) {
-          await reindexOutput(relatedOutput.id);
-        }
+      const output = await reindexOutput(event.detail.resourceId);
+      for (const relatedOutput of output.relatedOutputs) {
+        await reindexOutput(relatedOutput.id);
       }
+      // if (
+      //   event['detail-type'] === 'OutputsDeleted' ||
+      //   event['detail-type'] === 'OutputsUnpublished'
+      // ) {
+      //   // update outputs that had the removed/unpublished entry as related outputs
+      //   const relatedOutputs = await outputController.fetch({
+      //     filter: { relatedOutputId: event.detail.resourceId },
+      //     includeDrafts: true,
+      //   });
+      //   for (const relatedOutput of relatedOutputs.items) {
+      //     await reindexOutput(relatedOutput.id);
+      //   }
+      // }
     } catch (e) {
       log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {

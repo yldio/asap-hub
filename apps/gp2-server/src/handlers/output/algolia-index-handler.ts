@@ -41,16 +41,13 @@ export const indexOutputHandler =
         });
 
         log.debug(`Saved output ${output.id}`);
+
         return output;
       } catch (e) {
         log.error(e, `Error while reindexing output (fetch) ${id}`);
-        log.error(e, `${e instanceof NotFoundError}`);
-        if (isBoom(e)) {
-          log.error(e, `Error code: ${e.output.statusCode}`);
-          if (e.output.statusCode === 404) {
-            log.error(`Output ${id} not found`);
-            await algoliaClient.remove(id);
-          }
+        if (e instanceof NotFoundError) {
+          log.error(`Output ${id} not found`);
+          await algoliaClient.remove(id);
         }
         throw e;
       }
@@ -61,22 +58,9 @@ export const indexOutputHandler =
       for (const relatedOutput of output.relatedOutputs) {
         await reindexOutput(relatedOutput.id);
       }
-      // if (
-      //   event['detail-type'] === 'OutputsDeleted' ||
-      //   event['detail-type'] === 'OutputsUnpublished'
-      // ) {
-      //   // update outputs that had the removed/unpublished entry as related outputs
-      //   const relatedOutputs = await outputController.fetch({
-      //     filter: { relatedOutputId: event.detail.resourceId },
-      //     includeDrafts: true,
-      //   });
-      //   for (const relatedOutput of relatedOutputs.items) {
-      //     await reindexOutput(relatedOutput.id);
-      //   }
-      // }
     } catch (e) {
       log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (e instanceof NotFoundError) {
         return;
       }
       throw e;

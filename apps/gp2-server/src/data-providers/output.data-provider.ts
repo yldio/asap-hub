@@ -44,11 +44,17 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     skip = 0,
     search,
     filter,
+    includeDrafts,
   }: gp2Model.FetchOutputOptions) {
-    const outputs = await this.fetchOutputs(take, skip, {
-      filter,
-      search,
-    });
+    const outputs = await this.fetchOutputs(
+      take,
+      skip,
+      {
+        filter,
+        search,
+      },
+      includeDrafts,
+    );
 
     return parseOutputsCollection(outputs);
   }
@@ -57,6 +63,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     take: number,
     skip: number,
     { search, filter }: gp2Model.FetchOutputOptions,
+    includeDrafts?: boolean,
   ) {
     if (filter?.workingGroupId) {
       return this.fetchOutputsByWorkingGroupId(
@@ -82,6 +89,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 
     if (filter?.eventId) {
       return this.fetchOutputsByEventId(take, skip, filter.eventId);
+    }
+    if (filter?.relatedOutputId) {
+      return this.fetchOutputsByRelatedOutputId(
+        take,
+        skip,
+        filter.relatedOutputId,
+        includeDrafts ?? false,
+      );
     }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
@@ -169,6 +184,24 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       id,
     });
     return workingGroups?.linkedFrom?.outputsCollection;
+  }
+
+  private async fetchOutputsByRelatedOutputId(
+    take: number,
+    skip: number,
+    id: string,
+    preview: boolean,
+  ) {
+    const { outputs } = await this.graphQLClient.request<
+      gp2Contentful.FetchOutputsByRelatedOutputIdQuery,
+      gp2Contentful.FetchOutputsByRelatedOutputIdQueryVariables
+    >(gp2Contentful.FETCH_OUTPUTS_BY_RELATED_OUTPUT_ID, {
+      limit: take,
+      skip,
+      id,
+      preview,
+    });
+    return outputs?.linkedFrom?.outputsCollection;
   }
 
   async create({

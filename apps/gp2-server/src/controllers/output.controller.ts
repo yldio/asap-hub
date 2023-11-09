@@ -27,7 +27,7 @@ export default class OutputController {
   }
 
   async fetch(options: FetchOptions): Promise<gp2Model.ListOutputResponse> {
-    const { filter: fetchFilter, ...fetchOptions } = options;
+    const { filter: fetchFilter, includeDrafts, ...fetchOptions } = options;
 
     const filter: gp2Model.FetchOutputOptions['filter'] = Array.isArray(
       fetchFilter,
@@ -38,6 +38,7 @@ export default class OutputController {
     const { items, total } = await this.outputDataProvider.fetch({
       ...fetchOptions,
       filter,
+      includeDrafts,
     });
 
     return {

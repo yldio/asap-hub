@@ -38,7 +38,15 @@ class ApiAdapter extends RestAdapter {
 
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
     this.rateLimiter.removeTokens(1);
-    const result = await super.makeRequest<R>(options);
+    let result: R;
+
+    try {
+      result = await super.makeRequest<R>(options);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+
     if (options.action.match(/^create/)) {
       /*
         Handle an issue with the type definitions for `makeRequest` in contentful-management

@@ -45,8 +45,10 @@ export const indexOutputHandler =
         log.error(e, `Error while reindexing output (fetch) ${id}`);
         if (isBoom(e)) {
           log.error(`Error code: ${e.output.statusCode}`);
-          log.error(`Output ${id} not found`);
-          await algoliaClient.remove(id);
+          if (e.output.statusCode === 404) {
+            log.error(`Output ${id} not found`);
+            await algoliaClient.remove(id);
+          }
         }
         throw e;
       }

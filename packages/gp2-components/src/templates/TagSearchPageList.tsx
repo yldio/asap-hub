@@ -10,7 +10,7 @@ import {
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-type TagSearchPageListProps = {
+export type TagSearchPageListProps = {
   tags?: string[];
   setTags?: (tags: string[]) => void;
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];

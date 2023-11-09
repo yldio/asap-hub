@@ -17,6 +17,10 @@ describe('TagSearchPageList', () => {
     expect(screen.getByRole('search')).toBeVisible();
   });
 
+  it('displays supplied tag', () => {
+    render(<TagSearchPageList {...props} tags={['key']} />);
+    expect(screen.getByText('key')).toBeVisible();
+  });
   it('handles no tag options', async () => {
     const loadTags = jest.fn().mockResolvedValue([]);
     render(

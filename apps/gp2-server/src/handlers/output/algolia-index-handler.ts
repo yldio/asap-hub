@@ -24,16 +24,13 @@ export const indexOutputHandler =
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 
+    const removeOutput = async (id: string) => {
+      await algoliaClient.remove(id);
+      log.debug(`Removed output ${id}`);
+    };
+
     const reindexOutput = async (id: string) => {
       try {
-        if (
-          event['detail-type'] === 'OutputsDeleted' ||
-          event['detail-type'] === 'OutputsUnpublished'
-        ) {
-          await algoliaClient.remove(event.detail.resourceId);
-          log.debug(`Removed output ${event.detail.resourceId}`);
-          return undefined;
-        }
         const output = await outputController.fetchById(id);
         log.debug(`Fetched output ${output.id}`);
 
@@ -48,7 +45,6 @@ export const indexOutputHandler =
         });
 
         log.debug(`Saved output ${output.id}`);
-
         return output;
       } catch (e) {
         log.error(e, `Error while reindexing output ${id}`);
@@ -61,8 +57,21 @@ export const indexOutputHandler =
     };
 
     try {
-      const output = await reindexOutput(event.detail.resourceId);
-      if (output) {
+      if (
+        event['detail-type'] === 'OutputsDeleted' ||
+        event['detail-type'] === 'OutputsUnpublished'
+      ) {
+        await removeOutput(event.detail.resourceId);
+        // update outputs that had the removed/unpublished entry as related outputs
+        const relatedOutputs = await outputController.fetch({
+          filter: { relatedOutputId: event.detail.resourceId },
+          includeDrafts: true,
+        });
+        for (const relatedOutput of relatedOutputs.items) {
+          await reindexOutput(relatedOutput.id);
+        }
+      } else {
+        const output = await reindexOutput(event.detail.resourceId);
         for (const relatedOutput of output.relatedOutputs) {
           await reindexOutput(relatedOutput.id);
         }

@@ -3,13 +3,11 @@ import {
   crossQuery,
   drawerQuery,
   MenuButton,
-  info100,
   steel,
   pixels,
   noop,
   NavigationLink,
   tagSearchIcon,
-  silver,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -77,15 +75,12 @@ const searchButtonAreaStyles = css({
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
   borderLeft: `1px solid ${steel.rgb}`,
-  background: `${info100.rgb}`,
   display: 'flex',
   alignItems: 'center',
-  '&:hover': {
-    background: `${silver.rgb}`,
-  },
 });
 const searchIconStyles = css({
   width: rem(48),
+  padding: `${rem(14)} 0`,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

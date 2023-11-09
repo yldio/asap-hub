@@ -135,6 +135,19 @@ export const outputsContentQueryFragment = gql`
         studyLink
       }
     }
+    versionsCollection {
+      total
+      items {
+        sys {
+          id
+        }
+        title
+        documentType
+        type
+        addedDate
+        link
+      }
+    }
   }
   ${relatedOutputQueryFragment}
 `;

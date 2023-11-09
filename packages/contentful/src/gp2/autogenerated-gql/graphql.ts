@@ -3034,6 +3034,181 @@ export enum NewsOrder {
   TypeDesc = 'type_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersion = Entry & {
+  addedDate?: Maybe<Scalars['DateTime']>;
+  contentfulMetadata: ContentfulMetadata;
+  documentType?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<OutputVersionLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionAddedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionDocumentTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type OutputVersionCollection = {
+  items: Array<Maybe<OutputVersion>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type OutputVersionFilter = {
+  AND?: InputMaybe<Array<InputMaybe<OutputVersionFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<OutputVersionFilter>>>;
+  addedDate?: InputMaybe<Scalars['DateTime']>;
+  addedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  addedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  addedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  documentType?: InputMaybe<Scalars['String']>;
+  documentType_contains?: InputMaybe<Scalars['String']>;
+  documentType_exists?: InputMaybe<Scalars['Boolean']>;
+  documentType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  documentType_not?: InputMaybe<Scalars['String']>;
+  documentType_not_contains?: InputMaybe<Scalars['String']>;
+  documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  type_contains?: InputMaybe<Scalars['String']>;
+  type_exists?: InputMaybe<Scalars['Boolean']>;
+  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type_not?: InputMaybe<Scalars['String']>;
+  type_not_contains?: InputMaybe<Scalars['String']>;
+  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type OutputVersionLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
+};
+
+export type OutputVersionLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type OutputVersionLinkingCollectionsOutputsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<OutputVersionLinkingCollectionsOutputsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AdminNotesAsc = 'adminNotes_ASC',
+  AdminNotesDesc = 'adminNotes_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  SubtypeAsc = 'subtype_ASC',
+  SubtypeDesc = 'subtype_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export enum OutputVersionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type Outputs = Entry & {
   accessionNumber?: Maybe<Scalars['String']>;
@@ -3062,6 +3237,7 @@ export type Outputs = Entry & {
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   updatedBy?: Maybe<Users>;
+  versionsCollection?: Maybe<OutputsVersionsCollection>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3216,6 +3392,16 @@ export type OutputsUpdatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputsVersionsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OutputVersionFilter>;
 };
 
 export type OutputsAuthorsCollection = {
@@ -3404,6 +3590,8 @@ export type OutputsFilter = {
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy?: InputMaybe<CfUsersNestedFilter>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  versions?: InputMaybe<CfOutputVersionNestedFilter>;
+  versionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type OutputsLinkingCollections = {
@@ -3653,6 +3841,34 @@ export enum OutputsTagsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type OutputsVersionsCollection = {
+  items: Array<Maybe<OutputVersion>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum OutputsVersionsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
@@ -4360,6 +4576,8 @@ export type Query = {
   milestonesCollection?: Maybe<MilestonesCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
+  outputVersion?: Maybe<OutputVersion>;
+  outputVersionCollection?: Maybe<OutputVersionCollection>;
   outputs?: Maybe<Outputs>;
   outputsCollection?: Maybe<OutputsCollection>;
   pages?: Maybe<Pages>;
@@ -4629,6 +4847,21 @@ export type QueryNewsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<NewsFilter>;
+};
+
+export type QueryOutputVersionArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryOutputVersionCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputVersionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OutputVersionFilter>;
 };
 
 export type QueryOutputsArgs = {
@@ -7083,6 +7316,50 @@ export type CfMilestonesNestedFilter = {
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CfOutputVersionNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfOutputVersionNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfOutputVersionNestedFilter>>>;
+  addedDate?: InputMaybe<Scalars['DateTime']>;
+  addedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  addedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  addedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  documentType?: InputMaybe<Scalars['String']>;
+  documentType_contains?: InputMaybe<Scalars['String']>;
+  documentType_exists?: InputMaybe<Scalars['Boolean']>;
+  documentType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  documentType_not?: InputMaybe<Scalars['String']>;
+  documentType_not_contains?: InputMaybe<Scalars['String']>;
+  documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  type_contains?: InputMaybe<Scalars['String']>;
+  type_exists?: InputMaybe<Scalars['Boolean']>;
+  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type_not?: InputMaybe<Scalars['String']>;
+  type_not_contains?: InputMaybe<Scalars['String']>;
+  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CfOutputsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfOutputsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfOutputsNestedFilter>>>;
@@ -7209,6 +7486,7 @@ export type CfOutputsNestedFilter = {
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  versionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CfProjectMembershipNestedFilter = {
@@ -7833,6 +8111,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
@@ -7890,6 +8169,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
@@ -7947,6 +8227,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
@@ -8103,6 +8384,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ProjectMembership' } & {
@@ -8164,6 +8446,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ProjectMembership' } & {
@@ -8225,6 +8508,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ProjectMembership' } & {
@@ -8413,6 +8697,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersion' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ProjectMembership' } & {
@@ -8500,6 +8787,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersion' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ProjectMembership' } & {
@@ -8587,6 +8877,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersion' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ProjectMembership' } & {
@@ -8807,6 +9100,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersion' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Outputs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8909,6 +9205,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersion' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Outputs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -9009,6 +9308,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'OutputVersion' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Outputs' } & {
@@ -9258,6 +9560,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersion' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Outputs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -9360,6 +9665,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersion' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Outputs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -9460,6 +9768,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'OutputVersion' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Outputs' } & {
@@ -9857,6 +10168,18 @@ export type OutputsContentDataFragment = Pick<
       >;
     }
   >;
+  versionsCollection?: Maybe<
+    Pick<OutputsVersionsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            OutputVersion,
+            'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }
+  >;
 };
 
 export type FetchOutputByIdQueryVariables = Exact<{
@@ -9986,6 +10309,18 @@ export type FetchOutputByIdQuery = {
               Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                 sys: Pick<Sys, 'id'>;
               }
+            >
+          >;
+        }
+      >;
+      versionsCollection?: Maybe<
+        Pick<OutputsVersionsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                OutputVersion,
+                'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+              > & { sys: Pick<Sys, 'id'> }
             >
           >;
         }
@@ -10135,6 +10470,18 @@ export type FetchOutputsQuery = {
                     Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                       sys: Pick<Sys, 'id'>;
                     }
+                  >
+                >;
+              }
+            >;
+            versionsCollection?: Maybe<
+              Pick<OutputsVersionsCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      OutputVersion,
+                      'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+                    > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
               }
@@ -10289,6 +10636,22 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                         Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
+                      >
+                    >;
+                  }
+                >;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
                   }
@@ -10449,6 +10812,22 @@ export type FetchOutputsByUserIdQuery = {
                     >;
                   }
                 >;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -10601,6 +10980,22 @@ export type FetchOutputsByExternalUserIdQuery = {
                         Pick<ContributingCohorts, 'name' | 'studyLink'> & {
                           sys: Pick<Sys, 'id'>;
                         }
+                      >
+                    >;
+                  }
+                >;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
                   }
@@ -10761,6 +11156,22 @@ export type FetchOutputsByProjectIdQuery = {
                     >;
                   }
                 >;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -10917,6 +11328,22 @@ export type FetchOutputsByEventIdQuery = {
                     >;
                   }
                 >;
+                versionsCollection?: Maybe<
+                  Pick<OutputsVersionsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          OutputVersion,
+                          | 'title'
+                          | 'documentType'
+                          | 'type'
+                          | 'addedDate'
+                          | 'link'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }
+                >;
               }
             >
           >;
@@ -10958,6 +11385,7 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersion' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
@@ -11046,6 +11474,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersion' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ProjectMembership' } & {
@@ -14370,6 +14801,49 @@ export const OutputsContentDataFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'studyLink' },
                       },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'versionsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'documentType' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'addedDate' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'link' } },
                     ],
                   },
                 },

@@ -350,6 +350,24 @@ export const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
         ? getEntity(relatedEntitiesCollection?.items[0])
         : undefined,
     })) || [];
+type GraphQLOutputVersions = NonNullable<
+  OutputItem['versionsCollection']
+>['items'];
+type GraphQLOutputVersion = NonNullable<GraphQLOutputVersions[number]>;
+export const getOutputVersions = (items?: GraphQLOutputVersions) =>
+  items
+    ?.filter((output): output is GraphQLOutputVersion => output !== null)
+    .map((output: GraphQLOutputVersion) => ({
+      id: output?.sys.id || '',
+      title: output?.title || '',
+      link: output?.link || '',
+      type: getType(
+        output.documentType as gp2Model.OutputDocumentType,
+        output.type,
+      ),
+      documentType: output.documentType as gp2Model.OutputDocumentType,
+      addedDate: output?.addedDate || '',
+    })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -369,6 +387,7 @@ export const parseContentfulGraphQLOutput = (
   const contributingCohorts = getCohorts(
     data.contributingCohortsCollection?.items,
   );
+  const versions = getOutputVersions(data.versionsCollection?.items);
   const projects =
     relatedEntities && relatedEntities.projects.length !== 0
       ? relatedEntities?.projects
@@ -413,6 +432,7 @@ export const parseContentfulGraphQLOutput = (
     contributingCohorts,
     relatedOutputs,
     relatedEvents,
+    versions,
   };
 };
 

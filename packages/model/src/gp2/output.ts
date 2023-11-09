@@ -93,6 +93,7 @@ export type RelatedOutputs = {
   documentType: OutputDocumentType;
   entity?: OutputOwner;
 };
+
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -111,6 +112,15 @@ export type OutputCoreObject = {
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
   relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
+};
+
+export type OutputVersionCoreObject = Pick<
+  OutputCoreObject,
+  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
+>;
+
+export type OutputVersion = OutputVersionCoreObject & {
+  id: string;
 };
 
 export type UserAuthor = {
@@ -132,6 +142,7 @@ export type OutputDataObject = OutputCoreObject & {
   projects?: OutputOwner[];
   contributingCohorts: ContributingCohortDataObject[];
   mainEntity: OutputOwner;
+  versions?: OutputVersion[];
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -193,6 +204,7 @@ export type OutputPostRequest = {
   mainEntityId: string;
   relatedOutputIds: string[];
   relatedEventIds: string[];
+  versionIds?: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

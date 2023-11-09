@@ -325,6 +325,18 @@ describe('Outputs data provider', () => {
       expect(result!.contributingCohorts).toEqual([]);
     });
 
+    test('Should default versions to empty array when missing', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.versionsCollection = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.versions).toEqual([]);
+    });
+
     describe('Authors', () => {
       const getInternalUsers = (): InternalUser[] => [
         {

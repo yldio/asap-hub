@@ -13,7 +13,7 @@ const containerStyles = css({
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
 
-const DashboardPageHeader: React.FC = () => (
+const DiscoverPageHeader: React.FC = () => (
   <header css={containerStyles}>
     <Display styleAsHeading={2}>Guides &amp; Tutorials</Display>
     <Paragraph accent="lead">
@@ -26,4 +26,4 @@ const DashboardPageHeader: React.FC = () => (
   </header>
 );
 
-export default DashboardPageHeader;
+export default DiscoverPageHeader;

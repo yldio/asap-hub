@@ -1,27 +1,31 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { perRem } from '../pixels';
-import DashboardPageHeader from './DashboardPageHeader';
+import { perRem, rem } from '../pixels';
+import { Display } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${48 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type DashboardPageProps = ComponentProps<typeof DashboardPageHeader>;
+const headerStyles = css({
+  paddingBottom: rem(9),
+});
 
-const Dashboard: React.FC<DashboardPageProps> = ({
-  firstName,
-  dismissedGettingStarted,
-  children,
-}) => (
+type DashboardPageProps = {
+  readonly firstName?: string;
+};
+
+const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
   <article>
-    <DashboardPageHeader
-      firstName={firstName}
-      dismissedGettingStarted={dismissedGettingStarted}
-    />
-    <main css={mainStyles}>{children}</main>
+    <main css={mainStyles}>
+      <div css={headerStyles}>
+        <Display styleAsHeading={2}>{`Welcome to the Hub${
+          firstName ? `, ${firstName}` : ''
+        }!`}</Display>
+      </div>
+      {children}
+    </main>
   </article>
 );
 

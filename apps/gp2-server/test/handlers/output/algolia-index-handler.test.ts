@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -94,7 +95,7 @@ describe('Output index handler', () => {
   test('Should fetch the output and remove the record in Algolia when output is unpublished', async () => {
     const event = unpublishedEvent('42');
 
-    outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
 
     await indexHandler(event);
 
@@ -108,7 +109,7 @@ describe('Output index handler', () => {
   test('Should fetch the output and remove the record in Algolia when output is deleted', async () => {
     const event = deleteEvent('42');
 
-    outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
 
     await indexHandler(event);
 
@@ -127,8 +128,8 @@ describe('Output index handler', () => {
     );
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Should throw the algolia error when saving the record fails', async () => {
+
+  test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
     outputControllerMock.fetchById.mockResolvedValueOnce(getOutputResponse());
@@ -140,7 +141,7 @@ describe('Output index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -198,7 +199,7 @@ describe('Output index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -218,7 +219,7 @@ describe('Output index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -238,7 +239,7 @@ describe('Output index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -258,7 +259,7 @@ describe('Output index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -278,7 +279,7 @@ describe('Output index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -298,7 +299,7 @@ describe('Output index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -317,7 +318,7 @@ describe('Output index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -337,7 +338,7 @@ describe('Output index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      outputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      outputControllerMock.fetchById.mockRejectedValue(new NotFoundError());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 

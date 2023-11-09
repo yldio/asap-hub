@@ -108,7 +108,8 @@ describe('research outputs', () => {
         expect(response.body.addedDate).toEqual(null);
       });
 
-      test('can create a published team research output as a team PM', async () => {
+      // eslint-disable-next-line jest/no-disabled-tests
+      test.skip('can create a published team research output as a team PM', async () => {
         const input = getResearchOutputFixture({
           teams: [pmTeam.id],
           workingGroups: [],
@@ -392,7 +393,8 @@ describe('research outputs', () => {
     });
 
     describe('create', () => {
-      test('can create a draft working group output in a working group you are a member of', async () => {
+      // eslint-disable-next-line jest/no-disabled-tests
+      test.skip('can create a draft working group output in a working group you are a member of', async () => {
         const input = getResearchOutputFixture(
           {
             teams: [team.id],

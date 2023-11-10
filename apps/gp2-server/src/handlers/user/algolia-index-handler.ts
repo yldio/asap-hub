@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -48,7 +49,10 @@ export const indexUserHandler =
         }
       } catch (e) {
         log.error(e, `Error while reindexing user ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           log.error(`user ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -60,7 +64,10 @@ export const indexUserHandler =
       await reindexUser(event.detail.resourceId);
     } catch (e) {
       log.error(e, `Error while reindexing user ${event.detail.resourceId}`);
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

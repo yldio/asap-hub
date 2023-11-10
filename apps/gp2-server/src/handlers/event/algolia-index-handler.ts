@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -43,7 +44,10 @@ export const indexEventHandler =
         return calendarEvent;
       } catch (e) {
         log.error(e, `Error while reindexing calendar event ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           log.error(`calendar event ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -58,7 +62,10 @@ export const indexEventHandler =
         e,
         `Error while reindexing calendar event ${event.detail.resourceId}`,
       );
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

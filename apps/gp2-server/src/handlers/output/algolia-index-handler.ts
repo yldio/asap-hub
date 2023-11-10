@@ -2,6 +2,7 @@ import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
+import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import OutputController from '../../controllers/output.controller';
 import { ExternalUserContentfulDataProvider } from '../../data-providers/external-user.data-provider';
@@ -43,8 +44,11 @@ export const indexOutputHandler =
 
         return output;
       } catch (e) {
-        log.error(e, `Error while reindexing output (fetch) ${id}`);
-        if (e instanceof NotFoundError) {
+        log.error(e, `Error while reindexing output ${id}`);
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           log.error(`Output ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -59,7 +63,10 @@ export const indexOutputHandler =
       }
     } catch (e) {
       log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
-      if (e instanceof NotFoundError) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

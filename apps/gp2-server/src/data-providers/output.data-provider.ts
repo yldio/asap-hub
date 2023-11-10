@@ -83,7 +83,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     if (filter?.eventId) {
       return this.fetchOutputsByEventId(take, skip, filter.eventId);
     }
-
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];

@@ -147,14 +147,14 @@ describe('the share outputs page', () => {
       },
       history,
     );
-    expect(screen.queryByText(/about/i)).toBeInTheDocument();
+    expect(screen.queryByText('About')).toBeInTheDocument();
     userEvent.click(await screen.findByText(/share an output/i));
     expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
     userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
     expect(history.location.pathname).toEqual(
       '/network/working-groups/working-group-id-0/create-output/article',
     );
-    expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
+    expect(screen.queryByText('About')).not.toBeInTheDocument();
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   });
 
@@ -172,7 +172,7 @@ describe('the share outputs page', () => {
       },
       history,
     );
-    expect(screen.queryByText(/about/i)).toBeInTheDocument();
+    expect(screen.queryByText('About')).toBeInTheDocument();
     expect(screen.queryByText(/share an output/i)).toBeNull();
   });
 });

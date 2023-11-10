@@ -111,7 +111,7 @@ it('renders the about working-group information by default', async () => {
   await renderWorkingGroupProfile(createWorkingGroupResponse({}));
 
   expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
-  expect(await screen.findByRole('link', { name: /about/i })).toHaveClass(
+  expect(await screen.findByRole('link', { name: 'About' })).toHaveClass(
     'active-link',
   );
 });

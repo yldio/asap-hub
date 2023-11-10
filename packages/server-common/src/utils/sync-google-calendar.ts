@@ -22,20 +22,21 @@ export const syncCalendarFactory = (
   getJWTCredentials: GetJWTCredentials,
   logger: Logger,
 ): SyncCalendar => {
+  async function getCredentials() {
+    try {
+      return await getJWTCredentials();
+    } catch (error) {
+      logger.error(error, 'Error fetching AWS credentials');
+      throw error;
+    }
+  }
   const fetchEvents = async (
     googleCalendarId: string,
     cmsCalendarId: string,
     syncToken: string | undefined,
     pageToken?: string,
   ): Promise<string | undefined | null> => {
-    let credentials: Auth.JWTInput;
-
-    try {
-      credentials = await getJWTCredentials();
-    } catch (error) {
-      logger.error(error, 'Error fetching AWS credentials');
-      throw error;
-    }
+    const credentials = await getCredentials();
 
     const auth = new Auth.GoogleAuth({
       scopes: [
@@ -44,23 +45,22 @@ export const syncCalendarFactory = (
       ],
     }).fromJSON(credentials) as Auth.JWT;
 
-    const params: calendarV3.Params$Resource$Events$List = {
-      pageToken: pageToken || undefined,
-      calendarId: googleCalendarId,
-      singleEvents: true, // recurring events come returned as single events
-      showDeleted: true,
-    };
-
-    if (!syncToken) {
-      params.timeMin = new Date('2020-10-01').toISOString();
-      params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
-    }
-
     const calendar = google.calendar({ version: 'v3', auth });
 
     let data: calendarV3.Schema$Events;
     try {
-      const res = await calendar.events.list(params);
+      const res = await calendar.events.list({
+        pageToken: pageToken || undefined,
+        calendarId: googleCalendarId,
+        singleEvents: true, // recurring events come returned as single events
+        showDeleted: true,
+        ...(syncToken
+          ? { syncToken }
+          : {
+              timeMin: new Date('2020-10-01').toISOString(),
+              timeMax: DateTime.utc().plus({ months: 6 }).toISO(),
+            }),
+      });
       data = res.data;
     } catch (error) {
       if (isGaxiosError(error) && error.code === '410') {
@@ -89,8 +89,12 @@ export const syncCalendarFactory = (
     });
 
     if (data.nextPageToken) {
-      // get next page
-      return fetchEvents(googleCalendarId, cmsCalendarId, data.nextPageToken);
+      return fetchEvents(
+        googleCalendarId,
+        cmsCalendarId,
+        syncToken,
+        data.nextPageToken,
+      );
     }
 
     return data.nextSyncToken;

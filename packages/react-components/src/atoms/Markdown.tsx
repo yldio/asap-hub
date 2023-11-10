@@ -3,6 +3,7 @@ import { createElement } from 'react';
 import unified from 'unified';
 import remark2rehype from 'remark-rehype';
 import markdown from 'remark-parse';
+import rehypeRaw from 'rehype-raw';
 import rehypeReact from 'rehype-react';
 import rehypeSanitize from 'rehype-sanitize';
 import rehypeSlug from 'rehype-slug';
@@ -15,7 +16,10 @@ interface MarkdownProps {
 }
 
 const Markdown = ({ value, toc = false }: MarkdownProps) => {
-  let processor = unified().use(markdown).use(remark2rehype);
+  let processor = unified()
+    .use(markdown)
+    .use(remark2rehype, { allowDangerousHtml: true })
+    .use(rehypeRaw);
 
   if (toc) {
     processor = processor

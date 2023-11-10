@@ -42,6 +42,7 @@
     "react-sortable-hoc": "2.0.0",
     "regenerator-runtime": "0.14.0",
     "rehype-parse": "7.0.1",
+    "rehype-raw": "5.1.0",
     "rehype-react": "6.2.1",
     "rehype-remark": "8.1.1",
     "rehype-sanitize": "4.0.0",

@@ -17,12 +17,22 @@ it('renders processed links', () => {
   expect(link.getAttribute('href')).toBe('http://link.com');
 });
 
+it('renders html tags', () => {
+  const { getByText } = render(
+    <Markdown
+      value={`content<sup>superscript</sup> content<sub>subscript</sub>`}
+    />,
+  );
+  expect(getByText('superscript').tagName).toBe('SUP');
+  expect(getByText('subscript').tagName).toBe('SUB');
+});
+
 it('avoid basic xss risks', () => {
   const text = `<a href="#" onmouseover="alert('xss')">xss over</a>`;
   const { getByText } = render(<Markdown value={text} />);
 
   const tag = getByText('xss over');
-  expect(tag.tagName).toBe('P');
-  expect(tag.getAttribute('href')).toBe(null);
+  expect(tag.tagName).toBe('A');
+  expect(tag.getAttribute('href')).toBe('#');
   expect(tag.getAttribute('onmouseover')).toBe(null);
 });

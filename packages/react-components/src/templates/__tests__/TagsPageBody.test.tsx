@@ -1,6 +1,7 @@
 import {
   createEventResponse,
   createResearchOutputResponse,
+  createTeamResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
@@ -30,7 +31,7 @@ it('renders a list of cards', () => {
   render(
     <TagsPageBody
       {...props}
-      numberOfItems={2}
+      numberOfItems={4}
       results={[
         {
           ...createResearchOutputResponse(),
@@ -38,6 +39,7 @@ it('renders a list of cards', () => {
         },
         { ...createUserResponse(), displayName: 'John Doe', degree: 'PhD' },
         { ...createEventResponse(), title: 'ASAP Collaborative Meeting' },
+        { ...createTeamResponse(), displayName: 'Team ASAP' },
       ]}
     />,
   );
@@ -47,4 +49,6 @@ it('renders a list of cards', () => {
   expect(screen.getByText('John Doe, PhD')).toBeVisible();
 
   expect(screen.getByText('ASAP Collaborative Meeting')).toBeInTheDocument();
+
+  expect(screen.getByText(/Team ASAP/i)).toBeInTheDocument();
 });

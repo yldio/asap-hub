@@ -85,7 +85,7 @@ it('allows typing in tag queries', async () => {
   expect(searchBox.value).toEqual('test123');
   await waitFor(() => {
     expect(mockSearchForTagValues).toHaveBeenCalledWith(entities, 'test123', {
-      tagFilters: [],
+      facetFilters: [],
     });
   });
 });
@@ -126,7 +126,7 @@ it('will lookup new "default options" using previously selected tag filter', asy
     expect(mockSearchForTagValues).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
-      expect.objectContaining({ tagFilters: ['LGW'] }),
+      expect.objectContaining({ facetFilters: ['_tags:LGW'] }),
     );
   });
 });

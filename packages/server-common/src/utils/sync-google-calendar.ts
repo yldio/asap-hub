@@ -1,17 +1,11 @@
 import { mapLimit } from 'async';
-import { Auth, calendar_v3 as calendarV3, google } from 'googleapis';
+import { Auth, calendar_v3 as calendarV3, Common, google } from 'googleapis';
 import { DateTime } from 'luxon';
 import { GetJWTCredentials } from './aws-secret-manager';
 import { Logger } from './logger';
 import { SyncEvent } from './sync-google-event';
 
-type GaxiosError = Error & {
-  code: string;
-};
-const isGaxiosError = (error: unknown): error is GaxiosError =>
-  !!(error as GaxiosError)?.code; // We should upgrade google apis past version 70 so we can import Gaxios Error class and use instanceof instead.
-
-type SyncToken = calendarV3.Schema$Events['nextPageToken'];
+type SyncToken = calendarV3.Schema$Events['nextSyncToken'];
 type PageToken = calendarV3.Schema$Events['nextPageToken'];
 export type SyncCalendar = (
   googleCalendarId: string,
@@ -62,7 +56,7 @@ export const syncCalendarFactory = (
       });
       return data;
     } catch (error) {
-      if (isGaxiosError(error) && error.code === '410') {
+      if (error instanceof Common.GaxiosError && error.status === 410) {
         logger.warn(error, 'Token is Gone, doing full sync');
         return null;
       }

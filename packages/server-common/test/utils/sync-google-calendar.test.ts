@@ -1,12 +1,14 @@
+import { Common } from 'googleapis';
 import { GetJWTCredentials, syncCalendarFactory } from '../../src';
 import { getListEventsResponse } from '../fixtures/google-events.fixtures';
 import { loggerMock as logger } from '../mocks/logger.mock';
 
+const mockGoogleAuth = jest.fn().mockImplementation(() => ({}));
 const mockList = jest.fn();
+
 jest.mock('googleapis', () => {
-  const googleapis = jest.requireActual('googleapis');
   return {
-    ...googleapis,
+    ...jest.requireActual('googleapis'),
     google: {
       auth: {
         GoogleAuth: jest.fn(),
@@ -18,14 +20,9 @@ jest.mock('googleapis', () => {
       }),
     },
     Auth: {
-      GoogleAuth: jest.fn().mockReturnValue({
-        fromJSON: () => ({
-          scopes: [
-            'https://www.googleapis.com/auth/calendar',
-            'https://www.googleapis.com/auth/calendar.events',
-          ],
-        }),
-      }),
+      GoogleAuth: jest
+        .fn()
+        .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
     },
   };
 });
@@ -33,12 +30,8 @@ jest.mock('googleapis', () => {
 describe('Sync calendar util hook', () => {
   const syncEvent = jest.fn();
   const syncToken = 'a-sync-token';
-  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> = jest
-    .fn()
-    .mockResolvedValue({
-      client_email: 'random-data',
-      private_key: 'random-data',
-    });
+  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> =
+    jest.fn();
   const syncCalendarHandler = syncCalendarFactory(
     syncEvent,
     getJWTCredentialsMock,
@@ -53,6 +46,18 @@ describe('Sync calendar util hook', () => {
     jest.clearAllMocks();
   });
 
+  beforeEach(() => {
+    getJWTCredentialsMock.mockResolvedValue({
+      client_email: 'random-data',
+      private_key: 'random-data',
+    });
+    mockGoogleAuth.mockReturnValue({
+      scopes: [
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/calendar.events',
+      ],
+    });
+  });
   test('Should throw when get unknown error from google', async () => {
     mockList.mockRejectedValueOnce(new Error('Google Error'));
     await expect(
@@ -71,7 +76,11 @@ describe('Sync calendar util hook', () => {
   test('Should trigger full sync when syncToken is invalidated', async () => {
     const listEventsResponse = getListEventsResponse();
     jest.spyOn(global.Date, 'now').mockImplementationOnce(() => 1677926270000);
-    mockList.mockRejectedValueOnce({ code: '410' });
+    mockList.mockRejectedValueOnce(
+      new Common.GaxiosError('Gone', {}, {
+        status: 410,
+      } as unknown as Common.GaxiosResponse),
+    );
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     const result = await syncCalendarHandler(

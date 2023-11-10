@@ -1,4 +1,4 @@
-import { Auth } from 'googleapis';
+import { Auth, Common } from 'googleapis';
 import 'source-map-support/register';
 import { GetJWTCredentials, Logger } from '../../utils';
 
@@ -29,14 +29,13 @@ export const subscribeToEventChangesFactory =
       'https://www.googleapis.com/auth/calendar.events',
     ];
     const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-    const ttl = 2592000; // 30 days
+    const ttl = 2592000; // 30 days, which is a maximum TTL
     const data = {
       id: subscriptionId,
       token: googleApiToken,
       type: 'web_hook',
       address: `${asapApiUrl}/webhook/events/contentful`,
       params: {
-        // 30 days, which is a maximum TTL
         ttl,
       },
     };
@@ -57,12 +56,7 @@ export const subscribeToEventChangesFactory =
         expiration: parseInt(response.data.expiration, 10),
       };
     } catch (err: unknown) {
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'code' in err &&
-        err.code === '404'
-      ) {
+      if (err instanceof Common.GaxiosError && err.status === 404) {
         logger.warn(
           `Calendar not found when subscribing to calendarId: ${calendarId}`,
         );

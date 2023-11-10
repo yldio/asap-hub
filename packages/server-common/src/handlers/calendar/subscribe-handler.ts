@@ -8,6 +8,16 @@ type Config = {
   googleApiUrl: string;
 };
 
+const getClient = async (getJWTCredentials: GetJWTCredentials) => {
+  const creds = await getJWTCredentials();
+  const client = Auth.auth.fromJSON(creds) as Auth.JWT;
+
+  client.scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+  ];
+  return client;
+};
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
@@ -21,15 +31,9 @@ export const subscribeToEventChangesFactory =
     resourceId: string | null;
     expiration: number | null;
   }> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
+    const client = await getClient(getJWTCredentials);
     const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-    const ttl = 2592000; // 30 days, which is a maximum TTL
+    const ttl = 2_592_000; // 30 days, which is a maximum TTL
     const data = {
       id: subscriptionId,
       token: googleApiToken,
@@ -83,13 +87,7 @@ export const unsubscribeFromEventChangesFactory =
     { googleApiUrl }: Pick<Config, 'googleApiUrl'>,
   ) =>
   async (resourceId: string, channelId: string): Promise<void> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
+    const client = await getClient(getJWTCredentials);
     const url = `${googleApiUrl}calendar/v3/channels/stop`;
     const data = {
       id: channelId,

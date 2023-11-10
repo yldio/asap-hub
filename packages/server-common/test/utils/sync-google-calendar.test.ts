@@ -3,29 +3,27 @@ import { GetJWTCredentials, syncCalendarFactory } from '../../src';
 import { getListEventsResponse } from '../fixtures/google-events.fixtures';
 import { loggerMock as logger } from '../mocks/logger.mock';
 
-const mockGoogleAuth = jest.fn().mockImplementation(() => ({}));
+const mockGoogleAuth = jest.fn();
 const mockList = jest.fn();
 
-jest.mock('googleapis', () => {
-  return {
-    ...jest.requireActual('googleapis'),
-    google: {
-      auth: {
-        GoogleAuth: jest.fn(),
+jest.mock('googleapis', () => ({
+  ...jest.requireActual('googleapis'),
+  google: {
+    auth: {
+      GoogleAuth: jest.fn(),
+    },
+    calendar: () => ({
+      events: {
+        list: mockList,
       },
-      calendar: () => ({
-        events: {
-          list: mockList,
-        },
-      }),
-    },
-    Auth: {
-      GoogleAuth: jest
-        .fn()
-        .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
-    },
-  };
-});
+    }),
+  },
+  Auth: {
+    GoogleAuth: jest
+      .fn()
+      .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
+  },
+}));
 
 describe('Sync calendar util hook', () => {
   const syncEvent = jest.fn();
@@ -42,9 +40,7 @@ describe('Sync calendar util hook', () => {
   const squidexCalendarId = 'squidex-calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.clearAllMocks);
 
   beforeEach(() => {
     getJWTCredentialsMock.mockResolvedValue({

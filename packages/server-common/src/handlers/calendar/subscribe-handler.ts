@@ -10,13 +10,12 @@ type Config = {
 
 const getClient = async (getJWTCredentials: GetJWTCredentials) => {
   const creds = await getJWTCredentials();
-  const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-  client.scopes = [
-    'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.events',
-  ];
-  return client;
+  return new Auth.GoogleAuth({
+    scopes: [
+      'https://www.googleapis.com/auth/calendar',
+      'https://www.googleapis.com/auth/calendar.events',
+    ],
+  }).fromJSON(creds);
 };
 export const subscribeToEventChangesFactory =
   (

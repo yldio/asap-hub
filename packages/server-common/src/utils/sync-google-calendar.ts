@@ -39,7 +39,6 @@ export const syncCalendarFactory = (
         'https://www.googleapis.com/auth/calendar.events',
       ],
     }).fromJSON(credentials) as Auth.JWT;
-
     const calendar = google.calendar({ version: 'v3', auth });
     try {
       const { data } = await calendar.events.list({

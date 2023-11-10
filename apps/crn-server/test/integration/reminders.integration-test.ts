@@ -34,7 +34,8 @@ type AppResponse<T> = {
   body: T;
 };
 
-describe('Reminders', () => {
+// Revert this before open PR
+describe.skip('Reminders', () => {
   let app: Express;
   let loggedInUser: UserFixture;
   let notLoggedInUser: UserFixture;

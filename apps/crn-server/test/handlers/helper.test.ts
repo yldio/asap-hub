@@ -1,6 +1,6 @@
-import { addTagsFunction } from '../../../src/handlers/helper';
-import { getEventDataObject } from '../../fixtures/events.fixtures';
-import { getUserResponse } from '../../fixtures/users.fixtures';
+import { addTagsFunction } from '../../src/handlers/helper';
+import { getEventDataObject } from '../fixtures/events.fixtures';
+import { getUserResponse } from '../fixtures/users.fixtures';
 
 describe('addTagsFunction', () => {
   test('add tags to _tags when this field is present', () => {

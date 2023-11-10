@@ -695,6 +695,29 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexTeams: {
+      handler: './src/handlers/teams/algolia-index-team-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'TeamsPublished',
+                'TeamsUpdated',
+                'TeamsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     algoliaIndexTeamResearchOutputs: {
       handler:
         './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',

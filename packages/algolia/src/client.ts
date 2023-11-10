@@ -8,6 +8,7 @@ import {
   ExternalAuthorResponse,
   gp2 as gp2Model,
   ResearchOutputResponse,
+  TeamResponse,
   UserResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
@@ -17,6 +18,7 @@ import {
   Payload,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
+  TEAM_ENTITY_TYPE,
 } from './crn';
 import {
   NEWS_ENTITY_TYPE,
@@ -35,6 +37,7 @@ export type EntityResponses = {
     [USER_ENTITY_TYPE]: UserResponse;
     [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
     [EVENT_ENTITY_TYPE]: EventResponse;
+    [TEAM_ENTITY_TYPE]: TeamResponse;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;

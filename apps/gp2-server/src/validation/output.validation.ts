@@ -24,14 +24,12 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
       take: { type: 'number', nullable: true },
       skip: { type: 'number', nullable: true },
       search: { type: 'string', nullable: true },
-      includeDrafts: { type: 'boolean', nullable: true },
       filter: {
         type: 'object',
         properties: {
           workingGroupId: { type: 'string', nullable: true },
           projectId: { type: 'string', nullable: true },
           eventId: { type: 'string', nullable: true },
-          relatedOutputId: { type: 'string', nullable: true },
           authorId: {
             type: 'string',
             nullable: true,

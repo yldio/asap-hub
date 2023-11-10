@@ -220,9 +220,6 @@ export type FetchOutputFilter = FetchOutputSearchFilter & {
   projectId?: string;
   title?: string;
   workingGroupId?: string;
-  relatedOutputId?: string;
 };
 
-export type FetchOutputOptions = FetchOptions<FetchOutputFilter> & {
-  includeDrafts?: boolean;
-};
+export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

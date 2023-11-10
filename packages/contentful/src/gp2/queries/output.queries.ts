@@ -278,27 +278,3 @@ export const FETCH_OUTPUTS_BY_EVENT_ID = gql`
   }
   ${outputsContentQueryFragment}
 `;
-
-export const FETCH_OUTPUTS_BY_RELATED_OUTPUT_ID = gql`
-  query FetchOutputsByRelatedOutputId(
-    $id: String!
-    $limit: Int
-    $skip: Int
-    $preview: Boolean
-  ) {
-    outputs(id: $id, preview: $preview) {
-      sys {
-        id
-      }
-      linkedFrom {
-        outputsCollection(limit: $limit, skip: $skip) {
-          total
-          items {
-            ...OutputsContentData
-          }
-        }
-      }
-    }
-  }
-  ${outputsContentQueryFragment}
-`;

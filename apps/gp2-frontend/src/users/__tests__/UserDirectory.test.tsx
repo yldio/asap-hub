@@ -94,6 +94,8 @@ const renderUserDirectory = async ({
     searchQuery: '',
     debouncedSearchQuery: '',
     setSearchQuery: jest.fn(),
+    tags: [],
+    setTags: jest.fn(),
   }));
 
   render(

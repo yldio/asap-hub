@@ -144,6 +144,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
           <OutputCard {...output} detailedView />
           {(output.description || !!output.tags.length) && (
             <SharedResearchDetailsTagsCard
+              getTagsHref={(tag: string) => gp2Routing.tags({ tag }).$}
               tags={output.tags.map((tag) => tag.name)}
               displayDescription={!!output.description}
               descriptionMD={output.description}

@@ -15,6 +15,7 @@ const {
   events: eventsRoute,
   outputs: outputsRoute,
   newsList: newsRoute,
+  tags: tagsRoute,
 } = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
@@ -36,6 +37,8 @@ const loadOutputs = () =>
 
 const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
 
+const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
@@ -43,6 +46,7 @@ const Users = lazy(loadUsers);
 const Events = lazy(loadEvents);
 const Outputs = lazy(loadOutputs);
 const News = lazy(loadNews);
+const Tags = lazy(loadTags);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
@@ -57,7 +61,8 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       .then(loadProjects)
       .then(loadEvents)
       .then(loadOutputs)
-      .then(loadNews);
+      .then(loadNews)
+      .then(loadTags);
   });
 
   const { projects = [], workingGroups = [] } =
@@ -103,6 +108,12 @@ const OnboardedApp: FC<Record<string, never>> = () => {
             <News />
           </Frame>
         </Route>
+        <Route path={tagsRoute.template}>
+          <Frame title="Tags">
+            <Tags />
+          </Frame>
+        </Route>
+
         <Route>
           <Frame title="Not Found">
             <NotFoundPage />

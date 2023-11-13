@@ -100,7 +100,13 @@ const UserCard: React.FC<UserCardProps> = ({
             region={region}
             workingGroups={workingGroups}
           />
-          <TagList max={4} tags={tags} />
+          <TagList
+            max={4}
+            tags={tags.map((name) => ({
+              tag: name,
+              href: gp2Routing.tags({ tag: name }).$,
+            }))}
+          />
         </div>
       </div>
     </Card>

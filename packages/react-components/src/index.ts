@@ -27,6 +27,7 @@ export {
   Label,
   Link,
   Markdown,
+  MultiSelect,
   NavigationLink,
   Overlay,
   Paragraph,

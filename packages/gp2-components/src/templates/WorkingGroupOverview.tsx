@@ -102,7 +102,12 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           Explore keywords related to skills, techniques, resources, and tools.
         </Paragraph>
         <div css={contentStyles}>
-          <TagList tags={tags.map(({ name }) => name)} />
+          <TagList
+            tags={tags.map(({ name }) => ({
+              tag: name,
+              href: gp2Routing.tags({ tag: name }).$,
+            }))}
+          />
         </div>
       </Card>
     ) : null}

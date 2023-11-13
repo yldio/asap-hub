@@ -92,6 +92,8 @@ export {
   ProjectsPage,
   ProjectPageList,
   Theme,
+  TagSearchPage,
+  TagSearchPageList,
   UserDetailPage,
   UserOverview,
   UsersPage,

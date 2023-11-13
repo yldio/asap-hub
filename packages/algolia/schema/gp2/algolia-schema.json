@@ -27,6 +27,7 @@
   "optionalWords": null,
   "queryLanguages": ["en"],
   "attributesForFaceting": [
+    "searchable(_tags)",
     "__meta.type",
     "authors.id",
     "documentType",

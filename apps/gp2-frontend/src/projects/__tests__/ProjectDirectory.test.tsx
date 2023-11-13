@@ -67,6 +67,8 @@ beforeEach(() => {
     searchQuery: '',
     debouncedSearchQuery: '',
     setSearchQuery: jest.fn(),
+    tags: [],
+    setTags: jest.fn(),
   }));
 });
 

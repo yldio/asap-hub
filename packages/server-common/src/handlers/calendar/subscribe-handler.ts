@@ -1,4 +1,4 @@
-import { Auth } from 'googleapis';
+import { Auth, Common } from 'googleapis';
 import 'source-map-support/register';
 import { GetJWTCredentials, Logger } from '../../utils';
 
@@ -8,6 +8,15 @@ type Config = {
   googleApiUrl: string;
 };
 
+const getClient = async (getJWTCredentials: GetJWTCredentials) => {
+  const creds = await getJWTCredentials();
+  return new Auth.GoogleAuth({
+    scopes: [
+      'https://www.googleapis.com/auth/calendar',
+      'https://www.googleapis.com/auth/calendar.events',
+    ],
+  }).fromJSON(creds);
+};
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
@@ -21,22 +30,15 @@ export const subscribeToEventChangesFactory =
     resourceId: string | null;
     expiration: number | null;
   }> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
+    const client = await getClient(getJWTCredentials);
     const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-    const ttl = 2592000; // 30 days
+    const ttl = 2_592_000; // 30 days, which is a maximum TTL
     const data = {
       id: subscriptionId,
       token: googleApiToken,
       type: 'web_hook',
       address: `${asapApiUrl}/webhook/events/contentful`,
       params: {
-        // 30 days, which is a maximum TTL
         ttl,
       },
     };
@@ -57,12 +59,7 @@ export const subscribeToEventChangesFactory =
         expiration: parseInt(response.data.expiration, 10),
       };
     } catch (err: unknown) {
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'code' in err &&
-        err.code === '404'
-      ) {
+      if (err instanceof Common.GaxiosError && err.status === 404) {
         logger.warn(
           `Calendar not found when subscribing to calendarId: ${calendarId}`,
         );
@@ -89,13 +86,7 @@ export const unsubscribeFromEventChangesFactory =
     { googleApiUrl }: Pick<Config, 'googleApiUrl'>,
   ) =>
   async (resourceId: string, channelId: string): Promise<void> => {
-    const creds = await getJWTCredentials();
-    const client = Auth.auth.fromJSON(creds) as Auth.JWT;
-
-    client.scopes = [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ];
+    const client = await getClient(getJWTCredentials);
     const url = `${googleApiUrl}calendar/v3/channels/stop`;
     const data = {
       id: channelId,

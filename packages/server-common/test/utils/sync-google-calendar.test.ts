@@ -1,44 +1,35 @@
+import { Common } from 'googleapis';
 import { GetJWTCredentials, syncCalendarFactory } from '../../src';
 import { getListEventsResponse } from '../fixtures/google-events.fixtures';
 import { loggerMock as logger } from '../mocks/logger.mock';
 
+const mockGoogleAuth = jest.fn();
 const mockList = jest.fn();
-jest.mock('googleapis', () => {
-  const googleapis = jest.requireActual('googleapis');
-  return {
-    ...googleapis,
-    google: {
-      auth: {
-        GoogleAuth: jest.fn(),
+
+jest.mock('googleapis', () => ({
+  ...jest.requireActual('googleapis'),
+  google: {
+    auth: {
+      GoogleAuth: jest.fn(),
+    },
+    calendar: () => ({
+      events: {
+        list: mockList,
       },
-      calendar: () => ({
-        events: {
-          list: mockList,
-        },
-      }),
-    },
-    Auth: {
-      GoogleAuth: jest.fn().mockReturnValue({
-        fromJSON: () => ({
-          scopes: [
-            'https://www.googleapis.com/auth/calendar',
-            'https://www.googleapis.com/auth/calendar.events',
-          ],
-        }),
-      }),
-    },
-  };
-});
+    }),
+  },
+  Auth: {
+    GoogleAuth: jest
+      .fn()
+      .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
+  },
+}));
 
 describe('Sync calendar util hook', () => {
   const syncEvent = jest.fn();
-  const syncToken = '';
-  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> = jest
-    .fn()
-    .mockResolvedValue({
-      client_email: 'random-data',
-      private_key: 'random-data',
-    });
+  const syncToken = 'a-sync-token';
+  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> =
+    jest.fn();
   const syncCalendarHandler = syncCalendarFactory(
     syncEvent,
     getJWTCredentialsMock,
@@ -49,10 +40,20 @@ describe('Sync calendar util hook', () => {
   const squidexCalendarId = 'squidex-calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  afterEach(jest.clearAllMocks);
 
+  beforeEach(() => {
+    getJWTCredentialsMock.mockResolvedValue({
+      client_email: 'random-data',
+      private_key: 'random-data',
+    });
+    mockGoogleAuth.mockReturnValue({
+      scopes: [
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/calendar.events',
+      ],
+    });
+  });
   test('Should throw when get unknown error from google', async () => {
     mockList.mockRejectedValueOnce(new Error('Google Error'));
     await expect(
@@ -71,7 +72,11 @@ describe('Sync calendar util hook', () => {
   test('Should trigger full sync when syncToken is invalidated', async () => {
     const listEventsResponse = getListEventsResponse();
     jest.spyOn(global.Date, 'now').mockImplementationOnce(() => 1677926270000);
-    mockList.mockRejectedValueOnce({ code: '410' });
+    mockList.mockRejectedValueOnce(
+      new Common.GaxiosError('Gone', {}, {
+        status: 410,
+      } as unknown as Common.GaxiosResponse),
+    );
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     const result = await syncCalendarHandler(
@@ -80,17 +85,15 @@ describe('Sync calendar util hook', () => {
       syncToken,
     );
 
-    const googleParams = {
+    expect(mockList).toHaveBeenCalledWith({
       calendarId: 'google-calendar-id',
       singleEvents: true,
       showDeleted: true,
       timeMin: '2020-10-01T00:00:00.000Z',
       timeMax: '2023-09-04T10:37:50.000Z',
       pageToken: undefined,
-    };
-
-    expect(mockList).toHaveBeenCalledWith(googleParams);
-    expect(syncEvent).toBeCalledTimes(2);
+    });
+    expect(syncEvent).toHaveBeenCalledTimes(2);
     expect(result).toStrictEqual('next-sync-token-1');
   });
 
@@ -104,7 +107,7 @@ describe('Sync calendar util hook', () => {
     });
 
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
-    expect(syncEvent).toBeCalledTimes(0);
+    expect(syncEvent).toHaveBeenCalledTimes(0);
   });
 
   test('Should not throw when syncEvent fails to update event', async () => {
@@ -113,7 +116,7 @@ describe('Sync calendar util hook', () => {
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
-    expect(syncEvent).toBeCalledTimes(2);
+    expect(syncEvent).toHaveBeenCalledTimes(2);
   });
 
   test('Should call syncEvent with the google events', async () => {
@@ -123,7 +126,14 @@ describe('Sync calendar util hook', () => {
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(1);
-    expect(syncEvent).toBeCalledTimes(2);
+    expect(mockList).toHaveBeenCalledWith({
+      calendarId: 'google-calendar-id',
+      singleEvents: true,
+      showDeleted: true,
+      syncToken,
+      pageToken: undefined,
+    });
+    expect(syncEvent).toHaveBeenCalledTimes(2);
     expect(syncEvent).toHaveBeenCalledWith(
       listEventsResponse.items![0],
       googleCalendarId,
@@ -140,10 +150,11 @@ describe('Sync calendar util hook', () => {
 
   test('Should trigger fetch more events if nextPageToken is set', async () => {
     const listEventsResponse = getListEventsResponse();
+    const nextPageToken = 'next-page-token-1';
     mockList.mockResolvedValueOnce({
       data: {
         ...listEventsResponse,
-        nextPageToken: 'next-page-token-1',
+        nextPageToken,
       },
     });
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
@@ -151,6 +162,20 @@ describe('Sync calendar util hook', () => {
     await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(2);
-    expect(syncEvent).toBeCalledTimes(4);
+    expect(mockList).toHaveBeenNthCalledWith(1, {
+      calendarId: 'google-calendar-id',
+      singleEvents: true,
+      showDeleted: true,
+      syncToken,
+      pageToken: undefined,
+    });
+    expect(mockList).toHaveBeenNthCalledWith(2, {
+      calendarId: 'google-calendar-id',
+      singleEvents: true,
+      showDeleted: true,
+      syncToken,
+      pageToken: nextPageToken,
+    });
+    expect(syncEvent).toHaveBeenCalledTimes(4);
   });
 });

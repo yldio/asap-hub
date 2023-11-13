@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -34,7 +35,10 @@ export const indexNewsHandler =
         return news;
       } catch (e) {
         log.error(e, `Error while reindexing news ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           log.error(`News ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -46,7 +50,10 @@ export const indexNewsHandler =
       await reindexNews(event.detail.resourceId);
     } catch (e) {
       log.error(e, `Error while reindexing news ${event.detail.resourceId}`);
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -35,7 +36,10 @@ export const indexExternalUserHandler =
         log.debug(`Saved external user ${externalUser.id}`);
       } catch (e) {
         log.error(e, `Error while reindexing external user ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           log.error(`external user ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -50,7 +54,10 @@ export const indexExternalUserHandler =
         e,
         `Error while reindexing external user ${event.detail.resourceId}`,
       );
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

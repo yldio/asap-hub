@@ -1,8 +1,8 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { UserEvent, UserResponse } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
-import { NotFoundError } from '@asap-hub/errors';
-import { Boom, isBoom } from '@hapi/boom';
+import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
@@ -44,7 +44,7 @@ export const indexUserHandler =
       }
     } catch (e) {
       if (
-        (isBoom(e) && (e as Boom).output.statusCode === 404) ||
+        (isBoom(e) && e.output.statusCode === 404) ||
         e instanceof NotFoundError
       ) {
         await algoliaClient.remove(event.detail.resourceId);

@@ -165,7 +165,6 @@ export const researchOutputToIdentifierType: Record<
   Bioinformatics: [
     ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
-    ResearchOutputIdentifierType.RRID,
   ],
   'Lab Resource': [
     ResearchOutputIdentifierType.None,

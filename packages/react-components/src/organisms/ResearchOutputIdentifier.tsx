@@ -27,11 +27,11 @@ const getIdentifiers = (
 
 const identifierMap = {
   [ResearchOutputIdentifierType.DOI]: {
-    helpText: 'Your DOI must start with 1 and it cannot be a URL',
-    placeholder: 'DOI number e.g. 10.5555/YFRU1371',
+    helpText: 'Your DOI must start with 10 and it cannot be a URL',
+    placeholder: 'E.g. 10.5555/YFRU1371',
     regex: ResearchOutputIdentifierValidationExpression.DOI,
     errorMessage:
-      'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
+      'Please enter a valid DOI. It starts with a 10 and it cannot be a URL. (e.g. 10.5555/YFRU1371.121212)',
     required: true,
     name: 'DOI',
   },
@@ -165,6 +165,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.AccessionNumber && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}
@@ -177,6 +178,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.DOI && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}
@@ -189,6 +191,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.RRID && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}

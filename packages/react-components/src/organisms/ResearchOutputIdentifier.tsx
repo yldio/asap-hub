@@ -28,7 +28,7 @@ const getIdentifiers = (
 const identifierMap = {
   [ResearchOutputIdentifierType.DOI]: {
     helpText: 'Your DOI must start with 10 and it cannot be a URL',
-    placeholder: 'E.g. 10.5555/YFRU1371',
+    placeholder: 'e.g. 10.5555/YFRU1371',
     regex: ResearchOutputIdentifierValidationExpression.DOI,
     errorMessage:
       'Please enter a valid DOI. It starts with a 10 and it cannot be a URL. (e.g. 10.5555/YFRU1371.121212)',
@@ -38,7 +38,7 @@ const identifierMap = {
   [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
       'Your Accession Number must start with a letter. Accession Numbers are attributed by NIH, EMBL-EBI, ProteomeXchange, etc.',
-    placeholder: 'Accession number e.g. AF123456',
+    placeholder: 'e.g. AF123456',
     regex: ResearchOutputIdentifierValidationExpression['Accession Number'],
     errorMessage:
       'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
@@ -47,7 +47,7 @@ const identifierMap = {
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
-    placeholder: 'RRID e.g. RRID:AB_90755',
+    placeholder: 'e.g. RRID:AB_90755',
     regex: ResearchOutputIdentifierValidationExpression.RRID,
     errorMessage:
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',

@@ -89,10 +89,7 @@ const mandatoryFields = async (
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(identifier, 'DOI');
   userEvent.type(identifier, specialChars.enter);
-  userEvent.type(
-    screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
-    doi,
-  );
+  userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
   userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
 

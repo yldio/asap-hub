@@ -108,8 +108,7 @@ describe('research outputs', () => {
         expect(response.body.addedDate).toEqual(null);
       });
 
-      // eslint-disable-next-line jest/no-disabled-tests
-      test.skip('can create a published team research output as a team PM', async () => {
+      test('can create a published team research output as a team PM', async () => {
         const input = getResearchOutputFixture({
           teams: [pmTeam.id],
           workingGroups: [],
@@ -225,8 +224,7 @@ describe('research outputs', () => {
       });
 
       // regression test for cache behaviour when updating published content  in contentful
-      // eslint-disable-next-line jest/no-disabled-tests
-      test.skip('editing a published output returns the fresh data', async () => {
+      test('editing a published output returns the fresh data', async () => {
         const researchOutput = getResearchOutputFixture(
           {
             teams: [pmTeam.id],
@@ -393,8 +391,7 @@ describe('research outputs', () => {
     });
 
     describe('create', () => {
-      // eslint-disable-next-line jest/no-disabled-tests
-      test.skip('can create a draft working group output in a working group you are a member of', async () => {
+      test('can create a draft working group output in a working group you are a member of', async () => {
         const input = getResearchOutputFixture(
           {
             teams: [team.id],

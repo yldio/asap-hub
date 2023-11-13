@@ -200,8 +200,7 @@ describe('Reminders', () => {
 
       app = AppHelper(() => loggedInUser);
     });
-    // eslint-disable-next-line jest/no-disabled-tests
-    describe.skip('Published Reminder', () => {
+    describe('Published Reminder', () => {
       test('Should see the published reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
         const publishOutput = getResearchOutputFixture({
           teams: [pmTeam.id],

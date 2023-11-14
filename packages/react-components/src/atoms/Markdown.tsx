@@ -8,8 +8,8 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import visit from 'unist-util-visit';
-import { parseComponents, parseTagNames } from '../utils/parsing';
 import type { Literal, Node, Parent } from 'unist';
+import { parseComponents, parseTagNames } from '../utils/parsing';
 
 interface MarkdownProps {
   value: string;

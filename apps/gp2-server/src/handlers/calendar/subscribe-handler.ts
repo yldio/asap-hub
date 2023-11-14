@@ -15,7 +15,6 @@ import {
   contentfulSpaceId,
   googleApiCredentialsSecretId,
   googleApiToken,
-  googleApiUrl,
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
@@ -34,11 +33,8 @@ const webhookHandler = calendarCreatedContentfulHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,
-    googleApiUrl,
   }),
-  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-    googleApiUrl,
-  }),
+  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger),
   getCalendarDataProvider(contentfulGraphQLClient),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
   logger,

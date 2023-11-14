@@ -16,24 +16,24 @@ interface MarkdownProps {
   toc?: boolean;
 }
 
-const visitor = (type: string) => {
-  return (node: Node, i: number, parent: Parent | undefined) => {
+const visitor =
+  (type: string) => (node: Node, i: number, parent: Parent | undefined) => {
     const { value } = node as Literal<string>;
     const [pattern, tagName] =
-      type === 'superscript' ? [/\^/, 'sup'] : [/\~/, 'sub'];
+      type === 'superscript' ? [/\^/, 'sup'] : [/~/, 'sub'];
     const values = value.split(pattern);
 
     if (values.length === 1 || values.length % 2 === 0) {
       return;
     }
-    const children = values.map((str, i) =>
-      i % 2 === 0
+    const children = values.map((str, index) =>
+      index % 2 === 0
         ? {
             type: 'text',
             value: str,
           }
         : {
-            type: type,
+            type,
             data: {
               hName: tagName,
             },
@@ -45,15 +45,12 @@ const visitor = (type: string) => {
             ],
           },
     );
-    parent!.children.splice(i!, 1, ...children);
+    parent?.children.splice(i, 1, ...children);
   };
-};
 
-const supersubplugin = (): Transformer => {
-  return (tree) => {
-    visit(tree, 'text', visitor('superscript'));
-    visit(tree, 'text', visitor('subscript'));
-  };
+const supersubplugin = (): Transformer => (tree) => {
+  visit(tree, 'text', visitor('superscript'));
+  visit(tree, 'text', visitor('subscript'));
 };
 
 const Markdown = ({ value, toc = false }: MarkdownProps) => {

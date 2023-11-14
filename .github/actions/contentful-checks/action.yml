@@ -5,9 +5,6 @@ inputs:
   contentful-space-id:
     description: 'Contentful Space ID'
     required: true
-  contentful-master-env:
-    description: 'Contentful master environment'
-    required: true
   contentful-token:
     description: 'Contentful access token'
     required: true
@@ -15,22 +12,8 @@ inputs:
     description: 'Contentful environment name'
     required: true
     type: string
-  app:
-    description: 'crn or gp2'
-    required: true
-    type: string
-  create-dedicated-env:
-    description: 'if a dedicated env should be created'
-    required: true
-    type: boolean
 
 outputs:
-  contentful-env:
-    description: 'Contentful environment to be used on branch'
-    value: ${{ steps.determine-environment.outputs.env-id }}
-  on-branch-env:
-    description: 'Whether the Contentful environment being used is a branch environment'
-    value: ${{ steps.determine-environment.outputs.on-branch-env }}
   contentful-env-exists:
     description: 'Whether the Contentful environment already exists'
     value: ${{ steps.check-contentful-exists.outputs.exists }}
@@ -38,28 +21,6 @@ outputs:
 runs:
   using: 'composite'
   steps:
-    # Determine whether a dedicated environment is needed for this branch
-    # otherwise default to $CONTENTFUL_MASTER_ENV
-    - name: Determine Environment
-      id: determine-environment
-      shell: bash
-      run: |
-        CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
-        BRANCH_ENV=false
-
-        echo "CREATE_DEDICATED_ENV = $CREATE_DEDICATED_ENV"
-
-        if [ "$CREATE_DEDICATED_ENV" = true ]; then
-          CONTENTFUL_ENV=$CONTENTFUL_ENV_ID
-          BRANCH_ENV=true
-        fi
-
-        echo "env-id=$CONTENTFUL_ENV" >> $GITHUB_OUTPUT
-        echo "on-branch-env=$BRANCH_ENV" >> $GITHUB_OUTPUT
-      env:
-        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
-        CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
-        CREATE_DEDICATED_ENV: ${{ inputs.create-dedicated-env }}
     - name: Determine whether the Contentful environment has been created
       id: check-contentful-exists
       shell: bash
@@ -78,6 +39,6 @@ runs:
           echo "exists=false" >> $GITHUB_OUTPUT
         fi
       env:
-        CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
+        CONTENTFUL_ENV: ${{ inputs.contentful-environment-id }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

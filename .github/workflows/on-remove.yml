@@ -9,6 +9,14 @@ on:
         required: true
         type: string
         description: Choose which PR number to destroy
+      crn-create-env:
+        required: false
+        type: boolean
+        description: Destroy dedicated CRN enironment
+      gp2-create-env:
+        required: false
+        type: boolean
+        description: Destroy dedicated GP2 enironment
 jobs:
   crn-sls-remove:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
@@ -74,6 +82,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+          crn-create-env: ${{inputs.crn-create-env}}
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -83,6 +92,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.crn-contentful-env-id }}
       - name: Contentful Webhook Teardown
+        if: ${{ steps.setup.outputs.crn-on-branch-env == 'true' }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -113,6 +123,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+          gp2-create-env: ${{inputs.gp2-create-env}}
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
@@ -122,6 +133,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.gp2-contentful-env-id }}
       - name: Contentful Webhook Teardown
+        if: ${{ steps.setup.outputs.gp2-on-branch-env == 'true' }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -151,6 +163,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+          crn-create-env: ${{inputs.crn-create-env}}
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys
@@ -163,6 +176,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
+        if: ${{ steps.setup.outputs.crn-on-branch-env == 'true'}}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:
@@ -191,6 +205,7 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Branch
+          gp2-create-env: ${{inputs.gp2-create-env}}
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Get Algolia Keys
@@ -203,6 +218,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
+        if: ${{ steps.setup.outputs.gp2-on-branch-env == 'true' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:

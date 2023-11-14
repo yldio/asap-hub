@@ -10,18 +10,11 @@ type SharedResearchDetailsTagsCardProps = Pick<
 > & {
   tags: string[];
   displayDescription: boolean;
-  getTagsHref?: (tag: string) => string;
 };
 
 const SharedResearchDetailsTagsCard: React.FC<
   SharedResearchDetailsTagsCardProps
-> = ({
-  tags,
-  description = '',
-  descriptionMD = '',
-  getTagsHref,
-  displayDescription,
-}) => (
+> = ({ tags, description = '', descriptionMD = '', displayDescription }) => (
   <Card>
     {displayDescription && (
       <div css={{ paddingBottom: `${12 / perRem}em` }}>
@@ -45,16 +38,7 @@ const SharedResearchDetailsTagsCard: React.FC<
             tools.
           </Paragraph>
         </div>
-        <TagList
-          tags={tags.map((tag) =>
-            getTagsHref
-              ? {
-                  tag,
-                  href: getTagsHref(tag),
-                }
-              : tag,
-          )}
-        />
+        <TagList tags={tags} />
       </>
     )}
   </Card>

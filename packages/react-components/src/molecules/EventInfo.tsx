@@ -1,5 +1,5 @@
 import { BasicEvent } from '@asap-hub/model';
-import { events, tags as tagRoute } from '@asap-hub/routing';
+import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -107,12 +107,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
           {eventSpeakers}
           {tags.length > 0 && (
             <div css={listItemStyles}>
-              <TagList
-                tags={tags.map((name) => ({
-                  tag: name,
-                  href: tagRoute({ tag: name }).$,
-                }))}
-              />
+              <TagList tags={tags} />
             </div>
           )}
         </div>

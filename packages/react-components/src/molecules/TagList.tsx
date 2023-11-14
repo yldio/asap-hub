@@ -71,7 +71,7 @@ const overflowStyles = css({
 
 const SAFARI_MAX_SAFE_INTEGER = 2 ** 31 - 2;
 interface TagListProps {
-  tags: ReadonlyArray<string | { tag: string; href: string }>;
+  tags: ReadonlyArray<string>;
   enabled?: boolean;
   min?: number;
   max?: number;
@@ -102,15 +102,9 @@ const TagList: React.FC<TagListProps> = ({
             centerContent && centredItemStyles,
           ]}
         >
-          {typeof tag === 'string' ? (
-            <Tag title={tag} href={tagsRoute({ tag }).$} enabled={enabled}>
-              {tag}
-            </Tag>
-          ) : (
-            <Tag title={tag.tag} href={tag.href} enabled={enabled}>
-              {tag.tag}
-            </Tag>
-          )}
+          <Tag title={tag} href={tagsRoute({ tag }).$} enabled={enabled}>
+            {tag}
+          </Tag>
         </li>
       ))}
       <li key="overflow" className="overflow" css={overflowStyles}>

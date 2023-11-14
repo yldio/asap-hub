@@ -48,6 +48,6 @@ describe('UserCard', () => {
     render(<UserCard {...defaultProps} />);
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toMatchObject(['Genetics', 'Neurology', 'Operations', 'Training', '']);
+    ).toMatchObject(['Genetics', 'Neurology', 'Operations', '']);
   });
 });

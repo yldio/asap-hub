@@ -57,7 +57,10 @@ const supersubplugin = (): Transformer => {
 };
 
 const Markdown = ({ value, toc = false }: MarkdownProps) => {
-  let processor = unified().use(markdown).use(supersubplugin).use(remark2rehype);
+  let processor = unified()
+    .use(markdown)
+    .use(supersubplugin)
+    .use(remark2rehype);
 
   if (toc) {
     processor = processor

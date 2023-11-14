@@ -48,7 +48,7 @@ const visitor =
     parent?.children.splice(i, 1, ...children);
   };
 
-const supersubplugin = (): Transformer => (tree) => {
+const superSubPlugin = (): Transformer => (tree) => {
   visit(tree, 'text', visitor('superscript'));
   visit(tree, 'text', visitor('subscript'));
 };
@@ -56,7 +56,7 @@ const supersubplugin = (): Transformer => (tree) => {
 const Markdown = ({ value, toc = false }: MarkdownProps) => {
   let processor = unified()
     .use(markdown)
-    .use(supersubplugin)
+    .use(superSubPlugin)
     .use(remark2rehype);
 
   if (toc) {

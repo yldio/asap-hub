@@ -47,10 +47,10 @@ const identifierMap = {
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
-    placeholder: 'e.g. RRID:AB_90755',
+    placeholder: 'e.g. RRID:AB_007358',
     regex: ResearchOutputIdentifierValidationExpression.RRID,
     errorMessage:
-      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
+      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:AB_007358)',
     required: true,
     name: 'RRID',
   },

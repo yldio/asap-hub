@@ -5,7 +5,7 @@ export const ResearchOutputIdentifierValidationExpression: Record<
   ResearchOutputIdentifierType,
   string | undefined
 > = {
-  [ResearchOutputIdentifierType.DOI]: '^(doi:)?\\d{2}\\.\\d{4}.*$',
+  [ResearchOutputIdentifierType.DOI]: '^10\\.\\d{4}.*$',
   [ResearchOutputIdentifierType.AccessionNumber]:
     '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
   [ResearchOutputIdentifierType.RRID]: '^RRID:[a-zA-Z]+.+$',

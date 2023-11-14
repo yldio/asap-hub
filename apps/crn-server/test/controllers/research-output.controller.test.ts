@@ -1513,7 +1513,7 @@ describe('ResearchOutputs controller', () => {
         expect.anything(),
         {
           newVersion: {
-            documentType: 'Bioinformatics',
+            documentType: 'Lab Resource',
             link: undefined,
             title: 'Test Proposal 1234',
             type: '3D Printing',

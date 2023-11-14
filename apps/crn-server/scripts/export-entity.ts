@@ -4,11 +4,13 @@ import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
+import Teams from '../src/controllers/team.controller';
 import Users from '../src/controllers/user.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
+import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -69,6 +71,8 @@ const getController = (entity: keyof EntityResponsesCRN) => {
 
   const eventDataProvider = getEventDataProvider();
 
+  const teamDataProvider = getTeamDataProvider();
+
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
     'research-output': new ResearchOutputs(
@@ -78,6 +82,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     ),
     'external-author': new ExternalAuthors(externalAuthorDataProvider),
     event: new Events(eventDataProvider),
+    team: new Teams(teamDataProvider),
   };
 
   return controllerMap[entity];
@@ -123,6 +128,13 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
     return {
       ...payload,
       _tags: record.tags,
+    };
+  }
+
+  if (type === 'team' && 'expertiseAndResourceTags' in record) {
+    return {
+      ...payload,
+      _tags: record.expertiseAndResourceTags,
     };
   }
 

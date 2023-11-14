@@ -9,6 +9,7 @@ import {
   PeopleCard,
   ResultList,
   SharedResearchCard,
+  TeamCard,
 } from '../organisms';
 import { perRem } from '../pixels';
 import { eventMapper } from '..';
@@ -40,6 +41,7 @@ export enum TagFieldByEntity {
   'research-output' = 'keywords',
   user = 'expertiseAndResourceTags',
   event = 'calendar',
+  team = 'expertiseAndResourceTags',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,11 +59,14 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
     return <SharedResearchCard {...data} />;
   }
 
-  if (TagFieldByEntity.user in data) {
+  if (TagFieldByEntity.user in data && 'onboarded' in data) {
     return <PeopleCard {...data} />;
   }
 
-  return <EventCard {...eventMapper(data)} />;
+  if (TagFieldByEntity.event in data) {
+    return <EventCard {...eventMapper(data)} />;
+  }
+  return <TeamCard {...data} />;
 };
 
 interface TagsPageBodyProps {

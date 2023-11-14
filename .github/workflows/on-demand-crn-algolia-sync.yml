@@ -12,6 +12,7 @@ on:
           - research-outputs
           - external-authors
           - events
+          - teams
           - all
       environment-name:
         required: true

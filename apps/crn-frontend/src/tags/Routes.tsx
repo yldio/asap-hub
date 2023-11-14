@@ -11,6 +11,7 @@ export const entities: CRNTagSearchEntitiesList = [
   'research-output',
   'user',
   'event',
+  'team',
 ];
 
 const Routes: React.FC<Record<string, never>> = () => {
@@ -28,7 +29,7 @@ const Routes: React.FC<Record<string, never>> = () => {
             const searchedTags = await client.searchForTagValues(
               entities,
               tagQuery,
-              { tagFilters: tags },
+              { facetFilters: tags.map((tag) => `_tags:${tag}`) },
             );
             return searchedTags.facetHits.map(({ value }) => ({
               label: value,

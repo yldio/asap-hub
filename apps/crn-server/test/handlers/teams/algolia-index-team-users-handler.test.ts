@@ -1,3 +1,4 @@
+import { UserResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/algolia-index-team-users-handler';
 import {
@@ -78,19 +79,23 @@ describe('Index Users on Team event handler', () => {
   });
 
   test('Should omit non-onboarded and Hidden users', async () => {
+    const userResponse = getUserResponse();
     userControllerMock.fetch.mockResolvedValueOnce({
       total: 3,
       items: [
-        getUserResponse(),
-        { ...getUserResponse(), role: 'Hidden' },
-        { ...getUserResponse(), onboarded: false },
+        userResponse,
+        { ...userResponse, role: 'Hidden' },
+        { ...userResponse, onboarded: false },
       ],
     });
 
     await indexHandler(getTeamUpdateEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
-      mapPayload(getUserResponse()),
+      mapPayload({
+        ...userResponse,
+        _tags: userResponse.expertiseAndResourceTags,
+      } as UserResponse & { _tags: string[] }),
     ]);
   });
 
@@ -105,14 +110,19 @@ describe('Index Users on Team event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items.map(mapPayload),
+        usersResponse.items.map((item) =>
+          mapPayload({
+            ...item,
+            _tags: item.expertiseAndResourceTags,
+          } as UserResponse & { _tags: string[] }),
+        ),
       );
     },
   );
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test.each(possibleRacingConditionEvents)(
-      'recieves the events %s when team exists',
+      'receives the events %s when team exists',
       async (name, eventA, eventB) => {
         const userID = 'user-1234';
         const usersResponse = {
@@ -127,11 +137,21 @@ describe('Index Users on Team event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items.map(mapPayload),
+          usersResponse.items.map((item) =>
+            mapPayload({
+              ...item,
+              _tags: item.expertiseAndResourceTags,
+            } as UserResponse & { _tags: string[] }),
+          ),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items.map(mapPayload),
+          usersResponse.items.map((item) =>
+            mapPayload({
+              ...item,
+              _tags: item.expertiseAndResourceTags,
+            } as UserResponse & { _tags: string[] }),
+          ),
         );
       },
     );

@@ -13,5 +13,5 @@ export const getTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   client.search(entityTypes, options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    tagFilters: options.tags,
+    facetFilters: options.tags.map((tag) => `_tags:${tag}`),
   });

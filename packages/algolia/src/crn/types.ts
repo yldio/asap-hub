@@ -3,6 +3,7 @@ import {
   ExternalAuthorResponse,
   LabResponse,
   ResearchOutputResponse,
+  TeamResponse,
   UserResponse,
 } from '@asap-hub/model';
 
@@ -11,6 +12,7 @@ export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const LAB_ENTITY_TYPE = 'lab';
 export const EVENT_ENTITY_TYPE = 'event';
+export const TEAM_ENTITY_TYPE = 'team';
 export type Payload =
   | {
       data: EventResponse;
@@ -27,6 +29,10 @@ export type Payload =
   | {
       data: ResearchOutputResponse;
       type: typeof RESEARCH_OUTPUT_ENTITY_TYPE;
+    }
+  | {
+      data: TeamResponse;
+      type: typeof TEAM_ENTITY_TYPE;
     }
   | {
       data: UserResponse;

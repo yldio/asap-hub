@@ -474,10 +474,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onCancel={() => setShowConfirmPublish(false)}
                   confirmText="Publish Output"
                   onSave={async () => {
-                    const result = await save(false);
-                    if (!result) {
-                      setShowConfirmPublish(false);
-                    }
+                    await save(false);
+                    setShowConfirmPublish(false);
                   }}
                   description={
                     <>

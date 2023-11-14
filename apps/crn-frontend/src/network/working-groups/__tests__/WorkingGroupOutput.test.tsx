@@ -95,23 +95,29 @@ const mandatoryFields = async (
 
   userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
   userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
-  const button = screen.getByRole('button', { name: /Publish/i });
-  const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
-  const updatePublishedButton = screen.getByRole('button', { name: /Save/i });
+
   return {
     publish: async () => {
+      const button = screen.getByRole('button', { name: /Publish/i });
       userEvent.click(button);
+      userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
       await waitFor(() => {
         expect(button).toBeEnabled();
       });
     },
     saveDraft: async () => {
+      const saveDraftButton = screen.getByRole('button', {
+        name: /Save Draft/i,
+      });
       userEvent.click(saveDraftButton);
       await waitFor(() => {
         expect(saveDraftButton).toBeEnabled();
       });
     },
     updatePublished: async () => {
+      const updatePublishedButton = screen.getByRole('button', {
+        name: /Save/i,
+      });
       userEvent.click(updatePublishedButton);
       await waitFor(() => {
         expect(updatePublishedButton).toBeEnabled();
@@ -513,6 +519,9 @@ it.each([
 
     const button = screen.getByRole('button', { name: buttonName });
     userEvent.click(button);
+    if (buttonName === 'Publish') {
+      userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    }
     await waitFor(() => {
       expect(button).toBeEnabled();
       expect(history.location.pathname).toBe(

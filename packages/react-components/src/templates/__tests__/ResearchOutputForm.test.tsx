@@ -35,7 +35,7 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
 import { fern, paper } from '../../colors';
 
-const props: ComponentProps<typeof ResearchOutputForm> = {
+const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   onSaveDraft: jest.fn(() => Promise.resolve()),
   published: false,
@@ -58,7 +58,7 @@ jest.setTimeout(60000);
 it('sets authors to required', () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} authorsRequired={false} />
+      <ResearchOutputForm {...defaultProps} authorsRequired={false} />
     </StaticRouter>,
   );
   expect(
@@ -66,7 +66,7 @@ it('sets authors to required', () => {
   ).toBeVisible();
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} authorsRequired={true} />
+      <ResearchOutputForm {...defaultProps} authorsRequired={true} />
     </StaticRouter>,
   );
   expect(
@@ -97,7 +97,7 @@ describe('createIdentifierField', () => {
 it('renders the form', async () => {
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} />
+      <ResearchOutputForm {...defaultProps} />
     </StaticRouter>,
   );
   expect(
@@ -110,7 +110,7 @@ it('renders the edit form button when research output data is present', async ()
   render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         researchOutputData={createResearchOutputResponse()}
       />
     </StaticRouter>,
@@ -137,7 +137,7 @@ it('pre populates the form with provided backend response', async () => {
   await render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         documentType={'Dataset'}
         typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
         researchOutputData={researchOutputData}
@@ -168,7 +168,7 @@ it('pre populates the form with markdown value of usageNotes if it is defined', 
   await render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         documentType={'Dataset'}
         typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
         researchOutputData={researchOutputData}
@@ -184,7 +184,7 @@ it('displays keywords suggestions', async () => {
   await render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
       />
     </StaticRouter>,
@@ -201,7 +201,7 @@ it('displays selected teams', async () => {
   await render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         selectedTeams={[{ label: 'Team 1', value: 'abc123' }]}
       />
     </StaticRouter>,
@@ -214,7 +214,7 @@ it('displays error message when no author is found', async () => {
   render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         getAuthorSuggestions={getAuthorSuggestions}
       />
     </StaticRouter>,
@@ -229,7 +229,10 @@ it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
     <StaticRouter>
-      <ResearchOutputForm {...props} getLabSuggestions={getLabSuggestions} />
+      <ResearchOutputForm
+        {...defaultProps}
+        getLabSuggestions={getLabSuggestions}
+      />
     </StaticRouter>,
   );
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -242,7 +245,7 @@ it('displays error message when no related research is found', async () => {
   render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         getRelatedResearchSuggestions={getRelatedResearchSuggestions}
       />
     </StaticRouter>,
@@ -256,7 +259,7 @@ it('displays current team within the form', async () => {
   render(
     <StaticRouter>
       <ResearchOutputForm
-        {...props}
+        {...defaultProps}
         selectedTeams={[{ label: 'example team', value: 'id' }]}
       />
     </StaticRouter>,
@@ -321,11 +324,13 @@ describe('on submit', () => {
         type: 'Preprint',
         link: 'http://example.com',
       },
+      propOverride = {},
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
       researchOutputData = undefined,
     }: {
       data?: Data;
+      propOverride?: Partial<ComponentProps<typeof ResearchOutputForm>>;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
       researchOutputData?: ResearchOutputResponse;
@@ -343,7 +348,7 @@ describe('on submit', () => {
     render(
       <Router history={history}>
         <ResearchOutputForm
-          {...props}
+          {...defaultProps}
           researchOutputData={researchOutputData}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
@@ -356,6 +361,7 @@ describe('on submit', () => {
           getAuthorSuggestions={getAuthorSuggestions}
           getRelatedResearchSuggestions={getRelatedResearchSuggestions}
           researchTags={researchTags}
+          {...propOverride}
         />
       </Router>,
     );
@@ -395,13 +401,19 @@ describe('on submit', () => {
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
+    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+    });
+  };
 
-    expect(
-      await screen.findByRole('button', { name: /Publish/i }),
-    ).toBeEnabled();
-    expect(
-      await screen.findByRole('button', { name: /Cancel/i }),
-    ).toBeEnabled();
+  const saveForm = async () => {
+    const button = screen.getByRole('button', { name: /save/i });
+    userEvent.click(button);
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+    });
   };
 
   it('can submit a form with minimum data', async () => {
@@ -411,6 +423,28 @@ describe('on submit', () => {
     expect(history.location.pathname).toEqual(
       `/shared-research/${id}/publishedNow`,
     );
+  });
+
+  it('can update a published form with minimum data', async () => {
+    await setupForm({ propOverride: { published: true } });
+    await saveForm();
+    expect(saveFn).toHaveBeenLastCalledWith({
+      ...expectedRequest,
+      published: true,
+    });
+    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+  });
+
+  it('will show you confirmation dialog and allow you to cancel it', async () => {
+    await setupForm();
+    const button = screen.getByRole('button', { name: /Publish/i });
+    userEvent.click(button);
+    expect(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    ).toBeVisible();
+    userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+    expect(screen.queryByRole('button', { name: 'Publish Output' })).toBeNull();
+    expect(saveFn).not.toHaveBeenCalled();
   });
 
   it('can submit a lab', async () => {
@@ -883,7 +917,7 @@ describe('form buttons', () => {
       <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <ResearchOutputForm
-            {...props}
+            {...defaultProps}
             versionAction={versionAction}
             researchOutputData={researchOutputData}
             descriptionUnchangedWarning={descriptionUnchangedWarning}

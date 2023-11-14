@@ -2,6 +2,7 @@ import { mapLimit } from 'async';
 import { Auth, calendar_v3 as calendarV3, Common, google } from 'googleapis';
 import { DateTime } from 'luxon';
 import { GetJWTCredentials } from './aws-secret-manager';
+import { getAuthClient } from './google-auth-client';
 import { Logger } from './logger';
 import { SyncEvent } from './sync-google-event';
 
@@ -18,27 +19,12 @@ export const syncCalendarFactory = (
   getJWTCredentials: GetJWTCredentials,
   logger: Logger,
 ): SyncCalendar => {
-  const getCredentials = async () => {
-    try {
-      return await getJWTCredentials();
-    } catch (error) {
-      logger.error(error, 'Error fetching AWS credentials');
-      throw error;
-    }
-  };
   const getCalendarEvent = async (
     googleCalendarId: string,
     syncToken: SyncToken,
     pageToken?: PageToken,
   ): Promise<calendarV3.Schema$Events | null> => {
-    const credentials = await getCredentials();
-
-    const auth = new Auth.GoogleAuth({
-      scopes: [
-        'https://www.googleapis.com/auth/calendar',
-        'https://www.googleapis.com/auth/calendar.events',
-      ],
-    }).fromJSON(credentials) as Auth.JWT;
+    const auth = (await getAuthClient(getJWTCredentials)) as Auth.JWT;
     const calendar = google.calendar({ version: 'v3', auth });
     try {
       const { data } = await calendar.events.list({

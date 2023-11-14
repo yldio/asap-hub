@@ -75,6 +75,7 @@ export type WorkingGroupDataObject = {
   calendars: CalendarResponse[];
   deliverables: WorkingGroupDeliverable[];
   readonly lastModifiedDate: string;
+  tags: string[];
 };
 
 export type WorkingGroupUpdateDataObject = Pick<

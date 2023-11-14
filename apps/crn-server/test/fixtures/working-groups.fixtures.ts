@@ -56,6 +56,7 @@ export const getWorkingGroupDataObject = (
       workingGroups: [],
     },
   ],
+  tags: [],
   ...data,
 });
 
@@ -248,6 +249,9 @@ export const getContentfulGraphqlWorkingGroup = (
     items: [],
   },
   membersCollection: {
+    items: [],
+  },
+  tagsCollection: {
     items: [],
   },
   calendars: {

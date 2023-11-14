@@ -46,6 +46,11 @@ export const workingGroupsContentQueryFragment = gql`
         status
       }
     }
+    tagsCollection(limit: 20) {
+      items {
+        name
+      }
+    }
     membersCollection {
       items {
         __typename

@@ -95,208 +95,12 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-  iconCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsIconCollectionOrder], preview: Boolean, skip: Int = 0): IconCollection
-  interestGroupsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
-  newsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
-  tutorialsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
-  usersCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
-}
-
-enum AssetLinkingCollectionsEventsCollectionOrder {
-  endDateTimeZone_ASC
-  endDateTimeZone_DESC
-  endDate_ASC
-  endDate_DESC
-  eventLink_ASC
-  eventLink_DESC
-  googleId_ASC
-  googleId_DESC
-  hidden_ASC
-  hidden_DESC
-  hideMeetingLink_ASC
-  hideMeetingLink_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  meetingLink_ASC
-  meetingLink_DESC
-  meetingMaterialsPermanentlyUnavailable_ASC
-  meetingMaterialsPermanentlyUnavailable_DESC
-  notesPermanentlyUnavailable_ASC
-  notesPermanentlyUnavailable_DESC
-  notesUpdatedAt_ASC
-  notesUpdatedAt_DESC
-  presentationPermanentlyUnavailable_ASC
-  presentationPermanentlyUnavailable_DESC
-  presentationUpdatedAt_ASC
-  presentationUpdatedAt_DESC
-  startDateTimeZone_ASC
-  startDateTimeZone_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  videoRecordingPermanentlyUnavailable_ASC
-  videoRecordingPermanentlyUnavailable_DESC
-  videoRecordingUpdatedAt_ASC
-  videoRecordingUpdatedAt_DESC
-}
-
-enum AssetLinkingCollectionsIconCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-}
-
-enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
-  active_ASC
-  active_DESC
-  googleDrive_ASC
-  googleDrive_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  name_ASC
-  name_DESC
-  slack_ASC
-  slack_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-enum AssetLinkingCollectionsNewsCollectionOrder {
-  frequency_ASC
-  frequency_DESC
-  linkText_ASC
-  linkText_DESC
-  link_ASC
-  link_DESC
-  publishDate_ASC
-  publishDate_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-enum AssetLinkingCollectionsTutorialsCollectionOrder {
-  addedDate_ASC
-  addedDate_DESC
-  asapFunded_ASC
-  asapFunded_DESC
-  datePublished_ASC
-  datePublished_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  linkText_ASC
-  linkText_DESC
-  link_ASC
-  link_DESC
-  sharingStatus_ASC
-  sharingStatus_DESC
-  shortText_ASC
-  shortText_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  usedInAPublication_ASC
-  usedInAPublication_DESC
-}
-
-enum AssetLinkingCollectionsUsersCollectionOrder {
-  alumniLocation_ASC
-  alumniLocation_DESC
-  alumniSinceDate_ASC
-  alumniSinceDate_DESC
-  city_ASC
-  city_DESC
-  contactEmail_ASC
-  contactEmail_DESC
-  country_ASC
-  country_DESC
-  createdDate_ASC
-  createdDate_DESC
-  degree_ASC
-  degree_DESC
-  dismissedGettingStarted_ASC
-  dismissedGettingStarted_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  institution_ASC
-  institution_DESC
-  lastName_ASC
-  lastName_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  onboarded_ASC
-  onboarded_DESC
-  orcidLastModifiedDate_ASC
-  orcidLastModifiedDate_DESC
-  orcidLastSyncDate_ASC
-  orcidLastSyncDate_DESC
-  orcid_ASC
-  orcid_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  role_ASC
-  role_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  twitter_ASC
-  twitter_DESC
-  website1_ASC
-  website1_DESC
-  website2_ASC
-  website2_DESC
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  iconCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): IconCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TutorialsCollection
+  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum AssetOrder {
@@ -616,10 +420,8 @@ type Discover implements Entry {
   linkedFrom(allowedLocales: [String]): DiscoverLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [DiscoverMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverMembersCollection
   membersTeam(locale: String, preview: Boolean, where: TeamsFilter): Teams
-  pagesCollection(limit: Int = 100, locale: String, order: [DiscoverPagesCollectionOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): DiscoverPagesCollection
   scientificAdvisoryBoardCollection(limit: Int = 100, locale: String, order: [DiscoverScientificAdvisoryBoardCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverScientificAdvisoryBoardCollection
   sys: Sys!
-  trainingCollection(limit: Int = 100, locale: String, order: [DiscoverTrainingCollectionOrder], preview: Boolean, skip: Int = 0, where: TutorialsFilter): DiscoverTrainingCollection
 }
 
 type DiscoverAboutUs {
@@ -646,6 +448,8 @@ type DiscoverAboutUsLinks {
 
 type DiscoverAboutUsResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 type DiscoverCollection {
@@ -666,13 +470,9 @@ input DiscoverFilter {
   membersCollection_exists: Boolean
   membersTeam: cfTeamsNestedFilter
   membersTeam_exists: Boolean
-  pages: cfPagesNestedFilter
-  pagesCollection_exists: Boolean
   scientificAdvisoryBoard: cfUsersNestedFilter
   scientificAdvisoryBoardCollection_exists: Boolean
   sys: SysFilter
-  training: cfTutorialsNestedFilter
-  trainingCollection_exists: Boolean
 }
 
 type DiscoverLinkingCollections {
@@ -760,30 +560,6 @@ enum DiscoverOrder {
   sys_publishedVersion_DESC
 }
 
-type DiscoverPagesCollection {
-  items: [Pages]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum DiscoverPagesCollectionOrder {
-  linkText_ASC
-  linkText_DESC
-  link_ASC
-  link_DESC
-  path_ASC
-  path_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
 type DiscoverScientificAdvisoryBoardCollection {
   items: [Users]!
   limit: Int!
@@ -852,44 +628,6 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   website1_DESC
   website2_ASC
   website2_DESC
-}
-
-type DiscoverTrainingCollection {
-  items: [Tutorials]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum DiscoverTrainingCollectionOrder {
-  addedDate_ASC
-  addedDate_DESC
-  asapFunded_ASC
-  asapFunded_DESC
-  datePublished_ASC
-  datePublished_DESC
-  lastUpdated_ASC
-  lastUpdated_DESC
-  linkText_ASC
-  linkText_DESC
-  link_ASC
-  link_DESC
-  sharingStatus_ASC
-  sharingStatus_DESC
-  shortText_ASC
-  shortText_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  usedInAPublication_ASC
-  usedInAPublication_DESC
 }
 
 interface Entry {
@@ -1332,6 +1070,8 @@ type EventsNotesLinks {
 
 type EventsNotesResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 enum EventsOrder {
@@ -1407,6 +1147,8 @@ type EventsPresentationLinks {
 
 type EventsPresentationResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 type EventsSpeakersCollection {
@@ -1451,6 +1193,8 @@ type EventsVideoRecordingLinks {
 
 type EventsVideoRecordingResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors)"""
@@ -2716,6 +2460,8 @@ type NewsTextLinks {
 
 type NewsTextResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages)"""
@@ -2785,22 +2531,10 @@ input PagesFilter {
 
 type PagesLinkingCollections {
   dashboardCollection(limit: Int = 100, locale: String, order: [PagesLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
-  discoverCollection(limit: Int = 100, locale: String, order: [PagesLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum PagesLinkingCollectionsDashboardCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
-enum PagesLinkingCollectionsDiscoverCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2852,6 +2586,8 @@ type PagesTextLinks {
 
 type PagesTextResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
@@ -3153,6 +2889,8 @@ type ResearchOutputsDescriptionLinks {
 
 type ResearchOutputsDescriptionResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 type ResearchOutputsEnvironmentsCollection {
@@ -3777,6 +3515,7 @@ type ResearchTagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -3853,6 +3592,25 @@ enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
   title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
+}
+
+enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
+  complete_ASC
+  complete_DESC
+  externalLink_ASC
+  externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum ResearchTagsOrder {
@@ -4462,20 +4220,8 @@ input TutorialsFilter {
 }
 
 type TutorialsLinkingCollections {
-  discoverCollection(limit: Int = 100, locale: String, order: [TutorialsLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [TutorialsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
-}
-
-enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
 }
 
 enum TutorialsLinkingCollectionsTutorialsCollectionOrder {
@@ -4704,6 +4450,8 @@ type TutorialsTextLinks {
 
 type TutorialsTextResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
@@ -5523,6 +5271,7 @@ type WorkingGroups implements Entry {
   membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupsMembersFilter): WorkingGroupsMembersCollection
   shortText(locale: String): String
   sys: Sys!
+  tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): WorkingGroupsTagsCollection
   title(locale: String): String
 }
 
@@ -5577,6 +5326,8 @@ type WorkingGroupsDescriptionLinks {
 
 type WorkingGroupsDescriptionResources {
   block: [ResourceLink!]!
+  hyperlink: [ResourceLink!]!
+  inline: [ResourceLink!]!
 }
 
 input WorkingGroupsFilter {
@@ -5619,6 +5370,8 @@ input WorkingGroupsFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tags: cfResearchTagsNestedFilter
+  tagsCollection_exists: Boolean
   title: String
   title_contains: String
   title_exists: Boolean
@@ -5721,6 +5474,28 @@ enum WorkingGroupsOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+}
+
+type WorkingGroupsTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum WorkingGroupsTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 input cfCalendarsNestedFilter {
@@ -6870,6 +6645,7 @@ input cfWorkingGroupsNestedFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tagsCollection_exists: Boolean
   title: String
   title_contains: String
   title_exists: Boolean

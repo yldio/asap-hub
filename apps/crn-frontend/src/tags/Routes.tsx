@@ -12,6 +12,7 @@ export const entities: CRNTagSearchEntitiesList = [
   'user',
   'event',
   'team',
+  'working-group',
 ];
 
 const Routes: React.FC<Record<string, never>> = () => {

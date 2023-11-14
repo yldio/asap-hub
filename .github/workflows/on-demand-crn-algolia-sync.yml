@@ -13,6 +13,7 @@ on:
           - external-authors
           - events
           - teams
+          - working-groups
           - all
       environment-name:
         required: true

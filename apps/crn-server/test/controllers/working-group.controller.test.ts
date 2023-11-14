@@ -109,6 +109,7 @@ describe('toWorkingGroupResponse', () => {
 
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
+      tags: [],
       title: 'Working Group Title',
       description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
@@ -146,6 +147,7 @@ describe('toWorkingGroupResponse', () => {
 
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
+      tags: [],
       title: 'Working Group Title',
       description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
@@ -189,6 +191,7 @@ describe('toWorkingGroupResponse', () => {
 
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
+      tags: [],
       title: 'Working Group Title',
       description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
@@ -232,6 +235,7 @@ describe('toWorkingGroupResponse', () => {
 
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
+      tags: [],
       title: 'Working Group Title',
       description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',

@@ -10,3 +10,7 @@ export type CalendarContentfulPayload = WebhookDetail<
 >;
 
 export type CalendarPayload = CalendarContentfulPayload;
+
+export type WorkingGroupPayload = WebhookDetail<
+  ContentfulWebhookPayload<'workingGroups'>
+>;

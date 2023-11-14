@@ -19,6 +19,7 @@ yargs(hideBin(process.argv))
             'external-author',
             'event',
             'team',
+            'working-group',
           ],
           demandOption: true,
         })
@@ -34,7 +35,8 @@ yargs(hideBin(process.argv))
           | 'research-output'
           | 'external-author'
           | 'event'
-          | 'team',
+          | 'team'
+          | 'working-group',
         filename,
       ),
   })

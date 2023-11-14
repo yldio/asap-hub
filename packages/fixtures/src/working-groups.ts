@@ -75,6 +75,7 @@ export const createWorkingGroupResponse = (
   calendars: Array.from({ length: calendars }, (_, index) =>
     createCalendarResponse({ incompleteWorkingGroups: true }, index),
   ),
+  tags: [],
 });
 
 export const createWorkingGroupListResponse = (

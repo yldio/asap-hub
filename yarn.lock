@@ -1602,6 +1602,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
+    "@types/unist": ^2.0.6
     "@types/uuid": 8.3.4
     core-js: 3.33.0
     date-fns: 2.30.0
@@ -1622,7 +1623,6 @@ __metadata:
     react-test-renderer: 17.0.2
     regenerator-runtime: 0.14.0
     rehype-parse: 7.0.1
-    rehype-raw: 5.1.0
     rehype-react: 6.2.1
     rehype-remark: 8.1.1
     rehype-sanitize: 4.0.0
@@ -1633,6 +1633,7 @@ __metadata:
     remark-stringify: 9.0.1
     serialize-error: 7.0.1
     unified: 9.2.2
+    unist-util-visit: 2.0.3
     use-debounce: 8.0.4
     util: 0.12.5
     uuid: 8.3.2
@@ -19551,6 +19552,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/unist@npm:^2.0.6":
+  version: 2.0.10
+  resolution: "@types/unist@npm:2.0.10"
+  checksum: e2924e18dedf45f68a5c6ccd6015cd62f1643b1b43baac1854efa21ae9e70505db94290434a23da1137d9e31eb58e54ca175982005698ac37300a1c889f6c4aa
+  languageName: node
+  linkType: hard
+
 "@types/uuid@npm:8.3.4":
   version: 8.3.4
   resolution: "@types/uuid@npm:8.3.4"
@@ -32013,25 +32021,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hast-util-raw@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "hast-util-raw@npm:6.1.0"
-  dependencies:
-    "@types/hast": ^2.0.0
-    hast-util-from-parse5: ^6.0.0
-    hast-util-to-parse5: ^6.0.0
-    html-void-elements: ^1.0.0
-    parse5: ^6.0.0
-    unist-util-position: ^3.0.0
-    unist-util-visit: ^2.0.0
-    vfile: ^4.0.0
-    web-namespaces: ^1.0.0
-    xtend: ^4.0.0
-    zwitch: ^1.0.0
-  checksum: dfa4da83ce718bae8a91a88ee4c5ef43e0091dcd32775de633669b412f2ada35a71bb79c4e4b2851175a5a50861d7abe2049d45b97176b892b861d71591a18e6
-  languageName: node
-  linkType: hard
-
 "hast-util-sanitize@npm:^3.0.0":
   version: 3.0.0
   resolution: "hast-util-sanitize@npm:3.0.0"
@@ -43606,15 +43595,6 @@ __metadata:
     hast-util-from-parse5: "npm:^6.0.0"
     parse5: "npm:^6.0.0"
   checksum: c3c914aa9281853290eff6b09e0bed6843934e788b957e25219e91f0bf244a183d2f5e042c7d21543276571f9b49a6bae90f4640b8f885f2773392ffa57baf4b
-  languageName: node
-  linkType: hard
-
-"rehype-raw@npm:5.1.0":
-  version: 5.1.0
-  resolution: "rehype-raw@npm:5.1.0"
-  dependencies:
-    hast-util-raw: ^6.1.0
-  checksum: 6149926eba079f957a8681d8379d42497b2b1248aabc8d4028cad68f1e6331b8c8947aa33df1f1c21107ec7eb1919bba45adcb7f1c9ea0f0e9b4ca359cee397b
   languageName: node
   linkType: hard
 

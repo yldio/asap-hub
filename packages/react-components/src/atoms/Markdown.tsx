@@ -1,25 +1,63 @@
 import { createElement } from 'react';
 
-import unified from 'unified';
+import unified, { Transformer } from 'unified';
 import remark2rehype from 'remark-rehype';
 import markdown from 'remark-parse';
-import rehypeRaw from 'rehype-raw';
 import rehypeReact from 'rehype-react';
 import rehypeSanitize from 'rehype-sanitize';
 import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
+import visit from 'unist-util-visit';
 import { parseComponents, parseTagNames } from '../utils/parsing';
+import type { Literal, Node, Parent } from 'unist';
 
 interface MarkdownProps {
   value: string;
   toc?: boolean;
 }
 
+const visitor = (type: string) => {
+  return (node: Node, i: number, parent: Parent | undefined) => {
+    const { value } = node as Literal<string>;
+    const [pattern, tagName] =
+      type === 'superscript' ? [/\^/, 'sup'] : [/\~/, 'sub'];
+    const values = value.split(pattern);
+
+    if (values.length === 1 || values.length % 2 === 0) {
+      return;
+    }
+    const children = values.map((str, i) =>
+      i % 2 === 0
+        ? {
+            type: 'text',
+            value: str,
+          }
+        : {
+            type: type,
+            data: {
+              hName: tagName,
+            },
+            children: [
+              {
+                type: 'text',
+                value: str,
+              },
+            ],
+          },
+    );
+    parent!.children.splice(i!, 1, ...children);
+  };
+};
+
+const supersubplugin = (): Transformer => {
+  return (tree) => {
+    visit(tree, 'text', visitor('superscript'));
+    visit(tree, 'text', visitor('subscript'));
+  };
+};
+
 const Markdown = ({ value, toc = false }: MarkdownProps) => {
-  let processor = unified()
-    .use(markdown)
-    .use(remark2rehype, { allowDangerousHtml: true })
-    .use(rehypeRaw);
+  let processor = unified().use(markdown).use(supersubplugin).use(remark2rehype);
 
   if (toc) {
     processor = processor

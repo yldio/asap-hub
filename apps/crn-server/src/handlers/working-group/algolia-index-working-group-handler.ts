@@ -21,42 +21,53 @@ export const indexWorkingGroupHandler =
     algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<WorkingGroupEvent, WorkingGroupPayload> =>
   async (event) => {
-    logger.debug(`Event ${event['detail-type']}`);
+    const eventType = event['detail-type'] as Extract<
+      WorkingGroupEvent,
+      'WorkingGroupsPublished' | 'WorkingGroupsUnpublished'
+    >;
     const workingGroupId = event.detail.resourceId;
+    logger.debug(`Event ${eventType}`);
 
-    try {
-      const workingGroup = await workingGroupController.fetchById(
-        workingGroupId,
-      );
+    const eventHandlers = {
+      WorkingGroupsPublished: async () => {
+        try {
+          const workingGroup = await workingGroupController.fetchById(
+            workingGroupId,
+          );
 
-      logger.debug(`Fetched workingGroup ${workingGroupId}`);
+          logger.debug(`Fetched workingGroup ${workingGroupId}`);
 
-      if (workingGroup) {
-        await algoliaClient.save({
-          data: addTagsFunction(workingGroup) as WorkingGroupResponse,
-          type: 'working-group',
-        });
+          if (workingGroup) {
+            await algoliaClient.save({
+              data: addTagsFunction(workingGroup) as WorkingGroupResponse,
+              type: 'working-group',
+            });
 
-        logger.debug(`WorkingGroup saved ${workingGroupId}`);
-      } else {
+            logger.debug(`WorkingGroup saved ${workingGroupId}`);
+          }
+        } catch (e) {
+          if (
+            (isBoom(e) && (e as Boom).output.statusCode === 404) ||
+            e instanceof NotFoundError
+          ) {
+            await algoliaClient.remove(workingGroupId);
+
+            logger.debug(`WorkingGroup removed ${workingGroupId}`);
+            return;
+          }
+
+          logger.error(e, 'Error saving workingGroup to Algolia');
+          throw e;
+        }
+      },
+      WorkingGroupsUnpublished: async () => {
         await algoliaClient.remove(workingGroupId);
 
         logger.debug(`WorkingGroup removed ${workingGroupId}`);
-      }
-    } catch (e) {
-      if (
-        (isBoom(e) && (e as Boom).output.statusCode === 404) ||
-        e instanceof NotFoundError
-      ) {
-        await algoliaClient.remove(workingGroupId);
+      },
+    };
 
-        logger.debug(`WorkingGroup removed ${workingGroupId}`);
-        return;
-      }
-
-      logger.error(e, 'Error saving workingGroup to Algolia');
-      throw e;
-    }
+    await eventHandlers[eventType]();
   };
 
 /* istanbul ignore next */

@@ -42,7 +42,7 @@ export const calendarCreatedContentfulHandlerFactory =
     alerts: Alerts,
     logger: Logger,
     contentfulDeliveryApiConfig: ContentfulDeliveryApiConfig,
-    getCalendarSubscriptionIdFunction?: (id: string) => string,
+    getCalendarSubscriptionId: (id: string) => string = defaultGetCalendarId,
   ) =>
   async (
     event: EventBridgeEvent<CalendarEvent, CalendarContentfulPayload>,
@@ -58,8 +58,6 @@ export const calendarCreatedContentfulHandlerFactory =
 
     const webhookEventVersion = sys.revision;
     const webhookEventGoogleCalendarId = fields.googleCalendarId['en-US'];
-    const getCalendarSubscriptionId =
-      getCalendarSubscriptionIdFunction || defaultGetCalendarId;
 
     logger.info(
       `Received a '${eventType}' event for the calendar ${calendarId}`,

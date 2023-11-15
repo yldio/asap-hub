@@ -40,11 +40,14 @@ export const subscribeToEventChangesFactory =
       },
     };
     try {
+      logger.debug('subscribeToEventChanges');
       const auth = await getAuthClient(getJWTCredentials);
+      logger.debug('got auth');
       const calendar = google.calendar({
         version: 'v3',
         auth,
       });
+      logger.debug(`Watch Event Data: ${JSON.stringify(data)}`);
       const response = await calendar.events.watch(data);
       logger.debug({ response }, 'Google API subscription response');
 

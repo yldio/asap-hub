@@ -766,7 +766,10 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['WorkingGroupsPublished'],
+              'detail-type': [
+                'WorkingGroupsPublished',
+                'WorkingGroupsUnpublished',
+              ],
             },
           },
         },

@@ -6,23 +6,28 @@ type Config = {
   asapApiUrl: string;
   googleApiToken: string;
 };
+export type SubscribeToEventChanges = (
+  calendarId: string,
+  subscriptionId: string,
+) => Promise<
+  | {
+      resourceId: string;
+      expiration: number;
+    }
+  | { resourceId: null; expiration: null }
+>;
+export type UnsubscribeFromEventChanges = (
+  resourceId: string,
+  channelId: string,
+) => Promise<void>;
 
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
     { asapApiUrl, googleApiToken }: Config,
-  ) =>
-  async (
-    calendarId: string,
-    subscriptionId: string,
-  ): Promise<
-    | {
-        resourceId: string;
-        expiration: number;
-      }
-    | { resourceId: null; expiration: null }
-  > => {
+  ): SubscribeToEventChanges =>
+  async (calendarId, subscriptionId) => {
     const ttl = 2_592_000; // 30 days, which is a maximum TTL
     const data = {
       calendarId,
@@ -78,8 +83,11 @@ export const subscribeToEventChangesFactory =
   };
 
 export const unsubscribeFromEventChangesFactory =
-  (getJWTCredentials: GetJWTCredentials, logger: Logger) =>
-  async (resourceId: string, channelId: string): Promise<void> => {
+  (
+    getJWTCredentials: GetJWTCredentials,
+    logger: Logger,
+  ): UnsubscribeFromEventChanges =>
+  async (resourceId, channelId) => {
     const auth = await getAuthClient(getJWTCredentials);
     const requestBody = {
       id: channelId,
@@ -94,10 +102,3 @@ export const unsubscribeFromEventChangesFactory =
 
     logger.debug({ response }, 'Google API unsubscribing response');
   };
-
-export type SubscribeToEventChanges = ReturnType<
-  typeof subscribeToEventChangesFactory
->;
-export type UnsubscribeFromEventChanges = ReturnType<
-  typeof unsubscribeFromEventChangesFactory
->;

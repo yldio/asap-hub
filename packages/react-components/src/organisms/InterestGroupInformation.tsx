@@ -1,5 +1,4 @@
 import { InterestGroupResponse } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Card, Divider, Headline3, Paragraph } from '../atoms';
 import TagList from '../molecules/TagList';
 import { perRem } from '../pixels';
@@ -29,12 +28,7 @@ const InterestGroupInformation: React.FC<InterestGroupInformationProps> = ({
         Explore keywords related to skills, techniques, resources, and tools.
       </Paragraph>
     </div>
-    <TagList
-      tags={tags.map((name) => ({
-        tag: name,
-        href: gp2Routing.tags({ tag: name }).$,
-      }))}
-    />
+    <TagList tags={tags} />
   </Card>
 );
 

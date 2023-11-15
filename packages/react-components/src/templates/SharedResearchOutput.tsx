@@ -1,5 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { network, sharedResearch, tags as tagRoute } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
 
@@ -226,7 +226,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               displayDescription={!!displayDescription}
               description={description}
               descriptionMD={descriptionMD}
-              getTagsHref={(tag: string) => tagRoute({ tag }).$}
             />
           )}
           {!isGrantDocument && hasUsageNotes && (

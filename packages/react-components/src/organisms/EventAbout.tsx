@@ -3,7 +3,6 @@ import {
   BasicEvent,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 
 import { Divider, Headline2, Paragraph } from '../atoms';
 import { RichText, TagList } from '..';
@@ -44,12 +43,7 @@ const EventAbout: React.FC<EventAboutProps> = ({
           Explore keywords related to skills, techniques, resources, and tools.
         </Paragraph>
       </div>
-      <TagList
-        tags={tags.map((name) => ({
-          tag: name,
-          href: gp2Routing.tags({ tag: name }).$,
-        }))}
-      />
+      <TagList tags={tags} />
     </div>
   ) : null;
 

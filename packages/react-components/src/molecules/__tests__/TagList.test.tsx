@@ -29,10 +29,10 @@ it('shows all link tags by default', () => {
   const { getAllByRole } = render(
     <TagList
       tags={[
-        { tag: 'Neurological Diseases', href: 'http://example.com/1' },
-        { tag: 'Clinical Neurology', href: 'http://example.com/2' },
-        { tag: 'Adult Neurology', href: 'http://example.com/3' },
-        { tag: 'Neuroimaging', href: 'http://example.com/4' },
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
       ]}
     />,
   );
@@ -44,14 +44,12 @@ it('shows all link tags by default', () => {
     'Adult Neurology',
     'Neuroimaging',
   ]);
-  expect(
-    getAllByRole('listitem').map((node) => node.querySelector('a')?.href),
-  ).toEqual([
-    'http://example.com/1',
-    'http://example.com/2',
-    'http://example.com/3',
-    'http://example.com/4',
-  ]);
+
+  getAllByRole('listitem').map((node) =>
+    expect(node.querySelector('a')?.href).toContain(
+      `tags?tag=${encodeURI(node.textContent!)}`,
+    ),
+  );
 });
 
 it('hides tags when there are none', () => {

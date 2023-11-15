@@ -78,7 +78,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
     </Anchor>
     {!!expertiseAndResourceTags.length && (
       <div css={tagsContainer}>
-        <TagList min={5} max={5} tags={expertiseAndResourceTags} />
+        <TagList max={3} tags={expertiseAndResourceTags} />
       </div>
     )}
 

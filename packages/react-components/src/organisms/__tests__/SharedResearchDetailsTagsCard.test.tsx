@@ -60,21 +60,10 @@ it('renders tags with links if provided', () => {
     <SharedResearchDetailsTagsCard
       {...sharedResearchDetailsTagsCardProps}
       tags={['TestTag']}
-      getTagsHref={(tag) => `/tags/${tag}`}
     />,
   );
   expect(getByRole('link', { name: /TestTag/i })).toHaveAttribute(
     'href',
-    '/tags/TestTag',
+    '/tags?tag=TestTag',
   );
-});
-
-it('renders tags without links if not provided', () => {
-  const { queryByRole } = render(
-    <SharedResearchDetailsTagsCard
-      {...sharedResearchDetailsTagsCardProps}
-      tags={['TestTag']}
-    />,
-  );
-  expect(queryByRole('link', { name: /TestTag/i })).not.toBeInTheDocument();
 });

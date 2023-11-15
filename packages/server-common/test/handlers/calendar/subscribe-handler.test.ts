@@ -39,6 +39,50 @@ describe('Subscription', () => {
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
   const asapApiUrl = 'http://asap-api-url';
   const googleApiToken = 'google-api-token';
+  const scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+  ];
+  test('Should subscribe to the calendar events notifications and return the resourceId when cms is contentful', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+
+    mockGoogleAuth.mockReturnValue({
+      scopes,
+    });
+    const expiration = 1_617_196_357_000;
+
+    mockWatch.mockResolvedValue({
+      data: {
+        resourceId: 'some-resource-id',
+        expiration: `${expiration}`,
+      },
+    });
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    const result = await subscribeToEventChanges(
+      calendarId,
+      getCalendarCreateEvent().payload.id,
+    );
+
+    expect(result).toEqual({
+      resourceId: 'some-resource-id',
+      expiration,
+    });
+    expect(mockWatch).toHaveBeenCalledWith({
+      id: getCalendarCreateEvent().payload.id,
+      token: googleApiToken,
+      type: 'web_hook',
+      calendarId,
+      address: `${asapApiUrl}/webhook/events/contentful`,
+      params: {
+        ttl: 2_592_000,
+      },
+    });
+  });
 
   test('404 - should return empty resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
@@ -84,21 +128,17 @@ describe('Subscription', () => {
       subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
     ).rejects.toThrow();
   });
-  test('Should subscribe to the calendar events notifications and return the resourceId when cms is contentful', async () => {
+  test('Should throw when no resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
     mockGoogleAuth.mockReturnValue({
-      scopes: [
-        'https://www.googleapis.com/auth/calendar',
-        'https://www.googleapis.com/auth/calendar.events',
-      ],
+      scopes,
     });
-    const expiration = 1_617_196_357_000;
 
     mockWatch.mockResolvedValue({
       data: {
-        resourceId: 'some-resource-id',
-        expiration: `${expiration}`,
+        resourceId: undefined,
+        expiration: '1_617_196_357_000',
       },
     });
     const subscribeToEventChanges = subscribeToEventChangesFactory(
@@ -107,25 +147,32 @@ describe('Subscription', () => {
       { googleApiToken, asapApiUrl },
     );
 
-    const result = await subscribeToEventChanges(
-      calendarId,
-      getCalendarCreateEvent().payload.id,
-    );
+    await expect(
+      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
+    ).rejects.toThrow();
+  });
+  test('Should throw when no expiration', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
-    expect(result).toEqual({
-      resourceId: 'some-resource-id',
-      expiration,
+    mockGoogleAuth.mockReturnValue({
+      scopes,
     });
-    expect(mockWatch).toHaveBeenCalledWith({
-      id: getCalendarCreateEvent().payload.id,
-      token: googleApiToken,
-      type: 'web_hook',
-      calendarId,
-      address: `${asapApiUrl}/webhook/events/contentful`,
-      params: {
-        ttl: 2_592_000,
+
+    mockWatch.mockResolvedValue({
+      data: {
+        resourceId: 'some-resource-id',
+        expiration: undefined,
       },
     });
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    await expect(
+      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
+    ).rejects.toThrow();
   });
 });
 

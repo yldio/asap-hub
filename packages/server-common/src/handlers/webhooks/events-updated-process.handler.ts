@@ -6,11 +6,10 @@ export const webhookEventUpdatedProcessHandlerFactory = (
   calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
   syncCalendar: SyncCalendar,
   logger: Logger,
-): ((sqsEvent: SQSEvent) => Promise<{ statusCode: number }>) => {
-  const getCalendar = async (resourceId: string) => {
-    let calendars;
+): ((event: SQSEvent) => Promise<void>) => {
+  const fetchCalendar = async (resourceId: string) => {
     try {
-      calendars = await calendarDataProvider.fetch({
+      return await calendarDataProvider.fetch({
         resourceId,
       });
     } catch (error) {
@@ -20,6 +19,9 @@ export const webhookEventUpdatedProcessHandlerFactory = (
       }
       throw error;
     }
+  };
+  const getCalendar = async (resourceId: string) => {
+    const calendars = await fetchCalendar(resourceId);
     if (!calendars.items[0]) {
       logger.error(`calendar id ${resourceId} not found.`);
       throw new Error('Calendar not found');
@@ -42,22 +44,18 @@ export const webhookEventUpdatedProcessHandlerFactory = (
         throw new Error('Invalid payload');
       }
 
-      const calendar = await getCalendar(resourceId);
-
       const {
         googleCalendarId,
         id: cmsCalendarId,
         syncToken,
         channelId: currentChannelId,
-      } = calendar;
+      } = await getCalendar(resourceId);
 
       if (channelId !== currentChannelId) {
         logger.debug(
           `channel Ids do not match: ${channelId} - ${currentChannelId}`,
         );
-        return {
-          statusCode: 200,
-        };
+        return;
       }
       const nextSyncToken = await syncCalendar(
         googleCalendarId,
@@ -77,13 +75,7 @@ export const webhookEventUpdatedProcessHandlerFactory = (
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
       }
-      return {
-        statusCode: 500,
-      };
+      throw err;
     }
-
-    return {
-      statusCode: 200,
-    };
   };
 };

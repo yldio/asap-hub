@@ -67,23 +67,23 @@ describe('Contentful poller webhook', () => {
 
     mockGetEntry.mockRejectedValueOnce(new Error());
 
-    const { statusCode } = await handler(event);
-
-    expect(statusCode).toStrictEqual(200);
+    await expect(handler(event)).resolves.toEqual(void 0);
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringMatching(/Error while fetching entry/i),
+    );
   });
 
   test('Should error when there is no revision', async () => {
     const webHookPayload = getNewsPublishContentfulWebhookPayload();
-    delete (webHookPayload.sys as any).revision;
+    delete (webHookPayload.sys as Partial<typeof webHookPayload.sys>).revision;
     const event = getNewsPublishContentfulPollerPayload({
       ...getNewsPublishContentfulPollerRecord(),
       body: JSON.stringify(webHookPayload),
     });
 
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid payload/i),
     );
   });
@@ -95,10 +95,9 @@ describe('Contentful poller webhook', () => {
       messageAttributes,
     });
 
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid payload/i),
     );
   });
@@ -111,18 +110,16 @@ describe('Contentful poller webhook', () => {
       messageAttributes,
     });
 
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid payload/i),
     );
   });
   test('Should put the news-published event into the event bus and return 200', async () => {
     const event = getNewsPublishContentfulPollerPayload();
-    const { statusCode } = await handler(event);
+    await handler(event);
 
-    expect(statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
         {
@@ -133,7 +130,7 @@ describe('Contentful poller webhook', () => {
         },
       ],
     });
-    expect(logger.debug).toBeCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       expect.stringMatching(/Event added to event-bus/i),
     );
   });
@@ -154,21 +151,20 @@ describe('Contentful poller webhook', () => {
       },
       logger,
     );
-    const { statusCode } = await handlerWithError(event);
-    expect(logger.error).toBeCalledTimes(2);
-    expect(logger.error).nthCalledWith(
+    await expect(handlerWithError(event)).rejects.toThrow();
+    expect(logger.error).toHaveBeenCalledTimes(2);
+    expect(logger.error).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching(
         /An error occurred putting onto the event bus event-bus/i,
       ),
     );
-    expect(logger.error).nthCalledWith(
+    expect(logger.error).toHaveBeenNthCalledWith(
       2,
       expect.stringMatching(
         /The error message\: error message from putEvents/i,
       ),
     );
-    expect(statusCode).toStrictEqual(500);
   });
 
   test('Should put the news-unpublished event to event bus and return 200 when the entry has been deleted', async () => {
@@ -188,9 +184,8 @@ describe('Contentful poller webhook', () => {
         Action: { dataType: 'String', stringValue: 'unpublish' },
       },
     });
-    const { statusCode } = await handler(event);
+    await handler(event);
 
-    expect(statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
         {
@@ -201,7 +196,7 @@ describe('Contentful poller webhook', () => {
         },
       ],
     });
-    expect(logger.debug).toBeCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       expect.stringMatching(/Event added to event-bus/i),
     );
   });
@@ -217,12 +212,11 @@ describe('Contentful poller webhook', () => {
         revision: 5,
       },
       fields: {},
-    } as any);
+    } as unknown as ReturnType<ContentfulClientApi<undefined>['getEntry']>);
 
     const event = getNewsPublishContentfulPollerPayload();
-    const { statusCode } = await handler(event);
+    await handler(event);
 
-    expect(statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
       Entries: [
         {
@@ -233,7 +227,7 @@ describe('Contentful poller webhook', () => {
         },
       ],
     });
-    expect(logger.debug).toBeCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       expect.stringMatching(/Event added to event-bus/i),
     );
   });
@@ -245,28 +239,25 @@ describe('Contentful poller webhook', () => {
         typeof pollContentfulDeliveryApi
       >
     ).mockRejectedValueOnce(new Error('some error'));
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/The error message\: some error/i),
     );
   });
   test('Should error when there are no records', async () => {
     const event = getNewsContentfulPollerPayload(0);
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
     );
   });
   test('Should error when there are more than 1 record', async () => {
     const event = getNewsContentfulPollerPayload(2);
-    const { statusCode } = await handler(event);
+    await expect(handler(event)).rejects.toThrow();
 
-    expect(statusCode).toStrictEqual(500);
-    expect(logger.error).toBeCalledWith(
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringMatching(/Invalid record length. BatchSize is set to 1./i),
     );
   });

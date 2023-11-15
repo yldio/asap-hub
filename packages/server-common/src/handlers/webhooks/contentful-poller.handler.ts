@@ -15,7 +15,7 @@ export const contentfulPollerHandlerFactory = (
   eventBridge: EventBridge,
   config: Config,
   logger: Logger,
-): ((sqsEvent: SQSEvent) => Promise<{ statusCode: number }>) => {
+): ((event: SQSEvent) => Promise<void>) => {
   const cdaClient = getCDAClient({
     accessToken: config.accessToken,
     space: config.space,
@@ -96,12 +96,7 @@ export const contentfulPollerHandlerFactory = (
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
       }
-      return {
-        statusCode: 500,
-      };
+      throw err;
     }
-    return {
-      statusCode: 200,
-    };
   };
 };

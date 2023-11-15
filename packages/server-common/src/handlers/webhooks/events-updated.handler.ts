@@ -1,29 +1,38 @@
-import { framework as lambda } from '@asap-hub/services-common';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import Boom from '@hapi/boom';
+import { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import { Logger } from '../../utils';
 
 type Config = { googleApiToken: string; googleCalenderEventQueueUrl: string };
-export const webhookEventUpdatedHandlerFactory = (
-  sqs: SQSClient,
-  { googleApiToken, googleCalenderEventQueueUrl }: Config,
-  logger: Logger,
-): lambda.Handler =>
-  lambda.http(async (request) => {
+export const webhookEventUpdatedHandlerFactory =
+  (
+    sqs: SQSClient,
+    { googleApiToken, googleCalenderEventQueueUrl }: Config,
+    logger: Logger,
+  ): ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) =>
+  async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
     const channelToken = request.headers['x-goog-channel-token'];
     if (!channelToken) {
-      throw Boom.unauthorized('Missing x-goog-channel-token header');
+      return {
+        statusCode: 401,
+        body: 'Missing x-goog-channel-token header',
+      };
     }
 
     if (channelToken !== googleApiToken) {
-      throw Boom.forbidden('Channel token doesnt match');
+      return {
+        statusCode: 403,
+        body: 'Channel token doesnt match',
+      };
     }
 
     const resourceId = request.headers['x-goog-resource-id'];
     if (!resourceId) {
-      throw Boom.badRequest('Missing x-goog-resource-id header');
+      return {
+        statusCode: 400,
+        body: 'Missing x-goog-resource-id header',
+      };
     }
     const channelId = request.headers['x-goog-channel-id'];
 
@@ -49,6 +58,7 @@ export const webhookEventUpdatedHandlerFactory = (
 
       return {
         statusCode: 200,
+        body: 'Success',
       };
     } catch (err) {
       logger.error(
@@ -59,6 +69,7 @@ export const webhookEventUpdatedHandlerFactory = (
       }
       return {
         statusCode: 500,
+        body: 'Failure',
       };
     }
-  });
+  };

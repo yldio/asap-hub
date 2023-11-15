@@ -120,13 +120,9 @@ describe('dismissing the getting started option', () => {
       dismissedGettingStarted: true,
     });
     await renderDashboard({});
-    await waitFor(() => {
-      expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull();
-      // We should also expect the subtext on the header to be removed.
-      expect(
-        screen.queryByText(/The ASAP Hub is the private meeting point for/),
-      ).toBeNull();
-    });
+    await waitFor(() =>
+      expect(screen.queryByText(/Get Started with ASAP/i)).toBeNull(),
+    );
   });
 
   it('shows and can dismiss getting started', async () => {
@@ -140,10 +136,6 @@ describe('dismissing the getting started option', () => {
     userEvent.click(screen.getByText(/show/i));
 
     expect(screen.getByText(/Remove help/i)).toBeVisible();
-    // We should also expect the subtext on the header to be present.
-    expect(
-      screen.getByText(/The ASAP Hub is the private meeting point for/),
-    ).toBeVisible();
     expect(screen.getByText(/Cancel/i).closest('a')).toHaveAttribute(
       'href',
       '/',
@@ -162,10 +154,6 @@ describe('dismissing the getting started option', () => {
         expect.anything(),
       );
       expect(screen.queryByText(/Remove help/i)).toBeNull();
-      // We should also expect the subtext on the header to be removed.
-      expect(
-        screen.queryByText(/The ASAP Hub is the private meeting point for/),
-      ).toBeNull();
     });
   });
   it('correctly renders getting started block when dismissedGettingStarted is undefined', async () => {
@@ -176,10 +164,6 @@ describe('dismissing the getting started option', () => {
     await renderDashboard({});
 
     expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
-    // We should also expect the subtext on the header to be present.
-    expect(
-      screen.getByText(/The ASAP Hub is the private meeting point for/),
-    ).toBeVisible();
   });
 });
 

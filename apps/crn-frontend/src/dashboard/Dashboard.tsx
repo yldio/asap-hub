@@ -8,16 +8,12 @@ import {
   useCurrentUserTeamRolesCRN,
 } from '@asap-hub/react-context';
 import { dashboard as dashboardRoute } from '@asap-hub/routing';
-import { FC, lazy, useState } from 'react';
+import { FC, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../network/users/state';
 import { useDashboardState, useReminderState } from './state';
-
-const loadBody = () =>
-  import(/* webpackChunkName: "dashboard-body" */ './Body');
-const Body = lazy(loadBody);
-loadBody();
+import Body from './Body';
 
 const Dashboard: FC<Record<string, never>> = () => {
   const [date] = useState(new Date());
@@ -47,10 +43,7 @@ const Dashboard: FC<Record<string, never>> = () => {
 
   return (
     <>
-      <DashboardPage
-        firstName={firstName}
-        dismissedGettingStarted={user?.dismissedGettingStarted}
-      >
+      <DashboardPage firstName={firstName}>
         <Frame title={null}>
           <Body
             {...dashboard}

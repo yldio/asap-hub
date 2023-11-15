@@ -16,10 +16,13 @@ export const subscribeToEventChangesFactory =
   async (
     calendarId: string,
     subscriptionId: string,
-  ): Promise<{
-    resourceId: string | null;
-    expiration: number | null;
-  }> => {
+  ): Promise<
+    | {
+        resourceId: string;
+        expiration: number;
+      }
+    | { resourceId: null; expiration: null }
+  > => {
     const ttl = 2_592_000; // 30 days, which is a maximum TTL
     const data = {
       calendarId,

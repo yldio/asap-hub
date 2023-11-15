@@ -17,6 +17,13 @@ it('renders processed links', () => {
   expect(link.getAttribute('href')).toBe('http://link.com');
 });
 
+it('renders extended markdown superscript and subscript', () => {
+  const text = `test^superscript^ and test~subscript~`;
+  const { getByText } = render(<Markdown value={text} />);
+  expect(getByText('superscript').tagName).toBe('SUP');
+  expect(getByText('subscript').tagName).toBe('SUB');
+});
+
 it('avoid basic xss risks', () => {
   const text = `<a href="#" onmouseover="alert('xss')">xss over</a>`;
   const { getByText } = render(<Markdown value={text} />);

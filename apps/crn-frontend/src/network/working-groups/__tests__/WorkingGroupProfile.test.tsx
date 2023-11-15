@@ -17,7 +17,11 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { ResearchOutputWorkingGroupResponse } from '@asap-hub/model';
+import {
+  ResearchOutputWorkingGroupResponse,
+  WorkingGroupResponse,
+} from '@asap-hub/model';
+import { subDays } from 'date-fns';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   getDraftResearchOutputs,
@@ -65,7 +69,10 @@ mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
 
 beforeEach(jest.clearAllMocks);
 
-const workingGroupResponse = createWorkingGroupResponse({});
+const workingGroupResponse: WorkingGroupResponse = {
+  ...createWorkingGroupResponse({}),
+  lastModifiedDate: subDays(new Date(), 2).toISOString(),
+};
 const workingGroupId = workingGroupResponse.id;
 const renderWorkingGroupProfile = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},

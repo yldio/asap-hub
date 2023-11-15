@@ -1602,6 +1602,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
+    "@types/unist": ^2.0.6
     "@types/uuid": 8.3.4
     core-js: 3.33.0
     date-fns: 2.30.0
@@ -1632,6 +1633,7 @@ __metadata:
     remark-stringify: 9.0.1
     serialize-error: 7.0.1
     unified: 9.2.2
+    unist-util-visit: 2.0.3
     use-debounce: 8.0.4
     util: 0.12.5
     uuid: 8.3.2
@@ -19547,6 +19549,13 @@ __metadata:
   version: 2.0.3
   resolution: "@types/unist@npm:2.0.3"
   checksum: 4427306b094561da28164e7e5250c4e6b382cb8eac40bf7e6bb0ff1e6e00c13e47aaf32e4a08fc8ba54602d07f79a39fb9ba304cc9dc886b1e3caf824649edbd
+  languageName: node
+  linkType: hard
+
+"@types/unist@npm:^2.0.6":
+  version: 2.0.10
+  resolution: "@types/unist@npm:2.0.10"
+  checksum: e2924e18dedf45f68a5c6ccd6015cd62f1643b1b43baac1854efa21ae9e70505db94290434a23da1137d9e31eb58e54ca175982005698ac37300a1c889f6c4aa
   languageName: node
   linkType: hard
 

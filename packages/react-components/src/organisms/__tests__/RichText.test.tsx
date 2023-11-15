@@ -199,6 +199,18 @@ describe('with poorText', () => {
     const { getByText } = render(<RichText poorText text={'<p>text</p>'} />);
     expect(getByText('text').tagName).toBe('P');
   });
+  it('renders <sup> as a superscript', () => {
+    const { getByText } = render(
+      <RichText poorText text={'<sup>text</sup>'} />,
+    );
+    expect(getByText('text').tagName).toBe('SUP');
+  });
+  it('renders <sub> as a subscript', () => {
+    const { getByText } = render(
+      <RichText poorText text={'<sub>text</sub>'} />,
+    );
+    expect(getByText('text').tagName).toBe('SUB');
+  });
   it('strips out other formatting preserving content', () => {
     const { getByText } = render(
       <RichText poorText text={'<b>bold</b> <i>italic</i> text'} />,

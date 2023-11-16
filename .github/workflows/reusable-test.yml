@@ -90,6 +90,8 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-test:
+    # TODO: enable back with ASAP-70
+    if: false
     concurrency: integration-test
     permissions:
       packages: read

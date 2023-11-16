@@ -1,6 +1,6 @@
 import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
-import { getTeamUpdateEvent } from '../../fixtures/teams.fixtures';
+import { getTeamPublishedEvent } from '../../fixtures/teams.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
 
@@ -27,7 +27,7 @@ describe('Team Research Outputs Index', () => {
       items,
     });
 
-    const updateEvent = getTeamUpdateEvent('teamId');
+    const updateEvent = getTeamPublishedEvent('teamId');
 
     await indexHandler(updateEvent);
 
@@ -51,7 +51,7 @@ describe('Team Research Outputs Index', () => {
       items: [],
     });
 
-    const updateEvent = getTeamUpdateEvent('teamId');
+    const updateEvent = getTeamPublishedEvent('teamId');
 
     await indexHandler(updateEvent);
 

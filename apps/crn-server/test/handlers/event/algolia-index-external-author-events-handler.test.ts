@@ -20,17 +20,10 @@ const possibleEvents: [
   EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorContentfulPayload>,
 ][] = [
   [
-    'created',
+    'published',
     getExternalAuthorContentfulEvent(
       'external-author-id',
-      'ExternalAuthorsCreated',
-    ),
-  ],
-  [
-    'updated',
-    getExternalAuthorContentfulEvent(
-      'external-author-id',
-      'ExternalAuthorsUpdated',
+      'ExternalAuthorsPublished',
     ),
   ],
   [
@@ -38,13 +31,6 @@ const possibleEvents: [
     getExternalAuthorContentfulEvent(
       'external-author-id',
       'ExternalAuthorsUnpublished',
-    ),
-  ],
-  [
-    'deleted',
-    getExternalAuthorContentfulEvent(
-      'external-author-id',
-      'ExternalAuthorsDeleted',
     ),
   ],
 ];
@@ -64,7 +50,7 @@ describe('Index Events on External Author event handler', () => {
       indexHandler(
         getExternalAuthorContentfulEvent(
           'external-author-id',
-          'ExternalAuthorsCreated',
+          'ExternalAuthorsPublished',
         ),
       ),
     ).rejects.toThrow(Boom.badData());
@@ -82,7 +68,7 @@ describe('Index Events on External Author event handler', () => {
       indexHandler(
         getExternalAuthorContentfulEvent(
           'external-author-id',
-          'ExternalAuthorsUpdated',
+          'ExternalAuthorsPublished',
         ),
       ),
     ).rejects.toThrow(algoliaError);

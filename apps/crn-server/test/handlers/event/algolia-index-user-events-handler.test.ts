@@ -16,10 +16,8 @@ const mapPayload = toPayload('event');
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const possibleEvents: [string, EventBridgeEvent<UserEvent, UserPayload>][] = [
-  ['created', getUserEvent('user-id', 'UsersCreated')],
-  ['updated', getUserEvent('user-id', 'UsersUpdated')],
+  ['created', getUserEvent('user-id', 'UsersPublished')],
   ['unpublished', getUserEvent('user-id', 'UsersUnpublished')],
-  ['deleted', getUserEvent('user-id', 'UsersDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -34,7 +32,7 @@ describe('Index Events on User event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getUserEvent('user-id', 'UsersCreated')),
+      indexHandler(getUserEvent('user-id', 'UsersPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -47,7 +45,7 @@ describe('Index Events on User event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getUserEvent('user-id', 'UsersUpdated')),
+      indexHandler(getUserEvent('user-id', 'UsersPublished')),
     ).rejects.toThrow(algoliaError);
   });
 
@@ -73,7 +71,7 @@ describe('Index Events on User event handler', () => {
       ],
     });
 
-    await indexHandler(getUserEvent('user-id', 'UsersCreated'));
+    await indexHandler(getUserEvent('user-id', 'UsersPublished'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {
@@ -99,7 +97,7 @@ describe('Index Events on User event handler', () => {
       ],
     });
 
-    await indexHandler(getUserEvent('user-id', 'UsersCreated'));
+    await indexHandler(getUserEvent('user-id', 'UsersPublished'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {

@@ -148,13 +148,7 @@ export type TeamEventGenerator = (
 export const getTeamUnpublishedEvent: TeamEventGenerator = (id: string) =>
   getTeamEvent(id, 'TeamsUnpublished');
 
-export const getTeamDeleteEvent: TeamEventGenerator = (id: string) =>
-  getTeamEvent(id, 'TeamsUnpublished');
-
-export const getTeamCreateEvent: TeamEventGenerator = (id: string) =>
-  getTeamEvent(id, 'TeamsPublished');
-
-export const getTeamUpdateEvent: TeamEventGenerator = (id: string) =>
+export const getTeamPublishedEvent: TeamEventGenerator = (id: string) =>
   getTeamEvent(id, 'TeamsPublished');
 
 export const getTeamContentfulWebhookDetail = (

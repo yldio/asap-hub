@@ -1,9 +1,4 @@
-export type EntityEventAction =
-  | 'Created'
-  | 'Published'
-  | 'Updated'
-  | 'Unpublished'
-  | 'Deleted';
+export type EntityEventAction = 'Published' | 'Unpublished';
 
 export type EventEvent = `Events${EntityEventAction}`;
 export type ExternalAuthorEvent = `ExternalAuthors${EntityEventAction}`;

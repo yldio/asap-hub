@@ -16,13 +16,14 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.ExternalUserEvent, ExternalUserPayload>,
 ][] = [
-  ['created', getExternalUserEvent('external-user-id', 'ExternalUsersCreated')],
-  ['updated', getExternalUserEvent('external-user-id', 'ExternalUsersUpdated')],
+  [
+    'published',
+    getExternalUserEvent('external-user-id', 'ExternalUsersPublished'),
+  ],
   [
     'unpublished',
     getExternalUserEvent('external-user-id', 'ExternalUsersUnpublished'),
   ],
-  ['deleted', getExternalUserEvent('external-user-id', 'ExternalUsersDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -38,7 +39,7 @@ describe('Index Events on External User event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalUserEvent('external-user-id', 'ExternalUsersCreated'),
+        getExternalUserEvent('external-user-id', 'ExternalUsersPublished'),
       ),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -53,7 +54,7 @@ describe('Index Events on External User event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalUserEvent('external-user-id', 'ExternalUsersUpdated'),
+        getExternalUserEvent('external-user-id', 'ExternalUsersPublished'),
       ),
     ).rejects.toThrow(algoliaError);
   });

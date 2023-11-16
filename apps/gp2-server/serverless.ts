@@ -282,7 +282,9 @@ const serverlessConfig: AWS = {
             eventBus,
             pattern: {
               source: [eventBusSource],
-              'detail-type': ['CalendarsPublished'],
+              'detail-type': [
+                'CalendarsPublished',
+              ] satisfies gp2.WebhookDetailType[],
             },
           },
         },
@@ -320,7 +322,9 @@ const serverlessConfig: AWS = {
             eventBus,
             pattern: {
               source: [eventBusSource],
-              'detail-type': ['UsersPublished'],
+              'detail-type': [
+                'UsersPublished',
+              ] satisfies gp2.WebhookDetailType[],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,
@@ -346,9 +350,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'OutputsPublished',
-                'OutputsUpdated',
                 'OutputsUnpublished',
-                'OutputsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -370,9 +372,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -395,9 +395,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ExternalUsersPublished',
-                'ExternalUsersUpdated',
                 'ExternalUsersUnpublished',
-                'ExternalUsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -419,9 +417,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ProjectsPublished',
-                'ProjectsUpdated',
                 'ProjectsUnpublished',
-                'ProjectsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -444,9 +440,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'WorkingGroupsPublished',
-                'WorkingGroupsUpdated',
                 'WorkingGroupsUnpublished',
-                'WorkingGroupsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -468,9 +462,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'EventsPublished',
-                'EventsUpdated',
                 'EventsUnpublished',
-                'EventsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -492,9 +484,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ProjectsPublished',
-                'ProjectsUpdated',
                 'ProjectsUnpublished',
-                'ProjectsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -516,9 +506,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -540,9 +528,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'EventsPublished',
-                'EventsUpdated',
                 'EventsUnpublished',
-                'EventsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -564,9 +550,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'CalendarsPublished',
-                'CalendarsUpdated',
                 'CalendarsUnpublished',
-                'CalendarsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -588,9 +572,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -613,9 +595,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ExternalUsersPublished',
-                'ExternalUsersUpdated',
                 'ExternalUsersUnpublished',
-                'ExternalUsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -637,9 +617,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -661,9 +639,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ProjectsPublished',
-                'ProjectsUpdated',
                 'ProjectsUnpublished',
-                'ProjectsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -686,9 +662,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'WorkingGroupsPublished',
-                'WorkingGroupsUpdated',
                 'WorkingGroupsUnpublished',
-                'WorkingGroupsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -710,9 +684,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'NewsPublished',
-                'NewsUpdated',
                 'NewsUnpublished',
-                'NewsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -734,9 +706,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'ExternalUsersPublished',
-                'ExternalUsersUpdated',
                 'ExternalUsersUnpublished',
-                'ExternalUsersDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -760,7 +730,6 @@ const serverlessConfig: AWS = {
               source: [eventBusSource],
               'detail-type': [
                 'EventsPublished',
-                'EventsUpdated',
               ] satisfies gp2.WebhookDetailType[],
             },
           },
@@ -883,7 +852,9 @@ const serverlessConfig: AWS = {
             eventBus,
             pattern: {
               source: [eventBusSource],
-              'detail-type': ['UsersPublished'],
+              'detail-type': [
+                'UsersPublished',
+              ] satisfies gp2.WebhookDetailType[],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,

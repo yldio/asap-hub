@@ -6,11 +6,22 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { Logger } from '../../utils';
 import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
+type ContentfulActions =
+  | 'publish'
+  | 'unpublish'
+  | 'create'
+  | 'save'
+  | 'autosave'
+  | 'archive'
+  | 'unarchive'
+  | 'delete'
+  | 'complete';
+
 const getActionFromRequest = (
   request: lambda.Request<ContentfulWebhookPayload>,
-): 'publish' | 'unpublish' => {
+): ContentfulActions => {
   const actions = request.headers['x-contentful-topic']?.split('.') ?? [];
-  return actions[actions.length - 1] as 'publish' | 'unpublish';
+  return actions[actions.length - 1] as ContentfulActions;
 };
 
 const getDetailTypeFromRequest = (

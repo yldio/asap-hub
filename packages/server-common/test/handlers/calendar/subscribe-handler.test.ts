@@ -73,13 +73,15 @@ describe('Subscription', () => {
       expiration,
     });
     expect(mockWatch).toHaveBeenCalledWith({
-      id: getCalendarCreateEvent().payload.id,
-      token: googleApiToken,
-      type: 'web_hook',
       calendarId,
-      address: `${asapApiUrl}/webhook/events/contentful`,
-      params: {
-        ttl: 2_592_000,
+      requestBody: {
+        id: getCalendarCreateEvent().payload.id,
+        token: googleApiToken,
+        type: 'web_hook',
+        address: `${asapApiUrl}/webhook/events/contentful`,
+        params: {
+          ttl: '2592000',
+        },
       },
     });
   });

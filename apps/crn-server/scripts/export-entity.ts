@@ -6,15 +6,18 @@ import ExternalAuthors from '../src/controllers/external-author.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Teams from '../src/controllers/team.controller';
 import Users from '../src/controllers/user.controller';
+import WorkingGroups from '../src/controllers/working-group.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
+
 import {
   getAssetDataProvider,
   getUserDataProvider,
 } from '../src/dependencies/users.dependencies';
+import { getWorkingGroupDataProvider } from '../src/dependencies/working-groups.dependencies';
 
 type EntityResponsesCRN = EntityResponses['crn'];
 export const PAGE_SIZE = 10;
@@ -72,6 +75,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const eventDataProvider = getEventDataProvider();
 
   const teamDataProvider = getTeamDataProvider();
+  const workingGroupDataProvider = getWorkingGroupDataProvider();
 
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
@@ -83,6 +87,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     'external-author': new ExternalAuthors(externalAuthorDataProvider),
     event: new Events(eventDataProvider),
     team: new Teams(teamDataProvider),
+    'working-group': new WorkingGroups(workingGroupDataProvider),
   };
 
   return controllerMap[entity];
@@ -135,6 +140,13 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
     return {
       ...payload,
       _tags: record.expertiseAndResourceTags,
+    };
+  }
+
+  if (type === 'working-group' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
     };
   }
 

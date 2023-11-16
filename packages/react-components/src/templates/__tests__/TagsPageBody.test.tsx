@@ -3,6 +3,7 @@ import {
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
+  createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -40,6 +41,10 @@ it('renders a list of cards', () => {
         { ...createUserResponse(), displayName: 'John Doe', degree: 'PhD' },
         { ...createEventResponse(), title: 'ASAP Collaborative Meeting' },
         { ...createTeamResponse(), displayName: 'Team ASAP' },
+        {
+          ...createWorkingGroupResponse(),
+          title: 'Comparative Neuroanatomy Working Group',
+        },
       ]}
     />,
   );
@@ -51,4 +56,8 @@ it('renders a list of cards', () => {
   expect(screen.getByText('ASAP Collaborative Meeting')).toBeInTheDocument();
 
   expect(screen.getByText(/Team ASAP/i)).toBeInTheDocument();
+
+  expect(
+    screen.getByText(/Comparative Neuroanatomy Working Group/i),
+  ).toBeInTheDocument();
 });

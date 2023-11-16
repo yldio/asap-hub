@@ -615,6 +615,63 @@ describe('Working Groups data provider', () => {
         expect(result!.leaders).toHaveLength(0);
       });
     });
+
+    describe('tags', () => {
+      test('should return tags if there is any', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse =
+          getContentfulWorkingGroupGraphqlResponse();
+        contentfulGraphQLResponse.workingGroups!.tagsCollection = {
+          items: [
+            {
+              name: 'Neurobehavioral',
+            },
+            {
+              name: 'Lysosomes',
+            },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const response = await workingGroupDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual(['Neurobehavioral', 'Lysosomes']);
+      });
+
+      test('should return empty tags if they do not exist', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse =
+          getContentfulWorkingGroupGraphqlResponse();
+        contentfulGraphQLResponse.workingGroups!.tagsCollection = null;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const response = await workingGroupDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual([]);
+      });
+
+      test('should filter null tag items', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse =
+          getContentfulWorkingGroupGraphqlResponse();
+        contentfulGraphQLResponse.workingGroups!.tagsCollection = {
+          items: [
+            null,
+            {
+              name: 'Lysosomes',
+            },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const response = await workingGroupDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual(['Lysosomes']);
+      });
+    });
   });
 
   describe('Update method', () => {

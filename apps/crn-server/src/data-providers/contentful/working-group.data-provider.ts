@@ -194,6 +194,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     description,
     membersCollection,
     lastUpdated,
+    tagsCollection,
   } = item;
 
   const deliverables = (deliverablesCollection?.items || [])
@@ -262,6 +263,8 @@ export const parseContentfulGraphQlWorkingGroup = (
     calendars: calendars
       ? [parseContentfulGraphqlCalendarToResponse(calendars)]
       : [],
+    tags:
+      tagsCollection?.items.map((tag) => tag?.name || '').filter(Boolean) || [],
   };
 
   return externalLink ? { ...workingGroup, externalLink } : workingGroup;

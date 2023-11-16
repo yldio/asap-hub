@@ -26,6 +26,28 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Duplicate')).not.toBeInTheDocument();
   });
 
+  it('displays version button if canVersion is true', () => {
+    const { queryByTitle } = render(
+      <OutputDetailPage
+        isAdministrator
+        canVersion
+        {...gp2Fixtures.createOutputResponse()}
+      />,
+    );
+    expect(queryByTitle('Version Icon')).toBeInTheDocument();
+  });
+
+  it('ddoes not isplays version button if canVersion is false', () => {
+    const { queryByTitle } = render(
+      <OutputDetailPage
+        isAdministrator
+        canVersion={false}
+        {...gp2Fixtures.createOutputResponse()}
+      />,
+    );
+    expect(queryByTitle('Version Icon')).not.toBeInTheDocument();
+  });
+
   it('uses project duplicate output route if output is linked to a project', () => {
     const output = gp2Fixtures.createOutputResponse();
     const { getByRole } = render(

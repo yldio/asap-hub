@@ -19,7 +19,8 @@ const app = async () => {
   );
 
   if (!apiKey) {
-    throw new Error('Could not find API key');
+    console.log('Could not find API key');
+    process.exit(0);
   }
 
   apiKey.environments = apiKey.environments.filter(

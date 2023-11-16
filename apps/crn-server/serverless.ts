@@ -6,44 +6,47 @@ const { NODE_ENV = 'development' } = process.env;
 
 if (NODE_ENV === 'production') {
   [
-    'CRN_API_URL',
-    'CRN_APP_URL',
-    'CRN_AWS_ACM_CERTIFICATE_ARN',
-    'CRN_AUTH0_AUDIENCE',
-    'CRN_AUTH0_CLIENT_ID',
-    'CRN_SES_REGION',
-    'CRN_CONTENTFUL_ENV',
-    'CRN_CONTENTFUL_ACCESS_TOKEN',
-    'CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN',
-    'CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
-    'CRN_CONTENTFUL_SPACE_ID',
-    'CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+    'ALGOLIA_INDEX',
+    'API_URL',
+    'APP_URL',
+    'AUTH0_AUDIENCE',
+    'AUTH0_CLIENT_ID',
+    'AWS_ACM_CERTIFICATE_ARN',
+    'CONTENTFUL_ACCESS_TOKEN',
+    'CONTENTFUL_ENV',
+    'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+    'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
+    'CONTENTFUL_SPACE_ID',
+    'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+    'SENTRY_DSN_API',
+    'SENTRY_DSN_HANDLERS',
+    'SES_REGION',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
 }
 
 const {
-  CRN_APP_URL = 'http://localhost:3000',
-  CRN_API_URL = 'http://localhost:3333',
+  ALGOLIA_INDEX,
+  API_URL = 'http://localhost:3333',
+  APP_URL = 'http://localhost:3000',
   ASAP_HOSTNAME = 'hub.asap.science',
-  CRN_AWS_ACM_CERTIFICATE_ARN,
-  SLS_STAGE = 'development',
+  AUTH0_AUDIENCE,
+  AUTH0_CLIENT_ID,
+  AWS_ACM_CERTIFICATE_ARN,
   CI_COMMIT_SHA,
-  CRN_ALGOLIA_INDEX,
-  CRN_SENTRY_DSN_API,
-  CRN_SENTRY_DSN_HANDLERS,
-  CRN_SES_REGION,
-  CRN_AUTH0_AUDIENCE,
-  CRN_AUTH0_CLIENT_ID,
-  CRN_CONTENTFUL_ENV,
-  CRN_CONTENTFUL_ACCESS_TOKEN,
-  CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN,
-  CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
-  CRN_CONTENTFUL_SPACE_ID,
-  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
+  CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_ENV,
+  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN,
+  CONTENTFUL_SPACE_ID,
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   LOG_LEVEL,
+  SENTRY_DSN_API,
+  SENTRY_DSN_HANDLERS,
+  SES_REGION,
   SLACK_WEBHOOK,
+  SLS_STAGE = 'development',
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -60,22 +63,22 @@ if (SLS_STAGE === 'dev' || SLS_STAGE === 'production') {
     assert.ok(process.env[env], `${env} not defined`);
   });
 }
-const sentryDsnApi = CRN_SENTRY_DSN_API!;
-const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
 
-const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
-const auth0Audience = CRN_AUTH0_AUDIENCE!;
-const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
-const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
-const contentfulPreviewAccessToken = CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
-const contentfulManagementAccessToken = CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+const sentryDsnApi = SENTRY_DSN_API!;
+const sentryDsnHandlers = SENTRY_DSN_HANDLERS!;
+const auth0ClientId = AUTH0_CLIENT_ID!;
+const auth0Audience = AUTH0_AUDIENCE!;
+const contentfulEnvironment = CONTENTFUL_ENV!;
+const contentfulAccessToken = CONTENTFUL_ACCESS_TOKEN!;
+const contentfulPreviewAccessToken = CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
+const contentfulManagementAccessToken = CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulWebhookAuthenticationToken =
-  CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
-const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
-const sesRegion = CRN_SES_REGION!;
+  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+const contentfulSpaceId = CONTENTFUL_SPACE_ID!;
+const sesRegion = SES_REGION!;
 
-const algoliaIndex = CRN_ALGOLIA_INDEX
-  ? '${env:CRN_ALGOLIA_INDEX}'
+const algoliaIndex = ALGOLIA_INDEX
+  ? '${env:ALGOLIA_INDEX}'
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
@@ -129,7 +132,7 @@ const serverlessConfig: AWS = {
     httpApi: {
       payload: '2.0',
       cors: {
-        allowedOrigins: [CRN_APP_URL],
+        allowedOrigins: [APP_URL],
         allowCredentials: true,
         allowedMethods: ['OPTIONS', 'POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: [
@@ -152,12 +155,12 @@ const serverlessConfig: AWS = {
       lambda: true,
     },
     environment: {
-      APP_ORIGIN: CRN_APP_URL,
+      APP_ORIGIN: APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
       REGION: '${env:AWS_REGION}',
-      CRN_API_URL: '${env:CRN_API_URL}',
+      API_URL: '${env:API_URL}',
       LOG_LEVEL: LOG_LEVEL || (SLS_STAGE === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
@@ -250,8 +253,8 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiHostname: new URL(CRN_API_URL).hostname,
-    appHostname: new URL(CRN_APP_URL).hostname,
+    apiHostname: new URL(API_URL).hostname,
+    appHostname: new URL(APP_URL).hostname,
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
@@ -889,7 +892,7 @@ const serverlessConfig: AWS = {
           DomainName: '${self:custom.apiHostname}',
           DomainNameConfigurations: [
             {
-              CertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -1395,7 +1398,7 @@ const serverlessConfig: AWS = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
+              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },

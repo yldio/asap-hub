@@ -91,24 +91,21 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
       env:
+        ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+        API_URL: ${{ steps.setup.outputs.crn-api-url }}
+        APP_URL: ${{ steps.setup.outputs.crn-app-url }}
+        AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
+        AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
         AWS_REGION: ${{ steps.setup.outputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
-        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-        CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
-        CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
-        CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
-        CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
-        CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
-        CRN_CONTENTFUL_ENV: ${{ inputs.crn-contentful-env }}
-        CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
-        CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.crn-contentful-preview-access-token }}
-        CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-        CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.crn-contentful-webhook-authentication-token }}
-        CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
-        CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
-        CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
+        CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
+        CONTENTFUL_ENV: ${{ inputs.crn-contentful-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.crn-contentful-preview-access-token }}
+        CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.crn-contentful-webhook-authentication-token }}
         CURRENT_REVISION: ${{ github.sha }}
         GP2_ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
         GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
@@ -127,5 +124,8 @@ runs:
         GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
-        SLS_STAGE: ${{ steps.setup.outputs.sls-stage}}
+        SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+        SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
+        SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
+        SLS_STAGE: ${{ steps.setup.outputs.sls-stage}}

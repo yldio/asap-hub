@@ -4,19 +4,21 @@ import assert from 'assert';
 
 [
   'AWS_REGION',
-  'GP2_AUTH0_AUDIENCE',
-  'GP2_AUTH0_CLIENT_ID',
-  'GP2_AUTH0_SHARED_SECRET',
-  'GP2_AWS_ACM_CERTIFICATE_ARN',
-  'GP2_HOSTNAME',
+  'AUTH0_AUDIENCE',
+  'AUTH0_CLIENT_ID',
+  'AUTH0_SHARED_SECRET',
+  'AWS_ACM_CERTIFICATE_ARN',
+  'HOSTNAME',
   'SLS_STAGE',
-  'GP2_SES_REGION',
-  'GP2_CONTENTFUL_ENV',
-  'GP2_CONTENTFUL_ACCESS_TOKEN',
-  'GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN',
-  'GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
-  'GP2_CONTENTFUL_SPACE_ID',
-  'GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+  'SENTRY_DSN_API',
+  'SENTRY_DSN_HANDLERS',
+  'SES_REGION',
+  'CONTENTFUL_ENV',
+  'CONTENTFUL_ACCESS_TOKEN',
+  'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
+  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+  'CONTENTFUL_SPACE_ID',
+  'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -27,29 +29,30 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
-const auth0Audience = process.env.GP2_AUTH0_AUDIENCE!;
-const auth0ClientId = process.env.GP2_AUTH0_CLIENT_ID!;
-const auth0SharedSecret = process.env.GP2_AUTH0_SHARED_SECRET!;
-const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
-const hostname = process.env.GP2_HOSTNAME!;
+const auth0Audience = process.env.AUTH0_AUDIENCE!;
+const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
+const auth0SharedSecret = process.env.AUTH0_SHARED_SECRET!;
+const gp2AwsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
+const hostname = process.env.HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
-const contentfulEnvironment = process.env.GP2_CONTENTFUL_ENV!;
-const contentfulAccessToken = process.env.GP2_CONTENTFUL_ACCESS_TOKEN!;
+const contentfulEnvironment = process.env.CONTENTFUL_ENV!;
+const contentfulAccessToken = process.env.CONTENTFUL_ACCESS_TOKEN!;
 const contentfulPreviewAccessToken =
-  process.env.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
+  process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
 const contentfulManagementAccessToken =
-  process.env.GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
-const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
+  process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+const contentfulSpaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulWebhookAuthenticationToken =
-  process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+  process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 
 if (stage === 'dev' || stage === 'production') {
   ['CRN_SENTRY_DSN_API', 'CRN_SENTRY_DSN_HANDLERS'].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
 }
-const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
-const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
+
+const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;
@@ -63,10 +66,10 @@ const appUrl = `https://${appHostname}`;
 const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
-const sesRegion = process.env.GP2_SES_REGION!;
+const sesRegion = process.env.SES_REGION!;
 const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 
-const algoliaIndex = process.env.GP2_ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
+const algoliaIndex = process.env.ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
 
 export const plugins = [
   './serverless-plugins/serverless-webpack',
@@ -297,7 +300,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_API_URL: apiUrl,
+        API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
     },
@@ -313,7 +316,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_API_URL: apiUrl,
+        API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
     },

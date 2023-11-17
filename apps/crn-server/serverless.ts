@@ -1,83 +1,68 @@
 import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
+import { algoliaAppId, logLevel } from './src/config';
 
-const { NODE_ENV = 'development' } = process.env;
+[
+  'ALGOLIA_INDEX',
+  'AUTH0_AUDIENCE',
+  'AUTH0_CLIENT_ID',
+  'AUTH0_SHARED_SECRET',
+  'AWS_ACM_CERTIFICATE_ARN',
+  'AWS_REGION',
+  'CONTENTFUL_ACCESS_TOKEN',
+  'CONTENTFUL_ENV',
+  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+  'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
+  'CONTENTFUL_SPACE_ID',
+  'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+  'HOSTNAME',
+  'SENTRY_DSN_API',
+  'SENTRY_DSN_HANDLERS',
+  'SES_REGION',
+  'SLACK_WEBHOOK',
+  'SLS_STAGE',
+].forEach((env) => {
+  assert.ok(process.env[env], `${env} not defined`);
+});
 
-if (NODE_ENV === 'production') {
-  [
-    'ALGOLIA_INDEX',
-    'API_URL',
-    'APP_URL',
-    'AUTH0_AUDIENCE',
-    'AUTH0_CLIENT_ID',
-    'AWS_ACM_CERTIFICATE_ARN',
-    'CONTENTFUL_ACCESS_TOKEN',
-    'CONTENTFUL_ENV',
-    'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
-    'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
-    'CONTENTFUL_SPACE_ID',
-    'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
-    'SENTRY_DSN_API',
-    'SENTRY_DSN_HANDLERS',
-    'SES_REGION',
-  ].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
-}
+const stage = process.env.SLS_STAGE!;
+assert.ok(
+  stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
+  'stage must be either "dev" or "production" or a PR number',
+);
 
-const {
-  ALGOLIA_INDEX,
-  API_URL = 'http://localhost:3333',
-  APP_URL = 'http://localhost:3000',
-  ASAP_HOSTNAME = 'hub.asap.science',
-  AUTH0_AUDIENCE,
-  AUTH0_CLIENT_ID,
-  AWS_ACM_CERTIFICATE_ARN,
-  CI_COMMIT_SHA,
-  CONTENTFUL_ACCESS_TOKEN,
-  CONTENTFUL_ENV,
-  CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
-  CONTENTFUL_PREVIEW_ACCESS_TOKEN,
-  CONTENTFUL_SPACE_ID,
-  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
-  LOG_LEVEL,
-  SENTRY_DSN_API,
-  SENTRY_DSN_HANDLERS,
-  SES_REGION,
-  SLACK_WEBHOOK,
-  SLS_STAGE = 'development',
-} = process.env;
-
-const region = process.env.AWS_REGION as AWS['provider']['region'];
-const envAlias = SLS_STAGE === 'production' ? 'prod' : 'dev';
+const region = process.env.AWS_REGION as NonNullable<AWS['provider']['region']>;
+const envAlias = stage === 'production' ? 'prod' : 'dev';
 const envRef =
-  SLS_STAGE === 'production'
-    ? 'prod'
-    : SLS_STAGE === 'dev'
-    ? 'dev'
-    : `CI-${SLS_STAGE}`;
-
-if (SLS_STAGE === 'dev' || SLS_STAGE === 'production') {
-  ['CRN_SENTRY_DSN_API', 'CRN_SENTRY_DSN_HANDLERS'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
-}
-
-const sentryDsnApi = SENTRY_DSN_API!;
-const sentryDsnHandlers = SENTRY_DSN_HANDLERS!;
-const auth0ClientId = AUTH0_CLIENT_ID!;
-const auth0Audience = AUTH0_AUDIENCE!;
-const contentfulEnvironment = CONTENTFUL_ENV!;
-const contentfulAccessToken = CONTENTFUL_ACCESS_TOKEN!;
-const contentfulPreviewAccessToken = CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
-const contentfulManagementAccessToken = CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
+  stage === 'production' ? 'prod' : stage === 'dev' ? 'dev' : `CI-${stage}`;
+const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
+const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
+const auth0Audience = process.env.AUTH0_AUDIENCE!;
+const contentfulEnvironment = process.env.CONTENTFUL_ENV!;
+const contentfulAccessToken = process.env.CONTENTFUL_ACCESS_TOKEN!;
+const contentfulPreviewAccessToken =
+  process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
+const contentfulManagementAccessToken =
+  process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulWebhookAuthenticationToken =
-  CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
-const contentfulSpaceId = CONTENTFUL_SPACE_ID!;
-const sesRegion = SES_REGION!;
+  process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+const contentfulSpaceId = process.env.CONTENTFUL_SPACE_ID!;
+const sesRegion = process.env.SES_REGION!;
+const hostname = process.env.HOSTNAME!;
+const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
+const apiHostname =
+  stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
+const appUrl = `https://${appHostname}`;
+const apiUrl = `https://${apiHostname}`;
+const nodeEnv = 'production';
+const ciCommitSha = process.env.CI_COMMIT_SHA;
+const currentRevision = process.env.CURRENT_REVISION!;
+const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
+const slackWebhook = process.env.SLACK_WEBHOOK!;
 
-const algoliaIndex = ALGOLIA_INDEX
+const algoliaIndex = process.env.ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
@@ -94,7 +79,7 @@ const offlinePlugins = [
 ];
 
 const offlineSSM =
-  SLS_STAGE === 'local'
+  stage === 'local'
     ? {
         'algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
         'algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
@@ -111,7 +96,7 @@ const offlineSSM =
       }
     : {};
 
-if (SLS_STAGE === 'local') {
+if (stage === 'local') {
   plugins.push(...offlinePlugins);
 }
 
@@ -127,12 +112,12 @@ const serverlessConfig: AWS = {
     timeout: 16,
     memorySize: 1024,
     region,
-    stage: SLS_STAGE,
+    stage: stage,
     versionFunctions: false,
     httpApi: {
       payload: '2.0',
       cors: {
-        allowedOrigins: [APP_URL],
+        allowedOrigins: [appUrl],
         allowCredentials: true,
         allowedMethods: ['OPTIONS', 'POST', 'GET', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: [
@@ -155,16 +140,16 @@ const serverlessConfig: AWS = {
       lambda: true,
     },
     environment: {
-      APP_ORIGIN: APP_URL,
-      DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
-      NODE_ENV: '${env:NODE_ENV}',
-      ENVIRONMENT: '${env:SLS_STAGE}',
-      REGION: '${env:AWS_REGION}',
-      API_URL: '${env:API_URL}',
-      LOG_LEVEL: LOG_LEVEL || (SLS_STAGE === 'production' ? 'error' : 'info'),
+      APP_ORIGIN: appUrl,
+      DEBUG: stage === 'production' ? '' : 'crn-server,http',
+      NODE_ENV: nodeEnv,
+      ENVIRONMENT: stage,
+      REGION: region,
+      API_URL: apiUrl,
+      LOG_LEVEL: logLevel || (stage === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
-      ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
-      CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
+      ALGOLIA_APP_ID: algoliaAppId,
+      CURRENT_REVISION: ciCommitSha ?? currentRevision,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
@@ -253,8 +238,8 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiHostname: new URL(API_URL).hostname,
-    appHostname: new URL(APP_URL).hostname,
+    apiHostname: new URL(apiUrl).hostname,
+    appHostname: new URL(appUrl).hostname,
     s3Sync: [
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
@@ -862,7 +847,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SLACK_WEBHOOK: SLACK_WEBHOOK!,
+        SLACK_WEBHOOK: slackWebhook,
       },
     },
   },
@@ -892,7 +877,7 @@ const serverlessConfig: AWS = {
           DomainName: '${self:custom.apiHostname}',
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              CertificateArn: awsAcmCertificateArn,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -911,7 +896,7 @@ const serverlessConfig: AWS = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${ASAP_HOSTNAME}.`,
+          HostedZoneName: hostname,
           RecordSets: [
             {
               Name: '${self:custom.apiHostname}',
@@ -1398,7 +1383,7 @@ const serverlessConfig: AWS = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              AcmCertificateArn: awsAcmCertificateArn,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },
@@ -1408,7 +1393,7 @@ const serverlessConfig: AWS = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${ASAP_HOSTNAME}.`,
+          HostedZoneName: hostname,
           RecordSets: [
             {
               Name: '${self:custom.appHostname}',

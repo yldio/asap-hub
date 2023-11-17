@@ -25,6 +25,7 @@ crn-aws-acm-certificate-arn=arn:aws:acm:us-east-1:249832953260:certificate/91e95
 crn-base-pr-app-domain=hub.asap.science
 crn-contentful-env-id=Production
 crn-contentful-space-id=5v6w5j61tndm
+crn-hostname=hub.asap.science
 # reserve one environment for integration tests
 crn-max-contentful-envs=6
 gp2-auth0-additional-claim-domain=https://dev.gp2.asap.science

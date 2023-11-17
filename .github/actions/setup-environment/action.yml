@@ -134,6 +134,9 @@ outputs:
   crn-contentful-space-id:
     description: 'CRN Contentful Space ID'
     value: ${{ steps.vars.outputs.crn-contentful-space-id }}
+  crn-hostname:
+    description: 'CRN Hostname'
+    value: ${{ steps.vars.outputs.crn-hostname }}
   crn-max-contentful-envs:
     description: 'Maximum CRN Contentful environments'
     value: ${{ steps.vars.outputs.crn-max-contentful-envs }}
@@ -280,7 +283,7 @@ runs:
 
           CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') || inputs.crn-create-env }}
           GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
-          
+
           echo "crn-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
           echo "gp2-on-branch-env=$GP2_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
 

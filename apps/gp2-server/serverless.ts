@@ -3,22 +3,23 @@ import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
 [
-  'AWS_REGION',
+  'ALGOLIA_INDEX',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
   'AUTH0_SHARED_SECRET',
   'AWS_ACM_CERTIFICATE_ARN',
+  'AWS_REGION',
+  'CONTENTFUL_ACCESS_TOKEN',
+  'CONTENTFUL_ENV',
+  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+  'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
+  'CONTENTFUL_SPACE_ID',
+  'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
-  'SLS_STAGE',
   'SENTRY_DSN_API',
   'SENTRY_DSN_HANDLERS',
   'SES_REGION',
-  'CONTENTFUL_ENV',
-  'CONTENTFUL_ACCESS_TOKEN',
-  'CONTENTFUL_PREVIEW_ACCESS_TOKEN',
-  'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
-  'CONTENTFUL_SPACE_ID',
-  'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
+  'SLS_STAGE',
 ].forEach((env) => {
   assert.ok(process.env[env], `${env} not defined`);
 });
@@ -64,7 +65,8 @@ const apiHostname =
   stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
 const apiUrl = `https://${apiHostname}`;
-const currentRevision = process.env.CI_COMMIT_SHA;
+const ciCommitSha = process.env.CI_COMMIT_SHA;
+const currentRevision = process.env.CURRENT_REVISION!;
 const nodeEnv = 'production';
 const sesRegion = process.env.SES_REGION!;
 const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
@@ -115,9 +117,7 @@ const serverlessConfig: AWS = {
       APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
       ALGOLIA_APP_ID: `\${ssm:gp2-algolia-app-id-${envAlias}}`,
-      CURRENT_REVISION: currentRevision
-        ? '${env:CI_COMMIT_SHA}'
-        : '${env:CURRENT_REVISION}',
+      CURRENT_REVISION: ciCommitSha ?? currentRevision,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,

@@ -3246,6 +3246,7 @@ export type News = Entry & {
   publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
+  tagsCollection?: Maybe<NewsTagsCollection>;
   text?: Maybe<NewsText>;
   thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
@@ -3279,6 +3280,16 @@ export type NewsPublishDateArgs = {
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+export type NewsTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<NewsTagsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchTagsFilter>;
 };
 
 /** ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
@@ -3346,6 +3357,8 @@ export type NewsFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  tags?: InputMaybe<CfResearchTagsNestedFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   text_contains?: InputMaybe<Scalars['String']>;
   text_exists?: InputMaybe<Scalars['Boolean']>;
   text_not_contains?: InputMaybe<Scalars['String']>;
@@ -3401,6 +3414,28 @@ export enum NewsOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type NewsTagsCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum NewsTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5359,6 +5394,7 @@ export type ResearchTagsFilter = {
 
 export type ResearchTagsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  newsCollection?: Maybe<NewsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
@@ -5367,6 +5403,16 @@ export type ResearchTagsLinkingCollections = {
 export type ResearchTagsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchTagsLinkingCollectionsNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsNewsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -5404,6 +5450,25 @@ export type ResearchTagsLinkingCollectionsWorkingGroupsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
+  FrequencyAsc = 'frequency_ASC',
+  FrequencyDesc = 'frequency_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   AccessionAsc = 'accession_ASC',
@@ -8573,6 +8638,7 @@ export type CfNewsNestedFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   text_contains?: InputMaybe<Scalars['String']>;
   text_exists?: InputMaybe<Scalars['Boolean']>;
   text_not_contains?: InputMaybe<Scalars['String']>;
@@ -10212,10 +10278,7 @@ export type EventsContentFragment = Pick<
           }
         >;
         user?: Maybe<
-          | ({ __typename: 'ExternalAuthors' } & Pick<
-              ExternalAuthors,
-              'name' | 'orcid'
-            >)
+          | ({ __typename: 'ExternalAuthors' } & Pick<ExternalAuthors, 'name'>)
           | ({ __typename: 'Users' } & Pick<
               Users,
               | 'alumniSinceDate'
@@ -10545,7 +10608,7 @@ export type FetchEventByIdQuery = {
             user?: Maybe<
               | ({ __typename: 'ExternalAuthors' } & Pick<
                   ExternalAuthors,
-                  'name' | 'orcid'
+                  'name'
                 >)
               | ({ __typename: 'Users' } & Pick<
                   Users,
@@ -10962,7 +11025,7 @@ export type FetchEventsQuery = {
                   user?: Maybe<
                     | ({ __typename: 'ExternalAuthors' } & Pick<
                         ExternalAuthors,
-                        'name' | 'orcid'
+                        'name'
                       >)
                     | ({ __typename: 'Users' } & Pick<
                         Users,
@@ -11454,7 +11517,7 @@ export type FetchEventsByUserIdQuery = {
                               user?: Maybe<
                                 | ({ __typename: 'ExternalAuthors' } & Pick<
                                     ExternalAuthors,
-                                    'name' | 'orcid'
+                                    'name'
                                   >)
                                 | ({ __typename: 'Users' } & Pick<
                                     Users,
@@ -11954,7 +12017,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               user?: Maybe<
                                 | ({ __typename: 'ExternalAuthors' } & Pick<
                                     ExternalAuthors,
-                                    'name' | 'orcid'
+                                    'name'
                                   >)
                                 | ({ __typename: 'Users' } & Pick<
                                     Users,
@@ -12454,7 +12517,7 @@ export type FetchEventsByTeamIdQuery = {
                               user?: Maybe<
                                 | ({ __typename: 'ExternalAuthors' } & Pick<
                                     ExternalAuthors,
-                                    'name' | 'orcid'
+                                    'name'
                                   >)
                                 | ({ __typename: 'Users' } & Pick<
                                     Users,
@@ -12514,12 +12577,7 @@ export type FetchInterestGroupCalendarQuery = {
 export type ExternalAuthorsContentFragment = Pick<
   ExternalAuthors,
   'name' | 'orcid'
-> & {
-  sys: Pick<
-    Sys,
-    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-  >;
-};
+> & { sys: Pick<Sys, 'id'> };
 
 export type FetchExternalAuthorByIdQueryVariables = Exact<{
   id: Scalars['String'];
@@ -12527,12 +12585,7 @@ export type FetchExternalAuthorByIdQueryVariables = Exact<{
 
 export type FetchExternalAuthorByIdQuery = {
   externalAuthors?: Maybe<
-    Pick<ExternalAuthors, 'name' | 'orcid'> & {
-      sys: Pick<
-        Sys,
-        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-      >;
-    }
+    Pick<ExternalAuthors, 'name' | 'orcid'> & { sys: Pick<Sys, 'id'> }
   >;
 };
 
@@ -12549,12 +12602,7 @@ export type FetchExternalAuthorsQuery = {
     Pick<ExternalAuthorsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<ExternalAuthors, 'name' | 'orcid'> & {
-            sys: Pick<
-              Sys,
-              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-            >;
-          }
+          Pick<ExternalAuthors, 'name' | 'orcid'> & { sys: Pick<Sys, 'id'> }
         >
       >;
     }
@@ -17185,10 +17233,6 @@ export const EventsContentFragmentDoc = {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'name' },
                                   },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'orcid' },
-                                  },
                                 ],
                               },
                             },
@@ -17359,15 +17403,6 @@ export const ExternalAuthorsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'firstPublishedAt' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'publishedVersion' },
-                },
               ],
             },
           },

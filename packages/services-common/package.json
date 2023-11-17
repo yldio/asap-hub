@@ -30,7 +30,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/apr-intercept": "workspace:*",
-    "@types/aws-lambda": "8.10.125",
+    "@types/aws-lambda": "8.10.126",
     "@types/debug": "4.1.10",
     "@types/hapi": "18.0.12",
     "@types/hapi__boom": "9.0.1",

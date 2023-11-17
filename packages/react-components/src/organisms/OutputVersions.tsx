@@ -136,14 +136,15 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
             <div css={descriptionStyles}>
               {versionAction ? (
                 <Paragraph noMargin>
-                  List with all previous output versions that contributed to this
-                  one. In case you want to add or edit older versions, please
-                  contact{' '}
+                  List with all previous output versions that contributed to
+                  this one. In case you want to add or edit older versions,
+                  please contact{' '}
                   <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.
                 </Paragraph>
               ) : (
                 <Paragraph noMargin>
-                  Find all previous output versions that contributed to this one.
+                  Find all previous output versions that contributed to this
+                  one.
                 </Paragraph>
               )}
             </div>

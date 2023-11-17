@@ -73,6 +73,24 @@ const algoliaIndex = process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
+console.log({
+  algoliaIndex,
+  algoliaAppId,
+  region,
+  envAlias,
+  envRef,
+  sentryDsnApi,
+  sentryDsnHandlers,
+  auth0ClientId,
+  contentfulEnvironment,
+  contentfulSpaceId,
+  sesRegion,
+  hostname,
+  appUrl,
+  apiUrl,
+  awsAcmCertificateArn,
+});
+
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',

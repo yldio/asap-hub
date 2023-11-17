@@ -71,6 +71,23 @@ const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
 
+console.log({
+  algoliaIndex,
+  region,
+  envAlias,
+  envRef,
+  sentryDsnApi,
+  sentryDsnHandlers,
+  auth0ClientId,
+  contentfulEnvironment,
+  contentfulSpaceId,
+  sesRegion,
+  hostname,
+  appUrl,
+  apiUrl,
+  gp2AwsAcmCertificateArn,
+});
+
 export const plugins = [
   './serverless-plugins/serverless-webpack',
   './serverless-plugins/serverless-s3-sync',

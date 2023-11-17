@@ -503,7 +503,6 @@ describe('Events Contentful Data Provider', () => {
         contentfulGraphQLResponse.speakersCollection!.items![0]!.user! = {
           __typename: 'ExternalAuthors',
           name: 'Jane Doe',
-          orcid: '0000-0000-1111-1111',
         };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -516,7 +515,6 @@ describe('Events Contentful Data Provider', () => {
           {
             externalUser: {
               name: 'Jane Doe',
-              orcid: '0000-0000-1111-1111',
             },
           },
         ]);
@@ -686,7 +684,6 @@ describe('Events Contentful Data Provider', () => {
             user: {
               __typename: 'ExternalAuthors',
               name: 'Jane Doe',
-              orcid: '0000-0000-1111-1111',
             },
           },
           {
@@ -718,7 +715,6 @@ describe('Events Contentful Data Provider', () => {
           {
             externalUser: {
               name: 'Jane Doe',
-              orcid: '0000-0000-1111-1111',
             },
           },
         ]);

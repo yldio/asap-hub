@@ -1,9 +1,9 @@
+import { AuthorResponse } from './authors';
 import { DecisionOption, ListResponse } from './common';
 import { EventDataObject } from './event';
-import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
-import { UserDataObject, UserResponse } from './user';
+import { UserDataObject } from './user';
 import { WorkingGroupResponse } from './working-group';
 
 export const researchOutputDocumentTypes = [
@@ -223,20 +223,7 @@ export type ResearchOutputVersion = ResearchOutputVersionCoreObject & {
 };
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
-  authors: (
-    | Pick<
-        UserResponse,
-        | 'id'
-        | 'firstName'
-        | 'lastName'
-        | 'displayName'
-        | 'avatarUrl'
-        | 'orcid'
-        | 'email'
-        | 'alumniSinceDate'
-      >
-    | ExternalAuthorResponse
-  )[];
+  authors: AuthorResponse[];
   usageNotesMD?: string;
   contactEmails: string[];
   created: string;

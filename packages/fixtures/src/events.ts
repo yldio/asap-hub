@@ -39,7 +39,6 @@ export const createExternalSpeakerResponse = (
 ): EventSpeakerExternalUser => ({
   externalUser: {
     name: `External user ${itemIndex}`,
-    orcid: `orcid-${itemIndex}`,
   },
 });
 

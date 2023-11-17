@@ -52,11 +52,7 @@ export const tutorialsContentQueryFragment = gql`
       items {
         __typename
         ... on ExternalAuthors {
-          sys {
-            id
-          }
           name
-          orcid
         }
         ... on Users {
           sys {
@@ -64,9 +60,7 @@ export const tutorialsContentQueryFragment = gql`
           }
           firstName
           lastName
-          email
           onboarded
-          orcid
           alumniSinceDate
           avatar {
             url

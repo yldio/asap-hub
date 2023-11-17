@@ -1,4 +1,5 @@
 import {
+  AuthorResponse,
   convertBooleanToDecision,
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
@@ -34,6 +35,7 @@ import {
   ResearchOutputDataProvider,
   UpdateResearchOutputOptions,
 } from '../types';
+import { getAuthor } from '../transformers/author';
 
 type ResearchOutputItem = NonNullable<
   FetchResearchOutputByIdQuery['researchOutputs']
@@ -368,25 +370,10 @@ const parseGraphQLResearchOutput = (
           (author) =>
             author.__typename !== 'Users' || author?.onboarded !== false,
         )
-        .map((author) => {
-          if (author.__typename === 'Users') {
-            return {
-              id: author.sys.id,
-              firstName: author.firstName || '',
-              lastName: author.lastName || '',
-              email: author.email || '',
-              displayName: `${author.firstName} ${author.lastName}`,
-              avatarUrl: author.avatar?.url || undefined,
-              alumniSinceDate: author.alumniSinceDate || undefined,
-            };
-          }
-
-          return {
-            id: author.sys.id,
-            displayName: author?.name || '',
-            orcid: author.orcid || '',
-          };
-        }) || [],
+        .reduce((authors: AuthorResponse[], author) => {
+          authors.push(getAuthor(author));
+          return authors;
+        }, []) || [],
     contactEmails: [...new Set(contactEmails)],
     lastUpdatedPartial: researchOutputs.lastUpdatedPartial,
     labs:

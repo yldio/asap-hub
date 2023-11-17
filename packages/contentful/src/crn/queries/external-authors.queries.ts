@@ -6,12 +6,8 @@ export const externalAuthorsContentQueryFragment = gql`
   fragment ExternalAuthorsContent on ExternalAuthors {
     sys {
       id
-      firstPublishedAt
-      publishedAt
-      publishedVersion
     }
     name
-    orcid
   }
 `;
 

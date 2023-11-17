@@ -1,8 +1,7 @@
 import { FC } from 'react';
 import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ExternalAuthorResponse, UserResponse } from '@asap-hub/model';
-import { isExternalUser } from '@asap-hub/validation';
+import { Author } from '@asap-hub/model';
 
 import { Avatar, Link } from '../atoms';
 import { ImageLink } from '.';
@@ -10,10 +9,9 @@ import { perRem } from '../pixels';
 import { alumniBadgeIcon, userPlaceholderIcon } from '../icons';
 import { lead } from '../colors';
 
-const getPlaceholderAvatarUrl = () =>
-  `data:image/svg+xml;base64,${btoa(
-    renderToStaticMarkup(userPlaceholderIcon),
-  )}`;
+const externalUserAvatar = `data:image/svg+xml;base64,${btoa(
+  renderToStaticMarkup(userPlaceholderIcon),
+)}`;
 
 const listStyles = css({
   listStyle: 'none',
@@ -51,51 +49,40 @@ const iconStyles = css({
 });
 
 interface UsersListProps {
-  users: ReadonlyArray<
-    | (Pick<
-        UserResponse,
-        | 'displayName'
-        | 'firstName'
-        | 'lastName'
-        | 'avatarUrl'
-        | 'id'
-        | 'email'
-        | 'alumniSinceDate'
-      > & { href: string })
-    | ExternalAuthorResponse
-  >;
+  users: Author[];
   max?: number;
 }
+
 const UsersList: FC<UsersListProps> = ({
   users,
   max = Number.POSITIVE_INFINITY,
 }) => (
   <ul css={listStyles}>
-    {users.slice(0, max).map((user, i) => {
-      const externalUser = isExternalUser(user);
-      const imageUrl = externalUser
-        ? getPlaceholderAvatarUrl()
-        : user.avatarUrl;
+    {users.slice(0, max).map((author, i) => {
+      if ('externalUser' in author) {
+        return (
+          <li key={`author-${i}`} css={itemStyles}>
+            <div css={userStyles}>
+              <Avatar {...author} imageUrl={externalUserAvatar} />
+              <span css={nameStyles}>{author.externalUser.displayName}</span>
+            </div>
+          </li>
+        );
+      }
+
       return (
         <li key={`author-${i}`} css={itemStyles}>
-          {externalUser ? (
-            <div css={userStyles}>
-              <Avatar {...user} imageUrl={imageUrl} />
-              <span css={nameStyles}>{user.displayName}</span>
-            </div>
-          ) : (
-            <div css={userStyles}>
-              <ImageLink link={user.href}>
-                <Avatar {...user} imageUrl={imageUrl} />
-              </ImageLink>
-              <Link ellipsed href={user.href}>
-                <span css={nameStyles}>{user.displayName}</span>
-              </Link>
-              {user.alumniSinceDate && (
-                <span css={iconStyles}>{alumniBadgeIcon}</span>
-              )}
-            </div>
-          )}
+          <div css={userStyles}>
+            <ImageLink link={author.user.href}>
+              <Avatar {...author.user} imageUrl={author.user.avatarUrl} />
+            </ImageLink>
+            <Link ellipsed href={author.user.href}>
+              <span css={nameStyles}>{author.user.displayName}</span>
+            </Link>
+            {author.user.alumniSinceDate && (
+              <span css={iconStyles}>{alumniBadgeIcon}</span>
+            )}
+          </div>
         </li>
       );
     })}

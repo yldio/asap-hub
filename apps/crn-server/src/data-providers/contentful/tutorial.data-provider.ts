@@ -5,6 +5,7 @@ import {
   TutorialsSharingStatus,
   sharingStatuses,
   FetchOptions,
+  AuthorResponse,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -20,6 +21,7 @@ import {
 } from '@asap-hub/contentful';
 import { TutorialDataProvider } from '../types';
 import { cleanArray } from '../../utils/clean-array';
+import { getAuthor } from '../transformers/author';
 
 type TutorialItem = NonNullable<FetchTutorialByIdQuery['tutorials']>;
 
@@ -108,30 +110,15 @@ const mapEvents = (items: RelatedEventItem[]) =>
     endDate: event.endDate || '',
   }));
 
-const mapAuthors = (items: AuthorItem[]) =>
+const mapAuthors = (items: AuthorItem[]): AuthorResponse[] =>
   items
     .filter(
       (author) => author.__typename !== 'Users' || author?.onboarded !== false,
     )
-    .map((author) => {
-      if (author.__typename === 'Users') {
-        return {
-          id: author.sys.id,
-          firstName: author.firstName || '',
-          lastName: author.lastName || '',
-          email: author.email || '',
-          displayName: `${author.firstName} ${author.lastName}`,
-          avatarUrl: author.avatar?.url || undefined,
-          alumniSinceDate: author.alumniSinceDate || undefined,
-        };
-      }
-
-      return {
-        id: author.sys.id,
-        displayName: author?.name || '',
-        orcid: author.orcid || '',
-      };
-    });
+    .reduce((authors: AuthorResponse[], author) => {
+      authors.push(getAuthor(author));
+      return authors;
+    }, []);
 
 const mapRelatedTutorials = (
   items: RelatedTutorialItem[],

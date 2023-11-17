@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { TutorialsResponse } from '@asap-hub/model';
+import { Author, TutorialsResponse } from '@asap-hub/model';
 import { network, discover } from '@asap-hub/routing';
 
 import { Card, Paragraph } from '../atoms';
@@ -130,12 +130,16 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             <div css={associationsContainer}>
               <UsersList
                 max={3}
-                users={authors.map((author) => ({
-                  ...author,
-                  href:
-                    author.id &&
-                    network({}).users({}).user({ userId: author.id }).$,
-                }))}
+                users={
+                  authors.map((author) => ({
+                    ...author,
+                    href:
+                      'user' in author
+                        ? network({}).users({}).user({ userId: author.user.id })
+                            .$
+                        : '',
+                  })) as Author[]
+                }
               />
             </div>
           )}

@@ -1,10 +1,12 @@
 import { UserResponse, ExternalAuthorResponse } from '@asap-hub/model';
 
+type ExternalAuthor = Pick<ExternalAuthorResponse, 'displayName'>;
+
 export const isInternalUser = (
-  author: ExternalAuthorResponse | UserResponse,
+  author: ExternalAuthor | UserResponse,
 ): author is UserResponse => (author as UserResponse).email !== undefined;
 
 export const isExternalUser = (
-  author: ExternalAuthorResponse | UserResponse,
-): author is ExternalAuthorResponse =>
-  isInternalUser(author as ExternalAuthorResponse) === false;
+  author: ExternalAuthor | UserResponse,
+): author is ExternalAuthor =>
+  isInternalUser(author as ExternalAuthor) === false;

@@ -182,7 +182,6 @@ export const eventsContentQueryFragment = gql`
           __typename
           ... on ExternalAuthors {
             name
-            orcid
           }
           ... on Users {
             sys {

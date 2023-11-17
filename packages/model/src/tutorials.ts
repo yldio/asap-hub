@@ -1,9 +1,8 @@
 import { ListResponse } from './common';
 import { EventDataObject } from './event';
-import { ExternalAuthorResponse } from './external-author';
-import { UserResponse } from './user';
 import { TeamResponse } from './team';
 import { sharingStatuses } from './research-output';
+import { AuthorResponse } from './authors';
 
 export type TutorialsSharingStatus = (typeof sharingStatuses)[number];
 export interface TutorialsDataObject {
@@ -21,20 +20,7 @@ export interface TutorialsDataObject {
   asapFunded?: boolean;
   usedInPublication?: boolean;
   sharingStatus?: TutorialsSharingStatus;
-  authors: (
-    | Pick<
-        UserResponse,
-        | 'id'
-        | 'firstName'
-        | 'lastName'
-        | 'displayName'
-        | 'avatarUrl'
-        | 'orcid'
-        | 'email'
-        | 'alumniSinceDate'
-      >
-    | ExternalAuthorResponse
-  )[];
+  authors: AuthorResponse[];
   teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   relatedTutorials: Array<

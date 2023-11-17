@@ -20,7 +20,6 @@ export interface EventSpeakerUserData {
 
 export interface EventSpeakerExternalUserData {
   name: string;
-  orcid: string;
 }
 
 export type EventSpeakerTeam = {

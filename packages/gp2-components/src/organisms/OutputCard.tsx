@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { Author, gp2 as gp2Model } from '@asap-hub/model';
 import {
   Card,
   Display,
@@ -119,10 +119,15 @@ const OutputCard: React.FC<OutputCardProps> = ({
         </div>
       )}
       <UsersList
-        users={authors.map((author) => ({
-          ...author,
-          href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
-        }))}
+        users={
+          authors.map((author) => ({
+            ...author,
+            href:
+              'user' in author
+                ? gp2Routing.users({}).user({ userId: author.user.id }).$
+                : '',
+          })) as Author[]
+        }
         max={detailedView ? undefined : 3}
       />
       <div

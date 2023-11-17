@@ -1,7 +1,7 @@
+import { Author } from '../authors';
 import { FetchOptions, ListResponse } from '../common';
 import { ContributingCohortDataObject } from './contributing-cohort';
 import { EventDataObject } from './event';
-import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
 export const outputDocumentTypes = [
@@ -132,9 +132,8 @@ export type UserAuthor = {
   onboarded: boolean;
   avatarUrl?: string;
 };
-export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {
-  authors: OutputAuthor[];
+  authors: Author[];
   created: string;
   id: string;
   lastUpdatedPartial: string;

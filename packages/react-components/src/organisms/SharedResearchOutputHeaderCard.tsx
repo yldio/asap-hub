@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { Author, ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
@@ -96,10 +96,16 @@ const SharedResearchOutputHeaderCard: React.FC<
     </span>
 
     <UsersList
-      users={authors.map((author) => ({
-        ...author,
-        href: author.id && network({}).users({}).user({ userId: author.id }).$,
-      }))}
+      users={
+        authors.map((author) => ({
+          ...author,
+          href:
+            'user' in author
+              ? author.user.id &&
+                network({}).users({}).user({ userId: author.user.id }).$
+              : '',
+        })) as Author[]
+      }
     />
     <div css={associationStyles}>
       <AssociationList

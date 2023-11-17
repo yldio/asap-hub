@@ -96,6 +96,5 @@ export const parseGraphQLExternalAuthor = (
   item: ExternalAuthorItem,
 ): ExternalAuthorDataObject => ({
   id: item.sys.id,
-  orcid: item.orcid || undefined,
   displayName: item.name || '',
 });

@@ -22,20 +22,20 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   sharingStatus: 'GP2 Only',
   authors: [
     {
-      id: 'user-id-1',
-      firstName: 'Tony',
-      lastName: 'Stark',
-      email: 'tony.stark@email.com',
-      displayName: 'Tony Stark',
-      onboarded: true,
+      user: {
+        id: 'user-id-1',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        displayName: 'Tony Stark',
+      },
     },
     {
-      id: 'user-id-2',
-      firstName: 'Peter',
-      lastName: 'Parker',
-      displayName: 'Peter Parker',
-      email: 'peter.parker@email.com',
-      onboarded: true,
+      user: {
+        id: 'user-id-2',
+        firstName: 'Peter',
+        lastName: 'Parker',
+        displayName: 'Peter Parker',
+      },
     },
   ],
   publishDate: '2021-05-21T13:18:31.000Z',
@@ -115,7 +115,11 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     link: 'http://a.link',
     type: 'Research',
     projectIds: projects?.map(({ id }) => id),
-    authors: authors.map(({ id }) => ({ userId: id })),
+    authors: authors
+      .map((author) => {
+        return 'user' in author ? { userId: author?.user?.id } : null;
+      })
+      .filter((x): x is { userId: string } => x !== null),
     mainEntityId: mainEntity.id,
     contributingCohortIds: contributingCohorts.map(({ id }) => id),
     tagIds: tags.map(({ id }) => id),
@@ -155,7 +159,11 @@ export const getOutputCreateDataObject =
       ...outputPostRequest,
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
-      authors: authors.map(({ id }) => ({ userId: id })),
+      authors: authors
+        .map((author) => {
+          return 'user' in author ? { userId: author?.user?.id } : null;
+        })
+        .filter((x): x is { userId: string } => x !== null),
       tagIds: tags.map(({ id }) => id),
       mainEntityId: mainEntity.id,
       contributingCohortIds: contributingCohorts.map(({ id }) => id),

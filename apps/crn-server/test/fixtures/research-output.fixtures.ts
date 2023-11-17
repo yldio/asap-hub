@@ -34,7 +34,16 @@ export const getResearchOutputDataObject =
     title: 'Test Proposal 1234',
     description: '<p>Text</p>',
     descriptionMD: 'Text MD',
-    authors: fetchExpectation.items,
+    authors: fetchExpectation.items.map((user) => ({
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        displayName: user.displayName,
+        alumniSinceDate: user.alumniSinceDate,
+        avatarUrl: user.avatarUrl,
+      },
+    })),
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
     relatedResearch: [
       {
@@ -162,7 +171,21 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     link: 'http://a.link',
     type: 'Software',
     labs: labs.map(({ id }) => id),
-    authors: authors.map(({ id }) => ({ userId: id })),
+    authors: authors
+      .map((author) =>
+        'user' in author
+          ? {
+              userId: author.user.id,
+            }
+          : null,
+      )
+      .filter(
+        (
+          x,
+        ): x is {
+          userId: string;
+        } => x !== null,
+      ),
     teams: teams.map(({ id }) => id),
     relatedResearch: relatedResearch.map(({ id }) => id),
     relatedEvents: relatedEvents.map(({ id }) => id),
@@ -208,7 +231,21 @@ export const getResearchOutputCreateDataObject =
     return {
       ...researchOutputPostRequest,
       createdBy: 'userId',
-      authors: authors.map(({ id }) => ({ userId: id })),
+      authors: authors
+        .map((author) =>
+          'user' in author
+            ? {
+                userId: author.user.id,
+              }
+            : null,
+        )
+        .filter(
+          (
+            x,
+          ): x is {
+            userId: string;
+          } => x !== null,
+        ),
       teamIds: teams.map(({ id }) => id),
       labIds: labs.map(({ id }) => id),
       relatedResearchIds: relatedResearch?.map(({ id }) => id) || [],

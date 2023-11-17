@@ -10,9 +10,11 @@ it('links to an internal user', () => {
     <UsersList
       users={[
         {
-          ...createUserResponse(),
-          displayName: 'John',
-          href: '42',
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            href: '42',
+          },
         },
       ]}
     />,
@@ -28,8 +30,9 @@ it('falls back to a placeholder icon for an external user', () => {
     <UsersList
       users={[
         {
-          id: 'external-author-1',
-          displayName: 'John Doe',
+          externalUser: {
+            displayName: 'John Doe',
+          },
         },
       ]}
     />,
@@ -44,8 +47,9 @@ it('does not link external users', () => {
     <UsersList
       users={[
         {
-          id: 'external-author-1',
-          displayName: 'John Doe',
+          externalUser: {
+            displayName: 'John Doe',
+          },
         },
       ]}
     />,
@@ -60,8 +64,11 @@ describe('alumni badge', () => {
         max={1}
         users={[
           {
-            ...createUserResponse(),
-            alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
+            user: {
+              ...createUserResponse(),
+              href: '/user-1',
+              alumniSinceDate: new Date(2021, 6, 12, 14, 32).toISOString(),
+            },
           },
         ]}
       />,
@@ -74,7 +81,10 @@ describe('alumni badge', () => {
         max={1}
         users={[
           {
-            ...createUserResponse(),
+            user: {
+              ...createUserResponse(),
+              href: '/user-1',
+            },
           },
         ]}
       />,
@@ -87,8 +97,9 @@ describe('alumni badge', () => {
         max={1}
         users={[
           {
-            id: 'external-author-1',
-            displayName: 'John Doe',
+            externalUser: {
+              displayName: 'John Doe',
+            },
           },
         ]}
       />,
@@ -103,8 +114,10 @@ describe('maximum users', () => {
       <UsersList
         max={3}
         users={Array.from({ length: 5 }).map((e, i) => ({
-          id: `external-author-${i}`,
-          displayName: `Display Name ${i}`,
+          externalUser: {
+            id: `external-author-${i}`,
+            displayName: `Display Name ${i}`,
+          },
         }))}
       />,
     );
@@ -116,8 +129,10 @@ describe('maximum users', () => {
       <UsersList
         max={3}
         users={Array.from({ length: 3 }).map((e, i) => ({
-          id: `external-author-${i}`,
-          displayName: `Display Name ${i}`,
+          externalUser: {
+            id: `external-author-${i}`,
+            displayName: `Display Name ${i}`,
+          },
         }))}
       />,
     );

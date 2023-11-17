@@ -3,6 +3,7 @@ import {
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
   ResearchOutputResponse,
+  UserAuthorResponse,
 } from '@asap-hub/model';
 import {
   getDecision,
@@ -224,11 +225,25 @@ describe('transformResearchOutputResponseToRequest', () => {
       keywords: researchOutputResponse.keywords,
       published: researchOutputResponse.published,
       authors: getPostAuthors(
-        researchOutputResponse.authors.map((author) => ({
-          author,
-          value: author.id,
-          label: author.displayName,
-        })),
+        researchOutputResponse.authors
+          .map((author) =>
+            'user' in author
+              ? {
+                  author,
+                  value: author.user.id,
+                  label: author.user.displayName,
+                }
+              : null,
+          )
+          .filter(
+            (
+              x,
+            ): x is {
+              author: UserAuthorResponse;
+              value: string;
+              label: string;
+            } => x !== null,
+          ),
       ),
       descriptionMD: researchOutputResponse.descriptionMD || '',
       labs: researchOutputResponse.labs.map(({ id }) => id),

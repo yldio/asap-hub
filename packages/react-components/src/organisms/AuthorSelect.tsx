@@ -1,5 +1,4 @@
 import { AuthorResponse } from '@asap-hub/model';
-import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
 import { components } from 'react-select';
@@ -26,12 +25,12 @@ const LabelWithAvatar = ({
   externalLabel: string;
   children: ReactElement | ReactNode;
 }) =>
-  author && isInternalUser(author) ? (
+  author && 'user' in author ? (
     <>
       <Avatar
-        firstName={author.firstName}
-        lastName={author.lastName}
-        imageUrl={author.avatarUrl}
+        firstName={author.user.firstName}
+        lastName={author.user.lastName}
+        imageUrl={author.user.avatarUrl}
       />
       <span>{children}</span>
     </>

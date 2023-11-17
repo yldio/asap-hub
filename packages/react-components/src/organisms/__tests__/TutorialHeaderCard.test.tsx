@@ -28,7 +28,7 @@ it('shows authors', () => {
   const { getByText } = render(
     <TutorialHeaderCard
       {...createTutorialsResponse({ key: 'Test Tutorial' })}
-      authors={[{ ...createUserResponse(), displayName: 'John Doe' }]}
+      authors={[{ user: { ...createUserResponse(), displayName: 'John Doe' } }]}
     />,
   );
   expect(getByText('John Doe')).toBeVisible();

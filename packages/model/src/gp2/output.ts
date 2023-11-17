@@ -1,4 +1,4 @@
-import { Author } from '../authors';
+import { AuthorResponse } from '../authors';
 import { FetchOptions, ListResponse } from '../common';
 import { ContributingCohortDataObject } from './contributing-cohort';
 import { EventDataObject } from './event';
@@ -123,17 +123,8 @@ export type OutputVersion = OutputVersionCoreObject & {
   id: string;
 };
 
-export type UserAuthor = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  displayName: string;
-  onboarded: boolean;
-  avatarUrl?: string;
-};
 export type OutputDataObject = OutputCoreObject & {
-  authors: Author[];
+  authors: AuthorResponse[];
   created: string;
   id: string;
   lastUpdatedPartial: string;

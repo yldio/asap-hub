@@ -145,13 +145,16 @@ it('pre populates the form with provided backend response', async () => {
     </StaticRouter>,
   );
 
+  const authorName =
+    'user' in researchOutputData.authors[0]!
+      ? researchOutputData.authors[0]!.user.displayName
+      : '';
+
   expect(screen.getByText(researchOutputData.descriptionMD)).toBeVisible();
   expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
   expect(screen.getByText(researchOutputData.type!)).toBeVisible();
   expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
-  expect(
-    screen.getByText(researchOutputData.authors[0]!.displayName),
-  ).toBeVisible();
+  expect(screen.getByText(authorName)).toBeVisible();
 
   expect(screen.getByText(researchOutputData.keywords[0]!)).toBeVisible();
   expect(screen.getByText(researchOutputData.labs[0]!.name)).toBeVisible();

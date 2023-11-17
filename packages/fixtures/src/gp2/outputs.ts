@@ -1,14 +1,12 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2, UserAuthorResponse } from '@asap-hub/model';
 
 import { mockedUser } from './users';
 
-const userAuthor: gp2.UserAuthor = {
+const userAuthor: UserAuthorResponse['user'] = {
   id: mockedUser.id,
   firstName: mockedUser.firstName,
   lastName: mockedUser.lastName,
   displayName: mockedUser.displayName,
-  email: mockedUser.email,
-  onboarded: mockedUser.onboarded,
 };
 
 const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
@@ -18,7 +16,7 @@ const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
   sharingStatus: 'Public',
-  authors: [userAuthor],
+  authors: [{ user: userAuthor }],
   documentType: 'Code/Software',
   mainEntity: { id: '42', title: 'a project', type: 'Projects' },
   contributingCohorts: [],

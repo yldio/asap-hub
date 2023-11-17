@@ -20,8 +20,10 @@ const researchOutputResponse: Omit<
   type: '3D Printing',
   authors: [
     {
-      id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',
-      ...listUserResponseItem,
+      user: {
+        id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',
+        ...listUserResponseItem,
+      },
     },
   ],
   teams: [

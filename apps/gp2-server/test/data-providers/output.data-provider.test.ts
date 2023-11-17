@@ -381,8 +381,9 @@ describe('Outputs data provider', () => {
         const expectedAuthorsResponse: gp2Model.OutputDataObject['authors'] = [
           authors[0]!,
           {
-            id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
-            displayName: externalUser!.name!,
+            externalUser: {
+              displayName: externalUser!.name!,
+            },
           },
           authors[1]!,
         ];

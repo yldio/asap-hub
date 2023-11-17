@@ -60,7 +60,7 @@ it('shows authors', () => {
   const { getByText } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
-      authors={[{ ...createUserResponse(), displayName: 'John Doe' }]}
+      authors={[{ user: { ...createUserResponse(), displayName: 'John Doe' } }]}
     />,
   );
   expect(getByText('John Doe')).toBeVisible();

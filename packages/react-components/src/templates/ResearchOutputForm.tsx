@@ -202,11 +202,19 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       ComponentProps<typeof ResearchOutputContributorsCard>['authors']
     >
   >(
-    researchOutputData?.authors.map((author) => ({
-      author,
-      value: author.id,
-      label: author.displayName,
-    })) || [],
+    researchOutputData?.authors.map((author) =>
+      'user' in author
+        ? {
+            author,
+            value: author.user.id,
+            label: author.user.displayName,
+          }
+        : {
+            author,
+            value: author.externalUser.displayName, // TODO: ver se isso funciona
+            label: author.externalUser.displayName,
+          },
+    ) || [],
   );
 
   const [teams, setTeams] =

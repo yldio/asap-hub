@@ -8,10 +8,11 @@ import {
   patchAndPublish,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { AuthorResponse, gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
 import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
+import { getAuthor } from './transformers/author';
 import { OutputDataProvider } from './types';
 
 export type OutputItem = NonNullable<
@@ -312,22 +313,10 @@ const getAuthors = (authors?: GraphQLAuthors) =>
       (author) => author?.__typename !== 'Users' || author.onboarded !== false,
     )
     .filter((author): author is GraphQLAuthor => author !== null)
-    .map((author) =>
-      author.__typename === 'Users'
-        ? {
-            id: author.sys.id,
-            firstName: author.firstName ?? '',
-            lastName: author.lastName ?? '',
-            displayName: `${author.firstName} ${author.lastName}`,
-            email: author.email ?? '',
-            onboarded: author.onboarded ?? true,
-            avatarUrl: author.avatar?.url ?? undefined,
-          }
-        : {
-            id: author.sys.id,
-            displayName: author.name || '',
-          },
-    ) || [];
+    .reduce((authors: AuthorResponse[], author) => {
+      authors.push(getAuthor(author));
+      return authors;
+    }, []) || [];
 
 type GraphQLOutputs = NonNullable<
   OutputItem['relatedOutputsCollection']

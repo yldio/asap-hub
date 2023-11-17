@@ -373,7 +373,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-auto-populate-date-field@workspace:packages/contentful-app-extensions/auto-populate-date-field"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -400,7 +400,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -428,7 +428,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -455,7 +455,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -483,7 +483,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -510,7 +510,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-custom-validation@workspace:packages/contentful-app-extensions/event-custom-validation"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -538,7 +538,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-speakers-gp2@workspace:packages/contentful-app-extensions/event-speakers-gp2"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -567,7 +567,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -596,7 +596,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -624,7 +624,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-membership-custom-validation@workspace:packages/contentful-app-extensions/membership-custom-validation"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -652,7 +652,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -681,7 +681,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-partial-last-updated@workspace:packages/contentful-app-extensions/partial-last-updated"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -708,7 +708,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -735,7 +735,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables"
   dependencies:
-    "@contentful/app-scripts": 1.13.0
+    "@contentful/app-scripts": 1.13.1
     "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.3
     "@contentful/f36-tokens": 4.0.2
@@ -10418,16 +10418,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-scripts@npm:1.13.0":
-  version: 1.13.0
-  resolution: "@contentful/app-scripts@npm:1.13.0"
+"@contentful/app-scripts@npm:1.13.1":
+  version: 1.13.1
+  resolution: "@contentful/app-scripts@npm:1.13.1"
   dependencies:
+    "@segment/analytics-node": ^1.1.3
     adm-zip: 0.5.10
-    analytics-node: ^6.2.0
     bottleneck: 2.19.5
     chalk: 4.1.2
-    commander: 11.0.0
-    contentful-management: 10.40.1
+    commander: 11.1.0
+    contentful-management: 11.5.1
     dotenv: 16.3.1
     ignore: 5.2.4
     inquirer: 8.2.6
@@ -10436,7 +10436,7 @@ __metadata:
     ora: 5.4.1
   bin:
     contentful-app-scripts: lib/bin.js
-  checksum: 54c5fda4462fd1d91824c0c4993baeefbc397aea55c41647431195f369b35f04d8d990606e2510f4fd7a1919a12c477bcb488e79af2d89ead5004f88d45426b8
+  checksum: bbbcf6f280e6796348c634b24b83efbe65011c15fccc67a4563afe522cb55e73385e53e17253496ed777e2c53ee6af24395676ff3fba79dd00caa04701f463f4
   languageName: node
   linkType: hard
 
@@ -14866,6 +14866,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lukeed/csprng@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@lukeed/csprng@npm:1.1.0"
+  checksum: 926f5f7fc629470ca9a8af355bfcd0271d34535f7be3890f69902432bddc3262029bb5dbe9025542cf6c9883d878692eef2815fc2f3ba5b92e9da1f9eba2e51b
+  languageName: node
+  linkType: hard
+
+"@lukeed/uuid@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@lukeed/uuid@npm:2.0.1"
+  dependencies:
+    "@lukeed/csprng": ^1.1.0
+  checksum: f5e71e4da852dbff49b93cad27d5a2f61c2241e307bbe89b3b54b889ecb7927f2487246467f90ebb6cbdb7e0ac2a213e2e58b1182cb7990cef6e049aa7c39e7b
+  languageName: node
+  linkType: hard
+
 "@mapbox/hast-util-table-cell-style@npm:^0.2.0":
   version: 0.2.0
   resolution: "@mapbox/hast-util-table-cell-style@npm:0.2.0"
@@ -15387,13 +15403,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@segment/loosely-validate-event@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@segment/loosely-validate-event@npm:2.0.0"
+"@segment/analytics-core@npm:1.3.2":
+  version: 1.3.2
+  resolution: "@segment/analytics-core@npm:1.3.2"
   dependencies:
-    component-type: ^1.2.1
-    join-component: ^1.1.0
-  checksum: 8c4aacc903fb717619b69ca7eecf8d4a7b928661b0e835c9cd98f1b858a85ce62c348369ad9a52cb2df8df02578c0525a73fce4c69a42ac414d9554cc6be7117
+    "@lukeed/uuid": ^2.0.0
+    dset: ^3.1.2
+    tslib: ^2.4.1
+  checksum: d3402a0de749eb94253feb45961f12483660fc8ee170f226be3c26b1d5b94df035a99f1f189e375c44f2b6b9b824b7485c47d35806ab0bad362989699521caca
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-generic-utils@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@segment/analytics-generic-utils@npm:1.0.0"
+  checksum: b1a371269565179833f2c61a556d2a89a53eb4eb633188a7637b37b2f75020811065c8211bc70c2ac6eccd228c233c9e069fed047c9dcbc1880f50526b86a21d
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-node@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@segment/analytics-node@npm:1.1.3"
+  dependencies:
+    "@lukeed/uuid": ^2.0.0
+    "@segment/analytics-core": 1.3.2
+    "@segment/analytics-generic-utils": 1.0.0
+    buffer: ^6.0.3
+    node-fetch: ^2.6.7
+    tslib: ^2.4.1
+  checksum: 0c907fa2252c0f49484d2de7fc4430a0a20247b5f0a43c93fef0c93860957c32a8744a307ded1cf3bca89a7ddca792ea289596ad211c4dbca19b53760f66e794
   languageName: node
   linkType: hard
 
@@ -21071,22 +21109,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"analytics-node@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "analytics-node@npm:6.2.0"
-  dependencies:
-    "@segment/loosely-validate-event": ^2.0.0
-    axios: ^0.27.2
-    axios-retry: 3.2.0
-    lodash.isstring: ^4.0.1
-    md5: ^2.2.1
-    ms: ^2.0.0
-    remove-trailing-slash: ^0.1.0
-    uuid: ^8.3.2
-  checksum: d682f99742255b0e00a5f7a9a6245736eb04917cb0eb4cb196c3f7f1f889632f2fef62e64d471df24fd35d4da7e6581db08b43fe770cc67c5f277158acef5267
-  languageName: node
-  linkType: hard
-
 "ansi-align@npm:^3.0.0":
   version: 3.0.0
   resolution: "ansi-align@npm:3.0.0"
@@ -22253,15 +22275,6 @@ __metadata:
   version: 4.6.3
   resolution: "axe-core@npm:4.6.3"
   checksum: d0c46be92b9707c48b88a53cd5f471b155a2bfc8bf6beffb514ecd14e30b4863e340b5fc4f496d82a3c562048088c1f3ff5b93b9b3b026cb9c3bfacfd535da10
-  languageName: node
-  linkType: hard
-
-"axios-retry@npm:3.2.0":
-  version: 3.2.0
-  resolution: "axios-retry@npm:3.2.0"
-  dependencies:
-    is-retry-allowed: ^1.1.0
-  checksum: 411bedb3d2254bd05f9eaf8c9c7a7e14a985ad424f3448d6ec15e2a3584079c3bb99950c07465bdbab1138a5329ccb3e9d22c58db58c83253df4ca3f41e315e6
   languageName: node
   linkType: hard
 
@@ -24134,13 +24147,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"charenc@npm:0.0.2":
-  version: 0.0.2
-  resolution: "charenc@npm:0.0.2"
-  checksum: 81dcadbe57e861d527faf6dd3855dc857395a1c4d6781f4847288ab23cffb7b3ee80d57c15bba7252ffe3e5e8019db767757ee7975663ad2ca0939bb8fcaf2e5
-  languageName: node
-  linkType: hard
-
 "check-types@npm:^11.1.1":
   version: 11.1.2
   resolution: "check-types@npm:11.1.2"
@@ -24800,10 +24806,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:11.0.0":
-  version: 11.0.0
-  resolution: "commander@npm:11.0.0"
-  checksum: 6621954e1e1d078b4991c1f5bbd9439ad37aa7768d6ab4842de1dbd4d222c8a27e1b8e62108b3a92988614af45031d5bb2a2aaa92951f4d0c934d1a1ac564bb4
+"commander@npm:11.1.0":
+  version: 11.1.0
+  resolution: "commander@npm:11.1.0"
+  checksum: fd1a8557c6b5b622c89ecdfde703242ab7db3b628ea5d1755784c79b8e7cb0d74d65b4a262289b533359cd58e1bfc0bf50245dfbcd2954682a6f367c828b79ef
   languageName: node
   linkType: hard
 
@@ -24907,13 +24913,6 @@ __metadata:
   version: 1.3.0
   resolution: "component-emitter@npm:1.3.0"
   checksum: b3c46de38ffd35c57d1c02488355be9f218e582aec72d72d1b8bbec95a3ac1b38c96cd6e03ff015577e68f550fbb361a3bfdbd9bb248be9390b7b3745691be6b
-  languageName: node
-  linkType: hard
-
-"component-type@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "component-type@npm:1.2.1"
-  checksum: 41a81f87425088c072dc99b7bd06d8c81057047a599955572bfa7f320e1f4d0b38422b2eee922e0ac6e4132376c572673dbf5eb02717898173ec11512bc06b34
   languageName: node
   linkType: hard
 
@@ -25201,21 +25200,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:10.40.1":
-  version: 10.40.1
-  resolution: "contentful-management@npm:10.40.1"
-  dependencies:
-    "@contentful/rich-text-types": ^16.0.3
-    "@types/json-patch": 0.0.30
-    axios: ^1.4.0
-    contentful-sdk-core: ^8.1.0
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^4.0.0
-  checksum: e0c3e721170cb038d0bd39bb2dc2881b81e9c22f50cc0c471bd3547512740a9ed9ad6e4328e41cecf0cb677e4fd117d3fc4aa3e0ce879619f2cfdcf1e55a5dfe
-  languageName: node
-  linkType: hard
-
 "contentful-management@npm:10.46.4":
   version: 10.46.4
   resolution: "contentful-management@npm:10.46.4"
@@ -25228,6 +25212,21 @@ __metadata:
     lodash.isplainobject: ^4.0.6
     type-fest: ^4.0.0
   checksum: 8604823a4958578f5fc48c7bbda193905945afbd6df4e778ffc343b676163a23cb6b0b807d1b46582ca3ca47a920a0cf18337e3125b61979390be50faa6ab77a
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:11.5.1":
+  version: 11.5.1
+  resolution: "contentful-management@npm:11.5.1"
+  dependencies:
+    "@contentful/rich-text-types": ^16.3.0
+    "@types/json-patch": 0.0.30
+    axios: ^1.4.0
+    contentful-sdk-core: ^8.1.0
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^4.0.0
+  checksum: 718954438b0d8c29090156af30c4e4943e531dcbec6fdf812887eee87ce2e544524f4c1c51276149d0c78ab91b4c4fdd23d44bf40663de00547b737649a4bc51
   languageName: node
   linkType: hard
 
@@ -25951,13 +25950,6 @@ __metadata:
     shebang-command: "npm:^1.2.0"
     which: "npm:^1.2.9"
   checksum: f893bb0d96cd3d5751d04e67145bdddf25f99449531a72e82dcbbd42796bbc8268c1076c6b3ea51d4d455839902804b94bc45dfb37ecbb32ea8e54a6741c3ab9
-  languageName: node
-  linkType: hard
-
-"crypt@npm:0.0.2":
-  version: 0.0.2
-  resolution: "crypt@npm:0.0.2"
-  checksum: baf4c7bbe05df656ec230018af8cf7dbe8c14b36b98726939cef008d473f6fe7a4fad906cfea4062c93af516f1550a3f43ceb4d6615329612c6511378ed9fe34
   languageName: node
   linkType: hard
 
@@ -33239,7 +33231,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-buffer@npm:^1.1.5, is-buffer@npm:~1.1.6":
+"is-buffer@npm:^1.1.5":
   version: 1.1.6
   resolution: "is-buffer@npm:1.1.6"
   checksum: 4a186d995d8bbf9153b4bd9ff9fd04ae75068fe695d29025d25e592d9488911eeece84eefbd8fa41b8ddcc0711058a71d4c466dcf6f1f6e1d83830052d8ca707
@@ -33769,13 +33761,6 @@ __metadata:
   dependencies:
     is-unc-path: "npm:^1.0.0"
   checksum: 3271a0df109302ef5e14a29dcd5d23d9788e15ade91a40b942b035827ffbb59f7ce9ff82d036ea798541a52913cbf9d2d0b66456340887b51f3542d57b5a4c05
-  languageName: node
-  linkType: hard
-
-"is-retry-allowed@npm:^1.1.0":
-  version: 1.2.0
-  resolution: "is-retry-allowed@npm:1.2.0"
-  checksum: 50d700a89ae31926b1c91b3eb0104dbceeac8790d8b80d02f5c76d9a75c2056f1bb24b5268a8a018dead606bddf116b2262e5ac07401eb8b8783b266ed22558d
   languageName: node
   linkType: hard
 
@@ -35791,13 +35776,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"join-component@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "join-component@npm:1.1.0"
-  checksum: b904c2f98549e4195022caca3a7dc837f9706c670ff333f3d617f2aed23bce2841322a999734683b6ab8e202568ad810c11ff79b58a64df66888153f04750239
-  languageName: node
-  linkType: hard
-
 "jose@npm:2.0.6":
   version: 2.0.6
   resolution: "jose@npm:2.0.6"
@@ -37592,17 +37570,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"md5@npm:^2.2.1":
-  version: 2.3.0
-  resolution: "md5@npm:2.3.0"
-  dependencies:
-    charenc: 0.0.2
-    crypt: 0.0.2
-    is-buffer: ~1.1.6
-  checksum: a63cacf4018dc9dee08c36e6f924a64ced735b37826116c905717c41cebeb41a522f7a526ba6ad578f9c80f02cb365033ccd67fe186ffbcc1a1faeb75daa9b6e
-  languageName: node
-  linkType: hard
-
 "mdast-squeeze-paragraphs@npm:^4.0.0":
   version: 4.0.0
   resolution: "mdast-squeeze-paragraphs@npm:4.0.0"
@@ -38464,7 +38431,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ms@npm:2.1.3, ms@npm:^2.0.0, ms@npm:^2.1.2, ms@npm:^2.1.3":
+"ms@npm:2.1.3, ms@npm:^2.1.2, ms@npm:^2.1.3":
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: aa92de608021b242401676e35cfa5aa42dd70cbdc082b916da7fb925c542173e36bce97ea3e804923fe92c0ad991434e4a38327e15a1b5b5f945d66df615ae6d
@@ -43794,13 +43761,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remove-trailing-slash@npm:^0.1.0":
-  version: 0.1.1
-  resolution: "remove-trailing-slash@npm:0.1.1"
-  checksum: dd200c6b7d6f2b49d12b3eff3abc7089917e8a268cefcd5bf67ff23f8c2ad9f866fbe2f3566e1a8dbdc4f4b1171e2941f7dd00852f8de549bb73c3df53b09d96
-  languageName: node
-  linkType: hard
-
 "remove-trailing-spaces@npm:^1.0.6":
   version: 1.0.8
   resolution: "remove-trailing-spaces@npm:1.0.8"
@@ -47772,6 +47732,13 @@ __metadata:
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.4.1":
+  version: 2.6.2
+  resolution: "tslib@npm:2.6.2"
+  checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
   languageName: node
   linkType: hard
 

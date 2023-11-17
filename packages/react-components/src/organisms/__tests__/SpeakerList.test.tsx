@@ -34,7 +34,6 @@ const alumniSpeaker: EventSpeaker = {
 const externalSpeaker: EventSpeaker = {
   externalUser: {
     name: 'Jhonny External',
-    orcid: '',
   },
 };
 

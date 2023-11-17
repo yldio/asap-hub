@@ -37,7 +37,7 @@ describe('Sync calendar util hook', () => {
   );
 
   const googleCalendarId = 'google-calendar-id';
-  const squidexCalendarId = 'squidex-calendar-id';
+  const calendarId = 'calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
 
   afterEach(jest.clearAllMocks);
@@ -57,7 +57,7 @@ describe('Sync calendar util hook', () => {
   test('Should throw when get unknown error from google', async () => {
     mockList.mockRejectedValueOnce(new Error('Google Error'));
     await expect(
-      syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken),
+      syncCalendarHandler(googleCalendarId, calendarId, syncToken),
     ).rejects.toThrow('Google Error');
   });
 
@@ -65,7 +65,7 @@ describe('Sync calendar util hook', () => {
     getJWTCredentialsMock.mockRejectedValueOnce(new Error('AWS Error'));
 
     await expect(
-      syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken),
+      syncCalendarHandler(googleCalendarId, calendarId, syncToken),
     ).rejects.toThrow('AWS Error');
   });
 
@@ -81,7 +81,7 @@ describe('Sync calendar util hook', () => {
 
     const result = await syncCalendarHandler(
       googleCalendarId,
-      squidexCalendarId,
+      calendarId,
       syncToken,
     );
 
@@ -106,16 +106,16 @@ describe('Sync calendar util hook', () => {
       },
     });
 
-    await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
+    await syncCalendarHandler(googleCalendarId, calendarId, syncToken);
     expect(syncEvent).toHaveBeenCalledTimes(0);
   });
 
   test('Should not throw when syncEvent fails to update event', async () => {
     const listEventsResponse = getListEventsResponse();
-    syncEvent.mockRejectedValueOnce(new Error('Squidex Error'));
+    syncEvent.mockRejectedValueOnce(new Error());
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
-    await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
+    await syncCalendarHandler(googleCalendarId, calendarId, syncToken);
     expect(syncEvent).toHaveBeenCalledTimes(2);
   });
 
@@ -123,7 +123,7 @@ describe('Sync calendar util hook', () => {
     const listEventsResponse = getListEventsResponse();
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
-    await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
+    await syncCalendarHandler(googleCalendarId, calendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(1);
     expect(mockList).toHaveBeenCalledWith({
@@ -137,13 +137,13 @@ describe('Sync calendar util hook', () => {
     expect(syncEvent).toHaveBeenCalledWith(
       listEventsResponse.items![0],
       googleCalendarId,
-      squidexCalendarId,
+      calendarId,
       defaultCalendarTimezone,
     );
     expect(syncEvent).toHaveBeenCalledWith(
       listEventsResponse.items![1],
       googleCalendarId,
-      squidexCalendarId,
+      calendarId,
       defaultCalendarTimezone,
     );
   });
@@ -159,7 +159,7 @@ describe('Sync calendar util hook', () => {
     });
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
-    await syncCalendarHandler(googleCalendarId, squidexCalendarId, syncToken);
+    await syncCalendarHandler(googleCalendarId, calendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(2);
     expect(mockList).toHaveBeenNthCalledWith(1, {

@@ -1,15 +1,11 @@
-import { EventBridgeEvent } from 'aws-lambda';
 import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import {
+  CalendarDataObject,
   CalendarEvent,
   WebhookDetail,
-  CalendarDataObject,
 } from '@asap-hub/model';
-import {
-  CalendarContentfulPayload,
-  CalendarPayload,
-  CalendarSquidexPayload,
-} from '../../../src';
+import { EventBridgeEvent } from 'aws-lambda';
+import { CalendarContentfulPayload } from '../../../src';
 import { createEventBridgeEventMock } from '../../helpers/events';
 
 export const getCalendarDataObject = (): CalendarDataObject => ({
@@ -21,58 +17,7 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
-  groups: [{ id: 'group-id-1', active: true }],
   workingGroups: [{ id: '123', complete: false }],
-});
-
-export const getCalendarCreateEvent = (
-  version: number = 0,
-): CalendarSquidexPayload => ({
-  type: 'CalendarsCreated',
-  timestamp: '2021-01-07T16:44:09Z',
-  payload: {
-    created: '2023-04-10T10:33:27.249Z',
-    lastModified: '2023-04-10T10:33:27.249Z',
-    $type: 'EnrichedContentEvent',
-    type: 'Created',
-    id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
-    data: {
-      name: {
-        iv: 'Awesome Calendar',
-      },
-      googleCalendarId: {
-        iv: 'calendar-id@group.calendar.google.com',
-      },
-      color: {
-        iv: '#691426',
-      },
-    },
-    version,
-  },
-});
-
-export const getCalendarUpdateEvent = (
-  version: number = 42,
-): CalendarPayload => ({
-  ...getCalendarCreateEvent(),
-  type: 'CalendarsUpdated',
-  payload: {
-    ...getCalendarCreateEvent(version).payload,
-    dataOld: {
-      name: {
-        iv: 'Awesome Calendar',
-      },
-      googleCalendarId: {
-        iv: 'old-calendar-id@group.calendar.google.com',
-      },
-      color: {
-        iv: '#691426',
-      },
-      resourceId: {
-        iv: 'resource-id',
-      },
-    },
-  },
 });
 
 export const getCalendarContentfulWebhookDetail = ({

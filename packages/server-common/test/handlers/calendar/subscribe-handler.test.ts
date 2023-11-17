@@ -6,7 +6,6 @@ import {
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-import { getCalendarCreateEvent } from './webhook-sync-calendar.fixtures';
 
 const mockGoogleAuth = jest.fn();
 const mockWatch = jest.fn();
@@ -36,6 +35,7 @@ jest.mock('googleapis', () => ({
 
 describe('Subscription', () => {
   const calendarId = 'calendar-id';
+  const subscriptionId = '42';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
   const asapApiUrl = 'http://asap-api-url';
   const googleApiToken = 'google-api-token';
@@ -63,10 +63,7 @@ describe('Subscription', () => {
       { googleApiToken, asapApiUrl },
     );
 
-    const result = await subscribeToEventChanges(
-      calendarId,
-      getCalendarCreateEvent().payload.id,
-    );
+    const result = await subscribeToEventChanges(calendarId, subscriptionId);
 
     expect(result).toEqual({
       resourceId: 'some-resource-id',
@@ -75,7 +72,7 @@ describe('Subscription', () => {
     expect(mockWatch).toHaveBeenCalledWith({
       calendarId,
       requestBody: {
-        id: getCalendarCreateEvent().payload.id,
+        id: subscriptionId,
         token: googleApiToken,
         type: 'web_hook',
         address: `${asapApiUrl}/webhook/events/contentful`,
@@ -101,10 +98,7 @@ describe('Subscription', () => {
       { googleApiToken, asapApiUrl },
     );
 
-    const result = await subscribeToEventChanges(
-      calendarId,
-      getCalendarCreateEvent().payload.id,
-    );
+    const result = await subscribeToEventChanges(calendarId, subscriptionId);
 
     expect(result).toEqual({
       resourceId: null,
@@ -127,7 +121,7 @@ describe('Subscription', () => {
     );
 
     await expect(
-      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
+      subscribeToEventChanges(calendarId, subscriptionId),
     ).rejects.toThrow();
   });
   test('Should throw when no resourceId', async () => {
@@ -150,7 +144,7 @@ describe('Subscription', () => {
     );
 
     await expect(
-      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
+      subscribeToEventChanges(calendarId, subscriptionId),
     ).rejects.toThrow();
   });
   test('Should throw when no expiration', async () => {
@@ -173,7 +167,7 @@ describe('Subscription', () => {
     );
 
     await expect(
-      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
+      subscribeToEventChanges(calendarId, subscriptionId),
     ).rejects.toThrow();
   });
 });

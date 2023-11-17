@@ -998,7 +998,7 @@ describe('Events Contentful Data Provider', () => {
           calendar: {
             'en-US': {
               sys: {
-                id: 'squidex-calendar-id',
+                id: 'calendar-id',
                 linkType: 'Entry',
                 type: 'Link',
               },

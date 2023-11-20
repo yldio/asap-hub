@@ -111,7 +111,7 @@
     "@types/hapi": "18.0.13",
     "@types/hapi__boom": "9.0.1",
     "@types/hapi__bourne": "workspace:*",
-    "@types/hapi__joi": "17.1.12",
+    "@types/hapi__joi": "17.1.13",
     "@types/jest": "29.5.7",
     "@types/jest-when": "3.5.2",
     "@types/jsonwebtoken": "8.5.9",

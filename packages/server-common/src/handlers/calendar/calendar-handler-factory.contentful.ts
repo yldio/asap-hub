@@ -33,6 +33,26 @@ type CalendarSkeleton = {
 };
 
 const defaultGetCalendarId = (id: string): string => id;
+const pollForCalendar = async (
+  calendarId: string,
+  webhookEventVersion: number,
+  contentfulDeliveryApiConfig: ContentfulDeliveryApiConfig,
+  logger: Logger,
+) => {
+  const cdaClient = getCDAClient(contentfulDeliveryApiConfig);
+
+  const fetchCalendarById = () =>
+    cdaClient.getEntry<CalendarSkeleton>(calendarId);
+  try {
+    return await pollContentfulDeliveryApi<CalendarSkeleton>(
+      fetchCalendarById,
+      webhookEventVersion,
+    );
+  } catch {
+    logger.error('Failed to retrieve calendar by ID.');
+    return undefined;
+  }
+};
 
 export const calendarCreatedContentfulHandlerFactory =
   (
@@ -42,7 +62,7 @@ export const calendarCreatedContentfulHandlerFactory =
     alerts: Alerts,
     logger: Logger,
     contentfulDeliveryApiConfig: ContentfulDeliveryApiConfig,
-    getCalendarSubscriptionIdFunction?: (id: string) => string,
+    getCalendarSubscriptionId: (id: string) => string = defaultGetCalendarId,
   ) =>
   async (
     event: EventBridgeEvent<CalendarEvent, CalendarContentfulPayload>,
@@ -58,8 +78,6 @@ export const calendarCreatedContentfulHandlerFactory =
 
     const webhookEventVersion = sys.revision;
     const webhookEventGoogleCalendarId = fields.googleCalendarId['en-US'];
-    const getCalendarSubscriptionId =
-      getCalendarSubscriptionIdFunction || defaultGetCalendarId;
 
     logger.info(
       `Received a '${eventType}' event for the calendar ${calendarId}`,
@@ -67,21 +85,17 @@ export const calendarCreatedContentfulHandlerFactory =
 
     logger.debug(`Event payload: ${JSON.stringify(fields)}`);
 
-    if (eventType !== 'CalendarsPublished') return 'OK';
+    if (eventType !== 'CalendarsPublished') {
+      return 'OK';
+    }
 
-    const cdaClient = getCDAClient(contentfulDeliveryApiConfig);
-
-    const fetchCalendarById = () =>
-      cdaClient.getEntry<CalendarSkeleton>(calendarId);
-
-    let cmsCalendar;
-    try {
-      cmsCalendar = await pollContentfulDeliveryApi<CalendarSkeleton>(
-        fetchCalendarById,
-        webhookEventVersion,
-      );
-    } catch {
-      logger.error('Failed to retrieve calendar by ID.');
+    const cmsCalendar = await pollForCalendar(
+      calendarId,
+      webhookEventVersion,
+      contentfulDeliveryApiConfig,
+      logger,
+    );
+    if (!cmsCalendar) {
       return 'OK';
     }
 

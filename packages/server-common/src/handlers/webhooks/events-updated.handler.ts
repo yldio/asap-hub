@@ -1,29 +1,51 @@
-import { framework as lambda } from '@asap-hub/services-common';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import Boom from '@hapi/boom';
+import { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
+import pino from 'pino';
 import { Logger } from '../../utils';
 
 type Config = { googleApiToken: string; googleCalenderEventQueueUrl: string };
-export const webhookEventUpdatedHandlerFactory = (
-  sqs: SQSClient,
-  { googleApiToken, googleCalenderEventQueueUrl }: Config,
-  logger: Logger,
-): lambda.Handler =>
-  lambda.http(async (request) => {
+export const webhookEventUpdatedHandlerFactory =
+  (
+    sqs: SQSClient,
+    { googleApiToken, googleCalenderEventQueueUrl }: Config,
+    logger: Logger,
+  ): ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) =>
+  async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');
 
+    const generateResponse = (
+      statusCode: number,
+      body: string,
+      logFn?: pino.LogFn,
+    ) => {
+      if (logFn) {
+        logFn(body);
+      }
+      return {
+        statusCode,
+        body,
+      };
+    };
     const channelToken = request.headers['x-goog-channel-token'];
     if (!channelToken) {
-      throw Boom.unauthorized('Missing x-goog-channel-token header');
+      return generateResponse(
+        401,
+        'Missing x-goog-channel-token header',
+        logger.error,
+      );
     }
 
     if (channelToken !== googleApiToken) {
-      throw Boom.forbidden('Channel token doesnt match');
+      return generateResponse(403, 'Channel token doesnt match', logger.error);
     }
 
     const resourceId = request.headers['x-goog-resource-id'];
     if (!resourceId) {
-      throw Boom.badRequest('Missing x-goog-resource-id header');
+      return generateResponse(
+        400,
+        'Missing x-goog-resource-id header',
+        logger.error,
+      );
     }
     const channelId = request.headers['x-goog-channel-id'];
 
@@ -47,9 +69,7 @@ export const webhookEventUpdatedHandlerFactory = (
         `Event added to queue ${googleCalenderEventQueueUrl} resourceId: ${resourceId} channelId: ${channelId}`,
       );
 
-      return {
-        statusCode: 200,
-      };
+      return generateResponse(200, 'Success');
     } catch (err) {
       logger.error(
         `An error occurred putting onto the SQS ${googleCalenderEventQueueUrl}`,
@@ -57,8 +77,6 @@ export const webhookEventUpdatedHandlerFactory = (
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
       }
-      return {
-        statusCode: 500,
-      };
+      return generateResponse(500, 'Failure');
     }
-  });
+  };

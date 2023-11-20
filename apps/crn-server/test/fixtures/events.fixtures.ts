@@ -1,11 +1,11 @@
 import {
-  FetchEventsQuery as ContentfulFetchEventsQuery,
-  FetchEventsByUserIdQuery,
+  ContentfulWebhookPayload,
   FetchEventsByExternalAuthorIdQuery,
   FetchEventsByTeamIdQuery,
-  ContentfulWebhookPayload,
-  FetchWorkingGroupCalendarQuery,
+  FetchEventsByUserIdQuery,
+  FetchEventsQuery as ContentfulFetchEventsQuery,
   FetchInterestGroupCalendarQuery,
+  FetchWorkingGroupCalendarQuery,
 } from '@asap-hub/contentful';
 import {
   EventCreateDataObject,
@@ -491,7 +491,7 @@ export const getEventCreateDataObject = (): EventCreateDataObject => ({
   startDateTimeZone: 'Europe/Lisbon',
   endDate: '2021-02-23T19:32:00Z',
   endDateTimeZone: 'Europe/Lisbon',
-  calendar: 'squidex-calendar-id',
+  calendar: 'calendar-id',
   status: 'Confirmed' as EventStatus,
   tags: [],
   hidden: false,

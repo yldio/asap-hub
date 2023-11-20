@@ -1,62 +1,64 @@
-import { Auth, Common } from 'googleapis';
+import { Common, google } from 'googleapis';
 import 'source-map-support/register';
-import { GetJWTCredentials, Logger } from '../../utils';
+import { getAuthClient, GetJWTCredentials, Logger } from '../../utils';
 
 type Config = {
   asapApiUrl: string;
   googleApiToken: string;
-  googleApiUrl: string;
 };
+export type SubscribeToEventChanges = (
+  calendarId: string,
+  subscriptionId: string,
+) => Promise<
+  | {
+      resourceId: string;
+      expiration: number;
+    }
+  | { resourceId: null; expiration: null }
+>;
+export type UnsubscribeFromEventChanges = (
+  resourceId: string,
+  channelId: string,
+) => Promise<void>;
 
-const getClient = async (getJWTCredentials: GetJWTCredentials) => {
-  const creds = await getJWTCredentials();
-  return new Auth.GoogleAuth({
-    scopes: [
-      'https://www.googleapis.com/auth/calendar',
-      'https://www.googleapis.com/auth/calendar.events',
-    ],
-  }).fromJSON(creds);
-};
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
-    { asapApiUrl, googleApiToken, googleApiUrl }: Config,
-  ) =>
-  async (
-    calendarId: string,
-    subscriptionId: string,
-  ): Promise<{
-    resourceId: string | null;
-    expiration: number | null;
-  }> => {
-    const client = await getClient(getJWTCredentials);
-    const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-    const ttl = 2_592_000; // 30 days, which is a maximum TTL
-    const data = {
-      id: subscriptionId,
-      token: googleApiToken,
-      type: 'web_hook',
-      address: `${asapApiUrl}/webhook/events/contentful`,
-      params: {
-        ttl,
-      },
-    };
+    { asapApiUrl, googleApiToken }: Config,
+  ): SubscribeToEventChanges =>
+  async (calendarId, subscriptionId) => {
     try {
-      const response = await client.request<{
-        resourceId: string;
-        expiration: string;
-      }>({
-        url,
-        method: 'POST',
-        data,
+      const auth = await getAuthClient(getJWTCredentials);
+      const calendar = google.calendar({
+        version: 'v3',
+        auth,
       });
 
-      logger.debug({ response }, 'Google API subscription response');
+      const {
+        data: { resourceId, expiration },
+      } = await calendar.events.watch({
+        calendarId,
+        requestBody: {
+          id: subscriptionId,
+          token: googleApiToken,
+          address: `${asapApiUrl}/webhook/events/contentful`,
+          type: 'web_hook',
+          params: {
+            ttl: '2592000', // 30 days, which is a maximum TTL
+          },
+        },
+      });
 
+      if (!(resourceId && expiration)) {
+        logger.error(
+          `Invalid data returned resourceId: ${resourceId} expiration: ${expiration}`,
+        );
+        throw new Error('Invalid data');
+      }
       return {
-        resourceId: response.data.resourceId,
-        expiration: parseInt(response.data.expiration, 10),
+        resourceId,
+        expiration: parseInt(expiration, 10),
       };
     } catch (err: unknown) {
       if (err instanceof Common.GaxiosError && err.status === 404) {
@@ -83,24 +85,20 @@ export const unsubscribeFromEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
-    { googleApiUrl }: Pick<Config, 'googleApiUrl'>,
-  ) =>
-  async (resourceId: string, channelId: string): Promise<void> => {
-    const client = await getClient(getJWTCredentials);
-    const url = `${googleApiUrl}calendar/v3/channels/stop`;
-    const data = {
-      id: channelId,
-      resourceId,
-    };
+  ): UnsubscribeFromEventChanges =>
+  async (resourceId, channelId) => {
+    const auth = await getAuthClient(getJWTCredentials);
 
-    const response = await client.request({ url, method: 'POST', data });
+    const calendar = google.calendar({
+      version: 'v3',
+      auth,
+    });
+    const response = await calendar.channels.stop({
+      requestBody: {
+        id: channelId,
+        resourceId,
+      },
+    });
 
     logger.debug({ response }, 'Google API unsubscribing response');
   };
-
-export type SubscribeToEventChanges = ReturnType<
-  typeof subscribeToEventChangesFactory
->;
-export type UnsubscribeFromEventChanges = ReturnType<
-  typeof unsubscribeFromEventChangesFactory
->;

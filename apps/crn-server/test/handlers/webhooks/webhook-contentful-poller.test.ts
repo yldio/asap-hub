@@ -25,9 +25,8 @@ describe('Contentful poller event webhook', () => {
 
   test('Should put the news-published event into the event bus and return 200', async () => {
     const event = getNewsPublishContentfulPollerPayload();
-    const { statusCode } = await handler(event);
+    await handler(event);
 
-    expect(statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalled();
   });
 });

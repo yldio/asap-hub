@@ -1,4 +1,4 @@
-import nock from 'nock';
+import { Common } from 'googleapis';
 import {
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
@@ -6,132 +6,169 @@ import {
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-import { getCalendarCreateEvent } from './webhook-sync-calendar.fixtures';
-const googleApiUrl = 'https://www.googleapis.com/';
+
+const mockGoogleAuth = jest.fn();
+const mockWatch = jest.fn();
+const mockStop = jest.fn();
+
+jest.mock('googleapis', () => ({
+  ...jest.requireActual('googleapis'),
+  google: {
+    auth: {
+      GoogleAuth: jest.fn(),
+    },
+    calendar: () => ({
+      events: {
+        watch: mockWatch,
+      },
+      channels: {
+        stop: mockStop,
+      },
+    }),
+  },
+  Auth: {
+    GoogleAuth: jest
+      .fn()
+      .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
+  },
+}));
 
 describe('Subscription', () => {
   const calendarId = 'calendar-id';
+  const subscriptionId = '42';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
   const asapApiUrl = 'http://asap-api-url';
   const googleApiToken = 'google-api-token';
-
-  test('404 - should return empty resourceId', async () => {
-    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
-
-    nock(googleApiUrl)
-      .post('/oauth2/v4/token')
-      .reply(404, {
-        access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: `${googleApiUrl}auth/prediction`,
-        token_type: 'Bearer',
-        expires_in: 3600,
-      })
-      .post(`/calendar/v3/calendars/${calendarId}/events/watch`, {
-        id: getCalendarCreateEvent().payload.id,
-        token: googleApiToken,
-        type: 'web_hook',
-        address: `${asapApiUrl}/webhook/events/contentful`,
-        params: {
-          // 30 days, which is a maximum TTL
-          ttl: 2592000,
-        },
-      });
-
-    const subscribeToEventChanges = subscribeToEventChangesFactory(
-      getJWTCredentials,
-      logger,
-      { googleApiUrl, googleApiToken, asapApiUrl },
-    );
-
-    const result = await subscribeToEventChanges(
-      calendarId,
-      getCalendarCreateEvent().payload.id,
-    );
-
-    expect(result).toEqual({
-      resourceId: null,
-      expiration: null,
-    });
-    expect(nock.isDone()).toBe(true);
-  });
-  test('500 - should throw', async () => {
-    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
-
-    nock(googleApiUrl)
-      .post('/oauth2/v4/token')
-      .reply(500, {
-        access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: `${googleApiUrl}auth/prediction`,
-        token_type: 'Bearer',
-        expires_in: 3600,
-      })
-      .post(`/calendar/v3/calendars/${calendarId}/events/watch`, {
-        id: getCalendarCreateEvent().payload.id,
-        token: googleApiToken,
-        type: 'web_hook',
-        address: `${asapApiUrl}/webhook/events/contentful`,
-        params: {
-          // 30 days, which is a maximum TTL
-          ttl: 2592000,
-        },
-      });
-
-    const subscribeToEventChanges = subscribeToEventChangesFactory(
-      getJWTCredentials,
-      logger,
-      { googleApiUrl, googleApiToken, asapApiUrl },
-    );
-
-    await expect(
-      subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
-    ).rejects.toThrow();
-
-    expect(nock.isDone()).toBe(true);
-  });
+  const scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+  ];
   test('Should subscribe to the calendar events notifications and return the resourceId when cms is contentful', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
-    const expiration = 1617196357000;
+    mockGoogleAuth.mockReturnValue({
+      scopes,
+    });
+    const expiration = 1_617_196_357_000;
 
-    nock(googleApiUrl)
-      .post('/oauth2/v4/token')
-      .reply(200, {
-        access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: `${googleApiUrl}auth/prediction`,
-        token_type: 'Bearer',
-        expires_in: 3600,
-      })
-      .post(`/calendar/v3/calendars/${calendarId}/events/watch`, {
-        id: getCalendarCreateEvent().payload.id,
-        token: googleApiToken,
-        type: 'web_hook',
-        address: `${asapApiUrl}/webhook/events/contentful`,
-        params: {
-          // 30 days, which is a maximum TTL
-          ttl: 2592000,
-        },
-      })
-      .reply(200, {
+    mockWatch.mockResolvedValue({
+      data: {
         resourceId: 'some-resource-id',
         expiration: `${expiration}`,
-      });
-
+      },
+    });
     const subscribeToEventChanges = subscribeToEventChangesFactory(
       getJWTCredentials,
       logger,
-      { googleApiUrl, googleApiToken, asapApiUrl },
+      { googleApiToken, asapApiUrl },
     );
 
-    const result = await subscribeToEventChanges(
-      calendarId,
-      getCalendarCreateEvent().payload.id,
-    );
+    const result = await subscribeToEventChanges(calendarId, subscriptionId);
 
     expect(result).toEqual({
       resourceId: 'some-resource-id',
       expiration,
     });
-    expect(nock.isDone()).toBe(true);
+    expect(mockWatch).toHaveBeenCalledWith({
+      calendarId,
+      requestBody: {
+        id: subscriptionId,
+        token: googleApiToken,
+        type: 'web_hook',
+        address: `${asapApiUrl}/webhook/events/contentful`,
+        params: {
+          ttl: '2592000',
+        },
+      },
+    });
+  });
+
+  test('404 - should return empty resourceId', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+
+    mockGoogleAuth.mockRejectedValueOnce(
+      new Common.GaxiosError('Not Found', {}, {
+        status: 404,
+      } as unknown as Common.GaxiosResponse),
+    );
+
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    const result = await subscribeToEventChanges(calendarId, subscriptionId);
+
+    expect(result).toEqual({
+      resourceId: null,
+      expiration: null,
+    });
+  });
+  test('500 - should throw', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+
+    mockGoogleAuth.mockRejectedValueOnce(
+      new Common.GaxiosError('Internal Server Error', {}, {
+        status: 500,
+      } as unknown as Common.GaxiosResponse),
+    );
+
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    await expect(
+      subscribeToEventChanges(calendarId, subscriptionId),
+    ).rejects.toThrow();
+  });
+  test('Should throw when no resourceId', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+
+    mockGoogleAuth.mockReturnValue({
+      scopes,
+    });
+
+    mockWatch.mockResolvedValue({
+      data: {
+        resourceId: undefined,
+        expiration: '1_617_196_357_000',
+      },
+    });
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    await expect(
+      subscribeToEventChanges(calendarId, subscriptionId),
+    ).rejects.toThrow();
+  });
+  test('Should throw when no expiration', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+
+    mockGoogleAuth.mockReturnValue({
+      scopes,
+    });
+
+    mockWatch.mockResolvedValue({
+      data: {
+        resourceId: 'some-resource-id',
+        expiration: undefined,
+      },
+    });
+    const subscribeToEventChanges = subscribeToEventChangesFactory(
+      getJWTCredentials,
+      logger,
+      { googleApiToken, asapApiUrl },
+    );
+
+    await expect(
+      subscribeToEventChanges(calendarId, subscriptionId),
+    ).rejects.toThrow();
   });
 });
 
@@ -142,30 +179,18 @@ describe('Unsubscribing', () => {
   const unsubscribeFromEventChanges = unsubscribeFromEventChangesFactory(
     getJWTCredentials,
     logger,
-    { googleApiUrl },
   );
 
   test('Should unsubscribe from the calendar events notifications', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
-    nock.cleanAll();
-
-    nock(googleApiUrl)
-      .post('/oauth2/v4/token')
-      .reply(200, {
-        access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
-        scope: `${googleApiUrl}auth/prediction`,
-        token_type: 'Bearer',
-        expires_in: 3600,
-      })
-      .post(`/calendar/v3/channels/stop`, {
-        id: channelId,
-        resourceId,
-      })
-      .reply(200, {});
-
     await unsubscribeFromEventChanges(resourceId, channelId);
 
-    expect(nock.isDone()).toBe(true);
+    expect(mockStop).toHaveBeenCalledWith({
+      requestBody: {
+        id: channelId,
+        resourceId,
+      },
+    });
   });
 });

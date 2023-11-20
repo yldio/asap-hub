@@ -2,6 +2,7 @@ export * from './alerts';
 export * from './aws-secret-manager';
 export * from './csv-parse';
 export * from './fetch-orcid';
+export * from './google-auth-client';
 export * from './logger';
 export * from './loop-over-custom-collection';
 export * from './send-email';

@@ -9,7 +9,6 @@ import {
   asapApiUrl,
   googleApiCredentialsSecretId,
   googleApiToken,
-  googleApiUrl,
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
@@ -25,13 +24,10 @@ const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(
     getCalendarDataProvider(contentfulGraphQLClient),
-    unsubscribeFromEventChangesFactory(getJWTCredentials, logger, {
-      googleApiUrl,
-    }),
+    unsubscribeFromEventChangesFactory(getJWTCredentials, logger),
     subscribeToEventChangesFactory(getJWTCredentials, logger, {
       asapApiUrl,
       googleApiToken,
-      googleApiUrl,
     }),
     logger,
   ),

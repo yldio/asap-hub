@@ -14,14 +14,13 @@ export const resubscribeCalendarsHandlerFactory =
     unsubscribe: UnsubscribeFromEventChanges,
     subscribe: SubscribeToEventChanges,
     logger: Logger,
-    getCalendarIdFunction?: (id: string) => string,
+    getCalendarId: (id: string) => string = defaultGetCalendarId,
   ): ScheduledHandlerAsync =>
   async () => {
     const now = DateTime.local();
     const { items: calendars } = await calendarDataProvider.fetch({
       maxExpiration: now.plus({ days: 1 }).toMillis(),
     });
-    const getCalendarId = getCalendarIdFunction || defaultGetCalendarId;
 
     const calendarIds = calendars.map((calendar) => calendar.id);
     logger.info(

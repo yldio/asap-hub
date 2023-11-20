@@ -27,22 +27,6 @@ describe('Contentful event webhook', () => {
 
   beforeEach(jest.resetAllMocks);
 
-  test('Should throw an error when the request has no Authorization header', async () => {
-    const payload = getNewsPublishContentfulWebhookPayload();
-    const event = getLambdaRequest(payload, {});
-
-    await expect(handler(event)).rejects.toThrowError('Unauthorized');
-    expect(sqsMock.send).not.toHaveBeenCalled();
-  });
-
-  test('Should throw an error when the request has an invalid authentication token', async () => {
-    const payload = getNewsPublishContentfulWebhookPayload();
-    const invalidAuthHeaders = { authorization: 'invalid-token' };
-    const event = getLambdaRequest(payload, invalidAuthHeaders);
-    await expect(handler(event)).rejects.toThrowError('Forbidden');
-    expect(sqsMock.send).not.toHaveBeenCalled();
-  });
-
   test('Should put the news-published event into the SQS and return 200', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, headers);
@@ -74,9 +58,24 @@ describe('Contentful event webhook', () => {
       ...expectedCommand,
       middlewareStack: expect.any(Object),
     });
-    expect(logger.debug).toBeCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       expect.stringMatching(/Event added to queue queue-url/i),
     );
+  });
+  test('Should throw an error when the request has no Authorization header', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, {});
+
+    await expect(handler(event)).rejects.toThrow('Unauthorized');
+    expect(sqsMock.send).not.toHaveBeenCalled();
+  });
+
+  test('Should throw an error when the request has an invalid authentication token', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const invalidAuthHeaders = { authorization: 'invalid-token' };
+    const event = getLambdaRequest(payload, invalidAuthHeaders);
+    await expect(handler(event)).rejects.toThrow('Forbidden');
+    expect(sqsMock.send).not.toHaveBeenCalled();
   });
 
   test('Should log errors when they occur', async () => {
@@ -94,14 +93,14 @@ describe('Contentful event webhook', () => {
     );
     const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handlerWithError(event);
-    expect(logger.error).toBeCalledTimes(2);
-    expect(logger.error).nthCalledWith(
+    expect(logger.error).toHaveBeenCalledTimes(2);
+    expect(logger.error).toHaveBeenNthCalledWith(
       1,
       expect.stringMatching(
         /An error occurred putting onto the SQS queue-url/i,
       ),
     );
-    expect(logger.error).nthCalledWith(
+    expect(logger.error).toHaveBeenNthCalledWith(
       2,
       expect.stringMatching(/The error message\: error message from send/i),
     );

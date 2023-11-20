@@ -9,18 +9,17 @@ import * as Sentry from '@sentry/serverless';
 import 'source-map-support/register';
 import {
   asapApiUrl,
+  contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  contentfulAccessToken,
   googleApiCredentialsSecretId,
   googleApiToken,
-  googleApiUrl,
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
+import { getCalendarSubscriptionId } from '../../utils/get-calendar-subscription-id';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { getCalendarSubscriptionId } from '../../utils/get-calendar-subscription-id';
 
 /* istanbul ignore next */
 const getJWTCredentialsAWS = getJWTCredentialsFactory({
@@ -33,11 +32,8 @@ export const webhookHandler = calendarCreatedContentfulHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,
-    googleApiUrl,
   }),
-  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-    googleApiUrl,
-  }),
+  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger),
   getCalendarDataProvider(),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
   logger,

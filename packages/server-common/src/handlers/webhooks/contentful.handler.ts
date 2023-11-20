@@ -2,6 +2,7 @@ import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import { Logger } from '../../utils';
 import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
@@ -43,7 +44,7 @@ export const contentfulHandlerFactory =
     logger: Logger,
   ): ((
     request: lambda.Request<ContentfulWebhookPayload>,
-  ) => Promise<{ statusCode: number }>) =>
+  ) => Promise<APIGatewayProxyResult>) =>
   async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
     logger.debug(`request: ${JSON.stringify(request)}`);
@@ -75,6 +76,7 @@ export const contentfulHandlerFactory =
 
       return {
         statusCode: 200,
+        body: 'Success',
       };
     } catch (err) {
       logger.error(
@@ -85,6 +87,7 @@ export const contentfulHandlerFactory =
       }
       return {
         statusCode: 500,
+        body: 'Failure',
       };
     }
   };

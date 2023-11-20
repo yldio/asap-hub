@@ -301,7 +301,6 @@ export const parseEventSpeakerExternalUser = (
   user: ExternalAuthorSpeaker,
 ): EventSpeakerExternalUserData => ({
   name: user?.name || '',
-  orcid: user?.orcid || '',
 });
 
 export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>

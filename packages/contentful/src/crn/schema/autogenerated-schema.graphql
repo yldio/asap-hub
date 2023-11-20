@@ -2334,6 +2334,7 @@ type News implements Entry {
   publishDate(locale: String): DateTime
   shortText(locale: String): String
   sys: Sys!
+  tagsCollection(limit: Int = 100, locale: String, order: [NewsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): NewsTagsCollection
   text(locale: String): NewsText
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
@@ -2388,6 +2389,8 @@ input NewsFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tags: cfResearchTagsNestedFilter
+  tagsCollection_exists: Boolean
   text_contains: String
   text_exists: Boolean
   text_not_contains: String
@@ -2426,6 +2429,28 @@ enum NewsOrder {
   link_DESC
   publishDate_ASC
   publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type NewsTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum NewsTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3513,9 +3538,29 @@ input ResearchTagsFilter {
 
 type ResearchTagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  newsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
+  frequency_ASC
+  frequency_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -5862,6 +5907,7 @@ input cfNewsNestedFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tagsCollection_exists: Boolean
   text_contains: String
   text_exists: Boolean
   text_not_contains: String

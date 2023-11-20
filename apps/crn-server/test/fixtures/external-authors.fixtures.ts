@@ -22,9 +22,6 @@ export const getContentfulGraphqlExternalAuthor = (): NonNullable<
 > => ({
   sys: {
     id: 'external-author-id-1',
-    firstPublishedAt: '2021-11-23T20:45:22Z',
-    publishedAt: '2021-11-26T15:33:18Z',
-    publishedVersion: 45,
   },
   name: 'external author one',
   orcid: 'orcid-1',

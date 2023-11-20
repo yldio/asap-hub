@@ -40,6 +40,7 @@ const sentryDsnApi = process.env.SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
 const auth0Audience = process.env.AUTH0_AUDIENCE!;
+const auth0SharedSecret = process.env.AUTH0_SHARED_SECRET!;
 const contentfulEnvironment = process.env.CONTENTFUL_ENV!;
 const contentfulAccessToken = process.env.CONTENTFUL_ACCESS_TOKEN!;
 const contentfulPreviewAccessToken =
@@ -87,7 +88,6 @@ const offlineSSM =
         'crn-algolia-app-id-dev': '${env:ALGOLIA_APP_ID}',
         'crn-algolia-index-api-key-dev': '${env:ALGOLIA_API_KEY}',
         'crn-algolia-search-api-key-dev': '${env:ALGOLIA_API_KEY}',
-        'auth0-shared-secret-dev': '${env:AUTH0_SHARED_SECRET}',
         'google-api-token-dev': '${env:GOOGLE_API_TOKEN}',
         'ses-region-dev': '${env:SES_REGION}',
         'email-invite-sender-dev': '${env:EMAIL_SENDER}',
@@ -302,7 +302,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
-        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        AUTH0_SHARED_SECRET: auth0SharedSecret,
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-search-api-key-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -319,7 +319,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
-        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
+        AUTH0_SHARED_SECRET: auth0SharedSecret,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

@@ -37,7 +37,7 @@ describe('OutputDetailPage', () => {
     expect(queryByTitle('Version Icon')).toBeInTheDocument();
   });
 
-  it('ddoes not isplays version button if canVersion is false', () => {
+  it('does not display version button if canVersion is false', () => {
     const { queryByTitle } = render(
       <OutputDetailPage
         isAdministrator

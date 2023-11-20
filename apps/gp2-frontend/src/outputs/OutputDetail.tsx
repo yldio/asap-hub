@@ -43,7 +43,7 @@ const OutputDetail: FC = () => {
       <Route exact path={path}>
         <Frame title="Output">
           <OutputDetailPage
-            canVersion={isEnabled('ASAP_VERSION_RESEARCH_OUTPUT')}
+            canVersion={isEnabled('VERSION_RESEARCH_OUTPUT')}
             isAdministrator={isAdministrator}
             {...output}
           />

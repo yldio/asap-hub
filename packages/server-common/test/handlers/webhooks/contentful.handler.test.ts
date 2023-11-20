@@ -62,6 +62,28 @@ describe('Contentful event webhook', () => {
       expect.stringMatching(/Event added to queue queue-url/i),
     );
   });
+
+  test.each([
+    'create',
+    'save',
+    'autosave',
+    'archive',
+    'unarchive',
+    'delete',
+    'complete',
+  ])('Should throw an error when the request action is %s', async (action) => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, {
+      ...headers,
+      'x-contentful-topic': `ContentManagement.Entry.${action}`,
+    });
+
+    await expect(handler(event)).rejects.toThrow(
+      `Action ${action} not supported by handlers.`,
+    );
+    expect(sqsMock.send).not.toHaveBeenCalled();
+  });
+
   test('Should throw an error when the request has no Authorization header', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, {});

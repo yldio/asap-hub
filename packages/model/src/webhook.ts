@@ -18,9 +18,9 @@ export type WebhookDetailType =
   | InterestGroupEvent
   | LabEvent
   | NewsEvent
+  | ResearchOutputEvent
   | TeamEvent
   | UserEvent
-  | ResearchOutputEvent
   | WorkingGroupEvent;
 
 export type WebhookDetail<T extends object = object> = {

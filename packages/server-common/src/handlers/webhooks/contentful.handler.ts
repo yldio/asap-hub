@@ -1,4 +1,8 @@
-import { ContentfulWebhookPayload } from '@asap-hub/contentful';
+import {
+  ContentfulWebhookPayload,
+  ContentfulWebhookPayloadType,
+  WebhookPayloadTypeFirstLetterCapitalized,
+} from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
@@ -24,17 +28,30 @@ const getActionFromRequest = (
   return actions[actions.length - 1] as ContentfulActions;
 };
 
+const getWebhookAction = (action: 'publish' | 'unpublish') =>
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  `${action[0]!.toUpperCase()}${action.slice(1)}ed` as
+    | 'Published'
+    | 'Unpublished';
+
+const getWebhookContentType = (
+  contentType: ContentfulWebhookPayloadType,
+): WebhookPayloadTypeFirstLetterCapitalized =>
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  (contentType[0]!.toUpperCase() +
+    contentType.slice(1)) as WebhookPayloadTypeFirstLetterCapitalized;
+
 const getDetailTypeFromRequest = (
   request: lambda.Request<ContentfulWebhookPayload>,
 ): WebhookDetailType => {
   const action = getActionFromRequest(request);
   const contentType = request.payload.sys.contentType.sys.id;
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return `${contentType[0]!.toUpperCase()}${contentType.slice(
-    1,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  )}${action[0]!.toUpperCase()}${action.slice(1)}ed` as WebhookDetailType;
+  if (action !== 'publish' && action !== 'unpublish') {
+    throw Error(`Action ${action} not supported by handlers.`);
+  }
+
+  return `${getWebhookContentType(contentType)}${getWebhookAction(action)}`;
 };
 
 const getDetailFromRequest = (

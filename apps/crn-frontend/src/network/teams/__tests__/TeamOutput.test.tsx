@@ -6,29 +6,29 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import {BackendError} from '@asap-hub/frontend-utils';
+import { BackendError } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {network, OutputDocumentTypeParameter} from '@asap-hub/routing';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent, {specialChars} from '@testing-library/user-event';
-import {Suspense} from 'react';
-import {Route, StaticRouter} from 'react-router-dom';
-import {RecoilRoot} from 'recoil';
+import userEvent, { specialChars } from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { Route, StaticRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
   getTeam,
   updateTeamResearchOutput,
 } from '../api';
-import {refreshTeamState} from '../state';
+import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
 jest.setTimeout(60000);
@@ -71,18 +71,18 @@ const mandatoryFields = async (
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  userEvent.type(screen.getByRole('textbox', {name: url}), link);
-  userEvent.type(screen.getByRole('textbox', {name: /title/i}), title);
+  userEvent.type(screen.getByRole('textbox', { name: url }), link);
+  userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(
-    screen.getByRole('textbox', {name: /description/i}),
+    screen.getByRole('textbox', { name: /description/i }),
     descriptionMD,
   );
 
-  const typeInput = screen.getByRole('textbox', {name: /Select the type/i});
+  const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
   userEvent.type(typeInput, type);
   userEvent.type(typeInput, specialChars.enter);
 
-  const identifier = screen.getByRole('textbox', {name: /identifier/i});
+  const identifier = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(identifier, 'DOI');
   userEvent.type(identifier, specialChars.enter);
   userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
@@ -93,14 +93,14 @@ const mandatoryFields = async (
   return {
     publish: async () => {
       if (isEditMode && published) {
-        const button = screen.getByRole('button', {name: /Save/i});
+        const button = screen.getByRole('button', { name: /Save/i });
         userEvent.click(button);
         await waitFor(() => {
           expect(button).toBeEnabled();
         });
       } else {
-        userEvent.click(screen.getByRole('button', {name: /Publish/i}));
-        const button = screen.getByRole('button', {name: /Publish Output/i});
+        userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+        const button = screen.getByRole('button', { name: /Publish Output/i });
         userEvent.click(button);
         await waitFor(() => {
           expect(button).not.toBeInTheDocument();
@@ -108,7 +108,9 @@ const mandatoryFields = async (
       }
     },
     saveDraft: async () => {
-      const saveDraftButton = screen.queryByRole('button', {name: /Save Draft/i});
+      const saveDraftButton = screen.queryByRole('button', {
+        name: /Save Draft/i,
+      });
       if (saveDraftButton) {
         userEvent.click(saveDraftButton);
         await waitFor(() => {
@@ -145,7 +147,7 @@ it('Renders the research output', async () => {
   });
 
   expect(
-    screen.getByRole('heading', {name: /Share bioinformatics/i}),
+    screen.getByRole('heading', { name: /Share bioinformatics/i }),
   ).toBeInTheDocument();
 });
 
@@ -164,7 +166,7 @@ it('displays the publish button for new research outputs', async () => {
     outputDocumentType: 'bioinformatics',
   });
 
-  expect(screen.getByRole('button', {name: /Publish/i})).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Publish/i })).toBeInTheDocument();
 });
 
 it('displays the save button for existing research outputs', async () => {
@@ -174,7 +176,7 @@ it('displays the save button for existing research outputs', async () => {
     researchOutputData: baseResearchOutput,
   });
 
-  expect(screen.getByRole('button', {name: /Save/i})).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
 });
 
 it('displays the research output with one version in create mode', async () => {
@@ -200,10 +202,10 @@ it('displays the research output with no version in edit mode', async () => {
 });
 
 it('switches research output type based on parameter', async () => {
-  await renderPage({teamId: '42', outputDocumentType: 'article'});
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
   expect(
-    screen.getByRole('heading', {name: /Share an article/i}),
+    screen.getByRole('heading', { name: /Share an article/i }),
   ).toBeInTheDocument();
 });
 
@@ -215,9 +217,9 @@ it('can publish a form when the data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({teamId, outputDocumentType: 'lab-resource'});
+  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
-  const {publish} = await mandatoryFields({
+  const { publish } = await mandatoryFields({
     link,
     title,
     descriptionMD,
@@ -225,9 +227,9 @@ it('can publish a form when the data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', {name: /Labs/i}));
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', {name: /Authors/i}));
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
 
   await publish();
@@ -276,9 +278,9 @@ it('can save draft when form data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({teamId, outputDocumentType: 'lab-resource'});
+  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
-  const {saveDraft} = await mandatoryFields({
+  const { saveDraft } = await mandatoryFields({
     link,
     title,
     descriptionMD,
@@ -286,9 +288,9 @@ it('can save draft when form data is valid', async () => {
     doi,
   });
 
-  userEvent.click(screen.getByRole('textbox', {name: /Labs/i}));
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   userEvent.click(screen.getByText('Example 1 Lab'));
-  userEvent.click(screen.getByRole('textbox', {name: /Authors/i}));
+  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
 
   await saveDraft();
@@ -331,17 +333,17 @@ it('can save draft when form data is valid', async () => {
 
 it('can edit a research output', async () => {
   const teamId = baseResearchOutput.teams[0]!.id;
-  const {type, descriptionMD, title} = baseResearchOutput;
+  const { type, descriptionMD, title } = baseResearchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {...baseResearchOutput, doi},
+    researchOutputData: { ...baseResearchOutput, doi },
   });
 
-  const {publish} = await mandatoryFields(
+  const { publish } = await mandatoryFields(
     {
       link,
       title: '',
@@ -369,17 +371,17 @@ it('can edit a research output', async () => {
 it('can edit a draft research output', async () => {
   const researchOutput = baseResearchOutput;
   const teamId = researchOutput.teams[0]!.id;
-  const {type, descriptionMD, title} = researchOutput;
+  const { type, descriptionMD, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {...researchOutput, doi, published: false},
+    researchOutputData: { ...researchOutput, doi, published: false },
   });
 
-  const {saveDraft} = await mandatoryFields(
+  const { saveDraft } = await mandatoryFields(
     {
       link,
       title: '',
@@ -407,7 +409,7 @@ it('can edit a draft research output', async () => {
 it('can edit and publish a draft research output', async () => {
   const researchOutput = baseResearchOutput;
   const teamId = researchOutput.teams[0]!.id;
-  const {type, title} = researchOutput;
+  const { type, title } = researchOutput;
   const link = 'https://example42.com';
   const doi = '10.0777';
 
@@ -428,7 +430,7 @@ it('can edit and publish a draft research output', async () => {
   });
 
   const initiallyPublished = false;
-  const {publish} = await mandatoryFields(
+  const { publish } = await mandatoryFields(
     {
       link,
       title: '',
@@ -461,7 +463,7 @@ it('will show server side validation error for link', async () => {
     error: 'Bad Request',
     statusCode: 400,
     data: [
-      {instancePath: '/link', keyword: '', params: {}, schemaPath: 'link'},
+      { instancePath: '/link', keyword: '', params: {}, schemaPath: 'link' },
     ],
   };
 
@@ -469,8 +471,8 @@ it('will show server side validation error for link', async () => {
     new BackendError('example', validationResponse, 400),
   );
 
-  await renderPage({teamId: '42', outputDocumentType: 'article'});
-  const {publish} = await mandatoryFields({}, true);
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
+  const { publish } = await mandatoryFields({}, true);
 
   await publish();
 
@@ -481,7 +483,7 @@ it('will show server side validation error for link', async () => {
     ).length,
   ).toBeGreaterThan(1);
 
-  const url = screen.getByRole('textbox', {name: /URL \(required\)/i});
+  const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
   userEvent.type(url, 'a');
   url.blur();
 
@@ -495,9 +497,9 @@ it('will show server side validation error for link', async () => {
 it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
-  await renderPage({teamId: '42', outputDocumentType: 'article'});
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-  const {publish} = await mandatoryFields({}, true);
+  const { publish } = await mandatoryFields({}, true);
 
   await publish();
 
@@ -521,10 +523,10 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   await renderPage({
     teamId: '42',
     outputDocumentType: 'article',
-    researchOutputData: {...baseResearchOutput, doi},
+    researchOutputData: { ...baseResearchOutput, doi },
   });
 
-  const {publish} = await mandatoryFields(
+  const { publish } = await mandatoryFields(
     {
       link,
       title,
@@ -564,7 +566,7 @@ it('display a toast warning when creating a new version', async () => {
 async function renderPage({
   user = {
     ...baseUser,
-    teams: [{...baseUser.teams[0]!, id: '42', role: 'Project Manager'}],
+    teams: [{ ...baseUser.teams[0]!, id: '42', role: 'Project Manager' }],
   },
   teamId,
   outputDocumentType = 'bioinformatics',
@@ -575,11 +577,11 @@ async function renderPage({
     network.template +
     network({}).teams.template +
     network({}).teams({}).team.template +
-    network({}).teams({}).team({teamId}).createOutput.template;
+    network({}).teams({}).team({ teamId }).createOutput.template;
 
   render(
     <RecoilRoot
-      initializeState={({set}) =>
+      initializeState={({ set }) =>
         set(refreshTeamState(teamId), Math.random())
       }
     >
@@ -590,8 +592,8 @@ async function renderPage({
               location={
                 network({})
                   .teams({})
-                  .team({teamId})
-                  .createOutput({outputDocumentType}).$
+                  .team({ teamId })
+                  .createOutput({ outputDocumentType }).$
               }
             >
               <Route path={path}>

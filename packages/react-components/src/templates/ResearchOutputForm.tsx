@@ -261,6 +261,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const promptNewVersion =
     versionAction === 'create' && !dismissedVersionPrompt;
 
+  const [showConfirmPublish, setShowConfirmPublish] = useState<boolean>(false);
+
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
   );
@@ -416,7 +418,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               }
               return researchOutput;
             })();
-          const confirmText = `Keep and ${
+          const confirmDescriptionText = `Keep and ${
             showDescriptionChangePrompt === 'draft' ? 'save' : 'publish'
           }`;
           return (
@@ -436,10 +438,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   }}
                   description={
                     <>
-                      All team members listed on this output will be notified
-                      and all CRN members will be able to access it. If you want
-                      to add or edit older versions after this new version was
-                      published you need to contact{' '}
+                      Once published this output version will be available to
+                      all Hub members and reminders will be issued to all
+                      associated contributors. If you have any issues with this
+                      output version after it has been published, please contact{' '}
                       {<Link href={mailToSupport()}>{TECH_SUPPORT_EMAIL}</Link>}
                       .
                     </>
@@ -452,7 +454,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   title="Keep the same description?"
                   cancelText="Cancel"
                   onCancel={() => setShowDescriptionChangePrompt(false)}
-                  confirmText={confirmText}
+                  confirmText={confirmDescriptionText}
                   onSave={async () => {
                     setDismissedDescriptionChangePrompt(true);
                     const result = await save(
@@ -463,6 +465,27 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     }
                   }}
                   description="We noticed that you kept the same description as your previous output. ASAP encourages users to provide specific context for each output."
+                />
+              )}
+              {showConfirmPublish && (
+                <ConfirmModal
+                  title="Publish output for the whole hub?"
+                  cancelText="Cancel"
+                  onCancel={() => setShowConfirmPublish(false)}
+                  confirmText="Publish Output"
+                  onSave={async () => {
+                    await save(false);
+                    setShowConfirmPublish(false);
+                  }}
+                  description={
+                    <>
+                      Once published this output will be available to all Hub
+                      members and reminders will be issued to all associated
+                      contributors. If you have any issues with the output after
+                      it has been published, please contact{' '}
+                      <Link href={mailToSupport()}>{TECH_SUPPORT_EMAIL}</Link>.
+                    </>
+                  }
                 />
               )}
               <div css={contentStyles}>
@@ -600,6 +623,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                             ? setShowDescriptionChangePrompt('publish')
                             : promptNewVersion
                             ? setShowVersionPrompt(true)
+                            : !published
+                            ? setShowConfirmPublish(true)
                             : save(false)
                         }
                       >

@@ -86,19 +86,27 @@ const mandatoryFields = async (
   userEvent.type(identifier, 'DOI');
   userEvent.type(identifier, specialChars.enter);
   userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
-  const button =
-    isEditMode && published
-      ? screen.getByRole('button', { name: /Save/i })
-      : screen.getByRole('button', { name: /Publish/i });
-  const saveDraftButton = screen.queryByRole('button', { name: /Save Draft/i });
   return {
     publish: async () => {
-      userEvent.click(button);
-      await waitFor(() => {
-        expect(button).toBeEnabled();
-      });
+      if (isEditMode && published) {
+        const button = screen.getByRole('button', { name: /Save/i });
+        userEvent.click(button);
+        await waitFor(() => {
+          expect(button).toBeEnabled();
+        });
+      } else {
+        userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+        const button = screen.getByRole('button', { name: /Publish Output/i });
+        userEvent.click(button);
+        await waitFor(() => {
+          expect(button).not.toBeInTheDocument();
+        });
+      }
     },
     saveDraft: async () => {
+      const saveDraftButton = screen.queryByRole('button', {
+        name: /Save Draft/i,
+      });
       if (saveDraftButton) {
         userEvent.click(saveDraftButton);
         await waitFor(() => {

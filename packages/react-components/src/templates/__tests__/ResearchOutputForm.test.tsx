@@ -388,12 +388,9 @@ describe('on submit', () => {
     fireEvent.keyDown(identifier, {
       keyCode: ENTER_KEYCODE,
     });
-    fireEvent.change(
-      screen.getByPlaceholderText('DOI number e.g. 10.5555/YFRU1371'),
-      {
-        target: { value: '10.1234' },
-      },
-    );
+    fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
+      target: { value: '10.1234' },
+    });
   };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });

@@ -375,7 +375,7 @@ describe('/research-outputs/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(researchOutputControllerMock.create).toBeCalledWith({
+      expect(researchOutputControllerMock.create).toHaveBeenCalledWith({
         ...createResearchOutputRequest,
         createdBy: 'user-id-0',
       });
@@ -546,7 +546,7 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      const validDOI = { doi: 'doi:12.1234' };
+      const validDOI = { doi: '10.1234' };
       const validRRID = { rrid: 'RRID:Hi' };
       const validAccession = { accession: 'NP_1234' };
       const noIdentifier = {};
@@ -557,7 +557,7 @@ describe('/research-outputs/ route', () => {
         ${'Article'}        | ${validAccession} | ${400}
         ${'Article'}        | ${noIdentifier}   | ${201}
         ${'Bioinformatics'} | ${validDOI}       | ${201}
-        ${'Bioinformatics'} | ${validRRID}      | ${201}
+        ${'Bioinformatics'} | ${validRRID}      | ${400}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${201}
         ${'Lab Resource'}   | ${validDOI}       | ${201}
@@ -623,7 +623,7 @@ describe('/research-outputs/ route', () => {
           .send({
             ...researchOutput,
             documentType: 'Article',
-            doi: 'doi:1.222',
+            doi: '10.222',
           });
         expect(response.status).toBe(400);
       });
@@ -655,7 +655,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            documentType: 'Bioinformatics',
+            documentType: 'Lab Resource',
             ...validRRID,
           });
         expect(response.status).toBe(201);
@@ -1018,7 +1018,7 @@ describe('/research-outputs/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      const validDOI = { doi: 'doi:12.1234' };
+      const validDOI = { doi: '10.1234' };
       const validRRID = { rrid: 'RRID:Hi' };
       const validAccession = { accession: 'NP_1234' };
       const noIdentifier = {};
@@ -1029,7 +1029,7 @@ describe('/research-outputs/ route', () => {
         ${'Article'}        | ${validAccession} | ${400}
         ${'Article'}        | ${noIdentifier}   | ${200}
         ${'Bioinformatics'} | ${validDOI}       | ${200}
-        ${'Bioinformatics'} | ${validRRID}      | ${200}
+        ${'Bioinformatics'} | ${validRRID}      | ${400}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${200}
         ${'Lab Resource'}   | ${validDOI}       | ${200}
@@ -1126,7 +1126,7 @@ describe('/research-outputs/ route', () => {
           .put('/research-outputs/abc123')
           .send({
             ...researchOutputPutRequest,
-            documentType: 'Bioinformatics',
+            documentType: 'Lab Resource',
             ...validRRID,
           });
         expect(response.status).toBe(200);

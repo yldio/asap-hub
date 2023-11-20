@@ -27,18 +27,18 @@ const getIdentifiers = (
 
 const identifierMap = {
   [ResearchOutputIdentifierType.DOI]: {
-    helpText: 'Your DOI must start with 1 and it cannot be a URL',
-    placeholder: 'DOI number e.g. 10.5555/YFRU1371',
+    helpText: 'Your DOI must start with 10 and it cannot be a URL',
+    placeholder: 'e.g. 10.5555/YFRU1371',
     regex: ResearchOutputIdentifierValidationExpression.DOI,
     errorMessage:
-      'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
+      'Please enter a valid DOI. It starts with a 10 and it cannot be a URL. (e.g. 10.5555/YFRU1371.121212)',
     required: true,
     name: 'DOI',
   },
   [ResearchOutputIdentifierType.AccessionNumber]: {
     helpText:
       'Your Accession Number must start with a letter. Accession Numbers are attributed by NIH, EMBL-EBI, ProteomeXchange, etc.',
-    placeholder: 'Accession number e.g. AF123456',
+    placeholder: 'e.g. AF123456',
     regex: ResearchOutputIdentifierValidationExpression['Accession Number'],
     errorMessage:
       'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
@@ -47,10 +47,10 @@ const identifierMap = {
   },
   [ResearchOutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
-    placeholder: 'RRID e.g. RRID:AB_90755',
+    placeholder: 'e.g. RRID:AB_007358',
     regex: ResearchOutputIdentifierValidationExpression.RRID,
     errorMessage:
-      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
+      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:AB_007358)',
     required: true,
     name: 'RRID',
   },
@@ -165,6 +165,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.AccessionNumber && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}
@@ -177,6 +178,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.DOI && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}
@@ -189,6 +191,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
       {type === ResearchOutputIdentifierType.RRID && (
         <LabeledTextField
           title={type}
+          subtitle={'(required)'}
           description={helpText}
           placeholder={placeholder}
           getValidationMessage={() => errorMessage}

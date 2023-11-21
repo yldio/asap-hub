@@ -70,6 +70,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     try {
       await auth0Client.loginWithPopup(...args);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
     } finally {
       setPopupOpen(false);

@@ -12,6 +12,7 @@
 
 // CRA boilerplate
 /* istanbul ignore file */
+/* eslint no-console: "off" */
 
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||

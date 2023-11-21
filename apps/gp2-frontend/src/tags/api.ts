@@ -10,13 +10,8 @@ export type TagSearchOptions = Omit<
   tags: string[];
 };
 
-export const getItemTypes = (types: gp2.EntityType[]) => {
-  console.log('git', types);
-  if (types.length === 0) {
-    return ['event', 'news', 'output', 'project', 'user'] as gp2.EntityType[];
-  }
-  return types;
-};
+export const getItemTypes = (types: gp2.EntityType[]): gp2.EntityType[] =>
+  types.length === 0 ? ['event', 'news', 'output', 'project', 'user'] : types;
 
 export const getTagSearchResults = async (
   client: AlgoliaClient<'gp2'>,

@@ -42,8 +42,8 @@
   "devDependencies": {
     "@babel/core": "7.23.3",
     "@babel/plugin-transform-modules-commonjs": "7.23.3",
-    "@babel/plugin-transform-runtime": "7.23.3",
-    "@babel/runtime-corejs3": "7.23.2",
+    "@babel/plugin-transform-runtime": "7.23.4",
+    "@babel/runtime-corejs3": "7.23.4",
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.20.4",
     "@types/hapi__boom": "9.0.1",

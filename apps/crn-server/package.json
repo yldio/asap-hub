@@ -41,7 +41,7 @@
     "@aws-sdk/client-sqs": "3.437.0",
     "@babel/core": "7.23.3",
     "@babel/register": "7.22.15",
-    "@babel/runtime-corejs3": "7.23.2",
+    "@babel/runtime-corejs3": "7.23.4",
     "@hapi/boom": "9.1.4",
     "@hapi/bourne": "2.1.0",
     "@hapi/joi": "17.1.1",

@@ -17,7 +17,7 @@
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "7.23.2"
+    "@babel/runtime-corejs3": "7.23.4"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

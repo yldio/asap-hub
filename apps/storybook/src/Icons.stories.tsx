@@ -82,6 +82,7 @@ export const ShowPassword = () => components.showPasswordIcon;
 export const Slack = () => components.slackIcon;
 export const Success = () => components.successIcon;
 export const SystemCalendar = () => components.systemCalendarIcon;
+export const TagSearch = () => components.tagSearchIcon;
 export const TeamMembers = () => <components.TeamIcon />;
 export const Tick = () => components.tickIcon;
 export const Tools = () => components.toolsIcon;

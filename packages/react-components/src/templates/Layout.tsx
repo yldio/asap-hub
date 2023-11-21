@@ -13,13 +13,21 @@ import { Location } from 'history';
 import { css } from '@emotion/react';
 import { tags } from '@asap-hub/routing';
 
-import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
+import {
+  steel,
+  paper,
+  tin,
+  colorWithTransparency,
+  pearl,
+  charcoal,
+  success900,
+} from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
 import { usePrevious } from '../hooks';
-import { searchIcon } from '../icons';
+import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
 import { LoadingUserButton, LoadingMenu } from './LoadingLayout';
@@ -156,6 +164,14 @@ export const searchButtonAreaStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
   borderLeft: `1px solid ${steel.rgb}`,
   display: 'flex',
+  svg: {
+    fill: charcoal.rgb,
+  },
+  '& .active-link': {
+    svg: {
+      fill: success900.rgb,
+    },
+  },
 });
 const SearchIconStyles = css({
   width: rem(48),
@@ -250,7 +266,7 @@ const Layout: FC<LayoutProps> = ({
         </div>
         <div css={searchButtonAreaStyles}>
           <Navigation squareBorder href={tags({}).$}>
-            <div css={SearchIconStyles}>{searchIcon}</div>
+            <div css={SearchIconStyles}>{tagSearchIcon}</div>
           </Navigation>
         </div>
         <main ref={mainRef} css={contentStyles}>

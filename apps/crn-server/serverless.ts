@@ -54,13 +54,15 @@ const envRef =
     : SLS_STAGE === 'dev'
     ? 'dev'
     : `CI-${SLS_STAGE}`;
+
+if (SLS_STAGE === 'dev' || SLS_STAGE === 'production') {
+  ['CRN_SENTRY_DSN_API', 'CRN_SENTRY_DSN_HANDLERS'].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+}
 const sentryDsnApi = CRN_SENTRY_DSN_API!;
 const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
-assert.ok(
-  (SLS_STAGE === 'dev' || SLS_STAGE === 'production') &&
-    !(sentryDsnApi && sentryDsnHandlers),
-  'sentry DSN API or Handler not defined',
-);
+
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;

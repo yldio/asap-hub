@@ -42,13 +42,14 @@ const contentfulManagementAccessToken =
 const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
 const contentfulWebhookAuthenticationToken =
   process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+
+if (stage === 'dev' || stage === 'production') {
+  ['CRN_SENTRY_DSN_API', 'CRN_SENTRY_DSN_HANDLERS'].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+}
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
-assert.ok(
-  (stage === 'dev' || stage === 'production') &&
-    !(sentryDsnApi && sentryDsnHandlers),
-  'sentry DSN API or Handler not defined',
-);
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;

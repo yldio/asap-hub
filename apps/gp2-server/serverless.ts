@@ -16,8 +16,6 @@ import assert from 'assert';
   'CONTENTFUL_SPACE_ID',
   'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
-  'SENTRY_DSN_API',
-  'SENTRY_DSN_HANDLERS',
   'SES_REGION',
   'SLS_STAGE',
 ].forEach((env) => {
@@ -47,7 +45,7 @@ const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 
 if (stage === 'dev' || stage === 'production') {
-  ['CRN_SENTRY_DSN_API', 'CRN_SENTRY_DSN_HANDLERS'].forEach((env) => {
+  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
 }

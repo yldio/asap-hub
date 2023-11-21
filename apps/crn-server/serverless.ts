@@ -17,8 +17,6 @@ import { algoliaAppId, logLevel } from './src/config';
   'CONTENTFUL_SPACE_ID',
   'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
-  'SENTRY_DSN_API',
-  'SENTRY_DSN_HANDLERS',
   'SES_REGION',
   'SLACK_WEBHOOK',
   'SLS_STAGE',
@@ -36,6 +34,13 @@ const region = process.env.AWS_REGION as NonNullable<AWS['provider']['region']>;
 const envAlias = stage === 'production' ? 'prod' : 'dev';
 const envRef =
   stage === 'production' ? 'prod' : stage === 'dev' ? 'dev' : `CI-${stage}`;
+
+if (stage === 'dev' || stage === 'production') {
+  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+}
+
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;

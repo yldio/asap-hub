@@ -44,12 +44,11 @@ const contentfulWebhookAuthenticationToken =
   process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
-if (
+assert.ok(
   (stage === 'dev' || stage === 'production') &&
-  !(sentryDsnApi && sentryDsnHandlers)
-) {
-  assert.ok('sentry DSN API or Handler not defined');
-}
+    !(sentryDsnApi && sentryDsnHandlers),
+  'sentry DSN API or Handler not defined',
+);
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;

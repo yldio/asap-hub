@@ -56,12 +56,11 @@ const envRef =
     : `CI-${SLS_STAGE}`;
 const sentryDsnApi = CRN_SENTRY_DSN_API!;
 const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
-if (
+assert.ok(
   (SLS_STAGE === 'dev' || SLS_STAGE === 'production') &&
-  !(sentryDsnApi && sentryDsnHandlers)
-) {
-  assert.ok('sentry DSN API or Handler not defined');
-}
+    !(sentryDsnApi && sentryDsnHandlers),
+  'sentry DSN API or Handler not defined',
+);
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;

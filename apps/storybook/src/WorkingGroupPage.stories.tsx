@@ -45,6 +45,7 @@ export const Normal = () => {
     lastModifiedDate: new Date(
       text('Last updated', '2022-01-01'),
     ).toISOString(),
+    tags: ['Test Tag'],
   };
 
   return (

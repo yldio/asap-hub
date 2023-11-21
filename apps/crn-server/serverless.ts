@@ -11,8 +11,6 @@ if (NODE_ENV === 'production') {
     'CRN_AWS_ACM_CERTIFICATE_ARN',
     'CRN_AUTH0_AUDIENCE',
     'CRN_AUTH0_CLIENT_ID',
-    'CRN_SENTRY_DSN_API',
-    'CRN_SENTRY_DSN_HANDLERS',
     'CRN_SES_REGION',
     'CRN_CONTENTFUL_ENV',
     'CRN_CONTENTFUL_ACCESS_TOKEN',
@@ -58,6 +56,12 @@ const envRef =
     : `CI-${SLS_STAGE}`;
 const sentryDsnApi = CRN_SENTRY_DSN_API!;
 const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
+if (
+  (SLS_STAGE === 'dev' || SLS_STAGE === 'production') &&
+  !(sentryDsnApi && sentryDsnHandlers)
+) {
+  assert.ok('sentry DSN API or Handler not defined');
+}
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;

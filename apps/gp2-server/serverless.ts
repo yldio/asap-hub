@@ -10,8 +10,6 @@ import assert from 'assert';
   'GP2_AWS_ACM_CERTIFICATE_ARN',
   'GP2_HOSTNAME',
   'SLS_STAGE',
-  'GP2_SENTRY_DSN_API',
-  'GP2_SENTRY_DSN_HANDLERS',
   'GP2_SES_REGION',
   'GP2_CONTENTFUL_ENV',
   'GP2_CONTENTFUL_ACCESS_TOKEN',
@@ -46,6 +44,12 @@ const contentfulWebhookAuthenticationToken =
   process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
+if (
+  (stage === 'dev' || stage === 'production') &&
+  !(sentryDsnApi && sentryDsnHandlers)
+) {
+  assert.ok('sentry DSN API or Handler not defined');
+}
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;

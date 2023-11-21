@@ -74,6 +74,24 @@ const algoliaIndex = CRN_ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
+console.log({
+  algoliaIndex,
+  region,
+  envAlias,
+  envRef,
+  sentryDsnApi,
+  sentryDsnHandlers,
+  auth0ClientId,
+  contentfulEnvironment,
+  contentfulSpaceId,
+  sesRegion,
+  appUrl: CRN_APP_URL,
+  apiUrl: CRN_API_URL,
+  awsAcmCertificateArn: CRN_AWS_ACM_CERTIFICATE_ARN,
+  hostname: ASAP_HOSTNAME,
+});
+process.exit();
+
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',

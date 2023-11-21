@@ -16,5 +16,6 @@ export const Normal = () => (
     externalLink={text('Link', 'https://www.google.com')}
     lastModifiedDate={text('Last modified date', '2020-01-1')}
     complete={boolean('Working Group Complete', true)}
+    tags={['Test Tag']}
   />
 );

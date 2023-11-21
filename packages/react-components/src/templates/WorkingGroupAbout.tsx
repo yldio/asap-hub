@@ -1,9 +1,9 @@
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
-import { Card, Headline3, Link, Subtitle } from '../atoms';
+import { Card, Headline3, Link, Paragraph, Subtitle } from '../atoms';
 import { createMailTo } from '../mail';
-import { Collapsible } from '../molecules';
+import { Collapsible, TagList } from '../molecules';
 import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
 import { perRem } from '../pixels';
 
@@ -17,11 +17,17 @@ type WorkingGroupAboutProps = {
   | 'members'
   | 'leaders'
   | 'complete'
+  | 'tags'
 >;
 const containerStyles = css({
   display: 'flex',
   flexFlow: 'column',
   gap: `${33 / perRem}em`,
+});
+
+const tagListStyle = css({
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${24 / perRem}em`,
 });
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
@@ -32,6 +38,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   members,
   leaders,
   complete,
+  tags,
 }) => (
   <div css={containerStyles}>
     <DeliverablesCard deliverables={deliverables} />
@@ -60,6 +67,25 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <RichText text={description} />
       </Collapsible>
     </Card>
+    {tags.length ? (
+      <Card>
+        <Headline3>Tags</Headline3>
+        <div css={tagListStyle}>
+          <Paragraph accent="lead">
+            Explore keywords related to skills, techniques, resources, and
+            tools.
+          </Paragraph>
+        </div>
+        <TagList tags={tags} />
+      </Card>
+    ) : null}
+    <section id={membersListElementId}>
+      <WorkingGroupMembers
+        leaders={leaders}
+        members={members}
+        isComplete={complete}
+      />
+    </section>
     <Card accent="green">
       <Subtitle>Do you have any questions?</Subtitle>
       <div>Reach out to this working group if you need any support.</div>
@@ -74,13 +100,6 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </Link>
       )}
     </Card>
-    <section id={membersListElementId}>
-      <WorkingGroupMembers
-        leaders={leaders}
-        members={members}
-        isComplete={complete}
-      />
-    </section>
   </div>
 );
 

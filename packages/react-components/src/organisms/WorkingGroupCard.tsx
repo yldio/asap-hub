@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Paragraph, Anchor, Caption, Ellipsis, StateTag } from '../atoms';
 import { successIcon } from '../icons';
-import { ExternalLink, LinkHeadline } from '../molecules';
+import { ExternalLink, LinkHeadline, TagList } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
 import { formatDate } from '../date';
 
@@ -33,11 +33,8 @@ const linkStyle = css({
   },
 });
 
-const shortTextStyle = css({
+const contentStyle = css({
   marginBottom: `${24 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${36 / perRem}em`,
-  },
 });
 
 type WorkingGroupCardProps = Pick<
@@ -48,6 +45,7 @@ type WorkingGroupCardProps = Pick<
   | 'externalLink'
   | 'lastModifiedDate'
   | 'complete'
+  | 'tags'
 >;
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -57,6 +55,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   externalLink,
   lastModifiedDate,
   complete,
+  tags,
 }) => (
   <Card
     overrideStyles={wrapperStyle}
@@ -90,7 +89,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </div>
       )}
     </div>
-    <div css={shortTextStyle}>
+    <div css={contentStyle}>
       <Anchor
         href={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
@@ -102,6 +101,9 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
           </Paragraph>
         </Ellipsis>
       </Anchor>
+    </div>
+    <div css={contentStyle}>
+      <TagList max={3} tags={tags} />
     </div>
     <Caption noMargin>{`Last updated: ${formatDate(
       new Date(lastModifiedDate),

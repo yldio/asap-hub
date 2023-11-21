@@ -12,6 +12,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
       complete: false,
+      tags: [],
     },
     {
       id: '43',
@@ -20,6 +21,7 @@ const props: ComponentProps<typeof NetworkWorkingGroups> = {
       shortText: 'My Working Group Description',
       lastModifiedDate: '2020-01-1',
       complete: false,
+      tags: [],
     },
   ],
   numberOfItems: 2,

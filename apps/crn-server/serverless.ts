@@ -64,7 +64,7 @@ const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 const slackWebhook = process.env.SLACK_WEBHOOK!;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
-  ? '${env:ALGOLIA_INDEX}'
+  ? process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 

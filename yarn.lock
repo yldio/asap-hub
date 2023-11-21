@@ -986,7 +986,7 @@ __metadata:
     "@types/aws-lambda": 8.10.126
     "@types/babel__preset-env": 7.9.6
     "@types/chance": 1.1.6
-    "@types/cors": 2.8.16
+    "@types/cors": 2.8.17
     "@types/debug": 4.1.12
     "@types/express": 4.17.21
     "@types/graphql": 14.5.0
@@ -1447,7 +1447,7 @@ __metadata:
     "@serverless/typescript": 3.30.1
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.126
-    "@types/cors": 2.8.16
+    "@types/cors": 2.8.17
     "@types/express": 4.17.21
     "@types/jest": 29.5.7
     "@types/jest-when": 3.5.2
@@ -18241,12 +18241,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cors@npm:2.8.16":
-  version: 2.8.16
-  resolution: "@types/cors@npm:2.8.16"
+"@types/cors@npm:2.8.17":
+  version: 2.8.17
+  resolution: "@types/cors@npm:2.8.17"
   dependencies:
     "@types/node": "*"
-  checksum: 0c760aa826167a42bfbccff00d67e39c9dd9852e0cd88610f6d3ea1ed17e438df0f8f1f3175c77bfbfdee4c77bf677b12f6b5bd309358c30b5d0e758624b7250
+  checksum: 469bd85e29a35977099a3745c78e489916011169a664e97c4c3d6538143b0a16e4cc72b05b407dc008df3892ed7bf595f9b7c0f1f4680e169565ee9d64966bde
   languageName: node
   linkType: hard
 

@@ -32,7 +32,7 @@
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.126",
     "@types/debug": "4.1.12",
-    "@types/hapi": "18.0.13",
+    "@types/hapi": "18.0.14",
     "@types/hapi__boom": "9.0.1",
     "@types/hapi__bourne": "workspace:*",
     "@types/hapi__joi": "17.1.13",

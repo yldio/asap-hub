@@ -16,10 +16,8 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
 ][] = [
-  ['created', getProjectEvent('project-id', 'ProjectsCreated')],
-  ['updated', getProjectEvent('project-id', 'ProjectsUpdated')],
+  ['published', getProjectEvent('project-id', 'ProjectsPublished')],
   ['unpublished', getProjectEvent('project-id', 'ProjectsUnpublished')],
-  ['deleted', getProjectEvent('project-id', 'ProjectsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -34,7 +32,7 @@ describe('Index Outputs on Project event handler', () => {
     outputControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getProjectEvent('project-id', 'ProjectsCreated')),
+      indexHandler(getProjectEvent('project-id', 'ProjectsPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -47,7 +45,7 @@ describe('Index Outputs on Project event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getProjectEvent('project-id', 'ProjectsUpdated')),
+      indexHandler(getProjectEvent('project-id', 'ProjectsPublished')),
     ).rejects.toThrow(algoliaError);
   });
 

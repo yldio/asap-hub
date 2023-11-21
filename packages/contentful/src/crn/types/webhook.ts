@@ -1,11 +1,17 @@
 export type ContentfulWebhookPayloadType =
-  | 'teams'
-  | 'news'
-  | 'externalAuthors'
-  | 'users'
-  | 'labs'
   | 'calendars'
   | 'events'
+  | 'externalAuthors'
   | 'interestGroups'
+  | 'labs'
+  | 'news'
   | 'researchOutputs'
+  | 'teams'
+  | 'users'
   | 'workingGroups';
+
+type CapitalizeFirstLetter<S extends string> =
+  S extends `${infer First}${infer Rest}` ? `${Uppercase<First>}${Rest}` : S;
+
+export type WebhookPayloadTypeFirstLetterCapitalized =
+  CapitalizeFirstLetter<ContentfulWebhookPayloadType>;

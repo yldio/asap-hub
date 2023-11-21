@@ -16,13 +16,14 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
 ][] = [
-  ['created', getWorkingGroupEvent('working-group-id', 'WorkingGroupsCreated')],
-  ['updated', getWorkingGroupEvent('working-group-id', 'WorkingGroupsUpdated')],
+  [
+    'created',
+    getWorkingGroupEvent('working-group-id', 'WorkingGroupsPublished'),
+  ],
   [
     'unpublished',
     getWorkingGroupEvent('working-group-id', 'WorkingGroupsUnpublished'),
   ],
-  ['deleted', getWorkingGroupEvent('working-group-id', 'WorkingGroupsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -38,7 +39,7 @@ describe('Index Outputs on Working Group event handler', () => {
 
     await expect(
       indexHandler(
-        getWorkingGroupEvent('working-group-id', 'WorkingGroupsCreated'),
+        getWorkingGroupEvent('working-group-id', 'WorkingGroupsPublished'),
       ),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -52,7 +53,9 @@ describe('Index Outputs on Working Group event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getWorkingGroupEvent('project-id', 'WorkingGroupsUpdated')),
+      indexHandler(
+        getWorkingGroupEvent('project-id', 'WorkingGroupsPublished'),
+      ),
     ).rejects.toThrow(algoliaError);
   });
 

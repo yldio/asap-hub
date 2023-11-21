@@ -1,11 +1,9 @@
 import Boom from '@hapi/boom';
 import { indexLabUsersHandler } from '../../../src/handlers/lab/algolia-index-lab-users-handler';
 import {
-  getLabCreateEvent,
-  getLabDeleteEvent,
+  getLabPublishedEvent,
   LabEventGenerator,
   getLabUnpublishedEvent,
-  updateEvent,
 } from '../../fixtures/labs.fixtures';
 import {
   getListUserResponse,
@@ -20,10 +18,8 @@ const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const mapPayload = toPayload('user');
 
 const possibleEvents: [string, LabEventGenerator][] = [
-  ['created', getLabCreateEvent],
-  ['updated', updateEvent],
+  ['published', getLabPublishedEvent],
   ['unpublished', getLabUnpublishedEvent],
-  ['deleted', getLabDeleteEvent],
 ];
 
 const possibleRacingConditionEvents: [
@@ -31,20 +27,8 @@ const possibleRacingConditionEvents: [
   LabEventGenerator,
   LabEventGenerator,
 ][] = [
-  ['created and updated', getLabCreateEvent, updateEvent],
-  ['updated and created', updateEvent, getLabCreateEvent],
-
-  ['created and unpublished', getLabCreateEvent, getLabUnpublishedEvent],
-  ['unpublished and created', getLabUnpublishedEvent, getLabCreateEvent],
-
-  ['created and deleted', getLabCreateEvent, getLabDeleteEvent],
-  ['deleted and created', getLabDeleteEvent, getLabCreateEvent],
-
-  ['updated and deleted', updateEvent, getLabDeleteEvent],
-  ['deleted and updated', getLabDeleteEvent, updateEvent],
-
-  ['updated and unpublished', updateEvent, getLabUnpublishedEvent],
-  ['unpublished and updated', getLabUnpublishedEvent, updateEvent],
+  ['created and unpublished', getLabPublishedEvent, getLabUnpublishedEvent],
+  ['unpublished and created', getLabUnpublishedEvent, getLabPublishedEvent],
 ];
 
 describe('Index Users on Lab event handler', () => {
@@ -57,9 +41,9 @@ describe('Index Users on Lab event handler', () => {
   test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
     userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(getLabCreateEvent('lab-1234'))).rejects.toThrow(
-      Boom.badData(),
-    );
+    await expect(
+      indexHandler(getLabPublishedEvent('lab-1234')),
+    ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
 
@@ -69,9 +53,9 @@ describe('Index Users on Lab event handler', () => {
     userControllerMock.fetch.mockResolvedValueOnce(getListUserResponse());
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('lab-1234'))).rejects.toThrow(
-      algoliaError,
-    );
+    await expect(
+      indexHandler(getLabPublishedEvent('lab-1234')),
+    ).rejects.toThrow(algoliaError);
   });
 
   test('Should omit non-onboarded and Hidden users', async () => {
@@ -84,7 +68,7 @@ describe('Index Users on Lab event handler', () => {
       ],
     });
 
-    await indexHandler(updateEvent('lab-1234'));
+    await indexHandler(getLabPublishedEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       mapPayload(expect.objectContaining(getUserResponse())),

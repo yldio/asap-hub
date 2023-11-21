@@ -29,10 +29,8 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
 ][] = [
-  ['created', getProjectEvent(projectId, 'ProjectsCreated')],
-  ['updated', getProjectEvent(projectId, 'ProjectsUpdated')],
+  ['published', getProjectEvent(projectId, 'ProjectsPublished')],
   ['unpublished', getProjectEvent(projectId, 'ProjectsUnpublished')],
-  ['deleted', getProjectEvent(projectId, 'ProjectsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -48,7 +46,7 @@ describe('Index Users on Project event handler', () => {
     projectControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getProjectEvent(projectId, 'ProjectsCreated')),
+      indexHandler(getProjectEvent(projectId, 'ProjectsPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(userControllerMock.fetch).not.toHaveBeenCalled();
     expect(algoliaSearchClientMock.search).not.toHaveBeenCalled();
@@ -69,7 +67,7 @@ describe('Index Users on Project event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getProjectEvent(projectId, 'ProjectsUpdated')),
+      indexHandler(getProjectEvent(projectId, 'ProjectsPublished')),
     ).rejects.toThrow(algoliaError);
   });
   test('Should throw the algolia error when searching the record fails', async () => {
@@ -83,7 +81,7 @@ describe('Index Users on Project event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getProjectEvent(projectId, 'ProjectsUpdated')),
+      indexHandler(getProjectEvent(projectId, 'ProjectsPublished')),
     ).rejects.toThrow(algoliaError);
     expect(userControllerMock.fetch).not.toHaveBeenCalled();
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -98,7 +96,7 @@ describe('Index Users on Project event handler', () => {
     userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getProjectEvent(projectId, 'ProjectsUpdated')),
+      indexHandler(getProjectEvent(projectId, 'ProjectsPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });

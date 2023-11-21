@@ -343,7 +343,9 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['CalendarsPublished'],
+              'detail-type': [
+                'CalendarsPublished',
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -378,7 +380,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['UsersPublished'],
+              'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,
@@ -399,7 +401,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['UsersPublished'],
+              'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
             },
             retryPolicy: {
               maximumRetryAttempts: 2,
@@ -426,9 +428,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'ResearchOutputsPublished',
-                'ResearchOutputsUpdated',
                 'ResearchOutputsUnpublished',
-                'ResearchOutputsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -450,10 +450,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
-                'UsersCreated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -476,9 +473,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'ExternalAuthorsPublished',
-                'ExternalAuthorsUpdated',
                 'ExternalAuthorsUnpublished',
-                'ExternalAuthorsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -500,7 +495,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'EventsPublished',
-                'EventsDeleted',
+                'EventsUnpublished',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -522,9 +517,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'UsersPublished',
-                'UsersUpdated',
                 'UsersUnpublished',
-                'UsersDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -547,9 +540,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'ExternalAuthorsPublished',
-                'ExternalAuthorsUpdated',
                 'ExternalAuthorsUnpublished',
-                'ExternalAuthorsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -571,9 +562,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'TeamsPublished',
-                'TeamsUpdated',
                 'TeamsUnpublished',
-                'TeamsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -596,9 +585,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'InterestGroupsPublished',
-                'InterestGroupsUpdated',
                 'InterestGroupsUnpublished',
-                'InterestGroupsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -620,9 +607,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'LabsPublished',
-                'LabsUpdated',
                 'LabsUnpublished',
-                'LabsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -710,8 +695,7 @@ const serverlessConfig: AWS = {
               source: [eventBusSourceContentful],
               'detail-type': [
                 'TeamsPublished',
-                'TeamsUpdated',
-                'TeamsDeleted',
+                'TeamsUnpublished',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -732,7 +716,10 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
+              'detail-type': [
+                'TeamsPublished',
+                'TeamsUnpublished',
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -751,7 +738,10 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
+              'detail-type': [
+                'TeamsPublished',
+                'TeamsUnpublished',
+              ] satisfies WebhookDetailType[],
             },
           },
         },
@@ -794,7 +784,9 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
-              'detail-type': ['WorkingGroupsPublished'],
+              'detail-type': [
+                'WorkingGroupsPublished',
+              ] satisfies WebhookDetailType[],
             },
           },
         },

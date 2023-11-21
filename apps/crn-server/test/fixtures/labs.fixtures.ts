@@ -84,14 +84,8 @@ export const getLabEvent = (
 export const getLabUnpublishedEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsUnpublished') as EventBridgeEvent<LabEvent, LabPayload>;
 
-export const getLabDeleteEvent: LabEventGenerator = (id: string) =>
-  getLabEvent(id, 'LabsDeleted') as EventBridgeEvent<LabEvent, LabPayload>;
-
-export const getLabCreateEvent: LabEventGenerator = (id: string) =>
+export const getLabPublishedEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsPublished') as EventBridgeEvent<LabEvent, LabPayload>;
-
-export const updateEvent: LabEventGenerator = (id: string) =>
-  getLabEvent(id, 'LabsUpdated') as EventBridgeEvent<LabEvent, LabPayload>;
 
 export const getLabDataObject = (): LabDataObject => ({
   name: 'Simpson',

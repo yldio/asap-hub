@@ -1,9 +1,4 @@
-export type EntityEventAction =
-  | 'Created'
-  | 'Published'
-  | 'Updated'
-  | 'Unpublished'
-  | 'Deleted';
+export type EntityEventAction = 'Published' | 'Unpublished';
 
 export type EventEvent = `Events${EntityEventAction}`;
 export type ExternalAuthorEvent = `ExternalAuthors${EntityEventAction}`;
@@ -23,9 +18,9 @@ export type WebhookDetailType =
   | InterestGroupEvent
   | LabEvent
   | NewsEvent
+  | ResearchOutputEvent
   | TeamEvent
   | UserEvent
-  | ResearchOutputEvent
   | WorkingGroupEvent;
 
 export type WebhookDetail<T extends object = object> = {

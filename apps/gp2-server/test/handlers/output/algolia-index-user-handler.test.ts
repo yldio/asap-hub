@@ -16,10 +16,8 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.UserEvent, UserPayload>,
 ][] = [
-  ['created', getUserEvent('user-id', 'UsersCreated')],
-  ['updated', getUserEvent('user-id', 'UsersUpdated')],
+  ['created', getUserEvent('user-id', 'UsersPublished')],
   ['unpublished', getUserEvent('user-id', 'UsersUnpublished')],
-  ['deleted', getUserEvent('user-id', 'UsersDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -34,7 +32,7 @@ describe('Index Outputs on User event handler', () => {
     outputControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getUserEvent('user-id', 'UsersCreated')),
+      indexHandler(getUserEvent('user-id', 'UsersPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -47,7 +45,7 @@ describe('Index Outputs on User event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getUserEvent('user-id', 'UsersUpdated')),
+      indexHandler(getUserEvent('user-id', 'UsersPublished')),
     ).rejects.toThrow(algoliaError);
   });
 

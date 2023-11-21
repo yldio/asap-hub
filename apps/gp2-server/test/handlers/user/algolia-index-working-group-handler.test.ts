@@ -29,13 +29,11 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
 ][] = [
-  ['created', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsCreated')],
-  ['updated', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated')],
+  ['published', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsPublished')],
   [
     'unpublished',
     getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUnpublished'),
   ],
-  ['deleted', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -52,7 +50,7 @@ describe('Index Users on Working Group event handler', () => {
 
     await expect(
       indexHandler(
-        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsCreated'),
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsPublished'),
       ),
     ).rejects.toThrow(Boom.badData());
     expect(userControllerMock.fetch).not.toHaveBeenCalled();
@@ -77,7 +75,7 @@ describe('Index Users on Working Group event handler', () => {
 
     await expect(
       indexHandler(
-        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsPublished'),
       ),
     ).rejects.toThrow(algoliaError);
   });
@@ -95,7 +93,7 @@ describe('Index Users on Working Group event handler', () => {
 
     await expect(
       indexHandler(
-        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsPublished'),
       ),
     ).rejects.toThrow(algoliaError);
     expect(userControllerMock.fetch).not.toHaveBeenCalled();
@@ -114,7 +112,7 @@ describe('Index Users on Working Group event handler', () => {
 
     await expect(
       indexHandler(
-        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsPublished'),
       ),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();

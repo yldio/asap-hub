@@ -16,10 +16,8 @@ const possibleEvents: [
   string,
   EventBridgeEvent<gp2Model.CalendarEvent, CalendarPayload>,
 ][] = [
-  ['created', getCalendarEvent('calendar-id', 'CalendarsCreated')],
-  ['updated', getCalendarEvent('calendar-id', 'CalendarsUpdated')],
+  ['created', getCalendarEvent('calendar-id', 'CalendarsPublished')],
   ['unpublished', getCalendarEvent('calendar-id', 'CalendarsUnpublished')],
-  ['deleted', getCalendarEvent('calendar-id', 'CalendarsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -34,7 +32,7 @@ describe('Index Events on External User event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getCalendarEvent('calendar-id', 'CalendarsCreated')),
+      indexHandler(getCalendarEvent('calendar-id', 'CalendarsPublished')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -47,7 +45,7 @@ describe('Index Events on External User event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getCalendarEvent('calendar-id', 'CalendarsUpdated')),
+      indexHandler(getCalendarEvent('calendar-id', 'CalendarsPublished')),
     ).rejects.toThrow(algoliaError);
   });
 

@@ -19,13 +19,11 @@ const possibleEvents: [
   string,
   EventBridgeEvent<InterestGroupEvent, InterestGroupPayload>,
 ][] = [
-  ['created', getInterestGroupEvent('group-id', 'InterestGroupsCreated')],
-  ['updated', getInterestGroupEvent('group-id', 'InterestGroupsUpdated')],
+  ['created', getInterestGroupEvent('group-id', 'InterestGroupsPublished')],
   [
     'unpublished',
     getInterestGroupEvent('group-id', 'InterestGroupsUnpublished'),
   ],
-  ['deleted', getInterestGroupEvent('group-id', 'InterestGroupsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -40,7 +38,9 @@ describe('Index Events on Group event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsCreated')),
+      indexHandler(
+        getInterestGroupEvent('group-id', 'InterestGroupsPublished'),
+      ),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -53,7 +53,9 @@ describe('Index Events on Group event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsUpdated')),
+      indexHandler(
+        getInterestGroupEvent('group-id', 'InterestGroupsPublished'),
+      ),
     ).rejects.toThrow(algoliaError);
   });
 

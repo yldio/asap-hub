@@ -11,6 +11,7 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   ASAP_DRAFT_RESEARCH_OUTPUT: false,
+  VERSION_RESEARCH_OUTPUT: false,
   DISPLAY_EVENTS: false,
   CONTENTFUL: true,
 };

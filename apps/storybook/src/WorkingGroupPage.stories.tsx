@@ -9,7 +9,7 @@ import {
   createDeliverables,
   createWorkingGroupLeaders,
 } from '@asap-hub/fixtures';
-import { boolean, select, number, text } from '@storybook/addon-knobs';
+import { boolean, select, number, text, array } from '@storybook/addon-knobs';
 import { network } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
@@ -45,7 +45,12 @@ export const Normal = () => {
     lastModifiedDate: new Date(
       text('Last updated', '2022-01-01'),
     ).toISOString(),
-    tags: ['Test Tag'],
+    tags: array('Tags', [
+      'Neurological Diseases',
+      'Clinical Neurology',
+      'Adult Neurology',
+      'Neuroimaging',
+    ]),
   };
 
   return (

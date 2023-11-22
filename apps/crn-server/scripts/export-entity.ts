@@ -3,6 +3,7 @@ import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
+import InterestGroups from '../src/controllers/interest-group.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Teams from '../src/controllers/team.controller';
 import Users from '../src/controllers/user.controller';
@@ -12,7 +13,7 @@ import { getExternalAuthorDataProvider } from '../src/dependencies/external-auth
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
-
+import { getInterestGroupDataProvider } from '../src/dependencies/interest-groups.dependencies';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -76,6 +77,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
 
   const teamDataProvider = getTeamDataProvider();
   const workingGroupDataProvider = getWorkingGroupDataProvider();
+  const interestGroupDataProvider = getInterestGroupDataProvider();
 
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
@@ -88,6 +90,10 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     event: new Events(eventDataProvider),
     team: new Teams(teamDataProvider),
     'working-group': new WorkingGroups(workingGroupDataProvider),
+    'interest-group': new InterestGroups(
+      interestGroupDataProvider,
+      userDataProvider,
+    ),
   };
 
   return controllerMap[entity];
@@ -144,6 +150,13 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
   }
 
   if (type === 'working-group' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
+  if (type === 'interest-group' && 'tags' in record) {
     return {
       ...payload,
       _tags: record.tags,

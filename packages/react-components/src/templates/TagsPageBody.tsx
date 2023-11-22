@@ -6,6 +6,7 @@ import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
 import {
   EventCard,
+  InterestGroupCard,
   PeopleCard,
   ResultList,
   SharedResearchCard,
@@ -44,6 +45,7 @@ export enum TagFieldByEntity {
   event = 'calendar',
   team = 'expertiseAndResourceTags',
   'working-group' = 'deliverables',
+  'interest-group' = 'tags',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,6 +73,9 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 
   if (TagFieldByEntity['working-group'] in data) {
     return <WorkingGroupCard {...data} />;
+  }
+  if (TagFieldByEntity['interest-group'] in data) {
+    return <InterestGroupCard {...data} numberOfTeams={data.teams.length} />;
   }
 
   return <TeamCard {...data} />;

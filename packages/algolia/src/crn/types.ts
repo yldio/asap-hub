@@ -1,6 +1,7 @@
 import {
   EventResponse,
   ExternalAuthorResponse,
+  InterestGroupResponse,
   LabResponse,
   ResearchOutputResponse,
   TeamResponse,
@@ -15,6 +16,7 @@ export const LAB_ENTITY_TYPE = 'lab';
 export const EVENT_ENTITY_TYPE = 'event';
 export const TEAM_ENTITY_TYPE = 'team';
 export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
+export const INTEREST_GROUP_ENTITY_TYPE = 'interest-group';
 export type Payload =
   | {
       data: EventResponse;
@@ -43,4 +45,8 @@ export type Payload =
   | {
       data: WorkingGroupResponse;
       type: typeof WORKING_GROUP_ENTITY_TYPE;
+    }
+  | {
+      data: InterestGroupResponse;
+      type: typeof INTEREST_GROUP_ENTITY_TYPE;
     };

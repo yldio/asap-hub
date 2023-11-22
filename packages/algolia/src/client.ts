@@ -7,6 +7,7 @@ import {
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
+  InterestGroupResponse,
   ResearchOutputResponse,
   TeamResponse,
   UserResponse,
@@ -21,6 +22,7 @@ import {
   USER_ENTITY_TYPE,
   TEAM_ENTITY_TYPE,
   WORKING_GROUP_ENTITY_TYPE,
+  INTEREST_GROUP_ENTITY_TYPE,
 } from './crn';
 import {
   NEWS_ENTITY_TYPE,
@@ -41,6 +43,7 @@ export type EntityResponses = {
     [EVENT_ENTITY_TYPE]: EventResponse;
     [TEAM_ENTITY_TYPE]: TeamResponse;
     [WORKING_GROUP_ENTITY_TYPE]: WorkingGroupResponse;
+    [INTEREST_GROUP_ENTITY_TYPE]: InterestGroupResponse;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;

@@ -1,4 +1,5 @@
 import { EventResponse } from './event';
+import { InterestGroupResponse } from './interest-group';
 import { ResearchOutputResponse } from './research-output';
 import { TeamResponse } from './team';
 import { UserResponse } from './user';
@@ -9,4 +10,5 @@ export type TagSearchResponse =
   | UserResponse
   | EventResponse
   | TeamResponse
-  | WorkingGroupResponse;
+  | WorkingGroupResponse
+  | InterestGroupResponse;

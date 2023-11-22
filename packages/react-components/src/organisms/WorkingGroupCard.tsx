@@ -106,9 +106,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </Ellipsis>
       </Anchor>
     </div>
-    <div css={tagsContainer}>
-      <TagList max={3} tags={tags} />
-    </div>
+    {!!tags.length && (
+      <div css={tagsContainer}>
+        <TagList max={3} tags={tags} />
+      </div>
+    )}
     <Caption noMargin>{`Last updated: ${formatDate(
       new Date(lastModifiedDate),
     )}`}</Caption>

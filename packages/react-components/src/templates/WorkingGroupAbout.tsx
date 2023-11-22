@@ -67,7 +67,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <RichText text={description} />
       </Collapsible>
     </Card>
-    {tags.length ? (
+    {!!tags.length && (
       <Card>
         <Headline3>Tags</Headline3>
         <div css={tagListStyle}>
@@ -78,7 +78,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         </div>
         <TagList tags={tags} />
       </Card>
-    ) : null}
+    )}
     <section id={membersListElementId}>
       <WorkingGroupMembers
         leaders={leaders}

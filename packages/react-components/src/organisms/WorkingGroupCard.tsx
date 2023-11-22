@@ -33,8 +33,12 @@ const linkStyle = css({
   },
 });
 
-const contentStyle = css({
+const shortTextStyle = css({
   marginBottom: `${24 / perRem}em`,
+});
+
+const tagsContainer = css({
+  marginBottom: `${12 / perRem}em`,
 });
 
 type WorkingGroupCardProps = Pick<
@@ -89,7 +93,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </div>
       )}
     </div>
-    <div css={contentStyle}>
+    <div css={shortTextStyle}>
       <Anchor
         href={
           network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
@@ -102,7 +106,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </Ellipsis>
       </Anchor>
     </div>
-    <div css={contentStyle}>
+    <div css={tagsContainer}>
       <TagList max={3} tags={tags} />
     </div>
     <Caption noMargin>{`Last updated: ${formatDate(

@@ -131,6 +131,7 @@ type OutputFormProps = {
   >;
   serverValidationErrors?: ValidationErrorResponse['data'];
   clearServerValidationError?: (instancePath: string) => void;
+  createVersion?: boolean;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -220,6 +221,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   getRelatedEventSuggestions,
   serverValidationErrors = [],
   clearServerValidationError = noop,
+  createVersion = false,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -819,7 +821,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 </div>
                 <div css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}>
                   <Button primary noMargin onClick={save} enabled={!isSaving}>
-                    {isEditing ? 'Save' : 'Publish'}
+                    {isEditing && !createVersion ? 'Save' : 'Publish'}
                   </Button>
                 </div>
               </div>

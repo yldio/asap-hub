@@ -16,9 +16,11 @@ import { useUpdateOutput } from './state';
 
 interface ShareOutputProps {
   output: gp2Model.OutputBaseResponse;
+  createVersion?: boolean;
 }
 const ShareOutput: React.FC<ShareOutputProps> = ({
   output,
+  createVersion = false,
 }: ShareOutputProps) => {
   const entityType =
     output?.mainEntity.type === 'WorkingGroups' ? 'workingGroup' : 'project';
@@ -51,6 +53,7 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
     >
       <OutputForm
         {...output}
+        createVersion={createVersion}
         entityType={entityType}
         shareOutput={async (payload) =>
           shareOutput(payload).catch(

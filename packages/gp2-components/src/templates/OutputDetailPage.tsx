@@ -3,6 +3,7 @@ import {
   Link,
   pixels,
   editIcon,
+  VersionIcon,
   duplicateIcon,
   mail,
   RelatedEventsCard,
@@ -83,9 +84,11 @@ type OutputDetailPageProps = Pick<
   | 'tags'
 > & {
   isAdministrator: boolean;
+  canVersion?: boolean;
 };
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
+  canVersion = false,
   ...output
 }: OutputDetailPageProps) => (
   <PageNotifications page="output">
@@ -139,6 +142,25 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   {duplicateIcon} Duplicate
                 </Link>
               </div>
+              {canVersion && (
+                <div css={leftButtons}>
+                  <Link
+                    noMargin
+                    href={
+                      gp2Routing
+                        .outputs({})
+                        .output({ outputId: output.id })
+                        .version({}).$
+                    }
+                    buttonStyle
+                    small
+                    primary
+                  >
+                    <VersionIcon />
+                    Add Version
+                  </Link>
+                </div>
+              )}
             </div>
           ) : null}
           <OutputCard {...output} detailedView />

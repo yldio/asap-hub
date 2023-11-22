@@ -123,7 +123,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     environment:
       name: ${{ inputs.environment-name }}
-      url: ${{ steps.deploy.outputs.app-url }}
+      url: ${{ steps.setup.outputs.app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

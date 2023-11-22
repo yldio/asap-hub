@@ -21,6 +21,10 @@ on:
         description: 'GP2 Contentful environment name'
         required: true
         type: string
+      gp2-create-env:
+        required: false
+        type: boolean
+        description: This should be true when syncing a PR env
     secrets:
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
@@ -61,6 +65,8 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
           pr-number: ${{ inputs.pr-number }}
+          gp2-create-env: ${{ inputs.gp2-create-env }}
+
       - name: Get Algolia Keys
         id: algolia-keys
         uses: ./.github/actions/algolia-keys

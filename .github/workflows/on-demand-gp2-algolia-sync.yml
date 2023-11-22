@@ -37,6 +37,7 @@ jobs:
       environment-name: ${{ github.event.inputs.environment-name }}
       entity: ${{ github.event.inputs.entity }}
       pr-number: ${{ github.event.inputs.pr-number }}
+      gp2-create-env: ${{ inputs.environment-name == 'Branch' }}
       contentful-environment-id: ${{ github.event.inputs.contentful-environment-id }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

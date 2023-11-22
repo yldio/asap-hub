@@ -135,7 +135,7 @@ const serverlessConfig: AWS = {
     timeout: 16,
     memorySize: 1024,
     region,
-    stage: stage,
+    stage,
     versionFunctions: false,
     httpApi: {
       payload: '2.0',

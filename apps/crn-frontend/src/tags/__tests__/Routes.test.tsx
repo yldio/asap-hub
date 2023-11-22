@@ -1,5 +1,6 @@
 import {
   AlgoliaSearchClient,
+  CRNTagSearchEntitiesListArray,
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
@@ -22,7 +23,7 @@ import { useAlgolia } from '../../hooks/algolia';
 import { getTagSearch } from '../api';
 import { refreshTagSearchIndex } from '../state';
 
-import Routes, { entities } from '../Routes';
+import Routes from '../Routes';
 
 jest.mock('../api');
 jest.mock('../../hooks/algolia', () => ({
@@ -84,9 +85,13 @@ it('allows typing in tag queries', async () => {
   userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
   await waitFor(() => {
-    expect(mockSearchForTagValues).toHaveBeenCalledWith(entities, 'test123', {
-      facetFilters: [],
-    });
+    expect(mockSearchForTagValues).toHaveBeenCalledWith(
+      CRNTagSearchEntitiesListArray,
+      'test123',
+      {
+        facetFilters: [],
+      },
+    );
   });
 });
 

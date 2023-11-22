@@ -202,3 +202,12 @@ export type CRNEntities = keyof EntityResponses['crn'];
 export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author'>;
 
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;
+
+export const CRNTagSearchEntitiesListArray: CRNTagSearchEntitiesList = [
+  'research-output',
+  'user',
+  'event',
+  'team',
+  'tutorial',
+  'working-group',
+];

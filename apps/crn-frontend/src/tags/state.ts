@@ -16,7 +16,7 @@ import {
 import { useAlgolia } from '../hooks/algolia';
 import { getTagSearch, TagSearchListOptions } from './api';
 
-type RefreshTagSearchListOptions = GetListOptions & {
+type RefreshTagSearchListOptions = Omit<GetListOptions, 'filters'> & {
   refreshToken: number;
 };
 
@@ -42,7 +42,7 @@ export const refreshTagSearchIndex = atom<number>({
 
 export const tagsSearchState = selectorFamily<
   ListResponse<TagSearchResponse> | Error | undefined,
-  TagSearchListOptions
+  TagSearchListOptions & { entityTypes: CRNTagSearchEntities[] }
 >({
   key: 'tagSearch',
   get:
@@ -112,15 +112,13 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   entityTypes: ResponsesKey[],
   options: TagSearchListOptions,
 ) => {
-  const [tagSearch, setTagSearch] = useRecoilState(tagsSearchState(options));
+  const [tagSearch, setTagSearch] = useRecoilState(
+    tagsSearchState({ ...options, entityTypes }),
+  );
   const { client } = useAlgolia();
 
   if (tagSearch === undefined) {
-    if (
-      options.searchQuery === '' &&
-      options.filters.size === 0 &&
-      (options.tags?.length ?? 0) === 0
-    ) {
+    if (options.searchQuery === '' && options.tags.length === 0) {
       return EMPTY_ALGOLIA_RESPONSE;
     }
 

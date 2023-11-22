@@ -1,7 +1,7 @@
 import { AlgoliaClient, CRNTagSearchEntities } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
-export type TagSearchListOptions = GetListOptions & {
+export type TagSearchListOptions = Omit<GetListOptions, 'filters'> & {
   tags: string[];
 };
 

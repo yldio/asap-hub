@@ -9,6 +9,7 @@ import {
   gp2 as gp2Model,
   ResearchOutputResponse,
   TeamResponse,
+  TutorialsResponse,
   UserResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -21,6 +22,7 @@ import {
   USER_ENTITY_TYPE,
   TEAM_ENTITY_TYPE,
   WORKING_GROUP_ENTITY_TYPE,
+  TUTORIAL_ENTITY_TYPE,
 } from './crn';
 import {
   NEWS_ENTITY_TYPE,
@@ -41,6 +43,7 @@ export type EntityResponses = {
     [EVENT_ENTITY_TYPE]: EventResponse;
     [TEAM_ENTITY_TYPE]: TeamResponse;
     [WORKING_GROUP_ENTITY_TYPE]: WorkingGroupResponse;
+    [TUTORIAL_ENTITY_TYPE]: TutorialsResponse;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;

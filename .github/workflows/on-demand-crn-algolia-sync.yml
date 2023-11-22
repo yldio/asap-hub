@@ -14,6 +14,7 @@ on:
           - events
           - teams
           - working-groups
+          - tutorials
           - all
       environment-name:
         required: true

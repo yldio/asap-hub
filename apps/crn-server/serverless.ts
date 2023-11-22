@@ -919,7 +919,7 @@ const serverlessConfig: AWS = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: hostname,
+          HostedZoneName: `${hostname}.`,
           RecordSets: [
             {
               Name: '${self:custom.apiHostname}',
@@ -1416,7 +1416,7 @@ const serverlessConfig: AWS = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: hostname,
+          HostedZoneName: `${hostname}.`,
           RecordSets: [
             {
               Name: '${self:custom.appHostname}',

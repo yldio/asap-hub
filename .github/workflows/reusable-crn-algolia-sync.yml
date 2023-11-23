@@ -17,6 +17,11 @@ on:
         required: false
         type: string
         description: The PR number to run for
+      crn-create-env:
+        required: false
+        type: boolean
+        description: This should be true when syncing a PR env
+
       contentful-environment-id:
         description: 'CRN Contentful environment name'
         required: true
@@ -61,6 +66,7 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
           pr-number: ${{ inputs.pr-number }}
+          crn-create-env: ${{ inputs.crn-create-env }}
       - name: Get Algolia Keys
         id: algolia-keys
         uses: ./.github/actions/algolia-keys

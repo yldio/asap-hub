@@ -1,5 +1,8 @@
 import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
-import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
+import {
+  getAlgoliaResearchOutputResponse,
+  getResearchOutputResponse,
+} from '../../fixtures/research-output.fixtures';
 import { getTeamPublishedEvent } from '../../fixtures/teams.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
@@ -39,7 +42,10 @@ describe('Team Research Outputs Index', () => {
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
       items.map((item) => ({
-        data: item,
+        data: {
+          ...getAlgoliaResearchOutputResponse(),
+          id: item.id,
+        },
         type: 'research-output',
       })),
     );

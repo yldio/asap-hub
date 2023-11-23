@@ -3,9 +3,9 @@ import {
   ExternalAuthorResponse,
   LabResponse,
   NewsResponse,
-  ResearchOutputResponse,
   TeamResponse,
   TutorialsResponse,
+  AlgoliaResearchOutputResponse,
   UserResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -33,7 +33,7 @@ export type Payload =
       type: typeof LAB_ENTITY_TYPE;
     }
   | {
-      data: ResearchOutputResponse;
+      data: AlgoliaResearchOutputResponse;
       type: typeof RESEARCH_OUTPUT_ENTITY_TYPE;
     }
   | {

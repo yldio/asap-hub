@@ -6,6 +6,7 @@ import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
 import { indexResearchOutputHandler } from '../../../src/handlers/research-output/algolia-index-research-output-handler';
 import {
   getResearchOutputEvent,
+  getAlgoliaResearchOutputResponse,
   getResearchOutputResponse,
 } from '../../fixtures/research-output.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -22,15 +23,17 @@ describe('Research Output index handler', () => {
 
   test('Should fetch the research-output and create a record in Algolia when research-output is published', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    const expectedPayload = getAlgoliaResearchOutputResponse();
+
     researchOutputResponse.relatedResearch = [];
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
 
-    await indexHandler(publishedEvent('ro-1234'));
+    await indexHandler(publishedEvent(researchOutputResponse.id));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(expectedPayload),
       type: 'research-output',
     });
   });
@@ -47,11 +50,11 @@ describe('Research Output index handler', () => {
       researchOutputResponse,
     );
 
-    await indexHandler(publishedEvent('ro-1234'));
+    await indexHandler(publishedEvent(researchOutputResponse.id));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: {
-        ...researchOutputResponse,
+        ...getAlgoliaResearchOutputResponse(),
         _tags: [
           'methods-tag',
           'organisms-tag',
@@ -66,10 +69,17 @@ describe('Research Output index handler', () => {
 
   test('Should fetch the research-output and create two records in Algolia when research-output is published and own related RO is published', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    const expectedPayload = getAlgoliaResearchOutputResponse();
 
     const relatedResearchOutputResponse = getResearchOutputResponse();
     relatedResearchOutputResponse.id = 'ro-1235';
     relatedResearchOutputResponse.title = 'Related research output';
+
+    const expectedRelatedResearchPayload = {
+      ...getAlgoliaResearchOutputResponse(),
+      id: relatedResearchOutputResponse.id,
+      title: relatedResearchOutputResponse.title,
+    };
 
     researchOutputResponse.relatedResearch = [
       {
@@ -92,30 +102,43 @@ describe('Research Output index handler', () => {
       .mockResolvedValueOnce(researchOutputResponse)
       .mockResolvedValueOnce(relatedResearchOutputResponse);
 
-    await indexHandler(publishedEvent('ro-1234'));
+    await indexHandler(publishedEvent(researchOutputResponse.id));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(expectedPayload),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: expect.objectContaining(relatedResearchOutputResponse),
+      data: expect.objectContaining(expectedRelatedResearchPayload),
       type: 'research-output',
     });
   });
 
   test('Should fetch the research-output and create three records in Algolia when research-output is published and own and foreign related ROs are published', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    const expectedPayload = getAlgoliaResearchOutputResponse();
 
     const ownRelatedResearchOutputResponse = getResearchOutputResponse();
     ownRelatedResearchOutputResponse.id = 'ro-1235';
     ownRelatedResearchOutputResponse.title = 'Own related research output';
 
+    const expectedOwnRelatedPayload = {
+      ...getAlgoliaResearchOutputResponse(),
+      id: ownRelatedResearchOutputResponse.id,
+      title: ownRelatedResearchOutputResponse.title,
+    };
+
     const foreignRelatedResearchOutputResponse = getResearchOutputResponse();
     foreignRelatedResearchOutputResponse.id = 'ro-1236';
     foreignRelatedResearchOutputResponse.title =
       'Foreign related research output';
+
+    const expectedforeignRelatedPayload = {
+      ...getAlgoliaResearchOutputResponse(),
+      id: foreignRelatedResearchOutputResponse.id,
+      title: foreignRelatedResearchOutputResponse.title,
+    };
 
     researchOutputResponse.relatedResearch = [
       {
@@ -143,19 +166,19 @@ describe('Research Output index handler', () => {
       .mockResolvedValueOnce(ownRelatedResearchOutputResponse)
       .mockResolvedValueOnce(foreignRelatedResearchOutputResponse);
 
-    await indexHandler(publishedEvent('ro-1234'));
+    await indexHandler(publishedEvent(researchOutputResponse.id));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(3);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(expectedPayload),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: expect.objectContaining(ownRelatedResearchOutputResponse),
+      data: expect.objectContaining(expectedOwnRelatedPayload),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
-      data: expect.objectContaining(foreignRelatedResearchOutputResponse),
+      data: expect.objectContaining(expectedforeignRelatedPayload),
       type: 'research-output',
     });
   });

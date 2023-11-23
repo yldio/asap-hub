@@ -1,5 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse } from '@asap-hub/model';
+import { ListResponse, toAlgoliaResearchOutput } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -114,17 +114,12 @@ const transformRecords = (
   };
 
   if (type === 'research-output' && 'subtype' in record) {
-    const subtype = record.subtype;
+    const { objectID, __meta } = payload;
 
     return {
-      ...payload,
-      _tags: [
-        ...record.methods,
-        ...record.organisms,
-        ...record.environments,
-        ...(subtype ? [subtype] : []),
-        ...record.keywords,
-      ],
+      objectID,
+      __meta,
+      ...toAlgoliaResearchOutput(record),
     };
   }
 

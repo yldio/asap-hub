@@ -4,9 +4,13 @@ import {
   isResearchOutputDocumentType,
   isResearchOutputType,
   researchOutputMapType,
-  ResearchOutputResponse,
-  teamResearchOutput,
+  toAlgoliaResearchOutput,
 } from '../src/research-output';
+
+import {
+  getAlgoliaResearchOutputResponse,
+  getResearchOutputResponse,
+} from '../../../apps/crn-server/test/fixtures/research-output.fixtures';
 
 describe('Research Output Model', () => {
   describe('Document Types', () => {
@@ -57,5 +61,14 @@ describe('convertDecisionToBoolean', () => {
     ${'returns undefined when Not Sure'} | ${'Not Sure'} | ${undefined}
   `('$description', ({ given, expected }) => {
     expect(convertDecisionToBoolean(given)).toEqual(expected);
+  });
+});
+
+describe('toAlgoliaResearchOutput', () => {
+  it('should convert cms response to list data object', () => {
+    const result = toAlgoliaResearchOutput(getResearchOutputResponse());
+    const expected = getAlgoliaResearchOutputResponse();
+
+    expect(result).toEqual(expected);
   });
 });

@@ -1,8 +1,8 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import {
-  ListResponse,
-  ResearchOutputResponse,
+  AlgoliaResearchOutputListResponse,
   TeamEvent,
+  toAlgoliaResearchOutput,
 } from '@asap-hub/model';
 import {
   createProcessingFunction,
@@ -31,19 +31,23 @@ export const indexResearchOutputByTeamHandler = (
     logger,
   );
   return async (event) => {
-    const fetchFunction = ({
+    const fetchFunction = async ({
       skip,
       take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<
-      ListResponse<ResearchOutputResponse>
-    > =>
-      researchOutputController.fetch({
+    }: LoopOverCustomCollectionFetchOptions): Promise<AlgoliaResearchOutputListResponse> => {
+      const { items, total } = await researchOutputController.fetch({
         filter: {
           teamId: event.detail.resourceId,
         },
         skip,
         take,
       });
+
+      return {
+        total,
+        items: items.map(toAlgoliaResearchOutput),
+      };
+    };
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };

@@ -338,6 +338,27 @@ export type ResearchOutputResponse =
   | ResearchOutputWorkingGroupResponse
   | ResearchOutputTeamResponse;
 
+export type AlgoliaResearchOutputResponse = Pick<
+  ResearchOutputResponse,
+  | 'addedDate'
+  | 'authors'
+  | 'created'
+  | 'documentType'
+  | 'id'
+  | 'isInReview'
+  | 'labs'
+  | 'link'
+  | 'published'
+  | 'publishingEntity'
+  | 'teams'
+  | 'title'
+  | 'type'
+  | 'workingGroups'
+> & { _tags: string[] };
+
+export type AlgoliaResearchOutputListResponse =
+  ListResponse<AlgoliaResearchOutputResponse>;
+
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 
 export type AuthorPostRequest =
@@ -402,4 +423,54 @@ export const convertBooleanToDecision = (bool?: boolean): DecisionOption => {
     return 'Not Sure';
   }
   return bool ? 'Yes' : 'No';
+};
+
+export const toAlgoliaResearchOutput = (
+  researchOutput: ResearchOutputResponse,
+): AlgoliaResearchOutputResponse => {
+  const {
+    id,
+    published,
+    addedDate,
+    authors,
+    created,
+    documentType,
+    labs,
+    link,
+    teams,
+    title,
+    type,
+    workingGroups,
+    isInReview,
+    methods,
+    organisms,
+    environments,
+    subtype,
+    keywords,
+    publishingEntity,
+  } = researchOutput;
+
+  return {
+    id,
+    published,
+    addedDate,
+    authors,
+    created,
+    documentType,
+    labs,
+    link,
+    teams,
+    title,
+    type,
+    workingGroups,
+    isInReview,
+    publishingEntity,
+    _tags: [
+      ...methods,
+      ...organisms,
+      ...environments,
+      ...(subtype ? [subtype] : []),
+      ...keywords,
+    ],
+  };
 };

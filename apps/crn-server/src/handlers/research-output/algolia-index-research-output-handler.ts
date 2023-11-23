@@ -1,6 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
-import { ResearchOutputEvent } from '@asap-hub/model';
+import { ResearchOutputEvent, toAlgoliaResearchOutput } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -31,19 +31,8 @@ export const indexResearchOutputHandler =
           return researchOutput;
         }
 
-        const data = {
-          ...researchOutput,
-          _tags: [
-            ...researchOutput.methods,
-            ...researchOutput.organisms,
-            ...researchOutput.environments,
-            researchOutput.subtype,
-            ...researchOutput.keywords,
-          ],
-        };
-
         await algoliaClient.save({
-          data,
+          data: toAlgoliaResearchOutput(researchOutput),
           type: 'research-output',
         });
 

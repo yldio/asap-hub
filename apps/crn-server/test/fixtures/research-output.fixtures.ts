@@ -5,6 +5,7 @@ import {
   ResearchOutputDataObject,
   ResearchOutputDraftDataObject,
   ResearchOutputEvent,
+  AlgoliaResearchOutputResponse,
   ResearchOutputPostRequest,
   ResearchOutputPublishedDataObject,
   ResearchOutputPutRequest,
@@ -127,6 +128,52 @@ export const getResearchOutputResponse = (): ResearchOutputResponse => {
       : undefined,
   };
 };
+
+export const getAlgoliaResearchOutputResponse =
+  (): AlgoliaResearchOutputResponse => {
+    const researchOutput = getResearchOutputDataObject();
+    const {
+      id,
+      published,
+      addedDate,
+      authors,
+      created,
+      documentType,
+      labs,
+      link,
+      teams,
+      title,
+      type,
+      isInReview,
+      publishingEntity,
+    } = researchOutput;
+
+    return {
+      id,
+      published,
+      addedDate,
+      authors,
+      created,
+      documentType,
+      labs,
+      link,
+      teams,
+      title,
+      type,
+      isInReview,
+      publishingEntity,
+      _tags: [
+        ...researchOutput.methods,
+        ...researchOutput.organisms,
+        ...researchOutput.environments,
+        ...(researchOutput.subtype ? [researchOutput.subtype] : []),
+        ...researchOutput.keywords,
+      ],
+      workingGroups: researchOutput.workingGroups[0]
+        ? [researchOutput.workingGroups[0]]
+        : undefined,
+    };
+  };
 
 export const getListResearchOutputResponse = ({
   published = true,

@@ -19,6 +19,7 @@ import {
   getResearchOutput,
   getResearchOutputs,
   getResearchTags,
+  getResearchOutputsFromCMS,
 } from '../api';
 
 jest.mock('../../config');
@@ -441,6 +442,92 @@ describe('getDraftResearchOutputs', () => {
       ),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch draft research outputs. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getResearchOutputsFromCMS', () => {
+  it('makes an authorized GET request for research outputs', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/research-outputs')
+      .query(true)
+      .reply(200, {});
+    await getResearchOutputsFromCMS(
+      {
+        pageSize: 10,
+        searchQuery: '',
+        teamId: '123',
+        currentPage: 0,
+        filters: new Set(),
+      },
+      'Bearer x',
+    );
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a team research outputs query and returns results', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        teamId: '123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getResearchOutputsFromCMS(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          teamId: '123',
+          currentPage: 0,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a working group research outputs query and returns results', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        workingGroupId: '123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getResearchOutputsFromCMS(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          workingGroupId: '123',
+          currentPage: 0,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('errors for another status', async () => {
+    nock(API_BASE_URL).get('/research-outputs').query(true).reply(500);
+    await expect(
+      getResearchOutputsFromCMS(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          teamId: '123',
+          currentPage: 0,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch research outputs. Expected status 2xx. Received status 500."`,
     );
   });
 });

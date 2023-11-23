@@ -145,6 +145,32 @@ export const getDraftResearchOutputs = async (
   };
 };
 
+// As algolia has reduced data we need to fetch data from cms for `Export as CSV` feature
+export const getResearchOutputsFromCMS = async (
+  options: ResearchOutputPublishedListOptions,
+  authorization: string,
+): Promise<ListResponse<ResearchOutputResponse>> => {
+  const url = createListApiUrl(`research-outputs`, options);
+
+  if (options.workingGroupId) {
+    url.searchParams.set('workingGroupId', options.workingGroupId);
+  }
+  if (options.teamId) {
+    url.searchParams.set('teamId', options.teamId);
+  }
+
+  const resp = await fetch(url.toString(), {
+    headers: { authorization },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch research outputs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
 export const getResearchTags = async (
   authorization: string,
 ): Promise<ResearchTagResponse[]> => {

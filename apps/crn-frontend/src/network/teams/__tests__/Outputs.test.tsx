@@ -16,13 +16,11 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   getDraftResearchOutputs,
   getResearchOutputs,
+  getResearchOutputsFromCMS,
 } from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import {
-  MAX_ALGOLIA_RESULTS,
-  MAX_CONTENTFUL_RESULTS,
-} from '../../../shared-research/export';
+import { MAX_CONTENTFUL_RESULTS } from '../../../shared-research/export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -43,6 +41,12 @@ afterEach(() => {
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+
+const mockGetResearchOutputsFromCMS =
+  getResearchOutputsFromCMS as jest.MockedFunction<
+    typeof getResearchOutputsFromCMS
+  >;
+
 const mockGetDraftResearchOutputs =
   getDraftResearchOutputs as jest.MockedFunction<
     typeof getDraftResearchOutputs
@@ -77,7 +81,7 @@ const renderOutputs = async (
             filters,
             teamId: team.id,
             currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
+            pageSize: MAX_CONTENTFUL_RESULTS,
           }),
         );
       }}
@@ -176,8 +180,13 @@ it('triggers export with the same parameters and custom file name', async () => 
   const filters = new Set(['Grant Document']);
   const searchQuery = 'Some Search';
   const teamId = '12345';
+
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
+  });
+
+  mockGetResearchOutputsFromCMS.mockResolvedValue({
+    ...createListResearchOutputResponse(2),
   });
   const { getByRole, getByText, getByLabelText } = await renderOutputs(
     searchQuery,
@@ -203,13 +212,16 @@ it('triggers export with the same parameters and custom file name', async () => 
     expect.anything(),
   );
   await waitFor(() =>
-    expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-      searchQuery,
-      filters,
-      teamId,
-      currentPage: 0,
-      pageSize: MAX_ALGOLIA_RESULTS,
-    }),
+    expect(mockGetResearchOutputsFromCMS).toHaveBeenCalledWith(
+      {
+        searchQuery,
+        filters,
+        teamId,
+        currentPage: 0,
+        pageSize: MAX_CONTENTFUL_RESULTS,
+      },
+      expect.anything(),
+    ),
   );
 });
 

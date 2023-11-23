@@ -1,14 +1,15 @@
 import { format } from 'date-fns';
+import { useRecoilValue } from 'recoil';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
-import { useAlgolia } from '../hooks/algolia';
-import { getResearchOutputs } from './api';
-import { algoliaResultsToStream, researchOutputToCSV } from './export';
+import { getResearchOutputsFromCMS } from './api';
+import { squidexResultsToStream, researchOutputToCSV } from './export';
+import { authorizationState } from '../auth/state';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
@@ -27,23 +28,27 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     currentPage,
     pageSize,
   });
-  const { client } = useAlgolia();
 
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
     pageSize,
   );
+  const authorization = useRecoilValue(authorizationState);
+
   const exportResults = () =>
-    algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+    squidexResultsToStream<ResearchOutputResponse>(
       createCsvFileStream(`SharedOutputs_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),
       (paginationParams) =>
-        getResearchOutputs(client, {
-          filters,
-          searchQuery,
-          ...paginationParams,
-        }),
+        getResearchOutputsFromCMS(
+          {
+            filters,
+            searchQuery,
+            ...paginationParams,
+          },
+          authorization,
+        ),
       researchOutputToCSV,
     );
 

@@ -16,12 +16,10 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   getDraftResearchOutputs,
   getResearchOutputs,
+  getResearchOutputsFromCMS,
 } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
-import {
-  MAX_ALGOLIA_RESULTS,
-  MAX_CONTENTFUL_RESULTS,
-} from '../../../shared-research/export';
+import { MAX_CONTENTFUL_RESULTS } from '../../../shared-research/export';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
@@ -40,6 +38,12 @@ jest.mock('../api');
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+
+const mockGetResearchOutputsFromCMS =
+  getResearchOutputsFromCMS as jest.MockedFunction<
+    typeof getResearchOutputsFromCMS
+  >;
+
 const mockGetDraftResearchOutputs =
   getDraftResearchOutputs as jest.MockedFunction<
     typeof getDraftResearchOutputs
@@ -72,7 +76,7 @@ const renderOutputs = async (
             filters: new Set<string>(),
             workingGroupId: workingGroup.id,
             currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
+            pageSize: MAX_CONTENTFUL_RESULTS,
           }),
         );
       }}
@@ -166,8 +170,13 @@ it('renders the no outputs component correctly for a different working group', a
 it('triggers research output export with custom file name', async () => {
   const filters = new Set();
   const workingGroupId = '12345';
+
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
+  });
+
+  mockGetResearchOutputsFromCMS.mockResolvedValue({
+    ...createListResearchOutputResponse(2),
   });
   const { getByText } = await renderOutputs({
     ...createWorkingGroupResponse({}),
@@ -177,13 +186,16 @@ it('triggers research output export with custom file name', async () => {
 
   userEvent.click(getByText(/export as csv/i));
   await waitFor(() =>
-    expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-      searchQuery: '',
-      filters,
-      workingGroupId,
-      currentPage: 0,
-      pageSize: MAX_ALGOLIA_RESULTS,
-    }),
+    expect(mockGetResearchOutputsFromCMS).toHaveBeenCalledWith(
+      {
+        searchQuery: '',
+        filters,
+        workingGroupId,
+        currentPage: 0,
+        pageSize: MAX_CONTENTFUL_RESULTS,
+      },
+      expect.anything(),
+    ),
   );
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(

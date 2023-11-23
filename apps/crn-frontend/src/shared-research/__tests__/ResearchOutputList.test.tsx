@@ -1,3 +1,4 @@
+import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -8,8 +9,8 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getResearchOutputs } from '../api';
-import { MAX_ALGOLIA_RESULTS } from '../export';
+import { getResearchOutputs, getResearchOutputsFromCMS } from '../api';
+import { MAX_CONTENTFUL_RESULTS } from '../export';
 import ResearchOutputList from '../ResearchOutputList';
 import { researchOutputsState } from '../state';
 
@@ -31,6 +32,11 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+
+const mockGetResearchOutputsFromCMS =
+  getResearchOutputsFromCMS as jest.MockedFunction<
+    typeof getResearchOutputsFromCMS
+  >;
 
 const renderResearchOutputList = async (searchQuery = '') => {
   const result = render(
@@ -83,8 +89,8 @@ it('renders a list of research outputs', async () => {
 });
 
 it('triggers and export with the same parameters', async () => {
-  mockGetResearchOutputs.mockResolvedValue(
-    createResearchOutputListAlgoliaResponse(2),
+  mockGetResearchOutputsFromCMS.mockResolvedValue(
+    createListResearchOutputResponse(2),
   );
   const { getByText } = await renderResearchOutputList('example');
   userEvent.click(getByText(/export/i));
@@ -92,18 +98,16 @@ it('triggers and export with the same parameters', async () => {
     expect.stringMatching(/SharedOutputs_\d+\.csv/),
     expect.anything(),
   );
-  expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-    searchQuery: '',
-    filters: new Set(),
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-  });
-  expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-    searchQuery: '',
-    filters: new Set(),
-    currentPage: 0,
-    pageSize: MAX_ALGOLIA_RESULTS,
-  });
+
+  expect(mockGetResearchOutputsFromCMS).toHaveBeenCalledWith(
+    {
+      searchQuery: '',
+      filters: new Set(),
+      currentPage: 0,
+      pageSize: MAX_CONTENTFUL_RESULTS,
+    },
+    expect.anything(),
+  );
 });
 
 it('renders an algolia tagged result list and hit', async () => {

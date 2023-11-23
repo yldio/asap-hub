@@ -1,4 +1,3 @@
-import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import { SearchFrame, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
@@ -16,13 +15,12 @@ import { useRecoilValue } from 'recoil';
 
 import { authorizationState } from '../../auth/state';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
-import { useAlgolia } from '../../hooks/algolia';
+
 import {
   getDraftResearchOutputs,
-  getResearchOutputs,
+  getResearchOutputsFromCMS,
 } from '../../shared-research/api';
 import {
-  algoliaResultsToStream,
   researchOutputToCSV,
   squidexResultsToStream,
 } from '../../shared-research/export';
@@ -71,7 +69,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           workingGroupId,
         }),
   });
-  const { client } = useAlgolia();
+
   const authorization = useRecoilValue(authorizationState);
   const exportResults = () =>
     draftOutputs
@@ -96,7 +94,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
             ),
           researchOutputToCSV,
         )
-      : algoliaResultsToStream<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+      : squidexResultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_WorkingGroup_${utils
               .titleCase(displayName)
@@ -104,12 +102,15 @@ const OutputsList: React.FC<OutputsListProps> = ({
             { header: true },
           ),
           (paginationParams) =>
-            getResearchOutputs(client, {
-              filters,
-              searchQuery,
-              workingGroupId,
-              ...paginationParams,
-            }),
+            getResearchOutputsFromCMS(
+              {
+                filters,
+                searchQuery,
+                workingGroupId,
+                ...paginationParams,
+              },
+              authorization,
+            ),
           researchOutputToCSV,
         );
 

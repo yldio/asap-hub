@@ -30,3 +30,8 @@ export const getDraftResearchOutputs = jest.fn(
     createListResearchOutputResponse(2),
 );
 export const getResearchTags = jest.fn(async () => researchTagsResponse);
+
+export const getResearchOutputsFromCMS = jest.fn(
+  async (): Promise<Partial<SearchResponse>> =>
+    createResearchOutputListAlgoliaResponse(2),
+);

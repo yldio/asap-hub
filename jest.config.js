@@ -43,8 +43,6 @@ const packagePaths = packagesWithCustomConfig.map((package) =>
   resolve(packagesDir, package),
 );
 
-const lintConfigs = require('./jest/jest-lint.config');
-
 module.exports = {
   ...baseConfig,
   projects: [
@@ -52,7 +50,6 @@ module.exports = {
     ...appTestConfigs,
     ...appPaths,
     ...packagePaths,
-    ...lintConfigs,
   ],
   testTimeout: 10000,
   testRegex: '^$', // root project does not have tests itself

@@ -89,6 +89,13 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: lint
+        run: yarn lint
+
   integration-test:
     # TODO: enable back with ASAP-70
     if: false

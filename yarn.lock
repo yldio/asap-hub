@@ -1001,7 +1001,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash": ^4
     "@types/lodash.get": 4.4.9
-    "@types/lodash.matches": 4.6.7
+    "@types/lodash.matches": 4.6.9
     "@types/lodash.uniqby": 4.7.9
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.2
@@ -1453,7 +1453,7 @@ __metadata:
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
-    "@types/lodash.matches": 4.6.7
+    "@types/lodash.matches": 4.6.9
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.2
     "@types/node": 18.18.8
@@ -18780,12 +18780,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.matches@npm:4.6.7":
-  version: 4.6.7
-  resolution: "@types/lodash.matches@npm:4.6.7"
+"@types/lodash.matches@npm:4.6.9":
+  version: 4.6.9
+  resolution: "@types/lodash.matches@npm:4.6.9"
   dependencies:
-    "@types/lodash": "npm:*"
-  checksum: 44eac58c8481a8de23260f80a15b741422eb2687c3659b41aac12951e152063618f8c0c3694076f3b90aaf6f009b86c946729a48857b5c67402e9dd6bea79cf8
+    "@types/lodash": "*"
+  checksum: 4124b2c6e4d8d1f363dfb29e3ae821f8847630a349e050b93781e74c4dd407623ca4d257d9f10aa71fcca38d3934c3fef1a9f6a0460665c01f924d74efbc332b
   languageName: node
   linkType: hard
 

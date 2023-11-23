@@ -7,7 +7,7 @@ import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import { newsPlaceholder, trainingPlaceholderIcon } from '../icons';
 import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
-import { lead } from '..';
+import { lead, TagList } from '..';
 import { captionStyles } from '../text';
 
 const imageStyle = css({
@@ -55,6 +55,10 @@ const footerStyles = css({
   justifySelf: 'flex-end',
 });
 
+const tagListStyle = css({
+  margin: `${12 / perRem}em 0`,
+});
+
 const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
   Tutorial: trainingPlaceholderIcon,
@@ -72,6 +76,7 @@ const NewsCard: React.FC<
   shortText,
   created,
   type,
+  tags,
 }) => {
   const href =
     type === 'Tutorial'
@@ -120,6 +125,11 @@ const NewsCard: React.FC<
           <div css={{ flex: 1 }}>
             <Paragraph accent="lead">{shortText}</Paragraph>
           </div>
+          {!!tags.length && (
+            <div css={tagListStyle}>
+              <TagList max={3} tags={tags} />
+            </div>
+          )}
           <span css={footerStyles}>
             Posted: {formatDate(new Date(created))} by ASAP
           </span>

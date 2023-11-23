@@ -6,7 +6,7 @@ import {
   createListResearchOutputResponse,
   createListUserResponse,
 } from '@asap-hub/fixtures';
-import { number, text } from '@storybook/addon-knobs';
+import { array, number, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Dashboard / Page Body',
@@ -22,12 +22,24 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
         'Discover current and planned tools (e.g., animal & cell models, antibodies, vectors, tissues, etc.) in a sortable table. This will be a living reference.',
       link: text('Link', 'https://example.com'),
       linkText: text('Link Text', 'External Link'),
+      tags: array('Tags', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+      ]),
     },
     {
       id: 'uuid-2',
       created: new Date().toISOString(),
       title:
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
+      tags: array('Tags', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+      ]),
     },
   ],
   userId: 'u42',

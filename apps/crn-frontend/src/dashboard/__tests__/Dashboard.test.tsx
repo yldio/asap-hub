@@ -77,11 +77,13 @@ it('renders dashboard with news', async () => {
         id: '55724942-3408-4ad6-9a73-14b92226ffb6',
         created: '2020-09-07T17:36:54Z',
         title: 'News Title',
+        tags: ['Tag 1'],
       },
       {
         id: '55724942-3408-4ad6-9a73-14b92226ffb77',
         created: '2020-09-07T17:36:54Z',
         title: 'Tutorial Title',
+        tags: [],
       },
     ],
     pages: [],

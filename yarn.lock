@@ -1002,7 +1002,7 @@ __metadata:
     "@types/lodash": ^4
     "@types/lodash.get": 4.4.9
     "@types/lodash.matches": 4.6.7
-    "@types/lodash.uniqby": 4.7.7
+    "@types/lodash.uniqby": 4.7.9
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.2
     "@types/node": 18.18.8
@@ -18789,12 +18789,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash.uniqby@npm:4.7.7":
-  version: 4.7.7
-  resolution: "@types/lodash.uniqby@npm:4.7.7"
+"@types/lodash.uniqby@npm:4.7.9":
+  version: 4.7.9
+  resolution: "@types/lodash.uniqby@npm:4.7.9"
   dependencies:
-    "@types/lodash": "npm:*"
-  checksum: f496fd390c632f070b2bae7527cecd79c5398c6c2d14157bb85830b78ad72acbea095ddd8573f33ca97a94ac31cdaae83800373bba9f4f4f503a4dce98a87812
+    "@types/lodash": "*"
+  checksum: 24cc8af36e0d4c52b7294c7ba7d814c89ce2c8118d94350bbed21031fef850fa1a280bfd2b30a47e0b5f7aa6ac649a36a5089aa76bc23787963a5ee6443f631e
   languageName: node
   linkType: hard
 

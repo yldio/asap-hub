@@ -243,5 +243,83 @@ describe('News data provider', () => {
         }),
       );
     });
+
+    test('returns default values for fields if they are not set', async () => {
+      const id = 'some-id';
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        news: {
+          ...getContentfulGraphqlNews(),
+          title: null,
+          frequency: null,
+          linkText: null,
+          shortText: null,
+          text: null,
+        },
+      });
+
+      const result = await newsDataProvider.fetchById(id);
+
+      expect(result!.title).toEqual('');
+      expect(result!.frequency).toEqual(undefined);
+      expect(result!.linkText).toEqual(undefined);
+      expect(result!.shortText).toEqual(undefined);
+      expect(result!.text).toEqual(undefined);
+    });
+
+    describe('tags', () => {
+      test('should return tags if there are any', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = { news: getContentfulGraphqlNews() };
+        contentfulGraphQLResponse.news.tagsCollection = {
+          items: [
+            {
+              name: 'Neurobehavioral',
+            },
+            {
+              name: 'Lysosomes',
+            },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const response = await newsDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual(['Neurobehavioral', 'Lysosomes']);
+      });
+
+      test('should return empty tags if they do not exist', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = { news: getContentfulGraphqlNews() };
+        contentfulGraphQLResponse.news.tagsCollection = null;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const response = await newsDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual([]);
+      });
+
+      test('should filter null tag items', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = { news: getContentfulGraphqlNews() };
+        contentfulGraphQLResponse.news!.tagsCollection = {
+          items: [
+            null,
+            {
+              name: 'Lysosomes',
+            },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const response = await newsDataProvider.fetchById(id);
+
+        expect(response!.tags).toEqual(['Lysosomes']);
+      });
+    });
   });
 });

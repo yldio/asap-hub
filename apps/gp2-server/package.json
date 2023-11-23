@@ -80,7 +80,7 @@
     "@types/jwt-encode": "workspace:*",
     "@types/lodash.matches": "4.6.9",
     "@types/luxon": "1.27.1",
-    "@types/mime-types": "2.1.2",
+    "@types/mime-types": "2.1.4",
     "@types/node": "18.18.8",
     "@types/parse-data-url": "3.0.0",
     "@types/serverless": "3.12.16",

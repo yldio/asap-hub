@@ -1004,7 +1004,7 @@ __metadata:
     "@types/lodash.matches": 4.6.7
     "@types/lodash.uniqby": 4.7.9
     "@types/luxon": 1.27.1
-    "@types/mime-types": 2.1.2
+    "@types/mime-types": 2.1.4
     "@types/node": 18.18.8
     "@types/parse-data-url": 3.0.0
     "@types/pump": 1.1.1
@@ -1455,7 +1455,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.matches": 4.6.7
     "@types/luxon": 1.27.1
-    "@types/mime-types": 2.1.2
+    "@types/mime-types": 2.1.4
     "@types/node": 18.18.8
     "@types/parse-data-url": 3.0.0
     "@types/serverless": 3.12.16
@@ -18828,10 +18828,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mime-types@npm:2.1.2":
-  version: 2.1.2
-  resolution: "@types/mime-types@npm:2.1.2"
-  checksum: 9e3c78f1c63211e0450901212566a046da68d4438a5e543333ec9b0be3259bd5d01532734dc51ead40104889b98d12c7663b65212a318aafad3e34c98204e9e1
+"@types/mime-types@npm:2.1.4":
+  version: 2.1.4
+  resolution: "@types/mime-types@npm:2.1.4"
+  checksum: f8c521c54ee0c0b9f90a65356a80b1413ed27ccdc94f5c7ebb3de5d63cedb559cd2610ea55b4100805c7349606a920d96e54f2d16b2f0afa6b7cd5253967ccc9
   languageName: node
   linkType: hard
 

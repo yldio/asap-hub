@@ -9,6 +9,6 @@
     "app/**/*.ts",
     "packages/**/*.ts",
     ".eslintrc.js",
-    "jest.config.js",
+    "jest.config.js"
   ]
 }

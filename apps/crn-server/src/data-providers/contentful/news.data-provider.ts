@@ -79,4 +79,7 @@ export const parseContentfulGraphQlNews = (item: NewsItem): NewsDataObject => ({
   linkText: item.linkText ?? undefined,
   text: item.text ? parseRichText(item.text as RichTextFromQuery) : undefined,
   created: item.publishDate,
+  tags:
+    item.tagsCollection?.items.map((tag) => tag?.name || '').filter(Boolean) ||
+    [],
 });

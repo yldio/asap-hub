@@ -25,6 +25,7 @@ export const getDashboardDataObject = (): DashboardDataObject => ({
       thumbnail: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
       title: 'News 1',
       frequency: 'News Articles',
+      tags: ['Tag 1'],
     },
   ],
   pages: [

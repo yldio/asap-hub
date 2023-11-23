@@ -9727,6 +9727,9 @@ export type FetchDashboardQuery = {
                     };
                   }
                 >;
+                tagsCollection?: Maybe<{
+                  items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+                }>;
               }
             >
           >;
@@ -13074,6 +13077,7 @@ export type NewsContentFragment = Pick<
       };
     }
   >;
+  tagsCollection?: Maybe<{ items: Array<Maybe<Pick<ResearchTags, 'name'>>> }>;
 };
 
 export type FetchNewsByIdQueryVariables = Exact<{
@@ -13161,6 +13165,9 @@ export type FetchNewsByIdQuery = {
           };
         }
       >;
+      tagsCollection?: Maybe<{
+        items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+      }>;
     }
   >;
 };
@@ -13285,6 +13292,9 @@ export type FetchNewsQuery = {
                 };
               }
             >;
+            tagsCollection?: Maybe<{
+              items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+            }>;
           }
         >
       >;
@@ -17934,6 +17944,32 @@ export const NewsContentFragmentDoc = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
         ],
       },
@@ -21304,6 +21340,13 @@ export const FetchDashboardDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'newsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '10' },
+                          },
+                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -21329,6 +21372,13 @@ export const FetchDashboardDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'pagesCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '10' },
+                          },
+                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

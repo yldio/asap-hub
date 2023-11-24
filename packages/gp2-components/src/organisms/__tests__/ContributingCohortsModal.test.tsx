@@ -182,8 +182,9 @@ describe('ContributingCohortsModal', () => {
     userEvent.click(input);
     userEvent.click(screen.getByText(name));
     waitFor(() => expect(input).toHaveTextContent(name));
+
     userEvent.click(getSaveButton());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId: '7', role }],
     });
   });
@@ -215,7 +216,7 @@ describe('ContributingCohortsModal', () => {
       userEvent.click(screen.getByText(updatedRole));
       waitFor(() => expect(input).toHaveTextContent(updatedRole));
       userEvent.click(getSaveButton());
-      expect(onSave).toBeCalledWith({
+      expect(onSave).toHaveBeenCalledWith({
         contributingCohorts: [{ contributingCohortId, role: updatedRole }],
       });
     },
@@ -244,7 +245,7 @@ describe('ContributingCohortsModal', () => {
     userEvent.type(input, studyUrl);
     waitFor(() => expect(input).toHaveTextContent(studyUrl));
     userEvent.click(getSaveButton());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId, role, studyUrl }],
     });
   });
@@ -260,12 +261,12 @@ describe('ContributingCohortsModal', () => {
       onSave,
     });
     userEvent.click(getSaveButton());
-    expect(onSave).not.toBeCalled();
+    expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add the cohort name')).toBeVisible();
     expect(screen.getByText('Please add the role')).toBeVisible();
   });
 
-  it('does not allow an invalid url', () => {
+  it('does not allow an invalid url', async () => {
     const contributingCohortId = '11';
     const role = 'Investigator';
     const onSave = jest.fn();
@@ -288,7 +289,7 @@ describe('ContributingCohortsModal', () => {
     userEvent.type(input, studyUrl);
     waitFor(() => expect(input).toHaveTextContent(studyUrl));
     userEvent.click(getSaveButton());
-    expect(onSave).not.toBeCalled();
+    expect(onSave).not.toHaveBeenCalled();
     expect(
       screen.getByText(/Please enter a valid URL, starting with http/),
     ).toBeVisible();

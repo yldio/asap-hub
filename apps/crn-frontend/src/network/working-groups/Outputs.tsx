@@ -22,7 +22,7 @@ import {
 } from '../../shared-research/api';
 import {
   researchOutputToCSV,
-  squidexResultsToStream,
+  contentfulResultsToStream,
 } from '../../shared-research/export';
 import { useResearchOutputs } from '../../shared-research/state';
 
@@ -73,7 +73,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   const authorization = useRecoilValue(authorizationState);
   const exportResults = () =>
     draftOutputs
-      ? squidexResultsToStream<ResearchOutputResponse>(
+      ? contentfulResultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_Drafts_WorkingGroup_${utils
               .titleCase(displayName)
@@ -94,7 +94,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
             ),
           researchOutputToCSV,
         )
-      : squidexResultsToStream<ResearchOutputResponse>(
+      : contentfulResultsToStream<ResearchOutputResponse>(
           createCsvFileStream(
             `SharedOutputs_WorkingGroup_${utils
               .titleCase(displayName)

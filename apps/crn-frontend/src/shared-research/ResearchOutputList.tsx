@@ -8,7 +8,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 import { getResearchOutputsFromCMS } from './api';
-import { squidexResultsToStream, researchOutputToCSV } from './export';
+import { contentfulResultsToStream, researchOutputToCSV } from './export';
 import { authorizationState } from '../auth/state';
 
 interface ResearchOutputListProps {
@@ -36,7 +36,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   const authorization = useRecoilValue(authorizationState);
 
   const exportResults = () =>
-    squidexResultsToStream<ResearchOutputResponse>(
+    contentfulResultsToStream<ResearchOutputResponse>(
       createCsvFileStream(`SharedOutputs_${format(new Date(), 'MMddyy')}.csv`, {
         header: true,
       }),

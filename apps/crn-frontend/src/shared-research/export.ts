@@ -130,7 +130,7 @@ export const algoliaResultsToStream = async <
   csvStream.end();
 };
 
-export const squidexResultsToStream = async <T>(
+export const contentfulResultsToStream = async <T>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,

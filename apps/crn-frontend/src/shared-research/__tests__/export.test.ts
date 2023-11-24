@@ -15,7 +15,7 @@ import {
   algoliaResultsToStream,
   MAX_CONTENTFUL_RESULTS,
   researchOutputToCSV,
-  squidexResultsToStream,
+  contentfulResultsToStream,
 } from '../export';
 
 afterEach(() => {
@@ -215,13 +215,13 @@ describe('researchOutputToCSV', () => {
   });
 });
 
-describe('squidexResultsToStream', () => {
+describe('contentfulResultsToStream', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
   };
   it('streams one page of results', async () => {
-    await squidexResultsToStream(
+    await contentfulResultsToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve<ListResearchOutputResponse>({
@@ -238,7 +238,7 @@ describe('squidexResultsToStream', () => {
   });
 
   it('streams multiple pages of results', async () => {
-    await squidexResultsToStream(
+    await contentfulResultsToStream(
       mockCsvStream as unknown as Stringifier,
       (parameters) =>
         Promise.resolve<ListResearchOutputResponse>({
@@ -272,7 +272,7 @@ describe('squidexResultsToStream', () => {
   });
 
   it('streams transformed results', async () => {
-    await squidexResultsToStream(
+    await contentfulResultsToStream(
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve<ListResearchOutputResponse>({

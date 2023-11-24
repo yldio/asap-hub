@@ -5,8 +5,8 @@ import {
   ExternalProfilesModal,
   FundingProviderModal,
   KeyInformationModal,
-  TagsModal,
   OpenQuestionsModal,
+  TagsModal,
   UserDetailPage,
   UserOverview,
 } from '@asap-hub/gp2-components';
@@ -22,7 +22,7 @@ import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
-import { useTags, useContributingCohorts } from '../shared/state';
+import { useContributingCohorts, useTags } from '../shared/state';
 import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
@@ -44,6 +44,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadOutputDirectory();
   }, [user]);
   const { pageSize } = usePaginationParams();

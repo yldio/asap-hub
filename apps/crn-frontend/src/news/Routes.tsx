@@ -1,8 +1,8 @@
-import { FC, lazy, useEffect } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -16,7 +16,7 @@ const NewsDetailsPage = lazy(loadNews);
 const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNews().then(loadNewsList);
   });
   const {

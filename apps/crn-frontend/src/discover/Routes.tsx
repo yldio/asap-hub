@@ -23,7 +23,7 @@ const TutorialPage = lazy(loadTutorialPage);
 
 const Discover: FC<Record<string, never>> = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 

@@ -79,7 +79,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(loadCalendar)
       .then(loadOutputs)

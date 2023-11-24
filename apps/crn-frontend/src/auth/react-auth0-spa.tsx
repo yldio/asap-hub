@@ -58,6 +58,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
 
       setLoading(false);
     };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     initAuth0();
     // eslint-disable-next-line
   }, []);

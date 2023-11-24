@@ -15,11 +15,10 @@ const loadResearchOutput = () =>
 
 const ResearchOutputList = lazy(loadResearchOutputList);
 const ResearchOutput = lazy(loadResearchOutput);
-loadResearchOutputList();
 
 const SharedResearch: FC<Record<string, never>> = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadResearchOutputList().then(loadResearchOutput);
   }, []);
 

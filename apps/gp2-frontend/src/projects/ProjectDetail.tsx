@@ -70,7 +70,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadOutputDirectory().then(loadCreateProjectOutput);
   }, [project]);
 

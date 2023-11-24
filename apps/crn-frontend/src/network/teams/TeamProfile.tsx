@@ -70,7 +70,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const team = useTeamById(teamId);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)
       .then(loadOutputs)

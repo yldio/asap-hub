@@ -31,7 +31,7 @@ const { onboarding } = gp2;
 
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWelcome()
       .then(loadCoreDetail)
       .then(loadBackGround)

@@ -41,7 +41,7 @@ const WorkingGroupList = lazy(loadWorkingGroupList);
 
 const Network: FC<Record<string, never>> = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadTeamList()
       // Tab can be changed very quickly
       .then(loadUserList)

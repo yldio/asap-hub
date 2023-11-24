@@ -110,6 +110,7 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
 
   useDeepCompareEffect(() => {
     if (events === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getEvents(algoliaClient.client, options).then(setEvents).catch();
     }
   }, [authorization, events, options, setEvents]);

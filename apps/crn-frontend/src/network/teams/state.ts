@@ -102,6 +102,7 @@ export const usePrefetchTeams = (
   const [teams, setTeams] = useRecoilState(teamsState(options));
   useDeepCompareEffect(() => {
     if (teams === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getTeams(options, authorization).then(setTeams).catch();
     }
   }, [options, authorization, teams, setTeams]);

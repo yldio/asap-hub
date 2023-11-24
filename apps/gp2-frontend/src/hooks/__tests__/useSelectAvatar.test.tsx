@@ -92,6 +92,7 @@ describe('useSelectAvatar', () => {
     );
 
     await waitForNextUpdate();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 
@@ -128,6 +129,7 @@ describe('useSelectAvatar', () => {
     );
 
     await waitForNextUpdate();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 
@@ -151,6 +153,7 @@ describe('useSelectAvatar', () => {
     mockPostUserAvatar.mockRejectedValue(new Error('500'));
 
     await waitForNextUpdate();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 

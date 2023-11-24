@@ -17,6 +17,7 @@ const EventList = lazy(loadEventList);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadCalendars().then(loadEventList);
   }, []);
 

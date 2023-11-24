@@ -66,6 +66,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadOutputDirectory().then(loadCreateWorkingGroupOutput);
   }, [workingGroup]);
 

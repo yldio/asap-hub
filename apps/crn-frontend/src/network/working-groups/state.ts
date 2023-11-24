@@ -105,6 +105,7 @@ export const usePrefetchWorkingGroups = (options: GetListOptions) => {
   );
   useDeepCompareEffect(() => {
     if (workingGroups === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getWorkingGroups(options, authorization).then(setWorkingGroups).catch();
     }
   }, [authorization, workingGroups, options, setWorkingGroups]);

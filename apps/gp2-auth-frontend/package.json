@@ -7,10 +7,9 @@
   },
   "scripts": {
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "node scripts/build.js",
+    "build": "vite build",
     "typecheck": "tsc",
-    "test": "echo Run the workspace root script instead",
-    "eject": "react-scripts eject"
+    "test": "echo Run the workspace root script instead"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
@@ -18,13 +17,15 @@
     "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/runtime-corejs3": "7.23.4",
+    "@vitejs/plugin-react": "^4.2.0",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
     "react": "17.0.2",
     "react-app-polyfill": "3.0.0",
     "react-dom": "17.0.2",
     "react-router-dom": "5.3.4",
-    "util": "0.12.5"
+    "util": "0.12.5",
+    "vite": "^5.0.2"
   },
   "devDependencies": {
     "@asap-hub/auth-frontend-scripts": "workspace:*",
@@ -45,7 +46,6 @@
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
     "jsdom": "16.7.0",
-    "react-scripts": "5.0.1",
     "typescript": "4.9.5",
     "webpack": "5.76.0"
   }

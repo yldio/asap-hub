@@ -8,10 +8,9 @@
   "type": "module",
   "scripts": {
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "typecheck": "tsc",
-    "test": "echo Run the workspace root script instead",
-    "eject": "react-scripts eject"
+    "test": "echo Run the workspace root script instead"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

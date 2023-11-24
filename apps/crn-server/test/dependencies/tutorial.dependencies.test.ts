@@ -10,12 +10,10 @@ describe('Tutorials Dependencies', () => {
     const getTutorialDataProviderModule = await import(
       '../../src/dependencies/tutorial.dependencies'
     );
-    const WorkingGroupDataProvider =
+    const TutorialDataProvider =
       getTutorialDataProviderModule.getTutorialDataProvider();
 
-    expect(WorkingGroupDataProvider).toBeInstanceOf(
-      TutorialContentfulDataProvider,
-    );
+    expect(TutorialDataProvider).toBeInstanceOf(TutorialContentfulDataProvider);
   });
 });
 

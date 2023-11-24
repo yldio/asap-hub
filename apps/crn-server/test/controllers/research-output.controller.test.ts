@@ -2,7 +2,6 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { when } from 'jest-when';
 import ResearchOutputs, {
   ERROR_UNIQUE_LINK,
-  ERROR_UNIQUE_TITLE,
 } from '../../src/controllers/research-output.controller';
 import { FetchResearchOutputOptions } from '../../src/data-providers/types/research-output.data-provider.types';
 import {

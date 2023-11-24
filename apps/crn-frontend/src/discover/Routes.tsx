@@ -1,8 +1,8 @@
-import { FC, lazy, useEffect } from 'react';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
-import { discover } from '@asap-hub/routing';
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
+import { discover } from '@asap-hub/routing';
+import { FC, lazy, useEffect } from 'react';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>
@@ -23,6 +23,7 @@ const TutorialPage = lazy(loadTutorialPage);
 
 const Discover: FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 

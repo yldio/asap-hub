@@ -103,6 +103,7 @@ export const Auth0Provider: React.FC<{
       });
       setAuth0(createAuth0(auth0Client, user, auth0Overrides));
     };
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     initAuth0();
 
     return () => {

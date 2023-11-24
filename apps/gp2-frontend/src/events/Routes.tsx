@@ -16,6 +16,7 @@ const Event = lazy(loadEvent);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadEventDirectory().then(loadEvent);
   }, []);
 

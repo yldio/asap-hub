@@ -32,6 +32,7 @@ const OutputDetail: FC = () => {
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
 
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadShareOutput();
   }, []);
 

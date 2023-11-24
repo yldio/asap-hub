@@ -37,6 +37,7 @@ const Welcome: React.FC<Record<string, never>> = () => {
   }, [code]);
 
   const createAccount = () => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loginWithRedirect({
       prompt: 'login',
       screen_hint: 'signup',

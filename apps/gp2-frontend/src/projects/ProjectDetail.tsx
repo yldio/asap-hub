@@ -1,10 +1,10 @@
 import {
   EditResourceModal,
+  OutputFormPage,
   ProjectDetailPage,
   ProjectOverview,
   ProjectResources,
   ResourceModal,
-  OutputFormPage,
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
@@ -70,6 +70,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadOutputDirectory().then(loadCreateProjectOutput);
   }, [project]);
 

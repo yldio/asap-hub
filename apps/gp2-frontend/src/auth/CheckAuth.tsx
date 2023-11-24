@@ -10,7 +10,10 @@ const CheckAuth: FC<CheckAuthProps> = ({ children }) => {
   const { isAuthenticated, loading, checkSession } = useAuth0GP2();
   const location = useLocation();
   useEffect(() => {
-    if (checkSession) checkSession();
+    if (checkSession) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      checkSession();
+    }
   }, [location, checkSession]);
 
   if (loading) {

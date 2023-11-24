@@ -138,6 +138,7 @@ const Typeahead: FC<TypeaheadProps> = ({
       }
     },
   };
+  console.log('render');
   return (
     <div css={containerStyles}>
       <InputContext.Provider

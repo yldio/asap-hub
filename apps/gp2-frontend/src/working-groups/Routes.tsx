@@ -18,7 +18,7 @@ const WorkingGroupDetail = lazy(loadWorkingGroupDetail);
 const { workingGroups } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadWorkingGroupList().then(loadWorkingGroupDetail);
   }, []);
   const { path } = useRouteMatch();

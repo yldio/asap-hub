@@ -1,26 +1,26 @@
-import { FC, lazy, useEffect } from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import { useFlags } from '@asap-hub/react-context';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
-import { useFlags } from '@asap-hub/react-context';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Router, Switch } from 'react-router-dom';
+import { LastLocationProvider } from 'react-router-last-location';
 
+import { Frame } from '@asap-hub/frontend-utils';
 import {
   BasicLayout,
   GoogleTagManager,
+  LoadingLayout,
   ToastStack,
   UtilityBar,
-  LoadingLayout,
 } from '@asap-hub/react-components';
-import { staticPages, welcome, logout } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { logout, staticPages, welcome } from '@asap-hub/routing';
 
-import history from './history';
 import CheckAuth from './auth/CheckAuth';
-import Signin from './auth/Signin';
 import Logout from './auth/Logout';
-import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
+import Signin from './auth/Signin';
+import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
+import history from './history';
 
 init({
   dsn: SENTRY_DSN,
@@ -75,6 +75,7 @@ const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides } = useFlags();
 
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setCurrentOverrides();
   }, [setCurrentOverrides]);

@@ -1,7 +1,7 @@
-import { useContext, useEffect, useRef } from 'react';
 import { WelcomePage } from '@asap-hub/react-components';
 import { ToastContext, useAuth0CRN } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';
+import { useContext, useEffect, useRef } from 'react';
 import { API_BASE_URL } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
@@ -37,6 +37,7 @@ const Welcome: React.FC<Record<string, never>> = () => {
   }, [code]);
 
   const createAccount = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loginWithRedirect({
       prompt: 'login',
       screen_hint: 'signup',

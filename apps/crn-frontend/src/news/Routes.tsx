@@ -16,6 +16,7 @@ const NewsDetailsPage = lazy(loadNews);
 const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   useEffect(() => {
+    // eslint-disable-next-line @typescripyyt-eslint/no-floating-promises
     loadNews().then(loadNewsList);
   });
   const {

@@ -2,18 +2,51 @@ name: sls remove action
 description: Reusable sls remove
 
 inputs:
-  environment-name:
-    description: 'The environment name'
-    required: true
   app:
-    description: 'The application - crn-server or gp2-server'
+    description: 'Server application name'
+    required: true
+  auth0-audience:
+    description: 'Auth0 Audience'
+    required: true
+  auth0-client-id:
+    description: 'Auth0 Client ID'
+    required: true
+  auth0-shared-secret:
+    description: 'Auth0 Shared Secret'
     required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
+  aws-acm-certificate-arn:
+    description: 'Arn for AWS ACM Certificate'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
+  environment-name:
+    description: 'The environment name'
+    required: true
+  hostname:
+    description: 'Hostname'
+    required: true
+  sentry-dsn-api:
+    description: 'Sentry DSN for the API'
+    required: true
+  sentry-dsn-handlers:
+    description: 'Sentry DSN for handlers other than the API'
+    required: true
+  ses-region:
+    description: 'AWS SES Region'
+    required: true
+  slack-webhook:
+    description: 'Slack webhook URL'
+    required: false
+  sls-stage:
+    description: 'Serverless Stage'
+    required: false
 
 runs:
   using: 'composite'
@@ -47,37 +80,26 @@ runs:
           yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
         fi
       env:
+        ALGOLIA_INDEX: 'n-a'
+        AUTH0_AUDIENCE: ${{ inputs.auth0-audience }}
+        AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}
+        AUTH0_SHARED_SECRET: ${{ inputs.auth0-shared-secret }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+        AWS_ACM_CERTIFICATE_ARN: ${{ inputs.aws-acm-certificate-arn }}
+        AWS_REGION: ${{ inputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-        CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
-        CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
-        CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
-        CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
-        CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'n-a'
-        CRN_CONTENTFUL_ENV: 'n-a'
-        CRN_CONTENTFUL_ACCESS_TOKEN: 'n-a'
-        CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
-        CRN_CONTENTFUL_SPACE_ID: 'n-a'
-        CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
-        CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
+        CONTENTFUL_ACCESS_TOKEN: 'n-a'
+        CONTENTFUL_ENV: 'n-a'
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'n-a'
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
+        CONTENTFUL_SPACE_ID: 'n-a'
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
         CURRENT_REVISION: ${{ github.sha }}
-        GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
-        GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
-        GP2_AUTH0_SHARED_SECRET: ${{ inputs.gp2-auth0-shared-secret }}
-        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
-        GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: 'n-a'
-        GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
-        GP2_CONTENTFUL_ENV: 'n-a'
-        GP2_CONTENTFUL_ACCESS_TOKEN: 'n-a'
-        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
-        GP2_CONTENTFUL_SPACE_ID: 'n-a'
-        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
+        HOSTNAME: ${{ inputs.hostname }}
         NODE_ENV: 'production'
-        CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
-        CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
-        GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
-        GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
-        GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
-        SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+        NODE_OPTIONS: '--max-old-space-size=8192'
+        SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
+        SENTRY_DSN_HANDLERS: ${{ inputs.sentry-dsn-handlers }}
+        SES_REGION: ${{ inputs.ses-region }}
+        SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
+        SLS_STAGE: ${{ inputs.sls-stage }}

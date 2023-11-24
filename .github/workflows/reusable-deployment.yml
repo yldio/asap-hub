@@ -76,24 +76,41 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     environment:
       name: ${{ inputs.environment-name }}
-      url: ${{ steps.deploy.outputs.crn-app-url }}
+      url: ${{ steps.setup.outputs.crn-app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Deploy sls for crn
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
+          algolia-index: ${{ steps.setup.outputs.crn-algolia-index }}
           app: crn-server
+          auth0-audience: ${{ steps.setup.outputs.crn-auth0-audience }}
+          auth0-client-id: ${{ steps.setup.outputs.crn-auth0-client-id }}
+          auth0-shared-secret: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-acm-certificate-arn: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          crn-contentful-preview-access-token: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-          crn-contentful-env: ${{ inputs.crn-contentful-env }}
-          crn-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-env: ${{ inputs.crn-contentful-env }}
+          contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-preview-access-token: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
+          hostname: ${{ steps.setup.outputs.crn-hostname }}
+          sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+          sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
+          ses-region: ${{ steps.setup.outputs.crn-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
   gp2-sls-deploy:
     concurrency:
@@ -106,24 +123,41 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     environment:
       name: ${{ inputs.environment-name }}
-      url: ${{ steps.deploy.outputs.gp2-app-url }}
+      url: ${{ steps.setup.outputs.app-url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
       - name: Deploy sls for gp2
         id: deploy
         uses: ./.github/actions/sls-deployment
         with:
+          algolia-index: ${{ steps.setup.outputs.gp2-algolia-index }}
           app: gp2-server
+          auth0-audience: ${{ steps.setup.outputs.gp2-auth0-audience }}
+          auth0-client-id: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+          auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-acm-certificate-arn: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
+          aws-region: ${{ steps.setup.outputs.aws-region }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-env: ${{ inputs.gp2-contentful-env }}
+          contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-preview-access-token: ${{ secrets.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
-          gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
-          gp2-contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
-          gp2-contentful-preview-access-token: ${{ secrets.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-          gp2-contentful-env: ${{ inputs.gp2-contentful-env }}
-          gp2-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          gp2-contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
+          hostname: ${{ steps.setup.outputs.gp2-hostname }}
+          sentry-dsn-api: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
+          sentry-dsn-handlers: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
+          ses-region: ${{ steps.setup.outputs.gp2-ses-region }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
   crn-algolia-settings:
     needs: [crn-sls-deploy]

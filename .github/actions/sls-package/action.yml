@@ -2,53 +2,71 @@ name: sls package action
 description: Reusable sls package
 
 inputs:
+  algolia-index:
+    description: 'Algolia index name'
+    required: true
   app:
-    description: 'The application - crn-server or gp2-server'
+    description: 'Server application name'
+    required: true
+  auth0-audience:
+    description: 'Auth0 Audience'
+    required: true
+  auth0-client-id:
+    description: 'Auth0 Client ID'
+    required: true
+  auth0-shared-secret:
+    description: 'Auth0 Shared Secret'
     required: true
   aws-access-key-id:
     description: 'AWS Access Key ID'
     required: true
+  aws-acm-certificate-arn:
+    description: 'Arn for AWS ACM Certificate'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
   aws-secret-access-key:
     description: 'AWS Secret Access Key'
     required: true
-  crn-contentful-env:
-    description: 'CRN Contentful Environment'
-    required: false
-  crn-contentful-access-token:
-    description: 'CRN Contentful Access Token'
-    required: false
-  crn-contentful-management-access-token:
-    description: 'CRN Contentful Management Access Token'
-    required: false
-  crn-contentful-preview-access-token:
-    description: 'CRN Contentful Preview Access Token'
-    required: false
-  crn-contentful-webhook-authentication-token:
-    description: 'CRN Contentful Webhook Authentication Token'
-    required: false
+  contentful-access-token:
+    description: 'Contentful Access Token'
+    required: true
+  contentful-env:
+    description: 'Contentful Environment'
+    required: true
+  contentful-management-access-token:
+    description: 'Contentful Management Access Token'
+    required: true
+  contentful-preview-access-token:
+    description: 'Contentful Preview Access Token'
+    required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-webhook-authentication-token:
+    description: 'Contentful Webhook Authentication Token'
+    required: true
   environment-name:
     description: 'The environment name'
     required: true
-  gp2-contentful-env:
-    description: 'GP2 Contentful Environment'
-    required: false
-  gp2-contentful-access-token:
-    description: 'GP2 Contentful Access Token'
-    required: false
-  gp2-contentful-preview-access-token:
-    description: 'GP2 Contentful Preview Access Token'
-    required: false
-  gp2-contentful-management-access-token:
-    description: 'GP2 Contentful Management Access Token'
-    required: false
-  gp2-contentful-webhook-authentication-token:
-    description: 'GP2 Contentful Webhook Authentication Token'
-    required: false
-  gp2-auth0-shared-secret:
-    description: 'GP2 Auth0 Shared Secret'
-    required: false
+  hostname:
+    description: 'Hostname'
+    required: true
+  sentry-dsn-api:
+    description: 'Sentry DSN for the API'
+    required: true
+  sentry-dsn-handlers:
+    description: 'Sentry DSN for handlers other than the API'
+    required: true
+  ses-region:
+    description: 'AWS SES Region'
+    required: true
   slack-webhook:
     description: 'Slack webhook URL'
+    required: false
+  sls-stage:
+    description: 'Serverless Stage'
     required: false
 
 runs:
@@ -78,44 +96,29 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless package --package $PWD/${{ inputs.app }}-sls-package
       env:
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        AUTH0_AUDIENCE: ${{ inputs.auth0-audience }}
+        AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}
+        AUTH0_SHARED_SECRET: ${{ inputs.auth0-shared-secret }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
-        AWS_REGION: ${{ steps.setup.outputs.aws-region }}
+        AWS_ACM_CERTIFICATE_ARN: ${{ inputs.aws-acm-certificate-arn }}
+        AWS_REGION: ${{ inputs.aws-region }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
-        CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
-        CRN_API_URL: ${{ steps.setup.outputs.crn-api-url }}
-        CRN_APP_URL: ${{ steps.setup.outputs.crn-app-url }}
-        CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
-        CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
-        CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
-        CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
-        CRN_CONTENTFUL_ENV: ${{  inputs.crn-contentful-env }}
-        CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
-        CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.crn-contentful-preview-access-token }}
-        CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-        CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.crn-contentful-webhook-authentication-token }}
-        CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
-        CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
-        CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
+        CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}
+        CONTENTFUL_ENV: ${{ inputs.contentful-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-management-access-token }}
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.contentful-preview-access-token }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.contentful-webhook-authentication-token }}
         CURRENT_REVISION: ${{ github.sha }}
-        GP2_ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
-        GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
-        GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
-        GP2_AUTH0_SHARED_SECRET: ${{ inputs.gp2-auth0-shared-secret }}
-        GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
-        GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
-        GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
-        GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
-        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.gp2-contentful-preview-access-token }}
-        GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-        GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}
-        GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
-        GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
-        GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
-        GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
+        HOSTNAME: ${{ inputs.hostname }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
-        SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
+        SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
+        SENTRY_DSN_HANDLERS: ${{ inputs.sentry-dsn-handlers }}
+        SES_REGION: ${{ inputs.ses-region }}
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
+        SLS_STAGE: ${{ inputs.sls-stage }}
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}

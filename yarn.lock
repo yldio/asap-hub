@@ -1006,7 +1006,7 @@ __metadata:
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.4
     "@types/node": 18.18.13
-    "@types/parse-data-url": 3.0.0
+    "@types/parse-data-url": 3.0.2
     "@types/pump": 1.1.1
     "@types/serverless": 3.12.16
     "@types/source-map-support": 0.5.8
@@ -1457,7 +1457,7 @@ __metadata:
     "@types/luxon": 1.27.1
     "@types/mime-types": 2.1.4
     "@types/node": 18.18.13
-    "@types/parse-data-url": 3.0.0
+    "@types/parse-data-url": 3.0.2
     "@types/serverless": 3.12.16
     "@types/source-map-support": 0.5.8
     "@types/supertest": 2.0.14
@@ -18952,12 +18952,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/parse-data-url@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@types/parse-data-url@npm:3.0.0"
+"@types/parse-data-url@npm:3.0.2":
+  version: 3.0.2
+  resolution: "@types/parse-data-url@npm:3.0.2"
   dependencies:
-    "@types/node": "npm:*"
-  checksum: d2b8e4dc082a5e9011581af6dc11e99817fd71f8ea38aec7e02f990846edeb6f294ffcd6fd1173868e6e21ab819c63943df612d699991ac385c9acb05cdb4899
+    "@types/node": "*"
+  checksum: c44ef15dbf80dd5477d4b48c7fd9da41cf208f9482e3d28e7c8a1d404ea2723a1aa36e0ae36a9f66fce96bcca32ed89aac8eb43359ac92f97cae47bb6ed0fffd
   languageName: node
   linkType: hard
 

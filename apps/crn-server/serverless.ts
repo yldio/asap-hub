@@ -1,7 +1,6 @@
 import { WebhookDetailType } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
-import { algoliaAppId, logLevel } from './src/config';
 
 [
   'ALGOLIA_INDEX',
@@ -67,29 +66,12 @@ const ciCommitSha = process.env.CI_COMMIT_SHA;
 const currentRevision = process.env.CURRENT_REVISION!;
 const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 const slackWebhook = process.env.SLACK_WEBHOOK!;
+const logLevel = process.env.LOG_LEVEL!;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
-
-console.log({
-  algoliaIndex,
-  algoliaAppId,
-  region,
-  envAlias,
-  envRef,
-  sentryDsnApi,
-  sentryDsnHandlers,
-  auth0ClientId,
-  contentfulEnvironment,
-  contentfulSpaceId,
-  sesRegion,
-  hostname,
-  appUrl,
-  apiUrl,
-  awsAcmCertificateArn,
-});
 
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
@@ -171,7 +153,7 @@ const serverlessConfig: AWS = {
       API_URL: apiUrl,
       LOG_LEVEL: logLevel || (stage === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
-      ALGOLIA_APP_ID: algoliaAppId,
+      ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: ciCommitSha ?? currentRevision,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,

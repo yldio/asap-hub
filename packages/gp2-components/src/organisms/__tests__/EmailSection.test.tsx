@@ -21,10 +21,10 @@ describe('EmailSection', () => {
       ).href,
     ).toMatchInlineSnapshot(`"mailto:test@example.com"`);
   });
-  it('copy button adds email to clipboard', () => {
+  it('copy button adds email to clipboard', async () => {
     Object.assign(navigator, {
       clipboard: {
-        writeText: () => {},
+        writeText: jest.fn(),
       },
     });
     jest.spyOn(navigator.clipboard, 'writeText');
@@ -35,6 +35,7 @@ describe('EmailSection', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       'test@example.com',
     );
+    expect(await screen.findByText('Email copied')).toBeVisible();
   });
   it('copy button displays tooltip', async () => {
     render(<EmailSection {...defaultProps} />);
@@ -42,7 +43,7 @@ describe('EmailSection', () => {
     expect(copyButton).toBeVisible();
     expect(screen.getByText('Email copied')).not.toBeVisible();
     userEvent.click(copyButton);
-    expect(screen.getByText('Email copied')).toBeVisible();
+    expect(await screen.findByText('Email copied')).toBeVisible();
     await waitFor(
       () => expect(screen.getByText('Email copied')).not.toBeVisible(),
       { timeout: 20000 },

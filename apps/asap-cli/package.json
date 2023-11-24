@@ -47,7 +47,7 @@
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.20.5",
     "@types/hapi__boom": "9.0.1",
-    "@types/jest": "29.5.7",
+    "@types/jest": "29.5.10",
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/luxon": "1.27.1",

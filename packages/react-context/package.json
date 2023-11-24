@@ -30,7 +30,7 @@
     "@babel/preset-react": "7.23.3",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",
-    "@types/jest": "29.5.7",
+    "@types/jest": "29.5.10",
     "@types/react": "17.0.65",
     "@types/testing-library__jest-dom": "5.14.9",
     "@types/testing-library__react": "10.0.1",

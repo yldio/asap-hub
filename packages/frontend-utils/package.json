@@ -42,7 +42,7 @@
     "@testing-library/dom": "9.3.3",
     "@testing-library/react": "11.2.7",
     "@types/history": "4.7.11",
-    "@types/jest": "29.5.7",
+    "@types/jest": "29.5.10",
     "@types/node": "18.18.13",
     "@types/react": "17.0.65",
     "@types/react-router-dom": "5.3.3",

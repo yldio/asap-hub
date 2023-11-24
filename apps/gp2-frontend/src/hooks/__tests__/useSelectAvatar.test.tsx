@@ -92,7 +92,7 @@ describe('useSelectAvatar', () => {
     );
 
     await waitForNextUpdate();
-    await act(() => result.current.onImageSelect(file));
+    act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 
     expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
@@ -128,7 +128,7 @@ describe('useSelectAvatar', () => {
     );
 
     await waitForNextUpdate();
-    await act(() => result.current.onImageSelect(file));
+    act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 
     expect(mockToken).toHaveBeenCalled();
@@ -151,7 +151,7 @@ describe('useSelectAvatar', () => {
     mockPostUserAvatar.mockRejectedValue(new Error('500'));
 
     await waitForNextUpdate();
-    await act(() => result.current.onImageSelect(file));
+    act(() => result.current.onImageSelect(file));
     await waitForNextUpdate();
 
     expect(mockToast).toHaveBeenCalledWith(

@@ -10,6 +10,7 @@
 
 # production
 /apps/*/build*
+/apps/*/dist*
 /packages/*/build*
 /apps/frontend/public/*unsupported-browser*
 /apps/*/.webpack/*

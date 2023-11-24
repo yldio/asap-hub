@@ -28,7 +28,7 @@
     "@babel/runtime-corejs3": "7.23.4",
     "@types/jest": "29.5.7",
     "@types/js-yaml": "^4",
-    "@types/node": "18.18.8",
+    "@types/node": "18.18.13",
     "auth0-deploy-cli": "^7.15.1",
     "js-yaml": "^4.1.0",
     "nock": "13.3.4",

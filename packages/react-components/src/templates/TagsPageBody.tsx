@@ -1,5 +1,12 @@
-import { CRNTagSearchEntities } from '@asap-hub/algolia';
-import { TagSearchResponse } from '@asap-hub/model';
+import {
+  TagSearchResponse,
+  ResearchOutputResponse,
+  UserResponse,
+  EventResponse,
+  WorkingGroupResponse,
+  TutorialsResponse,
+  TeamResponse,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
@@ -48,38 +55,33 @@ export enum TagFieldByEntity {
   tutorial = 'tags',
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const assert = <T extends never>() => undefined;
-type TypeEqualityGuard<A, B> = Exclude<A, B> | Exclude<B, A>;
-
 const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
   ...data
 }): JSX.Element => {
-  assert<
-    TypeEqualityGuard<keyof typeof TagFieldByEntity, CRNTagSearchEntities>
-  >;
+  /* eslint-disable-next-line no-underscore-dangle */
+  const { type } = data.__meta;
 
-  if (TagFieldByEntity['research-output'] in data) {
-    return <SharedResearchCard {...data} />;
+  if (type === 'research-output') {
+    return <SharedResearchCard {...(data as ResearchOutputResponse)} />;
   }
 
-  if (TagFieldByEntity.user in data && 'onboarded' in data) {
-    return <PeopleCard {...data} />;
+  if (type === 'user') {
+    return <PeopleCard {...(data as UserResponse)} />;
   }
 
-  if (TagFieldByEntity.event in data) {
-    return <EventCard {...eventMapper(data)} />;
+  if (type === 'event') {
+    return <EventCard {...eventMapper(data as EventResponse)} />;
   }
 
-  if (TagFieldByEntity['working-group'] in data) {
-    return <WorkingGroupCard {...data} />;
+  if (type === 'working-group') {
+    return <WorkingGroupCard {...(data as WorkingGroupResponse)} />;
   }
 
-  if (TagFieldByEntity.tutorial in data) {
-    return <TutorialCard {...data} />;
+  if (type === 'tutorial') {
+    return <TutorialCard {...(data as TutorialsResponse)} />;
   }
 
-  return <TeamCard {...data} />;
+  return <TeamCard {...(data as TeamResponse)} />;
 };
 
 interface TagsPageBodyProps {

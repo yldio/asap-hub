@@ -37,16 +37,35 @@ it('renders a list of cards', () => {
       results={[
         {
           ...createResearchOutputResponse(),
+          __meta: { type: 'research-output' },
           title: 'Research about CRISPR/Cas9',
         },
-        { ...createUserResponse(), displayName: 'John Doe', degree: 'PhD' },
-        { ...createEventResponse(), title: 'ASAP Collaborative Meeting' },
-        { ...createTeamResponse(), displayName: 'Team ASAP' },
+        {
+          ...createUserResponse(),
+          __meta: { type: 'user' },
+          displayName: 'John Doe',
+          degree: 'PhD',
+        },
+        {
+          ...createEventResponse(),
+          __meta: { type: 'event' },
+          title: 'ASAP Collaborative Meeting',
+        },
+        {
+          ...createTeamResponse(),
+          __meta: { type: 'team' },
+          displayName: 'Team ASAP',
+        },
         {
           ...createWorkingGroupResponse(),
+          __meta: { type: 'working-group' },
           title: 'Comparative Neuroanatomy Working Group',
         },
-        { ...createTutorialsResponse({ key: '1' }), title: 'Tutorial 1' },
+        {
+          ...createTutorialsResponse({ key: '1' }),
+          __meta: { type: 'tutorial' },
+          title: 'Tutorial 1',
+        },
       ]}
     />,
   );

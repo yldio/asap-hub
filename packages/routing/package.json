@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@types/qs": "6.9.8",
+    "@types/qs": "6.9.10",
     "@types/react-router-dom": "5.3.3"
   }
 }

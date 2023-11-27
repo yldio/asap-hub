@@ -5,6 +5,7 @@ import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Teams from '../src/controllers/team.controller';
+import Tutorials from '../src/controllers/tutorial.controller';
 import Users from '../src/controllers/user.controller';
 import WorkingGroups from '../src/controllers/working-group.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
@@ -12,6 +13,7 @@ import { getExternalAuthorDataProvider } from '../src/dependencies/external-auth
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
+import { getTutorialDataProvider } from '../src/dependencies/tutorial.dependencies';
 
 import {
   getAssetDataProvider,
@@ -76,6 +78,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
 
   const teamDataProvider = getTeamDataProvider();
   const workingGroupDataProvider = getWorkingGroupDataProvider();
+  const tutorialDataProvider = getTutorialDataProvider();
 
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
@@ -88,6 +91,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     event: new Events(eventDataProvider),
     team: new Teams(teamDataProvider),
     'working-group': new WorkingGroups(workingGroupDataProvider),
+    tutorial: new Tutorials(tutorialDataProvider),
   };
 
   return controllerMap[entity];
@@ -144,6 +148,13 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
   }
 
   if (type === 'working-group' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
+  if (type === 'tutorial' && 'tags' in record) {
     return {
       ...payload,
       _tags: record.tags,

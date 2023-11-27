@@ -4,6 +4,7 @@ import {
   createTeamResponse,
   createUserResponse,
   createWorkingGroupResponse,
+  createTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -45,6 +46,7 @@ it('renders a list of cards', () => {
           ...createWorkingGroupResponse(),
           title: 'Comparative Neuroanatomy Working Group',
         },
+        { ...createTutorialsResponse({ key: '1' }), title: 'Tutorial 1' },
       ]}
     />,
   );
@@ -60,4 +62,6 @@ it('renders a list of cards', () => {
   expect(
     screen.getByText(/Comparative Neuroanatomy Working Group/i),
   ).toBeInTheDocument();
+
+  expect(screen.getByText(/Tutorial 1/i)).toBeInTheDocument();
 });

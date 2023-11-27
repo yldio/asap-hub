@@ -14,3 +14,7 @@ export type CalendarPayload = CalendarContentfulPayload;
 export type WorkingGroupPayload = WebhookDetail<
   ContentfulWebhookPayload<'workingGroups'>
 >;
+
+export type TutorialPayload = WebhookDetail<
+  ContentfulWebhookPayload<'tutorials'>
+>;

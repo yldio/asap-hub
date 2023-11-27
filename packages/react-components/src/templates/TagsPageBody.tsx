@@ -10,6 +10,7 @@ import {
   ResultList,
   SharedResearchCard,
   TeamCard,
+  TutorialCard,
   WorkingGroupCard,
 } from '../organisms';
 import { perRem } from '../pixels';
@@ -44,6 +45,7 @@ export enum TagFieldByEntity {
   event = 'calendar',
   team = 'expertiseAndResourceTags',
   'working-group' = 'deliverables',
+  tutorial = 'tags',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,6 +73,10 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 
   if (TagFieldByEntity['working-group'] in data) {
     return <WorkingGroupCard {...data} />;
+  }
+
+  if (TagFieldByEntity.tutorial in data) {
+    return <TutorialCard {...data} />;
   }
 
   return <TeamCard {...data} />;

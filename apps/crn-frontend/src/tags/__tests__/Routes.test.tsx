@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/algolia';
 import { createUserResponse } from '@asap-hub/fixtures';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -95,44 +96,107 @@ it('allows typing in tag queries', async () => {
   });
 });
 
-it('Will search algolia using selected tag', async () => {
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
+describe('tags', () => {
+  it('Will search algolia using selected tag', async () => {
+    mockSearchForTagValues.mockResolvedValue({
+      ...EMPTY_ALGOLIA_FACET_HITS,
+      facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
+    });
+
+    await renderTagsPage();
+
+    userEvent.click(screen.getByRole('textbox'));
+    userEvent.click(screen.getByText('LGW'));
+    await waitFor(() =>
+      expect(mockGetTagSearch).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ tags: ['LGW'] }),
+      ),
+    );
   });
 
-  await renderTagsPage();
+  it('will lookup new "default options" using previously selected tag filter', async () => {
+    mockSearchForTagValues.mockResolvedValue({
+      ...EMPTY_ALGOLIA_FACET_HITS,
+      facetHits: [
+        { value: 'LGW', count: 1, highlighted: 'LGW' },
+        { value: 'LTN', count: 1, highlighted: 'LTN' },
+      ],
+    });
+    await renderTagsPage();
 
-  userEvent.click(screen.getByRole('textbox'));
-  userEvent.click(screen.getByText('LGW'));
-  await waitFor(() =>
-    expect(mockGetTagSearch).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      expect.objectContaining({ tags: ['LGW'] }),
-    ),
-  );
+    userEvent.click(screen.getByRole('textbox'));
+    userEvent.click(screen.getByText('LGW'));
+    await waitFor(() => {
+      expect(mockGetTagSearch).toHaveBeenCalled();
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ facetFilters: ['_tags:LGW'] }),
+      );
+    });
+  });
 });
 
-it('will lookup new "default options" using previously selected tag filter', async () => {
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'LGW', count: 1, highlighted: 'LGW' },
-      { value: 'LTN', count: 1, highlighted: 'LTN' },
-    ],
-  });
-  await renderTagsPage();
+describe('filters', () => {
+  it('Will refresh default tag options using selected filter', async () => {
+    mockSearchForTagValues.mockResolvedValue({
+      ...EMPTY_ALGOLIA_FACET_HITS,
+      facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
+    });
 
-  userEvent.click(screen.getByRole('textbox'));
-  userEvent.click(screen.getByText('LGW'));
-  await waitFor(() => {
-    expect(mockGetTagSearch).toHaveBeenCalled();
-    expect(mockSearchForTagValues).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      expect.objectContaining({ facetFilters: ['_tags:LGW'] }),
+    await renderTagsPage();
+    fireEvent.focus(screen.getByRole('textbox'));
+
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
+        [
+          'research-output',
+          'user',
+          'event',
+          'team',
+          'tutorial',
+          'working-group',
+        ],
+        expect.anything(),
+        expect.anything(),
+      ),
     );
+
+    userEvent.click(screen.getByRole('button', { name: /Filter/i }));
+    userEvent.click(screen.getByText('Calendar & Events'));
+    fireEvent.focus(screen.getByRole('textbox'));
+
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
+        ['event'],
+        expect.anything(),
+        expect.anything(),
+      ),
+    );
+  });
+
+  it('Will search for tags and results using selected filter', async () => {
+    mockSearchForTagValues.mockResolvedValue({
+      ...EMPTY_ALGOLIA_FACET_HITS,
+      facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
+    });
+
+    await renderTagsPage();
+    userEvent.click(screen.getByRole('button', { name: /Filter/i }));
+    userEvent.click(screen.getByText('Calendar & Events'));
+    userEvent.click(screen.getByRole('textbox'));
+    userEvent.click(await screen.findByText('LGW'));
+    fireEvent.focus(screen.getByRole('textbox'));
+
+    await waitFor(() => {
+      expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
+        ['event'],
+        expect.anything(),
+        expect.objectContaining({ facetFilters: ['_tags:LGW'] }),
+      );
+    });
   });
 });
 

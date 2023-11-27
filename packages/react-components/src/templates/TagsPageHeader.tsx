@@ -38,7 +38,7 @@ const styles = css({
 
 type TagsPageHeaderProps = {
   tags: string[];
-  loadTags: ComponentProps<typeof MultiSelect>['loadOptions'];
+  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
   setTags: (tags: string[]) => void;
 } & Pick<
   ComponentProps<typeof Filter<CRNTagSearchEntities>>,

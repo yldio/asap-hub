@@ -13,6 +13,7 @@ const props: ComponentProps<typeof WorkingGroupCard> = {
   shortText: 'My Working Group Description',
   lastModifiedDate: '2020-01-1',
   complete: false,
+  tags: [],
 };
 
 it('renders the working group card', () => {
@@ -70,4 +71,12 @@ it('renders the state tag for a complete working group and displays the correct 
     findParentWithStyle(getByText(props.title), 'backgroundColor')
       ?.backgroundColor,
   ).toEqual('rgb(255, 255, 255)');
+});
+
+it('renders the working group tags', () => {
+  const { getByRole } = render(
+    <WorkingGroupCard {...props} tags={['Test Tag']} />,
+  );
+
+  expect(getByRole('link', { name: 'Test Tag' })).toBeVisible();
 });

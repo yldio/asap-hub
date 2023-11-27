@@ -1,5 +1,5 @@
 import { WorkingGroupCard } from '@asap-hub/react-components';
-import { boolean, text } from '@storybook/addon-knobs';
+import { array, boolean, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Network / Working Group Card',
@@ -16,5 +16,11 @@ export const Normal = () => (
     externalLink={text('Link', 'https://www.google.com')}
     lastModifiedDate={text('Last modified date', '2020-01-1')}
     complete={boolean('Working Group Complete', true)}
+    tags={array('Tags', [
+      'Neurological Diseases',
+      'Clinical Neurology',
+      'Adult Neurology',
+      'Neuroimaging',
+    ])}
   />
 );

@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { NetworkWorkingGroups } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { array, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Network / Working Groups',
@@ -19,6 +19,12 @@ const workingGroupsProps = (): ComponentProps<typeof NetworkWorkingGroups> => {
       externalLink: 'https://www.google.com',
       lastModifiedDate: '2020-01-1',
       complete: false,
+      tags: array('Tags', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+      ]),
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

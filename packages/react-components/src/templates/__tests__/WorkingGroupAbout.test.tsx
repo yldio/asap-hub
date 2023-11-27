@@ -12,6 +12,7 @@ const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
   members: [],
   leaders: [],
   complete: false,
+  tags: [],
 };
 
 it('renders the description', () => {
@@ -51,4 +52,12 @@ it('renders CTA when pointOfContact is provided', () => {
   expect(queryAllByText('Contact PM')).toHaveLength(2);
   rerender(<WorkingGroupAbout {...baseProps} />);
   expect(queryAllByText('Contact PM')).toHaveLength(0);
+});
+
+it('renders a list of tags', () => {
+  const { getByRole } = render(
+    <WorkingGroupAbout {...baseProps} tags={['Tag One', 'Tag Two']} />,
+  );
+  expect(getByRole('link', { name: 'Tag One' })).toBeVisible();
+  expect(getByRole('link', { name: 'Tag Two' })).toBeVisible();
 });

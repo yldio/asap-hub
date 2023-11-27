@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Paragraph, Anchor, Caption, Ellipsis, StateTag } from '../atoms';
 import { successIcon } from '../icons';
-import { ExternalLink, LinkHeadline } from '../molecules';
+import { ExternalLink, LinkHeadline, TagList } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
 import { formatDate } from '../date';
 
@@ -35,9 +35,10 @@ const linkStyle = css({
 
 const shortTextStyle = css({
   marginBottom: `${24 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    marginBottom: `${36 / perRem}em`,
-  },
+});
+
+const tagsContainer = css({
+  marginBottom: `${12 / perRem}em`,
 });
 
 type WorkingGroupCardProps = Pick<
@@ -48,6 +49,7 @@ type WorkingGroupCardProps = Pick<
   | 'externalLink'
   | 'lastModifiedDate'
   | 'complete'
+  | 'tags'
 >;
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -57,6 +59,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   externalLink,
   lastModifiedDate,
   complete,
+  tags,
 }) => (
   <Card
     overrideStyles={wrapperStyle}
@@ -103,6 +106,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </Ellipsis>
       </Anchor>
     </div>
+    {!!tags.length && (
+      <div css={tagsContainer}>
+        <TagList max={3} tags={tags} />
+      </div>
+    )}
     <Caption noMargin>{`Last updated: ${formatDate(
       new Date(lastModifiedDate),
     )}`}</Caption>

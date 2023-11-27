@@ -1281,7 +1281,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 2.4.7
+    "@types/react-router-hash-link": 2.4.9
     "@types/react-test-renderer": 18.0.3
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1595,7 +1595,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 2.4.7
+    "@types/react-router-hash-link": 2.4.9
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 18.0.3
     "@types/rehype-slug": "workspace:*"
@@ -19131,14 +19131,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-hash-link@npm:2.4.7":
-  version: 2.4.7
-  resolution: "@types/react-router-hash-link@npm:2.4.7"
+"@types/react-router-hash-link@npm:2.4.9":
+  version: 2.4.9
+  resolution: "@types/react-router-hash-link@npm:2.4.9"
   dependencies:
     "@types/history": ^4.7.11
     "@types/react": "*"
     "@types/react-router-dom": ^5.3.0
-  checksum: 909600aa8291bfea96ee5a790500bbae609722aba52e280dd209f8fb7ecf30655e71817d6f86c339c9aeb6ca2e689c3dce45f01d6975b38bc66825053b42d83f
+  checksum: 9d10fff8e95ff8270b78c79b16833307b2ccb02af25cd70f5cf137afb04c4e7df9afe3ec681e9febfefbab84aca20fe8485b3fab92d9159b95fa72a91923d8c2
   languageName: node
   linkType: hard
 

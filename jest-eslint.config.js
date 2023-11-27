@@ -6,7 +6,6 @@ module.exports = {
   ...baseConfig,
   projects: [...lintConfigs],
   testTimeout: 10000,
-  testRegex: '^$', // root project does not have tests itself
+  testRegex: '^$',
   maxWorkers: 2,
-  // workerIdleMemoryLimit: '1024MB'
 };

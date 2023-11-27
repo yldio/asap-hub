@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -159,10 +159,11 @@ describe('ContributingCohortsModal', () => {
     ).toBeVisible();
   });
 
-  it('allows the name to be edited', () => {
+  it('allows the name to be edited', async () => {
+    const promise = Promise.resolve();
     const contributingCohortId = '11';
     const role = 'Investigator';
-    const onSave = jest.fn();
+    const onSave = jest.fn(() => promise);
     renderContributingCohorts({
       cohortOptions: [
         { id: '7', name: 'S3' },
@@ -181,22 +182,26 @@ describe('ContributingCohortsModal', () => {
     const input = screen.getByRole('textbox', { name: /Name/i });
     userEvent.click(input);
     userEvent.click(screen.getByText(name));
-    waitFor(() => expect(input).toHaveTextContent(name));
+    expect(screen.getByText(/S3/i)).toBeVisible();
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId: '7', role }],
     });
+    await act(async () => {
+      await promise;
+    });
   });
 
   it.each(gp2Model.userContributingCohortRole)(
     'allows the role to be edited %s',
-    (updatedRole) => {
+    async (updatedRole) => {
+      const promise = Promise.resolve();
       const contributingCohortId = '11';
       const role: gp2Model.UserContributingCohortRole =
         updatedRole === 'Investigator' ? 'Lead Investigator' : 'Investigator';
 
-      const onSave = jest.fn();
+      const onSave = jest.fn(() => promise);
       renderContributingCohorts({
         cohortOptions: [
           { id: '7', name: 'S3' },
@@ -214,18 +219,22 @@ describe('ContributingCohortsModal', () => {
       const input = screen.getByRole('textbox', { name: /Role/i });
       userEvent.click(input);
       userEvent.click(screen.getByText(updatedRole));
-      waitFor(() => expect(input).toHaveTextContent(updatedRole));
+      expect(screen.getByText(updatedRole)).toBeVisible();
       userEvent.click(getSaveButton());
       expect(onSave).toHaveBeenCalledWith({
         contributingCohorts: [{ contributingCohortId, role: updatedRole }],
       });
+      await act(async () => {
+        await promise;
+      });
     },
   );
 
-  it('allows the link to be edited', () => {
+  it('allows the link to be edited', async () => {
+    const promise = Promise.resolve();
     const contributingCohortId = '11';
     const role = 'Investigator';
-    const onSave = jest.fn();
+    const onSave = jest.fn(() => promise);
     renderContributingCohorts({
       cohortOptions: [
         { id: '7', name: 'S3' },
@@ -243,10 +252,13 @@ describe('ContributingCohortsModal', () => {
     const studyUrl = 'http://example.com';
     const input = screen.getByRole('textbox', { name: /Link/i });
     userEvent.type(input, studyUrl);
-    waitFor(() => expect(input).toHaveTextContent(studyUrl));
+    expect(input).toHaveValue(studyUrl);
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId, role, studyUrl }],
+    });
+    await act(async () => {
+      await promise;
     });
   });
 
@@ -266,7 +278,7 @@ describe('ContributingCohortsModal', () => {
     expect(screen.getByText('Please add the role')).toBeVisible();
   });
 
-  it('does not allow an invalid url', async () => {
+  it('does not allow an invalid url', () => {
     const contributingCohortId = '11';
     const role = 'Investigator';
     const onSave = jest.fn();
@@ -287,7 +299,8 @@ describe('ContributingCohortsModal', () => {
     const studyUrl = 'http://invalid-url';
     const input = screen.getByRole('textbox', { name: /Link/i });
     userEvent.type(input, studyUrl);
-    waitFor(() => expect(input).toHaveTextContent(studyUrl));
+
+    expect(input).toHaveValue(studyUrl);
     userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(

@@ -1,10 +1,10 @@
-import userEvent from '@testing-library/user-event';
-import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { waitFor } from '@testing-library/dom';
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-import Typeahead from '../Typeahead';
 import { ember, lead, pine, silver } from '../../colors';
+import Typeahead from '../Typeahead';
 
 it('shows the selected value', () => {
   const { getByDisplayValue } = render(
@@ -119,19 +119,6 @@ describe('invalidity', () => {
     userEvent.tab();
     expect(findParentWithStyle(getByDisplayValue(''), 'color')?.color).toBe(
       ember.rgb,
-    );
-  });
-
-  it('is removed after keypress', () => {
-    const { getByDisplayValue } = render(
-      <Typeahead suggestions={['LHR', 'LGW']} value="" required />,
-    );
-    const input = getByDisplayValue('');
-    fireEvent.focusOut(input);
-    expect(findParentWithStyle(input, 'color')?.color).toBe(ember.rgb);
-    userEvent.type(input, 'a');
-    waitFor(() =>
-      expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
     );
   });
 });

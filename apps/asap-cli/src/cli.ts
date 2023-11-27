@@ -16,7 +16,7 @@ import {
   setAlgoliaSettings,
 } from './scripts/algolia';
 
-// eslint-disable-next-line no-unused-expressions
+// eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
 yargs(hideBin(process.argv))
   .command({
     command: 'algolia:delete-index',

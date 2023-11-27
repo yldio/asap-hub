@@ -33,11 +33,17 @@ export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
   const fileWriter = streamSaver.createWriteStream(fileName).getWriter();
   const stringifier = stringify({ bom: true, ...csvOptions });
   return stringifier
-    .on('readable', () => {
-      let row;
-      while ((row = stringifier.read()) !== null) {
-        fileWriter.write(row);
+    .on('readable', async () => {
+      async function processRow() {
+        const row = await stringifier.read();
+
+        if (row !== null) {
+          await fileWriter.write(row);
+          await processRow();
+        }
       }
+
+      await processRow();
     })
     .on('end', () => fileWriter.close());
 };

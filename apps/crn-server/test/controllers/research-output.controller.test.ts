@@ -2,7 +2,6 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { when } from 'jest-when';
 import ResearchOutputs, {
   ERROR_UNIQUE_LINK,
-  ERROR_UNIQUE_TITLE,
 } from '../../src/controllers/research-output.controller';
 import { FetchResearchOutputOptions } from '../../src/data-providers/types/research-output.data-provider.types';
 import {
@@ -1543,52 +1542,6 @@ describe('ResearchOutputs controller', () => {
       ).rejects.toThrow(
         expect.objectContaining({
           data: [ERROR_UNIQUE_LINK],
-        }),
-      );
-    });
-
-    test('Should throw when trying to create a new version with the same title', async () => {
-      const currentResearchOutput = getResearchOutputDataObject();
-      const researchOutputUpdateData = getResearchOutputUpdateData();
-
-      currentResearchOutput.title = 'new title';
-      researchOutputDataProviderMock.fetchById.mockResolvedValue(
-        currentResearchOutput,
-      );
-
-      await expect(
-        researchOutputs.update(researchOutputId, {
-          ...researchOutputUpdateData,
-          createVersion: true,
-          title: 'new title',
-        }),
-      ).rejects.toThrow(
-        expect.objectContaining({
-          data: [ERROR_UNIQUE_TITLE],
-        }),
-      );
-    });
-
-    test('Should throw when trying to create a new version with the same title and link', async () => {
-      const currentResearchOutput = getResearchOutputDataObject();
-      const researchOutputUpdateData = getResearchOutputUpdateData();
-
-      currentResearchOutput.title = 'new title';
-      currentResearchOutput.link = 'http://v1.com';
-      researchOutputDataProviderMock.fetchById.mockResolvedValue(
-        currentResearchOutput,
-      );
-
-      await expect(
-        researchOutputs.update(researchOutputId, {
-          ...researchOutputUpdateData,
-          createVersion: true,
-          link: 'http://v1.com',
-          title: 'new title',
-        }),
-      ).rejects.toThrow(
-        expect.objectContaining({
-          data: [ERROR_UNIQUE_LINK, ERROR_UNIQUE_TITLE],
         }),
       );
     });

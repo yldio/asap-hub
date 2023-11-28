@@ -318,14 +318,6 @@ export default class ResearchOutputController {
       errors.push(ERROR_UNIQUE_LINK);
     }
 
-    if (
-      newResearchOutput.title === newVersion.title ||
-      (versions &&
-        versions.some((version) => version.title === newVersion.title))
-    ) {
-      errors.push(ERROR_UNIQUE_TITLE);
-    }
-
     this.handleErrors(errors);
   }
 

@@ -47,6 +47,7 @@ For a list of individual package and particularly app scripts, look inside the r
 - `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
 - `yarn test:integration` - Runs the integration tests for the API against Contentful.
 - `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
+- `yarn lint` - this will run the linting for the project. A `yarn build:typecheck` is a prerequisite.
 
 ## Setting up your development environment
 

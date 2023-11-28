@@ -12,6 +12,7 @@ const NewsDirectory = lazy(loadNewsDirectory);
 
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNewsDirectory();
   }, []);
   const { path } = useRouteMatch();

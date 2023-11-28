@@ -1,8 +1,8 @@
 import {
-  chevronUpIcon,
   chevronDownIcon,
-  linkIcon,
+  chevronUpIcon,
   googleCalendarIcon,
+  linkIcon,
   systemCalendarIcon,
 } from '../icons';
 import { TextChildren } from '../text';
@@ -44,9 +44,9 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({
       }}
       {{
         item: <>{linkIcon}Copy link (Manual setup)</>,
-        onClick: (event) => {
+        onClick: async (event) => {
           event.preventDefault();
-          window.navigator.clipboard.writeText(webcal.toString());
+          await window.navigator.clipboard.writeText(webcal.toString());
         },
       }}
     </DropdownButton>

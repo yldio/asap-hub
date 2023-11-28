@@ -1,7 +1,7 @@
 /* eslint-disable-next-line import/no-unresolved */
-import { stringify, Options } from 'csv-stringify/browser/esm';
-import { WritableStream } from 'web-streams-polyfill/ponyfill';
+import { Options, stringify } from 'csv-stringify/browser/esm';
 import streamSaver from 'streamsaver';
+import { WritableStream } from 'web-streams-polyfill/ponyfill';
 
 export type CSVValue = string | undefined | boolean;
 
@@ -33,11 +33,17 @@ export const createCsvFileStream = (fileName: string, csvOptions?: Options) => {
   const fileWriter = streamSaver.createWriteStream(fileName).getWriter();
   const stringifier = stringify({ bom: true, ...csvOptions });
   return stringifier
-    .on('readable', () => {
-      let row;
-      while ((row = stringifier.read()) !== null) {
-        fileWriter.write(row);
+    .on('readable', async () => {
+      async function processRow() {
+        const row = await stringifier.read();
+
+        if (row !== null) {
+          await fileWriter.write(row);
+          await processRow();
+        }
       }
+
+      await processRow();
     })
     .on('end', () => fileWriter.close());
 };

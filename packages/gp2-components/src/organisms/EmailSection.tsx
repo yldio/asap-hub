@@ -2,9 +2,9 @@ import {
   Link,
   mail,
   pixels,
+  secondaryStyles,
   Subtitle,
   Tooltip,
-  secondaryStyles,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
@@ -72,8 +72,8 @@ const EmailItem: React.FC<{ email: string; contact: string }> = ({
         <Link href={createMailTo(email)}>{email}</Link>
         <button
           css={[secondaryStyles, copyButtonStyles]}
-          onClick={() => {
-            navigator.clipboard.writeText(email);
+          onClick={async () => {
+            await navigator.clipboard.writeText(email);
             setTooltipShown(true);
           }}
         >

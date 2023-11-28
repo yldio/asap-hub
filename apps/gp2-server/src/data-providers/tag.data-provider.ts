@@ -33,7 +33,7 @@ export class TagContentfulDataProvider implements TagDataProvider {
     return {
       total: tagsCollection.items.length,
       items: tagsCollection.items
-        .filter((tag): tag is TagItem => tag !== null)
+        .filter((tag: unknown): tag is TagItem => tag !== null)
         .map(parseTag),
     };
   }
@@ -53,7 +53,7 @@ export class TagContentfulDataProvider implements TagDataProvider {
     try {
       await entry.publish();
     } catch (err) {
-      entry.delete();
+      await entry.delete();
       throw err;
     }
 

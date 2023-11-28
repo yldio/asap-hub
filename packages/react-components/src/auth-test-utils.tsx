@@ -61,6 +61,7 @@ export const Auth0Provider = <T,>(props: Auth0ProviderProps<T>) => {
     const initAuth0 = async () => {
       setAuth0(await createAuth0Client(createAuth0ClientParams));
     };
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     initAuth0();
   }, []);
 

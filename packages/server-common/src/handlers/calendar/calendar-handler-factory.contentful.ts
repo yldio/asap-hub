@@ -119,6 +119,7 @@ export const calendarCreatedContentfulHandlerFactory =
         });
       } catch (error) {
         logger.error(error, 'Error during unsubscribing from the calendar');
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         alerts.error(error);
       }
     }
@@ -151,6 +152,7 @@ export const calendarCreatedContentfulHandlerFactory =
         });
       } catch (error) {
         logger.error(error, 'Error subscribing to the calendar');
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         alerts.error(error);
 
         throw error;

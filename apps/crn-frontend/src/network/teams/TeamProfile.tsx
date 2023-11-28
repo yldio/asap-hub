@@ -9,10 +9,10 @@ import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
 import {
-  useResearchOutputs,
+  useCanDuplicateResearchOutput,
   useCanShareResearchOutput,
   useResearchOutputById,
-  useCanDuplicateResearchOutput,
+  useResearchOutputs,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -35,7 +35,6 @@ const About = lazy(loadAbout);
 const Outputs = lazy(loadOutputs);
 const Workspace = lazy(loadWorkspace);
 const TeamOutput = lazy(loadTeamOutput);
-loadAbout();
 
 type TeamProfileProps = {
   currentTime: Date;
@@ -71,6 +70,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const team = useTeamById(teamId);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(team?.tools ? loadWorkspace : undefined)
       .then(loadOutputs)

@@ -1,11 +1,11 @@
+import { useFlags } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { useFlags } from '@asap-hub/react-context';
 
-import { gp2 } from '@asap-hub/routing';
 import { EventsPage } from '@asap-hub/gp2-components';
-import Calendars from './calendar/Calendars';
+import { gp2 } from '@asap-hub/routing';
 import Frame from '../Frame';
+import Calendars from './calendar/Calendars';
 
 const loadEventDirectory = () =>
   import(/* webpackChunkName: "events-list" */ './EventDirectory');
@@ -16,6 +16,7 @@ const Event = lazy(loadEvent);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadEventDirectory().then(loadEvent);
   }, []);
 

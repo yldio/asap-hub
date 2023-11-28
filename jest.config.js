@@ -43,18 +43,6 @@ const packagePaths = packagesWithCustomConfig.map((package) =>
   resolve(packagesDir, package),
 );
 
-const lintConfigs = [
-  ...packages.map((package) => [packagesDir, package]),
-  ...apps.map((app) => [appsDir, app]),
-].map(([dir, packageOrApp]) => ({
-  rootDir: resolve(dir, packageOrApp),
-  runner: require.resolve('jest-runner-eslint'),
-  testMatch: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
-  modulePathIgnorePatterns: ['<rootDir>/build(-cjs)?/'],
-
-  displayName: `lint-${packageOrApp}`,
-}));
-
 module.exports = {
   ...baseConfig,
   projects: [
@@ -62,7 +50,6 @@ module.exports = {
     ...appTestConfigs,
     ...appPaths,
     ...packagePaths,
-    ...lintConfigs,
   ],
   testTimeout: 10000,
   testRegex: '^$', // root project does not have tests itself

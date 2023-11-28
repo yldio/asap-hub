@@ -1,24 +1,20 @@
 import {
   EventResponse,
+  NewsResponse,
   OutputResponse,
   ProjectResponse,
   UserResponse,
-  NewsResponse,
 } from '.';
 import { ListResponse } from '../common';
 
-export const output = 'output';
-export const event = 'event';
-export const user = 'user';
-export const project = 'project';
-export const news = 'news';
-
-export type EntityType =
-  | typeof output
-  | typeof event
-  | typeof user
-  | typeof news
-  | typeof project;
+export const entityType = [
+  'output',
+  'event',
+  'user',
+  'news',
+  'project',
+] as const;
+export type EntityType = (typeof entityType)[number];
 
 export type EntityMetadata = {
   type: EntityType;

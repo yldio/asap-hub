@@ -4,7 +4,6 @@ import { useFlags } from '@asap-hub/react-context';
 import {
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
@@ -92,14 +91,10 @@ describe('Routes', () => {
     expect(upcomingEventsLink).toBeVisible();
     expect(pastEventsLink).toBeVisible();
 
-    waitFor(() => {
-      userEvent.click(upcomingEventsLink);
-      expect(screen.getByText('No upcoming events available')).toBeVisible();
-    });
+    userEvent.click(upcomingEventsLink);
+    expect(screen.getByText('No upcoming events available.')).toBeVisible();
 
-    waitFor(() => {
-      userEvent.click(pastEventsLink);
-      expect(screen.getByText('No past events available')).toBeVisible();
-    });
+    userEvent.click(pastEventsLink);
+    expect(await screen.findByText('No past events available.')).toBeVisible();
   });
 });

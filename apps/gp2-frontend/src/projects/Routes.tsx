@@ -16,6 +16,7 @@ const ProjectDetail = lazy(loadProjectDetail);
 const { projects } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadProjectDirectory().then(loadProjectDetail);
   }, []);
   const { path } = useRouteMatch();

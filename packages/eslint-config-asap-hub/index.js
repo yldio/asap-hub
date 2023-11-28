@@ -5,6 +5,13 @@ const testFiles = [...testMatch, '**/*{t,T}est*.{js,jsx,ts,tsx}'];
 
 module.exports = {
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: [
+      './tsconfig.eslint.json',
+      './apps/*/tsconfig.json',
+      './packages/*/tsconfig.json',
+    ],
+  },
   settings: {
     'import/resolver': require.resolve('./import-resolver'),
     jest: {
@@ -44,6 +51,7 @@ module.exports = {
     'no-multi-assign': 'off',
     'no-nested-ternary': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
+    '@typescript-eslint/no-floating-promises': 'error',
 
     'lines-between-class-members': 'off',
 

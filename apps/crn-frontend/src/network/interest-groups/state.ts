@@ -1,20 +1,20 @@
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import {
-  useRecoilValue,
-  useRecoilState,
-  atomFamily,
-  selectorFamily,
-  DefaultValue,
-} from 'recoil';
-import {
-  ListInterestGroupResponse,
-  InterestGroupResponse,
-} from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  InterestGroupResponse,
+  ListInterestGroupResponse,
+} from '@asap-hub/model';
+import {
+  atomFamily,
+  DefaultValue,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { authorizationState } from '../../auth/state';
-import { getInterestGroups, getInterestGroup } from './api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
+import { getInterestGroup, getInterestGroups } from './api';
 
 const interestGroupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -109,6 +109,7 @@ export const usePrefetchInterestGroups = (
   );
   useDeepCompareEffect(() => {
     if (interestGroups === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getInterestGroups(options, authorization).then(setInterestGroups).catch();
     }
   }, [authorization, interestGroups, options, setInterestGroups]);

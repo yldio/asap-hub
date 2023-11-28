@@ -3,16 +3,16 @@ import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
+import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
 import { usePaginationParams } from '../../hooks';
 import {
-  useResearchOutputs,
+  useCanDuplicateResearchOutput,
   useCanShareResearchOutput,
   useResearchOutputById,
-  useCanDuplicateResearchOutput,
+  useResearchOutputs,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -35,7 +35,6 @@ const About = lazy(loadAbout);
 const Calendar = lazy(loadCalendar);
 const Outputs = lazy(loadOutputs);
 const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
-loadAbout();
 
 const DuplicateOutput: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -80,6 +79,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout()
       .then(loadCalendar)
       .then(loadOutputs)

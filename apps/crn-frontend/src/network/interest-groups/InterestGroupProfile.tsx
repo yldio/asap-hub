@@ -22,7 +22,6 @@ const loadEventsList = () =>
 
 const About = lazy(loadAbout);
 const Calendar = lazy(loadCalendar);
-loadAbout();
 
 type InterestGroupProfileProps = {
   currentTime: Date;
@@ -39,6 +38,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   const interestGroup = useInterestGroupById(interestGroupId);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAbout().then(loadCalendar).then(loadEventsList);
   }, []);
 

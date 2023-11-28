@@ -46,6 +46,7 @@
     "export:entity:gp2": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/gp2-server/tsconfig.json --files=./apps/gp2-server/@types ./apps/gp2-server/scripts/cli.ts export",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
+    "lint": "yarn test --config=jest-eslint.config.js",
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
     "schema:update": "yarn schema:update:crn",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",

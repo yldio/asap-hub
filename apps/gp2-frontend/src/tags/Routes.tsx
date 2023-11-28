@@ -11,6 +11,7 @@ const TagSearch = lazy(loadTagSearch);
 
 const Tags: FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadTagSearch();
   }, []);
   const { path } = useRouteMatch();

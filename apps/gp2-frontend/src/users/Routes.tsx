@@ -16,6 +16,7 @@ const UserDirectory = lazy(loadUserDirectory);
 const { users } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadUserDirectory().then(loadUserDetail);
   }, []);
   const { path } = useRouteMatch();

@@ -55,6 +55,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadDashboard()
       .then(loadUsers)
       .then(loadWorkingGroups)

@@ -1,13 +1,13 @@
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { FC, lazy, useEffect } from 'react';
+import { OutputDetailPage, OutputFormPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
-import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import {
   useCurrentUserGP2,
   useCurrentUserRoleGP2,
   useFlags,
 } from '@asap-hub/react-context';
-import { OutputDetailPage, OutputFormPage } from '@asap-hub/gp2-components';
+import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 
@@ -32,6 +32,7 @@ const OutputDetail: FC = () => {
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadShareOutput();
   }, []);
 

@@ -15,6 +15,7 @@ const Outputs: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadOutputDirectory();
   }, []);
 

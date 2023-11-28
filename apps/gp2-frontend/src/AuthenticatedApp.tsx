@@ -38,6 +38,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // order by the likelyhood of user navigating there
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     user?.onboarded ? loadOnboardedApp() : loadOnboarding();
   }, [user?.onboarded]);
   const { addNotification } = useNotificationContext();

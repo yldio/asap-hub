@@ -10,5 +10,11 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/react-components" },
+    { "path": "../../packages/react-context" },
+    { "path": "../../packages/contentful" },
+    { "path": "../../packages/routing" }
+  ]
 }

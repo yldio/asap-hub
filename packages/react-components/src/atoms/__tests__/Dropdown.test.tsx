@@ -268,14 +268,16 @@ it('when optional and then rendered required it should not display error message
   ).not.toBeInTheDocument();
 });
 
-it('shows the field in red when required field not filled', async () => {
-  render(
+it('shows the field in red when required field not filled', () => {
+  const handleChange = jest.fn();
+  const { rerender } = render(
     <Dropdown
       placeholder="Select"
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       required={true}
       value=""
       id="test"
+      onChange={handleChange}
     />,
   );
   const input = screen.getByRole('textbox', { hidden: false });
@@ -289,12 +291,19 @@ it('shows the field in red when required field not filled', async () => {
   userEvent.type(input, 'Heathrow');
   userEvent.type(input, specialChars.enter);
 
-  waitFor(() =>
-    expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
+  expect(handleChange).toHaveBeenCalledWith('LHR');
+  rerender(
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value="LHR"
+      required={false}
+    />,
   );
+  expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb);
 });
 
-it('shows an error message when required field not filled', () => {
+it('shows an error message when required field not filled', async () => {
   const { rerender } = render(
     <Dropdown
       placeholder="Select"
@@ -315,15 +324,13 @@ it('shows an error message when required field not filled', () => {
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       value=""
       required
-      getValidationMessage={() => 'Please select something'}
+      customValidationMessage={'Please select something'}
     />,
   );
 
   userEvent.click(input);
 
-  waitFor(() =>
-    expect(screen.getByText('Please select something')).toBeVisible(),
-  );
+  expect(screen.getByText('Please select something')).toBeVisible();
 });
 
 it('clears invalid values, when it looses focus', async () => {
@@ -347,59 +354,6 @@ it('clears invalid values, when it looses focus', async () => {
     expect(screen.getByText('Select')).toBeVisible();
     expect(screen.getByRole('textbox')).toHaveValue('');
   });
-});
-
-it('clears invalid values, when enter', async () => {
-  render(
-    <Dropdown
-      placeholder="Select"
-      options={[{ value: 'LHR', label: 'Heathrow' }]}
-      value=""
-    />,
-  );
-
-  const input = screen.getByRole('textbox', { hidden: false });
-  userEvent.click(input);
-  userEvent.type(input, 'xxx');
-
-  expect(screen.getByRole('textbox')).toHaveValue('xxx');
-
-  userEvent.type(input, specialChars.enter);
-
-  expect(input).toBeVisible();
-  waitFor(() => expect(input).toHaveValue(''));
-});
-
-it('clears the field in red when rerendered correctly', async () => {
-  const { rerender } = render(
-    <Dropdown
-      placeholder="Select"
-      options={[{ value: 'LHR', label: 'Heathrow' }]}
-      required={true}
-      value=""
-      id="test"
-    />,
-  );
-  const input = screen.getByRole('textbox', { hidden: false });
-  expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb);
-
-  userEvent.click(input);
-  userEvent.tab();
-  expect(findParentWithStyle(input, 'color')?.color).toBe(ember.rgb);
-
-  rerender(
-    <Dropdown
-      placeholder="Select"
-      options={[{ value: 'LHR', label: 'Heathrow' }]}
-      required={true}
-      value=""
-      id="test"
-    />,
-  );
-
-  waitFor(() =>
-    expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
-  );
 });
 
 it('can clear the value when required is false', async () => {

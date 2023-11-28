@@ -6,4 +6,5 @@ build(resolve(__dirname, '../build'), {
   ...env,
   PUBLIC_URL:
     env.GP2_AUTH_FRONTEND_BASE_URL || 'https://dev.gp2.asap.science/.auth/',
+  DISABLE_ESLINT_PLUGIN: true,
 });

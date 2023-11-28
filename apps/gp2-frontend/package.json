@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "cross-env TSC_COMPILE_ON_ERROR=true PORT=4000 react-scripts start",
-    "build": "node ./scripts/build-unsupported-browser-page.js && react-scripts build",
+    "build": "node ./scripts/build-unsupported-browser-page.js && DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
-    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:^",
     "@babel/runtime-corejs3": "7.23.4",
     "@sentry/cli": "^2.20.3",
     "@testing-library/dom": "9.3.3",

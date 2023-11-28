@@ -15,6 +15,7 @@ on:
           - teams
           - working-groups
           - tutorials
+          - news
           - all
       environment-name:
         required: true

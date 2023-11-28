@@ -5,6 +5,7 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
   createTutorialsResponse,
+  createNewsResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -66,6 +67,11 @@ it('renders a list of cards', () => {
           __meta: { type: 'tutorial' },
           title: 'Tutorial 1',
         },
+        {
+          ...createNewsResponse({ key: 'id-1' }),
+          __meta: { type: 'news' },
+          title: 'News Title',
+        },
       ]}
     />,
   );
@@ -83,4 +89,6 @@ it('renders a list of cards', () => {
   ).toBeInTheDocument();
 
   expect(screen.getByText(/Tutorial 1/i)).toBeInTheDocument();
+
+  expect(screen.getByText(/News Title/i)).toBeInTheDocument();
 });

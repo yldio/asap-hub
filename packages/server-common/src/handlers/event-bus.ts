@@ -18,3 +18,5 @@ export type WorkingGroupPayload = WebhookDetail<
 export type TutorialPayload = WebhookDetail<
   ContentfulWebhookPayload<'tutorials'>
 >;
+
+export type NewsPayload = WebhookDetail<ContentfulWebhookPayload<'news'>>;

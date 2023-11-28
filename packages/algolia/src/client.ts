@@ -7,6 +7,7 @@ import {
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
+  NewsResponse,
   ResearchOutputResponse,
   TeamResponse,
   TutorialsResponse,
@@ -24,6 +25,7 @@ import {
   TEAM_ENTITY_TYPE,
   WORKING_GROUP_ENTITY_TYPE,
   TUTORIAL_ENTITY_TYPE,
+  NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
 } from './crn';
 import {
   NEWS_ENTITY_TYPE,
@@ -67,6 +69,7 @@ export type EntityResponses = {
       TutorialsResponse,
       typeof TUTORIAL_ENTITY_TYPE
     >;
+    [CRN_NEWS_ENTITY_TYPE]: WithMeta<NewsResponse, typeof CRN_NEWS_ENTITY_TYPE>;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;

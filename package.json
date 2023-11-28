@@ -146,7 +146,7 @@
     "@types/react-test-renderer": "18.0.7",
     "@types/uuid": "8.3.4",
     "@types/webpack": "4.41.38",
-    "@yarnpkg/pnpify": "3.1.6",
+    "@yarnpkg/pnpify": "3.1.7",
     "babel-jest": "29.7.0",
     "babel-plugin-lodash": "3.3.4",
     "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
@@ -174,5 +174,5 @@
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.6.4"
+  "packageManager": "yarn@3.7.0"
 }

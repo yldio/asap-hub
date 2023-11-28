@@ -6,13 +6,13 @@ export const FETCH_DASHBOARD = gql`
   query FetchDashboard {
     dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {
       items {
-        newsCollection {
+        newsCollection(limit: 10) {
           items {
             ...NewsContent
           }
         }
 
-        pagesCollection {
+        pagesCollection(limit: 10) {
           items {
             ...PageContent
           }

@@ -11,6 +11,7 @@ export const createNewsResponse = ({ key }: FixtureOptions): NewsResponse => ({
   shortText: `${key} short text`,
   text: `<h1>${key} text</h1>`,
   created: new Date().toISOString(),
+  tags: [],
 });
 
 export const createNewsResponseWithType = ({
@@ -23,6 +24,7 @@ export const createNewsResponseWithType = ({
   text: `<h1>${type} ${key} text</h1>`,
   created: new Date().toISOString(),
   type,
+  tags: [],
 });
 
 export const createListNewsResponse = (

@@ -21,6 +21,7 @@ export type NewsDataObject = {
   link?: string;
   linkText?: string;
   created: string;
+  tags: string[];
 };
 export type ListNewsDataObject = ListResponse<NewsDataObject>;
 

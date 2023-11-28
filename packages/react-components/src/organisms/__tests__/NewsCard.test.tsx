@@ -9,6 +9,7 @@ describe('News', () => {
     type: 'News',
     title: 'Not a Title',
     created: new Date().toISOString(),
+    tags: [],
   };
 
   it('renders the title', () => {
@@ -27,7 +28,18 @@ describe('News', () => {
     expect(getByText(/short text/i)).toBeVisible();
   });
 
-  it('renders thumbnail when when present', () => {
+  it('renders tags when present', () => {
+    const { rerender, queryByRole, getByText, getByRole } = render(
+      <NewsCard {...newsCardProps} />,
+    );
+    expect(queryByRole('list')).not.toBeInTheDocument();
+
+    rerender(<NewsCard {...newsCardProps} tags={['Tag 1']} />);
+    expect(getByRole('list')).toBeVisible();
+    expect(getByText(/Tag 1/i)).toBeVisible();
+  });
+
+  it('renders thumbnail when present', () => {
     const { rerender, getByRole, queryByRole } = render(
       <NewsCard {...newsCardProps} />,
     );

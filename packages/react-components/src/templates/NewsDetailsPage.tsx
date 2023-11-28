@@ -1,15 +1,23 @@
 import { css } from '@emotion/react';
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 
-import { Pill, Display, Card, Caption } from '../atoms';
+import { Pill, Display, Card, Caption, Headline3, Paragraph } from '../atoms';
 import { RichText } from '../organisms';
-import { perRem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { formatDate } from '../date';
-import { ExternalLink } from '../molecules';
+import { ExternalLink, TagList } from '../molecules';
 
 const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(32),
   padding: defaultPageLayoutPaddingStyle,
+});
+
+const descriptionStyles = css({
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${24 / perRem}em`,
 });
 
 const footerContainer = css({
@@ -22,8 +30,14 @@ const richTextContainer = css({
 });
 
 type NewsDetailsPageProps = (
-  | Pick<NewsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'>
-  | Pick<TutorialsResponse, 'text' | 'title' | 'created' | 'link' | 'linkText'>
+  | Pick<
+      NewsResponse,
+      'text' | 'title' | 'created' | 'link' | 'linkText' | 'tags'
+    >
+  | Pick<
+      TutorialsResponse,
+      'text' | 'title' | 'created' | 'link' | 'linkText' | 'tags'
+    >
 ) & { type: NewsType };
 
 const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
@@ -33,6 +47,7 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   link,
   linkText,
   type,
+  tags,
 }) => {
   const attachmentComponent = link ? (
     <div>
@@ -60,6 +75,20 @@ const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
         {attachmentComponent}
         <div css={footerContainer}>{publishDateComponent}</div>
       </Card>
+      {!!tags.length && (
+        <Card>
+          <Headline3 noMargin>Tags</Headline3>
+          <div css={descriptionStyles}>
+            <Paragraph accent="lead">
+              Explore keywords related to skills, techniques, resources, and
+              tools.
+            </Paragraph>
+          </div>
+          <div>
+            <TagList tags={tags} />
+          </div>
+        </Card>
+      )}
     </div>
   );
 };

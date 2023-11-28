@@ -48,6 +48,13 @@ export const getContentfulGraphqlNews = (): NonNullable<
   thumbnail: {
     url: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
   },
+  tagsCollection: {
+    items: [
+      {
+        name: 'Tag 1',
+      },
+    ],
+  },
 });
 
 export const getContentfulNewsGraphqlResponse = (): FetchNewsQuery => ({
@@ -65,6 +72,7 @@ export const getNewsDataObject = (): NewsDataObject => ({
   text: '<p>text</p>',
   thumbnail: `https://www.contentful.com/api/assets/asap-crn/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
+  tags: ['Tag 1'],
 });
 
 export const getListNewsDataObject = (): ListNewsDataObject => ({

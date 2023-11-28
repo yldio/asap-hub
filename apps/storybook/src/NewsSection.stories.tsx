@@ -1,6 +1,6 @@
 import { NewsSection } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { text } from '@storybook/addon-knobs';
+import { array, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Dashboard / News Section',
@@ -20,6 +20,7 @@ const props = (): ComponentProps<typeof NewsSection> => ({
         'Discover current and planned tools (e.g., animal & cell models, antibodies, vectors, tissues, etc.) in a sortable table. This will be a living reference.',
       link: text('Link', 'https://example.com'),
       linkText: text('Link Text', 'External Link'),
+      tags: array('Tags', ['Tag 1', 'Tag 2']),
     },
   ],
 });

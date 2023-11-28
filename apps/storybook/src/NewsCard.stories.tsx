@@ -1,4 +1,4 @@
-import { text } from '@storybook/addon-knobs';
+import { array, text } from '@storybook/addon-knobs';
 
 import { NewsCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
@@ -22,6 +22,12 @@ const newsProps = (): ComponentProps<typeof NewsCard> => ({
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
+  tags: array('Tags', [
+    'Neurological Diseases',
+    'Clinical Neurology',
+    'Adult Neurology',
+    'Neuroimaging',
+  ]),
 });
 
 const tutorialProps = (): ComponentProps<typeof NewsCard> => ({
@@ -33,6 +39,12 @@ const tutorialProps = (): ComponentProps<typeof NewsCard> => ({
     'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
+  tags: array('Tags', [
+    'Neurological Diseases',
+    'Clinical Neurology',
+    'Adult Neurology',
+    'Neuroimaging',
+  ]),
 });
 
 export const News = () => <NewsCard {...newsProps()} />;

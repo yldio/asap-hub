@@ -8,6 +8,10 @@
   "module": "build/index.js",
   "main": "build-cjs/index.js",
   "types": "build/index.d.ts",
+  "exports": {
+    "import": "./build/index.js",
+    "require": "./build-cjs/index.js"
+  },
   "sideEffects": false,
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",

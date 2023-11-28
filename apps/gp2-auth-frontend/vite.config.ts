@@ -2,7 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  base: 'https://dev.hub.asap.science',
+  base:
+    process.env.GP2_AUTH_FRONTEND_BASE_URL || 'https://dev.hub.asap.science',
   plugins: [react()],
   server: {
     open: true,

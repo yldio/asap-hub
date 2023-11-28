@@ -233,7 +233,7 @@ const serverlessConfig: AWS = {
       {
         bucketName: '${self:service}-${self:provider.stage}-gp2-auth-frontend',
         bucketPrefix: '.auth',
-        localDir: '../gp2-auth-frontend/build',
+        localDir: '../gp2-auth-frontend/dist',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-messages-static',

@@ -11,6 +11,7 @@ const CheckAuth: FC<CheckAuthProps> = ({ children }) => {
   const location = useLocation();
   useEffect(() => {
     if (checkSession) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       checkSession();
     }
   }, [location, checkSession]);

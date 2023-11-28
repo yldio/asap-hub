@@ -7,7 +7,7 @@ import { perRem, rem } from '../pixels';
 import { paper, steel } from '../colors';
 import {
   contentSidePaddingWithNavigation,
-  networkContentTopPadding,
+  defaultContentTopPadding,
 } from '../layout';
 import { Filter } from '../organisms';
 import { searchIcon } from '../icons';
@@ -23,7 +23,7 @@ const textStyles = css({
 });
 
 const controlsStyles = css({
-  padding: `${networkContentTopPadding} ${contentSidePaddingWithNavigation(
+  padding: `${defaultContentTopPadding} ${contentSidePaddingWithNavigation(
     8,
   )} 0`,
 });
@@ -58,7 +58,9 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
       <Display styleAsHeading={2}>Tags Search</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Search for research outputs that include selected tags.
+          Search for all CRN Hub areas that include selected tags (research
+          outputs, events, people, teams, tutorials, interest groups, working
+          groups and news).
         </Paragraph>
       </div>
     </div>

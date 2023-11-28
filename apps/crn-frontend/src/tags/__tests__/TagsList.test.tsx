@@ -28,6 +28,6 @@ const renderTags = async (): Promise<RenderResult> =>
 it('renders a headline', async () => {
   const { findByRole } = await renderTags();
   expect((await findByRole('heading')).textContent).toMatch(
-    /Explore any tags on the CRN Hub./i,
+    /Explore any tags/i,
   );
 });

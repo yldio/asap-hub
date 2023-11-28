@@ -104,8 +104,8 @@ const TagsPageBody: React.FC<TagsPageBodyProps> = ({
     renderPageHref={renderPageHref}
     noResultsComponent={
       <MessageBody
-        title="Explore any tags on the CRN Hub."
-        body="All CRN Hub research outputs with the selected tags will be listed on this page."
+        title="Explore any tags."
+        body="All CRN Hub areas with the selected tags will be listed on this page."
       />
     }
   >

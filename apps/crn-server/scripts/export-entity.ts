@@ -1,4 +1,4 @@
-import { EntityResponses } from '@asap-hub/algolia';
+import { EntityData, EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
@@ -31,7 +31,7 @@ export const exportEntity = async (
   const file = await fs.open(filename || `${entity}.json`, 'w');
   let recordCount = 0;
   let total: number;
-  let records: ListResponse<EntityResponsesCRN[keyof EntityResponsesCRN]>;
+  let records: ListResponse<EntityData>;
   let page = 1;
 
   await file.write('[\n');
@@ -97,11 +97,9 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   return controllerMap[entity];
 };
 
-const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
-  record: T[K] extends EntityResponsesCRN[keyof EntityResponsesCRN]
-    ? T[K] & { id: string }
-    : never,
-  type: K extends keyof EntityResponsesCRN ? K : never,
+const transformRecords = (
+  record: EntityData,
+  type: keyof EntityResponsesCRN,
 ) => {
   const payload = {
     ...record,

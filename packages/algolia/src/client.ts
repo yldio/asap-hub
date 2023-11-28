@@ -11,6 +11,7 @@ import {
   TeamResponse,
   TutorialsResponse,
   UserResponse,
+  WithMeta,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
@@ -35,15 +36,37 @@ import {
 const CRN = 'crn';
 const GP2 = 'gp2';
 export type Apps = typeof CRN | typeof GP2;
+
+export type EntityData =
+  | ResearchOutputResponse
+  | UserResponse
+  | ExternalAuthorResponse
+  | EventResponse
+  | TeamResponse
+  | WorkingGroupResponse
+  | TutorialsResponse;
+
 export type EntityResponses = {
   [CRN]: {
-    [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
-    [USER_ENTITY_TYPE]: UserResponse;
-    [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-    [EVENT_ENTITY_TYPE]: EventResponse;
-    [TEAM_ENTITY_TYPE]: TeamResponse;
-    [WORKING_GROUP_ENTITY_TYPE]: WorkingGroupResponse;
-    [TUTORIAL_ENTITY_TYPE]: TutorialsResponse;
+    [RESEARCH_OUTPUT_ENTITY_TYPE]: WithMeta<
+      ResearchOutputResponse,
+      typeof RESEARCH_OUTPUT_ENTITY_TYPE
+    >;
+    [USER_ENTITY_TYPE]: WithMeta<UserResponse, typeof USER_ENTITY_TYPE>;
+    [EXTERNAL_AUTHOR_ENTITY_TYPE]: WithMeta<
+      ExternalAuthorResponse,
+      typeof EXTERNAL_AUTHOR_ENTITY_TYPE
+    >;
+    [EVENT_ENTITY_TYPE]: WithMeta<EventResponse, typeof EVENT_ENTITY_TYPE>;
+    [TEAM_ENTITY_TYPE]: WithMeta<TeamResponse, typeof TEAM_ENTITY_TYPE>;
+    [WORKING_GROUP_ENTITY_TYPE]: WithMeta<
+      WorkingGroupResponse,
+      typeof WORKING_GROUP_ENTITY_TYPE
+    >;
+    [TUTORIAL_ENTITY_TYPE]: WithMeta<
+      TutorialsResponse,
+      typeof TUTORIAL_ENTITY_TYPE
+    >;
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;

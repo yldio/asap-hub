@@ -1110,7 +1110,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/eslint-config-asap-hub@workspace:*, @asap-hub/eslint-config-asap-hub@workspace:^, @asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
+"@asap-hub/eslint-config-asap-hub@workspace:*, @asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
   version: 0.0.0-use.local
   resolution: "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub"
   dependencies:
@@ -1318,7 +1318,7 @@ __metadata:
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
-    "@asap-hub/eslint-config-asap-hub": "workspace:^"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/frontend-utils": "workspace:*"

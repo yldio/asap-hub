@@ -46,7 +46,8 @@ export type EntityData =
   | EventResponse
   | TeamResponse
   | WorkingGroupResponse
-  | TutorialsResponse;
+  | TutorialsResponse
+  | NewsResponse;
 
 export type EntityResponses = {
   [CRN]: {

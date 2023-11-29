@@ -1,4 +1,5 @@
-module.exports.description = 'Add related outputs to outputs content model';
+module.exports.description =
+  'Change documentType field editor in output version';
 
 module.exports.up = (migration) => {
   const version = migration.editContentType('outputVersion');

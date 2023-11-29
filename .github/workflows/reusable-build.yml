@@ -209,13 +209,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: crn-auth-frontend-${{ inputs.environment-name }}
-          path: apps/crn-auth-frontend/build
+          path: apps/crn-auth-frontend/dist
           retention-days: 5
       - name: GP2 Auth frontend artifact
         uses: actions/upload-artifact@v3
         with:
           name: gp2-auth-frontend-${{ inputs.environment-name }}
-          path: apps/gp2-auth-frontend/build
+          path: apps/gp2-auth-frontend/dist
           retention-days: 5
   typecheck:
     needs: [definitions]

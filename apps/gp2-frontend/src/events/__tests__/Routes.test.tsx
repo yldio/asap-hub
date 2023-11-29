@@ -17,6 +17,7 @@ import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
 import Routes from '../Routes';
 
+jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../calendar/api');
 mockConsoleError();

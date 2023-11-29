@@ -6,6 +6,7 @@ import {
   WorkingGroupResponse,
   TutorialsResponse,
   TeamResponse,
+  NewsResponse,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
@@ -13,6 +14,7 @@ import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
 import {
   EventCard,
+  NewsCard,
   PeopleCard,
   ResultList,
   SharedResearchCard,
@@ -46,15 +48,6 @@ const MessageBody: React.FC<{ title: string; body: string }> = ({
   </main>
 );
 
-export enum TagFieldByEntity {
-  'research-output' = 'keywords',
-  user = 'expertiseAndResourceTags',
-  event = 'calendar',
-  team = 'expertiseAndResourceTags',
-  'working-group' = 'deliverables',
-  tutorial = 'tags',
-}
-
 const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
   ...data
 }): JSX.Element => {
@@ -79,6 +72,10 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 
   if (type === 'tutorial') {
     return <TutorialCard {...(data as TutorialsResponse)} />;
+  }
+
+  if (type === 'news') {
+    return <NewsCard {...(data as NewsResponse)} type="News" />;
   }
 
   return <TeamCard {...(data as TeamResponse)} />;

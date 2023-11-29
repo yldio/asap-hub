@@ -3,6 +3,7 @@ import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
+import News from '../src/controllers/news.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Teams from '../src/controllers/team.controller';
 import Tutorials from '../src/controllers/tutorial.controller';
@@ -10,6 +11,7 @@ import Users from '../src/controllers/user.controller';
 import WorkingGroups from '../src/controllers/working-group.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
+import { getNewsDataProvider } from '../src/dependencies/news.dependencies';
 import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import { getTeamDataProvider } from '../src/dependencies/team.dependencies';
@@ -79,6 +81,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const teamDataProvider = getTeamDataProvider();
   const workingGroupDataProvider = getWorkingGroupDataProvider();
   const tutorialDataProvider = getTutorialDataProvider();
+  const newsDataProvider = getNewsDataProvider();
 
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
@@ -92,6 +95,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     team: new Teams(teamDataProvider),
     'working-group': new WorkingGroups(workingGroupDataProvider),
     tutorial: new Tutorials(tutorialDataProvider),
+    news: new News(newsDataProvider),
   };
 
   return controllerMap[entity];
@@ -153,6 +157,13 @@ const transformRecords = (
   }
 
   if (type === 'tutorial' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
+  if (type === 'news' && 'tags' in record) {
     return {
       ...payload,
       _tags: record.tags,

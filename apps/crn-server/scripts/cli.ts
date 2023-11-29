@@ -21,6 +21,7 @@ yargs(hideBin(process.argv))
             'team',
             'working-group',
             'tutorial',
+            'news',
           ],
           demandOption: true,
         })
@@ -38,7 +39,8 @@ yargs(hideBin(process.argv))
           | 'event'
           | 'team'
           | 'working-group'
-          | 'tutorial',
+          | 'tutorial'
+          | 'news',
         filename,
       ),
   })

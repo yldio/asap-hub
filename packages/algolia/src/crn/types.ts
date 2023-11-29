@@ -2,6 +2,7 @@ import {
   EventResponse,
   ExternalAuthorResponse,
   LabResponse,
+  NewsResponse,
   ResearchOutputResponse,
   TeamResponse,
   TutorialsResponse,
@@ -17,6 +18,7 @@ export const EVENT_ENTITY_TYPE = 'event';
 export const TEAM_ENTITY_TYPE = 'team';
 export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
 export const TUTORIAL_ENTITY_TYPE = 'tutorial';
+export const NEWS_ENTITY_TYPE = 'news';
 export type Payload =
   | {
       data: EventResponse;
@@ -49,4 +51,8 @@ export type Payload =
   | {
       data: TutorialsResponse;
       type: typeof TUTORIAL_ENTITY_TYPE;
+    }
+  | {
+      data: NewsResponse;
+      type: typeof NEWS_ENTITY_TYPE;
     };

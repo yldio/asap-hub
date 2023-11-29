@@ -237,4 +237,5 @@ export const CRNTagSearchEntitiesListArray: CRNTagSearchEntitiesList = [
   'team',
   'tutorial',
   'working-group',
+  'news',
 ];

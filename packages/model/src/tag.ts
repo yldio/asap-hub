@@ -5,10 +5,12 @@ import { TutorialsResponse } from './tutorials';
 import { UserResponse } from './user';
 import { WorkingGroupResponse } from './working-group';
 
+export type WithMeta<Response, Type> = Response & { __meta: { type: Type } };
+
 export type TagSearchResponse =
-  | ResearchOutputResponse
-  | UserResponse
-  | EventResponse
-  | TeamResponse
-  | WorkingGroupResponse
-  | TutorialsResponse;
+  | WithMeta<ResearchOutputResponse, 'research-output'>
+  | WithMeta<UserResponse, 'user'>
+  | WithMeta<EventResponse, 'event'>
+  | WithMeta<TeamResponse, 'team'>
+  | WithMeta<WorkingGroupResponse, 'working-group'>
+  | WithMeta<TutorialsResponse, 'tutorial'>;

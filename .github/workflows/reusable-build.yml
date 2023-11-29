@@ -183,13 +183,17 @@ jobs:
           REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
           REACT_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
           REACT_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
+          VITE_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
           REACT_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          VITE_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
           REACT_APP_CRN_SENTRY_DSN: ${{ steps.setup.outputs.react-app-crn-sentry-dsn }}
           REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
           REACT_APP_GP2_API_BASE_URL: ${{ steps.setup.outputs.gp2-api-url }}
           REACT_APP_GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
           REACT_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+          VITE_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
           REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
+          VITE_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
           REACT_APP_GP2_SENTRY_DSN: ${{ steps.setup.outputs.react-app-gp2-sentry-dsn }}
           REACT_APP_CRN_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-crn-gtm-container-id }}
           REACT_APP_GP2_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gp2-gtm-container-id }}
@@ -205,13 +209,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: crn-auth-frontend-${{ inputs.environment-name }}
-          path: apps/crn-auth-frontend/build
+          path: apps/crn-auth-frontend/dist
           retention-days: 5
       - name: GP2 Auth frontend artifact
         uses: actions/upload-artifact@v3
         with:
           name: gp2-auth-frontend-${{ inputs.environment-name }}
-          path: apps/gp2-auth-frontend/build
+          path: apps/gp2-auth-frontend/dist
           retention-days: 5
   typecheck:
     needs: [definitions]

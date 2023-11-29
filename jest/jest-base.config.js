@@ -32,6 +32,7 @@ module.exports = {
   },
   modulePathIgnorePatterns: [
     '<rootDir>/build(-cjs)?',
+    '<rootDir>/dist',
     '<rootDir>/coverage',
     `<rootDir>/packages/services-common/src/cms/`,
     `/contentful-app-extensions/`,

@@ -158,6 +158,7 @@ describe('filters', () => {
           'team',
           'tutorial',
           'working-group',
+          'news',
         ],
         expect.anything(),
         expect.anything(),

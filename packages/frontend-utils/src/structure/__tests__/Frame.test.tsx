@@ -2,7 +2,7 @@ import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import Frame, { SkeletonFrame } from '../Frame';
+import Frame, { SkeletonHeaderFrame } from '../Frame';
 
 mockConsoleError();
 
@@ -92,9 +92,9 @@ describe('the document title', () => {
 describe('the skeleton header frame', () => {
   it('renders skeleton screen for content header', async () => {
     const { container } = render(
-      <SkeletonFrame title={null}>
+      <SkeletonHeaderFrame title={null}>
         <Suspend />
-      </SkeletonFrame>,
+      </SkeletonHeaderFrame>,
     );
     expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
       4,

@@ -53,8 +53,8 @@ export const SearchFrame: React.FC<
   </ErrorBoundary>
 );
 
-export const SkeletonFrame: React.FC<Omit<FrameBoundaryProps, 'fallback'>> = (
-  props,
-) => <DefaultFrame {...props} fallback={<LoadingContentHeader />} />;
+export const SkeletonHeaderFrame: React.FC<
+  Omit<FrameBoundaryProps, 'fallback'>
+> = (props) => <DefaultFrame {...props} fallback={<LoadingContentHeader />} />;
 
 export default DefaultFrame;

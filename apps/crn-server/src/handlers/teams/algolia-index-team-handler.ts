@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { TeamDataObject, TeamEvent } from '@asap-hub/model';
+import { TeamEvent, TeamListItemDataObject } from '@asap-hub/model';
 import { EventBridgeHandler, TeamPayload } from '@asap-hub/server-common';
 import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
@@ -9,7 +9,6 @@ import TeamController from '../../controllers/team.controller';
 import { getTeamDataProvider } from '../../dependencies/team.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { addTagsFunction } from '../helper';
 
 /* istanbul ignore next */
 export const indexTeamHandler =
@@ -27,8 +26,25 @@ export const indexTeamHandler =
       logger.debug(`Fetched team ${teamId}`);
 
       if (team) {
+        const {
+          id,
+          displayName,
+          inactiveSince,
+          projectTitle,
+          labCount,
+          expertiseAndResourceTags,
+        } = team;
         await algoliaClient.save({
-          data: addTagsFunction(team) as TeamDataObject,
+          data: {
+            id,
+            displayName,
+            inactiveSince,
+            projectTitle,
+            labCount,
+            expertiseAndResourceTags,
+            members: team.members.length,
+            _tags: team.expertiseAndResourceTags,
+          } as TeamListItemDataObject,
           type: 'team',
         });
 

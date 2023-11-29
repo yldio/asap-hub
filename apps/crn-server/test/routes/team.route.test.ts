@@ -1,6 +1,6 @@
 import { User } from '@asap-hub/auth';
 import { createAuthUser } from '@asap-hub/fixtures';
-import { FetchOptions, FetchTeamsOptions } from '@asap-hub/model';
+import { FetchOptions } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -150,50 +150,7 @@ describe('/teams/ route', () => {
 
       await supertest(app).get('/teams').query(params);
 
-      const expectedParams: FetchTeamsOptions = {
-        ...(params as Required<FetchOptions>),
-        showTeamTools: [loggedUser.teams[0]!.id],
-      };
-
-      expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
-    });
-
-    describe('Team tools', () => {
-      test('Should select the team tools for the teams the user is a member of', async () => {
-        teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
-        getLoggedUser.mockReturnValueOnce({
-          ...createAuthUser(),
-          teams: [
-            {
-              id: 'team-id-1',
-              role: 'Project Manager',
-            },
-            {
-              id: 'team-id-2',
-              role: 'Some role',
-            },
-            {
-              id: 'team-id-3',
-              role: 'Some other role',
-            },
-          ],
-        });
-
-        const params: FetchOptions = {
-          take: 15,
-          skip: 5,
-        };
-
-        await supertest(app).get('/teams').query(params);
-
-        const expectedParams: FetchTeamsOptions = {
-          take: 15,
-          skip: 5,
-          showTeamTools: ['team-id-1', 'team-id-2', 'team-id-3'],
-        };
-
-        expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
-      });
+      expect(teamControllerMock.fetch).toHaveBeenCalledWith(params);
     });
 
     describe('Parameter validation', () => {
@@ -240,8 +197,8 @@ describe('/teams/ route', () => {
 
       await supertest(app).get(`/teams/${teamId}`);
 
-      expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
-        showTools: expect.any(Boolean),
+      expect(teamControllerMock.fetchById).toHaveBeenCalledWith(teamId, {
+        showTools: false,
       });
     });
 

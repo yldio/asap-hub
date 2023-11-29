@@ -4,5 +4,6 @@ export type FetchContributingCohortProviderOptions = null;
 
 export type ContributingCohortDataProvider = DataProvider<
   gp2.ContributingCohortDataObject,
+  gp2.ContributingCohortDataObject,
   FetchContributingCohortProviderOptions
 >;

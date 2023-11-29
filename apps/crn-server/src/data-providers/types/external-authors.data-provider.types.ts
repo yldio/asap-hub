@@ -7,6 +7,7 @@ import {
 
 export type ExternalAuthorDataProvider = DataProvider<
   ExternalAuthorDataObject,
+  ExternalAuthorDataObject,
   FetchOptions,
   ExternalAuthorCreateDataObject
 >;

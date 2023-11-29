@@ -35,17 +35,9 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
         {
           id: 'team-id-1',
           displayName: 'Lee, M',
-          lastModifiedDate: '2020-12-11T15:06:26.000Z',
           expertiseAndResourceTags: [],
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
-          proposalURL: 'output-id-1',
-          tools: [
-            {
-              name: 'dropbox',
-              url: '  https://example.com/secure-comms',
-            },
-          ],
         },
       ],
       leaders: [
@@ -160,13 +152,9 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
     {
       id: 'team-id-0',
       displayName: 'Team A',
-      lastModifiedDate: '2020-11-26T11:56:04.000Z',
       expertiseAndResourceTags: ['Animal resources'],
-
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-      proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-      tools: [],
     },
   ],
   leaders: [

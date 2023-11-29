@@ -9,7 +9,7 @@ import {
   gp2 as gp2Model,
   NewsResponse,
   ResearchOutputResponse,
-  TeamResponse,
+  TeamListItemResponse,
   TutorialsResponse,
   UserResponse,
   WithMeta,
@@ -44,7 +44,7 @@ export type EntityData =
   | UserResponse
   | ExternalAuthorResponse
   | EventResponse
-  | TeamResponse
+  | TeamListItemResponse
   | WorkingGroupResponse
   | TutorialsResponse
   | NewsResponse;
@@ -61,7 +61,7 @@ export type EntityResponses = {
       typeof EXTERNAL_AUTHOR_ENTITY_TYPE
     >;
     [EVENT_ENTITY_TYPE]: WithMeta<EventResponse, typeof EVENT_ENTITY_TYPE>;
-    [TEAM_ENTITY_TYPE]: WithMeta<TeamResponse, typeof TEAM_ENTITY_TYPE>;
+    [TEAM_ENTITY_TYPE]: WithMeta<TeamListItemResponse, typeof TEAM_ENTITY_TYPE>;
     [WORKING_GROUP_ENTITY_TYPE]: WithMeta<
       WorkingGroupResponse,
       typeof WORKING_GROUP_ENTITY_TYPE

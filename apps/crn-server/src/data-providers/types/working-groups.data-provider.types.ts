@@ -7,6 +7,7 @@ import {
 
 export type WorkingGroupDataProvider = DataProvider<
   WorkingGroupDataObject,
+  WorkingGroupDataObject,
   FetchWorkingGroupOptions,
   null,
   null,

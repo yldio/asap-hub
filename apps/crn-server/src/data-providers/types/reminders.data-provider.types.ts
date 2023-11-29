@@ -6,5 +6,6 @@ import {
 
 export type ReminderDataProvider = DataProvider<
   ReminderDataObject,
+  ReminderDataObject,
   FetchRemindersOptions
 >;

@@ -1,5 +1,5 @@
 import { FetchOptions, ListResponse } from './common';
-import { TeamResponse } from './team';
+import { TeamListItemResponse } from './team';
 import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
 
@@ -9,7 +9,10 @@ export type InterestGroupTools = {
   readonly googleCalendar?: string;
 };
 
-export type InterestGroupTeam = Omit<TeamResponse, 'members' | 'labCount'>;
+export type InterestGroupTeam = Omit<
+  TeamListItemResponse,
+  'members' | 'labCount'
+>;
 
 export const interestGroupRole = ['Chair', 'Project Manager'] as const;
 

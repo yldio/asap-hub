@@ -65,14 +65,22 @@ export type TeamCreateDataObject = {
   tools?: TeamTool[];
 };
 
-export type ListTeamDataObject = ListResponse<TeamDataObject>;
-
 export type TeamResponse = TeamDataObject;
 
-export type ListTeamResponse = ListResponse<TeamResponse>;
+export type FetchTeamsOptions = FetchOptions;
 
-export type FetchTeamsOptions = {
-  // select team IDs of which tools should be returned
-  // leave undefined to return all teams' tools
-  showTeamTools?: string[];
-} & FetchOptions;
+export type TeamListItemDataObject = Pick<
+  TeamDataObject,
+  | 'id'
+  | 'displayName'
+  | 'inactiveSince'
+  | 'projectTitle'
+  | 'expertiseAndResourceTags'
+  | 'labCount'
+> & { members: number };
+
+export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;
+
+export type TeamListItemResponse = TeamListItemDataObject;
+
+export type ListTeamResponse = ListResponse<TeamListItemResponse>;

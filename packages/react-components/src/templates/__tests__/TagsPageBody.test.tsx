@@ -1,7 +1,7 @@
 import {
   createEventResponse,
   createResearchOutputResponse,
-  createTeamResponse,
+  createTeamListItemResponse,
   createUserResponse,
   createWorkingGroupResponse,
   createTutorialsResponse,
@@ -53,7 +53,7 @@ it('renders a list of cards', () => {
           title: 'ASAP Collaborative Meeting',
         },
         {
-          ...createTeamResponse(),
+          ...createTeamListItemResponse(),
           __meta: { type: 'team' },
           displayName: 'Team ASAP',
         },

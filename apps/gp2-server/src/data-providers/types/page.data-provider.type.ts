@@ -8,5 +8,6 @@ export type FetchPagesProviderOptions = {
 
 export type PageDataProvider = DataProvider<
   PageDataObject,
+  PageDataObject,
   FetchPagesProviderOptions
 >;

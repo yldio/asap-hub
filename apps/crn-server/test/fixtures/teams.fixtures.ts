@@ -3,12 +3,15 @@ import {
   ContentfulWebhookPublishPayload,
   ContentfulWebhookUnpublishPayload,
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
+  FetchTeamByIdQuery,
 } from '@asap-hub/contentful';
 import {
   ListTeamResponse,
   TeamCreateDataObject,
   TeamDataObject,
   TeamEvent,
+  TeamListItemDataObject,
+  TeamListItemResponse,
   TeamResponse,
   WebhookDetail,
 } from '@asap-hub/model';
@@ -16,24 +19,22 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
 
-export const getContentfulGraphql = () => ({
-  Teams: () => getContentfulGraphqlTeam(),
+export const getContentfulGraphql = (teamById = false) => ({
+  Teams: () =>
+    teamById ? getContentfulGraphqlTeamById() : getContentfulGraphqlTeam(),
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
 });
 
-export const getContentfulGraphqlTeam = (): NonNullable<
-  NonNullable<ContentfulFetchTeamsQuery['teamsCollection']>['items'][number]
+export const getContentfulGraphqlTeamById = (): NonNullable<
+  NonNullable<FetchTeamByIdQuery['teams']>
 > => ({
   sys: {
     id: 'team-id-0',
-    firstPublishedAt: '2020-09-23T20:33:36.000Z',
     publishedAt: '2020-11-26T11:56:04.000Z',
-    publishedVersion: 42,
   },
   displayName: 'Team A',
-  applicationNumber: 'ASAP-000420',
   inactiveSince: null,
   projectSummary: null,
   projectTitle:
@@ -47,6 +48,38 @@ export const getContentfulGraphqlTeam = (): NonNullable<
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
     },
   },
+  linkedFrom: {
+    teamMembershipCollection: {
+      items: [
+        {
+          ...getContentfulGraphqlTeamMemberships().items[0],
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  ...getContentfulGraphqlTeamMembers(),
+                  labsCollection: getContentfulGraphqlTeamMemberLabs(),
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulGraphqlTeam = (): NonNullable<
+  NonNullable<ContentfulFetchTeamsQuery['teamsCollection']>['items'][number]
+> => ({
+  sys: {
+    id: 'team-id-0',
+  },
+  displayName: 'Team A',
+  inactiveSince: null,
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  expertiseAndResourceTags: ['Animal resources'],
   linkedFrom: {
     teamMembershipCollection: {
       items: [
@@ -108,7 +141,7 @@ export const getContentfulTeamsGraphqlResponse =
 
 export const getListTeamResponse = (): ListTeamResponse => ({
   total: 1,
-  items: [getTeamResponse()],
+  items: [getTeamListItemResponse()],
 });
 
 export const getTeamDataObject = (): TeamDataObject => ({
@@ -139,7 +172,19 @@ export const getTeamDataObject = (): TeamDataObject => ({
   tools: [],
 });
 
+export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
+  id: 'team-id-0',
+  displayName: 'Team A',
+  labCount: 2,
+  expertiseAndResourceTags: ['Animal resources'],
+  members: 1,
+  projectTitle:
+    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+});
+
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();
+export const getTeamListItemResponse = (): TeamListItemResponse =>
+  getTeamListItemDataObject();
 
 export type TeamEventGenerator = (
   id: string,

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { TeamResponse } from '@asap-hub/model';
+import { TeamListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Anchor, Paragraph, StateTag } from '../atoms';
@@ -38,18 +38,7 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-type TeamCardProps = Pick<
-  TeamResponse,
-  | 'id'
-  | 'displayName'
-  | 'inactiveSince'
-  | 'projectTitle'
-  | 'expertiseAndResourceTags'
-  | 'members'
-  | 'labCount'
->;
-
-const TeamCard: React.FC<TeamCardProps> = ({
+const TeamCard: React.FC<TeamListItemResponse> = ({
   id,
   displayName,
   inactiveSince,
@@ -87,7 +76,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
         <span css={iconStyles}>
           <TeamIcon />{' '}
         </span>
-        <span>{getCounterString(members.length, 'Team Member')}</span>
+        <span>{getCounterString(members, 'Team Member')}</span>
       </div>
       {labCount > 0 && (
         <div>

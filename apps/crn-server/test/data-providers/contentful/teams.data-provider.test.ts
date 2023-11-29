@@ -6,12 +6,14 @@ import {
 
 import {
   getContentfulGraphql,
-  getContentfulGraphqlTeam,
   getContentfulGraphqlTeamMembers,
   getContentfulGraphqlTeamMemberLabs,
   getContentfulTeamsGraphqlResponse,
   getTeamCreateDataObject,
   getTeamDataObject,
+  getTeamListItemDataObject,
+  getContentfulGraphqlTeamById,
+  getContentfulGraphqlTeam,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -46,7 +48,7 @@ describe('Teams data provider', () => {
     test('Should fetch the list of teams from Contentful GraphQl', async () => {
       const result = await teamDataProviderMock.fetch({});
 
-      expect(result.items[0]).toMatchObject(getTeamDataObject());
+      expect(result.items[0]).toMatchObject(getTeamListItemDataObject());
     });
 
     test('Should return an empty result when no teams exist', async () => {
@@ -103,7 +105,7 @@ describe('Teams data provider', () => {
 
       expect(result).toEqual({
         total: 1,
-        items: [getTeamDataObject()],
+        items: [getTeamListItemDataObject()],
       });
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -133,7 +135,7 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           total: 1,
-          items: [getTeamDataObject()],
+          items: [getTeamListItemDataObject()],
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -162,7 +164,7 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           total: 1,
-          items: [getTeamDataObject()],
+          items: [getTeamListItemDataObject()],
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -190,7 +192,7 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           total: 1,
-          items: [getTeamDataObject()],
+          items: [getTeamListItemDataObject()],
         });
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -228,7 +230,7 @@ describe('Teams data provider', () => {
 
         expect(result).toEqual({
           total: 1,
-          items: [getTeamDataObject()],
+          items: [getTeamListItemDataObject()],
         });
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -251,89 +253,273 @@ describe('Teams data provider', () => {
       });
     });
 
-    describe('Tools', () => {
-      const tools = [
-        {
-          url: 'testUrl',
-          name: 'slack',
-          description: 'this is a test',
-        },
-      ];
-
-      test('Should return team tools by default', async () => {
-        const team1 = getContentfulGraphqlTeam();
-        team1.toolsCollection!.items! = [];
-
-        const team2 = getContentfulGraphqlTeam();
-        team2.toolsCollection!.items! = tools;
-
-        const team3 = getContentfulGraphqlTeam();
-        team3.toolsCollection!.items! = tools;
+    describe('team members', () => {
+      test('should ignore falsy items in the team membership list', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 3,
+              items: [
+                null,
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [null],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [getContentfulGraphqlTeamMembers()],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teamsCollection: {
-            total: 3,
-            items: [team1, team2, team3],
+            total: 1,
+            items: [team],
           },
         });
 
-        const result = await teamDataProvider.fetch({
-          take: 8,
-          skip: 0,
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ members: 1 })],
+          total: 1,
         });
-        expect(result.items[0]!.tools).toEqual([]);
-        expect(result.items[1]!.tools).toEqual(tools);
-        expect(result.items[2]!.tools).toEqual(tools);
       });
 
-      test('should only return team tools with name and url defined', async () => {
-        const brokenUrlTools = [
-          ...tools,
-          {
-            url: null,
-            name: 'testTool',
-            description: 'tool description',
+      test('should filter non onboarded users', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 3,
+              items: [
+                {
+                  role: 'Collaborating PI',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [getContentfulGraphqlTeamMembers()],
+                    },
+                  },
+                },
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          onboarded: false,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [getContentfulGraphqlTeamMembers()],
+                    },
+                  },
+                },
+              ],
+            },
           },
-        ];
-        const team1 = getContentfulGraphqlTeam();
-        team1.toolsCollection!.items! = brokenUrlTools;
-
-        const brokenNameTools = [
-          ...tools,
-          {
-            url: 'testUrl',
-            name: null,
-            description: 'tool description',
-          },
-        ];
-        const team2 = getContentfulGraphqlTeam();
-        team2.toolsCollection!.items! = brokenNameTools;
-
-        const fullTools = [
-          ...tools,
-          {
-            url: 'testUrl',
-            name: 'testTool',
-            description: 'tool description',
-          },
-        ];
-        const team3 = getContentfulGraphqlTeam();
-        team3.toolsCollection!.items! = fullTools;
+        };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           teamsCollection: {
-            total: 3,
-            items: [team1, team2, team3],
+            total: 1,
+            items: [team],
           },
         });
 
-        const result = await teamDataProvider.fetch({
-          take: 8,
-          skip: 0,
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ members: 2 })],
+          total: 1,
         });
-        expect(result.items[0]!.tools).toEqual(tools);
-        expect(result.items[1]!.tools).toEqual(tools);
-        expect(result.items[2]!.tools).toEqual(fullTools);
+      });
+    });
+
+    describe('labs', () => {
+      test('should add a lab count to the team response', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ labCount: 2 })],
+          total: 1,
+        });
+      });
+      test('should ignore null labs', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [null, { sys: { id: 'lab-2' } }],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ labCount: 1 })],
+          total: 1,
+        });
+      });
+      test('should include only unique labs in the lab count', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 2,
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
+                              { sys: { id: 'lab-3' } },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              { sys: { id: 'lab-1' } },
+                              { sys: { id: 'lab-2' } },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ labCount: 3 })],
+          total: 1,
+        });
       });
     });
   });
@@ -341,7 +527,17 @@ describe('Teams data provider', () => {
   describe('Fetch-by-id method', () => {
     test('Should fetch the team from Contentful GraphQl', async () => {
       const teamId = 'team-id-0';
-      const result = await teamDataProviderMock.fetchById(teamId);
+
+      const teamById = true;
+      const contentfulGraphqlClientMockServer =
+        getContentfulGraphqlClientMockServer(getContentfulGraphql(teamById));
+
+      const teamByIdDataProviderMock = new TeamContentfulDataProvider(
+        contentfulGraphqlClientMockServer,
+        contentfulRestClientMock,
+      );
+
+      const result = await teamByIdDataProviderMock.fetchById(teamId);
 
       expect(result).toMatchObject(getTeamDataObject());
     });
@@ -373,7 +569,7 @@ describe('Teams data provider', () => {
     test('Should return the result when the team exists', async () => {
       const id = 'some-id';
       const contentfulGraphQLResponse = {
-        teams: getContentfulGraphqlTeam(),
+        teams: getContentfulGraphqlTeamById(),
       };
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -396,7 +592,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 3,
@@ -443,7 +639,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 3,
@@ -500,44 +696,10 @@ describe('Teams data provider', () => {
         expect(result?.members[1]?.role).toEqual('Collaborating PI');
       });
 
-      test('should not include team members with an invalid role', async () => {
-        const id = 'some-id';
-        const contentfulGraphQLResponse = {
-          teams: {
-            ...getContentfulGraphqlTeam(),
-            linkedFrom: {
-              teamMembershipCollection: {
-                total: 1,
-                items: [
-                  {
-                    role: 'Invalid Role',
-                    inactiveSinceDate: null,
-                    linkedFrom: {
-                      usersCollection: {
-                        total: 1,
-                        items: [getContentfulGraphqlTeamMembers()],
-                      },
-                    },
-                  },
-                ],
-              },
-            },
-          },
-        };
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          contentfulGraphQLResponse,
-        );
-
-        const result = await teamDataProvider.fetchById(id);
-
-        expect(result?.members).toEqual([]);
-      });
-
       test('should sort team members by role priority', async () => {
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 1,
@@ -616,7 +778,7 @@ describe('Teams data provider', () => {
       test('should sort team members with the same role priority by last name', async () => {
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 1,
@@ -697,7 +859,7 @@ describe('Teams data provider', () => {
       test('should add a lab count to the team response', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
-          teams: getContentfulGraphqlTeam(),
+          teams: getContentfulGraphqlTeamById(),
         };
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -712,7 +874,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 1,
@@ -756,7 +918,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 2,
@@ -859,7 +1021,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 3,
@@ -900,7 +1062,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 2,
@@ -930,7 +1092,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             linkedFrom: {
               teamMembershipCollection: {
                 total: 2,
@@ -962,7 +1124,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             proposal: {
               sys: {
                 id: 'research-output-id',
@@ -984,7 +1146,7 @@ describe('Teams data provider', () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
           teams: {
-            ...getContentfulGraphqlTeam(),
+            ...getContentfulGraphqlTeamById(),
             proposal: null,
           },
         };
@@ -996,6 +1158,67 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.proposalURL).toBeUndefined();
+      });
+    });
+
+    describe('Tools', () => {
+      const tools = [
+        {
+          url: 'testUrl',
+          name: 'slack',
+          description: 'this is a test',
+        },
+      ];
+
+      test('Should return team tools by default', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = {
+          teams: {
+            ...getContentfulGraphqlTeamById(),
+            toolsCollection: {
+              total: 1,
+              items: tools,
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.tools).toEqual(tools);
+      });
+
+      test('should only return team tools with name and url defined', async () => {
+        const id = 'some-id';
+        const brokenUrlTools = [
+          ...tools,
+          {
+            url: null,
+            name: 'testTool',
+            description: 'tool description',
+          },
+        ];
+
+        const contentfulGraphQLResponse = {
+          teams: {
+            ...getContentfulGraphqlTeamById(),
+            toolsCollection: {
+              total: 2,
+              items: brokenUrlTools,
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.tools).toEqual(tools);
       });
     });
   });

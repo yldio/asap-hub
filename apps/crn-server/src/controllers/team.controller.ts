@@ -46,16 +46,7 @@ export default class TeamController {
 
     return {
       total,
-      items: items.map((team) => {
-        if (!options.showTeamTools || options.showTeamTools.includes(team.id)) {
-          return team;
-        }
-
-        return {
-          ...team,
-          tools: undefined,
-        };
-      }),
+      items,
     };
   }
 

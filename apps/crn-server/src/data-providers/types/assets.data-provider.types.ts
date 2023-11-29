@@ -6,4 +6,4 @@ export type AssetCreateData = {
   contentType: string;
 };
 
-export type AssetDataProvider = DataProvider<null, null, AssetCreateData>;
+export type AssetDataProvider = DataProvider<null, null, null, AssetCreateData>;

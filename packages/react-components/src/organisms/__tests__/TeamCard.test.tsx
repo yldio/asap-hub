@@ -3,14 +3,6 @@ import { render } from '@testing-library/react';
 
 import TeamCard from '../TeamCard';
 
-const member = {
-  id: 'ff0e04ac-4769-44ed-8d3b-245c1bfe17b3',
-  firstName: 'Mason',
-  lastName: 'Carpenter',
-  email: 'masoncarpenter@foo.com',
-  displayName: 'Birdie Romeo',
-  role: 'Lead PI (Core Leadership)' as const,
-};
 const teamCardProps: ComponentProps<typeof TeamCard> = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',
   displayName: 'A Barnes',
@@ -26,7 +18,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
     'alpha-synuclein',
     'autophagy',
   ],
-  members: [member],
+  members: 1,
   labCount: 0,
 };
 
@@ -47,16 +39,12 @@ it('renders the state tag for a inactive group', () => {
 });
 
 it('uses singular for one team member', () => {
-  const { getByText } = render(
-    <TeamCard {...teamCardProps} members={[member]} />,
-  );
+  const { getByText } = render(<TeamCard {...teamCardProps} />);
   expect(getByText('1 Team Member')).toBeVisible();
 });
 
 it('pluralises when more than one team member', () => {
-  const { getByText } = render(
-    <TeamCard {...teamCardProps} members={Array(3).fill(member)} />,
-  );
+  const { getByText } = render(<TeamCard {...teamCardProps} members={3} />);
   expect(getByText('3 Team Members')).toBeVisible();
 });
 

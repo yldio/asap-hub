@@ -4,7 +4,7 @@ import {
   LabResponse,
   NewsResponse,
   ResearchOutputResponse,
-  TeamResponse,
+  TeamListItemResponse,
   TutorialsResponse,
   UserResponse,
   WorkingGroupResponse,
@@ -37,7 +37,7 @@ export type Payload =
       type: typeof RESEARCH_OUTPUT_ENTITY_TYPE;
     }
   | {
-      data: TeamResponse;
+      data: TeamListItemResponse;
       type: typeof TEAM_ENTITY_TYPE;
     }
   | {

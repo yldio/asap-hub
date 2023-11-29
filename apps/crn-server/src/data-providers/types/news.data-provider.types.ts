@@ -13,5 +13,6 @@ export type FetchNewsProviderOptions = FetchPaginationOptions & {
 
 export type NewsDataProvider = DataProvider<
   NewsDataObject,
+  NewsDataObject,
   FetchNewsProviderOptions
 >;

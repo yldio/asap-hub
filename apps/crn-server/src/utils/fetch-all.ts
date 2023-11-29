@@ -1,7 +1,7 @@
 import { DataProvider, FetchOptions } from '@asap-hub/model';
 
 export async function fetchAll<DataObject, Filter>(
-  dataProvider: DataProvider<DataObject, FetchOptions<Filter>>,
+  dataProvider: DataProvider<DataObject, DataObject, FetchOptions<Filter>>,
   filter?: Filter,
 ) {
   let page = 1;

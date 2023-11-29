@@ -2,7 +2,7 @@ import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import Frame from '../Frame';
+import Frame, { SkeletonFrame } from '../Frame';
 
 mockConsoleError();
 
@@ -86,5 +86,18 @@ describe('the document title', () => {
     );
     expect(document.title).toContain('The Hub');
     expect(document.title).toContain('A Page');
+  });
+});
+
+describe('the skeleton header frame', () => {
+  it('renders skeleton screen for content header', async () => {
+    const { container } = render(
+      <SkeletonFrame title={null}>
+        <Suspend />
+      </SkeletonFrame>,
+    );
+    expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
+      4,
+    );
   });
 });

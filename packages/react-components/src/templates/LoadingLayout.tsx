@@ -162,7 +162,7 @@ export const LoadingMenu: React.FC<Record<string, never>> = () => (
   </div>
 );
 
-export const LoadingContentHeader: React.FC<Record<string, never>> = () => (
+export const LoadingContentHeader: React.FC = () => (
   <div css={contentHeaderContainerStyles}>
     <div css={headerTitleStyles} />
     <div css={headerDescriptionStyles('100%')} />

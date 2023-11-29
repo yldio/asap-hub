@@ -1,4 +1,4 @@
-module.exports.description = 'Change createdDate field editor';
+module.exports.description = 'Change documentType field editor';
 
 module.exports.up = (migration) => {
   const researchOutputs = migration.editContentType('researchOutputs');

@@ -6,6 +6,8 @@ import TagsPageHeader from '../TagsPageHeader';
 
 const props: ComponentProps<typeof TagsPageHeader> = {
   tags: [],
+  setTags: jest.fn(),
+  filterOptions: [],
 };
 
 it('renders the header', () => {

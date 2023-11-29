@@ -1,3 +1,4 @@
+import { CRNTagSearchEntitiesListArray } from '@asap-hub/algolia';
 import { render, RenderResult } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { RecoilRoot } from 'recoil';
 import { WhenReady, Auth0Provider } from '../../auth/test-utils';
 
 import TagList from '../TagsList';
-import { entities } from '../Routes';
 
 const renderTags = async (): Promise<RenderResult> =>
   render(
@@ -16,7 +16,7 @@ const renderTags = async (): Promise<RenderResult> =>
           <Suspense fallback="Loading...">
             <MemoryRouter initialEntries={['/']}>
               <Route path="/">
-                <TagList entities={entities} />
+                <TagList entities={CRNTagSearchEntitiesListArray} />
               </Route>
             </MemoryRouter>
           </Suspense>
@@ -28,6 +28,6 @@ const renderTags = async (): Promise<RenderResult> =>
 it('renders a headline', async () => {
   const { findByRole } = await renderTags();
   expect((await findByRole('heading')).textContent).toMatch(
-    /Explore any tags on the CRN Hub./i,
+    /Explore any tags/i,
   );
 });

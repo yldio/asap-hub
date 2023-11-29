@@ -7,11 +7,10 @@ type TagsProps = {
   entities: CRNTagSearchEntitiesList;
 };
 const Tags: React.FC<TagsProps> = ({ entities }) => {
-  const { tags, searchQuery, filters } = useSearch();
+  const { tags, searchQuery } = useSearch();
   const { currentPage, pageSize } = usePaginationParams();
   const { items, total } = useTagSearch(entities, {
     searchQuery,
-    filters,
     currentPage,
     pageSize,
     tags,

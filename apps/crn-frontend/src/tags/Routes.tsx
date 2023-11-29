@@ -1,4 +1,7 @@
-import { CRNTagSearchEntitiesList } from '@asap-hub/algolia';
+import {
+  CRNTagSearchEntities,
+  CRNTagSearchEntitiesListArray,
+} from '@asap-hub/algolia';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
@@ -7,19 +10,27 @@ import Tags from './TagsList';
 import { useAlgolia } from '../hooks/algolia';
 import { useSearch } from '../hooks';
 
-export const entities: CRNTagSearchEntitiesList = [
-  'research-output',
-  'user',
-  'event',
-  'team',
-  'working-group',
-  'tutorial',
+const options: { label: string; value: CRNTagSearchEntities }[] = [
+  { label: 'Calendar & Events', value: 'event' },
+  // { label: 'Interest Groups', value:  },
+  // { label: 'News', value:  },
+  { label: 'People', value: 'user' },
+  { label: 'Shared Research', value: 'research-output' },
+  { label: 'Teams', value: 'team' },
+  { label: 'Tutorials', value: 'tutorial' },
+  { label: 'Working Groups', value: 'working-group' },
 ];
 
 const Routes: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const { client } = useAlgolia();
-  const { tags, setTags } = useSearch();
+  const { tags, setTags, filters, toggleFilter } = useSearch();
+
+  const urlEntities = Array.from(filters).filter((value) =>
+    CRNTagSearchEntitiesListArray.includes(value as CRNTagSearchEntities),
+  ) as CRNTagSearchEntities[];
+  const entities =
+    urlEntities.length > 0 ? urlEntities : CRNTagSearchEntitiesListArray;
 
   return (
     <Switch>
@@ -38,6 +49,9 @@ const Routes: React.FC<Record<string, never>> = () => {
               value,
             }));
           }}
+          filters={new Set(urlEntities)}
+          filterOptions={[{ title: 'AREAS' }, ...options]}
+          onChangeFilter={toggleFilter}
         >
           <Frame title="Search">
             <Tags entities={entities} />

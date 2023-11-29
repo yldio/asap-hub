@@ -16,5 +16,17 @@ export const Normal = () => (
     tags={Array.from({ length: number('Number of tags to show', 1) }).map(
       (_, i) => `Tag ${i + 1}`,
     )}
+    filterOptions={[
+      { title: 'AREAS' },
+      { label: 'Calendar & Events', value: 'event' },
+      { label: 'Interest Groups', value: 'event' },
+      { label: 'News', value: 'event' },
+      { label: 'People', value: 'user' },
+      { label: 'Shared Research', value: 'research-output' },
+      { label: 'Teams', value: 'team' },
+      { label: 'Working Groups', value: 'working-group' },
+    ]}
+    setTags={() => {}}
+    onChangeFilter={() => {}}
   />
 );

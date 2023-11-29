@@ -52,7 +52,7 @@ const showMenuStyles = css({
   display: 'flex',
 });
 
-interface FilterProps<V extends string> {
+export interface FilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
   readonly filterOptions: ReadonlyArray<Option<V> | Title>;

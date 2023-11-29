@@ -16,10 +16,10 @@
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "7.23.3",
-    "@babel/preset-env": "7.23.3",
+    "@babel/core": "7.23.5",
+    "@babel/preset-env": "7.23.5",
     "@babel/preset-typescript": "7.23.3",
-    "@babel/runtime-corejs3": "7.23.4",
+    "@babel/runtime-corejs3": "7.23.5",
     "@types/jest": "29.5.10",
     "@types/jsonwebtoken": "8.5.9"
   }

@@ -18,10 +18,8 @@ export const indexNewsHandler =
     algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<NewsEvent, NewsPayload> =>
   async (event) => {
-    const eventType = event['detail-type'] as Extract<
-      NewsEvent,
-      'NewsPublished' | 'NewsUnpublished'
-    >;
+    const eventType = event['detail-type'];
+
     const newsId = event.detail.resourceId;
     logger.debug(`Event ${eventType}`);
 

@@ -6,7 +6,7 @@ import {
   menuButtonStyles,
   styles as menuButtonContainer,
 } from '../organisms/MenuHeader';
-import { rem, perRem } from '../pixels';
+import { rem } from '../pixels';
 import {
   contentStyles,
   headerStyles,
@@ -67,9 +67,7 @@ const contentHeaderContainerStyles = css({
   width: '100%',
   boxSizing: 'border-box',
   gridColumn: '1 / -1',
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)}`,
   borderBottom: `1px solid ${steel.rgb}`,
   backgroundColor: paper.rgb,
   rowGap: rem(12),

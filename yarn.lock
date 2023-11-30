@@ -987,7 +987,7 @@ __metadata:
     "@slack/webhook": ^6.1.0
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
-    "@types/aws-lambda": 8.10.129
+    "@types/aws-lambda": 8.10.130
     "@types/babel__preset-env": 7.9.6
     "@types/chance": 1.1.6
     "@types/cors": 2.8.17
@@ -1454,7 +1454,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.30.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.129
+    "@types/aws-lambda": 8.10.130
     "@types/cors": 2.8.17
     "@types/express": 4.17.21
     "@types/jest": 29.5.10
@@ -1724,7 +1724,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
     "@types/async": ^3
-    "@types/aws-lambda": 8.10.129
+    "@types/aws-lambda": 8.10.130
     "@types/express": 4.17.21
     "@types/jest": 29.5.10
     "@types/jsonwebtoken": 8.5.9
@@ -1772,7 +1772,7 @@ __metadata:
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.129
+    "@types/aws-lambda": 8.10.130
     "@types/debug": 4.1.12
     "@types/hapi": 18.0.14
     "@types/hapi__boom": 9.0.1
@@ -18453,10 +18453,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:8.10.129":
-  version: 8.10.129
-  resolution: "@types/aws-lambda@npm:8.10.129"
-  checksum: 58fcc6c786c420044c68c014e101ba5a134c7b793e41d9bbc745978780ab72ef4488939320f5097f505a0602828c7b6d02dbb7a1794af26c39cc18c2586622a7
+"@types/aws-lambda@npm:8.10.130":
+  version: 8.10.130
+  resolution: "@types/aws-lambda@npm:8.10.130"
+  checksum: fcad17f55be695578f8c8512c65391dc5fa2f079590546643beb8e1fcb5c9b09f2a21c576f7e31864b57ff88c84a710893988ffe828e51453754e20e21ae24f0
   languageName: node
   linkType: hard
 

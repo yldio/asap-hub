@@ -24,7 +24,6 @@ export const createInterestGroupResponse = (
     leadPiCount = 1,
     projectManager,
     projectManagerCount = 1,
-    teams,
     teamsCount = 1,
   }: FixtureOptions = {},
   itemIndex = 0,

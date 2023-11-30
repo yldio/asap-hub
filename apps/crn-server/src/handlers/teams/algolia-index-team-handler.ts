@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { TeamEvent, TeamListItemDataObject } from '@asap-hub/model';
+import { TeamEvent } from '@asap-hub/model';
 import { EventBridgeHandler, TeamPayload } from '@asap-hub/server-common';
 import { NotFoundError } from '@asap-hub/errors';
 import { Boom, isBoom } from '@hapi/boom';
@@ -44,7 +44,7 @@ export const indexTeamHandler =
             expertiseAndResourceTags,
             memberCount: team.members.length,
             _tags: team.expertiseAndResourceTags,
-          } as TeamListItemDataObject,
+          },
           type: 'team',
         });
 

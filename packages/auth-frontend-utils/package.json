@@ -28,6 +28,6 @@
     "@types/auth0-js": "9.21.5",
     "@types/jest": "29.5.10",
     "@types/node": "18.18.13",
-    "@types/pify": "5.0.2"
+    "@types/pify": "5.0.4"
   }
 }

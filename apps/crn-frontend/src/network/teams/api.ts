@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ListLabsResponse,
-  ListTeamDataObject,
+  ListTeamResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
@@ -39,7 +39,7 @@ export const getTeam = async (
 export const getTeams = async (
   options: GetListOptions,
   authorization: string,
-): Promise<ListTeamDataObject> => {
+): Promise<ListTeamResponse> => {
   const resp = await fetch(createListApiUrl('teams', options).toString(), {
     headers: {
       authorization,

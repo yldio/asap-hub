@@ -77,7 +77,7 @@ export type TeamListItemDataObject = Pick<
   | 'projectTitle'
   | 'expertiseAndResourceTags'
   | 'labCount'
-> & { members: number };
+> & { memberCount: number };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;
 

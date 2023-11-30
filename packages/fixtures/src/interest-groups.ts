@@ -3,7 +3,7 @@ import {
   InterestGroupResponse,
   InterestGroupRole,
 } from '@asap-hub/model';
-import { createTeamResponse } from './teams';
+import { createTeamListItemResponse, createTeamResponse } from './teams';
 import { createUserResponse } from './users';
 import { createCalendarResponse } from './calendars';
 
@@ -44,7 +44,7 @@ export const createInterestGroupResponse = (
       googleDrive: 'http://drive.google.com/123',
     },
     teams: Array.from({ length: teamsCount }, (_, index) =>
-      createTeamResponse(teams, index),
+      createTeamListItemResponse(index),
     ),
     leaders: [
       ...Array.from({ length: leadPiCount }, (_, index) => ({

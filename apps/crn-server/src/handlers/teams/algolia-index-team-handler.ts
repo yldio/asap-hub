@@ -42,7 +42,7 @@ export const indexTeamHandler =
             projectTitle,
             labCount,
             expertiseAndResourceTags,
-            members: team.members.length,
+            memberCount: team.members.length,
             _tags: team.expertiseAndResourceTags,
           } as TeamListItemDataObject,
           type: 'team',

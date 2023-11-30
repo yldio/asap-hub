@@ -107,7 +107,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       total: teamsCollection?.total,
       items: teamsCollection?.items
         .filter((x): x is TeamItem => x !== null)
-        .map(parseContentfulGraphQlTeams),
+        .map(parseContentfulGraphQlTeamListItem),
     };
   }
 
@@ -186,7 +186,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 }
 
-export const parseContentfulGraphQlTeams = (
+export const parseContentfulGraphQlTeamListItem = (
   item: TeamItem,
 ): TeamListItemDataObject => {
   const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
@@ -231,7 +231,7 @@ export const parseContentfulGraphQlTeams = (
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',
     expertiseAndResourceTags,
-    members: numberOfMembers,
+    memberCount: numberOfMembers,
     labCount: labIds.size,
   };
 };

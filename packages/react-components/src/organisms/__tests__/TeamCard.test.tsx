@@ -18,7 +18,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
     'alpha-synuclein',
     'autophagy',
   ],
-  members: 1,
+  memberCount: 1,
   labCount: 0,
 };
 
@@ -44,7 +44,7 @@ it('uses singular for one team member', () => {
 });
 
 it('pluralises when more than one team member', () => {
-  const { getByText } = render(<TeamCard {...teamCardProps} members={3} />);
+  const { getByText } = render(<TeamCard {...teamCardProps} memberCount={3} />);
   expect(getByText('3 Team Members')).toBeVisible();
 });
 

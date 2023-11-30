@@ -30,7 +30,7 @@ const teamCardProps = () => {
         numberOfExpertiseAndResources,
       ),
     ],
-    members: numberOfMembers,
+    memberCount: numberOfMembers,
     labCount: number('Lab count', 15),
   };
 };

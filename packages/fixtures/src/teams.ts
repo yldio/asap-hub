@@ -72,7 +72,7 @@ export const createTeamListItemResponse = (
   ...listTeamResponseItem,
   id: `t${itemIndex}`,
   displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
-  members: 2,
+  memberCount: 2,
 });
 
 export const createListTeamResponse = (items: number): ListTeamResponse => ({

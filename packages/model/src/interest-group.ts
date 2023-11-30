@@ -11,7 +11,7 @@ export type InterestGroupTools = {
 
 export type InterestGroupTeam = Omit<
   TeamListItemResponse,
-  'members' | 'labCount'
+  'memberCount' | 'labCount'
 >;
 
 export const interestGroupRole = ['Chair', 'Project Manager'] as const;

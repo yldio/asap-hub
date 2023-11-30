@@ -177,7 +177,7 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   displayName: 'Team A',
   labCount: 2,
   expertiseAndResourceTags: ['Animal resources'],
-  members: 1,
+  memberCount: 1,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
 });

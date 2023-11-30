@@ -44,7 +44,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
   inactiveSince,
   projectTitle,
   expertiseAndResourceTags,
-  members,
+  memberCount,
   labCount,
 }) => (
   <Card accent={inactiveSince ? 'neutral200' : 'default'}>
@@ -76,7 +76,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
         <span css={iconStyles}>
           <TeamIcon />{' '}
         </span>
-        <span>{getCounterString(members, 'Team Member')}</span>
+        <span>{getCounterString(memberCount, 'Team Member')}</span>
       </div>
       {labCount > 0 && (
         <div>

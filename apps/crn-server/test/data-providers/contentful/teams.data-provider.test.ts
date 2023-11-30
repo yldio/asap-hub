@@ -297,7 +297,7 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({});
 
         expect(result).toEqual({
-          items: [expect.objectContaining({ members: 1 })],
+          items: [expect.objectContaining({ memberCount: 1 })],
           total: 1,
         });
       });
@@ -359,7 +359,7 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({});
 
         expect(result).toEqual({
-          items: [expect.objectContaining({ members: 2 })],
+          items: [expect.objectContaining({ memberCount: 2 })],
           total: 1,
         });
       });

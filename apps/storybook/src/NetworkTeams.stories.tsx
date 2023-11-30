@@ -18,7 +18,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
       expertiseAndResourceTags: ['Neurological Diseases'],
       labCount: number('Lab count', 15),
-      members: 2,
+      memberCount: 2,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

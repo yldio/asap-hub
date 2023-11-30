@@ -31,14 +31,14 @@ import {
   FETCH_USER_BY_ID,
   GraphQLClient,
   Maybe,
-  patchAndPublish,
+  patchAndPublishConflict,
   pollContentfulGql,
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
+import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
-import { cleanArray } from '../../utils/clean-array';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -164,13 +164,14 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async create(): Promise<string> {
     throw new Error('Method not implemented.');
   }
-
   async update(id: string, data: UserUpdateDataObject): Promise<void> {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const result = await patchAndPublish(user, fields);
-
+    const result = await patchAndPublishConflict(user, fields);
+    if (!result) {
+      return;
+    }
     const fetchUserById = () => this.fetchUserById(id);
 
     await pollContentfulGql<FetchUserByIdQuery>(

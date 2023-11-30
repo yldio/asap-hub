@@ -1,29 +1,31 @@
 import {
-  patchAndPublish,
-  getContentfulGraphqlClientMockServer,
-  Environment,
   Entry,
+  Environment,
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
+  getContentfulGraphqlClientMockServer,
+  patchAndPublishConflict,
 } from '@asap-hub/contentful';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
+  parseToWorkingGroups,
+  UserContentfulDataProvider,
+} from '../../../src/data-providers/contentful/user.data-provider';
+import { UserDataProvider } from '../../../src/data-providers/types';
+import { getEntry } from '../../fixtures/contentful.fixtures';
+import {
   getContentfulGraphql,
   getContentfulGraphqlUser,
-  getUserDataObject,
   getUserCreateDataObject,
+  getUserDataObject,
 } from '../../fixtures/users.fixtures';
-import { getEntry } from '../../fixtures/contentful.fixtures';
-import { UserDataProvider } from '../../../src/data-providers/types';
-import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { parseToWorkingGroups } from '../../../src/data-providers/contentful/user.data-provider';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  patchAndPublish: jest.fn().mockResolvedValue(undefined),
+  patchAndPublishConflict: jest.fn().mockResolvedValue(undefined),
 }));
 
 describe('User data provider', () => {
@@ -657,9 +659,10 @@ describe('User data provider', () => {
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
-      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
-        typeof patchAndPublish
-      >;
+      const mockPatchAndPublish =
+        patchAndPublishConflict as jest.MockedFunction<
+          typeof patchAndPublishConflict
+        >;
       mockPatchAndPublish.mockResolvedValue({
         sys: {
           publishedVersion: 2,
@@ -679,7 +682,7 @@ describe('User data provider', () => {
         firstName: 'Colin',
       });
       expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         firstName: 'Colin',
       });
     });
@@ -691,11 +694,11 @@ describe('User data provider', () => {
           twitter: 'yldio',
         },
       });
-      expect(patchAndPublish).toHaveBeenCalledWith(
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(
         entry,
         expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
       );
-      expect(patchAndPublish).toHaveBeenCalledWith(
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(
         entry,
         expect.not.objectContaining({ social: expect.anything() }),
       );
@@ -708,7 +711,7 @@ describe('User data provider', () => {
           twitter: 'yldio',
         },
       });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         website1: null,
         website2: null,
         googleScholar: null,
@@ -723,7 +726,7 @@ describe('User data provider', () => {
       await userDataProvider.update('123', {
         avatar: 'abc123',
       });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         avatar: {
           sys: {
             type: 'Link',
@@ -739,7 +742,7 @@ describe('User data provider', () => {
         degree: '',
         onboarded: false,
       });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         firstName: null,
         degree: null,
         onboarded: false,
@@ -776,8 +779,7 @@ describe('User data provider', () => {
     });
 
     test('throws if polling query does not return a value', async () => {
-      jest.resetAllMocks();
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      contentfulGraphqlClientMock.request.mockReset().mockResolvedValueOnce({
         users: null,
       });
 
@@ -792,7 +794,7 @@ describe('User data provider', () => {
       await userDataProvider.update('123', {
         connections: [{ code: 'abc123' }],
       });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         connections: ['abc123'],
       });
     });

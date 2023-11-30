@@ -513,6 +513,31 @@ describe('getResearchOutputsFromCMS', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('does a source query and returns results', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        workingGroupId: '123',
+        take: 10,
+        skip: 0,
+        source: 'teams',
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getResearchOutputsFromCMS(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          workingGroupId: '123',
+          currentPage: 0,
+          filters: new Set(['Team']),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('errors for another status', async () => {
     nock(API_BASE_URL).get('/research-outputs').query(true).reply(500);
     await expect(

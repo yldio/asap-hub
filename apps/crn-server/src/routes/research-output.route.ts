@@ -29,11 +29,11 @@ export const researchOutputRouteFactory = (
     '/research-outputs',
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query, loggedInUser } = req;
-      const { teamId, status, workingGroupId, filter, ...options } =
+      const { teamId, status, workingGroupId, source, filter, ...options } =
         validateResearchOutputFetchOptions(query);
-      const isRequestingDrafts = status === 'draft';
+      const includeDrafts = status === 'draft';
 
-      if (isRequestingDrafts) {
+      if (includeDrafts) {
         const hasTeamRole = teamId
           ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             getUserRole(loggedInUser!, 'teams', [teamId]) !== 'None'
@@ -52,17 +52,14 @@ export const researchOutputRouteFactory = (
 
       const result = await researchOutputController.fetch({
         ...options,
-        ...(isRequestingDrafts
-          ? {
-              includeDrafts: true,
-              filter: {
-                documentType: filter,
-                status,
-                workingGroupId,
-                teamId,
-              },
-            }
-          : { filter }),
+        includeDrafts,
+        filter: {
+          documentType: filter,
+          status,
+          workingGroupId,
+          teamId,
+          source,
+        },
       });
 
       res.json(result);

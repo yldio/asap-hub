@@ -498,6 +498,7 @@ type ResearchOutputFilter =
       status?: string;
       teamId?: string;
       workingGroupId?: string;
+      source?: string[];
     };
 
 type ResearchOutputInputTags = {
@@ -521,6 +522,7 @@ export type ResearchOutputFetchOptions = {
   search?: string;
   filter?: ResearchOutputFilter;
   includeDrafts?: boolean;
+  source?: string[];
 };
 
 export const ERROR_UNIQUE_LINK = {

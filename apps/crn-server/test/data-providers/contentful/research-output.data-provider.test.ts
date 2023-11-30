@@ -249,6 +249,26 @@ describe('Research Outputs Data Provider', () => {
             }),
           );
         });
+
+        test('Should pass the parameters to filter by source as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              source: ['working-groups', 'teams'],
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                teamsCollection_exists: true,
+                workingGroup_exists: true,
+              },
+            }),
+          );
+        });
       });
 
       describe('with a search term', () => {

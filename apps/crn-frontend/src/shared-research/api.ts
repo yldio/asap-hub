@@ -57,27 +57,51 @@ export const getResearchOutput = async (
   return resp.json();
 };
 
+const isSourceFilter = (filter: string) =>
+  ResearchOutputPublishingEntitiesValues.includes(
+    filter as ResearchOutputPublishingEntities,
+  );
+
+const isDocumentTypeFilter = (filter: string) =>
+  researchOutputDocumentTypes.includes(filter as ResearchOutputDocumentType);
+
+type SplitFilters = {
+  source: string[];
+  documentTypes: string[];
+};
+
+const splitFiltersByType = (filters: Set<string>) =>
+  Array.from(filters).reduce(
+    (splitFilters: SplitFilters, filter) => {
+      if (isSourceFilter(filter)) {
+        splitFilters.source.push(filter);
+      }
+
+      if (isDocumentTypeFilter(filter)) {
+        splitFilters.documentTypes.push(filter);
+      }
+
+      return splitFilters;
+    },
+    {
+      source: [],
+      documentTypes: [],
+    },
+  );
+
 export const getAllFilters = (
   filters: Set<string>,
   teamId?: string,
   userId?: string,
   workingGroupId?: string,
 ) => {
-  const filterArray = Array.from(filters);
-  const isSourceFilter = (filter: string) =>
-    ResearchOutputPublishingEntitiesValues.includes(
-      filter as ResearchOutputPublishingEntities,
-    );
-  const sourceFilter = filterArray
-    .filter(isSourceFilter)
+  const splitFilters = splitFiltersByType(filters);
+
+  const sourceFilter = splitFilters.source
     .map((filter) => `publishingEntity:"${filter}"`)
     .join(' OR ');
 
-  const isDocumentTypeFilter = (filter: string) =>
-    researchOutputDocumentTypes.includes(filter as ResearchOutputDocumentType);
-
-  const documentTypesFilter = filterArray
-    .filter((filter) => isDocumentTypeFilter(filter))
+  const documentTypesFilter = splitFilters.documentTypes
     .map((filter) => `documentType:"${filter}"`)
     .join(' OR ');
 
@@ -145,18 +169,36 @@ export const getDraftResearchOutputs = async (
   };
 };
 
+const sourceMapping = new Map([
+  ['Working Group', 'working-groups'],
+  ['Team', 'teams'],
+]);
 // As algolia has reduced data we need to fetch data from cms for `Export as CSV` feature
 export const getResearchOutputsFromCMS = async (
   options: ResearchOutputPublishedListOptions,
   authorization: string,
 ): Promise<ListResponse<ResearchOutputResponse>> => {
-  const url = createListApiUrl(`research-outputs`, options);
+  const splitFilters = splitFiltersByType(options.filters);
+
+  const url = createListApiUrl(`research-outputs`, {
+    ...options,
+    filters: new Set(splitFilters.documentTypes),
+  });
 
   if (options.workingGroupId) {
     url.searchParams.set('workingGroupId', options.workingGroupId);
   }
   if (options.teamId) {
     url.searchParams.set('teamId', options.teamId);
+  }
+
+  if (splitFilters.source.length) {
+    for (const source of splitFilters.source) {
+      const value = sourceMapping.get(source);
+      if (value) {
+        url.searchParams.append('source', value);
+      }
+    }
   }
 
   const resp = await fetch(url.toString(), {
@@ -199,3 +241,5 @@ export const getResearchTags = async (
 
   return response?.items || [];
 };
+
+export default getResearchOutputsFromCMS;

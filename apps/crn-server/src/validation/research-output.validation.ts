@@ -26,6 +26,7 @@ type ResearchOutputFetchOptions = FetchOptions & {
   status?: string;
   teamId?: string;
   workingGroupId?: string;
+  source?: string[];
 };
 
 const researchOutputFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputFetchOptions> =
@@ -36,6 +37,11 @@ const researchOutputFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputF
       status: { type: 'string', enum: ['draft'], nullable: true },
       teamId: { type: 'string', nullable: true },
       workingGroupId: { type: 'string', nullable: true },
+      source: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
     },
     additionalProperties: false,
   };

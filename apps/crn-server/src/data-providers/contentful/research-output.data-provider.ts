@@ -111,7 +111,18 @@ export class ResearchOutputContentfulDataProvider
           publishedVersion_exists: filter.status !== 'draft',
         };
       }
+
+      if (filter.source) {
+        if (filter.source.includes('teams')) {
+          where.teamsCollection_exists = true;
+        }
+
+        if (filter.source.includes('working-groups')) {
+          where.workingGroup_exists = true;
+        }
+      }
     }
+
     const client = includeDrafts
       ? this.contentfulPreviewClient
       : this.contentfulClient;

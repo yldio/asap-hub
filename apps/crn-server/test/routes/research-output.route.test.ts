@@ -99,13 +99,15 @@ describe('/research-outputs/ route', () => {
           skip: 5,
           search: 'something',
           filter: ['one', 'two'],
+          source: ['teams'],
         });
 
       const expectedParams = {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: ['one', 'two'],
+        includeDrafts: false,
+        filter: { documentType: ['one', 'two'], source: ['teams'] },
       };
 
       expect(researchOutputControllerMock.fetch).toBeCalledWith(expectedParams);

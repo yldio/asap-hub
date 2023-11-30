@@ -14,6 +14,7 @@ export type FetchResearchOutputFilter = ResearchOutputFilter & {
   teamId?: string;
   workingGroupId?: string;
   documentType?: string | string[];
+  source?: string[];
 };
 
 export type UpdateResearchOutputOptions = {

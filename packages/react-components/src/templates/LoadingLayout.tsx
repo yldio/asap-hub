@@ -1,5 +1,6 @@
 import { css, keyframes } from '@emotion/react';
-import { neutral300 } from '../colors';
+import { neutral300, paper, steel } from '../colors';
+import { contentSidePaddingWithNavigation } from '../layout';
 import { Header } from '../molecules';
 import {
   menuButtonStyles,
@@ -60,6 +61,18 @@ const userButtonContainerStyles = css({
   columnGap: rem(16),
   paddingRight: rem(24),
 });
+
+const contentHeaderContainerStyles = css({
+  display: `grid`,
+  width: '100%',
+  boxSizing: 'border-box',
+  gridColumn: '1 / -1',
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)} ${rem(48)}`,
+  borderBottom: `1px solid ${steel.rgb}`,
+  backgroundColor: paper.rgb,
+  rowGap: rem(12),
+});
+
 const menuRowStyles = css({
   display: 'grid',
   padding: `${rem(16)} ${rem(12)}`,
@@ -100,6 +113,29 @@ const menuTextStyles = [
   animation(rem(100), rem(18)),
 ];
 
+const headerTitleStyles = [
+  css({
+    width: '50%',
+    height: rem(32),
+    backgroundColor: neutral300.rgb,
+    marginBottom: rem(16),
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation('50%', rem(32)),
+];
+
+const headerDescriptionStyles = (width: string) => [
+  css({
+    width,
+    height: rem(12),
+    backgroundColor: neutral300.rgb,
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation(width, rem(12)),
+];
+
 const searchIconContainerStyles = css({
   display: 'flex',
   padding: rem(24),
@@ -121,6 +157,15 @@ export const LoadingMenu: React.FC<Record<string, never>> = () => (
         <div css={menuTextStyles} />
       </div>
     ))}
+  </div>
+);
+
+export const LoadingContentHeader: React.FC = () => (
+  <div css={contentHeaderContainerStyles}>
+    <div css={headerTitleStyles} />
+    <div css={headerDescriptionStyles('100%')} />
+    <div css={headerDescriptionStyles('100%')} />
+    <div css={headerDescriptionStyles('50%')} />
   </div>
 );
 

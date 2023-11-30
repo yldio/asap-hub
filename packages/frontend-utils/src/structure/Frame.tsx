@@ -1,6 +1,6 @@
 import React, { Suspense, ComponentProps, ReactNode } from 'react';
 import { Titled } from 'react-titled';
-import { Loading } from '@asap-hub/react-components';
+import { Loading, LoadingContentHeader } from '@asap-hub/react-components';
 
 import ErrorBoundary from './ErrorBoundary';
 
@@ -52,5 +52,9 @@ export const SearchFrame: React.FC<
     </Frame>
   </ErrorBoundary>
 );
+
+export const SkeletonHeaderFrame: React.FC<
+  Omit<FrameBoundaryProps, 'fallback'>
+> = (props) => <DefaultFrame {...props} fallback={<LoadingContentHeader />} />;
 
 export default DefaultFrame;

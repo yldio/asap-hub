@@ -496,6 +496,7 @@ describe('Teams data provider', () => {
                             items: [
                               { sys: { id: 'lab-1' } },
                               { sys: { id: 'lab-2' } },
+                              { sys: { id: 'lab-4' } },
                             ],
                           },
                         },
@@ -517,7 +518,7 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({});
 
         expect(result).toEqual({
-          items: [expect.objectContaining({ labCount: 3 })],
+          items: [expect.objectContaining({ labCount: 4 })],
           total: 1,
         });
       });

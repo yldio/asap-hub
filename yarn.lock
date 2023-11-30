@@ -325,7 +325,7 @@ __metadata:
     "@types/auth0-js": 9.21.5
     "@types/jest": 29.5.10
     "@types/node": 18.18.13
-    "@types/pify": 5.0.2
+    "@types/pify": 5.0.4
     auth0-js: 9.23.3
     camelcase: 6.3.0
     pify: 5.0.0
@@ -19389,10 +19389,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pify@npm:5.0.2":
-  version: 5.0.2
-  resolution: "@types/pify@npm:5.0.2"
-  checksum: dcfa7aad04cdab4cf006d7c4af651137080749678ab87abdb768d3f3228872c23fa7516e4a169b20b325ef3fe38668ca28b9a00155c3911eb1c2c1ba1bdc59af
+"@types/pify@npm:5.0.4":
+  version: 5.0.4
+  resolution: "@types/pify@npm:5.0.4"
+  checksum: 765a4f130fac9eb4ca2fb14d95a218d605f671ddd1ed4ebeb6ee0e0fa937ec59cf91fd55a9bb702c0472ca1296cb00ab081bdf9e908ee4abb8105068994f309f
   languageName: node
   linkType: hard
 

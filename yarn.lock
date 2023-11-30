@@ -322,11 +322,11 @@ __metadata:
     "@babel/core": 7.23.5
     "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
-    "@types/auth0-js": 9.21.2
+    "@types/auth0-js": 9.21.5
     "@types/jest": 29.5.10
     "@types/node": 18.18.13
     "@types/pify": 5.0.2
-    auth0-js: 9.23.0
+    auth0-js: 9.23.3
     camelcase: 6.3.0
     pify: 5.0.0
     util: 0.12.5
@@ -18446,10 +18446,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:9.21.2":
-  version: 9.21.2
-  resolution: "@types/auth0-js@npm:9.21.2"
-  checksum: 46ddced309e7ac006645ad130bb1a099ad291058986740c2f7fa4f09103e639faa9e760eee884a7c5a538c98b4e99d1b76ebcf52f1d2cb0a5d09bb3023593c22
+"@types/auth0-js@npm:9.21.5":
+  version: 9.21.5
+  resolution: "@types/auth0-js@npm:9.21.5"
+  checksum: 7df92564af1a3c09aec463c9296869a7e7bbdce4c627e90c557513cd1f998e8570a816f25c250587d15b2d72b318a47a5b44dd4dd538e997ef1ba91d97da2cc7
   languageName: node
   linkType: hard
 
@@ -22339,19 +22339,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:9.23.0":
-  version: 9.23.0
-  resolution: "auth0-js@npm:9.23.0"
+"auth0-js@npm:9.23.3":
+  version: 9.23.3
+  resolution: "auth0-js@npm:9.23.3"
   dependencies:
     base64-js: ^1.5.1
-    idtoken-verifier: ^2.2.2
+    idtoken-verifier: ^2.2.4
     js-cookie: ^2.2.0
     minimist: ^1.2.5
     qs: ^6.10.1
     superagent: ^7.1.5
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 024d7c872919a5907bac12ff332844139c5a4dd779b5d52e7c57d8a6d6713d7e48726482e211f95b12fb34a189589276c54b36ba6dce8654792a5ef7c212dca7
+  checksum: 327a521c497545a65bae819c119b952029faed562256f46fac296468d5dacf674203285b079a588a3e3f1124e491ae241ba53671fe190fc69f58e49751c52ce2
   languageName: node
   linkType: hard
 
@@ -26302,10 +26302,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "crypto-js@npm:4.1.1"
-  checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+"crypto-js@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "crypto-js@npm:4.2.0"
+  checksum: f051666dbc077c8324777f44fbd3aaea2986f198fe85092535130d17026c7c2ccf2d23ee5b29b36f7a4a07312db2fae23c9094b644cc35f7858b1b4fcaf27774
   languageName: node
   linkType: hard
 
@@ -33095,17 +33095,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idtoken-verifier@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "idtoken-verifier@npm:2.2.2"
+"idtoken-verifier@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "idtoken-verifier@npm:2.2.4"
   dependencies:
     base64-js: ^1.5.1
-    crypto-js: ^4.1.1
+    crypto-js: ^4.2.0
     es6-promise: ^4.2.8
     jsbn: ^1.1.0
     unfetch: ^4.2.0
     url-join: ^4.0.1
-  checksum: 7cf461f08e93f022d5c36d33fc0b6fe0091d64eaf367733be61ed0d700360c8cef982398b8040c24de011ce29e4a162f995532672e4aa9dac5a827153c6a6268
+  checksum: ed69f6b518a60d2dc332b2aabc90320de83f8e29758a8ee613a28e5b31fdbcca89255c764b5dcac8eedc767f6bd3d708c469151601b1f966848b969de2a5c296
   languageName: node
   linkType: hard
 

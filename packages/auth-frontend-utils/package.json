@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.23.5",
-    "auth0-js": "9.23.0",
+    "auth0-js": "9.23.3",
     "camelcase": "6.3.0",
     "pify": "5.0.0",
     "util": "0.12.5"
@@ -25,7 +25,7 @@
     "@asap-hub/model": "workspace:*",
     "@babel/core": "7.23.5",
     "@babel/preset-react": "7.23.3",
-    "@types/auth0-js": "9.21.2",
+    "@types/auth0-js": "9.21.5",
     "@types/jest": "29.5.10",
     "@types/node": "18.18.13",
     "@types/pify": "5.0.2"

@@ -1,4 +1,4 @@
-const { join, dirname } = require('path');
+ const { join, dirname } = require('path');
 
 const root = dirname(require.resolve('asap-hub/package.json'), '..');
 

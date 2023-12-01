@@ -25,7 +25,49 @@ describe('User index handler', () => {
       event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(userResponse),
+      data: {
+        _tags: [
+          'expertise 1',
+          'expertise 2',
+          'expertise 3',
+          'expertise 4',
+          'expertise 5',
+        ],
+        alumniSinceDate: '2020-09-23T20:45:22.000Z',
+        avatarUrl: undefined,
+        city: 'London',
+        country: 'United Kingdom',
+        createdDate: '2020-09-23T20:45:22.000Z',
+        degree: 'MPH',
+        displayName: 'Tom Hardy',
+        firstName: 'Tom',
+        id: 'user-id-1',
+        institution: 'some institution',
+        jobTitle: 'some job title',
+        labs: [
+          {
+            id: 'cd7be4902',
+            name: 'Brighton',
+          },
+          {
+            id: 'cd7be4903',
+            name: 'Liverpool',
+          },
+        ],
+        lastName: 'Hardy',
+        membershipStatus: ['Alumni Member'],
+        role: 'Grantee',
+        teams: [
+          {
+            displayName: 'Team A',
+            id: 'team-id-0',
+            inactiveSinceDate: undefined,
+            proposal: 'proposalId1',
+            role: 'Lead PI (Core Leadership)',
+            teamInactiveSince: '',
+          },
+        ],
+      },
       type: 'user',
     });
   });
@@ -97,10 +139,9 @@ describe('User index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...userResponse,
+      data: expect.objectContaining({
         _tags: ['Bitopertin', 'A53T', 'Adapter ligation'],
-      },
+      }),
       type: 'user',
     });
   });

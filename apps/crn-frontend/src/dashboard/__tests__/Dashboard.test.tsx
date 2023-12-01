@@ -4,7 +4,8 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   createListReminderResponse,
-  createListUserResponse,
+  createUserAlgoliaResponse,
+  createUserListAlgoliaResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { activeUserMembershipStatus } from '@asap-hub/model';
@@ -25,7 +26,11 @@ jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 
-const userResponse = createUserResponse({});
+const userResponse = createUserAlgoliaResponse();
+
+beforeEach(() => {
+  mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(2));
+});
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -118,7 +123,7 @@ it('renders reminders', async () => {
 describe('dismissing the getting started option', () => {
   it('toggles the not show getting started', async () => {
     mockGetUser.mockResolvedValue({
-      ...userResponse,
+      ...createUserResponse(),
       dismissedGettingStarted: true,
     });
     await renderDashboard({});
@@ -129,7 +134,7 @@ describe('dismissing the getting started option', () => {
 
   it('shows and can dismiss getting started', async () => {
     mockGetUser.mockResolvedValue({
-      ...userResponse,
+      ...createUserResponse(),
       dismissedGettingStarted: false,
     });
     await renderDashboard({});
@@ -160,7 +165,7 @@ describe('dismissing the getting started option', () => {
   });
   it('correctly renders getting started block when dismissedGettingStarted is undefined', async () => {
     mockGetUser.mockResolvedValue({
-      ...userResponse,
+      ...createUserResponse(),
       dismissedGettingStarted: undefined,
     });
     await renderDashboard({});
@@ -170,7 +175,7 @@ describe('dismissing the getting started option', () => {
 });
 
 it('renders latest users filtered by active users', async () => {
-  mockGetUsers.mockResolvedValueOnce(createListUserResponse(3));
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
   const { container } = await renderDashboard({});
 
   expect(mockGetUsers).toBeCalledWith(

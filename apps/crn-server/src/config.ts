@@ -4,6 +4,7 @@ const {
   ALGOLIA_API_KEY,
   ALGOLIA_APP_ID,
   ALGOLIA_INDEX,
+  API_URL,
   APP_ORIGIN,
   AUTH0_AUDIENCE,
   AUTH0_CLIENT_ID,
@@ -18,7 +19,6 @@ const {
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_POLLER_QUEUE_URL,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
-  CRN_API_URL,
   CRN_MEETING_MATERIALS_DRIVE,
   CURRENT_REVISION,
   EMAIL_BCC,
@@ -46,7 +46,7 @@ export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 mi
 export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
 export const algoliaIndex = ALGOLIA_INDEX || 'asap-hub_dev';
 export const appName = 'asap-local';
-export const asapApiUrl = CRN_API_URL || 'http://localhost:3333';
+export const asapApiUrl = API_URL || 'http://localhost:3333';
 export const auth0Audience = AUTH0_AUDIENCE || '';
 export const auth0ClientId = AUTH0_CLIENT_ID || '';
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';

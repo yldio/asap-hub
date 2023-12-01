@@ -837,7 +837,7 @@ __metadata:
     react-dom: 17.0.2
     react-router-dom: 5.3.4
     typescript: 4.9.5
-    vite: ^5.0.2
+    vite: ^5.0.4
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -892,6 +892,7 @@ __metadata:
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
     identity-obj-proxy: 3.0.0
+    jest-transform-css: ^6.0.1
     jose: 2.0.6
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"

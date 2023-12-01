@@ -1,6 +1,7 @@
 const {
   setupFilesAfterEnv,
   moduleNameMapper,
+  transform,
   ...baseConfig
 } = require('../../jest/jest-base.config.js');
 
@@ -19,13 +20,8 @@ module.exports = {
   ],
 
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': require.resolve(
-      'react-scripts/config/jest/babelTransform.js',
-    ),
-    '^.+\\.css$': require.resolve('react-scripts/config/jest/cssTransform.js'),
-    '^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)': require.resolve(
-      'react-scripts/config/jest/fileTransform.js',
-    ),
+    '^.+\\.css$': [require.resolve('jest-transform-css'), { modules: true }],
+    ...transform
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',

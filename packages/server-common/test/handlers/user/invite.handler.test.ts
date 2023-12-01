@@ -1,3 +1,4 @@
+import { UserDataObject } from '@asap-hub/model';
 import path from 'path';
 import url from 'url';
 import {
@@ -7,7 +8,6 @@ import {
 import { crnWelcomeTemplate, SendEmail } from '../../../src/utils';
 import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-import { UserDataObject } from '@asap-hub/model';
 
 describe('Invite Handler', () => {
   const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
@@ -21,6 +21,7 @@ describe('Invite Handler', () => {
     dataProvider,
     origin,
     logger,
+    false,
     'Crn-Welcome',
     jest.fn(),
   );
@@ -68,7 +69,7 @@ describe('Invite Handler', () => {
     await expect(inviteHandler(event)).rejects.toThrow(
       `Unable to send the email for the user with ID ${getUserDataObject().id}`,
     );
-    expect(dataProvider.update).toBeCalledWith(userWithoutConnection.id, {
+    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
       connections: [{ code: expect.any(String) }],
     });
   });
@@ -85,7 +86,7 @@ describe('Invite Handler', () => {
 
     await inviteHandler(event);
 
-    expect(dataProvider.fetchById).toBeCalledWith(userWithConnection.id);
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(userWithConnection.id);
     expect(sendEmailMock).not.toBeCalled();
   });
 
@@ -105,7 +106,9 @@ describe('Invite Handler', () => {
 
     await inviteHandler(event);
 
-    expect(dataProvider.fetchById).toBeCalledWith(userWithOtherConnection.id);
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(
+      userWithOtherConnection.id,
+    );
     expect(dataProvider.update).not.toHaveBeenCalled();
     expect(sendEmailMock).not.toHaveBeenCalled();
   });
@@ -121,13 +124,57 @@ describe('Invite Handler', () => {
 
     await inviteHandler(event);
 
-    expect(dataProvider.fetchById).toBeCalledWith(userWithoutConnection.id);
-    expect(dataProvider.update).toBeCalledWith(userWithoutConnection.id, {
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+    );
+    expect(dataProvider.update).toHaveBeenCalledWith(userWithoutConnection.id, {
       connections: [{ code: expect.any(String) }],
     });
     const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
-    expect(sendEmailMock).toBeCalledWith({
+    expect(sendEmailMock).toHaveBeenCalledWith({
+      to: [userWithoutConnection.email],
+      template: crnWelcomeTemplate,
+      values: {
+        firstName: userWithoutConnection.firstName,
+        link: expectedLink.toString(),
+      },
+    });
+  });
+  test('Should pass in the suppress conflict flag if set', async () => {
+    const inviteHandlerNoConflict = inviteHandlerFactory(
+      sendEmailMock,
+      dataProvider,
+      origin,
+      logger,
+      true,
+      'Crn-Welcome',
+      jest.fn(),
+    );
+
+    const userWithoutConnection: UserDataObject = {
+      ...getUserDataObject(),
+      connections: [],
+    };
+    dataProvider.fetchById.mockResolvedValueOnce(userWithoutConnection);
+
+    const event = getEventBridgeEventMock(getUserDataObject().id);
+
+    await inviteHandlerNoConflict(event);
+
+    expect(dataProvider.fetchById).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+    );
+    expect(dataProvider.update).toHaveBeenCalledWith(
+      userWithoutConnection.id,
+      {
+        connections: [{ code: expect.any(String) }],
+      },
+      { suppressConflict: true },
+    );
+    const code = dataProvider.update.mock.calls[0]![1].connections![0]!.code;
+    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
+    expect(sendEmailMock).toHaveBeenCalledWith({
       to: [userWithoutConnection.email],
       template: crnWelcomeTemplate,
       values: {

@@ -12,5 +12,6 @@ export type UserDataProvider = DataProvider<
   FetchUsersOptions,
   UserCreateDataObject,
   null,
-  UserUpdateDataObject
+  UserUpdateDataObject,
+  { suppressConflict?: boolean }
 >;

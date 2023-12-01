@@ -5,6 +5,7 @@ import {
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
   getContentfulGraphqlClientMockServer,
+  patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
@@ -26,6 +27,7 @@ import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
   patchAndPublishConflict: jest.fn().mockResolvedValue(undefined),
+  patchAndPublish: jest.fn().mockResolvedValue(undefined),
 }));
 
 describe('User data provider', () => {
@@ -656,13 +658,22 @@ describe('User data provider', () => {
       firstName: 'Test',
       lastName: 'User',
     });
-    const mockPatchAndPublish = patchAndPublishConflict as jest.MockedFunction<
-      typeof patchAndPublishConflict
+    const mockPatchAndPublishConflict =
+      patchAndPublishConflict as jest.MockedFunction<
+        typeof patchAndPublishConflict
+      >;
+    const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+      typeof patchAndPublish
     >;
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
       mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      mockPatchAndPublishConflict.mockResolvedValue({
         sys: {
           publishedVersion: 2,
         },
@@ -678,140 +689,302 @@ describe('User data provider', () => {
         },
       });
     });
-
-    test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
-      await userDataProvider.update('123', {
-        firstName: 'Colin',
-      });
-      expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        firstName: 'Colin',
-      });
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
-    });
-    test('when conflict should return and not poll', async () => {
-      mockPatchAndPublish.mockReset().mockResolvedValueOnce(null);
-      await userDataProvider.update('123', {
-        firstName: 'Colin',
-      });
-      expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        firstName: 'Colin',
-      });
-
-      expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
-    });
-
-    test('flattens `social` values', async () => {
-      await userDataProvider.update('123', {
-        social: {
-          github: 'yldio',
-          twitter: 'yldio',
-        },
-      });
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(
-        entry,
-        expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
-      );
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(
-        entry,
-        expect.not.objectContaining({ social: expect.anything() }),
-      );
-    });
-
-    test('includes undefined `social` values as null to allow unsetting', async () => {
-      await userDataProvider.update('123', {
-        social: {
-          github: 'yldio',
-          twitter: 'yldio',
-        },
-      });
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        website1: null,
-        website2: null,
-        googleScholar: null,
-        linkedIn: null,
-        researchGate: null,
-        researcherId: null,
-        github: 'yldio',
-        twitter: 'yldio',
-      });
-    });
-    test('maps avatar value to a linked resource', async () => {
-      await userDataProvider.update('123', {
-        avatar: 'abc123',
-      });
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        avatar: {
-          sys: {
-            type: 'Link',
-            linkType: 'Asset',
-            id: 'abc123',
-          },
-        },
-      });
-    });
-    test('converts empty string values to `null`', async () => {
-      await userDataProvider.update('123', {
-        firstName: '  ',
-        degree: '',
-        onboarded: false,
-      });
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        firstName: null,
-        degree: null,
-        onboarded: false,
-      });
-    });
-
-    test('checks version of published data and polls until they match', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: {
-          sys: {
-            publishedVersion: 1,
-          },
-        },
-      });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: {
-          sys: {
-            publishedVersion: 1,
-          },
-        },
-      });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: {
-          sys: {
-            publishedVersion: 2,
-          },
-        },
-      });
-
-      await userDataProvider.update('123', {
-        firstName: 'Colin',
-      });
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
-    });
-
-    test('throws if polling query does not return a value', async () => {
-      contentfulGraphqlClientMock.request.mockReset().mockResolvedValueOnce({
-        users: null,
-      });
-
-      await expect(
-        userDataProvider.update('123', {
+    describe('suppressConflict false', () => {
+      test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
+        await userDataProvider.update('123', {
           firstName: 'Colin',
-        }),
-      ).rejects.toThrow();
-    });
+        });
+        expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          firstName: 'Colin',
+        });
 
-    test('unwraps `code` property of connections', async () => {
-      await userDataProvider.update('123', {
-        connections: [{ code: 'abc123' }],
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
       });
-      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
-        connections: ['abc123'],
+
+      test('flattens `social` values', async () => {
+        await userDataProvider.update('123', {
+          social: {
+            github: 'yldio',
+            twitter: 'yldio',
+          },
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+        );
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.not.objectContaining({ social: expect.anything() }),
+        );
+      });
+
+      test('includes undefined `social` values as null to allow unsetting', async () => {
+        await userDataProvider.update('123', {
+          social: {
+            github: 'yldio',
+            twitter: 'yldio',
+          },
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          website1: null,
+          website2: null,
+          googleScholar: null,
+          linkedIn: null,
+          researchGate: null,
+          researcherId: null,
+          github: 'yldio',
+          twitter: 'yldio',
+        });
+      });
+      test('maps avatar value to a linked resource', async () => {
+        await userDataProvider.update('123', {
+          avatar: 'abc123',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          avatar: {
+            sys: {
+              type: 'Link',
+              linkType: 'Asset',
+              id: 'abc123',
+            },
+          },
+        });
+      });
+      test('converts empty string values to `null`', async () => {
+        await userDataProvider.update('123', {
+          firstName: '  ',
+          degree: '',
+          onboarded: false,
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          firstName: null,
+          degree: null,
+          onboarded: false,
+        });
+      });
+
+      test('checks version of published data and polls until they match', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 1,
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 1,
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 2,
+            },
+          },
+        });
+
+        await userDataProvider.update('123', {
+          firstName: 'Colin',
+        });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
+      });
+
+      test('throws if polling query does not return a value', async () => {
+        contentfulGraphqlClientMock.request.mockReset().mockResolvedValueOnce({
+          users: null,
+        });
+
+        await expect(
+          userDataProvider.update('123', {
+            firstName: 'Colin',
+          }),
+        ).rejects.toThrow();
+      });
+
+      test('unwraps `code` property of connections', async () => {
+        await userDataProvider.update('123', {
+          connections: [{ code: 'abc123' }],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          connections: ['abc123'],
+        });
+      });
+    });
+    describe('suppressConflict true', () => {
+      test('fetches entry from contentful and passes to `patchAndPublishConflict`', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            firstName: 'Colin',
+          },
+
+          { suppressConflict: true },
+        );
+        expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          firstName: 'Colin',
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
+      });
+      test('when conflict should return and not poll', async () => {
+        mockPatchAndPublishConflict.mockReset().mockResolvedValueOnce(null);
+        await userDataProvider.update(
+          '123',
+          {
+            firstName: 'Colin',
+          },
+          { suppressConflict: true },
+        );
+        expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          firstName: 'Colin',
+        });
+
+        expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
+      });
+      test('flattens `social` values', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            social: {
+              github: 'yldio',
+              twitter: 'yldio',
+            },
+          },
+          { suppressConflict: true },
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(
+          entry,
+          expect.not.objectContaining({ social: expect.anything() }),
+        );
+      });
+
+      test('includes undefined `social` values as null to allow unsetting', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            social: {
+              github: 'yldio',
+              twitter: 'yldio',
+            },
+          },
+          { suppressConflict: true },
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          website1: null,
+          website2: null,
+          googleScholar: null,
+          linkedIn: null,
+          researchGate: null,
+          researcherId: null,
+          github: 'yldio',
+          twitter: 'yldio',
+        });
+      });
+      test('maps avatar value to a linked resource', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            avatar: 'abc123',
+          },
+          { suppressConflict: true },
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          avatar: {
+            sys: {
+              type: 'Link',
+              linkType: 'Asset',
+              id: 'abc123',
+            },
+          },
+        });
+      });
+      test('converts empty string values to `null`', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            firstName: '  ',
+            degree: '',
+            onboarded: false,
+          },
+          { suppressConflict: true },
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          firstName: null,
+          degree: null,
+          onboarded: false,
+        });
+      });
+
+      test('checks version of published data and polls until they match', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 1,
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 1,
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: {
+            sys: {
+              publishedVersion: 2,
+            },
+          },
+        });
+
+        await userDataProvider.update(
+          '123',
+          {
+            firstName: 'Colin',
+          },
+          { suppressConflict: true },
+        );
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
+      });
+
+      test('throws if polling query does not return a value', async () => {
+        contentfulGraphqlClientMock.request.mockReset().mockResolvedValueOnce({
+          users: null,
+        });
+
+        await expect(
+          userDataProvider.update(
+            '123',
+            {
+              firstName: 'Colin',
+            },
+            { suppressConflict: true },
+          ),
+        ).rejects.toThrow();
+      });
+
+      test('unwraps `code` property of connections', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            connections: [{ code: 'abc123' }],
+          },
+          { suppressConflict: true },
+        );
+        expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+          connections: ['abc123'],
+        });
       });
     });
   });

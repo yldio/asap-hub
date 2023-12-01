@@ -22,8 +22,12 @@ export default class UserController {
     private assetDataProvider: AssetDataProvider,
   ) {}
 
-  async update(id: string, update: UserUpdateRequest): Promise<UserResponse> {
-    await this.userDataProvider.update(id, update);
+  async update(
+    id: string,
+    update: UserUpdateRequest,
+    { suppressConflict = false } = {},
+  ): Promise<UserResponse> {
+    await this.userDataProvider.update(id, update, { suppressConflict });
     return this.fetchById(id);
   }
 
@@ -125,7 +129,7 @@ export default class UserController {
       logger.warn(error, 'Failed to sync ORCID profile');
     }
 
-    return this.update(user.id, updateToUser);
+    return this.update(user.id, updateToUser, { suppressConflict: true });
   }
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({

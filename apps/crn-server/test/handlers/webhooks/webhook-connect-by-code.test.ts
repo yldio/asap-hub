@@ -1,15 +1,15 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { auth0SharedSecret as secret } from '../../../src/config';
+import UserController from '../../../src/controllers/user.controller';
 import {
-  unloggedHandler,
   connectByCodeHandler,
+  unloggedHandler,
 } from '../../../src/handlers/webhooks/webhook-connect-by-code';
+import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
 import {
   getDataProviderMock,
   getDataProviderMock as mockGetDataProvider,
 } from '../../mocks/data-provider.mock';
-import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
-import { auth0SharedSecret as secret } from '../../../src/config';
-import UserController from '../../../src/controllers/user.controller';
 
 import { getApiGatewayEvent } from '../../helpers/events';
 
@@ -114,10 +114,14 @@ describe('POST /webhook/users/connections - success', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toEqual(202);
-    expect(mockDataProvider.update).toHaveBeenCalledWith('user-0', {
-      connections: [{ code: 'oauth-connection-code' }],
-      email: 'test@example.com',
-    });
+    expect(mockDataProvider.update).toHaveBeenCalledWith(
+      'user-0',
+      {
+        connections: [{ code: 'oauth-connection-code' }],
+        email: 'test@example.com',
+      },
+      { suppressConflict: false },
+    );
   });
 
   test('returns 500 for invalid code', async () => {

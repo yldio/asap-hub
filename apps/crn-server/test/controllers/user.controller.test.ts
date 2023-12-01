@@ -117,7 +117,11 @@ describe('Users controller', () => {
       const result = await userController.update('user-id', {});
 
       expect(result).toEqual(getUserResponse());
-      expect(userDataProviderMock.update).toHaveBeenCalledWith('user-id', {});
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        'user-id',
+        {},
+        { suppressConflict: false },
+      );
     });
   });
 
@@ -135,9 +139,13 @@ describe('Users controller', () => {
 
       expect(result).toEqual(getUserResponse());
       expect(nock.isDone()).toBe(true);
-      expect(userDataProviderMock.update).toHaveBeenCalledWith('user-id', {
-        avatar: '42',
-      });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        'user-id',
+        {
+          avatar: '42',
+        },
+        { suppressConflict: false },
+      );
       expect(assetDataProviderMock.create).toHaveBeenCalledWith({
         id: 'user-id',
         avatar: Buffer.from('avatar'),
@@ -160,10 +168,14 @@ describe('Users controller', () => {
       userDataProviderMock.fetchById.mockResolvedValue(user);
       const result = await userController.connectByCode(welcomeCode, 'user-id');
 
-      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-        email: user.email,
-        connections: [{ code: 'user-id' }],
-      });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        userId,
+        {
+          email: user.email,
+          connections: [{ code: 'user-id' }],
+        },
+        { suppressConflict: false },
+      );
       expect(result).toEqual(getUserResponse());
     });
 
@@ -180,14 +192,18 @@ describe('Users controller', () => {
       userDataProviderMock.fetchById.mockResolvedValue(user);
       await userController.connectByCode('some code', 'user-id');
 
-      expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-        email: user.email,
-        connections: expect.arrayContaining([
-          {
-            code: existingConnection,
-          },
-        ]),
-      });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        userId,
+        {
+          email: user.email,
+          connections: expect.arrayContaining([
+            {
+              code: existingConnection,
+            },
+          ]),
+        },
+        { suppressConflict: false },
+      );
     });
 
     test('Shouldnt do anything if connecting with existing code', async () => {
@@ -244,6 +260,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
+        { suppressConflict: true },
       );
     });
 
@@ -269,6 +286,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
+        { suppressConflict: true },
       );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
@@ -289,10 +307,14 @@ describe('Users controller', () => {
       });
 
       expect(userDataProviderMock.update).toHaveBeenCalled();
-      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
-        email: user.email,
-        orcidLastSyncDate: expect.any(String),
-      });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        user.id,
+        {
+          email: user.email,
+          orcidLastSyncDate: expect.any(String),
+        },
+        { suppressConflict: true },
+      );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
 
@@ -311,10 +333,14 @@ describe('Users controller', () => {
 
       await userController.syncOrcidProfile(userId);
 
-      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
-        email: user.email,
-        orcidLastSyncDate: expect.any(String),
-      });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        user.id,
+        {
+          email: user.email,
+          orcidLastSyncDate: expect.any(String),
+        },
+        { suppressConflict: true },
+      );
     });
 
     test('Throws when user does not exist', async () => {
@@ -347,6 +373,7 @@ describe('Users controller', () => {
             orcidFixtures.orcidWorksResponse['last-modified-date']!.value,
           ).toISOString(),
         }),
+        { suppressConflict: true },
       );
     });
   });

@@ -31,6 +31,7 @@ import {
   FETCH_USER_BY_ID,
   GraphQLClient,
   Maybe,
+  patchAndPublish,
   patchAndPublishConflict,
   pollContentfulGql,
   UsersFilter,
@@ -164,21 +165,33 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async create(): Promise<string> {
     throw new Error('Method not implemented.');
   }
-  async update(id: string, data: UserUpdateDataObject): Promise<void> {
+  async update(
+    id: string,
+    data: UserUpdateDataObject,
+    { suppressConflict = false } = {},
+  ): Promise<void> {
+    const pollForUpdate = async (publishedVersion: number | undefined) => {
+      const fetchUserById = () => this.fetchUserById(id);
+
+      await pollContentfulGql<FetchUserByIdQuery>(
+        publishedVersion || Infinity,
+        fetchUserById,
+        'users',
+      );
+    };
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const result = await patchAndPublishConflict(user, fields);
-    if (!result) {
-      return;
+    if (suppressConflict) {
+      const result = await patchAndPublishConflict(user, fields);
+      if (!result) {
+        return;
+      }
+      await pollForUpdate(result.sys.publishedVersion);
+    } else {
+      const result = await patchAndPublish(user, fields);
+      await pollForUpdate(result.sys.publishedVersion);
     }
-    const fetchUserById = () => this.fetchUserById(id);
-
-    await pollContentfulGql<FetchUserByIdQuery>(
-      result.sys.publishedVersion || Infinity,
-      fetchUserById,
-      'users',
-    );
   }
 }
 

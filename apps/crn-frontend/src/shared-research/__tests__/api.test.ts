@@ -445,14 +445,25 @@ describe('getDraftResearchOutputs', () => {
     );
   });
 });
-
+// TODO refactor test
 describe('getResearchOutputsFromCMS', () => {
-  it('makes an authorized GET request for research outputs', async () => {
+  const mockAlgoliaSearchClient = {
+    UnsupportedBrowserPage: jest
+      .fn()
+      .mockResolvedValue(createResearchOutputListAlgoliaResponse(3)),
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'crn'>>;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('makes an authorized POST request for research outputs', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/research-outputs')
+      .post('/research-outputs', { ids: ['ro0', 'ro1', 'ro2'] })
       .query(true)
       .reply(200, {});
     await getResearchOutputsFromCMS(
+      mockAlgoliaSearchClient,
       {
         pageSize: 10,
         searchQuery: '',
@@ -476,6 +487,7 @@ describe('getResearchOutputsFromCMS', () => {
       .reply(200, createListResearchOutputResponse(1));
     expect(
       await getResearchOutputsFromCMS(
+        mockAlgoliaSearchClient,
         {
           pageSize: 10,
           searchQuery: '',
@@ -500,6 +512,7 @@ describe('getResearchOutputsFromCMS', () => {
       .reply(200, createListResearchOutputResponse(1));
     expect(
       await getResearchOutputsFromCMS(
+        mockAlgoliaSearchClient,
         {
           pageSize: 10,
           searchQuery: '',
@@ -525,6 +538,7 @@ describe('getResearchOutputsFromCMS', () => {
       .reply(200, createListResearchOutputResponse(1));
     expect(
       await getResearchOutputsFromCMS(
+        mockAlgoliaSearchClient,
         {
           pageSize: 10,
           searchQuery: '',
@@ -542,6 +556,7 @@ describe('getResearchOutputsFromCMS', () => {
     nock(API_BASE_URL).get('/research-outputs').query(true).reply(500);
     await expect(
       getResearchOutputsFromCMS(
+        mockAlgoliaSearchClient,
         {
           pageSize: 10,
           searchQuery: '',

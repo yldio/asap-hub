@@ -10,6 +10,7 @@ import { usePaginationParams, usePagination } from '../hooks';
 import { getResearchOutputsFromCMS } from './api';
 import { contentfulResultsToStream, researchOutputToCSV } from './export';
 import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
@@ -35,6 +36,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   );
   const authorization = useRecoilValue(authorizationState);
 
+  const { client } = useAlgolia();
+
   const exportResults = () =>
     contentfulResultsToStream<ResearchOutputResponse>(
       createCsvFileStream(`SharedOutputs_${format(new Date(), 'MMddyy')}.csv`, {
@@ -42,6 +45,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       }),
       (paginationParams) =>
         getResearchOutputsFromCMS(
+          client,
           {
             filters,
             searchQuery,

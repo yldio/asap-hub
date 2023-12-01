@@ -169,40 +169,32 @@ export const getDraftResearchOutputs = async (
   };
 };
 
-const sourceMapping = new Map([
-  ['Working Group', 'working-groups'],
-  ['Team', 'teams'],
-]);
 // As algolia has reduced data we need to fetch data from cms for `Export as CSV` feature
+// but as the server search query feature is not as good we need to run query on algolia first
+// extract the ids and fetch research outputs by ids from server
 export const getResearchOutputsFromCMS = async (
+  client: AlgoliaClient<'crn'>,
   options: ResearchOutputPublishedListOptions,
   authorization: string,
 ): Promise<ListResponse<ResearchOutputResponse>> => {
-  const splitFilters = splitFiltersByType(options.filters);
+  const filters = getAllFilters(
+    options.filters,
+    options.teamId,
+    options.userId,
+    options.workingGroupId,
+  );
 
-  const url = createListApiUrl(`research-outputs`, {
-    ...options,
-    filters: new Set(splitFilters.documentTypes),
+  const hits = await client.browse(['research-output'], options.searchQuery, {
+    filters,
   });
 
-  if (options.workingGroupId) {
-    url.searchParams.set('workingGroupId', options.workingGroupId);
-  }
-  if (options.teamId) {
-    url.searchParams.set('teamId', options.teamId);
-  }
-
-  if (splitFilters.source.length) {
-    for (const source of splitFilters.source) {
-      const value = sourceMapping.get(source);
-      if (value) {
-        url.searchParams.append('source', value);
-      }
-    }
-  }
-
-  const resp = await fetch(url.toString(), {
+  // TODO implement api endpoint
+  const resp = await fetch(`${API_BASE_URL}/research-outputs`, {
+    method: 'POST',
     headers: { authorization },
+    body: JSON.stringify({
+      ids: hits.map((hit) => hit.id),
+    }),
   });
 
   if (!resp.ok) {

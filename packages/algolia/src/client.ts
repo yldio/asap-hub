@@ -221,6 +221,37 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
       );
     }
   }
+
+  // TODO fix ts issues
+  async browse<ResponsesKey extends keyof EntityResponses[App]>(
+    entityTypes: ResponsesKey[],
+    query: string,
+    requestOptions?: SearchOptions,
+  ) {
+    try {
+      let hits = [];
+      const entityTypesFilter = entityTypes
+        .map((entityType) => `__meta.type:"${String(entityType)}"`)
+        .join(' OR ');
+
+      await this.index.browseObjects({
+        query,
+        attributesToRetrieve: ['id'],
+        ...requestOptions,
+        userToken: this.userToken,
+        filters: requestOptions?.filters
+          ? `${requestOptions.filters} AND (${entityTypesFilter})`
+          : entityTypesFilter,
+        batch: (batch) => {
+          hits = hits.concat(batch);
+        },
+      });
+
+      return hits;
+    } catch (error) {
+      throw new Error(`Could not browse: ${(error as Error).message}`);
+    }
+  }
 }
 
 export type CRNEntities = keyof EntityResponses['crn'];

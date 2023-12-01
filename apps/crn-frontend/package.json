@@ -6,8 +6,8 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "cross-env TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "node ./scripts/build-unsupported-browser-page.js && DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "start": "cross-env TSC_COMPILE_ON_ERROR=true vite start",
+    "build": "node ./scripts/build-unsupported-browser-page.js && vite build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject",
@@ -28,6 +28,7 @@
     "@auth0/auth0-spa-js": "1.22.6",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
+    "@vitejs/plugin-react": "^4.2.0",
     "browser-image-compression": "1.0.17",
     "csv-stringify": "6.4.4",
     "date-fns": "2.30.0",
@@ -45,7 +46,8 @@
     "stream": "npm:stream-browserify@3.0.0",
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "vite": "^5.0.4"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
@@ -77,7 +79,6 @@
     "jose": "2.0.6",
     "nock": "13.4.0",
     "pirates": "4.0.6",
-    "react-scripts": "5.0.1",
     "react-test-renderer": "17.0.2",
     "typescript": "4.9.5",
     "webpack": "5.76.0"

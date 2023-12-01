@@ -176,28 +176,27 @@ jobs:
         env:
           CRN_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.crn-auth-url}}'
           GP2_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.gp2-auth-url}}'
-          REACT_APP_CRN_ALGOLIA_APP_ID: ${{ steps.crn-algolia-keys.outputs.algolia-app-id }}
-          REACT_APP_CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
+          REACT_APP_CRN_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-crn-gtm-container-id }}
+          REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
           REACT_APP_GP2_ALGOLIA_APP_ID: ${{ steps.gp2-algolia-keys.outputs.algolia-app-id }}
           REACT_APP_GP2_ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
-          REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
-          REACT_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
-          REACT_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
-          VITE_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
-          REACT_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
-          VITE_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
-          REACT_APP_CRN_SENTRY_DSN: ${{ steps.setup.outputs.react-app-crn-sentry-dsn }}
-          REACT_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
           REACT_APP_GP2_API_BASE_URL: ${{ steps.setup.outputs.gp2-api-url }}
           REACT_APP_GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
           REACT_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
-          VITE_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
           REACT_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
-          VITE_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
-          REACT_APP_GP2_SENTRY_DSN: ${{ steps.setup.outputs.react-app-gp2-sentry-dsn }}
-          REACT_APP_CRN_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-crn-gtm-container-id }}
           REACT_APP_GP2_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-gp2-gtm-container-id }}
+          REACT_APP_GP2_SENTRY_DSN: ${{ steps.setup.outputs.react-app-gp2-sentry-dsn }}
           REACT_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
+          VITE_APP_CRN_ALGOLIA_APP_ID: ${{ steps.crn-algolia-keys.outputs.algolia-app-id }}
+          VITE_APP_CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          VITE_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
+          VITE_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
+          VITE_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          VITE_APP_CRN_GTM_CONTAINER_ID: ${{ steps.setup.outputs.react-app-crn-gtm-container-id }}
+          VITE_APP_CRN_SENTRY_DSN: ${{ steps.setup.outputs.react-app-crn-sentry-dsn }}
+          VITE_APP_GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
+          VITE_APP_GP2_AUTH0_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-domain }}
         run: |
           yarn build:frontend
       - name: Cache build output

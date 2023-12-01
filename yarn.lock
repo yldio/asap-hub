@@ -883,6 +883,7 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
+    "@vitejs/plugin-react": ^4.2.0
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
@@ -902,7 +903,6 @@ __metadata:
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
-    react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: 0.7.7
     stream: "npm:stream-browserify@3.0.0"
@@ -910,6 +910,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
+    vite: ^5.0.4
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -49530,9 +49531,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.2":
-  version: 5.0.5
-  resolution: "vite@npm:5.0.5"
+"vite@npm:^5.0.2, vite@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "vite@npm:5.0.4"
   dependencies:
     esbuild: ^0.19.3
     fsevents: ~2.3.3
@@ -49566,7 +49567,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 8df70302934de39ad6fda4f28246e07850f849c2bd197b7af93615f5f39955be460dd19940a46ec5bf2adf81bc32b60985eb5990142212754c733eba4fe3bfa3
+  checksum: baa088f02f610bf0c7e48931e693781dae7367c1836ed19c202aace0e90fa5f6156669f562ba466585f3fdc50d9d75e82697456e1529cc8c2880af420a010ef3
   languageName: node
   linkType: hard
 

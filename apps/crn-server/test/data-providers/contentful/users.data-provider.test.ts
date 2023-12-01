@@ -656,21 +656,23 @@ describe('User data provider', () => {
       firstName: 'Test',
       lastName: 'User',
     });
+    const mockPatchAndPublish = patchAndPublishConflict as jest.MockedFunction<
+      typeof patchAndPublishConflict
+    >;
 
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
-      const mockPatchAndPublish =
-        patchAndPublishConflict as jest.MockedFunction<
-          typeof patchAndPublishConflict
-        >;
       mockPatchAndPublish.mockResolvedValue({
         sys: {
           publishedVersion: 2,
         },
       } as Entry);
+      const user = getContentfulGraphqlUser();
       contentfulGraphqlClientMock.request.mockResolvedValue({
         users: {
+          ...user,
           sys: {
+            ...user.sys,
             publishedVersion: 2,
           },
         },
@@ -685,6 +687,20 @@ describe('User data provider', () => {
       expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
         firstName: 'Colin',
       });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
+    });
+    test('when conflict should return and not poll', async () => {
+      mockPatchAndPublish.mockReset().mockResolvedValueOnce(null);
+      await userDataProvider.update('123', {
+        firstName: 'Colin',
+      });
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+      expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
+        firstName: 'Colin',
+      });
+
+      expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
     });
 
     test('flattens `social` values', async () => {

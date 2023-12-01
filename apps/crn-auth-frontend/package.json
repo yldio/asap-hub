@@ -25,7 +25,7 @@
     "react-app-polyfill": "3.0.0",
     "react-dom": "17.0.2",
     "react-router-dom": "5.3.4",
-    "vite": "^5.0.4"
+    "vite": "5.0.4"
   },
   "devDependencies": {
     "@asap-hub/auth-frontend-scripts": "workspace:*",

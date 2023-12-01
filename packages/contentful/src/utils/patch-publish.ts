@@ -27,18 +27,22 @@ const parseError = ({ message }: Error) => {
   }
 };
 
-export const patchAndPublish = async (
+type PatchAndPublish = (
   entry: Entry,
   fields: Record<string, unknown>,
-): Promise<Entry> => {
+) => Promise<Entry>;
+export const patchAndPublish: PatchAndPublish = async (entry, fields) => {
   const result = await patch(entry, fields);
   return result.publish();
 };
 
-export const patchAndPublishConflict = async (
-  entry: Entry,
-  fields: Record<string, unknown>,
-): Promise<Entry | null> => {
+type PatchAndPublishConflict = (
+  ...args: Parameters<PatchAndPublish>
+) => Promise<Awaited<ReturnType<PatchAndPublish>> | null>;
+export const patchAndPublishConflict: PatchAndPublishConflict = async (
+  entry,
+  fields,
+) => {
   try {
     return await patchAndPublish(entry, fields);
   } catch (err) {

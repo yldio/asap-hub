@@ -26,7 +26,7 @@
     "@asap-hub/unsupported-browser-page": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@auth0/auth0-spa-js": "1.22.6",
-    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-react": "7.23.3",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
     "@vitejs/plugin-react": "^4.2.0",

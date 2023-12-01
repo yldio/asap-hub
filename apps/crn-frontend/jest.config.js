@@ -21,7 +21,7 @@ module.exports = {
 
   transform: {
     '^.+\\.css$': [require.resolve('jest-transform-css'), { modules: true }],
-    ...transform
+    ...transform,
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',

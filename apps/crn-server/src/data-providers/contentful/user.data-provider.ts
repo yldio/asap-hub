@@ -179,19 +179,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
         'users',
       );
     };
+
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    if (suppressConflict) {
-      const result = await patchAndPublishConflict(user, fields);
-      if (!result) {
-        return;
-      }
-      await pollForUpdate(result.sys.publishedVersion);
-    } else {
-      const result = await patchAndPublish(user, fields);
-      await pollForUpdate(result.sys.publishedVersion);
+    const patchMethod = suppressConflict
+      ? patchAndPublishConflict
+      : patchAndPublish;
+    const result = await patchMethod(user, fields);
+    if (!result) {
+      return;
     }
+    await pollForUpdate(result.sys.publishedVersion);
   }
 }
 

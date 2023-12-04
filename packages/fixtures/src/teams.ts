@@ -1,15 +1,13 @@
 import {
-  ListTeamResponse,
   TeamMember,
   TeamTool,
   TeamResponse,
+  TeamListItemResponse,
+  ListTeamResponse,
 } from '@asap-hub/model';
 import { createLabs } from './labs';
 
-export const teamMember: Omit<
-  ListTeamResponse['items'][0]['members'][0],
-  'id'
-> = {
+export const teamMember: Omit<TeamResponse['members'][number], 'id'> = {
   firstName: 'Mason',
   lastName: 'Carpenter',
   email: 'mason@car.com',
@@ -23,7 +21,7 @@ const teamTool = (id: number): TeamTool => ({
   url: `/tool-${id}`,
 });
 
-const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
+const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   displayName: 'Abu-Remaileh, M',
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
@@ -68,14 +66,18 @@ export const createTeamResponse = (
     : {}),
 });
 
-export const createListTeamResponse = (
-  items: number,
-  options: FixtureOptions = {},
-): ListTeamResponse => ({
-  total: items,
-  items: Array.from({ length: items }, (_, itemIndex) =>
-    createTeamResponse(options, itemIndex),
-  ),
+export const createTeamListItemResponse = (
+  itemIndex = 0,
+): TeamListItemResponse => ({
+  ...listTeamResponseItem,
+  id: `t${itemIndex}`,
+  displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
+  memberCount: 2,
 });
 
-export default createListTeamResponse;
+export const createListTeamResponse = (items: number): ListTeamResponse => ({
+  total: items,
+  items: Array.from({ length: items }, (_, itemIndex) =>
+    createTeamListItemResponse(itemIndex),
+  ),
+});

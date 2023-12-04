@@ -3,6 +3,7 @@ import {
   ListTeamResponse,
   TeamPatchRequest,
   TeamResponse,
+  TeamListItemResponse,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -34,7 +35,7 @@ export const teamsState = selectorFamily<
     ({ get }) => {
       const index = get(teamIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: TeamResponse[] = [];
+      const teams: TeamListItemResponse[] = [];
       for (const id of index.ids) {
         const team = get(teamListState(id));
         if (team === undefined) return undefined;
@@ -85,9 +86,13 @@ export const teamState = selectorFamily<TeamResponse | undefined, string>({
     ({ get }) =>
       get(patchedTeamState(id)) ?? get(initialTeamState(id)),
 });
-export const teamListState = atomFamily<TeamResponse | undefined, string>({
+
+export const teamListState = atomFamily<
+  TeamListItemResponse | undefined,
+  string
+>({
   key: 'teamList',
-  default: teamState,
+  default: undefined,
 });
 
 export const usePrefetchTeams = (
@@ -107,7 +112,7 @@ export const usePrefetchTeams = (
     }
   }, [options, authorization, teams, setTeams]);
 };
-export const useTeams = (options: GetListOptions) => {
+export const useTeams = (options: GetListOptions): ListTeamResponse => {
   const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));
   if (teams === undefined) {

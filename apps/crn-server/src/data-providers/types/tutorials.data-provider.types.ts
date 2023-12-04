@@ -6,5 +6,6 @@ import {
 
 export type TutorialDataProvider = DataProvider<
   TutorialsDataObject,
+  TutorialsDataObject,
   FetchOptions
 >;

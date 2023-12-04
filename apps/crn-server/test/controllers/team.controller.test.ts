@@ -34,37 +34,6 @@ describe('Team Controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should only show selected team tools', async () => {
-      const teamDataObject = getTeamDataObject();
-      const teamTools = [
-        {
-          name: 'tool name',
-          url: 'tool url',
-        },
-      ];
-      teamDataObject.tools = teamTools;
-      const teamItems = [
-        {
-          ...teamDataObject,
-          id: 'team-id-1',
-        },
-        {
-          ...teamDataObject,
-          id: 'team-id-2',
-        },
-      ];
-      teamDataProviderMock.fetch.mockResolvedValueOnce({
-        total: 1,
-        items: teamItems,
-      });
-      const result = await teamController.fetch({
-        showTeamTools: ['team-id-2'],
-      });
-
-      expect(result.items[0]!.tools).toBeUndefined();
-      expect(result.items[1]!.tools).toEqual(teamTools);
-    });
-
     test('Should call the data provider with correct parameters', async () => {
       teamDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,

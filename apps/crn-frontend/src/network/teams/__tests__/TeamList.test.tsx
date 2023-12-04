@@ -54,6 +54,7 @@ const renderTeamList = async () => {
 
 it('renders a list of teams information', async () => {
   const response = createListTeamResponse(2);
+
   mockGetTeams.mockResolvedValue({
     ...response,
     items: response.items.map((item, index) => ({

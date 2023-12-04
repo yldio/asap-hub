@@ -29,6 +29,7 @@ export type FetchResearchOutputOptions =
 
 export type ResearchOutputDataProvider = DataProvider<
   ResearchOutputDataObject,
+  ResearchOutputDataObject,
   FetchResearchOutputOptions,
   ResearchOutputCreateDataObject,
   CreateResearchOutputOptions,

@@ -8,6 +8,7 @@ import {
 
 export type UserDataProvider = DataProvider<
   UserDataObject,
+  UserDataObject,
   FetchUsersOptions,
   UserCreateDataObject,
   null,

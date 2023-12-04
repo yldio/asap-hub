@@ -7,17 +7,6 @@ export default {
   component: NetworkTeams,
 };
 
-const member: Omit<
-  ComponentProps<typeof NetworkTeams>['teams'][0]['members'][0],
-  'id'
-> = {
-  firstName: 'Mason',
-  lastName: 'Carpenter',
-  email: 'mason@car.com',
-  displayName: 'Birdie Romeo',
-  role: 'Lead PI (Core Leadership)',
-};
-
 const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
   const numberOfItems = number('Number of Teams', 2, { min: 0 });
   const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
@@ -29,10 +18,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
       expertiseAndResourceTags: ['Neurological Diseases'],
       labCount: number('Lab count', 15),
-      members: [
-        { ...member, id: 'm0' },
-        { ...member, id: 'm1' },
-      ],
+      memberCount: 2,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

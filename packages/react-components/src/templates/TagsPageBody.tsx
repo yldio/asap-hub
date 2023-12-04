@@ -1,12 +1,12 @@
 import {
-  TagSearchResponse,
-  ResearchOutputResponse,
-  UserResponse,
   EventResponse,
-  WorkingGroupResponse,
-  TutorialsResponse,
-  TeamResponse,
   NewsResponse,
+  ResearchOutputResponse,
+  TagSearchResponse,
+  TeamListItemResponse,
+  TutorialsResponse,
+  UserResponse,
+  WorkingGroupResponse,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
@@ -78,7 +78,7 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
     return <NewsCard {...(data as NewsResponse)} type="News" />;
   }
 
-  return <TeamCard {...(data as TeamResponse)} />;
+  return <TeamCard {...(data as TeamListItemResponse)} />;
 };
 
 interface TagsPageBodyProps {

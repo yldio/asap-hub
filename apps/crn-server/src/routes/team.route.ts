@@ -25,10 +25,7 @@ export const teamRouteFactory = (
 
     const options = validateFetchOptions(query);
 
-    const result = await teamController.fetch({
-      ...options,
-      showTeamTools: req.loggedInUser?.teams.map((team) => team.id),
-    });
+    const result = await teamController.fetch(options);
 
     res.json(result);
   });

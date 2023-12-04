@@ -14,12 +14,14 @@ import {
 
 export type CalendarDataProvider = DataProvider<
   CalendarDataObject,
+  CalendarDataObject,
   FetchCalendarProviderOptions,
   CalendarCreateDataObject,
   null,
   CalendarUpdateDataObject
 >;
 export type EventDataProvider = DataProvider<
+  EventDataObject,
   EventDataObject,
   FetchEventsOptions,
   EventCreateDataObject,

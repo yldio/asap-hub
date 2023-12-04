@@ -6,5 +6,6 @@ import {
 
 export type InterestGroupDataProvider = DataProvider<
   InterestGroupDataObject,
+  InterestGroupDataObject,
   FetchInterestGroupOptions
 >;

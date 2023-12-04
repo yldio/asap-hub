@@ -1,11 +1,13 @@
 import {
   LabResponse,
-  ListTeamDataObject,
   TeamCreateDataObject,
   TeamDataObject,
   TeamTool,
   TeamUpdateDataObject,
   TeamMember,
+  TeamListItemDataObject,
+  ListTeamDataObject,
+  TeamRole,
 } from '@asap-hub/model';
 
 import {
@@ -22,11 +24,23 @@ import {
   addLocaleToFields,
 } from '@asap-hub/contentful';
 
-import { isTeamRole, sortMembers } from '../transformers';
+import { sortMembers } from '../transformers';
 import {
   FetchTeamsOptions,
   TeamDataProvider,
 } from '../types/teams.data-provider.types';
+
+export type TeamByIdItem = NonNullable<
+  NonNullable<FetchTeamByIdQuery['teams']>
+>;
+
+export type MembershipTeamById = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
+    >['teamMembershipCollection']
+  >['items'][number]
+>;
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]
@@ -93,7 +107,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       total: teamsCollection?.total,
       items: teamsCollection?.items
         .filter((x): x is TeamItem => x !== null)
-        .map(parseContentfulGraphQlTeams),
+        .map(parseContentfulGraphQlTeamListItem),
     };
   }
 
@@ -107,7 +121,7 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
       return null;
     }
 
-    return parseContentfulGraphQlTeams(teams);
+    return parseContentfulGraphQlTeam(teams);
   }
 
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
@@ -172,7 +186,59 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 }
 
-export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
+export const parseContentfulGraphQlTeamListItem = (
+  item: TeamItem,
+): TeamListItemDataObject => {
+  const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
+    (tags: string[], tag) => {
+      if (tag) {
+        tags.push(tag);
+      }
+      return tags;
+    },
+    [],
+  );
+
+  const [numberOfMembers, labIds]: [number, Set<string>] = (
+    item.linkedFrom?.teamMembershipCollection?.items || []
+  ).reduce(
+    ([memberCount, labIdsSet], membership: Membership | null) => {
+      if (
+        !membership ||
+        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
+        !membership.role
+      ) {
+        return [memberCount, labIdsSet];
+      }
+
+      const { labsCollection } =
+        membership.linkedFrom?.usersCollection?.items[0] || {};
+
+      const memberLabIds = labsCollection?.items
+        .map((labItem) => labItem?.sys.id)
+        .filter((x): x is string => x !== undefined);
+
+      memberLabIds?.forEach((labId) => labIdsSet.add(labId));
+
+      return [memberCount + 1, labIdsSet];
+    },
+    [0, new Set() as Set<string>],
+  );
+
+  return {
+    id: item.sys.id ?? '',
+    displayName: item.displayName ?? '',
+    inactiveSince: item.inactiveSince ?? undefined,
+    projectTitle: item.projectTitle ?? '',
+    expertiseAndResourceTags,
+    memberCount: numberOfMembers,
+    labCount: labIds.size,
+  };
+};
+
+export const parseContentfulGraphQlTeam = (
+  item: TeamByIdItem,
+): TeamDataObject => {
   const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
     (tags: string[], tag) => {
       if (tag) {
@@ -205,17 +271,21 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
   const members: TeamMember[] = (
     item.linkedFrom?.teamMembershipCollection?.items || []
   ).reduce(
-    (userList: TeamMember[], membership: Membership | null): TeamMember[] => {
+    (
+      userList: TeamMember[],
+      membership: MembershipTeamById | null,
+    ): TeamMember[] => {
       if (
         !membership ||
-        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded
+        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
+        !membership.role
       ) {
         return userList;
       }
 
       const { role, inactiveSinceDate } = membership;
       const {
-        sys,
+        sys: { id },
         firstName,
         lastName,
         email,
@@ -223,15 +293,6 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
         labsCollection,
         alumniSinceDate,
       } = membership.linkedFrom?.usersCollection?.items[0] || {};
-      const id = sys?.id;
-
-      if (!id) {
-        return userList;
-      }
-
-      if (!role || !isTeamRole(role)) {
-        return userList;
-      }
 
       const labs: LabResponse[] = (labsCollection?.items || []).reduce(
         (userLabs: LabResponse[], lab): LabResponse[] => {
@@ -257,7 +318,7 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
           firstName: firstName ?? '',
           lastName: lastName ?? '',
           email: email ?? '',
-          role: role ?? '',
+          role: (role as TeamRole) ?? '',
           inactiveSinceDate: inactiveSinceDate ?? undefined,
           alumniSinceDate,
           avatarUrl: avatar?.url ?? undefined,

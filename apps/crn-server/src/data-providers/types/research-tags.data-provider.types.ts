@@ -17,5 +17,6 @@ export type FetchResearchTagsOptions = Omit<
 
 export type ResearchTagDataProvider = DataProvider<
   ResearchTagDataObject,
+  ResearchTagDataObject,
   FetchResearchTagsOptions
 >;

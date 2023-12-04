@@ -23,17 +23,11 @@ export const interestGroupContentQueryFragment = gql`
       items {
         sys {
           id
-          publishedAt
         }
         displayName
         inactiveSince
         expertiseAndResourceTags
         projectTitle
-        proposal {
-          sys {
-            id
-          }
-        }
       }
     }
     leadersCollection(limit: 20) {

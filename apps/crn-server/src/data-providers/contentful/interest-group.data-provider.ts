@@ -28,7 +28,7 @@ import {
   parseInterestGroupLeader,
 } from '../transformers';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
-import { parseContentfulGraphQlTeams } from './team.data-provider';
+import { parseContentfulGraphQlTeamListItem } from './team.data-provider';
 
 type InterestGroupItem = NonNullable<
   NonNullable<
@@ -171,7 +171,8 @@ const parseGraphQLInterestGroup = (
     .filter((x): x is Teams => x !== null)
     .map((t) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { members, labCount, ...team } = parseContentfulGraphQlTeams(t);
+      const { memberCount, labCount, ...team } =
+        parseContentfulGraphQlTeamListItem(t);
       return team;
     });
 

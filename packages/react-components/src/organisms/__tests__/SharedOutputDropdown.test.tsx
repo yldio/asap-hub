@@ -51,9 +51,6 @@ describe('ShareOutputDropdown', () => {
   };
 
   describe('permissions', () => {
-    beforeEach(() => {
-      disable('DRAFT_RESEARCH_OUTPUT');
-    });
     it('only displays working groups the user can share outputs with', () => {
       const { getByText, queryByText } = renderWithContent({
         groups: [

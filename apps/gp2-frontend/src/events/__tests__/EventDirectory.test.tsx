@@ -68,7 +68,7 @@ describe('EventDirectory', () => {
     }));
 
     await renderList({ currentTime: new Date(), searchQuery: '' });
-    await userEvent.click(screen.queryByLabelText('GP2 Hub'));
+    await userEvent.click(screen.getByLabelText('GP2 Hub'));
 
     expect(mockToggleFilter).toHaveBeenLastCalledWith('GP2 Hub', 'eventType');
   });

@@ -98,9 +98,7 @@ describe('TagSearch', () => {
     mockGetTags.mockResolvedValue(createEventListAlgoliaResponse(1));
 
     await renderPage();
-    userEvent.click(
-      screen.getByLabelText('Outputs')
-    );
+    userEvent.click(screen.getByLabelText('Outputs'));
     expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'entityType');
   });
 

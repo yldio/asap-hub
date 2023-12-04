@@ -1342,6 +1342,7 @@ __metadata:
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
+    "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
     "@sentry/cli": ^2.20.3
     "@sentry/react": 6.19.7
@@ -1364,6 +1365,8 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
+    "@vitejs/plugin-react": ^4.2.0
+    babel-preset-vite: ^1.1.0
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
@@ -1371,6 +1374,7 @@ __metadata:
     date-fns: 2.30.0
     history: 4.10.1
     identity-obj-proxy: 3.0.0
+    jest-transform-css: ^6.0.1
     jose: 2.0.6
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
@@ -1389,6 +1393,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
+    vite: 5.0.4
   languageName: unknown
   linkType: soft
 

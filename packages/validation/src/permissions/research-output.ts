@@ -64,17 +64,14 @@ export const getUserRole = (
 };
 
 export const hasRequestForReviewPermission = (userRole: UserRole): boolean =>
-   userRole === 'Member';
+  userRole === 'Member';
 
 export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
-  userRole === 'Staff' ||
-   userRole === 'Member';
+  userRole === 'Staff' || userRole === 'Member';
 
 export const hasDuplicateResearchOutputPermission = (
   userRole: UserRole,
-): boolean =>
-  userRole === 'Staff' ||
-  userRole === 'Member';
+): boolean => userRole === 'Staff' || userRole === 'Member';
 
 export const hasPublishResearchOutputPermission = (
   userRole: UserRole,
@@ -88,5 +85,4 @@ export const hasVersionResearchOutputPermission = (
 export const hasEditResearchOutputPermission = (
   userRole: UserRole,
   published: boolean,
-): boolean =>
-  userRole === 'Staff' || userRole === 'Member' && !published;
+): boolean => userRole === 'Staff' || (userRole === 'Member' && !published);

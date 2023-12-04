@@ -249,7 +249,7 @@ const serverlessConfig: AWS = {
       {
         bucketName: '${self:service}-${self:provider.stage}-frontend',
         deleteRemoved: false,
-        localDir: '../crn-frontend/build',
+        localDir: '../crn-frontend/dist',
       },
       {
         bucketName: '${self:service}-${self:provider.stage}-auth-frontend',

@@ -68,11 +68,8 @@ describe('EventDirectory', () => {
     }));
 
     await renderList({ currentTime: new Date(), searchQuery: '' });
-    userEvent.click(
-      screen.getByRole('checkbox', {
-        name: 'GP2 Hub',
-      }),
-    );
+    await userEvent.click(screen.queryByLabelText('GP2 Hub'));
+
     expect(mockToggleFilter).toHaveBeenLastCalledWith('GP2 Hub', 'eventType');
   });
 });

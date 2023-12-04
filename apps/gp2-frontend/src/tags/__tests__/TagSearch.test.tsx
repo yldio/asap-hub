@@ -99,9 +99,7 @@ describe('TagSearch', () => {
 
     await renderPage();
     userEvent.click(
-      screen.getByRole('checkbox', {
-        name: 'Outputs',
-      }),
+      screen.getByLabelText('Outputs')
     );
     expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'entityType');
   });

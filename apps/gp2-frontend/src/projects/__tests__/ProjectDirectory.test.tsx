@@ -114,19 +114,16 @@ it('handles filter switching', async () => {
   mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
 
   await renderProjectsList();
-  userEvent.click(
-    screen.getByRole('checkbox', {
-      name: 'Opportunities Available',
-    }),
+  await userEvent.click(
+    screen.getByLabelText('Opportunities Available')
   );
+
   expect(mockToggleFilter).toHaveBeenLastCalledWith(
     'Opportunities Available',
     'type',
   );
-  userEvent.click(
-    screen.getByRole('checkbox', {
-      name: 'Active',
-    }),
+  await userEvent.click(
+    screen.getByLabelText('Active')
   );
   expect(mockToggleFilter).toHaveBeenLastCalledWith('Active', 'status');
 });

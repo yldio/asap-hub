@@ -1,18 +1,14 @@
 import { CalendarDataProvider, gp2 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import { Logger, ScheduledHandlerAsync } from '../../utils';
-import {
-  SubscribeToEventChanges,
-  UnsubscribeFromEventChanges,
-} from './subscribe-handler';
+import { UnsubscribeFromEventChanges } from './subscribe-handler';
 
 const defaultGetCalendarId = (id: string): string => id;
 
-export const resubscribeCalendarsHandlerFactory =
+export const unsubscribeCalendarsHandlerFactory =
   (
     calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
     unsubscribe: UnsubscribeFromEventChanges,
-    subscribe: SubscribeToEventChanges,
     logger: Logger,
     getCalendarId: (id: string) => string = defaultGetCalendarId,
   ): ScheduledHandlerAsync =>
@@ -25,7 +21,7 @@ export const resubscribeCalendarsHandlerFactory =
     const calendarIds = calendars.map((calendar) => calendar.id);
     logger.info(
       { calendarIds },
-      `Received the following calendars to resubscribe`,
+      `Received the following calendars to unsubscribe`,
     );
 
     await Promise.allSettled(
@@ -42,23 +38,6 @@ export const resubscribeCalendarsHandlerFactory =
           } catch (error) {
             logger.error(error, 'Error during unsubscribing from the calendar');
           }
-        }
-
-        try {
-          const channelId = `${getCalendarId(calendar.id)}_${Date.now()}`;
-          const { expiration, resourceId } = await subscribe(
-            calendar.googleCalendarId,
-            channelId,
-          );
-
-          await calendarDataProvider.update(calendar.id, {
-            resourceId,
-            channelId,
-            expirationDate: expiration,
-          });
-          logger.info(`Successfully resubscribed the calendar '${calendar.id}`);
-        } catch (error) {
-          logger.error(error, 'Error during subscribing to the calendar');
         }
       }),
     );

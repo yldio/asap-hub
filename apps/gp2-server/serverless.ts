@@ -319,8 +319,8 @@ const serverlessConfig: AWS = {
         REGION: '${env:AWS_REGION}',
       },
     },
-    resubscribeCalendars: {
-      handler: './src/handlers/calendar/resubscribe-handler.handler',
+    unsubscribeCalendars: {
+      handler: './src/handlers/calendar/unsubscribe-handler.handler',
       timeout: 120,
       events: [
         {

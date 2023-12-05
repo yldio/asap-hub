@@ -90,7 +90,7 @@ describe('Event Webhook', () => {
     );
   });
 
-  test('Should throw when the resourceId is not found', async () => {
+  test('Should log when the resourceId is not empty', async () => {
     const { messageAttributes } = getGoogleCalenderEventRecord();
     delete messageAttributes.ResourceId;
     const event = getGoogleCalenderEventProcessPayload({
@@ -98,8 +98,13 @@ describe('Event Webhook', () => {
       messageAttributes,
     });
 
-    await expect(handler(event)).rejects.toThrow();
+    await handler(event);
+
+    expect(logger.debug).toHaveBeenCalledWith(
+      expect.stringMatching(/Empty resourceId/i),
+    );
   });
+
   test('Should throw when the channelId is not found', async () => {
     const { messageAttributes } = getGoogleCalenderEventRecord();
     delete messageAttributes.ChannelId;

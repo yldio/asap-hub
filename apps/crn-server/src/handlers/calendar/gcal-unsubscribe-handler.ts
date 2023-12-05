@@ -1,15 +1,9 @@
 import {
   getJWTCredentialsFactory,
-  resubscribeCalendarsHandlerFactory,
-  subscribeToEventChangesFactory,
+  unsubscribeCalendarsHandlerFactory,
   unsubscribeFromEventChangesFactory,
 } from '@asap-hub/server-common';
-import {
-  asapApiUrl,
-  googleApiCredentialsSecretId,
-  googleApiToken,
-  region,
-} from '../../config';
+import { googleApiCredentialsSecretId, region } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
 import { getCalendarSubscriptionId } from '../../utils/get-calendar-subscription-id';
 import logger from '../../utils/logger';
@@ -22,13 +16,9 @@ const getJWTCredentials = getJWTCredentialsFactory({
 });
 
 export const handler = sentryWrapper(
-  resubscribeCalendarsHandlerFactory(
+  unsubscribeCalendarsHandlerFactory(
     getCalendarDataProvider(),
     unsubscribeFromEventChangesFactory(getJWTCredentials, logger),
-    subscribeToEventChangesFactory(getJWTCredentials, logger, {
-      asapApiUrl,
-      googleApiToken,
-    }),
     logger,
     getCalendarSubscriptionId,
   ),

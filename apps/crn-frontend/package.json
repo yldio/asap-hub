@@ -74,6 +74,7 @@
     "@types/testing-library__react-hooks": "3.4.1",
     "@types/uuid": "8.3.4",
     "babel-preset-vite": "^1.1.0",
+    "browserslist-to-esbuild": "^1.2.0",
     "browserslist-useragent-regexp": "3.0.2",
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",

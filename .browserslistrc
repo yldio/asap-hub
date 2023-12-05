@@ -11,6 +11,7 @@ not dead
 not ie 11 # CSS would be all broken anyway
 not ios_saf 12.2 # there seems to be no reason it wouldn't work, but we're getting error reports about e.g. Object.fromEntries
 not op_mini all
+not safari tp # had to add that in otherwise esbuild fails
 
 [development]
 last 2 chrome versions

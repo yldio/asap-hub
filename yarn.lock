@@ -11972,14 +11972,14 @@ __metadata:
   linkType: hard
 
 "@contentful/rich-text-react-renderer@npm:^15.16.4":
-  version: 15.18.0
-  resolution: "@contentful/rich-text-react-renderer@npm:15.18.0"
+  version: 15.19.0
+  resolution: "@contentful/rich-text-react-renderer@npm:15.19.0"
   dependencies:
     "@contentful/rich-text-types": ^16.3.0
   peerDependencies:
     react: ^16.8.6 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
-  checksum: 660fb8aa7522f3a2a08e5bb2810a3ae30cdac220ed88c88f7667935a4ea56c96ca61c545e695a2e0bb5961cac0337baa8c58c85ee80f33e4fd993014120ac8f1
+  checksum: cfc876b3ee87192f77e7c90c6134729e2e097dcfc5c5b5f004c91d7126105409d8792cbf68c90268271cedcdc9ca20d00c200ddce5af08fdb54681bbc70f05fd
   languageName: node
   linkType: hard
 

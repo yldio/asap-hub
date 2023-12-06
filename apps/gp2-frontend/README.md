@@ -14,9 +14,9 @@ You will also see any lint errors in the console.
 
 #### Environment Variables
 
-The frontend application uses the production API by default, to change this behavior you can set the `REACT_APP_API_BASE_URL` environment variable.
+The frontend application uses the production API by default, to change this behavior you can set the `VITE_APP_API_BASE_URL` environment variable.
 
-- `REACT_APP_API_BASE_URL` - Set the api endpoint, default value is `http://localhost:3333`.
+- `VITE_APP_API_BASE_URL` - Set the api endpoint, default value is `http://localhost:3333`.
 
 ### `yarn test`
 

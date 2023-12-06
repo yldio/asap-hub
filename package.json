@@ -47,7 +47,7 @@
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint": "yarn test --config=jest-eslint.config.js",
-    "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
+    "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend && yarn workspace @asap-hub/gp2-frontend release:frontend",
     "schema:update": "yarn schema:update:crn",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",
     "start": "yarn watch & yarn start:crn & yarn start:gp2 & yarn start:storybook",
@@ -119,7 +119,11 @@
   "bundlewatch": {
     "files": [
       {
-        "path": "apps/crn-frontend/build/**/*.js",
+        "path": "apps/crn-frontend/dist/**/*.js",
+        "maxSize": "256 kB"
+      },
+      {
+        "path": "apps/gp2-frontend/dist/**/*.js",
         "maxSize": "256 kB"
       }
     ]

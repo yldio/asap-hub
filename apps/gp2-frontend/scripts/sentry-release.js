@@ -13,7 +13,7 @@ async function createReleaseAndUpload() {
     project: 'asap-hub-frontend',
   });
   try {
-    const release = process.env.REACT_APP_RELEASE;
+    const release = process.env.FRONTEND_RELEASE;
     console.log('Creating sentry release ' + release);
     await cli.releases.new(release);
     console.log('Uploading source maps');

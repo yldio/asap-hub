@@ -7,7 +7,7 @@ describe('the detection script', () => {
   const detectionScriptCode = readFileSync(
     resolve(
       require.resolve('@asap-hub/crn-frontend/package.json'),
-      '../build/detect-unsupported-browser.js',
+      '../dist/detect-unsupported-browser.js',
     ),
   ).toString();
 

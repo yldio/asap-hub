@@ -837,7 +837,7 @@ __metadata:
     react-dom: 17.0.2
     react-router-dom: 5.3.4
     typescript: 4.9.5
-    vite: ^5.0.2
+    vite: 5.0.4
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -860,6 +860,7 @@ __metadata:
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
+    "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
     "@sentry/cli": ^2.20.3
     "@sentry/react": 6.19.7
@@ -883,7 +884,10 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
+    "@vitejs/plugin-react": ^4.2.0
+    babel-preset-vite: ^1.1.0
     browser-image-compression: 1.0.17
+    browserslist-to-esbuild: ^1.2.0
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
     csv-stringify: 6.4.4
@@ -891,6 +895,7 @@ __metadata:
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
     identity-obj-proxy: 3.0.0
+    jest-transform-css: ^6.0.1
     jose: 2.0.6
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
@@ -902,7 +907,6 @@ __metadata:
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
-    react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: 0.7.7
     stream: "npm:stream-browserify@3.0.0"
@@ -910,6 +914,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
+    vite: 5.0.4
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -1252,7 +1257,7 @@ __metadata:
     react-router-dom: 5.3.4
     typescript: 4.9.5
     util: 0.12.5
-    vite: ^5.0.2
+    vite: 5.0.4
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -1338,6 +1343,7 @@ __metadata:
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
+    "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
     "@sentry/cli": ^2.20.3
     "@sentry/react": 6.19.7
@@ -1360,13 +1366,17 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
+    "@vitejs/plugin-react": ^4.2.0
+    babel-preset-vite: ^1.1.0
     browser-image-compression: 1.0.17
+    browserslist-to-esbuild: ^1.2.0
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
     csv-stringify: 6.4.4
     date-fns: 2.30.0
     history: 4.10.1
     identity-obj-proxy: 3.0.0
+    jest-transform-css: ^6.0.1
     jose: 2.0.6
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
@@ -1377,7 +1387,6 @@ __metadata:
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
-    react-scripts: 5.0.1
     react-test-renderer: 17.0.2
     recoil: 0.7.7
     serialize-error: 7.0.1
@@ -1385,6 +1394,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
+    vite: 5.0.4
   languageName: unknown
   linkType: soft
 
@@ -23466,6 +23476,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"browserslist-to-esbuild@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "browserslist-to-esbuild@npm:1.2.0"
+  dependencies:
+    browserslist: ^4.17.3
+  checksum: a6c1adc2ad8da0db23aa4f0b3c71e13561cbf61599e9acedc7890793d79aca250edb0f599095042e81587c88e87569bf3a1a68633026e81e4ac7548eb1c71b49
+  languageName: node
+  linkType: hard
+
 "browserslist-useragent-regexp@npm:3.0.2":
   version: 3.0.2
   resolution: "browserslist-useragent-regexp@npm:3.0.2"
@@ -23509,6 +23528,20 @@ __metadata:
   bin:
     browserslist: cli.js
   checksum: 3dffc86892d2dcfcfc66b52519b7e5698ae070b4fc92ab047e760efc4cae0474e9e70bbe10d769c8d3491b655ef3a2a885b88e7196c83cc5dc0a46dfdba8b70c
+  languageName: node
+  linkType: hard
+
+"browserslist@npm:^4.17.3":
+  version: 4.22.2
+  resolution: "browserslist@npm:4.22.2"
+  dependencies:
+    caniuse-lite: ^1.0.30001565
+    electron-to-chromium: ^1.4.601
+    node-releases: ^2.0.14
+    update-browserslist-db: ^1.0.13
+  bin:
+    browserslist: cli.js
+  checksum: 33ddfcd9145220099a7a1ac533cecfe5b7548ffeb29b313e1b57be6459000a1f8fa67e781cf4abee97268ac594d44134fcc4a6b2b4750ceddc9796e3a22076d9
   languageName: node
   linkType: hard
 
@@ -24054,6 +24087,13 @@ __metadata:
   version: 1.0.30001547
   resolution: "caniuse-lite@npm:1.0.30001547"
   checksum: ec0fc2b46721887f6f4aca1f3902f03d9a1a07416d16a86b7cd4bfba60e7b6b03ab3969659d3ea0158cc2f298972c80215c06c9457eb15c649d7780e8f5e91a7
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001565":
+  version: 1.0.30001566
+  resolution: "caniuse-lite@npm:1.0.30001566"
+  checksum: 0f9084bf9f7d5c0a9ddb200c2baddb25dd2ad5a2f205f01e7b971f3e98e9a7bb23c2d86bae48237e9bc9782b682cffaaf3406d936937ab9844987dbe2a6401f2
   languageName: node
   linkType: hard
 
@@ -27858,6 +27898,13 @@ __metadata:
   version: 1.4.553
   resolution: "electron-to-chromium@npm:1.4.553"
   checksum: ee1fd847da4277de5630ecfc3fba22e1f429e109d254fed9c798c6d86d0ff97a7655854c4ddc86a814954846d29a912e13f1be7b647d646708c0b4fa69d3d290
+  languageName: node
+  linkType: hard
+
+"electron-to-chromium@npm:^1.4.601":
+  version: 1.4.603
+  resolution: "electron-to-chromium@npm:1.4.603"
+  checksum: 4d81f73c0f7e5e6c9374b6ada0b5f85acf2c71cacf4d169c56d350387516a932da0f68bff81cfda62ef7f9365b5092586b9a0a364b5051dcc3a5bb0ae75a61b0
   languageName: node
   linkType: hard
 
@@ -39194,6 +39241,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-releases@npm:^2.0.14":
+  version: 2.0.14
+  resolution: "node-releases@npm:2.0.14"
+  checksum: 59443a2f77acac854c42d321bf1b43dea0aef55cd544c6a686e9816a697300458d4e82239e2d794ea05f7bbbc8a94500332e2d3ac3f11f52e4b16cbe638b3c41
+  languageName: node
+  linkType: hard
+
 "node-releases@npm:^2.0.3":
   version: 2.0.5
   resolution: "node-releases@npm:2.0.5"
@@ -49397,9 +49451,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.2":
-  version: 5.0.5
-  resolution: "vite@npm:5.0.5"
+"vite@npm:5.0.4":
+  version: 5.0.4
+  resolution: "vite@npm:5.0.4"
   dependencies:
     esbuild: ^0.19.3
     fsevents: ~2.3.3
@@ -49433,7 +49487,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 8df70302934de39ad6fda4f28246e07850f849c2bd197b7af93615f5f39955be460dd19940a46ec5bf2adf81bc32b60985eb5990142212754c733eba4fe3bfa3
+  checksum: baa088f02f610bf0c7e48931e693781dae7367c1836ed19c202aace0e90fa5f6156669f562ba466585f3fdc50d9d75e82697456e1529cc8c2880af420a010ef3
   languageName: node
   linkType: hard
 

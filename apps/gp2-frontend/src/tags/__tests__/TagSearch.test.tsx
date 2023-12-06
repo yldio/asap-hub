@@ -98,11 +98,7 @@ describe('TagSearch', () => {
     mockGetTags.mockResolvedValue(createEventListAlgoliaResponse(1));
 
     await renderPage();
-    userEvent.click(
-      screen.getByRole('checkbox', {
-        name: 'Outputs',
-      }),
-    );
+    userEvent.click(screen.getByLabelText('Outputs'));
     expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'entityType');
   });
 

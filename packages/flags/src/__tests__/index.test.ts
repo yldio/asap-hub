@@ -7,30 +7,30 @@ import {
   enable,
 } from '..';
 
-const originalNodeEnv = process.env.REACT_APP_ENVIRONMENT;
+const originalNodeEnv = process.env.VITE_APP_ENVIRONMENT;
 beforeEach(() => {
-  process.env.REACT_APP_ENVIRONMENT = 'unknown';
+  process.env.VITE_APP_ENVIRONMENT = 'unknown';
 });
 afterEach(() => {
-  process.env.REACT_APP_ENVIRONMENT = originalNodeEnv;
+  process.env.VITE_APP_ENVIRONMENT = originalNodeEnv;
 });
 
 it('disables flags in unknown environments', () => {
-  process.env.REACT_APP_ENVIRONMENT = 'unknown';
+  process.env.VITE_APP_ENVIRONMENT = 'unknown';
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 it.each(['test', 'development'])('enables flags in %s', (nodeEnv) => {
-  process.env.REACT_APP_ENVIRONMENT = nodeEnv;
+  process.env.VITE_APP_ENVIRONMENT = nodeEnv;
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });
 it.each(['production'])('disables flags in %s', (nodeEnv) => {
-  process.env.REACT_APP_ENVIRONMENT = nodeEnv;
+  process.env.VITE_APP_ENVIRONMENT = nodeEnv;
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 
 describe('in test', () => {
   beforeEach(() => {
-    process.env.REACT_APP_ENVIRONMENT = 'test';
+    process.env.VITE_APP_ENVIRONMENT = 'test';
   });
 
   describe('setCurrentOverrides,', () => {

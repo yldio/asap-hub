@@ -82,8 +82,8 @@ afterEach(jest.clearAllMocks);
 
 it('renders the filters modal', async () => {
   await renderOutputDirectory();
-  const filterButton = screen.getByRole('button', { name: 'Filter Filters' });
-  expect(filterButton).toBeVisible();
+  const filterButton = screen.getByText('Filters');
+  expect(filterButton).toBeInTheDocument();
   userEvent.click(filterButton);
   expect(screen.getByText('TYPE OF OUTPUT')).toBeVisible();
 });

@@ -183,7 +183,8 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
-      expect(screen.getByLabelText(/upload.+avatar/i)).toBeVisible();
+      expect(screen.getByLabelText(/upload.+avatar/i)).not.toBeVisible();
+      expect(screen.getByLabelText(/edit.+avatar/i)).toBeVisible();
     });
     it('saves the key information modal', async () => {
       const user = gp2Fixtures.createUserResponse({

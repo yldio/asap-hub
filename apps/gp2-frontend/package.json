@@ -6,11 +6,10 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "cross-env TSC_COMPILE_ON_ERROR=true PORT=4000 react-scripts start",
-    "build": "node ./scripts/build-unsupported-browser-page.js && DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "start": "cross-env TSC_COMPILE_ON_ERROR=true PORT=4000 vite",
+    "build": "node ./scripts/build-unsupported-browser-page.js && vite build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
-    "eject": "react-scripts eject",
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {
@@ -29,6 +28,7 @@
     "@auth0/auth0-spa-js": "1.22.6",
     "@sentry/react": "6.19.7",
     "@sentry/tracing": "6.19.7",
+    "@vitejs/plugin-react": "^4.2.0",
     "browser-image-compression": "1.0.17",
     "csv-stringify": "6.4.4",
     "date-fns": "2.30.0",
@@ -44,11 +44,13 @@
     "serialize-error": "7.0.1",
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "vite": "5.0.5"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@babel/preset-react": "7.23.3",
     "@babel/runtime-corejs3": "7.23.5",
     "@sentry/cli": "^2.20.3",
     "@testing-library/dom": "9.3.3",
@@ -57,7 +59,7 @@
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "12.8.3",
     "@types/history": "4.7.11",
-    "@types/jest": "29.5.10",
+    "@types/jest": "29.5.11",
     "@types/nock": "11.1.0",
     "@types/node": "18.18.13",
     "@types/react": "17.0.65",
@@ -69,13 +71,15 @@
     "@types/testing-library__react": "10.0.1",
     "@types/testing-library__react-hooks": "3.4.1",
     "@types/uuid": "8.3.4",
+    "babel-preset-vite": "^1.1.0",
+    "browserslist-to-esbuild": "^1.2.0",
     "browserslist-useragent-regexp": "3.0.2",
     "cross-env": "7.0.3",
     "identity-obj-proxy": "3.0.0",
+    "jest-transform-css": "^6.0.1",
     "jose": "2.0.6",
     "nock": "13.4.0",
     "pirates": "4.0.6",
-    "react-scripts": "5.0.1",
     "react-test-renderer": "17.0.2",
     "typescript": "4.9.5"
   }

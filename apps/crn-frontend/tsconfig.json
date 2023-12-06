@@ -6,9 +6,11 @@
 
     "emitDeclarationOnly": false,
     "noEmit": true,
-
+    "target": "ESNext",
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["vite/client", "@testing-library/jest-dom"],
+    "isolatedModules": true
   },
   "include": ["src"],
   "references": [

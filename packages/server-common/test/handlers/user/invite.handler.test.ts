@@ -21,8 +21,8 @@ describe('Invite Handler', () => {
     dataProvider,
     origin,
     logger,
-    false,
-    'Crn-Welcome',
+    undefined,
+    undefined,
     jest.fn(),
   );
 

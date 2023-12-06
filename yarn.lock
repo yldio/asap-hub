@@ -267,7 +267,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.20.5
     "@types/hapi__boom": 9.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.27.1
@@ -304,7 +304,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": 7.23.5
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jsdom": 16.2.15
     "@types/node": 18.18.13
     core-js: 3.33.3
@@ -323,7 +323,7 @@ __metadata:
     "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
     "@types/auth0-js": 9.21.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/pify": 5.0.4
     auth0-js: 9.23.3
@@ -344,7 +344,7 @@ __metadata:
     "@babel/preset-env": 7.23.5
     "@babel/preset-typescript": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/js-yaml": ^4
     "@types/node": 18.18.13
     "@vedicium/auth0-actions-sdk": ^0.1.3
@@ -364,7 +364,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
   languageName: unknown
   linkType: soft
@@ -381,7 +381,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -409,7 +409,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -436,7 +436,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -464,7 +464,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -491,7 +491,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -519,7 +519,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -548,7 +548,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -577,7 +577,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -605,7 +605,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -633,7 +633,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -662,7 +662,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -689,7 +689,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -716,7 +716,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -745,7 +745,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -781,7 +781,7 @@ __metadata:
     "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@types/async-retry": ^1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/minimist": ^1
     "@types/node": 18.18.13
     async-retry: 1.3.3
@@ -817,7 +817,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -870,7 +870,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/nock": 11.1.0
     "@types/node": 18.18.13
     "@types/qs": 6.9.10
@@ -998,7 +998,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.14
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-decode": 2.2.1
@@ -1089,7 +1089,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
   languageName: unknown
   linkType: soft
 
@@ -1160,7 +1160,7 @@ __metadata:
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     core-js: 3.33.3
   languageName: unknown
@@ -1182,7 +1182,7 @@ __metadata:
     "@testing-library/dom": 9.3.3
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/node": 18.18.13
     "@types/react": 17.0.65
     "@types/react-router-dom": 5.3.3
@@ -1231,7 +1231,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -1285,7 +1285,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
@@ -1348,7 +1348,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/nock": 11.1.0
     "@types/node": 18.18.13
     "@types/react": 17.0.65
@@ -1457,7 +1457,7 @@ __metadata:
     "@types/aws-lambda": 8.10.130
     "@types/cors": 2.8.17
     "@types/express": 4.17.21
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
@@ -1562,7 +1562,7 @@ __metadata:
     "@babel/preset-env": 7.23.5
     "@babel/preset-typescript": 7.23.3
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jsonwebtoken": 8.5.9
     jsonwebtoken: 9.0.0
   languageName: unknown
@@ -1598,7 +1598,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/ramda": 0.27.20
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
@@ -1669,7 +1669,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.23.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/react": 17.0.65
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1726,7 +1726,7 @@ __metadata:
     "@types/async": ^3
     "@types/aws-lambda": 8.10.130
     "@types/express": 4.17.21
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jsonwebtoken": 8.5.9
     "@types/luxon": 1.27.1
     "@types/pump": 1.1.3
@@ -1778,7 +1778,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.14
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: 3.0.4
@@ -1857,7 +1857,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.23.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
   languageName: unknown
   linkType: soft
 
@@ -18872,13 +18872,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:29.5.10":
-  version: 29.5.10
-  resolution: "@types/jest@npm:29.5.10"
+"@types/jest@npm:29.5.11":
+  version: 29.5.11
+  resolution: "@types/jest@npm:29.5.11"
   dependencies:
     expect: ^29.0.0
     pretty-format: ^29.0.0
-  checksum: ef385905787db528de9b6beb2688865c0bb276e64256ed60b9a1a6ffc0b75737456cb5e27e952a3241c5845b6a1da487470010dd30f3ca59c8581624c564a823
+  checksum: f892a06ec9f0afa9a61cd7fa316ec614e21d4df1ad301b5a837787e046fcb40dfdf7f264a55e813ac6b9b633cb9d366bd5b8d1cea725e84102477b366df23fdd
   languageName: node
   linkType: hard
 
@@ -21880,7 +21880,7 @@ __metadata:
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.3
     "@testing-library/jest-dom": ^5.16.5
-    "@types/jest": 29.5.10
+    "@types/jest": 29.5.11
     "@types/react-test-renderer": 18.0.7
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.38

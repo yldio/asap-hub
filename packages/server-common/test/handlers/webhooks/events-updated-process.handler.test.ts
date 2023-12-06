@@ -90,16 +90,6 @@ describe('Event Webhook', () => {
     );
   });
 
-  test('Should throw when the channelId is not found', async () => {
-    const { messageAttributes } = getGoogleCalenderEventRecord();
-    delete messageAttributes.ChannelId;
-    const event = getGoogleCalenderEventProcessPayload({
-      ...getGoogleCalenderEventRecord(),
-      messageAttributes,
-    });
-
-    await expect(handler(event)).rejects.toThrow();
-  });
   test('Should throw when the resourceId is not found', async () => {
     const { messageAttributes } = getGoogleCalenderEventRecord();
     delete messageAttributes.ResourceId;
@@ -110,6 +100,17 @@ describe('Event Webhook', () => {
 
     await expect(handler(event)).rejects.toThrow();
   });
+  test('Should throw when the channelId is not found', async () => {
+    const { messageAttributes } = getGoogleCalenderEventRecord();
+    delete messageAttributes.ChannelId;
+    const event = getGoogleCalenderEventProcessPayload({
+      ...getGoogleCalenderEventRecord(),
+      messageAttributes,
+    });
+
+    await expect(handler(event)).rejects.toThrow();
+  });
+
   test('Should return 502 when fails to get calendar', async () => {
     calendarDataProviderMock.fetch.mockRejectedValueOnce(
       new Error('CMS Error'),

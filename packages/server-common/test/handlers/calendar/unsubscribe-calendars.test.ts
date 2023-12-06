@@ -142,6 +142,8 @@ describe('Unsubscribe calendar handler', () => {
   test('Should log if nullifying resourceId fails and should keep updating the calendars even if one fails', async () => {
     const calendarDataObject1 = {
       ...getCalendarDataObject(),
+      id: 'uuid1',
+      resourceId: 'resource-id-1',
       channelId: undefined,
     };
     const calendarDataObject2 = {
@@ -164,7 +166,7 @@ describe('Unsubscribe calendar handler', () => {
 
     expect(logger.error).toHaveBeenCalledWith(
       'failed',
-      'Error during unsubscribing from the calendar',
+      'Error during unsubscribing from the calendar with resourceId resource-id-1 and CMS id uuid1',
     );
     expect(calendarDataProviderMock.update).toHaveBeenCalledTimes(2);
   });

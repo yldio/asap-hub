@@ -36,7 +36,10 @@ export const unsubscribeCalendarsHandlerFactory =
               googleApiMetadata: null,
             });
           } catch (error) {
-            logger.error(error, 'Error during unsubscribing from the calendar');
+            logger.error(
+              error,
+              `Error during unsubscribing from the calendar with resourceId ${calendar.resourceId} and CMS id ${calendar.id}`,
+            );
           }
         }
       }),

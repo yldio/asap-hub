@@ -5,7 +5,6 @@ import {
   UserTeam,
   WorkingGroupMembership,
 } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
 
 type AssociationType = 'teams' | 'workingGroups';
 type UserInput = Omit<User, 'algoliaApiKey'> | UserResponse | null;

@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
 import {
   DecisionOption,
   EventResponse,

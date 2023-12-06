@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createAuthUser } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 
 import {
@@ -71,8 +70,17 @@ describe('ShareOutputDropdown', () => {
     it('only displays teams the user can share outputs with', () => {
       const { getByText, queryByText } = renderWithContent({
         teams: [
-          { displayName: 'Correct team', id: '1', role: 'Project Manager' },
-          { displayName: 'Wrong team', id: '2', role: 'Collaborating PI' },
+          {
+            displayName: 'Correct team',
+            id: '1',
+            role: 'Project Manager',
+          },
+          {
+            displayName: 'Wrong team',
+            id: '2',
+            role: 'Collaborating PI',
+            inactiveSinceDate: 'date',
+          },
         ],
       });
 
@@ -83,10 +91,20 @@ describe('ShareOutputDropdown', () => {
     it('does not display the button if no association available', () => {
       const { queryByText } = renderWithContent({
         groups: [
-          { name: 'Wrong group', id: '2', active: false, role: 'Member' },
+          {
+            name: 'Wrong group',
+            id: '2',
+            active: false,
+            role: 'Member',
+          },
         ],
         teams: [
-          { displayName: 'Wrong team', id: '2', role: 'Collaborating PI' },
+          {
+            displayName: 'Wrong team',
+            id: '2',
+            role: 'Collaborating PI',
+            inactiveSinceDate: 'date',
+          },
         ],
       });
 

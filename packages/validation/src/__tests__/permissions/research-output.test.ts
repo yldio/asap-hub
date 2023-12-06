@@ -1,5 +1,4 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import {
   getUserRole,
   hasDuplicateResearchOutputPermission,

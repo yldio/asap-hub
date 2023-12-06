@@ -33,7 +33,7 @@ export const unsubscribeCalendarsHandlerFactory =
               calendar.channelId || getCalendarId(calendar.id),
             );
             await calendarDataProvider.update(calendar.id, {
-              resourceId: null,
+              googleApiMetadata: null,
             });
           } catch (error) {
             logger.error(error, 'Error during unsubscribing from the calendar');

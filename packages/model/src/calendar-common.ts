@@ -70,7 +70,11 @@ export type BasicCalendarResponse = Pick<
 
 export type CalendarCreateDataObject = Omit<BasicCalendar, 'version' | 'id'>;
 
-export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
+export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject> & {
+  // We don't have the use case to update all googleApiMetadata fields at once
+  // just to remove googleApiMetadata. This type will enforce this.
+  googleApiMetadata?: null;
+};
 
 export interface CalendarUpdateRequest {
   resourceId?: string | null;

@@ -782,6 +782,47 @@ describe('Calendars data provider', () => {
       expect(calendarMock.update).toHaveBeenCalled();
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
+
+    test('Should update googleApiMetadata when present and ignore other update fields like resourceId, expirationDate, channelId and syncToken', async () => {
+      const calendarId = 'calendar-id-1';
+
+      const calendarMock = getEntry({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
+        },
+        googleApiMetadata: {
+          'en-US': {
+            syncToken: 'syncToken-1',
+          },
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, {
+        googleApiMetadata: null,
+        resourceId: 'resource-id',
+        syncToken: 'token-id',
+        expirationDate: 2,
+        channelId: 'channel-id',
+      });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
+        },
+        googleApiMetadata: {
+          'en-US': null,
+        },
+      });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
+    });
   });
 
   describe('Create method', () => {

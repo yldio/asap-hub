@@ -160,6 +160,12 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
     updateEntryFields(calendar, otherFields);
 
+    if ('googleApiMetadata' in update) {
+      const calendarUpdated = await calendar.update();
+      await calendarUpdated.publish();
+      return;
+    }
+
     const hasResourceId = 'resourceId' in update;
     if (hasResourceId || expirationDate || syncToken) {
       calendar.fields.googleApiMetadata = {

@@ -122,7 +122,7 @@ describe('Unsubscribe calendar handler', () => {
     );
   });
 
-  test('Should remove the resourceId after unsubscribing', async () => {
+  test('Should remove the googleApiMetadata after unsubscribing', async () => {
     calendarDataProviderMock.fetch.mockResolvedValueOnce({
       items: [getCalendarDataObject()],
       total: 1,
@@ -134,7 +134,7 @@ describe('Unsubscribe calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
       getCalendarDataObject().id,
       {
-        resourceId: null,
+        googleApiMetadata: null,
       },
     );
   });

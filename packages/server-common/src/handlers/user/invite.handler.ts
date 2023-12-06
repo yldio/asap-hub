@@ -1,8 +1,8 @@
+import { gp2, UserDataObject, UserUpdateDataObject } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
-import { gp2, UserDataObject, UserUpdateDataObject } from '@asap-hub/model';
 import {
   EventBridgeHandler,
   Logger,
@@ -16,6 +16,7 @@ interface DataProvider {
   update(
     id: string,
     user: gp2.UserUpdateDataObject | UserUpdateDataObject,
+    options?: { suppressConflict?: boolean } | null,
   ): Promise<void>;
 }
 
@@ -28,6 +29,7 @@ export const inviteHandlerFactory =
     dataProvider: Provider,
     origin: string,
     logger: Logger,
+    suppressConflict = false,
     template: SendEmailTemplate = 'Crn-Welcome',
     /* istanbul ignore next */
     sleep = sleepFn,
@@ -56,9 +58,19 @@ export const inviteHandlerFactory =
     const code = uuidV4();
 
     try {
-      await dataProvider.update(user.id, {
-        connections: [{ code }],
-      });
+      if (suppressConflict) {
+        await dataProvider.update(
+          user.id,
+          {
+            connections: [{ code }],
+          },
+          { suppressConflict },
+        );
+      } else {
+        await dataProvider.update(user.id, {
+          connections: [{ code }],
+        });
+      }
     } catch (error) {
       logger.error(error, 'Error while saving user data');
       throw new Error(

@@ -26,6 +26,7 @@ export const handler = sentryWrapper(
     userDataProvider,
     origin,
     logger,
+    false,
     gp2WelcomeTemplate,
   ),
 );

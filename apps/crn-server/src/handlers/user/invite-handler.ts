@@ -21,5 +21,6 @@ export const handler = sentryWrapper(
     userDataProvider,
     origin,
     logger,
+    true,
   ),
 );

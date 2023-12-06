@@ -1,19 +1,27 @@
 import { Entry } from 'contentful-management';
-import { patchAndPublish, patch } from '../../src/utils';
+import {
+  patch,
+  patchAndPublish,
+  patchAndPublishConflict,
+} from '../../src/utils';
 
-describe('patchAndPublish', () => {
+describe.each`
+  name                         | fn
+  ${'patchAndPublish'}         | ${patchAndPublish}
+  ${'patchAndPublishConflict'} | ${patchAndPublishConflict}
+`('$name', ({ fn }) => {
+  const returnedEntry = { some: 'entry' };
   const getMocks = () => {
-    const publish = jest.fn();
+    const publish = jest.fn(() => returnedEntry);
     const entry = {
       fields: {},
       patch: jest.fn().mockResolvedValueOnce({ publish }),
     } as unknown as Entry;
     return { publish, entry };
   };
-
   test('converts data object passed to a json patch with locales', async () => {
     const { entry } = getMocks();
-    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
+    await fn(entry, { foo: 'bar', baz: 1 });
     expect(entry.patch).toHaveBeenCalledWith([
       { op: 'add', path: '/fields/foo', value: { 'en-US': 'bar' } },
       { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
@@ -25,7 +33,7 @@ describe('patchAndPublish', () => {
     entry.fields = {
       foo: null,
     };
-    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
+    await fn(entry, { foo: 'bar', baz: 1 });
     expect(entry.patch).toHaveBeenCalledWith([
       { op: 'replace', path: '/fields/foo', value: { 'en-US': 'bar' } },
       { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
@@ -34,8 +42,46 @@ describe('patchAndPublish', () => {
 
   test('calls publish on the return value of the patch function', async () => {
     const { entry, publish } = getMocks();
-    await patchAndPublish(entry, { foo: 'bar' });
+    const result = await fn(entry, { foo: 'bar' });
+    expect(result).toEqual(returnedEntry);
     expect(publish).toHaveBeenCalled();
+  });
+});
+describe('patchAndPublishConflict', () => {
+  test('Conflict should null', async () => {
+    const mockPublish = jest.fn();
+    const mockPatch = jest
+      .fn()
+      .mockRejectedValueOnce(new Error(JSON.stringify({ status: 409 })));
+    const mockEntry = {
+      fields: {},
+      patch: mockPatch,
+    } as unknown as Entry;
+    const result = await patchAndPublishConflict(mockEntry, { foo: 'bar' });
+    expect(result).toBeNull();
+    expect(mockPublish).not.toHaveBeenCalled();
+  });
+  test('500 should throw', async () => {
+    const mockPatch = jest
+      .fn()
+      .mockRejectedValueOnce(new Error(JSON.stringify({ status: 500 })));
+    const mockEntry = {
+      fields: {},
+      patch: mockPatch,
+    } as unknown as Entry;
+    await expect(
+      patchAndPublishConflict(mockEntry, { foo: 'bar' }),
+    ).rejects.toThrow();
+  });
+  test('generic error should throw', async () => {
+    const mockPatch = jest.fn().mockRejectedValueOnce(new Error());
+    const mockEntry = {
+      fields: {},
+      patch: mockPatch,
+    } as unknown as Entry;
+    await expect(
+      patchAndPublishConflict(mockEntry, { foo: 'bar' }),
+    ).rejects.toThrow();
   });
 });
 
@@ -48,7 +94,6 @@ describe('patch', () => {
     } as unknown as Entry;
     return { publish, entry };
   };
-
   test('converts data object passed to a json patch with locales', async () => {
     const { entry } = getMocks();
     await patch(entry, { foo: 'bar', baz: 1 });

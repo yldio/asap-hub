@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { unloggedHandler } from '../../../src/handlers/user/cronjob-sync-orcid';
-import { getDataProviderMock } from '../../mocks/data-provider.mock';
 import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
+import { getDataProviderMock } from '../../mocks/data-provider.mock';
 import * as fixtures from '../webhooks/cronjob-sync-orcid.fixtures';
 
 const mockDataProvider = getDataProviderMock();
@@ -45,6 +45,7 @@ describe('Cronjob - Sync Users ORCID', () => {
           fixtures.ORCIDWorksDeserialisedExpectation,
         ),
       }),
+      { suppressConflict: true },
     );
   });
 });

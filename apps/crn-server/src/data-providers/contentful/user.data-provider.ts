@@ -32,13 +32,14 @@ import {
   GraphQLClient,
   Maybe,
   patchAndPublish,
+  patchAndPublishConflict,
   pollContentfulGql,
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
+import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
-import { cleanArray } from '../../utils/clean-array';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -164,20 +165,32 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async create(): Promise<string> {
     throw new Error('Method not implemented.');
   }
+  async update(
+    id: string,
+    data: UserUpdateDataObject,
+    { suppressConflict = false } = {},
+  ): Promise<void> {
+    const pollForUpdate = async (publishedVersion: number | undefined) => {
+      const fetchUserById = () => this.fetchUserById(id);
 
-  async update(id: string, data: UserUpdateDataObject): Promise<void> {
+      await pollContentfulGql<FetchUserByIdQuery>(
+        publishedVersion || Infinity,
+        fetchUserById,
+        'users',
+      );
+    };
+
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const result = await patchAndPublish(user, fields);
-
-    const fetchUserById = () => this.fetchUserById(id);
-
-    await pollContentfulGql<FetchUserByIdQuery>(
-      result.sys.publishedVersion || Infinity,
-      fetchUserById,
-      'users',
-    );
+    const patchMethod = suppressConflict
+      ? patchAndPublishConflict
+      : patchAndPublish;
+    const result = await patchMethod(user, fields);
+    if (!result) {
+      return;
+    }
+    await pollForUpdate(result.sys.publishedVersion);
   }
 }
 

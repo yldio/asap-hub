@@ -1,9 +1,9 @@
 import {
+  DataProvider,
   FetchUsersOptions,
   UserCreateDataObject,
   UserDataObject,
   UserUpdateDataObject,
-  DataProvider,
 } from '@asap-hub/model';
 
 export type UserDataProvider = DataProvider<
@@ -12,5 +12,6 @@ export type UserDataProvider = DataProvider<
   FetchUsersOptions,
   UserCreateDataObject,
   null,
-  UserUpdateDataObject
+  UserUpdateDataObject,
+  { suppressConflict?: boolean }
 >;

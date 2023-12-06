@@ -1,8 +1,7 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'VERSION_RESEARCH_OUTPUT'
-  | 'DISPLAY_EVENTS'
-  | 'CONTENTFUL';
+  | 'DISPLAY_EVENTS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
@@ -10,7 +9,6 @@ let overrides: Flags = {
   // can also be used to manually disable a flag in development:
   VERSION_RESEARCH_OUTPUT: false,
   DISPLAY_EVENTS: false,
-  CONTENTFUL: true,
 };
 
 const envDefaults: Record<string, boolean> = {

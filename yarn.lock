@@ -837,7 +837,7 @@ __metadata:
     react-dom: 17.0.2
     react-router-dom: 5.3.4
     typescript: 4.9.5
-    vite: 5.0.5
+    vite: 5.0.6
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -914,7 +914,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
-    vite: 5.0.5
+    vite: 5.0.6
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -1257,7 +1257,7 @@ __metadata:
     react-router-dom: 5.3.4
     typescript: 4.9.5
     util: 0.12.5
-    vite: 5.0.5
+    vite: 5.0.6
     webpack: 5.76.0
   languageName: unknown
   linkType: soft
@@ -1394,7 +1394,7 @@ __metadata:
     use-debounce: 8.0.4
     use-deep-compare-effect: 1.6.1
     uuid: 8.3.2
-    vite: 5.0.5
+    vite: 5.0.6
   languageName: unknown
   linkType: soft
 
@@ -49451,9 +49451,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.0.5":
-  version: 5.0.5
-  resolution: "vite@npm:5.0.5"
+"vite@npm:5.0.6":
+  version: 5.0.6
+  resolution: "vite@npm:5.0.6"
   dependencies:
     esbuild: ^0.19.3
     fsevents: ~2.3.3
@@ -49487,7 +49487,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 8df70302934de39ad6fda4f28246e07850f849c2bd197b7af93615f5f39955be460dd19940a46ec5bf2adf81bc32b60985eb5990142212754c733eba4fe3bfa3
+  checksum: 06d85f7d838d0cb2063c82c67974044f6b11e2914ac2cb395185509ecea85dcd5a9d3bd380b13f3c3494665b08b0793d1a03008372a10575f7619db003dbfc7e
   languageName: node
   linkType: hard
 

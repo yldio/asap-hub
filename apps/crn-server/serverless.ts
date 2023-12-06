@@ -355,7 +355,7 @@ const serverlessConfig: AWS = {
       timeout: 120,
       events: [
         {
-          schedule: 'cron(30 10 * * ? *)',
+          schedule: 'cron(0 1 * * ? *)',
         },
       ],
       environment: {

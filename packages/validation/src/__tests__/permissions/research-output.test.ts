@@ -225,19 +225,6 @@ describe('hasVersionResearchOutputPermission', () => {
       expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
-
-  test.each`
-    userRole    | expected
-    ${`Staff`}  | ${false}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
-  `(
-    'returns $expected when user role is $userRole and feature flag is disabled',
-    ({ userRole, expected }) => {
-      disable('CONTENTFUL');
-      expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
-    },
-  );
 });
 
 describe('hasRequestForReviewPermission', () => {

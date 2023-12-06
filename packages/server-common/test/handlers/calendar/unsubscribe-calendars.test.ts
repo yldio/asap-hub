@@ -70,15 +70,11 @@ describe('Unsubscribe calendar handler', () => {
   });
 
   test('Should get the list of calendars and unsubscribe each of them', async () => {
-    const calendarDataObject1 = {
-      ...getCalendarDataObject(),
-      channelId: undefined,
-    };
+    const calendarDataObject1 = getCalendarDataObject();
     const calendarDataObject2 = {
       ...getCalendarDataObject(),
       id: 'uuid2',
       resourceId: 'resource-id-2',
-      channelId: undefined,
     };
 
     calendarDataProviderMock.fetch.mockResolvedValueOnce({
@@ -90,11 +86,11 @@ describe('Unsubscribe calendar handler', () => {
 
     expect(unsubscribeMock).toHaveBeenCalledWith(
       calendarDataObject1.resourceId,
-      calendarDataObject1.id,
+      calendarDataObject1.channelId,
     );
     expect(unsubscribeMock).toHaveBeenCalledWith(
       calendarDataObject2.resourceId,
-      calendarDataObject2.id,
+      calendarDataObject2.channelId,
     );
   });
 

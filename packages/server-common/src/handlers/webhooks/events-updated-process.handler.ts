@@ -40,11 +40,6 @@ export const webhookEventUpdatedProcessHandlerFactory = (
       const resourceId = record.messageAttributes.ResourceId?.stringValue;
       const channelId = record.messageAttributes.ChannelId?.stringValue;
 
-      if (!resourceId) {
-        logger.debug('Empty resourceId');
-        return;
-      }
-
       if (!(resourceId && channelId)) {
         throw new Error('Invalid payload');
       }

@@ -59,6 +59,7 @@ jobs:
         app:
           - auto-populate-date-field
           - date-field-as-first-published-at
+          - date-field-as-last-published-at
           - disabled-fields
           - event-additional-materials
           - event-custom-validation

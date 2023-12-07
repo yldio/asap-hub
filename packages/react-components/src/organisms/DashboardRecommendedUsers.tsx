@@ -1,4 +1,4 @@
-import { UserResponse } from '@asap-hub/model';
+import { UserListItem, WithAlgoliaTags } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Card, Avatar, Ellipsis, Paragraph } from '../atoms';
@@ -37,7 +37,7 @@ const roleStyles = css({
 });
 
 type DashboardRecommendedUsersProps = {
-  recommendedUsers: UserResponse[];
+  recommendedUsers: WithAlgoliaTags<UserListItem>[];
 };
 
 const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
@@ -80,7 +80,8 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
           )}
           <TagList
             centerContent
-            tags={user.expertiseAndResourceTags}
+            // eslint-disable-next-line no-underscore-dangle
+            tags={user._tags}
             max={NUMBER_OF_TAGS_TO_DISPLAY}
           />
         </div>

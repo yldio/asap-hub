@@ -3,7 +3,12 @@ import {
   algoliaSearchClientFactory,
   Payload,
 } from '@asap-hub/algolia';
-import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
+import {
+  ListResponse,
+  TeamEvent,
+  toAlgoliaUserItem,
+  UserResponse,
+} from '@asap-hub/model';
 import {
   createProcessingFunction,
   loopOverCustomCollection,
@@ -20,7 +25,6 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
-import { addTagsFunction } from '../helper';
 
 export const indexTeamUsersHandler = (
   userController: UserController,
@@ -31,7 +35,7 @@ export const indexTeamUsersHandler = (
     'user',
     logger,
     userFilter,
-    addTagsFunction<Payload>,
+    toAlgoliaUserItem,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

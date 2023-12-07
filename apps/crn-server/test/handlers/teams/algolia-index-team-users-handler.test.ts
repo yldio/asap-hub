@@ -1,11 +1,10 @@
-import { UserResponse } from '@asap-hub/model';
+import { toAlgoliaUserItem } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/algolia-index-team-users-handler';
 import {
   getListUserResponse,
   getUserResponse,
 } from '../../fixtures/users.fixtures';
-import { toPayload } from '../../helpers/algolia';
 
 import {
   getTeamPublishedEvent,
@@ -17,7 +16,6 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
 jest.mock('../../../src/utils/logger');
-const mapPayload = toPayload('user');
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
@@ -76,10 +74,10 @@ describe('Index Users on Team event handler', () => {
     await indexHandler(getTeamPublishedEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
-      mapPayload({
-        ...userResponse,
-        _tags: userResponse.expertiseAndResourceTags,
-      } as UserResponse & { _tags: string[] }),
+      {
+        data: toAlgoliaUserItem(userResponse),
+        type: 'user',
+      },
     ]);
   });
 
@@ -94,12 +92,10 @@ describe('Index Users on Team event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items.map((item) =>
-          mapPayload({
-            ...item,
-            _tags: item.expertiseAndResourceTags,
-          } as UserResponse & { _tags: string[] }),
-        ),
+        usersResponse.items.map((item) => ({
+          data: toAlgoliaUserItem(item),
+          type: 'user',
+        })),
       );
     },
   );
@@ -121,21 +117,17 @@ describe('Index Users on Team event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items.map((item) =>
-            mapPayload({
-              ...item,
-              _tags: item.expertiseAndResourceTags,
-            } as UserResponse & { _tags: string[] }),
-          ),
+          usersResponse.items.map((item) => ({
+            data: toAlgoliaUserItem(item),
+            type: 'user',
+          })),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items.map((item) =>
-            mapPayload({
-              ...item,
-              _tags: item.expertiseAndResourceTags,
-            } as UserResponse & { _tags: string[] }),
-          ),
+          usersResponse.items.map((item) => ({
+            data: toAlgoliaUserItem(item),
+            type: 'user',
+          })),
         );
       },
     );

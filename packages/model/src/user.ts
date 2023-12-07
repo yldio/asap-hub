@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
+import { WithAlgoliaTags } from './tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
 
@@ -107,6 +108,30 @@ export interface UserResponse
   displayName: string;
 }
 
+export type UserListItem = Pick<
+  UserResponse,
+  | 'alumniSinceDate'
+  | 'avatarUrl'
+  | 'city'
+  | 'country'
+  | 'createdDate'
+  | 'degree'
+  | 'displayName'
+  | 'firstName'
+  | 'id'
+  | 'institution'
+  | 'jobTitle'
+  | 'labs'
+  | 'lastName'
+  | 'membershipStatus'
+  | 'role'
+  | 'teams'
+>;
+
+export type UserListAlgoliaResponse = ListResponse<
+  WithAlgoliaTags<UserListItem>
+>;
+
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
 };
@@ -199,3 +224,47 @@ export type FetchUsersFilter =
 export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';
+
+export const toAlgoliaUserItem = (
+  user: UserResponse,
+): WithAlgoliaTags<UserListItem> => {
+  const {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    displayName,
+    expertiseAndResourceTags,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    role,
+    teams,
+  } = user;
+
+  return {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    displayName,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    role,
+    teams,
+    _tags: expertiseAndResourceTags,
+  };
+};

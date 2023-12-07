@@ -4,7 +4,7 @@ import {
   createListEventResponse,
   createListReminderResponse,
   createListResearchOutputResponse,
-  createListUserResponse,
+  createUserListAlgoliaResponse,
 } from '@asap-hub/fixtures';
 import { array, number, text } from '@storybook/addon-knobs';
 
@@ -58,7 +58,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   recentSharedOutputs: createListResearchOutputResponse(
     number('Number of outputs', 5),
   ),
-  recommendedUsers: createListUserResponse(3).items,
+  recommendedUsers: createUserListAlgoliaResponse(3).items,
 });
 
 export const Normal = () => <DashboardPageBody {...props()} />;

@@ -1,4 +1,11 @@
-import { ListUserResponse, UserResponse, UserTeam } from '@asap-hub/model';
+import {
+  ListUserResponse,
+  UserResponse,
+  UserTeam,
+  UserListItem,
+  WithAlgoliaTags,
+  UserListAlgoliaResponse,
+} from '@asap-hub/model';
 import { createLabs } from './labs';
 
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
@@ -71,6 +78,61 @@ export const createListUserResponse = (
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
     createUserResponse(options, itemIndex),
+  ),
+});
+
+export const createUserAlgoliaResponse = (
+  options: FixtureOptions = {},
+  itemIndex = 0,
+): WithAlgoliaTags<UserListItem> => {
+  const {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    displayName,
+    expertiseAndResourceTags,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    role,
+    teams,
+  } = createUserResponse(options, itemIndex);
+
+  return {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    displayName,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    role,
+    teams,
+    _tags: expertiseAndResourceTags,
+  };
+};
+
+export const createUserListAlgoliaResponse = (
+  items: number,
+  options: FixtureOptions = {},
+): UserListAlgoliaResponse => ({
+  total: items,
+  items: Array.from({ length: items }, (_, itemIndex) =>
+    createUserAlgoliaResponse(options, itemIndex),
   ),
 });
 

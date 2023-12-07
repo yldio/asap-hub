@@ -11908,21 +11908,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/field-editor-date@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "@contentful/field-editor-date@npm:1.6.2"
-  dependencies:
-    "@contentful/f36-components": ^4.34.1
-    "@contentful/f36-tokens": ^4.0.1
-    "@contentful/field-editor-shared": ^1.4.2
-    emotion: ^10.0.17
-    moment: ^2.20.0
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: fd3ceda7c969c62ebe2c6ccdba15ea4bfc6431dcf13e09a38c2d0d35c59cf1dac475cc791594d583bf7e399450268a94ff37e7885d607f4d28bba78bd522e384
-  languageName: node
-  linkType: hard
-
 "@contentful/field-editor-reference@npm:^5.9.0":
   version: 5.21.0
   resolution: "@contentful/field-editor-reference@npm:5.21.0"

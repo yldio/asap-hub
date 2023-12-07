@@ -1,5 +1,10 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
+import {
+  LabEvent,
+  ListResponse,
+  toAlgoliaUserItem,
+  UserResponse,
+} from '@asap-hub/model';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
@@ -48,10 +53,7 @@ export const indexLabUsersHandler =
         foundUsers.items
           .filter((user) => user.onboarded && user.role !== 'Hidden')
           .map((data) => ({
-            data: {
-              ...data,
-              _tags: data.expertiseAndResourceTags,
-            },
+            data: toAlgoliaUserItem(data),
             type: 'user',
           })),
       );

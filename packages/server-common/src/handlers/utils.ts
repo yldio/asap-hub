@@ -26,7 +26,8 @@ export const createProcessingFunction =
     type: Type,
     logger: Logger,
     filterFunction: (item: T['data']) => boolean = () => true,
-    addTagsFunction?: (item: T['data']) => T['data'] & { _tags: string[] },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    addTagsFunction?: (item: any) => SavePayload['data'],
   ) =>
   async (found: ListResponse<T['data']>) => {
     logger.info(

@@ -5,7 +5,6 @@ import {
   UserTeam,
   WorkingGroupMembership,
 } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
 
 type AssociationType = 'teams' | 'workingGroups';
 type UserInput = Omit<User, 'algoliaApiKey'> | UserResponse | null;
@@ -64,17 +63,14 @@ export const getUserRole = (
 };
 
 export const hasRequestForReviewPermission = (userRole: UserRole): boolean =>
-  isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member';
+  userRole === 'Member';
 
 export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
-  userRole === 'Staff' ||
-  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');
+  userRole === 'Staff' || userRole === 'Member';
 
 export const hasDuplicateResearchOutputPermission = (
   userRole: UserRole,
-): boolean =>
-  userRole === 'Staff' ||
-  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');
+): boolean => userRole === 'Staff' || userRole === 'Member';
 
 export const hasPublishResearchOutputPermission = (
   userRole: UserRole,
@@ -82,12 +78,9 @@ export const hasPublishResearchOutputPermission = (
 
 export const hasVersionResearchOutputPermission = (
   userRole: UserRole,
-): boolean =>
-  hasPublishResearchOutputPermission(userRole) && isEnabled('CONTENTFUL');
+): boolean => hasPublishResearchOutputPermission(userRole);
 
 export const hasEditResearchOutputPermission = (
   userRole: UserRole,
   published: boolean,
-): boolean =>
-  userRole === 'Staff' ||
-  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member' && !published);
+): boolean => userRole === 'Staff' || (userRole === 'Member' && !published);

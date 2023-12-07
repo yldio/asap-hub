@@ -1,5 +1,4 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 import {
   getUserRole,
   hasDuplicateResearchOutputPermission,
@@ -197,19 +196,6 @@ describe('hasShareResearchOutputPermission', () => {
       expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
-
-  test.each`
-    userRole    | expected
-    ${`Staff`}  | ${true}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
-  `(
-    'returns $expected when user role is $userRole and feature flag is disabled',
-    ({ userRole, expected }) => {
-      disable('DRAFT_RESEARCH_OUTPUT');
-      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
-    },
-  );
 });
 
 describe('hasPublishResearchOutputPermission', () => {
@@ -235,19 +221,6 @@ describe('hasVersionResearchOutputPermission', () => {
   `(
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
-      expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
-    },
-  );
-
-  test.each`
-    userRole    | expected
-    ${`Staff`}  | ${false}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
-  `(
-    'returns $expected when user role is $userRole and feature flag is disabled',
-    ({ userRole, expected }) => {
-      disable('CONTENTFUL');
       expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
@@ -279,18 +252,6 @@ describe('hasDuplicateResearchOutputPermission', () => {
       expect(hasDuplicateResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
-  test.each`
-    userRole    | expected
-    ${`Staff`}  | ${true}
-    ${`Member`} | ${false}
-    ${`None`}   | ${false}
-  `(
-    'returns $expected when user role is $userRole and feature flag is disabled',
-    ({ userRole, expected }) => {
-      disable('DRAFT_RESEARCH_OUTPUT');
-      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
-    },
-  );
 });
 
 describe('hasEditResearchOutputPermission', () => {
@@ -305,24 +266,6 @@ describe('hasEditResearchOutputPermission', () => {
   `(
     'returns $expected when user role is $userRole and published is $published',
     ({ userRole, published, expected }) => {
-      expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
-        expected,
-      );
-    },
-  );
-
-  test.each`
-    userRole    | published | expected
-    ${`Staff`}  | ${true}   | ${true}
-    ${`Staff`}  | ${false}  | ${true}
-    ${`Member`} | ${true}   | ${false}
-    ${`Member`} | ${false}  | ${false}
-    ${`None`}   | ${true}   | ${false}
-    ${`None`}   | ${false}  | ${false}
-  `(
-    'returns $expected when user role is $userRole, published is $published and feature flag is disabled',
-    ({ userRole, published, expected }) => {
-      disable('DRAFT_RESEARCH_OUTPUT');
       expect(hasEditResearchOutputPermission(userRole, published)).toEqual(
         expected,
       );

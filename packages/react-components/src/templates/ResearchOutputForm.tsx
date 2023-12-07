@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
 import {
   DecisionOption,
   EventResponse,
@@ -175,8 +174,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
-  const showSaveDraftButton =
-    isEnabled('DRAFT_RESEARCH_OUTPUT') && !published && canShareResearchOutput;
+  const showSaveDraftButton = !published && canShareResearchOutput;
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 

@@ -350,8 +350,8 @@ const serverlessConfig: AWS = {
         LOG_LEVEL: 'warn',
       },
     },
-    gcalResubscribeCalendarsContentful: {
-      handler: './src/handlers/calendar/gcal-resubscribe-handler.handler',
+    gcalUnsubscribeCalendarsContentful: {
+      handler: './src/handlers/calendar/gcal-unsubscribe-handler.handler',
       timeout: 120,
       events: [
         {

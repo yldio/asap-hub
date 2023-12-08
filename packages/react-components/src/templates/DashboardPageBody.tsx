@@ -50,8 +50,9 @@ const viewAllStyles = css({
 type DashboardPageBodyProps = Pick<
   ComponentProps<typeof RemindersCard>,
   'reminders'
-> &
-  Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
+> & {
+  announcements?: ComponentProps<typeof RemindersCard>['reminders'];
+} & Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
   ComponentProps<typeof DashboardUpcomingEvents> &
   Omit<ComponentProps<typeof NewsSection>, 'title' | 'type' | 'news'> & {
     readonly userId: string;
@@ -68,6 +69,7 @@ type DashboardPageBodyProps = Pick<
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
+  announcements,
   news,
   roles,
   reminders,
@@ -118,6 +120,17 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               }}
             />
           </Card>
+        </div>
+      )}
+      {announcements && (
+        <div>
+          <Headline2 styleAsHeading={3}>Announcements</Headline2>
+          <div css={infoStyles}>Last announcements from admins.</div>
+          <RemindersCard
+            reminders={announcements}
+            limit={3}
+            canPublish={canPublish}
+          />
         </div>
       )}
       <div>

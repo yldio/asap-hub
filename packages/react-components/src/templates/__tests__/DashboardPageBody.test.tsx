@@ -218,6 +218,28 @@ describe('the reminders card', () => {
   });
 });
 
+describe('the announcements card', () => {
+  it('hides the card if there are no announcements', () => {
+    render(<DashboardPageBody {...props} />);
+    expect(screen.queryByText('Announcements')).not.toBeInTheDocument();
+  });
+
+  it('displays the card when there are announcements', () => {
+    render(
+      <DashboardPageBody
+        {...props}
+        announcements={[
+          {
+            id: 'announcement-id',
+            description: 'announcement description',
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText('Announcements')).toBeVisible();
+  });
+});
+
 describe('the recommended users card', () => {
   it('shows the recommended users card', () => {
     render(<DashboardPageBody {...props} />);

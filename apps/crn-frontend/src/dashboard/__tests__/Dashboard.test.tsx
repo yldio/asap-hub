@@ -87,6 +87,7 @@ it('renders dashboard with news', async () => {
       },
     ],
     pages: [],
+    announcements: [],
   });
 
   await renderDashboard({
@@ -95,6 +96,31 @@ it('renders dashboard with news', async () => {
   expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(screen.queryAllByText(/title/i, { selector: 'h4' }).length).toBe(2);
   expect(screen.getByRole('heading', { name: 'News Title' })).toBeVisible();
+});
+
+it('renders dashboard with an announcement', async () => {
+  mockGetDashboard.mockResolvedValue({
+    news: [],
+    pages: [],
+    announcements: [
+      {
+        deadline: new Date().getTime().toString(),
+        description: 'Example Announcement',
+        href: 'https://example-announcement.com',
+        id: '231',
+      },
+    ],
+  });
+
+  await renderDashboard({
+    firstName: 'John',
+  });
+  expect(await screen.findByText(/john/i, { selector: 'h1' })).toBeVisible();
+  expect(await screen.findByText(/Example Announcement/i)).toBeVisible();
+  expect(screen.getByText('Example Announcement').closest('a')).toHaveAttribute(
+    'href',
+    'https://example-announcement.com',
+  );
 });
 
 it('renders reminders', async () => {

@@ -57,6 +57,6 @@
     "contentful-cli": "1.19.1",
     "graphql-typescript-integration": "1.2.1",
     "prettier": "2.8.8",
-    "ts-node": "10.9.1"
+    "ts-node": "10.9.2"
   }
 }

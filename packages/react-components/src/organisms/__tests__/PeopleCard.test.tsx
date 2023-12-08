@@ -1,10 +1,10 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserAlgoliaResponse } from '@asap-hub/fixtures';
 
 import PeopleCard from '../PeopleCard';
 
-const props: ComponentProps<typeof PeopleCard> = createUserResponse();
+const props: ComponentProps<typeof PeopleCard> = createUserAlgoliaResponse();
 
 it('renders the display name', () => {
   const { getByRole } = render(

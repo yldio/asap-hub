@@ -2,9 +2,10 @@ import {
   ListUserResponse,
   UserResponse,
   UserTeam,
-  UserListItem,
+  UserListItemAlgoliaResponse,
   WithAlgoliaTags,
   UserListAlgoliaResponse,
+  UserListItemResponse,
 } from '@asap-hub/model';
 import { createLabs } from './labs';
 
@@ -22,8 +23,11 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   institution: 'University of Copenhagen',
   country: 'Denmark',
   city: 'Copenhagen',
+  role: 'Grantee',
+  onboarded: true,
   teams: [],
   labs: [],
+  _tags: [],
 };
 
 type FixtureOptions = {
@@ -47,13 +51,11 @@ export const createUserResponse = (
 ): UserResponse => ({
   ...listUserResponseItem,
   lastModifiedDate: '2020-09-07T17:36:54Z',
-  onboarded: true,
   email: 'agnete.kirkeby@sund.ku.dk',
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],
   expertiseAndResourceTags: [],
   questions: [],
-  role: 'Grantee',
   social: {
     github: '',
     googleScholar: '',
@@ -72,20 +74,31 @@ export const createUserResponse = (
   labs: createLabs(options),
 });
 
+export const createUserListItemResponse = (
+  options: FixtureOptions = {},
+  itemIndex = 0,
+): UserListItemResponse => ({
+  ...listUserResponseItem,
+  id: `user-id-${itemIndex}`,
+  displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
+  teams: createUserTeams(options),
+  labs: createLabs(options),
+});
+
 export const createListUserResponse = (
   items: number,
   options: FixtureOptions = {},
 ): ListUserResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
-    createUserResponse(options, itemIndex),
+    createUserListItemResponse(options, itemIndex),
   ),
 });
 
 export const createUserAlgoliaResponse = (
   options: FixtureOptions = {},
   itemIndex = 0,
-): WithAlgoliaTags<UserListItem> => {
+): WithAlgoliaTags<UserListItemAlgoliaResponse> => {
   const {
     alumniSinceDate,
     avatarUrl,

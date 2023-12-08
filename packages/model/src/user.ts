@@ -101,7 +101,8 @@ export interface UserDataObject extends Invitee {
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
 }
-export type ListUserDataObject = ListResponse<UserListItem>;
+export type ListUserDataObject = ListResponse<UserListItemDataObject>;
+
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
@@ -109,7 +110,7 @@ export interface UserResponse
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
-export type UserListItem = Pick<
+export type UserListItemDataObject = Pick<
   UserResponse,
   | 'alumniSinceDate'
   | 'avatarUrl'
@@ -125,13 +126,20 @@ export type UserListItem = Pick<
   | 'labs'
   | 'lastName'
   | 'membershipStatus'
+  | 'onboarded'
+  | 'role'
 > & {
+  _tags: string[];
   teams: UserListItemTeam[];
 };
-
-export type UserListAlgoliaResponse = ListResponse<
-  WithAlgoliaTags<UserListItem>
+export type UserListItemAlgoliaResponse = Omit<
+  UserListItemDataObject,
+  'onboarded' | 'role'
 >;
+
+export type UserListItemResponse = UserListItemDataObject;
+
+export type UserListAlgoliaResponse = ListResponse<UserListItemAlgoliaResponse>;
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
@@ -188,7 +196,7 @@ export interface UserAvatarPostRequest {
   avatar: string;
 }
 
-export type ListUserResponse = ListResponse<UserListItem>;
+export type ListUserResponse = ListResponse<UserListItemResponse>;
 
 export type FetchUsersFilter =
   | {
@@ -228,7 +236,7 @@ export type UserRole = 'Staff' | 'Member' | 'None';
 
 export const toAlgoliaUserItem = (
   user: UserResponse,
-): WithAlgoliaTags<UserListItem> => {
+): WithAlgoliaTags<UserListItemAlgoliaResponse> => {
   const {
     alumniSinceDate,
     avatarUrl,

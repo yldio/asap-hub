@@ -7,6 +7,7 @@ import {
   inactiveUserMembershipStatus,
   UserEvent,
   WebhookDetail,
+  UserListItemResponse,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -130,61 +131,65 @@ export const getUserResponse = (): UserResponse => ({
   ],
 });
 
+export const getUserListItemResponse = (): UserListItemResponse => ({
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
+  city: 'London',
+  country: 'United Kingdom',
+  createdDate: '2020-09-23T20:45:22.000Z',
+  degree: 'MPH',
+  displayName: 'Tom Hardy',
+  firstName: 'Tom',
+  id: 'user-id-1',
+  institution: 'some institution',
+  jobTitle: 'some job title',
+  labs: [
+    { id: 'cd7be4902', name: 'Brighton' },
+    { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+  lastName: 'Hardy',
+  membershipStatus: [inactiveUserMembershipStatus],
+  onboarded: true,
+  role: 'Grantee',
+  _tags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  teams: [
+    {
+      id: 'team-id-0',
+      role: 'Lead PI (Core Leadership)',
+      displayName: 'Team A',
+    },
+  ],
+});
+
 export const fetchExpectation: ListUserResponse = {
   total: 2,
   items: [
-    getUserResponse(),
+    getUserListItemResponse(),
     {
       membershipStatus: [inactiveUserMembershipStatus],
       id: 'user-id-2',
-      alumniLocation: 'some alumni location',
       alumniSinceDate: '2020-09-23T20:45:22Z',
-      biography: 'some biography',
       city: 'some city',
-      contactEmail: 'some@contact.email',
       country: 'some country',
-      dismissedGettingStarted: false,
       institution: 'some institution',
       jobTitle: 'some job title',
-      orcid: 'orcid',
-      orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
-      orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
-      reachOut: 'some reach out',
-      responsibilities: 'some responsibilities',
-      researchInterests: 'some research interests',
       onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
-      questions: [],
-      expertiseAndResourceTags: [],
-      expertiseAndResourceDescription: 'Amazing person',
+      _tags: [],
       displayName: 'Arnold Schwatzneger',
-      email: 'iwillbeback@arnold.com',
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
-      lastModifiedDate: '2021-09-23T20:45:22.000Z',
-      workingGroups: [],
-      interestGroups: [],
-      orcidWorks: [
-        {
-          doi: 'test-doi',
-          id: '987-654-321',
-          lastModifiedDate: '2020-10-26T15:33:18Z',
-          publicationDate: {},
-          type: 'BOOK',
-          title: 'orcid work title 2',
-        },
-      ],
-      social: {
-        github: 'awesome',
-        orcid: 'orcid',
-      },
       teams: [
         {
           id: 'team-id-2',
           role: 'Project Manager',
           displayName: 'Team B',
-          teamInactiveSince: '',
-          proposal: 'proposalId',
         },
       ],
       role: 'Grantee',
@@ -195,7 +200,7 @@ export const fetchExpectation: ListUserResponse = {
 
 export const getListUserResponse = (): ListUserResponse => ({
   total: 1,
-  items: [getUserResponse()],
+  items: [getUserListItemResponse()],
 });
 
 export const getUserDataObjects = () => [getUserDataObject()];

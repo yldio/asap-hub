@@ -15225,6 +15225,37 @@ export type FetchUserByIdQuery = {
   >;
 };
 
+export type UserListItemContentFragment = Pick<
+  Users,
+  | 'alumniSinceDate'
+  | 'city'
+  | 'country'
+  | 'createdDate'
+  | 'degree'
+  | 'expertiseAndResourceTags'
+  | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastName'
+  | 'onboarded'
+  | 'role'
+> & {
+  avatar?: Maybe<Pick<Asset, 'url'>>;
+  sys: Pick<Sys, 'id'>;
+  labsCollection?: Maybe<{
+    items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
+  teamsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<TeamMembership, 'role'> & {
+          team?: Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>;
+        }
+      >
+    >;
+  }>;
+};
+
 export type FetchUsersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -15244,10 +15275,13 @@ export type FetchUsersQuery = {
             | 'country'
             | 'createdDate'
             | 'degree'
+            | 'expertiseAndResourceTags'
             | 'firstName'
             | 'institution'
             | 'jobTitle'
             | 'lastName'
+            | 'onboarded'
+            | 'role'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
             sys: Pick<Sys, 'id'>;
@@ -15291,145 +15325,38 @@ export type FetchUsersByTeamIdQuery = {
                 Maybe<
                   Pick<
                     Users,
-                    | 'lastUpdated'
                     | 'alumniSinceDate'
-                    | 'alumniLocation'
-                    | 'biography'
-                    | 'connections'
+                    | 'city'
+                    | 'country'
                     | 'createdDate'
                     | 'degree'
-                    | 'email'
-                    | 'contactEmail'
-                    | 'dismissedGettingStarted'
+                    | 'expertiseAndResourceTags'
                     | 'firstName'
                     | 'institution'
                     | 'jobTitle'
                     | 'lastName'
-                    | 'country'
-                    | 'city'
                     | 'onboarded'
-                    | 'orcid'
-                    | 'orcidLastModifiedDate'
-                    | 'orcidLastSyncDate'
-                    | 'orcidWorks'
-                    | 'questions'
-                    | 'expertiseAndResourceTags'
-                    | 'expertiseAndResourceDescription'
-                    | 'github'
-                    | 'googleScholar'
-                    | 'linkedIn'
-                    | 'researcherId'
-                    | 'researchGate'
-                    | 'twitter'
-                    | 'website1'
-                    | 'website2'
                     | 'role'
-                    | 'responsibilities'
-                    | 'researchInterests'
-                    | 'reachOut'
                   > & {
-                    sys: Pick<
-                      Sys,
-                      | 'id'
-                      | 'firstPublishedAt'
-                      | 'publishedAt'
-                      | 'publishedVersion'
-                    >;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
-                            team?: Maybe<
-                              Pick<Teams, 'displayName' | 'inactiveSince'> & {
-                                sys: Pick<Sys, 'id'>;
-                                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                                linkedFrom?: Maybe<{
-                                  interestGroupsCollection?: Maybe<{
-                                    items: Array<
-                                      Maybe<
-                                        Pick<
-                                          InterestGroups,
-                                          'active' | 'name'
-                                        > & { sys: Pick<Sys, 'id'> }
-                                      >
-                                    >;
-                                  }>;
-                                }>;
-                              }
-                            >;
-                          }
-                        >
-                      >;
-                    }>;
+                    sys: Pick<Sys, 'id'>;
                     labsCollection?: Maybe<{
                       items: Array<
                         Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                       >;
                     }>;
-                    linkedFrom?: Maybe<{
-                      workingGroupMembersCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            Pick<WorkingGroupMembers, 'inactiveSinceDate'> & {
-                              linkedFrom?: Maybe<{
-                                workingGroupsCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<
-                                        WorkingGroups,
-                                        'title' | 'complete'
-                                      > & { sys: Pick<Sys, 'id'> }
-                                    >
-                                  >;
-                                }>;
-                              }>;
-                              user?: Maybe<Pick<Users, 'lastName'>>;
-                            }
-                          >
-                        >;
-                      }>;
-                      workingGroupLeadersCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            Pick<
-                              WorkingGroupLeaders,
-                              'role' | 'inactiveSinceDate'
-                            > & {
-                              linkedFrom?: Maybe<{
-                                workingGroupsCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<
-                                        WorkingGroups,
-                                        'title' | 'complete'
-                                      > & { sys: Pick<Sys, 'id'> }
-                                    >
-                                  >;
-                                }>;
-                              }>;
-                              user?: Maybe<Pick<Users, 'lastName'>>;
-                            }
-                          >
-                        >;
-                      }>;
-                      interestGroupLeadersCollection?: Maybe<{
-                        items: Array<
-                          Maybe<{
-                            linkedFrom?: Maybe<{
-                              interestGroupsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<
-                                    Pick<InterestGroups, 'active' | 'name'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >
-                                >;
-                              }>;
-                            }>;
-                          }>
-                        >;
-                      }>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<TeamMembership, 'role'> & {
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }
+                        >
+                      >;
                     }>;
                   }
                 >
@@ -15457,139 +15384,36 @@ export type FetchUsersByLabIdQuery = {
             Maybe<
               Pick<
                 Users,
-                | 'lastUpdated'
                 | 'alumniSinceDate'
-                | 'alumniLocation'
-                | 'biography'
-                | 'connections'
+                | 'city'
+                | 'country'
                 | 'createdDate'
                 | 'degree'
-                | 'email'
-                | 'contactEmail'
-                | 'dismissedGettingStarted'
+                | 'expertiseAndResourceTags'
                 | 'firstName'
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
-                | 'country'
-                | 'city'
                 | 'onboarded'
-                | 'orcid'
-                | 'orcidLastModifiedDate'
-                | 'orcidLastSyncDate'
-                | 'orcidWorks'
-                | 'questions'
-                | 'expertiseAndResourceTags'
-                | 'expertiseAndResourceDescription'
-                | 'github'
-                | 'googleScholar'
-                | 'linkedIn'
-                | 'researcherId'
-                | 'researchGate'
-                | 'twitter'
-                | 'website1'
-                | 'website2'
                 | 'role'
-                | 'responsibilities'
-                | 'researchInterests'
-                | 'reachOut'
               > & {
-                sys: Pick<
-                  Sys,
-                  'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-                >;
                 avatar?: Maybe<Pick<Asset, 'url'>>;
-                teamsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
-                        team?: Maybe<
-                          Pick<Teams, 'displayName' | 'inactiveSince'> & {
-                            sys: Pick<Sys, 'id'>;
-                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                            linkedFrom?: Maybe<{
-                              interestGroupsCollection?: Maybe<{
-                                items: Array<
-                                  Maybe<
-                                    Pick<InterestGroups, 'active' | 'name'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >
-                                >;
-                              }>;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
-                  >;
-                }>;
+                sys: Pick<Sys, 'id'>;
                 labsCollection?: Maybe<{
                   items: Array<
                     Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                   >;
                 }>;
-                linkedFrom?: Maybe<{
-                  workingGroupMembersCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<WorkingGroupMembers, 'inactiveSinceDate'> & {
-                          linkedFrom?: Maybe<{
-                            workingGroupsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<WorkingGroups, 'title' | 'complete'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }>;
-                          user?: Maybe<Pick<Users, 'lastName'>>;
-                        }
-                      >
-                    >;
-                  }>;
-                  workingGroupLeadersCollection?: Maybe<{
-                    items: Array<
-                      Maybe<
-                        Pick<
-                          WorkingGroupLeaders,
-                          'role' | 'inactiveSinceDate'
-                        > & {
-                          linkedFrom?: Maybe<{
-                            workingGroupsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<WorkingGroups, 'title' | 'complete'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }>;
-                          user?: Maybe<Pick<Users, 'lastName'>>;
-                        }
-                      >
-                    >;
-                  }>;
-                  interestGroupLeadersCollection?: Maybe<{
-                    items: Array<
-                      Maybe<{
-                        linkedFrom?: Maybe<{
-                          interestGroupsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<InterestGroups, 'active' | 'name'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >
-                            >;
-                          }>;
-                        }>;
-                      }>
-                    >;
-                  }>;
+                teamsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<TeamMembership, 'role'> & {
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                      }
+                    >
+                  >;
                 }>;
               }
             >
@@ -20184,6 +20008,150 @@ export const UsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentFragment, unknown>;
+export const UserListItemContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'UserListItemContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Users' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'avatar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'expertiseAndResourceTags' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'labsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'team' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'displayName' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserListItemContentFragment, unknown>;
 export const WorkingGroupsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -25597,166 +25565,8 @@ export const FetchUsersDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'alumniSinceDate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'avatar' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'country' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdDate' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'degree' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'firstName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'institution' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'jobTitle' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'labsCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '10' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'name' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'lastName' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'teamsCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '10' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'team' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'id',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'displayName',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'role' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'UserListItemContent' },
                       },
                     ],
                   },
@@ -25767,6 +25577,7 @@ export const FetchUsersDocument = {
         ],
       },
     },
+    ...UserListItemContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
 export const FetchUsersByTeamIdDocument = {
@@ -25900,7 +25711,7 @@ export const FetchUsersByTeamIdDocument = {
                                           kind: 'FragmentSpread',
                                           name: {
                                             kind: 'Name',
-                                            value: 'UsersContent',
+                                            value: 'UserListItemContent',
                                           },
                                         },
                                       ],
@@ -25921,7 +25732,7 @@ export const FetchUsersByTeamIdDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UserListItemContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchUsersByTeamIdQuery,
@@ -26023,7 +25834,7 @@ export const FetchUsersByLabIdDocument = {
                                     kind: 'FragmentSpread',
                                     name: {
                                       kind: 'Name',
-                                      value: 'UsersContent',
+                                      value: 'UserListItemContent',
                                     },
                                   },
                                 ],
@@ -26041,7 +25852,7 @@ export const FetchUsersByLabIdDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UserListItemContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchUsersByLabIdQuery,

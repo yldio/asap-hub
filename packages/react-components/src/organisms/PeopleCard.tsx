@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { UserListItem } from '@asap-hub/model';
+import { UserListItemAlgoliaResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
@@ -44,7 +44,7 @@ const moveStyles = css({
 
 const alumniBadgeStyles = css({});
 
-const PeopleCard: React.FC<UserListItem> = ({
+const PeopleCard: React.FC<UserListItemAlgoliaResponse> = ({
   id,
   alumniSinceDate,
   displayName,

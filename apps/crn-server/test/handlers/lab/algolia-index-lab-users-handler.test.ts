@@ -7,11 +7,11 @@ import {
 } from '../../fixtures/labs.fixtures';
 import {
   getListUserResponse,
-  getUserResponse,
+  getUserListItemResponse,
 } from '../../fixtures/users.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
-import { toAlgoliaUserItem } from '@asap-hub/model';
+import {} from '@asap-hub/model';
 jest.mock('../../../src/utils/logger');
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
@@ -60,9 +60,17 @@ describe('Index Users on Lab event handler', () => {
     userControllerMock.fetch.mockResolvedValueOnce({
       total: 3,
       items: [
-        { ...getUserResponse(), displayName: 'Person A' },
-        { ...getUserResponse(), role: 'Hidden', displayName: 'Person B' },
-        { ...getUserResponse(), onboarded: false, displayName: 'Person C' },
+        { ...getUserListItemResponse(), displayName: 'Person A' },
+        {
+          ...getUserListItemResponse(),
+          role: 'Hidden',
+          displayName: 'Person B',
+        },
+        {
+          ...getUserListItemResponse(),
+          onboarded: false,
+          displayName: 'Person C',
+        },
       ],
     });
 
@@ -91,7 +99,7 @@ describe('Index Users on Lab event handler', () => {
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
         usersResponse.items.map((item) => ({
-          data: toAlgoliaUserItem(item),
+          data: item,
           type: 'user',
         })),
       );
@@ -116,14 +124,14 @@ describe('Index Users on Lab event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
           usersResponse.items.map((item) => ({
-            data: toAlgoliaUserItem(item),
+            data: item,
             type: 'user',
           })),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
           usersResponse.items.map((item) => ({
-            data: toAlgoliaUserItem(item),
+            data: item,
             type: 'user',
           })),
         );

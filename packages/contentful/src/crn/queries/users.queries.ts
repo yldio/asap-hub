@@ -154,6 +154,48 @@ export const FETCH_USER_BY_ID = gql`
   ${usersContentQueryFragment}
 `;
 
+export const userListItemContentQueryFragment = gql`
+  fragment UserListItemContent on Users {
+    alumniSinceDate
+    avatar {
+      url
+    }
+    city
+    country
+    createdDate
+    degree
+    expertiseAndResourceTags
+    firstName
+    sys {
+      id
+    }
+    institution
+    jobTitle
+    labsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
+    lastName
+    onboarded
+    role
+    teamsCollection(limit: 10) {
+      items {
+        team {
+          sys {
+            id
+          }
+          displayName
+        }
+        role
+      }
+    }
+  }
+`;
+
 export const FETCH_USERS = gql`
   query FetchUsers(
     $limit: Int
@@ -164,43 +206,11 @@ export const FETCH_USERS = gql`
     usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
-        alumniSinceDate
-        avatar {
-          url
-        }
-        city
-        country
-        createdDate
-        degree
-        firstName
-        sys {
-          id
-        }
-        institution
-        jobTitle
-        labsCollection(limit: 10) {
-          items {
-            sys {
-              id
-            }
-            name
-          }
-        }
-        lastName
-        teamsCollection(limit: 10) {
-          items {
-            team {
-              sys {
-                id
-              }
-              displayName
-            }
-            role
-          }
-        }
+        ...UserListItemContent
       }
     }
   }
+  ${userListItemContentQueryFragment}
 `;
 
 export const FETCH_USERS_BY_TEAM_ID = gql`
@@ -215,14 +225,14 @@ export const FETCH_USERS_BY_TEAM_ID = gql`
         linkedFrom {
           usersCollection(limit: 1) {
             items {
-              ...UsersContent
+              ...UserListItemContent
             }
           }
         }
       }
     }
   }
-  ${usersContentQueryFragment}
+  ${userListItemContentQueryFragment}
 `;
 
 export const FETCH_USERS_BY_LAB_ID = gql`
@@ -232,11 +242,11 @@ export const FETCH_USERS_BY_LAB_ID = gql`
         usersCollection(limit: $limit, skip: $skip) {
           total
           items {
-            ...UsersContent
+            ...UserListItemContent
           }
         }
       }
     }
   }
-  ${usersContentQueryFragment}
+  ${userListItemContentQueryFragment}
 `;

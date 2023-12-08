@@ -32,6 +32,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
         { id: 'cd7be4905', name: 'Glasgow' },
       ],
       role: 'Grantee' as const,
+      _tags: [],
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

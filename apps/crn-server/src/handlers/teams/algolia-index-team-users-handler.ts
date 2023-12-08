@@ -3,12 +3,7 @@ import {
   algoliaSearchClientFactory,
   Payload,
 } from '@asap-hub/algolia';
-import {
-  ListResponse,
-  TeamEvent,
-  toAlgoliaUserItem,
-  UserResponse,
-} from '@asap-hub/model';
+import { ListUserResponse, TeamEvent } from '@asap-hub/model';
 import {
   createProcessingFunction,
   loopOverCustomCollection,
@@ -35,7 +30,6 @@ export const indexTeamUsersHandler = (
     'user',
     logger,
     userFilter,
-    toAlgoliaUserItem,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
@@ -43,9 +37,7 @@ export const indexTeamUsersHandler = (
     const fetchFunction = ({
       skip,
       take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<
-      ListResponse<UserResponse>
-    > =>
+    }: LoopOverCustomCollectionFetchOptions): Promise<ListUserResponse> =>
       userController.fetch({
         filter: {
           teamId: event.detail.resourceId,

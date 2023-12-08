@@ -2,7 +2,7 @@ import {
   createEventResponse,
   createResearchOutputResponse,
   createTeamListItemResponse,
-  createUserResponse,
+  createUserAlgoliaResponse,
   createWorkingGroupResponse,
   createTutorialsResponse,
   createNewsResponse,
@@ -42,7 +42,7 @@ it('renders a list of cards', () => {
           title: 'Research about CRISPR/Cas9',
         },
         {
-          ...createUserResponse(),
+          ...createUserAlgoliaResponse(),
           __meta: { type: 'user' },
           displayName: 'John Doe',
           degree: 'PhD',

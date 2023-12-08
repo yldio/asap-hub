@@ -9,7 +9,7 @@ import {
   ListUserDataObject,
   OrcidWork,
   UserDataObject,
-  UserListItem,
+  UserListItemDataObject,
   UserListItemTeam,
   UserSocialLinks,
   UserTeam,
@@ -110,21 +110,11 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserDataObject> {
-    const { usersCollection } = await this.contentfulClient.request<
-      FetchUsersQuery,
-      FetchUsersQueryVariables
-    >(FETCH_USERS, options);
-
-    if (!usersCollection) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
+    const result = await this.fetchUsers(options);
 
     return {
-      total: usersCollection?.total,
-      items: usersCollection?.items
+      total: result?.total,
+      items: result?.items
         .filter((user): user is QueryUserListItem => user !== null)
         .map(parseContentfulGraphQlUserListItem),
     };
@@ -386,7 +376,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 
 export const parseContentfulGraphQlUserListItem = (
   item: QueryUserListItem,
-): UserListItem => {
+): UserListItemDataObject => {
   const userFirstName = item.firstName ?? '';
   const userLastName = item.lastName ?? '';
 
@@ -409,6 +399,11 @@ export const parseContentfulGraphQlUserListItem = (
   );
 
   return {
+    _tags: item.expertiseAndResourceTags?.length
+      ? item.expertiseAndResourceTags.filter(
+          (tag): tag is string => tag !== null,
+        )
+      : [],
     alumniSinceDate: item.alumniSinceDate,
     avatarUrl: item.avatar?.url ?? undefined,
     city: item.city ?? undefined,
@@ -427,6 +422,8 @@ export const parseContentfulGraphQlUserListItem = (
         ? inactiveUserMembershipStatus
         : activeUserMembershipStatus,
     ],
+    onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
+    role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,
   };
 };

@@ -18,11 +18,11 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
       role: 'Lead PI (Core Leadership)',
     },
   ],
-  role: 'Grantee',
   labs: [
     { id: 'cd7be4902', name: 'Barcelona' },
     { id: 'cd7be4905', name: 'Glasgow' },
   ],
+  _tags: [],
 };
 const people = [
   person,

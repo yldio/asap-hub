@@ -57,7 +57,14 @@ export default class UserController {
       throw new GenericError(undefined, 'too many users found');
     }
 
-    return parseUserToResponse(users[0]);
+    const user = await this.userDataProvider.fetchById(users[0].id);
+    if (!user) {
+      throw new NotFoundError(
+        undefined,
+        `user with code ${code} and id ${users[0].id} not found`,
+      );
+    }
+    return parseUserToResponse(user);
   }
 
   async updateAvatar(
@@ -85,8 +92,15 @@ export default class UserController {
         `user with code ${welcomeCode} not found`,
       );
     }
+    const user = await this.userDataProvider.fetchById(items[0].id);
 
-    const user = items[0];
+    if (!user) {
+      throw new NotFoundError(
+        undefined,
+        `user with code ${welcomeCode} not found`,
+      );
+    }
+
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }

@@ -1,9 +1,8 @@
-import { toAlgoliaUserItem } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/algolia-index-team-users-handler';
 import {
   getListUserResponse,
-  getUserResponse,
+  getUserListItemResponse,
 } from '../../fixtures/users.fixtures';
 
 import {
@@ -61,7 +60,7 @@ describe('Index Users on Team event handler', () => {
   });
 
   test('Should omit non-onboarded and Hidden users', async () => {
-    const userResponse = getUserResponse();
+    const userResponse = getUserListItemResponse();
     userControllerMock.fetch.mockResolvedValueOnce({
       total: 3,
       items: [
@@ -75,7 +74,7 @@ describe('Index Users on Team event handler', () => {
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {
-        data: toAlgoliaUserItem(userResponse),
+        data: userResponse,
         type: 'user',
       },
     ]);
@@ -93,7 +92,7 @@ describe('Index Users on Team event handler', () => {
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
         usersResponse.items.map((item) => ({
-          data: toAlgoliaUserItem(item),
+          data: item,
           type: 'user',
         })),
       );
@@ -118,14 +117,14 @@ describe('Index Users on Team event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
           usersResponse.items.map((item) => ({
-            data: toAlgoliaUserItem(item),
+            data: item,
             type: 'user',
           })),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
           usersResponse.items.map((item) => ({
-            data: toAlgoliaUserItem(item),
+            data: item,
             type: 'user',
           })),
         );

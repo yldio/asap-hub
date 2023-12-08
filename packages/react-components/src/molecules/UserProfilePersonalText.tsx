@@ -1,6 +1,6 @@
 import { FC, useContext } from 'react';
 import { css } from '@emotion/react';
-import { UserListItem } from '@asap-hub/model';
+import { UserListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -46,7 +46,7 @@ const avatarStyles = css({
 });
 
 type UserProfilePersonalTextProps = Pick<
-  UserListItem,
+  UserListItemResponse,
   'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'labs'
 > & { userActiveTeamsRoute?: string };
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({

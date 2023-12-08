@@ -91,7 +91,6 @@ describe('User', () => {
         labs: [{ id: 'cd7be4902', name: 'Brighton' }],
         lastName: 'Doe',
         membershipStatus: undefined,
-        role: 'Grantee',
         teams: [
           {
             displayName: 'Alessi',

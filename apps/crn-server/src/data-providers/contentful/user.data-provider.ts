@@ -381,17 +381,17 @@ export const parseContentfulGraphQlUserListItem = (
   const userLastName = item.lastName ?? '';
 
   const userTeams = (item.teamsCollection?.items || []).reduce(
-    (userListItemTeams: UserListItemTeam[], item) => {
-      if (!item || !item.role || !isTeamRole(item.role)) {
+    (userListItemTeams: UserListItemTeam[], teamItem) => {
+      if (!teamItem || !teamItem.role || !isTeamRole(teamItem.role)) {
         return userListItemTeams;
       }
 
       return [
         ...userListItemTeams,
         {
-          id: item?.team?.sys.id || '',
-          displayName: item?.team?.displayName || '',
-          role: item?.role,
+          id: teamItem?.team?.sys.id || '',
+          displayName: teamItem?.team?.displayName || '',
+          role: teamItem?.role,
         },
       ];
     },

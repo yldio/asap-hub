@@ -101,7 +101,6 @@ export interface UserDataObject extends Invitee {
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
 }
-export type ListUserDataObject = ListResponse<UserListItemDataObject>;
 
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
@@ -132,6 +131,8 @@ export type UserListItemDataObject = Pick<
   _tags: string[];
   teams: UserListItemTeam[];
 };
+export type ListUserDataObject = ListResponse<UserListItemDataObject>;
+
 export type UserListItemAlgoliaResponse = Omit<
   UserListItemDataObject,
   'onboarded' | 'role'

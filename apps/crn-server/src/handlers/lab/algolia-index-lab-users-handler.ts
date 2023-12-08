@@ -44,7 +44,7 @@ export const indexLabUsersHandler =
         foundUsers.items
           .filter((user) => user.onboarded && user.role !== 'Hidden')
           .map((data) => ({
-            data: data,
+            data,
             type: 'user',
           })),
       );

@@ -56,7 +56,6 @@ describe('User index handler', () => {
         ],
         lastName: 'Hardy',
         membershipStatus: ['Alumni Member'],
-        role: 'Grantee',
         teams: [
           {
             displayName: 'Team A',

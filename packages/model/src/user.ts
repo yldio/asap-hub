@@ -101,13 +101,14 @@ export interface UserDataObject extends Invitee {
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
 }
-export type ListUserDataObject = ListResponse<UserDataObject>;
+export type ListUserDataObject = ListResponse<UserListItem>;
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
 }
 
+export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
 export type UserListItem = Pick<
   UserResponse,
   | 'alumniSinceDate'
@@ -124,9 +125,9 @@ export type UserListItem = Pick<
   | 'labs'
   | 'lastName'
   | 'membershipStatus'
-  | 'role'
-  | 'teams'
->;
+> & {
+  teams: UserListItemTeam[];
+};
 
 export type UserListAlgoliaResponse = ListResponse<
   WithAlgoliaTags<UserListItem>
@@ -187,7 +188,7 @@ export interface UserAvatarPostRequest {
   avatar: string;
 }
 
-export type ListUserResponse = ListResponse<UserResponse>;
+export type ListUserResponse = ListResponse<UserListItem>;
 
 export type FetchUsersFilter =
   | {
@@ -244,7 +245,6 @@ export const toAlgoliaUserItem = (
     labs,
     lastName,
     membershipStatus,
-    role,
     teams,
   } = user;
 
@@ -263,7 +263,6 @@ export const toAlgoliaUserItem = (
     labs,
     lastName,
     membershipStatus,
-    role,
     teams,
     _tags: expertiseAndResourceTags,
   };

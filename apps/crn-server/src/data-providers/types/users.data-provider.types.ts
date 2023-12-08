@@ -3,12 +3,13 @@ import {
   FetchUsersOptions,
   UserCreateDataObject,
   UserDataObject,
+  UserListItem,
   UserUpdateDataObject,
 } from '@asap-hub/model';
 
 export type UserDataProvider = DataProvider<
   UserDataObject,
-  UserDataObject,
+  UserListItem,
   FetchUsersOptions,
   UserCreateDataObject,
   null,

@@ -32,9 +32,7 @@ export default class UserController {
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
-    const { total, items: users } = await this.userDataProvider.fetch(options);
-
-    const items = total > 0 ? users.map(parseUserToResponse) : [];
+    const { total, items } = await this.userDataProvider.fetch(options);
 
     return { total, items };
   }

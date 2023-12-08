@@ -164,11 +164,43 @@ export const FETCH_USERS = gql`
     usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
-        ...UsersContent
+        alumniSinceDate
+        avatar {
+          url
+        }
+        city
+        country
+        createdDate
+        degree
+        firstName
+        sys {
+          id
+        }
+        institution
+        jobTitle
+        labsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
+        lastName
+        teamsCollection(limit: 10) {
+          items {
+            team {
+              sys {
+                id
+              }
+              displayName
+            }
+            role
+          }
+        }
       }
     }
   }
-  ${usersContentQueryFragment}
 `;
 
 export const FETCH_USERS_BY_TEAM_ID = gql`

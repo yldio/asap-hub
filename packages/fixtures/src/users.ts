@@ -15,10 +15,7 @@ const listUserResponseTeam: Omit<UserTeam, 'id'> = {
 
 export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   createdDate: '2020-09-07T17:36:54Z',
-  lastModifiedDate: '2020-09-07T17:36:54Z',
-  onboarded: true,
   displayName: 'Person A',
-  email: 'agnete.kirkeby@sund.ku.dk',
   firstName: 'Agnete',
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',
@@ -26,23 +23,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   country: 'Denmark',
   city: 'Copenhagen',
   teams: [],
-  orcid: '0000-0001-8203-6901',
-  orcidWorks: [],
-  expertiseAndResourceTags: [],
-  questions: [],
-  role: 'Grantee',
-  social: {
-    github: '',
-    googleScholar: '',
-    linkedIn: '',
-    orcid: '',
-    researchGate: '',
-    researcherId: '',
-    twitter: '',
-  },
   labs: [],
-  workingGroups: [],
-  interestGroups: [],
 };
 
 type FixtureOptions = {
@@ -65,6 +46,26 @@ export const createUserResponse = (
   itemIndex = 0,
 ): UserResponse => ({
   ...listUserResponseItem,
+  lastModifiedDate: '2020-09-07T17:36:54Z',
+  onboarded: true,
+  email: 'agnete.kirkeby@sund.ku.dk',
+  orcid: '0000-0001-8203-6901',
+  orcidWorks: [],
+  expertiseAndResourceTags: [],
+  questions: [],
+  role: 'Grantee',
+  social: {
+    github: '',
+    googleScholar: '',
+    linkedIn: '',
+    orcid: '',
+    researchGate: '',
+    researcherId: '',
+    twitter: '',
+  },
+  workingGroups: [],
+  interestGroups: [],
+
   id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
@@ -101,7 +102,6 @@ export const createUserAlgoliaResponse = (
     labs,
     lastName,
     membershipStatus,
-    role,
     teams,
   } = createUserResponse(options, itemIndex);
 
@@ -120,7 +120,6 @@ export const createUserAlgoliaResponse = (
     labs,
     lastName,
     membershipStatus,
-    role,
     teams,
     _tags: expertiseAndResourceTags,
   };

@@ -119,6 +119,7 @@ export type UserListItemDataObject = Pick<
   | 'degree'
   | 'dismissedGettingStarted'
   | 'displayName'
+  | 'email'
   | 'firstName'
   | 'id'
   | 'institution'
@@ -247,6 +248,7 @@ export const toAlgoliaUserItem = (
     createdDate,
     degree,
     displayName,
+    email,
     expertiseAndResourceTags,
     firstName,
     id,
@@ -266,6 +268,7 @@ export const toAlgoliaUserItem = (
     createdDate,
     degree,
     displayName,
+    email,
     firstName,
     id,
     institution,

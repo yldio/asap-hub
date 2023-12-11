@@ -164,6 +164,7 @@ export const userListItemContentQueryFragment = gql`
     country
     createdDate
     degree
+    email
     expertiseAndResourceTags
     firstName
     sys {

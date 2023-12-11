@@ -15232,6 +15232,7 @@ export type UserListItemContentFragment = Pick<
   | 'country'
   | 'createdDate'
   | 'degree'
+  | 'email'
   | 'expertiseAndResourceTags'
   | 'firstName'
   | 'institution'
@@ -15276,6 +15277,7 @@ export type FetchUsersQuery = {
             | 'country'
             | 'createdDate'
             | 'degree'
+            | 'email'
             | 'expertiseAndResourceTags'
             | 'firstName'
             | 'institution'
@@ -15332,6 +15334,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'country'
                     | 'createdDate'
                     | 'degree'
+                    | 'email'
                     | 'expertiseAndResourceTags'
                     | 'firstName'
                     | 'institution'
@@ -15392,6 +15395,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'country'
                 | 'createdDate'
                 | 'degree'
+                | 'email'
                 | 'expertiseAndResourceTags'
                 | 'firstName'
                 | 'institution'
@@ -20040,6 +20044,7 @@ export const UserListItemContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'expertiseAndResourceTags' },

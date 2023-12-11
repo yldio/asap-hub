@@ -9,4 +9,11 @@ export const createDashboardResponse = (
     ...Array.from({ length }).map((_, i) => createNewsResponse({ key: i })),
   ],
   pages: ['content', 'about', 'slides'].map(createPageResponse),
+  announcements: [
+    {
+      deadline: new Date().getTime().toString(),
+      description: 'Test',
+      id: '123',
+    },
+  ],
 });

@@ -8,7 +8,6 @@ import {
   patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
-import { createUserListItemResponse } from '@asap-hub/fixtures';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
   parseToWorkingGroups,

@@ -122,6 +122,19 @@ describe('Users controller', () => {
         GenericError,
       );
     });
+
+    test('throws if user is not found', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserListItemResponse()],
+      });
+
+      userDataProviderMock.fetchById.mockReturnValue(null);
+
+      await expect(userController.fetchByCode(code)).rejects.toThrow(
+        NotFoundError,
+      );
+    });
   });
 
   describe('update', () => {
@@ -171,7 +184,7 @@ describe('Users controller', () => {
 
   describe('connectByCode', () => {
     test('should replace the welcome code with the connection code and return the user on success', async () => {
-      const userId = 'user-id';
+      const userId = '42';
       const user = getUserDataObject();
       const welcomeCode = 'welcome-code';
       user.connections = [{ code: welcomeCode }];
@@ -182,7 +195,7 @@ describe('Users controller', () => {
 
       userDataProviderMock.fetchById.mockResolvedValue({ ...user, id: userId });
 
-      const result = await userController.connectByCode(welcomeCode, userId);
+      const result = await userController.connectByCode(welcomeCode, 'user-id');
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         userId,

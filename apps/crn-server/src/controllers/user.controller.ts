@@ -97,7 +97,7 @@ export default class UserController {
     if (!user) {
       throw new NotFoundError(
         undefined,
-        `user with code ${welcomeCode} not found`,
+        `user with code ${welcomeCode} and id ${items[0].id} not found`,
       );
     }
 

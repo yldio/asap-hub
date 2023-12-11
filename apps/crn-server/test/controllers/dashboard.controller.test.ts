@@ -1,5 +1,6 @@
 import { DashboardResponse } from '@asap-hub/model';
 import Dashboard from '../../src/controllers/dashboard.controller';
+import { DashboardDataProvider } from '../../src/data-providers/types';
 import {
   getDashboardResponse,
   getDashboardDataObject,
@@ -7,7 +8,8 @@ import {
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Dashboard controller', () => {
-  const dashboardDataProviderMock = getDataProviderMock();
+  const dashboardDataProviderMock =
+    getDataProviderMock() as jest.Mocked<DashboardDataProvider>;
   const dashboardController = new Dashboard(dashboardDataProviderMock);
 
   describe('Fetch method', () => {

@@ -1,7 +1,11 @@
 import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { indexUserHandler } from '../../../src/handlers/user/algolia-index-user-handler';
-import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
+import {
+  getUserEvent,
+  getUserListItemResponse,
+  getUserResponse,
+} from '../../fixtures/users.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
@@ -24,49 +28,12 @@ describe('User index handler', () => {
     expect(userControllerMock.fetchById).toHaveBeenCalledWith(
       event.detail.resourceId,
     );
+
+    const user = getUserListItemResponse();
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: {
-        _tags: [
-          'expertise 1',
-          'expertise 2',
-          'expertise 3',
-          'expertise 4',
-          'expertise 5',
-        ],
-        alumniSinceDate: '2020-09-23T20:45:22.000Z',
+        ...user,
         avatarUrl: undefined,
-        city: 'London',
-        country: 'United Kingdom',
-        createdDate: '2020-09-23T20:45:22.000Z',
-        degree: 'MPH',
-        displayName: 'Tom Hardy',
-        email: 'H@rdy.io',
-        firstName: 'Tom',
-        id: 'user-id-1',
-        institution: 'some institution',
-        jobTitle: 'some job title',
-        labs: [
-          {
-            id: 'cd7be4902',
-            name: 'Brighton',
-          },
-          {
-            id: 'cd7be4903',
-            name: 'Liverpool',
-          },
-        ],
-        lastName: 'Hardy',
-        membershipStatus: ['Alumni Member'],
-        teams: [
-          {
-            displayName: 'Team A',
-            id: 'team-id-0',
-            inactiveSinceDate: undefined,
-            proposal: 'proposalId1',
-            role: 'Lead PI (Core Leadership)',
-            teamInactiveSince: '',
-          },
-        ],
       },
       type: 'user',
     });

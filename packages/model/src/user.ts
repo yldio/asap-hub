@@ -276,7 +276,11 @@ export const toAlgoliaUserItem = (user: UserResponse): UserAlgoliaResponse => {
     membershipStatus,
     onboarded,
     role,
-    teams,
+    teams: teams.map(({ id, role, displayName }) => ({
+      id,
+      role,
+      displayName,
+    })),
     _tags: expertiseAndResourceTags,
   };
 };

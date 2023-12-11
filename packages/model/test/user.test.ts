@@ -83,6 +83,7 @@ describe('User', () => {
         country: 'Canada',
         createdDate: '2020-09-07T17:36:54Z',
         degree: undefined,
+        dismissedGettingStarted: undefined,
         displayName: 'Jane Doe',
         email: 'jane.doe@asap.com',
         firstName: 'Jane',
@@ -92,6 +93,8 @@ describe('User', () => {
         labs: [{ id: 'cd7be4902', name: 'Brighton' }],
         lastName: 'Doe',
         membershipStatus: undefined,
+        onboarded: true,
+        role: 'Grantee',
         teams: [
           {
             displayName: 'Alessi',

@@ -15238,6 +15238,7 @@ export type UserListItemContentFragment = Pick<
   | 'jobTitle'
   | 'lastName'
   | 'onboarded'
+  | 'dismissedGettingStarted'
   | 'role'
 > & {
   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -15281,6 +15282,7 @@ export type FetchUsersQuery = {
             | 'jobTitle'
             | 'lastName'
             | 'onboarded'
+            | 'dismissedGettingStarted'
             | 'role'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -15336,6 +15338,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'jobTitle'
                     | 'lastName'
                     | 'onboarded'
+                    | 'dismissedGettingStarted'
                     | 'role'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -15395,6 +15398,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'jobTitle'
                 | 'lastName'
                 | 'onboarded'
+                | 'dismissedGettingStarted'
                 | 'role'
               > & {
                 avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -20094,6 +20098,10 @@ export const UserListItemContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'dismissedGettingStarted' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           {
             kind: 'Field',

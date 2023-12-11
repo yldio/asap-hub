@@ -181,6 +181,7 @@ export const userListItemContentQueryFragment = gql`
     }
     lastName
     onboarded
+    dismissedGettingStarted
     role
     teamsCollection(limit: 10) {
       items {

@@ -139,6 +139,7 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   country: 'United Kingdom',
   createdDate: '2020-09-23T20:45:22.000Z',
   degree: 'MPH',
+  dismissedGettingStarted: true,
   displayName: 'Tom Hardy',
   firstName: 'Tom',
   id: 'user-id-1',

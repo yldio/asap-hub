@@ -117,6 +117,7 @@ export type UserListItemDataObject = Pick<
   | 'country'
   | 'createdDate'
   | 'degree'
+  | 'dismissedGettingStarted'
   | 'displayName'
   | 'firstName'
   | 'id'

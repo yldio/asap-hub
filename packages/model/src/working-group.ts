@@ -41,7 +41,6 @@ export type WorkingGroupMember = {
     | 'lastName'
     | 'displayName'
     | 'alumniSinceDate'
-    | 'email'
     | 'avatarUrl'
   >;
   readonly inactiveSinceDate?: string;

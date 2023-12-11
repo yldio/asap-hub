@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  createUserAlgoliaResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import WorkingGroupMembers from '../WorkingGroupMembers';
 
 const props: ComponentProps<typeof WorkingGroupMembers> = {
@@ -118,7 +121,7 @@ describe('member section', () => {
         {...props}
         members={Array.from({ length: 10 }, (_, index) => ({
           user: {
-            ...createUserResponse(),
+            ...createUserAlgoliaResponse({}, index),
             displayName: `Test User ${index}`,
           },
           isActive: true,

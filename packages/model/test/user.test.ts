@@ -84,6 +84,7 @@ describe('User', () => {
         createdDate: '2020-09-07T17:36:54Z',
         degree: undefined,
         displayName: 'Jane Doe',
+        email: 'jane.doe@asap.com',
         firstName: 'Jane',
         id: 'user-1',
         institution: 'University of Toronto',

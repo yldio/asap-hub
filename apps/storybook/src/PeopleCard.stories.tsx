@@ -22,6 +22,7 @@ const props = {
   city: text('City', 'New Haven'),
   country: text('Country', 'United States'),
   degree: degree === 'Empty' ? undefined : degree,
+  email: 'agnete.kirkeby@sund.ku.dk',
   institution: text('Institution', 'Yale University'),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),

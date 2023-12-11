@@ -410,6 +410,7 @@ export const parseContentfulGraphQlUserListItem = (
     country: item.country ?? undefined,
     createdDate: item.createdDate,
     degree: item.degree && isUserDegree(item.degree) ? item.degree : undefined,
+    dismissedGettingStarted: item.dismissedGettingStarted ?? false,
     displayName: `${userFirstName} ${userLastName}`,
     email: item.email ?? '',
     firstName: userFirstName,

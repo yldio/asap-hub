@@ -18,6 +18,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
       displayName: `Agnete Kirkeby ${i + 1}`,
       firstName: 'Agnete',
       lastName: 'Kirkeby',
+      email: 'agnete.kirkeby@sund.ku.dk',
       jobTitle: 'Assistant Professor',
       institution: 'University of Copenhagen',
       teams: [

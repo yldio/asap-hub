@@ -10,6 +10,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   firstName: 'Agnete',
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',
+  email: 'agnete.kirkeby@sund.ku.dk',
   institution: 'University of Copenhagen',
   teams: [
     {

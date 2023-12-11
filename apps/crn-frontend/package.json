@@ -30,7 +30,7 @@
     "@sentry/tracing": "6.19.7",
     "@vitejs/plugin-react": "^4.2.0",
     "browser-image-compression": "1.0.17",
-    "csv-stringify": "6.4.4",
+    "csv-stringify": "6.4.5",
     "date-fns": "2.30.0",
     "fs": "npm:browserify-fs@1.0.0",
     "history": "4.10.1",

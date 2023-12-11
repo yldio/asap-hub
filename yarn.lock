@@ -890,7 +890,7 @@ __metadata:
     browserslist-to-esbuild: ^1.2.0
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    csv-stringify: 6.4.4
+    csv-stringify: 6.4.5
     date-fns: 2.30.0
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
@@ -1194,7 +1194,7 @@ __metadata:
     "@types/streamsaver": 2.0.4
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
-    csv-stringify: 6.4.4
+    csv-stringify: 6.4.5
     date-fns: 2.30.0
     history: 4.10.1
     react: 17.0.2
@@ -1372,7 +1372,7 @@ __metadata:
     browserslist-to-esbuild: ^1.2.0
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    csv-stringify: 6.4.4
+    csv-stringify: 6.4.5
     date-fns: 2.30.0
     history: 4.10.1
     identity-obj-proxy: 3.0.0
@@ -26592,10 +26592,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-stringify@npm:6.4.4":
-  version: 6.4.4
-  resolution: "csv-stringify@npm:6.4.4"
-  checksum: cc0c0d49e32c2c862658cc45fa2e9668cd67d85ff7eb1f65de0383335aaaae53bf2fc73e8f8051ba8de50f8f5dbffd8f3686bdaa760363762bba02525fe61939
+"csv-stringify@npm:6.4.5":
+  version: 6.4.5
+  resolution: "csv-stringify@npm:6.4.5"
+  checksum: 4da6ceb911735294c970880f295afc8f5e140702bb3f239f2cee2feb7f88f989e25238bae59558ad6b6f16adeb9407e74259f614ed3a9d49d06656aaac4d222e
   languageName: node
   linkType: hard
 

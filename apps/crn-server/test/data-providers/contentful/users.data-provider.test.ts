@@ -8,6 +8,7 @@ import {
   patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
+import { createUserListItemResponse } from '@asap-hub/fixtures';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
   parseToWorkingGroups,
@@ -18,6 +19,7 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphql,
   getContentfulGraphqlUser,
+  getContentfulGraphqlUserListItem,
   getUserCreateDataObject,
   getUserDataObject,
   getUserListItemResponse,
@@ -392,6 +394,111 @@ describe('User data provider', () => {
         items: [],
       });
     });
+
+    test('should return an empty _tags if there is no expertiseAndResourceTags', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [
+            getContentfulGraphqlUserListItem({
+              expertiseAndResourceTags: null,
+            }),
+          ],
+        },
+      });
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getUserListItemResponse(),
+            _tags: [],
+          },
+        ],
+      });
+    });
+
+    test('should filter user teams without roles', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [
+            getContentfulGraphqlUserListItem({
+              teamsCollection: {
+                items: [
+                  {
+                    team: {
+                      sys: {
+                        id: 'team-id-0',
+                      },
+                      displayName: 'Team A',
+                    },
+                  },
+                  {
+                    role: 'Lead PI (Core Leadership)',
+                    team: {
+                      sys: {
+                        id: 'team-id-1',
+                      },
+                      displayName: 'Team B',
+                    },
+                  },
+                ],
+              },
+            }),
+          ],
+        },
+      });
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getUserListItemResponse(),
+            teams: [
+              {
+                id: 'team-id-1',
+                role: 'Lead PI (Core Leadership)',
+                displayName: 'Team B',
+              },
+            ],
+          },
+        ],
+      });
+    });
+
+    test.each([
+      { membershipStatus: 'CRN Member', alumniSinceDate: null },
+      {
+        membershipStatus: 'Alumni Member',
+        alumniSinceDate: '2020-01-01T12:00:00.000Z',
+      },
+    ])(
+      'should return membershipStatus as $membershipStatus if alumniSinceDate is $alumniSinceDate',
+      async ({ membershipStatus, alumniSinceDate }) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          usersCollection: {
+            total: 1,
+            items: [
+              getContentfulGraphqlUserListItem({
+                alumniSinceDate,
+              }),
+            ],
+          },
+        });
+        const result = await userDataProvider.fetch({});
+        expect(result).toEqual({
+          total: 1,
+          items: [
+            {
+              ...getUserListItemResponse(),
+              alumniSinceDate,
+              membershipStatus: [membershipStatus],
+            },
+          ],
+        });
+      },
+    );
 
     test('should filter out team memberships not linked to a user', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({

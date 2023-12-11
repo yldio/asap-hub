@@ -99,13 +99,11 @@ describe('User', () => {
           {
             displayName: 'Alessi',
             id: 'team-alessi',
-            inactiveSinceDate: '',
             role: 'Lead PI (Core Leadership)',
           },
           {
             displayName: 'De Camilli',
             id: 'team-de-camilli',
-            inactiveSinceDate: '',
             role: 'Project Manager',
           },
         ],

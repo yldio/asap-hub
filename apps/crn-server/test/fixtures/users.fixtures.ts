@@ -12,6 +12,7 @@ import {
 import {
   ContentfulWebhookPayload,
   FetchUserByIdQuery,
+  FetchUsersQuery,
 } from '@asap-hub/contentful';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
@@ -319,9 +320,15 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
   };
 };
 
-export const getContentfulGraphql = (props = {}) => {
+export const getContentfulGraphql = (
+  props = {},
+  isListItem: boolean = false,
+) => {
   return {
-    Users: () => getContentfulGraphqlUser(props),
+    Users: () =>
+      isListItem
+        ? getContentfulGraphqlUserListItem(props)
+        : getContentfulGraphqlUser(props),
     InterestGroupsCollection: () => getInterestGroupsCollection(),
     WorkingGroupMembersCollection: () => getWorkingGroupMembersCollection(),
     WorkingGroupLeadersCollection: () => getWorkingGroupLeadersCollection(),
@@ -420,6 +427,61 @@ export const getContentfulGraphqlUser = (
   linkedFrom: {
     workingGroupMembersCollection: getWorkingGroupMembersCollection(),
     workingGroupLeadersCollection: getWorkingGroupLeadersCollection(),
+  },
+  ...props,
+});
+
+export const getContentfulGraphqlUserListItem = (
+  props: Partial<
+    NonNullable<
+      NonNullable<FetchUsersQuery>['usersCollection']
+    >['items'][number]
+  > = {},
+): NonNullable<
+  NonNullable<FetchUsersQuery>['usersCollection']
+>['items'][number] => ({
+  sys: {
+    id: 'user-id-1',
+  },
+  avatar: {
+    url: 'https://www.contentful.com/api/assets/asap-crn/contentful-asset-id',
+  },
+  onboarded: true,
+  createdDate: '2020-09-23T20:45:22.000Z',
+  alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  expertiseAndResourceTags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  institution: 'some institution',
+  jobTitle: 'some job title',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  city: 'London',
+  degree: 'MPH',
+  role: 'Grantee',
+  labsCollection: {
+    items: [
+      { sys: { id: 'cd7be4902' }, name: 'Brighton' },
+      { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+    ],
+  },
+  teamsCollection: {
+    items: [
+      {
+        role: 'Lead PI (Core Leadership)',
+        team: {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+        },
+      },
+    ],
   },
   ...props,
 });

@@ -20,6 +20,7 @@ import {
   getContentfulGraphqlUser,
   getUserCreateDataObject,
   getUserDataObject,
+  getUserListItemResponse,
 } from '../../fixtures/users.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -364,8 +365,11 @@ describe('User data provider', () => {
 
   describe('Fetch', () => {
     test('should receive a user list', async () => {
+      const isListItem = true;
       const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+        getContentfulGraphqlClientMockServer(
+          getContentfulGraphql({}, isListItem),
+        );
 
       const userDataProviderWithMockServer: UserDataProvider =
         new UserContentfulDataProvider(
@@ -373,38 +377,9 @@ describe('User data provider', () => {
           contentfulRestClientMock,
         );
       const result = await userDataProviderWithMockServer.fetch({});
-      const expectation = {
-        ...getUserDataObject(),
-        workingGroups: [
-          {
-            active: false,
-            id: 'wg-1',
-            name: 'working-group-1',
-            role: 'Project Manager',
-          },
-          {
-            active: false,
-            id: 'wg-1',
-            name: 'working-group-1',
-            role: 'Member',
-          },
-        ],
-        interestGroups: [
-          {
-            active: true,
-            id: 'ig-1',
-            name: 'interest-group-1',
-          },
-          {
-            active: false,
-            id: 'ig-2',
-            name: 'interest-group-2',
-          },
-        ],
-      };
 
       expect(result.total).toEqual(1);
-      expect(result.items).toEqual([expectation]);
+      expect(result.items).toEqual([getUserListItemResponse()]);
     });
 
     test('should return an empty response if there is no result', async () => {

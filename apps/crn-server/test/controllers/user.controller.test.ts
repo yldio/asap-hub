@@ -209,7 +209,7 @@ describe('Users controller', () => {
         items: [{ ...user, id: userId }],
       });
       userDataProviderMock.fetchById.mockResolvedValue({ ...user, id: userId });
-      await userController.connectByCode('some code', 'user-id');
+      await userController.connectByCode(welcomeCode, 'user-id');
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         userId,
@@ -253,6 +253,23 @@ describe('Users controller', () => {
     });
     test('throws if no user is returned', async () => {
       userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
+
+      await expect(
+        userController.connectByCode('some code', 'user-id'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('throws if user is not found', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [
+          {
+            ...getUserDataObject(),
+            connections: [{ code: 'google-oauth2|token' }],
+          },
+        ],
+      });
+      userDataProviderMock.fetchById.mockReturnValue(null);
 
       await expect(
         userController.connectByCode('some code', 'user-id'),

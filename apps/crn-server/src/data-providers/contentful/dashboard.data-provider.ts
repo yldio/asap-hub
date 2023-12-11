@@ -28,6 +28,23 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
         dashboard?.pagesCollection?.items
           .filter((x): x is PageItem => x !== null)
           .map(parseContentfulGraphQlPages) ?? [],
+      announcements:
+        dashboard?.announcementsCollection?.items
+          .filter((x): x is AnnouncementItem => x !== null)
+          .map((announcement) => ({
+            deadline: announcement.deadline,
+            description: announcement.description || '',
+            id: announcement.sys.id,
+            href: announcement.link || '',
+          })) ?? [],
     };
   }
 }
+
+type AnnouncementItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchDashboardQuery['dashboardCollection']>['items'][number]
+    >['announcementsCollection']
+  >['items'][number]
+>;

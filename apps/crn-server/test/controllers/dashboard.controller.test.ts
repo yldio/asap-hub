@@ -1,3 +1,4 @@
+import { DashboardResponse } from '@asap-hub/model';
 import Dashboard from '../../src/controllers/dashboard.controller';
 import {
   getDashboardResponse,
@@ -14,6 +15,7 @@ describe('Dashboard controller', () => {
       dashboardDataProviderMock.fetch.mockResolvedValue({
         news: [],
         pages: [],
+        announcements: [],
       });
 
       const result = await dashboardController.fetch();
@@ -21,7 +23,8 @@ describe('Dashboard controller', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardResponse);
     });
 
     test('Should return the dashboard news and pages', async () => {

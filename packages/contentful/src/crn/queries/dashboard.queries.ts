@@ -17,6 +17,17 @@ export const FETCH_DASHBOARD = gql`
             ...PageContent
           }
         }
+
+        announcementsCollection(order: sys_firstPublishedAt_DESC) {
+          items {
+            description
+            deadline
+            link
+            sys {
+              id
+            }
+          }
+        }
       }
     }
   }

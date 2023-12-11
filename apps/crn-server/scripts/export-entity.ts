@@ -1,5 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse, toAlgoliaUserItem, UserResponse } from '@asap-hub/model';
+import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -129,13 +129,7 @@ const transformRecords = (
   }
 
   if (type === 'user' && 'expertiseAndResourceTags' in record) {
-    return {
-      ...toAlgoliaUserItem(record as UserResponse),
-      objectID: record.id,
-      __meta: {
-        type,
-      },
-    };
+    return payload;
   }
 
   if (type === 'event' && 'tags' in record) {

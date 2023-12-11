@@ -11,9 +11,8 @@ import {
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
-  UserListItemAlgoliaResponse,
+  UserAlgoliaResponse,
   UserResponse,
-  WithAlgoliaTags,
   WithMeta,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -57,10 +56,7 @@ export type EntityResponses = {
       ResearchOutputResponse,
       typeof RESEARCH_OUTPUT_ENTITY_TYPE
     >;
-    [USER_ENTITY_TYPE]: WithMeta<
-      WithAlgoliaTags<UserListItemAlgoliaResponse>,
-      typeof USER_ENTITY_TYPE
-    >;
+    [USER_ENTITY_TYPE]: WithMeta<UserAlgoliaResponse, typeof USER_ENTITY_TYPE>;
     [EXTERNAL_AUTHOR_ENTITY_TYPE]: WithMeta<
       ExternalAuthorResponse,
       typeof EXTERNAL_AUTHOR_ENTITY_TYPE

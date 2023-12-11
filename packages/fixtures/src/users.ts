@@ -2,8 +2,7 @@ import {
   ListUserResponse,
   UserResponse,
   UserTeam,
-  UserListItemAlgoliaResponse,
-  WithAlgoliaTags,
+  UserAlgoliaResponse,
   UserListAlgoliaResponse,
   UserListItemResponse,
 } from '@asap-hub/model';
@@ -98,7 +97,7 @@ export const createListUserResponse = (
 export const createUserAlgoliaResponse = (
   options: FixtureOptions = {},
   itemIndex = 0,
-): WithAlgoliaTags<UserListItemAlgoliaResponse> => {
+): UserAlgoliaResponse => {
   const {
     alumniSinceDate,
     avatarUrl,
@@ -106,6 +105,7 @@ export const createUserAlgoliaResponse = (
     country,
     createdDate,
     degree,
+    dismissedGettingStarted,
     displayName,
     email,
     expertiseAndResourceTags,
@@ -116,6 +116,8 @@ export const createUserAlgoliaResponse = (
     labs,
     lastName,
     membershipStatus,
+    onboarded,
+    role,
     teams,
   } = createUserResponse(options, itemIndex);
 
@@ -126,6 +128,7 @@ export const createUserAlgoliaResponse = (
     country,
     createdDate,
     degree,
+    dismissedGettingStarted,
     displayName,
     email,
     firstName,
@@ -135,6 +138,8 @@ export const createUserAlgoliaResponse = (
     labs,
     lastName,
     membershipStatus,
+    onboarded,
+    role,
     teams,
     _tags: expertiseAndResourceTags,
   };

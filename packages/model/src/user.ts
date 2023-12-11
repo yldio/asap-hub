@@ -1,7 +1,6 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
-import { WithAlgoliaTags } from './tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
 
@@ -135,14 +134,11 @@ export type UserListItemDataObject = Pick<
 };
 export type ListUserDataObject = ListResponse<UserListItemDataObject>;
 
-export type UserListItemAlgoliaResponse = Omit<
-  UserListItemDataObject,
-  'onboarded' | 'role'
->;
-
 export type UserListItemResponse = UserListItemDataObject;
 
-export type UserListAlgoliaResponse = ListResponse<UserListItemAlgoliaResponse>;
+export type UserAlgoliaResponse = UserListItemDataObject;
+
+export type UserListAlgoliaResponse = ListResponse<UserAlgoliaResponse>;
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
@@ -237,9 +233,7 @@ export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';
 
-export const toAlgoliaUserItem = (
-  user: UserResponse,
-): WithAlgoliaTags<UserListItemAlgoliaResponse> => {
+export const toAlgoliaUserItem = (user: UserResponse): UserAlgoliaResponse => {
   const {
     alumniSinceDate,
     avatarUrl,
@@ -247,6 +241,7 @@ export const toAlgoliaUserItem = (
     country,
     createdDate,
     degree,
+    dismissedGettingStarted,
     displayName,
     email,
     expertiseAndResourceTags,
@@ -257,6 +252,8 @@ export const toAlgoliaUserItem = (
     labs,
     lastName,
     membershipStatus,
+    onboarded,
+    role,
     teams,
   } = user;
 
@@ -267,6 +264,7 @@ export const toAlgoliaUserItem = (
     country,
     createdDate,
     degree,
+    dismissedGettingStarted,
     displayName,
     email,
     firstName,
@@ -276,6 +274,8 @@ export const toAlgoliaUserItem = (
     labs,
     lastName,
     membershipStatus,
+    onboarded,
+    role,
     teams,
     _tags: expertiseAndResourceTags,
   };

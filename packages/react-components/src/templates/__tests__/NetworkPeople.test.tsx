@@ -6,6 +6,7 @@ import NetworkPeople from '../NetworkPeople';
 const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
   createdDate: '2020-09-07T17:36:54Z',
+  dismissedGettingStarted: true,
   displayName: 'Person A',
   firstName: 'Agnete',
   lastName: 'Kirkeby',
@@ -23,6 +24,8 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
     { id: 'cd7be4902', name: 'Barcelona' },
     { id: 'cd7be4905', name: 'Glasgow' },
   ],
+  onboarded: true,
+  role: 'Grantee',
   _tags: [],
 };
 const people = [

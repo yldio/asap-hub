@@ -15,6 +15,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
     people: Array.from({ length: numberOfItems }, (_, i) => ({
       id: `p${i}`,
       createdDate: '2020-09-07T17:36:54Z',
+      dismissedGettingStarted: true,
       displayName: `Agnete Kirkeby ${i + 1}`,
       firstName: 'Agnete',
       lastName: 'Kirkeby',
@@ -32,6 +33,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
         { id: 'cd7be4904', name: 'Manchester' },
         { id: 'cd7be4905', name: 'Glasgow' },
       ],
+      onboarded: true,
       role: 'Grantee' as const,
       _tags: [],
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

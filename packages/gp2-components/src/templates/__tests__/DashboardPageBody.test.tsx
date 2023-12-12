@@ -105,7 +105,7 @@ describe('DashboardPageBody', () => {
       ${'shows no reminders message'}                            | ${true}    | ${/no reminders/i}
       ${'informs other users to contact their project managers'} | ${false}   | ${/anything to share /i}
     `(
-      `$description when canPublish is $canPublish `,
+      `$description when canPublish is $canPublish`,
       ({ canPublish, selector }) => {
         render(
           <DashboardPageBody

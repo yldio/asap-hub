@@ -73,11 +73,13 @@ const usersCardsStyles = css({
 });
 
 type DashboardPageBodyProps = {
+  canPublish: boolean;
   news: gp2Model.ListNewsResponse;
   latestStats: gp2Model.StatsDataObject;
   totalOfUpcomingEvents: number;
   totalOfPastEvents: number;
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
+  reminders: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
   guides?: gp2Model.GuideDataObject[];
@@ -87,11 +89,13 @@ type DashboardPageBodyProps = {
 };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
+  canPublish,
   news,
   latestStats,
   totalOfUpcomingEvents,
   totalOfPastEvents,
   announcements,
+  reminders,
   upcomingEvents,
   pastEvents,
   guides,
@@ -104,7 +108,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   const lastestNews = news.items[0];
   return (
     <>
-      {announcements ? (
+      {announcements?.length ? (
         <div css={columnContainer}>
           <Headline2>Announcements</Headline2>
           <Paragraph accent="lead" noMargin>
@@ -115,6 +119,20 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
         </div>
       ) : null}
+
+      <div css={columnContainer}>
+        <Headline2>Reminders</Headline2>
+        <Paragraph accent="lead" noMargin>
+          Latest reminders about published outputs and upcoming events.
+        </Paragraph>
+        <div css={contentCardsStyles}>
+          <RemindersCard
+            limit={3}
+            reminders={reminders}
+            canPublish={canPublish}
+          />
+        </div>
+      </div>
       <div css={columnContainer}>
         <Headline2>GP2 Hub Stats</Headline2>
         <Paragraph accent="lead" noMargin>

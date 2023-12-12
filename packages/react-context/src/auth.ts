@@ -34,6 +34,23 @@ export const useCurrentUserRoleGP2 = (
     : undefined;
 };
 
+export const useCurrentUserProjectRolesGP2 =
+  (): gp2Model.ProjectMemberRole[] => {
+    const user = useCurrentUserGP2();
+
+    return (
+      (user?.projects
+        .map(
+          (project) =>
+            project.members.filter((member) => member.userId === user.id)[0]
+              ?.role,
+        )
+        .filter(
+          (role) => role !== undefined,
+        ) as gp2Model.ProjectMemberRole[]) || []
+    );
+  };
+
 export const useCurrentUserTeamRolesCRN = (): Array<
   User['teams'][number]['role']
 > => {

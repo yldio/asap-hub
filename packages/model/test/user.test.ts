@@ -3,7 +3,7 @@ import {
   isUserRole,
   userDegree,
   userRole,
-  toAlgoliaUserItem,
+  toUserListItem,
 } from '../src';
 
 describe('User', () => {
@@ -27,10 +27,10 @@ describe('User', () => {
     });
   });
 
-  describe('toAlgoliaUserItem', () => {
+  describe('toUserListItem', () => {
     it('should convert user response to algolia user item response', () => {
       expect(
-        toAlgoliaUserItem({
+        toUserListItem({
           id: 'user-1',
           createdDate: '2020-09-07T17:36:54Z',
           lastModifiedDate: '2020-09-07T17:36:54Z',

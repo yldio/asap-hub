@@ -17,7 +17,7 @@
     "@asap-hub/gp2-components": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/preset-react": "7.23.3",
-    "@babel/runtime-corejs3": "7.23.5",
+    "@babel/runtime-corejs3": "7.23.6",
     "@vitejs/plugin-react": "^4.2.0",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
@@ -26,7 +26,7 @@
     "react-dom": "17.0.2",
     "react-router-dom": "5.3.4",
     "util": "0.12.5",
-    "vite": "5.0.6"
+    "vite": "5.0.8"
   },
   "devDependencies": {
     "@asap-hub/auth-frontend-scripts": "workspace:*",

@@ -30,7 +30,7 @@
     "@sentry/tracing": "6.19.7",
     "@vitejs/plugin-react": "^4.2.0",
     "browser-image-compression": "1.0.17",
-    "csv-stringify": "6.4.4",
+    "csv-stringify": "6.4.5",
     "date-fns": "2.30.0",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
@@ -45,13 +45,13 @@
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
     "uuid": "8.3.2",
-    "vite": "5.0.6"
+    "vite": "5.0.8"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/preset-react": "7.23.3",
-    "@babel/runtime-corejs3": "7.23.5",
+    "@babel/runtime-corejs3": "7.23.6",
     "@sentry/cli": "^2.20.3",
     "@testing-library/dom": "9.3.3",
     "@testing-library/jest-dom": "^5.16.5",

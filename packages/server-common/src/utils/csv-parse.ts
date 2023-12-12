@@ -9,7 +9,6 @@ export const parse =
     transformer: (arg: T) => Promise<unknown>,
   ) =>
   (src: string): Promise<void> =>
-    /* eslint-enable no-unused-vars */
     new Promise((resolve, reject) => {
       pump(
         createReadStream(src),

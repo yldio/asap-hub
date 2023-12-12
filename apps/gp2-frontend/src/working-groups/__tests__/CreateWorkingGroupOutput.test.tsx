@@ -153,6 +153,7 @@ describe('Create WorkingGroup Output', () => {
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalledWith(
         {
+          createVersion: false,
           title,
           link,
           description: 'An interesting article',

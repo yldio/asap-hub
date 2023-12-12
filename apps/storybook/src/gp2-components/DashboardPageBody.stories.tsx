@@ -1,5 +1,6 @@
-import { gp2 } from '@asap-hub/fixtures';
+import { gp2, createListReminderResponse } from '@asap-hub/fixtures';
 import { DashboardPageBody } from '@asap-hub/gp2-components';
+import { number } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Templates / Dashboard / Dashboard Page Body',
@@ -14,6 +15,8 @@ const mockedDashboardStats = {
 
 export const Normal = () => (
   <DashboardPageBody
+    canPublish={true}
+    reminders={createListReminderResponse(number('Reminders', 3)).items}
     news={gp2.createNewsResponse()}
     latestStats={mockedDashboardStats}
     upcomingEvents={gp2

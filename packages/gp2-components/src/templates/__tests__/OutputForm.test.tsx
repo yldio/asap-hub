@@ -225,6 +225,7 @@ describe('OutputForm', () => {
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
+          createVersion: false,
           title: 'output title',
           link: 'https://example.com',
           documentType: 'Code/Software',
@@ -623,6 +624,7 @@ describe('OutputForm', () => {
 
     await waitFor(() => {
       expect(shareOutput).toHaveBeenCalledWith({
+        createVersion: false,
         title: 'output title',
         link: 'https://example.com',
         documentType: 'Procedural Form',
@@ -935,6 +937,7 @@ describe('OutputForm', () => {
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
+          createVersion: false,
           title: 'output title',
           link: 'https://example.com',
           documentType: 'Article',

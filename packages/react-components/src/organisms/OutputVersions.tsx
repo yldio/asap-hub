@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputVersion } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
@@ -103,11 +103,12 @@ const createVersionCardStyles = css({
   background: neutral200.rgb,
 });
 
+type Version = Omit<ResearchOutputVersion, 'documentType'> & {
+  documentType?: string;
+};
+
 export type OutputVersionsProps = {
-  versions: Pick<
-    ResearchOutputResponse,
-    'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
-  >[];
+  versions: Version[];
   versionAction?: 'create' | 'edit';
 };
 
@@ -167,7 +168,7 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
                       {documentType === 'Report' ? (
                         <Pill accent="gray">Report</Pill>
                       ) : (
-                        <Pill accent="gray">{type}</Pill>
+                        type && <Pill accent="gray">{type}</Pill>
                       )}
                     </p>
                     <span css={[titleStyles, rowTitleStyles]}>

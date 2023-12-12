@@ -1,5 +1,6 @@
-import { gp2 } from '@asap-hub/fixtures';
+import { createListReminderResponse, gp2 } from '@asap-hub/fixtures';
 import { DashboardPageBody } from '@asap-hub/gp2-components';
+import { number } from '@storybook/addon-knobs';
 
 export default {
   title: 'GP2 / Templates / Dashboard / Dashboard Page Body',
@@ -30,5 +31,6 @@ export const Normal = () => (
     latestUsers={gp2.createUsersResponse(3).items}
     recentOutputs={gp2.createListOutputResponse(2).items}
     totalOutputs={2}
+    announcements={createListReminderResponse(number('Reminders', 3)).items}
   />
 );

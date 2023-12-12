@@ -51,7 +51,7 @@ type DashboardPageBodyProps = Pick<
   ComponentProps<typeof RemindersCard>,
   'reminders'
 > & {
-  announcements?: ComponentProps<typeof RemindersCard>['reminders'];
+  announcements: ComponentProps<typeof RemindersCard>['reminders'];
 } & Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
   ComponentProps<typeof DashboardUpcomingEvents> &
   Omit<ComponentProps<typeof NewsSection>, 'title' | 'type' | 'news'> & {
@@ -122,7 +122,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </Card>
         </div>
       )}
-      {announcements && (
+      {announcements.length && (
         <div>
           <Headline2 styleAsHeading={3}>Announcements</Headline2>
           <div css={infoStyles}>Last announcements from admins.</div>

@@ -29,6 +29,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
   roles: [],
   reminders: [],
+  announcements: [],
   guides: [],
   dismissedGettingStarted: false,
   upcomingEvents: undefined,

@@ -47,6 +47,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
   roles: [],
   pastEvents: createListEventResponse(3).items,
   reminders: createListReminderResponse(number('Reminders', 3)).items,
+  announcements: createListReminderResponse(number('Reminders', 3)).items,
   guides: [],
   upcomingEvents: createListEventResponse(
     number('Number of events', 4),

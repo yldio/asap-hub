@@ -22,6 +22,7 @@ describe('DashboardPageBody', () => {
         totalOfPastEvents={0}
         recentOutputs={[]}
         totalOutputs={0}
+        announcements={[]}
       />,
     );
     expect(
@@ -41,11 +42,30 @@ describe('DashboardPageBody', () => {
         totalOfPastEvents={0}
         recentOutputs={[]}
         totalOutputs={0}
+        announcements={[]}
       />,
     );
     expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
   });
   describe('Announcements', () => {
+    it('hides the card if there are no announcements', () => {
+      render(
+        <DashboardPageBody
+          news={gp2.createNewsResponse()}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
+          announcements={[]}
+        />,
+      );
+      expect(screen.queryByText('Announcements')).not.toBeInTheDocument();
+    });
+
     it('should render announcements if there is an announcement', () => {
       render(
         <DashboardPageBody
@@ -86,6 +106,7 @@ describe('DashboardPageBody', () => {
           totalOfPastEvents={0}
           recentOutputs={[]}
           totalOutputs={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -119,6 +140,7 @@ describe('DashboardPageBody', () => {
           ]}
           pastEvents={[]}
           totalOfPastEvents={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -142,6 +164,7 @@ describe('DashboardPageBody', () => {
           totalOfPastEvents={0}
           recentOutputs={[]}
           totalOutputs={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -169,6 +192,7 @@ describe('DashboardPageBody', () => {
           totalOfPastEvents={0}
           recentOutputs={[]}
           totalOutputs={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -201,6 +225,7 @@ describe('DashboardPageBody', () => {
             totalOfPastEvents={0}
             recentOutputs={[]}
             totalOutputs={0}
+            announcements={[]}
           />
         </Router>,
       );
@@ -242,6 +267,7 @@ describe('DashboardPageBody', () => {
           totalOfPastEvents={0}
           recentOutputs={[]}
           totalOutputs={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -267,6 +293,7 @@ describe('DashboardPageBody', () => {
             totalOfPastEvents={0}
             recentOutputs={[]}
             totalOutputs={0}
+            announcements={[]}
           />
         </Router>,
       );
@@ -298,6 +325,7 @@ describe('DashboardPageBody', () => {
           totalOfPastEvents={1}
           recentOutputs={[]}
           totalOutputs={0}
+          announcements={[]}
         />,
       );
       expect(
@@ -324,6 +352,7 @@ describe('DashboardPageBody', () => {
             totalOfPastEvents={4}
             recentOutputs={[]}
             totalOutputs={0}
+            announcements={[]}
           />
         </Router>,
       );
@@ -368,6 +397,7 @@ describe('DashboardPageBody', () => {
             },
           ]}
           totalOutputs={2}
+          announcements={[]}
         />,
       );
       expect(
@@ -399,6 +429,7 @@ describe('DashboardPageBody', () => {
             totalOfPastEvents={0}
             recentOutputs={gp2.createListOutputResponse(9).items}
             totalOutputs={9}
+            announcements={[]}
           />
         </Router>,
       );

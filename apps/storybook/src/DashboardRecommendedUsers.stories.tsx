@@ -1,5 +1,5 @@
 import { DashboardRecommendedUsers } from '@asap-hub/react-components';
-import { createUserListAlgoliaResponse } from '@asap-hub/fixtures';
+import { createListUserResponse } from '@asap-hub/fixtures';
 import { number, text } from '@storybook/addon-knobs';
 
 export default {
@@ -9,7 +9,7 @@ export default {
 
 export const Normal = () => (
   <DashboardRecommendedUsers
-    recommendedUsers={createUserListAlgoliaResponse(3).items.map((user) => ({
+    recommendedUsers={createListUserResponse(3).items.map((user) => ({
       ...user,
       expertiseAndResourceTags: Array.from(
         new Array(number('Number of tags', 8)),

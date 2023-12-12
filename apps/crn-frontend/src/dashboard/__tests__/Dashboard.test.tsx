@@ -4,8 +4,8 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   createListReminderResponse,
-  createUserAlgoliaResponse,
-  createUserListAlgoliaResponse,
+  createUserListItemResponse,
+  createListUserResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { activeUserMembershipStatus } from '@asap-hub/model';
@@ -26,10 +26,10 @@ jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
 
-const userResponse = createUserAlgoliaResponse();
+const userResponse = createUserListItemResponse();
 
 beforeEach(() => {
-  mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(2));
+  mockGetUsers.mockResolvedValue(createListUserResponse(2));
 });
 afterEach(() => {
   jest.clearAllMocks();
@@ -175,7 +175,7 @@ describe('dismissing the getting started option', () => {
 });
 
 it('renders latest users filtered by active users', async () => {
-  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
+  mockGetUsers.mockResolvedValueOnce(createListUserResponse(3));
   const { container } = await renderDashboard({});
 
   expect(mockGetUsers).toBeCalledWith(

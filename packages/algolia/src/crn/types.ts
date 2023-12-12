@@ -6,7 +6,7 @@ import {
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
-  UserAlgoliaResponse,
+  UserListItemResponse,
   WithAlgoliaTags,
   WorkingGroupResponse,
 } from '@asap-hub/model';
@@ -42,7 +42,7 @@ export type Payload =
       type: typeof TEAM_ENTITY_TYPE;
     }
   | {
-      data: UserAlgoliaResponse;
+      data: UserListItemResponse;
       type: typeof USER_ENTITY_TYPE;
     }
   | {

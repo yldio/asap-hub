@@ -4,7 +4,7 @@ import { GuideDataObject } from '@asap-hub/model';
 import {
   createListEventResponse,
   createListResearchOutputResponse,
-  createUserListAlgoliaResponse,
+  createListUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import DashboardPageBody from '../DashboardPageBody';
@@ -33,7 +33,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
   recentSharedOutputs: createListResearchOutputResponse(5),
-  recommendedUsers: createUserListAlgoliaResponse(3).items,
+  recommendedUsers: createListUserResponse(3).items,
 };
 
 it('renders guides', () => {

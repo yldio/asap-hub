@@ -11,7 +11,7 @@ import {
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
-  UserAlgoliaResponse,
+  UserListItemResponse,
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
@@ -56,7 +56,7 @@ export type EntityResponses = {
       ResearchOutputResponse,
       typeof RESEARCH_OUTPUT_ENTITY_TYPE
     >;
-    [USER_ENTITY_TYPE]: WithMeta<UserAlgoliaResponse, typeof USER_ENTITY_TYPE>;
+    [USER_ENTITY_TYPE]: WithMeta<UserListItemResponse, typeof USER_ENTITY_TYPE>;
     [EXTERNAL_AUTHOR_ENTITY_TYPE]: WithMeta<
       ExternalAuthorResponse,
       typeof EXTERNAL_AUTHOR_ENTITY_TYPE

@@ -136,10 +136,6 @@ export type ListUserDataObject = ListResponse<UserListItemDataObject>;
 
 export type UserListItemResponse = UserListItemDataObject;
 
-export type UserAlgoliaResponse = UserListItemDataObject;
-
-export type UserListAlgoliaResponse = ListResponse<UserAlgoliaResponse>;
-
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
 };
@@ -233,7 +229,7 @@ export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';
 
-export const toAlgoliaUserItem = (user: UserResponse): UserAlgoliaResponse => {
+export const toUserListItem = (user: UserResponse): UserListItemResponse => {
   const {
     alumniSinceDate,
     avatarUrl,

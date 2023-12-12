@@ -1,4 +1,4 @@
-import { UserAlgoliaResponse } from '@asap-hub/model';
+import { UserListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Card, Avatar, Ellipsis, Paragraph } from '../atoms';
@@ -37,7 +37,7 @@ const roleStyles = css({
 });
 
 type DashboardRecommendedUsersProps = {
-  recommendedUsers: UserAlgoliaResponse[];
+  recommendedUsers: UserListItemResponse[];
 };
 
 const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({

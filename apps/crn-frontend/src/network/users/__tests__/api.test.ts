@@ -1,7 +1,7 @@
 import {
   createUserResponse,
-  createUserAlgoliaResponse,
-  createUserListAlgoliaResponse,
+  createUserListItemResponse,
+  createListUserResponse,
 } from '@asap-hub/fixtures';
 import {
   inactiveUserMembershipStatus,
@@ -55,7 +55,7 @@ describe('getUsers', () => {
   beforeEach(() => {
     search.mockReset();
 
-    const userResponse = createUserAlgoliaResponse();
+    const userResponse = createUserListItemResponse();
 
     search.mockResolvedValue(
       createAlgoliaResponse<'user'>([
@@ -148,7 +148,7 @@ describe('getUsers', () => {
   });
 
   it('returns successfully fetched users', async () => {
-    const users = createUserListAlgoliaResponse(1);
+    const users = createListUserResponse(1);
 
     const transformedUsers = {
       ...users,

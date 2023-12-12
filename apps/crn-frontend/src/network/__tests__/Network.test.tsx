@@ -4,7 +4,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
   createListEventResponse,
-  createUserListAlgoliaResponse,
+  createListUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -63,7 +63,7 @@ const mockGetWorkingGroupEventsFromAlgolia = getEvents as jest.MockedFunction<
 const response = createListEventResponse(7);
 mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
 
-mockUseUsers.mockReturnValue(createUserListAlgoliaResponse(1));
+mockUseUsers.mockReturnValue(createListUserResponse(1));
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   render(

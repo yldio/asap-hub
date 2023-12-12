@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { createUserAlgoliaResponse } from '@asap-hub/fixtures';
+import { createUserListItemResponse } from '@asap-hub/fixtures';
 import DashboardRecommendedUsers from '../DashboardRecommendedUsers';
 
 it('renders the dashboard recommended users', () => {
@@ -7,15 +7,15 @@ it('renders the dashboard recommended users', () => {
     <DashboardRecommendedUsers
       recommendedUsers={[
         {
-          ...createUserAlgoliaResponse(undefined, 0),
+          ...createUserListItemResponse(undefined, 0),
           displayName: 'John Doe',
         },
         {
-          ...createUserAlgoliaResponse(undefined, 1),
+          ...createUserListItemResponse(undefined, 1),
           displayName: 'Octavian Ratiu',
         },
         {
-          ...createUserAlgoliaResponse(undefined, 2),
+          ...createUserListItemResponse(undefined, 2),
           id: '345',
           displayName: 'User 3',
         },
@@ -32,7 +32,7 @@ it('renders the recommended user', () => {
     <DashboardRecommendedUsers
       recommendedUsers={[
         {
-          ...createUserAlgoliaResponse(),
+          ...createUserListItemResponse(),
           id: 'user-1',
           firstName: 'Test',
           lastName: 'User',
@@ -44,8 +44,8 @@ it('renders the recommended user', () => {
             { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
           ],
         },
-        createUserAlgoliaResponse(undefined, 1),
-        createUserAlgoliaResponse(undefined, 2),
+        createUserListItemResponse(undefined, 1),
+        createUserListItemResponse(undefined, 2),
       ]}
     />,
   );

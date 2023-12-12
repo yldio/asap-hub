@@ -8,7 +8,7 @@ import {
   UserPatchRequest,
   UserResponse,
   userMembershipStatus,
-  UserListAlgoliaResponse,
+  ListUserResponse,
 } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
@@ -38,7 +38,7 @@ export const getUser = async (
 export const getUsers = async (
   algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
-): Promise<UserListAlgoliaResponse> => {
+): Promise<ListUserResponse> => {
   const isMembershipStatusFilter = (filter: string) =>
     (userMembershipStatus as unknown as string[]).includes(filter);
   const filterArray = Array.from(filters);

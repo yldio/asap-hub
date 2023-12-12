@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { createUserListAlgoliaResponse } from '@asap-hub/fixtures';
+import { createListUserResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -53,7 +53,7 @@ const renderUserList = async () => {
 };
 
 it('renders a list of people when searching with algolia', async () => {
-  const listUserResponse = createUserListAlgoliaResponse(2);
+  const listUserResponse = createListUserResponse(2);
   const names = ['Person A', 'Person B'];
   mockGetUsers.mockResolvedValue({
     ...listUserResponse,
@@ -69,7 +69,7 @@ it('renders a list of people when searching with algolia', async () => {
 });
 
 it('renders an algolia tagged result list and hit', async () => {
-  const listUserResponse = createUserListAlgoliaResponse(1);
+  const listUserResponse = createListUserResponse(1);
   mockGetUsers.mockResolvedValue({
     ...listUserResponse,
     algoliaIndexName: 'index',

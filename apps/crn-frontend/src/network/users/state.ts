@@ -1,10 +1,10 @@
 import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  UserAlgoliaResponse,
+  UserListItemResponse,
   UserPatchRequest,
   UserResponse,
-  UserListAlgoliaResponse,
+  ListUserResponse,
 } from '@asap-hub/model';
 import { useAuth0CRN } from '@asap-hub/react-context';
 import {
@@ -33,7 +33,7 @@ const userIndexState = atomFamily<
   default: undefined,
 });
 export const usersState = selectorFamily<
-  UserListAlgoliaResponse | Error | undefined,
+  ListUserResponse | Error | undefined,
   GetListOptions
 >({
   key: 'users',
@@ -42,7 +42,7 @@ export const usersState = selectorFamily<
     ({ get }) => {
       const index = get(userIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const users: UserAlgoliaResponse[] = [];
+      const users: UserListItemResponse[] = [];
       for (const id of index.ids) {
         const user = get(userListState(id));
         if (user === undefined) return undefined;
@@ -102,7 +102,7 @@ const userState = selectorFamily<UserResponse | undefined, string>({
       get(patchedUserState(id)) ?? get(initialUserState(id)),
 });
 
-const userListState = atomFamily<UserAlgoliaResponse | undefined, string>({
+const userListState = atomFamily<UserListItemResponse | undefined, string>({
   key: 'userList',
   default: undefined,
 });

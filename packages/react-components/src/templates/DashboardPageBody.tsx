@@ -14,7 +14,7 @@ import {
   NewsResponse,
   GuideDataObject,
   EventResponse,
-  UserAlgoliaResponse,
+  UserListItemResponse,
 } from '@asap-hub/model';
 import {
   NewsSection,
@@ -63,7 +63,7 @@ type DashboardPageBodyProps = Pick<
     roles: TeamRole[];
     guides: GuideDataObject[];
     recentSharedOutputs?: ListResearchOutputResponse;
-    recommendedUsers: UserAlgoliaResponse[];
+    recommendedUsers: UserListItemResponse[];
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];

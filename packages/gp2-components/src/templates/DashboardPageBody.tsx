@@ -104,7 +104,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   const lastestNews = news.items[0];
   return (
     <>
-      {announcements.length ? (
+      {announcements.length > 0 ? (
         <div css={columnContainer}>
           <Headline2>Announcements</Headline2>
           <Paragraph accent="lead" noMargin>

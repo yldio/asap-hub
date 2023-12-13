@@ -2026,8 +2026,8 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/client-cloudfront@npm:^3.287.0":
-  version: 3.470.0
-  resolution: "@aws-sdk/client-cloudfront@npm:3.470.0"
+  version: 3.472.0
+  resolution: "@aws-sdk/client-cloudfront@npm:3.472.0"
   dependencies:
     "@aws-crypto/sha256-browser": 3.0.0
     "@aws-crypto/sha256-js": 3.0.0
@@ -2044,7 +2044,7 @@ __metadata:
     "@aws-sdk/util-endpoints": 3.470.0
     "@aws-sdk/util-user-agent-browser": 3.468.0
     "@aws-sdk/util-user-agent-node": 3.470.0
-    "@aws-sdk/xml-builder": 3.465.0
+    "@aws-sdk/xml-builder": 3.472.0
     "@smithy/config-resolver": ^2.0.21
     "@smithy/fetch-http-handler": ^2.3.1
     "@smithy/hash-node": ^2.0.17
@@ -2072,7 +2072,7 @@ __metadata:
     "@smithy/util-waiter": ^2.0.15
     fast-xml-parser: 4.2.5
     tslib: ^2.5.0
-  checksum: e2f58136d4f5507f82aacf53d17b49a8300f04ad4f2be8071616bc15e11fbc983292f93878df7eaaeb459150ae740eac50cda54793313a0f4eb0f4ca2a060075
+  checksum: a8a213f1825e41521c6d4d9c6ba7b000dfb60602d2b9fb03b5123cc5e373285c1bd5e8e8a5ea2b13dd7fc70c05c489cf4d7e3baa3eef38f3dd53890716ad0ca6
   languageName: node
   linkType: hard
 
@@ -3081,12 +3081,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/xml-builder@npm:3.465.0":
-  version: 3.465.0
-  resolution: "@aws-sdk/xml-builder@npm:3.465.0"
+"@aws-sdk/xml-builder@npm:3.472.0":
+  version: 3.472.0
+  resolution: "@aws-sdk/xml-builder@npm:3.472.0"
   dependencies:
+    "@smithy/types": ^2.7.0
     tslib: ^2.5.0
-  checksum: 33c370b216aece520352bc36dc147649bee0bca7139a5d5c6e49e99756e9ca369c73bacc55dff5920f6003d06a29a1375920e18b9776c264de925c5a9cfc3deb
+  checksum: e053e8e247b096e311b717a54d70270ba9fcb4bf049d66b3a1958b2136503ba292adfa7efe694ce76d7cb1b4d0fd838aa44b2a8612210c7e1673c5f27d72e88d
   languageName: node
   linkType: hard
 

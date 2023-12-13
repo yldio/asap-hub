@@ -13,6 +13,8 @@ describe('DashboardPageBody', () => {
   it('should render GP2 Hub Stats', () => {
     render(
       <DashboardPageBody
+        canPublish={true}
+        reminders={[]}
         news={{ total: 0, items: [] }}
         latestStats={mockStats}
         upcomingEvents={[]}
@@ -33,6 +35,8 @@ describe('DashboardPageBody', () => {
   it('should render Latest News if there is a news item', () => {
     render(
       <DashboardPageBody
+        canPublish={true}
+        reminders={[]}
         news={gp2.createNewsResponse()}
         latestStats={mockStats}
         upcomingEvents={[]}
@@ -69,6 +73,8 @@ describe('DashboardPageBody', () => {
     it('should render announcements if there is an announcement', () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={[]}
@@ -93,10 +99,41 @@ describe('DashboardPageBody', () => {
     });
   });
 
+  describe('Reminders', () => {
+    it.each`
+      description                                                | canPublish | selector
+      ${'shows no reminders message'}                            | ${true}    | ${/no reminders/i}
+      ${'informs other users to contact their project managers'} | ${false}   | ${/anything to share /i}
+    `(
+      `$description when canPublish is $canPublish`,
+      ({ canPublish, selector }) => {
+        render(
+          <DashboardPageBody
+            canPublish={canPublish}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            announcements={[]}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+          />,
+        );
+        expect(screen.getByText(selector)).toBeVisible();
+      },
+    );
+  });
+
   describe('Tools and tutorials', () => {
     it('should not render tools and tutorials if there is no guide', () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={[]}
@@ -117,6 +154,8 @@ describe('DashboardPageBody', () => {
     it('should render tools and tutorials if there is a guide', () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={[]}
@@ -155,6 +194,8 @@ describe('DashboardPageBody', () => {
     it('should render no events if there is no upcoming event items', () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={[]}
@@ -176,6 +217,8 @@ describe('DashboardPageBody', () => {
     it('should render with events if there is an upcoming event item', async () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={gp2
@@ -209,6 +252,8 @@ describe('DashboardPageBody', () => {
       render(
         <Router history={history}>
           <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
             news={{ total: 0, items: [] }}
             latestStats={mockStats}
             upcomingEvents={gp2
@@ -245,6 +290,8 @@ describe('DashboardPageBody', () => {
     it('should render users if there is a latest user item', async () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           latestUsers={[
@@ -284,6 +331,8 @@ describe('DashboardPageBody', () => {
       render(
         <Router history={history}>
           <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
             news={{ total: 0, items: [] }}
             latestStats={mockStats}
             latestUsers={gp2.createUsersResponse(3).items}
@@ -316,6 +365,8 @@ describe('DashboardPageBody', () => {
       }).items;
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           upcomingEvents={[]}
@@ -343,6 +394,8 @@ describe('DashboardPageBody', () => {
       render(
         <Router history={history}>
           <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
             news={{ total: 0, items: [] }}
             latestStats={mockStats}
             upcomingEvents={[]}
@@ -373,6 +426,8 @@ describe('DashboardPageBody', () => {
     it('should render outputs if there is any', async () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={{ total: 0, items: [] }}
           latestStats={mockStats}
           latestUsers={[]}
@@ -420,6 +475,8 @@ describe('DashboardPageBody', () => {
       render(
         <Router history={history}>
           <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
             news={{ total: 0, items: [] }}
             latestStats={mockStats}
             latestUsers={[]}

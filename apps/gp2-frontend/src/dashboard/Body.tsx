@@ -1,11 +1,13 @@
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { DashboardPageBody } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { useCurrentUserProjectRolesGP2 } from '@asap-hub/react-context/src/auth';
 import { eventMapper } from '../events/EventsList';
 import { useEvents } from '../events/state';
 import { useOutputs } from '../outputs/state';
 import { useUsers } from '../users/state';
-import { useDashboard, useNews } from './state';
+import { useDashboard, useNews, useReminderState } from './state';
 
 const pageSize = 3;
 
@@ -49,14 +51,27 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
   };
   const announcements = dashboard.items[0]?.announcements || [];
   const guides = dashboard.items[0]?.guides || [];
+
+  const currentUser = useCurrentUserGP2();
+  const isAdministrator = currentUser?.role === 'Administrator';
+  const userProjectRoles = useCurrentUserProjectRolesGP2();
+
+  const canPublish =
+    isAdministrator ||
+    userProjectRoles.some((role) => role === 'Project manager');
+
+  const { items: reminders } = useReminderState();
+
   return (
     <DashboardPageBody
+      canPublish={canPublish}
       news={news}
       latestStats={stats}
       upcomingEvents={upcomingEvents.map(eventMapper)}
       totalOfUpcomingEvents={totalOfUpcomingEvents}
       pastEvents={pastEvents}
       totalOfPastEvents={totalOfPastEvents}
+      reminders={reminders}
       announcements={announcements}
       guides={guides}
       recentOutputs={recentOutputs || []}

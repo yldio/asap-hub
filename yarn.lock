@@ -382,7 +382,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -409,7 +409,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
@@ -437,7 +437,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -464,7 +464,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
@@ -492,7 +492,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -519,7 +519,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
@@ -547,7 +547,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
@@ -576,7 +576,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
@@ -605,7 +605,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
@@ -633,7 +633,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
@@ -661,7 +661,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
@@ -690,7 +690,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -717,7 +717,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
@@ -744,7 +744,7 @@ __metadata:
   dependencies:
     "@contentful/app-scripts": 1.13.2
     "@contentful/app-sdk": 4.23.1
-    "@contentful/f36-components": 4.56.0
+    "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.3
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
@@ -10481,20 +10481,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-accordion@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-accordion@npm:4.56.0"
+"@contentful/f36-accordion@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-accordion@npm:4.56.2"
   dependencies:
-    "@contentful/f36-collapse": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-collapse": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 71e80aa39ba139c03e40325d7687bf1b0281498418418bcdfc23f2222a5adb6a62531a73f524aa6dd6343048406c8ccef490b1b820ee47d1138c70f7c02633b4
+  checksum: aa972bf4d89d5a9c2124d3919e9ec0eb9faf35b54d86651de98b5524e383d1356c72a443fe86dff2ac1b91cbd72b4e177d2bb0aec738f85f6d7edc30bd536975
   languageName: node
   linkType: hard
 
@@ -10515,20 +10515,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-asset@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-asset@npm:4.56.0"
+"@contentful/f36-asset@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-asset@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-icon": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-icon": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: e507aaeb339bc43eb39ab18c50cbc27e920c10891f37d044b06edd7ee6784ae2f4b27725cc9163efe51a752069e75ccce01780c4594b5a969d2932ad8052d15e
+  checksum: 771b1c28b0248973e4f4094694002badcd9a54689ea2c2029c4ff4f4bee22db445658220b566b236494496daa18494ab995366e401209b21e6a37cf065a41e98
   languageName: node
   linkType: hard
 
@@ -10554,25 +10554,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-autocomplete@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-autocomplete@npm:4.56.0"
+"@contentful/f36-autocomplete@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-autocomplete@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-forms": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-forms": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-popover": ^4.56.0
-    "@contentful/f36-skeleton": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-popover": ^4.56.2
+    "@contentful/f36-skeleton": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     "@contentful/f36-utils": ^4.24.2
     downshift: ^6.1.12
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 2bd8dde8005a86496769170bef8329b7ae478789576548e079b161884f78d0c62ec43781e4a90baff011a7925d3ae387f2159bf5fd4d8f73a632892415745237
+  checksum: f1af89be36b1d286dddb44cb5bfa63ef81247ab53daf6b82b2104f7e6cf643e2b9fb413de1ebf068468c73ac5f663a075eb58c2a189a575e324d691737b7e794
   languageName: node
   linkType: hard
 
@@ -10590,18 +10590,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-badge@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-badge@npm:4.56.0"
+"@contentful/f36-badge@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-badge@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 88a5769c16be7251756b002c312b78275a45be52e6d7b4ec5ff7a7efb8bad35f70d0b7bd5d4f70a5921a51337e1b31de0ccab1c6235a4671693d624f303b09c6
+  checksum: c4d31f138658a48e100be766f4c9c1e1511204146d582c6b5b7aca4bbd22f9f374f23147fddbce8592f96a448e95db6f5155c7bc3b4ba706586adc4160bd8350
   languageName: node
   linkType: hard
 
@@ -10620,19 +10620,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-button@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-button@npm:4.56.0"
+"@contentful/f36-button@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-button@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-spinner": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-spinner": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     "@contentful/f36-utils": ^4.24.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 45b20249627e50f445053806df4043b9d7d341d9c8eaacb11ea032321f93ebf8fad537be1e896c29ec9669786789423618630ea515823e85cea398f5869581c8
+  checksum: a3bf3a66d776e0843eff9f4081175c31e6d8237019548135292d945692d4f467c6ed5105838602ea27bcf29ece5a721478880a4d43a5e49d364676863d7f3726
   languageName: node
   linkType: hard
 
@@ -10661,28 +10661,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-card@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-card@npm:4.56.0"
+"@contentful/f36-card@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-card@npm:4.56.2"
   dependencies:
-    "@contentful/f36-asset": ^4.56.0
-    "@contentful/f36-badge": ^4.56.0
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-drag-handle": ^4.56.0
-    "@contentful/f36-icon": ^4.56.0
+    "@contentful/f36-asset": ^4.56.2
+    "@contentful/f36-badge": ^4.56.2
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-drag-handle": ^4.56.2
+    "@contentful/f36-icon": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-menu": ^4.56.0
-    "@contentful/f36-skeleton": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-tooltip": ^4.56.0
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-menu": ^4.56.2
+    "@contentful/f36-skeleton": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-tooltip": ^4.56.2
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
     truncate: ^3.0.0
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 195ea6fab9ffb23d2e96ec613fc73a35ea3ad20b0d51be9abdb6324c6291fa3391050a21f90e11bf49bd846c682e7e32068123b465edd5685a343012ada89bf2
+  checksum: 873a56d8c6d142e782396b0dbecbb54d1a1f9b912d5422818528913a9cc6fec7223604f68078ec915fac138a1b186d4d859e83474edfdd558600dcac51602bb0
   languageName: node
   linkType: hard
 
@@ -10700,58 +10700,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-collapse@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-collapse@npm:4.56.0"
+"@contentful/f36-collapse@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-collapse@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: e7b900b2145f3f2023bb870eefe40f826b6713371be4a6a59e11059bd6b19e688b64f4e3a5de1f9b182c3696a0cd80ac114e15cc58d3f828e9d0792aa1f6b264
+  checksum: 720a7e8210ee3b370a66758a44e0fab90a7d1b9250b8cffbf031235b0d770fa7aead41972972ebfbfa1c2ca32edb5688a5bac4177c78de92154cae1fc42dfbfd
   languageName: node
   linkType: hard
 
-"@contentful/f36-components@npm:4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-components@npm:4.56.0"
+"@contentful/f36-components@npm:4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-components@npm:4.56.2"
   dependencies:
-    "@contentful/f36-accordion": ^4.56.0
-    "@contentful/f36-asset": ^4.56.0
-    "@contentful/f36-autocomplete": ^4.56.0
-    "@contentful/f36-badge": ^4.56.0
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-card": ^4.56.0
-    "@contentful/f36-collapse": ^4.56.0
-    "@contentful/f36-copybutton": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-datepicker": ^4.56.0
-    "@contentful/f36-datetime": ^4.56.0
-    "@contentful/f36-drag-handle": ^4.56.0
-    "@contentful/f36-empty-state": ^4.56.0
-    "@contentful/f36-entity-list": ^4.56.0
-    "@contentful/f36-forms": ^4.56.0
-    "@contentful/f36-icon": ^4.56.0
+    "@contentful/f36-accordion": ^4.56.2
+    "@contentful/f36-asset": ^4.56.2
+    "@contentful/f36-autocomplete": ^4.56.2
+    "@contentful/f36-badge": ^4.56.2
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-card": ^4.56.2
+    "@contentful/f36-collapse": ^4.56.2
+    "@contentful/f36-copybutton": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-datepicker": ^4.56.2
+    "@contentful/f36-datetime": ^4.56.2
+    "@contentful/f36-drag-handle": ^4.56.2
+    "@contentful/f36-empty-state": ^4.56.2
+    "@contentful/f36-entity-list": ^4.56.2
+    "@contentful/f36-forms": ^4.56.2
+    "@contentful/f36-icon": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-list": ^4.56.0
-    "@contentful/f36-menu": ^4.56.0
-    "@contentful/f36-modal": ^4.56.0
+    "@contentful/f36-list": ^4.56.2
+    "@contentful/f36-menu": ^4.56.2
+    "@contentful/f36-modal": ^4.56.2
     "@contentful/f36-navbar": ^4.1.0
-    "@contentful/f36-note": ^4.56.0
-    "@contentful/f36-notification": ^4.56.0
-    "@contentful/f36-pagination": ^4.56.0
-    "@contentful/f36-pill": ^4.56.0
-    "@contentful/f36-popover": ^4.56.0
-    "@contentful/f36-skeleton": ^4.56.0
-    "@contentful/f36-spinner": ^4.56.0
-    "@contentful/f36-table": ^4.56.0
-    "@contentful/f36-tabs": ^4.56.0
-    "@contentful/f36-text-link": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-tooltip": ^4.56.0
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-note": ^4.56.2
+    "@contentful/f36-notification": ^4.56.2
+    "@contentful/f36-pagination": ^4.56.2
+    "@contentful/f36-pill": ^4.56.2
+    "@contentful/f36-popover": ^4.56.2
+    "@contentful/f36-skeleton": ^4.56.2
+    "@contentful/f36-spinner": ^4.56.2
+    "@contentful/f36-table": ^4.56.2
+    "@contentful/f36-tabs": ^4.56.2
+    "@contentful/f36-text-link": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-tooltip": ^4.56.2
+    "@contentful/f36-typography": ^4.56.2
     "@contentful/f36-utils": ^4.24.2
   peerDependencies:
     "@types/react": ">=16.8"
@@ -10763,7 +10763,7 @@ __metadata:
       optional: true
     "@types/react-dom":
       optional: true
-  checksum: ca6fb7a44981a0617dab3bb8d674b1b6e8e71e0821addf2c06bfc6f4f66e3af340cae1151c8e451650163405411e44e5db3bbd56ccc77b6e0ee5d8df2b6e4d78
+  checksum: f8a660c8dfb2b46b2a6b5cb6c0a2a3046e2d170b466de272f3c8b3fd0bfdf33414626644f6c1d8a0c29989c415f1a92f104173e53f5045bf005bbcdd89db3782
   languageName: node
   linkType: hard
 
@@ -10831,20 +10831,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-copybutton@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-copybutton@npm:4.56.0"
+"@contentful/f36-copybutton@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-copybutton@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-tooltip": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-tooltip": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: e2345fa1fa5a4d3ab4ffc11fa397c87d27fd3ba2e0ac329bcd7084ffade6144fc3591fc32de8212fab554a7b5542ab3ed46e3d5ebbd653b6b490eccda2a02cc2
+  checksum: f5d1aff2f9746120c6d7e9ddfb6ae835e101603593de34e1de0bf9cf7ca606e595f4506c9f248d451669ce08c7d9bb76bd2e84a7a829d820a67fe322db51b864
   languageName: node
   linkType: hard
 
@@ -10912,11 +10912,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-core@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-core@npm:4.56.0"
+"@contentful/f36-core@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-core@npm:4.56.2"
   dependencies:
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-tokens": ^4.0.3
     "@emotion/core": ^10.1.1
     "@emotion/is-prop-valid": ^1.2.0
     csstype: ^3.1.1
@@ -10924,7 +10924,7 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 31fd72b7aa386b39d5446cc3e3d2fc85e2a8f4f443a398297bff0e7a1f32c3c058fe05dd62eb3360473822508f3f63467636ecd4817ee3422d6d31dd0cd06950
+  checksum: fc7aa3c704d0697292975a6c2a181193f8844beeba298f56a116dfec22d770a1c48b8e01ffd7c5406e07509f998fcf0f5e65586fe711907968f037185d8c539f
   languageName: node
   linkType: hard
 
@@ -10950,17 +10950,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-datepicker@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-datepicker@npm:4.56.0"
+"@contentful/f36-datepicker@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-datepicker@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-forms": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-forms": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-popover": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-popover": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     date-fns: ^2.28.0
     emotion: ^10.0.17
     react-day-picker: ^8.7.1
@@ -10968,7 +10968,7 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 8531f5f3319be281b08b707b77800531ef92dc689dcf90a31ccfebe14255660d7430a59971164f4d2ceb413b516b4c6cfa604bda05528dd372233d273b931174
+  checksum: 2e87b44b1750327a0b1d08e693af20efc64175448a502fa88e27364dd9c0e58b6a9f384ab6458e9f1549c0da5b73f20b6eb94dc6969e9266306b6f27f3c5f5ac
   languageName: node
   linkType: hard
 
@@ -10987,18 +10987,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-datetime@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-datetime@npm:4.56.0"
+"@contentful/f36-datetime@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-datetime@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     dayjs: ^1.11.5
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 0160eb2dd93346237b6249c95801ec9dd1a334d2e5d49cdd9ae63bc24e48b6577993f66c06db4c84b8017f0eb6629e6222f2adafc916c797f79ac03782853f2d
+  checksum: 97367472e7cc924a55725944efe58ffa5a9290e3e533ce972a33451daa0f26264d1efcbdbf31b99959a9649b1f80aafa47baab8a688e685f11169880cd43f380
   languageName: node
   linkType: hard
 
@@ -11017,19 +11017,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-drag-handle@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-drag-handle@npm:4.56.0"
+"@contentful/f36-drag-handle@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-drag-handle@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-tokens": ^4.0.3
     "@contentful/f36-utils": ^4.24.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: dd5f59a51b72fa9fc7d2c4dfa74d505ed16497f5e2ba6e10fb374ae50a1a2d7064bd820d450fd7ee97d6831c5612a2d6d453dc33803f368eb56966ca408139fa
+  checksum: cc1f8acbbaccd75f40ff010edbc64f44965101ce21618b23eb2b36d461eed917de5755dc0e4a4dda9c2811cbfcc83e7a090aa84022f4a5c0e273690eba15828e
   languageName: node
   linkType: hard
 
@@ -11047,17 +11047,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-empty-state@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-empty-state@npm:4.56.0"
+"@contentful/f36-empty-state@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-empty-state@npm:4.56.2"
   dependencies:
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: a7f7c63bea80d0ffe5c607018ed470d272e7584f5de5ef024c05614f70cf5b1bf55bbd73866319cca955ca297a2fa791b90a8d9c6fe955b684a39c1eaa54e6ad
+  checksum: 8f9b6c7b31541d5b11cc66c5b0fac5fb65b57c287ece16e10a98de2854fabbc899e6d0d60fac8f8efd2955269ed124cce0ba74eee768668bad405db73624b685
   languageName: node
   linkType: hard
 
@@ -11083,25 +11083,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-entity-list@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-entity-list@npm:4.56.0"
+"@contentful/f36-entity-list@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-entity-list@npm:4.56.2"
   dependencies:
-    "@contentful/f36-badge": ^4.56.0
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-drag-handle": ^4.56.0
-    "@contentful/f36-icon": ^4.56.0
+    "@contentful/f36-badge": ^4.56.2
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-drag-handle": ^4.56.2
+    "@contentful/f36-icon": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-menu": ^4.56.0
-    "@contentful/f36-skeleton": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-menu": ^4.56.2
+    "@contentful/f36-skeleton": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 4bb3690e9c60f4f03d558abeecb10723d0358452fe992b7465f6902201e7d6130505ce3ead347cbdcf7385914ef61728e10f7f99741dde49c1ef3be82fef8d4f
+  checksum: 64b7184b9ae01db3c6f60b8c22a0671859f8a66631df503ec113ec94669060d736096fdd272901074eeb8042760f80a896c03e4354e0f515ad2c422372fbe0cf
   languageName: node
   linkType: hard
 
@@ -11121,19 +11121,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-forms@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-forms@npm:4.56.0"
+"@contentful/f36-forms@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-forms@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: e1084a355ef0b8c7cf64dc93542eefbe2735e108478c011f0a329aedac0329359075d091a5836dc14691f5d30f24fb4143b61bf98d65c56ff84c83d3ee59a904
+  checksum: 0aae227fb05d098b3534f0a00bd57fff892dbc4861d459e6558875b7a5aabdb49bbb5ed1476d4d46d416e5ffb4ba29495391fd4b8a0ffbb107eeb604f95b448e
   languageName: node
   linkType: hard
 
@@ -11189,17 +11189,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-icon@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-icon@npm:4.56.0"
+"@contentful/f36-icon@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-icon@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 50d1adad90d5f3768e39d6f7d043c9f0c7b6f1ce0a7f5e41f8f22fab83ddf4ea0a650e9356f3ddb3c1c40ad6dbb6c3e5e74f1df3b357db7304c6dcc545d71a1f
+  checksum: 8516aeb52d9ff20d799ccc4cbbe6d4548db4d12ea595c27e74809143ee11c69e5568bf80f0008905616b6b8abec020c3ddebcbf3660ab5dcb37ff5f32ac19cb9
   languageName: node
   linkType: hard
 
@@ -11261,17 +11261,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-list@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-list@npm:4.56.0"
+"@contentful/f36-list@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-list@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 0a0c347698b1055e4820fc3abdf06f1df96dff84007bfccbd31bba86a3a2559c8fbd61cca76648e583b7a573461083392317965d6ed35586e473d169c7d3ab74
+  checksum: 19c8792604363d61cfde51f42b5461f3b936c6e51d48b24ce2b6a6e7e567944741fe0a07ca93fc8e7b86e78f2caf1afcddd5a2a85c4a0520da63171570b3a0cc
   languageName: node
   linkType: hard
 
@@ -11311,21 +11311,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-menu@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-menu@npm:4.56.0"
+"@contentful/f36-menu@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-menu@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-popover": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-popover": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     "@contentful/f36-utils": ^4.24.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: ec913b0348373b669e0aa8008550a3fc99eb0fa888e378556261b91a44c0d11004be8b387a320540e159abbfda48688a17ed9106c32deefde95df43c025d45f3
+  checksum: 5d49ff6b68362e6d52fd9f6fff6efdc0acd2adcbafb4e852f1adcf2f2fda7271bc38a7cb5e53ce41fd480f449bd4e03fae2c9b6b671a1bdbe5679abc58dd2989
   languageName: node
   linkType: hard
 
@@ -11348,22 +11348,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-modal@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-modal@npm:4.56.0"
+"@contentful/f36-modal@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-modal@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     "@types/react-modal": ^3.13.1
     emotion: ^10.0.17
     react-modal: ^3.16.1
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: ebd50a2b3ecfa895cd0c6820185809bd0bfa487176682ff8dcf15783f15196b583033c0570f00e2d8983af502231e8f0b5e89f7148d9905db0280dcbd1b85c66
+  checksum: 2584e77ffff5ce1489baf1e141388f542b69a298a8e037c13a48ff7680e12e5f93850921acf3da20120848d4632b37fd12c7e189e235a91502a57aecea4d6557
   languageName: node
   linkType: hard
 
@@ -11404,21 +11404,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-note@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-note@npm:4.56.0"
+"@contentful/f36-note@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-note@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-icon": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-icon": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: d0735fc4e28683cf59f5f6db28f260fa40ae667c8e9f578643c5696575fff207e33a11bbe453ac63da145f859fcd705b5cf5440ff48d3b4a5b24b097654b6a95
+  checksum: d5f085cece98277d518e06aa64eb52931c9a1f2b46a5fe86de28cad9a78bec95c34c25e8ec10ec1309f031fc3dfb89b3a7fa516a31cbb441d5d2cd91e8b28f1f
   languageName: node
   linkType: hard
 
@@ -11442,23 +11442,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-notification@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-notification@npm:4.56.0"
+"@contentful/f36-notification@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-notification@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-text-link": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-text-link": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     "@swc/helpers": ^0.4.14
     emotion: ^10.0.17
     react-animate-height: ^3.0.4
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 34fe95d403eca1c5cedf5df377a9fe55c22e97828048ce644076a61edf0358b22d52069494a2f87bc13176b5d0490e509c240aa96caf8fe3b9ccc1797f3a158b
+  checksum: 60afaa9042a60df5a036e5fca23a4e2e678a3c2825f2debaed9619acc56be89f076d4e96fb07a5f58cfda0ac46d1268b01130c301bb653c69903ff7a7277e0ff
   languageName: node
   linkType: hard
 
@@ -11479,21 +11479,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-pagination@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-pagination@npm:4.56.0"
+"@contentful/f36-pagination@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-pagination@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-forms": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-forms": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: b805470876fe2a85ccdf76791fb60a2fc463eed7f149f90036cb7285032ac9149d74634a52439cd358ad4fdbebe6cfa8bbcf32d8bd44a8ae4b0e2eb3e29d2a48
+  checksum: 087d8fd4f2f58617e348265866491fc22cec15514c81de64d38ece0674eb8fa7dcb22cbce2046c901e1007be07f95f41a61be20bd5c3fb0d35dc1ca56db894c5
   languageName: node
   linkType: hard
 
@@ -11514,21 +11514,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-pill@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-pill@npm:4.56.0"
+"@contentful/f36-pill@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-pill@npm:4.56.2"
   dependencies:
-    "@contentful/f36-button": ^4.56.0
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-drag-handle": ^4.56.0
+    "@contentful/f36-button": ^4.56.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-drag-handle": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-tooltip": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-tooltip": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 222b468fd04b54ee1b8bade1ef7dca304c9450626d73cc31125bc725ba3061ff3d5764e098a10c52ed6be43a05f910414ba6c8ffe4fc5653ee23e51e46298fea
+  checksum: ed3f82b3d8fd1efb04352fbd4f0c5daa6c888d0cbc5b236b9f4fdaf7da316ef0cec8238d88e68070973c8ec2f534aa0f92fd2462c58c850bac011c9d6c34aeb7
   languageName: node
   linkType: hard
 
@@ -11564,12 +11564,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-popover@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-popover@npm:4.56.0"
+"@contentful/f36-popover@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-popover@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     "@contentful/f36-utils": ^4.24.2
     "@popperjs/core": ^2.11.5
     emotion: ^10.0.17
@@ -11577,7 +11577,7 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 20639ce9320556a7767a0efe3aee226da8a8bfb09e389af087cfebb8dde72e1b2c47f814dc03ca1e9a121ee6cab9f9a3fb450f5c91a1d0dfcd4cbde7a9913f6c
+  checksum: 19444cb4716fb12175e6de2d4fdda224318aa0c58dbc6231c2accdfddd7ed41b6c3f093e32eade5ba471ffdc3b1675dff96ff359a5a334322b4965229d2fda34
   languageName: node
   linkType: hard
 
@@ -11611,18 +11611,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-skeleton@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-skeleton@npm:4.56.0"
+"@contentful/f36-skeleton@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-skeleton@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-table": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-table": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: b2734a3eb9462e5297fe7add0478aebc2cb2ddd6b0fec35166d2057f0fbd8135b81f1467f8b2bd4f150b46bb5330e156dde8ddca83448374f907aede5efa4724
+  checksum: 675f72baf096e7fb36239286fac460077c39f539a4f9bccd729a0307afce7b302f625d350233fa0a90d88c2dcdac9f2cab7ff950b2d268ed2c591c0b63f7e95f
   languageName: node
   linkType: hard
 
@@ -11639,17 +11639,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-spinner@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-spinner@npm:4.56.0"
+"@contentful/f36-spinner@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-spinner@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 5387d9645df57fe434b5cb5a332f1ec69b7c1373bcb3b2055eba1861671ba7a95e6caaa495ab308648038f2704d74697879b3664e9a20f2ae8f58844f321d923
+  checksum: e712552e024a3cbd7283498b4b2add01da2419da45999be08b5011b1b147337a2d5862948167536f495236afd5b3e534351b48eefc98bebc7ed0b0e776bc1919
   languageName: node
   linkType: hard
 
@@ -11685,19 +11685,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-table@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-table@npm:4.56.0"
+"@contentful/f36-table@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-table@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
+    "@contentful/f36-core": ^4.56.2
     "@contentful/f36-icons": ^4.27.0
-    "@contentful/f36-tokens": ^4.0.2
-    "@contentful/f36-typography": ^4.56.0
+    "@contentful/f36-tokens": ^4.0.3
+    "@contentful/f36-typography": ^4.56.2
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: b1d1a93404e89d9ae59bbcc9682c016c963dd28ada34eee16d3f2ba217a9fdcd14f324776e8a96c05e14be0d60b72c1f3255233e44a7fc9c2eaf32ac28c7bf73
+  checksum: 307fc80448d9ee64aa2b9f4745f8d4fd71bbefdea36d6ad078c00250a5499c836bcba6637f846d807242cb7d9a97f9915d4125c93642dc9119b9dcb2860aecdd
   languageName: node
   linkType: hard
 
@@ -11716,18 +11716,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-tabs@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-tabs@npm:4.56.0"
+"@contentful/f36-tabs@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-tabs@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     "@radix-ui/react-tabs": ^1.0.1
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 1b31a6b2aa802038884e203731fce27a9ca807e9005b1b76876bb4a5e9663915392bea12862cf74a066669c6af1bbbfa79cf6c71836f6f8de3f583f5801f7623
+  checksum: ba14902b2411b3bf9495e9b79afded488b2dc0e4b9dfa37bca0a8a1c91e92d7becc44039c5b2c461245a2bf27b92f2c13473fb454851b73e791aad21bdf07def
   languageName: node
   linkType: hard
 
@@ -11744,21 +11744,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-text-link@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-text-link@npm:4.56.0"
+"@contentful/f36-text-link@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-text-link@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: faa81a8b594d4533bfd6d609403e9a5b45ef9a11c273a104be091e34e9b12a161ee8ca5b424466a133b110dffb44e4aeedb42fbc1e13ec8be856d24bbcebcfed
+  checksum: b6f2a3a3d7e62513337ffb60e8ae6a09c2da3d7d12aa044d7a0e10ec8c8e3751d0bdb887bfd67534d6f05642f17e972e2698ab6ad46de495f9cb394d26ebaab8
   languageName: node
   linkType: hard
 
-"@contentful/f36-tokens@npm:4.0.3":
+"@contentful/f36-tokens@npm:4.0.3, @contentful/f36-tokens@npm:^4.0.3":
   version: 4.0.3
   resolution: "@contentful/f36-tokens@npm:4.0.3"
   checksum: 98643001f5b020898630ff6a02657e22116f5c3f3f1177589cee0465e4948a8a012a196cdec5cfb2cdeb9f822691dd6a4da2586c9b493749285fb638683b5652
@@ -11797,12 +11797,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-tooltip@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-tooltip@npm:4.56.0"
+"@contentful/f36-tooltip@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-tooltip@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     "@contentful/f36-utils": ^4.24.2
     "@popperjs/core": ^2.11.5
     csstype: ^3.1.1
@@ -11811,7 +11811,7 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 66352ace07f8921489c7e26978691f17c347ce157abf4b1707a188f515c94c25ea00ff7125b84f334a443371fa5af4e05cb31c652456271e33d44f92344a2855
+  checksum: b56e2cff049fce5eed1b3ad76f7a7dbbd7d0d9bbb63957fb69dbfa1478cbea7416b93f0aaca1313f578370e5ca9b3d266bbe7d5ba41823d4d57cb25f893b3029
   languageName: node
   linkType: hard
 
@@ -11841,17 +11841,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-typography@npm:^4.56.0":
-  version: 4.56.0
-  resolution: "@contentful/f36-typography@npm:4.56.0"
+"@contentful/f36-typography@npm:^4.56.2":
+  version: 4.56.2
+  resolution: "@contentful/f36-typography@npm:4.56.2"
   dependencies:
-    "@contentful/f36-core": ^4.56.0
-    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-core": ^4.56.2
+    "@contentful/f36-tokens": ^4.0.3
     emotion: ^10.0.17
   peerDependencies:
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 09ad8d563ced646fa7cbdd3928a0ce149c1298a264dbd8f6aae3076b628676e27a9ea9dc7aacf897dc4b4ed7695853c301b7bbf434c1493aac63547c9ec81d19
+  checksum: 6988ee82f0da9d78581bf1844bb8e328b39e16b7924a7b77f8685b4191aabd1b634744ec9680d5a90903867016c9c3730bda5cf24169cf061c82f88400c8b26a
   languageName: node
   linkType: hard
 

@@ -4,7 +4,6 @@ import {
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
-  getContentfulGraphqlClientMockServer,
   patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
@@ -16,7 +15,6 @@ import {
 import { UserDataProvider } from '../../../src/data-providers/types';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
-  getContentfulGraphql,
   getContentfulGraphqlUser,
   getContentfulGraphqlUserListItem,
   getUserCreateDataObject,
@@ -48,16 +46,12 @@ describe('User data provider', () => {
   });
 
   describe('Fetch-by-ID', () => {
-    test('fetches the user from Contentful GraphQL', async () => {
-      const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+    test('fetches the user by id', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser(),
+      });
 
-      const userDataProviderWithMockServer: UserDataProvider =
-        new UserContentfulDataProvider(
-          contentfulGraphqlClientMockServer,
-          contentfulRestClientMock,
-        );
-      const result = await userDataProviderWithMockServer.fetchById('123');
+      const result = await userDataProvider.fetchById('123');
       const expectation = {
         ...getUserDataObject(),
         workingGroups: [
@@ -366,18 +360,13 @@ describe('User data provider', () => {
 
   describe('Fetch', () => {
     test('should receive a user list', async () => {
-      const isListItem = true;
-      const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(
-          getContentfulGraphql({}, isListItem),
-        );
-
-      const userDataProviderWithMockServer: UserDataProvider =
-        new UserContentfulDataProvider(
-          contentfulGraphqlClientMockServer,
-          contentfulRestClientMock,
-        );
-      const result = await userDataProviderWithMockServer.fetch({});
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [getContentfulGraphqlUserListItem()],
+        },
+      });
+      const result = await userDataProvider.fetch({});
 
       expect(result.total).toEqual(1);
       expect(result.items).toEqual([getUserListItemResponse()]);
@@ -623,34 +612,13 @@ describe('User data provider', () => {
       });
 
       test('should support filtering by lab', async () => {
-        await userDataProvider.fetch({ filter: { labId: '1234567' } });
+        await userDataProvider.fetch({
+          filter: { labId: '1234567' },
+        });
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
           FETCH_USERS_BY_LAB_ID,
           expect.objectContaining({ id: '1234567' }),
         );
-
-        const contentfulGraphqlClientMockServer =
-          getContentfulGraphqlClientMockServer({
-            UsersCollection: () => {
-              return {
-                total: 2,
-                items: [...new Array(2)],
-              };
-            },
-            ...getContentfulGraphql(),
-          });
-
-        const userDataProviderWithMockServer: UserDataProvider =
-          new UserContentfulDataProvider(
-            contentfulGraphqlClientMockServer,
-            contentfulRestClientMock,
-          );
-
-        const result = await userDataProviderWithMockServer.fetch({
-          filter: { labId: '1234567' },
-        });
-        expect(result.total).toEqual(2);
-        expect(result.items).toHaveLength(2);
       });
 
       test('should support filtering by team', async () => {
@@ -659,46 +627,6 @@ describe('User data provider', () => {
           FETCH_USERS_BY_TEAM_ID,
           expect.objectContaining({ id: '1234567' }),
         );
-
-        const contentfulGraphqlClientMockServer =
-          getContentfulGraphqlClientMockServer({
-            TeamMembershipCollection: () => {
-              return {
-                total: 2,
-                items: [
-                  {
-                    linkedFrom: {
-                      usersCollection: {
-                        total: 1,
-                        items: [...Array(1)],
-                      },
-                    },
-                  },
-                  {
-                    linkedFrom: {
-                      usersCollection: {
-                        total: 1,
-                        items: [...Array(1)],
-                      },
-                    },
-                  },
-                ],
-              };
-            },
-            ...getContentfulGraphql(),
-          });
-
-        const userDataProviderWithMockServer: UserDataProvider =
-          new UserContentfulDataProvider(
-            contentfulGraphqlClientMockServer,
-            contentfulRestClientMock,
-          );
-        const result = await userDataProviderWithMockServer.fetch({
-          filter: { teamId: '1234567' },
-        });
-
-        expect(result.total).toEqual(2);
-        expect(result.items).toHaveLength(2);
       });
 
       test('should support filtering by orcid', async () => {

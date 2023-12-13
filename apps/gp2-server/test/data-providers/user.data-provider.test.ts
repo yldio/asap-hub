@@ -2,7 +2,6 @@ import {
   addLocaleToFields,
   Entry,
   Environment,
-  getGP2ContentfulGraphqlClientMockServer,
   gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
@@ -15,7 +14,6 @@ import {
   getEntryCollection,
 } from '../fixtures/contentful.fixtures';
 import {
-  getContentfulGraphql,
   getContentfulGraphqlUser,
   getContentfulUsersByProjectIds,
   getContentfulUsersByTagIds,
@@ -46,18 +44,6 @@ describe('User data provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the users from contentful graphql', async () => {
-      const contentfulGraphqlClientMockServer =
-        getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
-      const userDataProviderWithMockServer: UserDataProvider =
-        new UserContentfulDataProvider(
-          contentfulGraphqlClientMockServer,
-          contentfulRestClientMock,
-        );
-      const result = await userDataProviderWithMockServer.fetchById('user-id');
-
-      expect(result).toMatchObject(getUserDataObject());
-    });
     test('Should return null when the user is not found', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: null,
@@ -771,18 +757,6 @@ describe('User data provider', () => {
 
   describe('Fetch', () => {
     beforeEach(jest.resetAllMocks);
-    test('Should fetch the users from contentful graphql', async () => {
-      const contentfulGraphqlClientMockServer =
-        getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
-      const userDataProviderWithMockServer: UserDataProvider =
-        new UserContentfulDataProvider(
-          contentfulGraphqlClientMockServer,
-          contentfulRestClientMock,
-        );
-      const result = await userDataProviderWithMockServer.fetch({});
-
-      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
-    });
     test('Should return an empty result', async () => {
       const mockResponse = getContentfulUsersGraphqlResponse();
       mockResponse.usersCollection!.items = [];

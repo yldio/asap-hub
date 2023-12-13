@@ -55,6 +55,8 @@ describe('DashboardPageBody', () => {
     it('hides the card if there are no announcements', () => {
       render(
         <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
           news={gp2.createNewsResponse()}
           latestStats={mockStats}
           upcomingEvents={[]}

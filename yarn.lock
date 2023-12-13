@@ -11881,8 +11881,8 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.20.0
-  resolution: "@contentful/field-editor-reference@npm:5.20.0"
+  version: 5.21.0
+  resolution: "@contentful/field-editor-reference@npm:5.21.0"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
@@ -11895,7 +11895,7 @@ __metadata:
     "@tanstack/react-query": ^4.3.9
     "@types/deep-equal": ^1.0.1
     constate: 3.2.0
-    contentful-management: ^10.14.0
+    contentful-management: ^10.14.0 || ^11.0.0
     deep-equal: 2.2.2
     emotion: ^10.0.17
     lodash: ^4.17.15
@@ -11906,7 +11906,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.17.1
     react: ">=16.8.0"
-  checksum: b20d8f3690c7c5e47bc27c3901b91193164da38d8baade4cc5e25d7e2c5bd6ae3712b728fda4ed3e78909a2ffee9f674805790c5e9bdc89c1665c3e8d5ce5003
+  checksum: cc91f0fe0c8275b243fdc2143934bdbac143420f8655bfa6eb6ca8002403b60ef19af70925fc74fc8cd3b01e95fe8c29bd55bf50ac25561f7b88cee1507bc74b
   languageName: node
   linkType: hard
 
@@ -25669,18 +25669,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:^10.14.0":
-  version: 10.35.3
-  resolution: "contentful-management@npm:10.35.3"
+"contentful-management@npm:^10.14.0 || ^11.0.0":
+  version: 11.6.1
+  resolution: "contentful-management@npm:11.6.1"
   dependencies:
-    "@contentful/rich-text-types": ^16.0.3
+    "@contentful/rich-text-types": ^16.3.0
     "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
+    axios: ^1.6.2
+    contentful-sdk-core: ^8.1.0
     fast-copy: ^3.0.0
     lodash.isplainobject: ^4.0.6
-    type-fest: ^3.0.0
-  checksum: 10dcabd3e7aab03945c6b59e0dc1b582aca55bfecb7c2103a53da5a258a23a8fbbf2ac509f1eca849cb2e3beba12b1ef3ff82f0f0b12aa69a22114b854bde2f9
+    type-fest: ^4.0.0
+  checksum: 2640e3a1b3d7e5fdecae0ef11d4709b3a0091824bf5c5f9672c402b7c1e9668ce7824143429af1307824e8c42e48c68c9f9c0980a26852d2845f2a9c49637c26
   languageName: node
   linkType: hard
 

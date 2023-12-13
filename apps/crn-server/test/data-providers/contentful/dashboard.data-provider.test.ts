@@ -1,5 +1,7 @@
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import { DashboardDataObject } from '@asap-hub/model';
 import { DashboardContentfulDataProvider } from '../../../src/data-providers/contentful/dashboard.data-provider';
+import { getContentfulGraphqlAnnouncements } from '../../fixtures/announcements.fixtures';
 import {
   getContentfulDashboardGraphqlResponse,
   getDashboardDataObject,
@@ -18,6 +20,7 @@ describe('DashboardDataProvider', () => {
     getContentfulGraphqlClientMockServer({
       News: () => getContentfulGraphqlNews(),
       Pages: () => getContentfulGraphqlPages(),
+      Announcements: () => getContentfulGraphqlAnnouncements(),
     });
   const dashboardDataProviderMockGraphql = new DashboardContentfulDataProvider(
     contentfulGraphqlClientMockServer,
@@ -40,6 +43,8 @@ describe('DashboardDataProvider', () => {
         [];
       contentfulGraphQLResponse.dashboardCollection!.items[0]!.pagesCollection!.items =
         [];
+      contentfulGraphQLResponse.dashboardCollection!.items[0]!.announcementsCollection!.items =
+        [];
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
@@ -50,7 +55,8 @@ describe('DashboardDataProvider', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardDataObject);
     });
 
     test('Should return an empty result when the client returns an empty array for queryDashboardContents', async () => {
@@ -66,7 +72,8 @@ describe('DashboardDataProvider', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardDataObject);
     });
 
     test('Should return an empty result when the client returns nulls inside news and page collection arrays', async () => {
@@ -74,6 +81,8 @@ describe('DashboardDataProvider', () => {
       contentfulGraphQLResponse.dashboardCollection!.items[0]!.newsCollection =
         null;
       contentfulGraphQLResponse.dashboardCollection!.items[0]!.pagesCollection =
+        null;
+      contentfulGraphQLResponse.dashboardCollection!.items[0]!.announcementsCollection =
         null;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
@@ -84,7 +93,8 @@ describe('DashboardDataProvider', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardDataObject);
     });
 
     test('Should return an empty result when the client returns null for queryDashboardContents', async () => {
@@ -100,7 +110,8 @@ describe('DashboardDataProvider', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardDataObject);
     });
   });
 });

@@ -29,6 +29,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
   roles: [],
   reminders: [],
+  announcements: [],
   guides: [],
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
@@ -215,6 +216,28 @@ describe('the reminders card', () => {
   `('$description', ({ roles, selector }) => {
     render(<DashboardPageBody {...props} roles={roles} />);
     expect(screen.getByText(selector)).toBeVisible();
+  });
+});
+
+describe('the announcements card', () => {
+  it('hides the card if there are no announcements', () => {
+    render(<DashboardPageBody {...props} />);
+    expect(screen.queryByText('Announcements')).not.toBeInTheDocument();
+  });
+
+  it('displays the card when there are announcements', () => {
+    render(
+      <DashboardPageBody
+        {...props}
+        announcements={[
+          {
+            id: 'announcement-id',
+            description: 'announcement description',
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText('Announcements')).toBeVisible();
   });
 });
 

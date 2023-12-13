@@ -1,4 +1,6 @@
+import { DashboardResponse } from '@asap-hub/model';
 import Dashboard from '../../src/controllers/dashboard.controller';
+import { DashboardDataProvider } from '../../src/data-providers/types';
 import {
   getDashboardResponse,
   getDashboardDataObject,
@@ -6,7 +8,8 @@ import {
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Dashboard controller', () => {
-  const dashboardDataProviderMock = getDataProviderMock();
+  const dashboardDataProviderMock =
+    getDataProviderMock() as jest.Mocked<DashboardDataProvider>;
   const dashboardController = new Dashboard(dashboardDataProviderMock);
 
   describe('Fetch method', () => {
@@ -14,6 +17,7 @@ describe('Dashboard controller', () => {
       dashboardDataProviderMock.fetch.mockResolvedValue({
         news: [],
         pages: [],
+        announcements: [],
       });
 
       const result = await dashboardController.fetch();
@@ -21,7 +25,8 @@ describe('Dashboard controller', () => {
       expect(result).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardResponse);
     });
 
     test('Should return the dashboard news and pages', async () => {

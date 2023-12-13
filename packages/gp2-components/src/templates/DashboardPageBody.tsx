@@ -77,7 +77,7 @@ type DashboardPageBodyProps = {
   latestStats: gp2Model.StatsDataObject;
   totalOfUpcomingEvents: number;
   totalOfPastEvents: number;
-  announcements?: ComponentProps<typeof RemindersCard>['reminders'];
+  announcements: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
   guides?: gp2Model.GuideDataObject[];
@@ -104,7 +104,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   const lastestNews = news.items[0];
   return (
     <>
-      {announcements ? (
+      {announcements.length ? (
         <div css={columnContainer}>
           <Headline2>Announcements</Headline2>
           <Paragraph accent="lead" noMargin>

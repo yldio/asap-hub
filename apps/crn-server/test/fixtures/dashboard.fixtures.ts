@@ -2,6 +2,7 @@ import { DashboardDataObject, DashboardResponse } from '@asap-hub/model';
 import { FetchDashboardQuery as FetchDashboardQueryContentful } from '@asap-hub/contentful';
 import { getContentfulNewsGraphqlResponse } from './news.fixtures';
 import { getContentfulPagesGraphqlResponse } from './page.fixtures';
+import { getContentfulGraphqlAnnouncements } from './announcements.fixtures';
 
 export const getContentfulDashboardGraphqlResponse =
   (): FetchDashboardQueryContentful => ({
@@ -10,6 +11,9 @@ export const getContentfulDashboardGraphqlResponse =
         {
           newsCollection: getContentfulNewsGraphqlResponse().newsCollection!,
           pagesCollection: getContentfulPagesGraphqlResponse().pagesCollection!,
+          announcementsCollection: {
+            items: [getContentfulGraphqlAnnouncements()],
+          },
         },
       ],
     },
@@ -39,8 +43,15 @@ export const getDashboardDataObject = (): DashboardDataObject => ({
       text: '<h1>Privacy Policy</h1>',
     },
   ],
+  announcements: [
+    {
+      deadline: '2020-09-08T16:35:28.000Z',
+      description: 'Example Announcement',
+      href: 'https://example-announcement.com',
+      id: '231',
+    },
+  ],
 });
-``;
 
 export const getDashboardResponse = (): DashboardResponse =>
   getDashboardDataObject();

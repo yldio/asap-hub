@@ -22,6 +22,7 @@ describe('getDashboard', () => {
         },
       ],
       pages: [],
+      announcements: [],
     };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/dashboard')

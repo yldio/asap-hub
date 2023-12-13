@@ -1,3 +1,4 @@
+import { DashboardResponse } from '@asap-hub/model';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getDashboardResponse } from '../fixtures/dashboard.fixtures';
@@ -13,10 +14,11 @@ describe('/dashboard/ route', () => {
   });
 
   describe('GET /dashboard', () => {
-    test('Should return 200 when no news are found', async () => {
+    test('Should return 200 when no news, pages or announcements are found', async () => {
       dashboardControllerMock.fetch.mockResolvedValueOnce({
         news: [],
         pages: [],
+        announcements: [],
       });
 
       const response = await supertest(app).get('/dashboard');
@@ -25,7 +27,8 @@ describe('/dashboard/ route', () => {
       expect(response.body).toEqual({
         news: [],
         pages: [],
-      });
+        announcements: [],
+      } satisfies DashboardResponse);
     });
 
     test('Should return the results correctly', async () => {

@@ -35,6 +35,123 @@ export type Scalars = {
   Quality: any;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
+export type Announcements = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  deadline?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<AnnouncementsLinkingCollections>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
+export type AnnouncementsDeadlineArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
+export type AnnouncementsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
+export type AnnouncementsLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
+export type AnnouncementsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type AnnouncementsCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type AnnouncementsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  deadline?: InputMaybe<Scalars['DateTime']>;
+  deadline_exists?: InputMaybe<Scalars['Boolean']>;
+  deadline_gt?: InputMaybe<Scalars['DateTime']>;
+  deadline_gte?: InputMaybe<Scalars['DateTime']>;
+  deadline_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  deadline_lt?: InputMaybe<Scalars['DateTime']>;
+  deadline_lte?: InputMaybe<Scalars['DateTime']>;
+  deadline_not?: InputMaybe<Scalars['DateTime']>;
+  deadline_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type AnnouncementsLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type AnnouncementsLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AnnouncementsLinkingCollectionsDashboardCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AnnouncementsOrder {
+  DeadlineAsc = 'deadline_ASC',
+  DeadlineDesc = 'deadline_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type Asset = {
   contentType?: Maybe<Scalars['String']>;
@@ -502,11 +619,22 @@ export type ContentfulTag = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
 export type Dashboard = Entry & {
+  announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
   contentfulMetadata: ContentfulMetadata;
   linkedFrom?: Maybe<DashboardLinkingCollections>;
   newsCollection?: Maybe<DashboardNewsCollection>;
   pagesCollection?: Maybe<DashboardPagesCollection>;
   sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardAnnouncementsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardAnnouncementsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<AnnouncementsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
@@ -534,6 +662,30 @@ export type DashboardPagesCollectionArgs = {
   where?: InputMaybe<PagesFilter>;
 };
 
+export type DashboardAnnouncementsCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum DashboardAnnouncementsCollectionOrder {
+  DeadlineAsc = 'deadline_ASC',
+  DeadlineDesc = 'deadline_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type DashboardCollection = {
   items: Array<Maybe<Dashboard>>;
   limit: Scalars['Int'];
@@ -544,6 +696,8 @@ export type DashboardCollection = {
 export type DashboardFilter = {
   AND?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
+  announcements?: InputMaybe<CfAnnouncementsNestedFilter>;
+  announcementsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   news?: InputMaybe<CfNewsNestedFilter>;
   newsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3653,6 +3807,8 @@ export type PagesTextResources = {
 };
 
 export type Query = {
+  announcements?: Maybe<Announcements>;
+  announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
   calendars?: Maybe<Calendars>;
@@ -3714,6 +3870,21 @@ export type Query = {
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type QueryAnnouncementsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryAnnouncementsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AnnouncementsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<AnnouncementsFilter>;
 };
 
 export type QueryAssetArgs = {
@@ -8266,6 +8437,36 @@ export enum WorkingGroupsTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type CfAnnouncementsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  deadline?: InputMaybe<Scalars['DateTime']>;
+  deadline_exists?: InputMaybe<Scalars['Boolean']>;
+  deadline_gt?: InputMaybe<Scalars['DateTime']>;
+  deadline_gte?: InputMaybe<Scalars['DateTime']>;
+  deadline_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  deadline_lt?: InputMaybe<Scalars['DateTime']>;
+  deadline_lte?: InputMaybe<Scalars['DateTime']>;
+  deadline_not?: InputMaybe<Scalars['DateTime']>;
+  deadline_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfCalendarsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
@@ -9620,6 +9821,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Announcements' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Calendars' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9748,6 +9952,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Announcements' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Calendars' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9859,6 +10066,15 @@ export type FetchDashboardQuery = {
             >
           >;
         }>;
+        announcementsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<Announcements, 'description' | 'deadline' | 'link'> & {
+                sys: Pick<Sys, 'id'>;
+              }
+            >
+          >;
+        }>;
       }>
     >;
   }>;
@@ -9892,6 +10108,9 @@ export type FetchDiscoverQuery = {
               entries: {
                 inline: Array<
                   Maybe<
+                    | ({ __typename: 'Announcements' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
                     | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10048,6 +10267,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10111,6 +10331,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10174,6 +10395,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10346,6 +10568,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10419,6 +10642,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10492,6 +10716,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -10685,6 +10910,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10782,6 +11010,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10879,6 +11110,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -11113,6 +11347,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11227,6 +11464,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11341,6 +11581,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11613,6 +11856,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11727,6 +11973,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11841,6 +12090,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -12113,6 +12365,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -12227,6 +12482,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -12341,6 +12599,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -13008,6 +13269,7 @@ export type NewsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -13086,6 +13348,7 @@ export type FetchNewsByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -13189,6 +13452,9 @@ export type FetchNewsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -13301,6 +13567,7 @@ export type PageContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -13377,6 +13644,9 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -13680,6 +13950,7 @@ export type ResearchOutputsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -13891,6 +14162,7 @@ export type FetchResearchOutputByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -14126,6 +14398,9 @@ export type FetchResearchOutputsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14519,6 +14794,7 @@ export type TutorialsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -14645,6 +14921,7 @@ export type FetchTutorialByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -14796,6 +15073,9 @@ export type FetchTutorialsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -15443,6 +15723,7 @@ export type WorkingGroupsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -15558,6 +15839,7 @@ export type FetchWorkingGroupByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
@@ -15701,6 +15983,9 @@ export type FetchWorkingGroupsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -20841,6 +21126,65 @@ export const FetchDashboardDocument = {
                                     name: {
                                       kind: 'Name',
                                       value: 'PageContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'announcementsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'EnumValue',
+                              value: 'sys_firstPublishedAt_DESC',
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'deadline' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'link' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
                                     },
                                   },
                                 ],

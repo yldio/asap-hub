@@ -326,7 +326,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
-    createVersion: createVersion,
+    createVersion,
     title: newTitle,
     documentType,
     link: newLink,
@@ -360,10 +360,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
       ? [
           {
             id: '0',
-            documentType: documentType,
-            title: title ? title : '',
-            link: link,
-            addedDate: addedDate,
+            documentType,
+            title: title || '',
+            link,
+            addedDate,
           },
         ]
       : [];

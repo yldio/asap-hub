@@ -123,7 +123,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </Card>
         </div>
       )}
-      {announcements.length && (
+      {announcements.length > 0 && (
         <div>
           <Headline2 styleAsHeading={3}>Announcements</Headline2>
           <div css={infoStyles}>Last announcements from admins.</div>

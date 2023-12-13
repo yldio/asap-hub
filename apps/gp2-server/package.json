@@ -36,7 +36,7 @@
     "@sentry/serverless": "6.19.7",
     "@types/yargs": "17.0.5",
     "ajv": "8.11.0",
-    "algoliasearch": "4.21.0",
+    "algoliasearch": "4.21.1",
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",
     "cors": "2.8.5",

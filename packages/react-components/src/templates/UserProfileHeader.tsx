@@ -247,7 +247,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
               city={city}
               jobTitle={jobTitle}
               teams={teams}
-              role={role}
               labs={labs}
               userActiveTeamsRoute={tabRoutes.research({}).$}
             />

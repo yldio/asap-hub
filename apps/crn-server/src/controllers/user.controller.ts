@@ -32,9 +32,7 @@ export default class UserController {
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
-    const { total, items: users } = await this.userDataProvider.fetch(options);
-
-    const items = total > 0 ? users.map(parseUserToResponse) : [];
+    const { total, items } = await this.userDataProvider.fetch(options);
 
     return { total, items };
   }
@@ -59,7 +57,14 @@ export default class UserController {
       throw new GenericError(undefined, 'too many users found');
     }
 
-    return parseUserToResponse(users[0]);
+    const user = await this.userDataProvider.fetchById(users[0].id);
+    if (!user) {
+      throw new NotFoundError(
+        undefined,
+        `user with code ${code} and id ${users[0].id} not found`,
+      );
+    }
+    return parseUserToResponse(user);
   }
 
   async updateAvatar(
@@ -87,8 +92,15 @@ export default class UserController {
         `user with code ${welcomeCode} not found`,
       );
     }
+    const user = await this.userDataProvider.fetchById(items[0].id);
 
-    const user = items[0];
+    if (!user) {
+      throw new NotFoundError(
+        undefined,
+        `user with code ${welcomeCode} and id ${items[0].id} not found`,
+      );
+    }
+
     if (user.connections?.find(({ code }) => code === userId)) {
       return parseUserToResponse(user);
     }

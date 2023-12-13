@@ -9,6 +9,8 @@ import {
   ListUserDataObject,
   OrcidWork,
   UserDataObject,
+  UserListItemDataObject,
+  UserListItemTeam,
   UserSocialLinks,
   UserTeam,
   UserUpdateDataObject,
@@ -41,9 +43,14 @@ import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 
-export type UserItem = NonNullable<
+export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
 >;
+
+export type UserItem = NonNullable<NonNullable<FetchUserByIdQuery['users']>>;
+
+export type LabsCollection = UserItem['labsCollection'];
+
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
 >;
@@ -108,8 +115,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return {
       total: result?.total,
       items: result?.items
-        .filter((user): user is UserItem => user !== null)
-        .map(parseContentfulGraphQlUsers),
+        .filter((user): user is QueryUserListItem => user !== null)
+        .map(parseContentfulGraphQlUserListItem),
     };
   }
 
@@ -282,22 +289,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     },
     [],
   );
-  const labs: LabResponse[] = (item.labsCollection?.items || []).reduce(
-    (userLabs: LabResponse[], lab): LabResponse[] => {
-      if (!lab || !lab.name) {
-        return userLabs;
-      }
-
-      return [
-        ...userLabs,
-        {
-          id: lab.sys.id,
-          name: lab.name,
-        },
-      ];
-    },
-    [],
-  );
+  const labs: LabResponse[] = parseLabsCollection(item.labsCollection);
 
   const orcidWorks: OrcidWork[] = parseOrcidWorksContentful(
     item.orcidWorks || [],
@@ -381,6 +373,62 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     },
   };
 };
+
+export const parseContentfulGraphQlUserListItem = (
+  item: QueryUserListItem,
+): UserListItemDataObject => {
+  const userFirstName = item.firstName ?? '';
+  const userLastName = item.lastName ?? '';
+
+  const userTeams = (item.teamsCollection?.items || []).reduce(
+    (userListItemTeams: UserListItemTeam[], teamItem) => {
+      if (!teamItem || !teamItem.role || !isTeamRole(teamItem.role)) {
+        return userListItemTeams;
+      }
+
+      return [
+        ...userListItemTeams,
+        {
+          id: teamItem?.team?.sys.id || '',
+          displayName: teamItem?.team?.displayName || '',
+          role: teamItem?.role,
+        },
+      ];
+    },
+    [],
+  );
+
+  return {
+    _tags: item.expertiseAndResourceTags?.length
+      ? item.expertiseAndResourceTags.filter(
+          (tag): tag is string => tag !== null,
+        )
+      : [],
+    alumniSinceDate: item.alumniSinceDate,
+    avatarUrl: item.avatar?.url ?? undefined,
+    city: item.city ?? undefined,
+    country: item.country ?? undefined,
+    createdDate: item.createdDate,
+    degree: item.degree && isUserDegree(item.degree) ? item.degree : undefined,
+    dismissedGettingStarted: item.dismissedGettingStarted ?? false,
+    displayName: `${userFirstName} ${userLastName}`,
+    email: item.email ?? '',
+    firstName: userFirstName,
+    id: item.sys.id,
+    institution: item.institution ?? undefined,
+    jobTitle: item.jobTitle ?? undefined,
+    labs: parseLabsCollection(item.labsCollection),
+    lastName: userLastName,
+    membershipStatus: [
+      item.alumniSinceDate
+        ? inactiveUserMembershipStatus
+        : activeUserMembershipStatus,
+    ],
+    onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
+    role: item.role && isUserRole(item.role) ? item.role : 'Guest',
+    teams: userTeams,
+  };
+};
 const generateFetchQueryFilter = ({
   filter,
 }: FetchUsersOptions): UsersFilter => {
@@ -420,6 +468,26 @@ const parseOrcidWorksContentful = (
     throw new Error(`Invalid ORCID works content data: ${e}`);
   }
 };
+
+export const parseLabsCollection = (
+  labsCollection: LabsCollection,
+): LabResponse[] =>
+  (labsCollection?.items || []).reduce(
+    (userLabs: LabResponse[], lab): LabResponse[] => {
+      if (!lab || !lab.name) {
+        return userLabs;
+      }
+
+      return [
+        ...userLabs,
+        {
+          id: lab.sys.id,
+          name: lab.name,
+        },
+      ];
+    },
+    [],
+  );
 
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],

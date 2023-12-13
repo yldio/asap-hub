@@ -1,9 +1,10 @@
 import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  ListUserResponse,
+  UserListItemResponse,
   UserPatchRequest,
   UserResponse,
+  ListUserResponse,
 } from '@asap-hub/model';
 import { useAuth0CRN } from '@asap-hub/react-context';
 import {
@@ -41,7 +42,7 @@ export const usersState = selectorFamily<
     ({ get }) => {
       const index = get(userIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const users: UserResponse[] = [];
+      const users: UserListItemResponse[] = [];
       for (const id of index.ids) {
         const user = get(userListState(id));
         if (user === undefined) return undefined;
@@ -101,9 +102,9 @@ const userState = selectorFamily<UserResponse | undefined, string>({
       get(patchedUserState(id)) ?? get(initialUserState(id)),
 });
 
-const userListState = atomFamily<UserResponse | undefined, string>({
+const userListState = atomFamily<UserListItemResponse | undefined, string>({
   key: 'userList',
-  default: userState,
+  default: undefined,
 });
 
 export const useUsers = (options: GetListOptions) => {

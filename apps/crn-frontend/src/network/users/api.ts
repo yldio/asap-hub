@@ -4,11 +4,11 @@ import {
   ExternalAuthorResponse,
   InstitutionsResponse,
   ListResponse,
-  ListUserResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
   userMembershipStatus,
+  ListUserResponse,
 } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';

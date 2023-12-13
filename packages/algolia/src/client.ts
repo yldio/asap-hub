@@ -11,6 +11,7 @@ import {
   ResearchOutputResponse,
   TeamListItemResponse,
   TutorialsResponse,
+  UserListItemResponse,
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
@@ -19,13 +20,13 @@ import { SearchIndex } from 'algoliasearch';
 import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
+  NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
   Payload,
   RESEARCH_OUTPUT_ENTITY_TYPE,
-  USER_ENTITY_TYPE,
   TEAM_ENTITY_TYPE,
-  WORKING_GROUP_ENTITY_TYPE,
   TUTORIAL_ENTITY_TYPE,
-  NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
+  USER_ENTITY_TYPE,
+  WORKING_GROUP_ENTITY_TYPE,
 } from './crn';
 import {
   NEWS_ENTITY_TYPE,
@@ -55,7 +56,7 @@ export type EntityResponses = {
       ResearchOutputResponse,
       typeof RESEARCH_OUTPUT_ENTITY_TYPE
     >;
-    [USER_ENTITY_TYPE]: WithMeta<UserResponse, typeof USER_ENTITY_TYPE>;
+    [USER_ENTITY_TYPE]: WithMeta<UserListItemResponse, typeof USER_ENTITY_TYPE>;
     [EXTERNAL_AUTHOR_ENTITY_TYPE]: WithMeta<
       ExternalAuthorResponse,
       typeof EXTERNAL_AUTHOR_ENTITY_TYPE

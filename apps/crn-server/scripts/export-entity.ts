@@ -129,10 +129,7 @@ const transformRecords = (
   }
 
   if (type === 'user' && 'expertiseAndResourceTags' in record) {
-    return {
-      ...payload,
-      _tags: record.expertiseAndResourceTags,
-    };
+    return payload;
   }
 
   if (type === 'event' && 'tags' in record) {

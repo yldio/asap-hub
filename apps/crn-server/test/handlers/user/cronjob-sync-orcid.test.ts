@@ -34,7 +34,7 @@ describe('Cronjob - Sync Users ORCID', () => {
       items: [user],
     });
 
-    mockDataProvider.fetchById.mockResolvedValueOnce(user);
+    mockDataProvider.fetchById.mockResolvedValue(user);
 
     const { statusCode } = await unloggedHandler();
     expect(statusCode).toBe(200);

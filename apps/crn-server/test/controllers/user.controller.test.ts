@@ -2,7 +2,11 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
-import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
+import {
+  getUserDataObject,
+  getUserListItemResponse,
+  getUserResponse,
+} from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Users controller', () => {
@@ -18,11 +22,11 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getUserDataObject()],
+        items: [getUserListItemResponse()],
       });
       const result = await userController.fetch({});
 
-      expect(result).toEqual({ items: [getUserResponse()], total: 1 });
+      expect(result).toEqual({ items: [getUserListItemResponse()], total: 1 });
     });
 
     test('Should return empty list when there are no users', async () => {
@@ -69,21 +73,31 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getUserDataObject()],
+        items: [getUserListItemResponse()],
       });
+
+      userDataProviderMock.fetchById.mockResolvedValue(
+        getUserListItemResponse(),
+      );
+
       const result = await userController.fetchByCode(code);
 
-      expect(result).toEqual(getUserResponse());
+      expect(result).toEqual(getUserListItemResponse());
     });
 
     test('Should call the data provider with correct parameters', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getUserDataObject()],
+        items: [getUserListItemResponse()],
       });
+
+      userDataProviderMock.fetchById.mockResolvedValue(
+        getUserListItemResponse(),
+      );
+
       await userController.fetchByCode(code);
 
-      expect(userDataProviderMock.fetch).toBeCalledWith({
+      expect(userDataProviderMock.fetch).toHaveBeenCalledWith({
         filter: { code, hidden: false, onboarded: false },
         take: 1,
         skip: 0,
@@ -106,6 +120,19 @@ describe('Users controller', () => {
 
       await expect(userController.fetchByCode(code)).rejects.toThrow(
         GenericError,
+      );
+    });
+
+    test('throws if user is not found', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getUserListItemResponse()],
+      });
+
+      userDataProviderMock.fetchById.mockReturnValue(null);
+
+      await expect(userController.fetchByCode(code)).rejects.toThrow(
+        NotFoundError,
       );
     });
   });
@@ -165,7 +192,9 @@ describe('Users controller', () => {
         total: 1,
         items: [{ ...user, id: userId }],
       });
-      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      userDataProviderMock.fetchById.mockResolvedValue({ ...user, id: userId });
+
       const result = await userController.connectByCode(welcomeCode, 'user-id');
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
@@ -176,7 +205,10 @@ describe('Users controller', () => {
         },
         { suppressConflict: false },
       );
-      expect(result).toEqual(getUserResponse());
+      expect(result).toEqual({
+        ...getUserResponse(),
+        id: userId,
+      });
     });
 
     test('should keep the existing connections when creating a new one', async () => {
@@ -189,8 +221,8 @@ describe('Users controller', () => {
         total: 1,
         items: [{ ...user, id: userId }],
       });
-      userDataProviderMock.fetchById.mockResolvedValue(user);
-      await userController.connectByCode('some code', 'user-id');
+      userDataProviderMock.fetchById.mockResolvedValue({ ...user, id: userId });
+      await userController.connectByCode(welcomeCode, 'user-id');
 
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         userId,
@@ -219,7 +251,11 @@ describe('Users controller', () => {
           },
         ],
       });
-      userDataProviderMock.fetchById.mockResolvedValue(getUserDataObject());
+      userDataProviderMock.fetchById.mockResolvedValue({
+        ...getUserDataObject(),
+        id: userId,
+        connections: [{ code: userCode }],
+      });
       const result = await userController.connectByCode(
         'asapWelcomeCode',
         userCode,
@@ -230,6 +266,23 @@ describe('Users controller', () => {
     });
     test('throws if no user is returned', async () => {
       userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
+
+      await expect(
+        userController.connectByCode('some code', 'user-id'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('throws if user is not found', async () => {
+      userDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [
+          {
+            ...getUserDataObject(),
+            connections: [{ code: 'google-oauth2|token' }],
+          },
+        ],
+      });
+      userDataProviderMock.fetchById.mockReturnValue(null);
 
       await expect(
         userController.connectByCode('some code', 'user-id'),

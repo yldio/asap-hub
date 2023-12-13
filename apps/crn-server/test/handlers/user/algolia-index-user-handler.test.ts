@@ -1,7 +1,11 @@
 import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { indexUserHandler } from '../../../src/handlers/user/algolia-index-user-handler';
-import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
+import {
+  getUserEvent,
+  getUserListItemResponse,
+  getUserResponse,
+} from '../../fixtures/users.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
@@ -24,8 +28,13 @@ describe('User index handler', () => {
     expect(userControllerMock.fetchById).toHaveBeenCalledWith(
       event.detail.resourceId,
     );
+
+    const user = getUserListItemResponse();
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(userResponse),
+      data: {
+        ...user,
+        avatarUrl: undefined,
+      },
       type: 'user',
     });
   });
@@ -97,10 +106,9 @@ describe('User index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...userResponse,
+      data: expect.objectContaining({
         _tags: ['Bitopertin', 'A53T', 'Adapter ligation'],
-      },
+      }),
       type: 'user',
     });
   });

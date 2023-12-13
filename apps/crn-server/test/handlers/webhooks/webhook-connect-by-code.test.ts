@@ -99,7 +99,7 @@ describe('POST /webhook/users/connections - success', () => {
       total: 1,
       items: [user],
     });
-    mockDataProvider.fetchById.mockResolvedValueOnce(user);
+    mockDataProvider.fetchById.mockResolvedValue(user);
 
     const res = (await handler(
       getApiGatewayEvent({

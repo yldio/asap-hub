@@ -4,7 +4,7 @@ import {
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserListItemResponse } from '@asap-hub/fixtures';
 import {
   fireEvent,
   render,
@@ -206,7 +206,7 @@ it('Will show algolia results', async () => {
     ...EMPTY_ALGOLIA_FACET_HITS,
     facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
   });
-  const userResponse = createUserResponse();
+  const userResponse = createUserListItemResponse();
   const algoliaResponse = createAlgoliaResponse([
     {
       ...userResponse,

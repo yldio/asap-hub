@@ -1,4 +1,9 @@
-import { ListUserResponse, UserResponse, UserTeam } from '@asap-hub/model';
+import {
+  ListUserResponse,
+  UserResponse,
+  UserTeam,
+  UserListItemResponse,
+} from '@asap-hub/model';
 import { createLabs } from './labs';
 
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
@@ -8,34 +13,19 @@ const listUserResponseTeam: Omit<UserTeam, 'id'> = {
 
 export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   createdDate: '2020-09-07T17:36:54Z',
-  lastModifiedDate: '2020-09-07T17:36:54Z',
-  onboarded: true,
   displayName: 'Person A',
-  email: 'agnete.kirkeby@sund.ku.dk',
   firstName: 'Agnete',
   lastName: 'Kirkeby',
+  email: 'agnete.kirkeby@sund.ku.dk',
   jobTitle: 'Assistant Professor',
   institution: 'University of Copenhagen',
   country: 'Denmark',
   city: 'Copenhagen',
-  teams: [],
-  orcid: '0000-0001-8203-6901',
-  orcidWorks: [],
-  expertiseAndResourceTags: [],
-  questions: [],
   role: 'Grantee',
-  social: {
-    github: '',
-    googleScholar: '',
-    linkedIn: '',
-    orcid: '',
-    researchGate: '',
-    researcherId: '',
-    twitter: '',
-  },
+  onboarded: true,
+  teams: [],
   labs: [],
-  workingGroups: [],
-  interestGroups: [],
+  _tags: [],
 };
 
 type FixtureOptions = {
@@ -58,6 +48,34 @@ export const createUserResponse = (
   itemIndex = 0,
 ): UserResponse => ({
   ...listUserResponseItem,
+  lastModifiedDate: '2020-09-07T17:36:54Z',
+  orcid: '0000-0001-8203-6901',
+  orcidWorks: [],
+  expertiseAndResourceTags: [],
+  questions: [],
+  social: {
+    github: '',
+    googleScholar: '',
+    linkedIn: '',
+    orcid: '',
+    researchGate: '',
+    researcherId: '',
+    twitter: '',
+  },
+  workingGroups: [],
+  interestGroups: [],
+
+  id: `user-id-${itemIndex}`,
+  displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
+  teams: createUserTeams(options),
+  labs: createLabs(options),
+});
+
+export const createUserListItemResponse = (
+  options: FixtureOptions = {},
+  itemIndex = 0,
+): UserListItemResponse => ({
+  ...listUserResponseItem,
   id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
@@ -70,7 +88,7 @@ export const createListUserResponse = (
 ): ListUserResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
-    createUserResponse(options, itemIndex),
+    createUserListItemResponse(options, itemIndex),
   ),
 });
 

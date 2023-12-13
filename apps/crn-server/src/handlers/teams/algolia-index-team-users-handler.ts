@@ -3,7 +3,7 @@ import {
   algoliaSearchClientFactory,
   Payload,
 } from '@asap-hub/algolia';
-import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
+import { ListUserResponse, TeamEvent } from '@asap-hub/model';
 import {
   createProcessingFunction,
   loopOverCustomCollection,
@@ -20,7 +20,6 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
-import { addTagsFunction } from '../helper';
 
 export const indexTeamUsersHandler = (
   userController: UserController,
@@ -31,7 +30,6 @@ export const indexTeamUsersHandler = (
     'user',
     logger,
     userFilter,
-    addTagsFunction<Payload>,
   );
   return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
@@ -39,9 +37,7 @@ export const indexTeamUsersHandler = (
     const fetchFunction = ({
       skip,
       take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<
-      ListResponse<UserResponse>
-    > =>
+    }: LoopOverCustomCollectionFetchOptions): Promise<ListUserResponse> =>
       userController.fetch({
         filter: {
           teamId: event.detail.resourceId,

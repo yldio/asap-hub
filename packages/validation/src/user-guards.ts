@@ -1,10 +1,11 @@
-import { UserResponse, ExternalAuthorResponse } from '@asap-hub/model';
+import { ExternalAuthorResponse, UserListItemResponse } from '@asap-hub/model';
 
 export const isInternalUser = (
-  author: ExternalAuthorResponse | UserResponse,
-): author is UserResponse => (author as UserResponse).email !== undefined;
+  author: ExternalAuthorResponse | UserListItemResponse,
+): author is UserListItemResponse =>
+  (author as UserListItemResponse).email !== undefined;
 
 export const isExternalUser = (
-  author: ExternalAuthorResponse | UserResponse,
+  author: ExternalAuthorResponse | UserListItemResponse,
 ): author is ExternalAuthorResponse =>
   isInternalUser(author as ExternalAuthorResponse) === false;

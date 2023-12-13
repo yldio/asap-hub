@@ -22,6 +22,8 @@ const props = {
   city: text('City', 'New Haven'),
   country: text('Country', 'United States'),
   degree: degree === 'Empty' ? undefined : degree,
+  dismissedGettingStarted: true,
+  email: 'agnete.kirkeby@sund.ku.dk',
   institution: text('Institution', 'Yale University'),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),
@@ -30,6 +32,7 @@ const props = {
     role: text('Role', 'Researcher'),
     displayName: text('Team Name', 'A'),
   }),
+  onboarded: true,
   jobTitle: text('Job Title', 'Assistant Professor'),
   avatarUrl: text(
     'Avatar URL',
@@ -40,6 +43,7 @@ const props = {
     id: `${i}`,
     name: `${i}`,
   })),
+  _tags: [],
 };
 
 export const Normal = () => <PeopleCard {...props} />;

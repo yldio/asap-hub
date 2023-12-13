@@ -5,7 +5,7 @@ import {
   TagSearchResponse,
   TeamListItemResponse,
   TutorialsResponse,
-  UserResponse,
+  UserListItemResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
@@ -59,7 +59,7 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
   }
 
   if (type === 'user') {
-    return <PeopleCard {...(data as UserResponse)} />;
+    return <PeopleCard {...(data as UserListItemResponse)} />;
   }
 
   if (type === 'event') {

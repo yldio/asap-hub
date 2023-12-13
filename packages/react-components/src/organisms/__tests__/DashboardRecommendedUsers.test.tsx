@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserListItemResponse } from '@asap-hub/fixtures';
 import DashboardRecommendedUsers from '../DashboardRecommendedUsers';
 
 it('renders the dashboard recommended users', () => {
@@ -7,15 +7,15 @@ it('renders the dashboard recommended users', () => {
     <DashboardRecommendedUsers
       recommendedUsers={[
         {
-          ...createUserResponse(undefined, 0),
+          ...createUserListItemResponse(undefined, 0),
           displayName: 'John Doe',
         },
         {
-          ...createUserResponse(undefined, 1),
+          ...createUserListItemResponse(undefined, 1),
           displayName: 'Octavian Ratiu',
         },
         {
-          ...createUserResponse(undefined, 2),
+          ...createUserListItemResponse(undefined, 2),
           id: '345',
           displayName: 'User 3',
         },
@@ -32,20 +32,20 @@ it('renders the recommended user', () => {
     <DashboardRecommendedUsers
       recommendedUsers={[
         {
-          ...createUserResponse(),
+          ...createUserListItemResponse(),
           id: 'user-1',
           firstName: 'Test',
           lastName: 'User',
           displayName: 'Test User',
-          expertiseAndResourceTags: ['Tag 1'],
+          _tags: ['Tag 1'],
           avatarUrl:
             'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y',
           teams: [
             { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
           ],
         },
-        createUserResponse(undefined, 1),
-        createUserResponse(undefined, 2),
+        createUserListItemResponse(undefined, 1),
+        createUserListItemResponse(undefined, 2),
       ]}
     />,
   );

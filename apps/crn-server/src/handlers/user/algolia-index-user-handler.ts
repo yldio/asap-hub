@@ -1,6 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
-import { UserEvent, UserResponse } from '@asap-hub/model';
+import { toUserListItem, UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -29,10 +29,7 @@ export const indexUserHandler =
 
       if (user.onboarded && user.role !== 'Hidden') {
         await algoliaClient.save({
-          data: {
-            ...user,
-            _tags: user.expertiseAndResourceTags,
-          } as UserResponse & { _tags: string[] },
+          data: toUserListItem(user),
           type: 'user',
         });
 

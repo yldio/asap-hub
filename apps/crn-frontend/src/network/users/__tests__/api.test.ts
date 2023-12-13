@@ -1,4 +1,8 @@
-import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
+import {
+  createUserResponse,
+  createUserListItemResponse,
+  createListUserResponse,
+} from '@asap-hub/fixtures';
 import {
   inactiveUserMembershipStatus,
   InstitutionsResponse,
@@ -51,7 +55,8 @@ describe('getUsers', () => {
   beforeEach(() => {
     search.mockReset();
 
-    const userResponse = createUserResponse();
+    const userResponse = createUserListItemResponse();
+
     search.mockResolvedValue(
       createAlgoliaResponse<'user'>([
         {
@@ -144,6 +149,7 @@ describe('getUsers', () => {
 
   it('returns successfully fetched users', async () => {
     const users = createListUserResponse(1);
+
     const transformedUsers = {
       ...users,
       items: users.items.map((item) => ({
@@ -192,6 +198,7 @@ describe('getUsersAndExternalAuthors', () => {
         ...userResponse,
         objectID: userResponse.id,
         __meta: { type: 'user' },
+        _tags: userResponse.expertiseAndResourceTags,
       },
     ]);
 

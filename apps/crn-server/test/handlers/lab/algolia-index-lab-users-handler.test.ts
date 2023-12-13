@@ -7,15 +7,13 @@ import {
 } from '../../fixtures/labs.fixtures';
 import {
   getListUserResponse,
-  getUserResponse,
+  getUserListItemResponse,
 } from '../../fixtures/users.fixtures';
-import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
+import {} from '@asap-hub/model';
 jest.mock('../../../src/utils/logger');
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
-
-const mapPayload = toPayload('user');
 
 const possibleEvents: [string, LabEventGenerator][] = [
   ['published', getLabPublishedEvent],
@@ -62,16 +60,30 @@ describe('Index Users on Lab event handler', () => {
     userControllerMock.fetch.mockResolvedValueOnce({
       total: 3,
       items: [
-        getUserResponse(),
-        { ...getUserResponse(), role: 'Hidden' },
-        { ...getUserResponse(), onboarded: false },
+        { ...getUserListItemResponse(), displayName: 'Person A' },
+        {
+          ...getUserListItemResponse(),
+          role: 'Hidden',
+          displayName: 'Person B',
+        },
+        {
+          ...getUserListItemResponse(),
+          onboarded: false,
+          displayName: 'Person C',
+        },
       ],
     });
 
     await indexHandler(getLabPublishedEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
-      mapPayload(expect.objectContaining(getUserResponse())),
+      {
+        data: expect.objectContaining({
+          role: 'Grantee',
+          displayName: 'Person A',
+        }),
+        type: 'user',
+      },
     ]);
   });
 
@@ -86,16 +98,17 @@ describe('Index Users on Lab event handler', () => {
       await indexHandler(event);
 
       expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
-        usersResponse.items.map((item) =>
-          mapPayload(expect.objectContaining(item)),
-        ),
+        usersResponse.items.map((item) => ({
+          data: item,
+          type: 'user',
+        })),
       );
     },
   );
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test.each(possibleRacingConditionEvents)(
-      'recieves the events %s when lab exists',
+      'receives the events %s when lab exists',
       async (name, eventA, eventB) => {
         const userID = 'user-1234';
         const usersResponse = {
@@ -110,15 +123,17 @@ describe('Index Users on Lab event handler', () => {
         expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledTimes(2);
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           1,
-          usersResponse.items.map((item) =>
-            mapPayload(expect.objectContaining(item)),
-          ),
+          usersResponse.items.map((item) => ({
+            data: item,
+            type: 'user',
+          })),
         );
         expect(algoliaSearchClientMock.saveMany).toHaveBeenNthCalledWith(
           2,
-          usersResponse.items.map((item) =>
-            mapPayload(expect.objectContaining(item)),
-          ),
+          usersResponse.items.map((item) => ({
+            data: item,
+            type: 'user',
+          })),
         );
       },
     );

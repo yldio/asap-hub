@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
+import { LabEvent, ListUserResponse } from '@asap-hub/model';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
@@ -26,9 +26,7 @@ export const indexLabUsersHandler =
     const fetchFunction = ({
       skip,
       take,
-    }: LoopOverCustomCollectionFetchOptions): Promise<
-      ListResponse<UserResponse>
-    > =>
+    }: LoopOverCustomCollectionFetchOptions): Promise<ListUserResponse> =>
       userController.fetch({
         filter: {
           labId: event.detail.resourceId,
@@ -37,9 +35,7 @@ export const indexLabUsersHandler =
         take,
       });
 
-    const processingFunction = async (
-      foundUsers: ListResponse<UserResponse>,
-    ) => {
+    const processingFunction = async (foundUsers: ListUserResponse) => {
       logger.info(
         `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
       );
@@ -48,10 +44,7 @@ export const indexLabUsersHandler =
         foundUsers.items
           .filter((user) => user.onboarded && user.role !== 'Hidden')
           .map((data) => ({
-            data: {
-              ...data,
-              _tags: data.expertiseAndResourceTags,
-            },
+            data,
             type: 'user',
           })),
       );

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { UserResponse } from '@asap-hub/model';
+import { UserListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
@@ -44,23 +44,7 @@ const moveStyles = css({
 
 const alumniBadgeStyles = css({});
 
-type PeopleCardProps = Pick<
-  UserResponse,
-  | 'id'
-  | 'alumniSinceDate'
-  | 'avatarUrl'
-  | 'displayName'
-  | 'firstName'
-  | 'institution'
-  | 'jobTitle'
-  | 'createdDate'
-  | 'lastName'
-  | 'role'
-  | 'teams'
-  | 'degree'
-  | 'labs'
->;
-const PeopleCard: React.FC<PeopleCardProps> = ({
+const PeopleCard: React.FC<UserListItemResponse> = ({
   id,
   alumniSinceDate,
   displayName,

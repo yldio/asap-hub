@@ -100,12 +100,41 @@ export interface UserDataObject extends Invitee {
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
 }
-export type ListUserDataObject = ListResponse<UserDataObject>;
+
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
 }
+
+export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
+export type UserListItemDataObject = Pick<
+  UserResponse,
+  | 'alumniSinceDate'
+  | 'avatarUrl'
+  | 'city'
+  | 'country'
+  | 'createdDate'
+  | 'degree'
+  | 'dismissedGettingStarted'
+  | 'displayName'
+  | 'email'
+  | 'firstName'
+  | 'id'
+  | 'institution'
+  | 'jobTitle'
+  | 'labs'
+  | 'lastName'
+  | 'membershipStatus'
+  | 'onboarded'
+  | 'role'
+> & {
+  _tags: string[];
+  teams: UserListItemTeam[];
+};
+export type ListUserDataObject = ListResponse<UserListItemDataObject>;
+
+export type UserListItemResponse = UserListItemDataObject;
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
@@ -162,7 +191,7 @@ export interface UserAvatarPostRequest {
   avatar: string;
 }
 
-export type ListUserResponse = ListResponse<UserResponse>;
+export type ListUserResponse = ListResponse<UserListItemResponse>;
 
 export type FetchUsersFilter =
   | {
@@ -199,3 +228,55 @@ export type FetchUsersFilter =
 export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';
+
+export const toUserListItem = (user: UserResponse): UserListItemResponse => {
+  const {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    dismissedGettingStarted,
+    displayName,
+    email,
+    expertiseAndResourceTags,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    onboarded,
+    role,
+    teams,
+  } = user;
+
+  return {
+    alumniSinceDate,
+    avatarUrl,
+    city,
+    country,
+    createdDate,
+    degree,
+    dismissedGettingStarted,
+    displayName,
+    email,
+    firstName,
+    id,
+    institution,
+    jobTitle,
+    labs,
+    lastName,
+    membershipStatus,
+    onboarded,
+    role,
+    teams: teams.map((teamItem) => ({
+      id: teamItem.id,
+      role: teamItem.role,
+      displayName: teamItem.displayName,
+    })),
+    _tags: expertiseAndResourceTags,
+  };
+};

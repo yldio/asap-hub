@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
+import {
+  createUserListItemResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import WorkingGroupMembers from '../WorkingGroupMembers';
 
 const props: ComponentProps<typeof WorkingGroupMembers> = {
@@ -116,9 +119,9 @@ describe('member section', () => {
     const { getByText } = render(
       <WorkingGroupMembers
         {...props}
-        members={createListUserResponse(10).items.map((item, index) => ({
+        members={Array.from({ length: 10 }, (_, index) => ({
           user: {
-            ...item,
+            ...createUserListItemResponse({}, index),
             displayName: `Test User ${index}`,
           },
           isActive: true,

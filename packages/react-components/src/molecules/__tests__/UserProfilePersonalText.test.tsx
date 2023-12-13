@@ -6,7 +6,6 @@ import UserProfilePersonalText from '../UserProfilePersonalText';
 const props: ComponentProps<typeof UserProfilePersonalText> = {
   labs: [],
   teams: [],
-  role: 'Grantee',
   userActiveTeamsRoute: '#',
 };
 

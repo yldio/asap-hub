@@ -67,3 +67,20 @@ export const clearAjvErrorForPath = (
   path: string,
 ): ValidationErrorResponse['data'] =>
   errors.filter(({ instancePath }) => instancePath !== path);
+
+export const getTimezone = (date: Date) => {
+  const offset = date.getTimezoneOffset();
+  // The number of minutes returned by getTimezoneOffset() is positive if the local time zone is behind UTC,
+  // and negative if the local time zone is ahead of UTC. For example, for UTC+10, -600 will be returned.
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#negative_values_and_positive_values
+
+  if (offset > 0) {
+    return `UTC-${offset / 60}`;
+  }
+
+  if (offset < 0) {
+    return `UTC+${offset / -60}`;
+  }
+
+  return 'UTC';
+};

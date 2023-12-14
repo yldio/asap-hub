@@ -5,6 +5,7 @@ import {
   createSentryHeaders,
   validationErrorsAreSupported,
   clearAjvErrorForPath,
+  getTimezone,
 } from '../api-util';
 
 const mockSetTag = jest.fn();
@@ -181,5 +182,37 @@ describe('validationErrorsAreSupported', () => {
         ['/2', '/3'],
       ),
     ).toBe(false);
+  });
+});
+
+describe('getTimezone', () => {
+  it('returns UTC+{hours} for timezone ahead of UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return -600;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC+10');
+  });
+
+  it('returns UTC-{hours} for timezone behind of UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return 180;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC-3');
+  });
+
+  it('returns UTC for timezone equal to UTC', async () => {
+    const date = {
+      getTimezoneOffset() {
+        return 0;
+      },
+    } as Date;
+
+    expect(getTimezone(date)).toBe('UTC');
   });
 });

@@ -1,5 +1,5 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
-import { gp2 } from '@asap-hub/model';
+import { createSentryHeaders, getTimezone } from '@asap-hub/frontend-utils';
+import { gp2, ListReminderResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const getNews = async (
@@ -11,6 +11,30 @@ export const getNews = async (
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch the News. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getReminders = async (
+  authorization: string,
+): Promise<ListReminderResponse> => {
+  const timezone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || getTimezone(new Date());
+  const resp = await fetch(
+    `${API_BASE_URL}/reminders?${new URLSearchParams({
+      timezone,
+    })}`,
+    {
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
+    },
+  );
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch reminders. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

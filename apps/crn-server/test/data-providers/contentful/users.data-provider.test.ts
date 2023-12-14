@@ -79,6 +79,11 @@ describe('User data provider', () => {
             id: 'ig-2',
             name: 'interest-group-2',
           },
+          {
+            active: true,
+            id: 'interest-group-leader-1',
+            name: 'Interest Group Leader 1',
+          },
         ],
       };
       expect(result).toEqual(expectation);

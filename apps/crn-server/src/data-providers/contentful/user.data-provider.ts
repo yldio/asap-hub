@@ -401,12 +401,11 @@ export const parseContentfulGraphQlUserListItem = (
     [],
   );
 
+  const expertiseAndResourceTags = item.expertiseAndResourceTags?.length
+    ? item.expertiseAndResourceTags.filter((tag): tag is string => tag !== null)
+    : [];
   return {
-    _tags: item.expertiseAndResourceTags?.length
-      ? item.expertiseAndResourceTags.filter(
-          (tag): tag is string => tag !== null,
-        )
-      : [],
+    _tags: expertiseAndResourceTags,
     alumniSinceDate: item.alumniSinceDate,
     avatarUrl: item.avatar?.url ?? undefined,
     city: item.city ?? undefined,
@@ -416,6 +415,7 @@ export const parseContentfulGraphQlUserListItem = (
     dismissedGettingStarted: item.dismissedGettingStarted ?? false,
     displayName: `${userFirstName} ${userLastName}`,
     email: item.email ?? '',
+    expertiseAndResourceTags,
     firstName: userFirstName,
     id: item.sys.id,
     institution: item.institution ?? undefined,

@@ -119,6 +119,7 @@ export type UserListItemDataObject = Pick<
   | 'dismissedGettingStarted'
   | 'displayName'
   | 'email'
+  | 'expertiseAndResourceTags'
   | 'firstName'
   | 'id'
   | 'institution'
@@ -263,6 +264,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     dismissedGettingStarted,
     displayName,
     email,
+    expertiseAndResourceTags,
     firstName,
     id,
     institution,

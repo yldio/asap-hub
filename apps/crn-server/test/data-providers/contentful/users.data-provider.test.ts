@@ -406,6 +406,7 @@ describe('User data provider', () => {
           {
             ...getUserListItemResponse(),
             _tags: [],
+            expertiseAndResourceTags: [],
           },
         ],
       });

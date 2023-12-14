@@ -744,7 +744,6 @@ describe('OutputForm', () => {
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    // userEvent.click(screen.getByText('None'));
     userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
     expect(

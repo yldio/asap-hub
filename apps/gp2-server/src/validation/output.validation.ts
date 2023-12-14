@@ -151,11 +151,8 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         type: 'array',
         items: { type: 'string' },
       },
-      versionIds: {
-        type: 'array',
-        items: {
-          type: 'string',
-        },
+      createVersion: {
+        type: 'boolean',
         nullable: true,
       },
       tagIds: {

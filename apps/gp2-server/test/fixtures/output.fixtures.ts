@@ -112,6 +112,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
   } = getOutputResponse();
   return {
     ...outputResponse,
+    createVersion: false,
     link: 'http://a.link',
     type: 'Research',
     projectIds: projects?.map(({ id }) => id),

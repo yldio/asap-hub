@@ -204,7 +204,7 @@ export type OutputPostRequest = {
   mainEntityId: string;
   relatedOutputIds: string[];
   relatedEventIds: string[];
-  versionIds?: string[];
+  createVersion?: boolean;
 };
 
 export type OutputPutRequest = OutputPostRequest;

@@ -58,6 +58,7 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "publishingEntity"
+    "publishingEntity",
+    "_tags"
   ]
 }

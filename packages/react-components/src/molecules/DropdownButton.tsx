@@ -109,8 +109,8 @@ const itemStyles = ({
       type === 'title'
         ? silver.rgba
         : type === 'inner'
-          ? neutral200.rgba
-          : 'none',
+        ? neutral200.rgba
+        : 'none',
     ':hover': {
       backgroundColor: primary100.rgba,
       span: {

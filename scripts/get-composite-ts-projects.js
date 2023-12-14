@@ -36,9 +36,10 @@ const configErrors = [];
     let devDependencies;
     // read package.json
     try {
-      ({ dependencies = {}, devDependencies = {} } = require(
-        resolve(dir, 'package.json'),
-      ));
+      ({ dependencies = {}, devDependencies = {} } = require(resolve(
+        dir,
+        'package.json',
+      )));
     } catch {
       // obsolete project dir without a package.json, pretend it doesn't exist
       return;

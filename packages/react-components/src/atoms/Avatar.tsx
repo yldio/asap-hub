@@ -143,8 +143,8 @@ const Avatar: React.FC<AvatarProps> = ({
           placeholder
             ? ` placeholder: ${placeholder}`
             : name
-              ? ` of ${name}`
-              : ''
+            ? ` of ${name}`
+            : ''
         }`}
         css={[
           circleStyle,
@@ -152,8 +152,8 @@ const Avatar: React.FC<AvatarProps> = ({
           placeholder
             ? placeholderColorStyle
             : imageUrl
-              ? null
-              : colorStyles[hash(initials) % colorStyles.length],
+            ? null
+            : colorStyles[hash(initials) % colorStyles.length],
           imageUrl && imageStyle(imageUrl),
         ]}
       >

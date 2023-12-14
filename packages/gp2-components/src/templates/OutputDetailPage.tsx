@@ -129,11 +129,11 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                             outputId: output.id,
                           }).$
                       : output.mainEntity.type === 'Projects'
-                        ? gp2Routing
-                            .projects({})
-                            .project({ projectId: output.mainEntity.id })
-                            .duplicateOutput({ outputId: output.id }).$
-                        : undefined
+                      ? gp2Routing
+                          .projects({})
+                          .project({ projectId: output.mainEntity.id })
+                          .duplicateOutput({ outputId: output.id }).$
+                      : undefined
                   }
                   buttonStyle
                   small

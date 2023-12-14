@@ -620,10 +620,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('publish')
                             : promptNewVersion
-                              ? setShowVersionPrompt(true)
-                              : !published
-                                ? setShowConfirmPublish(true)
-                                : save(false)
+                            ? setShowVersionPrompt(true)
+                            : !published
+                            ? setShowConfirmPublish(true)
+                            : save(false)
                         }
                       >
                         {published ? 'Save' : 'Publish'}

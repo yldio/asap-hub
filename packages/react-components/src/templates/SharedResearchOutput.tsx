@@ -132,11 +132,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             id,
           }).$
       : props.teams[0] && props.teams[0].id
-        ? network({})
-            .teams({})
-            .team({ teamId: props.teams[0].id })
-            .duplicateOutput({ id }).$
-        : undefined;
+      ? network({})
+          .teams({})
+          .team({ teamId: props.teams[0].id })
+          .duplicateOutput({ id }).$
+      : undefined;
 
   return (
     <div>

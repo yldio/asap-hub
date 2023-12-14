@@ -246,8 +246,8 @@ export const getButtonStyles = ({
           ? activePrimaryStyles(colors)
           : activeSecondaryStyles
         : primary
-          ? primaryStyles(colors)
-          : secondaryStyles
+        ? primaryStyles(colors)
+        : secondaryStyles
       : disabledStyles,
     (Array.isArray(children)
       ? children.some((child) => child && typeof child === 'object')

@@ -288,12 +288,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const identifierType: gp2Model.OutputIdentifierType = doi
     ? gp2Model.OutputIdentifierType.DOI
     : rrid
-      ? gp2Model.OutputIdentifierType.RRID
-      : accessionNumber
-        ? gp2Model.OutputIdentifierType.AccessionNumber
-        : title // if it's editing
-          ? gp2Model.OutputIdentifierType.None
-          : gp2Model.OutputIdentifierType.Empty;
+    ? gp2Model.OutputIdentifierType.RRID
+    : accessionNumber
+    ? gp2Model.OutputIdentifierType.AccessionNumber
+    : title // if it's editing
+    ? gp2Model.OutputIdentifierType.None
+    : gp2Model.OutputIdentifierType.Empty;
   const [newIdentifierType, setNewIdentifierType] =
     useState<gp2Model.OutputIdentifierType>(identifierType);
 

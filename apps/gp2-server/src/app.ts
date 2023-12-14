@@ -71,6 +71,7 @@ import { newsRouteFactory } from './routes/news.route';
 import { outputRouteFactory } from './routes/output.route';
 import { pageRouteFactory } from './routes/page.route';
 import { projectRouteFactory } from './routes/project.route';
+import { reminderRouteFactory } from './routes/reminder.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupNetworkRouteFactory } from './routes/working-group-network.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
@@ -251,6 +252,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     workingGroupNetworkController,
   );
   const projectRoutes = projectRouteFactory(projectController);
+  const reminderRoutes = reminderRouteFactory();
   const eventRoutes = eventRouteFactory(eventController);
   const externalUsersRoutes = externalUserRouteFactory(externalUserController);
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -291,6 +293,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
   app.use(projectRoutes);
+  app.use(reminderRoutes);
   app.use(eventRoutes);
   app.use(externalUsersRoutes);
   app.use(calendarRoutes);

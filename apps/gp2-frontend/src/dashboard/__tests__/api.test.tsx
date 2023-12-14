@@ -1,8 +1,11 @@
-import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  createListReminderResponse,
+  gp2 as gp2Fixtures,
+} from '@asap-hub/fixtures';
+import { gp2 as gp2Model, ListReminderResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getDashboardStats, getNews } from '../api';
+import { getDashboardStats, getNews, getReminders } from '../api';
 
 jest.mock('../../config');
 
@@ -31,6 +34,37 @@ describe('getNews', () => {
       getNews('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the News. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getReminders', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+  it('returns successfully fetched reminders', async () => {
+    const listReminderResponse: ListReminderResponse =
+      createListReminderResponse();
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/reminders')
+      .query({ timezone: 'UTC' })
+      .reply(200, listReminderResponse);
+
+    const result = await getReminders('Bearer x');
+    expect(result).toEqual(listReminderResponse);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/reminders')
+      .query({ timezone: 'UTC' })
+      .reply(500);
+
+    await expect(
+      getReminders('Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch reminders. Expected status 2xx. Received status 500."`,
     );
   });
 });

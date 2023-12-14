@@ -1,5 +1,5 @@
 import { gp2 as gp2Auth } from '@asap-hub/auth';
-import { gp2 } from '@asap-hub/fixtures';
+import { createListReminderResponse, gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -11,7 +11,7 @@ import {
   createUserListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getDashboardStats, getNews } from '../api';
+import { getDashboardStats, getNews, getReminders } from '../api';
 import { getOutputs } from '../../outputs/api';
 import Dashboard from '../Dashboard';
 
@@ -45,6 +45,9 @@ const renderDashboard = async ({
   );
 };
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+const mockGetReminders = getReminders as jest.MockedFunction<
+  typeof getReminders
+>;
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 const mockDashboard = getDashboardStats as jest.MockedFunction<
   typeof getDashboardStats
@@ -56,6 +59,7 @@ const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
 it('renders dashboard header', async () => {
+  mockGetReminders.mockResolvedValue(createListReminderResponse());
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
@@ -69,6 +73,7 @@ it('renders dashboard header', async () => {
 });
 
 it('doesnt render the welcome back banner when its disabled', async () => {
+  mockGetReminders.mockResolvedValue(createListReminderResponse());
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
@@ -84,6 +89,7 @@ it('doesnt render the welcome back banner when its disabled', async () => {
 });
 
 it('renders the news when theres at least one news', async () => {
+  mockGetReminders.mockResolvedValue(createListReminderResponse());
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
@@ -95,6 +101,7 @@ it('renders the news when theres at least one news', async () => {
 });
 
 it("renders the upcoming events with events when there's at least one upcoming event", async () => {
+  mockGetReminders.mockResolvedValue(createListReminderResponse());
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
   mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
@@ -105,4 +112,16 @@ it("renders the upcoming events with events when there's at least one upcoming e
   expect(
     screen.getByRole('heading', { name: 'Upcoming Events' }),
   ).toBeVisible();
+});
+
+it('renders the reminder section', async () => {
+  mockGetReminders.mockResolvedValue(createListReminderResponse());
+  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
+  mockGetOutputs.mockResolvedValueOnce(createOutputListAlgoliaResponse(2));
+  await renderDashboard({});
+  expect(screen.getByRole('heading', { name: 'Reminders' })).toBeVisible();
 });

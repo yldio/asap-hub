@@ -15,6 +15,8 @@ const mockedDashboardStats = {
 
 export const Normal = () => (
   <DashboardPageBody
+    canPublish={true}
+    reminders={createListReminderResponse(number('Reminders', 3)).items}
     news={gp2.createNewsResponse()}
     latestStats={mockedDashboardStats}
     upcomingEvents={gp2

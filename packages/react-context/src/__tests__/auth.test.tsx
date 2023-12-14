@@ -5,6 +5,7 @@ import {
   getUserClaimKey,
   useCurrentUserCRN,
   useCurrentUserGP2,
+  useCurrentUserProjectRolesGP2,
   useCurrentUserRoleGP2,
   useCurrentUserTeamRolesCRN,
 } from '../auth';
@@ -240,6 +241,55 @@ describe('useCurrentUserRoleGP2', () => {
       },
     );
     expect(result.current).toEqual('Project manager');
+  });
+});
+describe('useCurrentUserProjectRolesGP2', () => {
+  it('returns an empty array when there is no current user', async () => {
+    const { result } = renderHook(() => useCurrentUserProjectRolesGP2(), {
+      wrapper: userProviderGP2(undefined),
+    });
+    expect(result.current).toEqual([]);
+  });
+
+  it('returns an array of project user roles when there is a logged in user', async () => {
+    const project1: gp2.User['projects'][number] = {
+      id: 'proj-1',
+      title: 'Proj',
+      status: 'Active',
+      members: [
+        { role: 'Project manager', userId: 'testuser' },
+        { role: 'Contributor', userId: '2' },
+      ],
+    };
+    const project2: gp2.User['projects'][number] = {
+      id: 'proj-1',
+      title: 'Proj',
+      status: 'Active',
+      members: [
+        { role: 'Project co-lead', userId: '1' },
+        { role: 'Investigator', userId: 'testuser' },
+        { role: 'Project manager', userId: '3' },
+      ],
+    };
+    const { result } = renderHook(() => useCurrentUserProjectRolesGP2(), {
+      wrapper: userProviderGP2({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        [`${window.location.origin}/user`]: {
+          id: 'testuser',
+          onboarded: true,
+          email: 'john.doe@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          displayName: 'John Doe',
+          projects: [project1, project2],
+          algoliaApiKey: 'asdasda',
+          workingGroups: [],
+          role: 'Trainee',
+        },
+      }),
+    });
+    expect(result.current).toEqual(['Project manager', 'Investigator']);
   });
 });
 describe('useCurrentUserTeamRoles', () => {

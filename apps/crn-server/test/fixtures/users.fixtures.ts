@@ -430,6 +430,7 @@ export const getContentfulGraphqlUser = (
   linkedFrom: {
     workingGroupMembersCollection: getWorkingGroupMembersCollection(),
     workingGroupLeadersCollection: getWorkingGroupLeadersCollection(),
+    interestGroupLeadersCollection: getInterestGroupLeadersCollection(),
   },
   ...props,
 });
@@ -562,6 +563,26 @@ const getWorkingGroupCollection = () => ({
       },
       title: 'working-group-1',
       complete: true,
+    },
+  ],
+});
+
+const getInterestGroupLeadersCollection = () => ({
+  items: [
+    {
+      linkedFrom: {
+        interestGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'interest-group-leader-1',
+              },
+              active: true,
+              name: 'Interest Group Leader 1',
+            },
+          ],
+        },
+      },
     },
   ],
 });

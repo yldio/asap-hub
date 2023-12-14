@@ -38,15 +38,18 @@ describe('FilterPills', () => {
     expect(onRemoveWorkingGroupButton).toBeVisible();
 
     userEvent.click(onRemoveTagButton);
-    expect(props.onRemove).toBeCalledWith('tag-1', 'tags');
+    expect(props.onRemove).toHaveBeenCalledWith('tag-1', 'tags');
 
     userEvent.click(onRemoveRegionButton);
-    expect(props.onRemove).toBeCalledWith('Asia', 'regions');
+    expect(props.onRemove).toHaveBeenCalledWith('Asia', 'regions');
 
     userEvent.click(onRemoveProjectButton);
-    expect(props.onRemove).toBeCalledWith('project-1', 'projects');
+    expect(props.onRemove).toHaveBeenCalledWith('project-1', 'projects');
 
     userEvent.click(onRemoveWorkingGroupButton);
-    expect(props.onRemove).toBeCalledWith('working-group-1', 'workingGroups');
+    expect(props.onRemove).toHaveBeenCalledWith(
+      'working-group-1',
+      'workingGroups',
+    );
   });
 });

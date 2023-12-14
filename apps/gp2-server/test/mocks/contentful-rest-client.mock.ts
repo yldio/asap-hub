@@ -11,4 +11,4 @@ export const getContentfulEnvironmentMock = (
     getEntries: jest.fn(),
     getEntry: jest.fn(),
     ...overrideProps,
-  } as unknown as jest.Mocked<Environment>);
+  }) as unknown as jest.Mocked<Environment>;

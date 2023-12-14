@@ -24,20 +24,17 @@ const wrapper =
     currentRoute: string;
     user?: Partial<User>;
   }): React.FC =>
-  ({ children }) =>
-    (
-      <RecoilRoot
-        initializeState={({ set }) => {
-          user?.id && set(refreshUserState(user.id), Math.random());
-        }}
-      >
-        <Auth0Provider user={user}>
-          <MemoryRouter initialEntries={[currentRoute]}>
-            {children}
-          </MemoryRouter>
-        </Auth0Provider>
-      </RecoilRoot>
-    );
+  ({ children }) => (
+    <RecoilRoot
+      initializeState={({ set }) => {
+        user?.id && set(refreshUserState(user.id), Math.random());
+      }}
+    >
+      <Auth0Provider user={user}>
+        <MemoryRouter initialEntries={[currentRoute]}>{children}</MemoryRouter>
+      </Auth0Provider>
+    </RecoilRoot>
+  );
 it('returns undefined when on different user profile', async () => {
   const userId = 'test123';
   const route = network({})

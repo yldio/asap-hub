@@ -102,7 +102,7 @@ it('renders a country selector', () => {
 
   userEvent.click(screen.getByText('Start Typing...'));
   userEvent.type(screen.getByText('Start Typing...'), 'xx');
-  expect(screen.queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
+  expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
   render(

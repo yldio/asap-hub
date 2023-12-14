@@ -2,7 +2,6 @@ import { caseInsensitive, CSVValue } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { formatDate } from '@asap-hub/react-components';
 import { isInternalUser } from '@asap-hub/validation';
-/* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const outputFields = {

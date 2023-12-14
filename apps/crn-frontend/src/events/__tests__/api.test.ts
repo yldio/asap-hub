@@ -64,7 +64,7 @@ describe('getEvents', () => {
       getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
     );
 
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -87,7 +87,7 @@ describe('getEvents', () => {
       }),
     );
 
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -105,7 +105,7 @@ describe('getEvents', () => {
       algoliaSearchClient,
       getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
     );
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -124,7 +124,7 @@ describe('getEvents', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { userId: 'user-1' },
     });
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -144,7 +144,7 @@ describe('getEvents', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00Z'), { past: true }),
       constraint: { userId: 'user-1' },
     });
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -164,7 +164,7 @@ describe('getEvents', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { teamId: 'team-1' },
     });
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -216,7 +216,7 @@ describe('getEvents', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { interestGroupId: 'group-5' },
     });
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {
@@ -236,7 +236,7 @@ describe('getEvents', () => {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
       constraint: { workingGroupId: 'wg-1' },
     });
-    expect(search).toBeCalledWith(
+    expect(search).toHaveBeenCalledWith(
       ['event'],
       '',
       {

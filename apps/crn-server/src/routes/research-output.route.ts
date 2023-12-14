@@ -172,9 +172,10 @@ export const hasAccessToDraft = (
       researchOutput.teams.find((outputTeam) => outputTeam.id === userTeam.id),
     );
   }
-  return loggedInUser.workingGroups.some((userWorkingGroup) =>
-    researchOutput?.workingGroups.find(
-      (outputWorkingGroup) => outputWorkingGroup.id === userWorkingGroup.id,
-    ),
+  return loggedInUser.workingGroups.some(
+    (userWorkingGroup) =>
+      researchOutput?.workingGroups.find(
+        (outputWorkingGroup) => outputWorkingGroup.id === userWorkingGroup.id,
+      ),
   );
 };

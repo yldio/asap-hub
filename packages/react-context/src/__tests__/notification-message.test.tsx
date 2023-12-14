@@ -8,6 +8,6 @@ test('add and remove throw as default', () => {
     useNotificationContext,
   ).result.current;
 
-  expect(addNotification).toThrowError();
-  expect(removeNotification).toThrowError();
+  expect(addNotification).toThrow();
+  expect(removeNotification).toThrow();
 });

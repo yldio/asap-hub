@@ -27,16 +27,15 @@ const wrapper =
     { user }: { user?: gp2Model.UserResponse },
     step: string = gp2.onboarding({}).coreDetails({}).$,
   ): React.FC =>
-  ({ children }) =>
-    (
-      <RecoilRoot>
-        <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    );
+  ({ children }) => (
+    <RecoilRoot>
+      <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>
+  );
 
 describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());

@@ -7,7 +7,6 @@ import {
 } from '@asap-hub/frontend-utils';
 import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
-/* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const MAX_ALGOLIA_RESULTS = 10000;

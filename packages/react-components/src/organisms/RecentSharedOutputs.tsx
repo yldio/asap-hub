@@ -1,7 +1,7 @@
 import { EventResponse, gp2, ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { Card, Link } from '../atoms';
 import { formatDateToTimezone } from '../date';

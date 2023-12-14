@@ -44,9 +44,8 @@ export default class InterestGroupController {
   }
 
   async fetchById(interestGroupId: string): Promise<InterestGroupResponse> {
-    const interestGroup = await this.interestGroupDataProvider.fetchById(
-      interestGroupId,
-    );
+    const interestGroup =
+      await this.interestGroupDataProvider.fetchById(interestGroupId);
     if (!interestGroup) {
       throw new NotFoundError(
         undefined,

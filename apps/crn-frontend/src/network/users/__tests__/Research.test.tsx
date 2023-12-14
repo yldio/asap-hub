@@ -23,31 +23,30 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const id = '42';
 const makeWrapper =
   (userId = id, currentUserId = userId): FC =>
-  ({ children }) =>
-    (
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{ id: currentUserId }}>
-            <MemoryRouter
-              initialEntries={[
-                network({}).users({}).user({ userId }).research({}).$,
-              ]}
+  ({ children }) => (
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: currentUserId }}>
+          <MemoryRouter
+            initialEntries={[
+              network({}).users({}).user({ userId }).research({}).$,
+            ]}
+          >
+            <Route
+              path={
+                network.template +
+                network({}).users.template +
+                network({}).users({}).user.template +
+                network({}).users({}).user({ userId }).research.template
+              }
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).users.template +
-                  network({}).users({}).user.template +
-                  network({}).users({}).user({ userId }).research.template
-                }
-              >
-                {children}
-              </Route>
-            </MemoryRouter>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>
-    );
+              {children}
+            </Route>
+          </MemoryRouter>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>
+  );
 const wrapper = makeWrapper();
 
 it('renders the profile research section', async () => {

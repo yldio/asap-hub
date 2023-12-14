@@ -191,7 +191,7 @@ it('should call the connections api with Auth0 UserId, invitation code and Share
     apiBase,
   );
   expect(nock.isDone()).toBe(true);
-  expect(apiBase.access.deny).not.toBeCalled();
+  expect(apiBase.access.deny).not.toHaveBeenCalled();
 });
 
 it('should not call the connections api when there is no invitation code (because they have already connected their accounts)', async () => {
@@ -209,7 +209,7 @@ it('should not call the connections api when there is no invitation code (becaus
     apiBase,
   );
   expect(nock.isDone()).toBe(false);
-  expect(apiBase.access.deny).not.toBeCalled();
+  expect(apiBase.access.deny).not.toHaveBeenCalled();
 });
 
 it('should deny access if the backend throws an error and fails connect the user', async () => {
@@ -221,5 +221,5 @@ it('should deny access if the backend throws an error and fails connect the user
     .reply(404);
   await onExecutePostLogin(eventBase, apiBase);
   expect(nock.isDone()).toBe(true);
-  expect(apiBase.access.deny).toBeCalled();
+  expect(apiBase.access.deny).toHaveBeenCalled();
 });

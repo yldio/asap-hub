@@ -28,31 +28,30 @@ const emptyUser: UserResponse = {
 
 const wrapper =
   ({ user }: { user?: UserResponse }): React.FC =>
-  ({ children }) =>
-    (
-      <RecoilRoot
-        initializeState={({ set }) => {
-          user?.id && set(refreshUserState(user.id), Math.random());
-        }}
-      >
-        <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({})
-                  .users({})
-                  .user({
-                    userId: user?.id ?? '',
-                  })
-                  .research({}).$,
-              ]}
-            >
-              {children}
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    );
+  ({ children }) => (
+    <RecoilRoot
+      initializeState={({ set }) => {
+        user?.id && set(refreshUserState(user.id), Math.random());
+      }}
+    >
+      <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
+        <WhenReady>
+          <MemoryRouter
+            initialEntries={[
+              network({})
+                .users({})
+                .user({
+                  userId: user?.id ?? '',
+                })
+                .research({}).$,
+            ]}
+          >
+            {children}
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>
+  );
 
 describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());

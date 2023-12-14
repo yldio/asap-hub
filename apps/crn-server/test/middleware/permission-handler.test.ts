@@ -90,9 +90,8 @@ describe('Permission middleware', () => {
           listInterestGroupsResponse,
         );
 
-        const response = await supertest(appWithMockedAuth).get(
-          '/interest-groups',
-        );
+        const response =
+          await supertest(appWithMockedAuth).get('/interest-groups');
 
         expect(response.status).toBe(200);
       });
@@ -104,9 +103,8 @@ describe('Permission middleware', () => {
       });
 
       test('Should deny access to /interest-groups endpoint', async () => {
-        const response = await supertest(appWithMockedAuth).get(
-          '/interest-groups',
-        );
+        const response =
+          await supertest(appWithMockedAuth).get('/interest-groups');
 
         expect(response.status).toBe(403);
       });
@@ -138,9 +136,8 @@ describe('Permission middleware', () => {
         });
 
         test('Should deny access to GET /users/{user_id} when the requested user is not the logged-in user', async () => {
-          const response = await supertest(appWithMockedAuth).get(
-            `/users/some-other-id`,
-          );
+          const response =
+            await supertest(appWithMockedAuth).get(`/users/some-other-id`);
 
           expect(response.status).toBe(403);
         });

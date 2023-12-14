@@ -1,4 +1,4 @@
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { css } from '@emotion/react';
 import { Anchor } from '../atoms';
 import { fern } from '../colors';

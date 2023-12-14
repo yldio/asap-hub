@@ -36,7 +36,7 @@ describe('UserMenu', () => {
     render(<UserMenu {...props} closeUserMenu={closeUserMenu} />);
     const profileLink = screen.getByRole('link', { name: /my profile/i });
     userEvent.click(profileLink);
-    expect(closeUserMenu).toBeCalledWith(false);
+    expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
   it('renders the projects', () => {
@@ -87,7 +87,7 @@ describe('UserMenu', () => {
       screen.getByRole('link', { name: /the first project title/i }),
     );
 
-    expect(closeUserMenu).toBeCalledWith(false);
+    expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
   it('renders only active projects', () => {
@@ -172,7 +172,7 @@ describe('UserMenu', () => {
 
     userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));
 
-    expect(closeUserMenu).toBeCalledWith(false);
+    expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
   it('closes when the user clicks outside the User Menu', () => {
@@ -184,7 +184,7 @@ describe('UserMenu', () => {
       </>,
     );
     fireEvent.mouseDown(screen.getByRole('heading'));
-    expect(closeUserMenu).toBeCalledWith(false);
+    expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
   it('renders the bottom links', () => {

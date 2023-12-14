@@ -159,7 +159,7 @@ it('does not open a menu when clicking a value', () => {
   );
 
   userEvent.click(getByText('LGW'));
-  expect(() => getByText('LHR')).toThrowError();
+  expect(() => getByText('LHR')).toThrow();
 });
 
 it('opens a filtered menu to select from when typing', () => {

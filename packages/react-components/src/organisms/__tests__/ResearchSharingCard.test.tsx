@@ -86,7 +86,7 @@ it('does not require an url', async () => {
   fireEvent.focusOut(input);
   await expect(
     screen.findByText('Please enter a valid URL, starting with http://'),
-  ).rejects.toThrowError();
+  ).rejects.toThrow();
 });
 
 it.each`

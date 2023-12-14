@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { css, CSSObject } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';

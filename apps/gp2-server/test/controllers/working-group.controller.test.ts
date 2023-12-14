@@ -148,9 +148,8 @@ describe('Working Group controller', () => {
           ...getWorkingGroupDataObject(),
           members: [member],
         });
-        const result = await workingGroupController.fetchById(
-          'working-group-id',
-        );
+        const result =
+          await workingGroupController.fetchById('working-group-id');
 
         const { resources: _, ...expectedWorkingGroup } =
           getWorkingGroupResponse();

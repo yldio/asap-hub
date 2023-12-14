@@ -32,9 +32,8 @@ export const indexUserProjectHandler = (
     logger.debug(`Event ${event['detail-type']}`);
 
     const projectId = event.detail.resourceId;
-    const { members: currentMembers } = await projectController.fetchById(
-      projectId,
-    );
+    const { members: currentMembers } =
+      await projectController.fetchById(projectId);
     const currentUserIds = currentMembers.map(({ userId }) => userId);
 
     const searchUsers = async (page = 0) => {

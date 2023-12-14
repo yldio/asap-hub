@@ -113,9 +113,8 @@ describe('External Authors Contentful Data Provider', () => {
 
   describe('Fetch-by-id method', () => {
     test('Should fetch the user from Contentful Graphql', async () => {
-      const result = await externalAuthorsDataProviderMockGraphql.fetchById(
-        'user-id',
-      );
+      const result =
+        await externalAuthorsDataProviderMockGraphql.fetchById('user-id');
 
       expect(result).toMatchObject(getExternalAuthorDataObject());
     });

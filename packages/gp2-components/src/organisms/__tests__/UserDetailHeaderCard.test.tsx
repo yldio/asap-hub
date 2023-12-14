@@ -98,7 +98,7 @@ describe('UserDetailHeaderCard', () => {
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
     userEvent.upload(uploadInput, testFile);
-    expect(onImageSelect).toBeCalledWith(testFile);
+    expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
   describe('when passing a editHref', () => {
     it('renders edit button when information is complete', () => {

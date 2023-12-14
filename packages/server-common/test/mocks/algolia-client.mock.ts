@@ -6,4 +6,4 @@ export const getAlgoliaSearchClientMock = () =>
     saveMany: jest.fn(),
     remove: jest.fn(),
     search: jest.fn(),
-  } as unknown as jest.Mocked<AlgoliaSearchClient<'crn'>>);
+  }) as unknown as jest.Mocked<AlgoliaSearchClient<'crn'>>;

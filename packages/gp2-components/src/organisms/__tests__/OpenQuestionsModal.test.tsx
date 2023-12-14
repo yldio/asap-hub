@@ -146,7 +146,7 @@ describe('OpenQuestionsModal', () => {
     expect(emptyTextArea).toHaveTextContent(newQuestion);
     const saveButton = screen.getByRole('button', { name: 'Save' });
     await waitFor(() => userEvent.click(saveButton));
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       questions: [
         'a first question?',
         'a second question?',

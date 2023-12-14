@@ -61,7 +61,7 @@ export const getApiGatewayEvent = (
       typeof event.body === 'object'
         ? JSON.stringify(event.body || {})
         : event.body,
-  } as APIGatewayProxyEventV2);
+  }) as APIGatewayProxyEventV2;
 
 export const createEventBridgeScheduledEventMock = (): EventBridgeEvent<
   'Scheduled Event',
@@ -104,7 +104,7 @@ export const createHandlerContext = () =>
     awsRequestId: 'aws-request-id',
     logGroupName: 'some-log-group',
     logStreamName: 'some-log-stream',
-  } as Context);
+  }) as Context;
 
 export const getConnectByCodeRequest = <T>(
   payload: T,

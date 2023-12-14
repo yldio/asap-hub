@@ -1,7 +1,7 @@
 import { EventResponse, gp2 } from '@asap-hub/model';
 import { gp2 as gp2Routing, network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';

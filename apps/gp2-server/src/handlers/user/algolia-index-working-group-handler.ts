@@ -32,9 +32,8 @@ export const indexUserWorkingGroupHandler = (
     logger.debug(`Event ${event['detail-type']}`);
 
     const workingGroupId = event.detail.resourceId;
-    const { members: currentMembers } = await workingGroupController.fetchById(
-      workingGroupId,
-    );
+    const { members: currentMembers } =
+      await workingGroupController.fetchById(workingGroupId);
     const currentUserIds = currentMembers.map(({ userId }) => userId);
 
     const searchUsers = async (page = 0) => {

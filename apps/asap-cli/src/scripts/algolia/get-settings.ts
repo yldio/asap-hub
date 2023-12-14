@@ -24,7 +24,7 @@ export const getAlgoliaSettings = async ({
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);
   const { replicas: _, ...indexSettings } = await index.getSettings();
-  const formattedIndexSettings = prettier.format(
+  const formattedIndexSettings = await prettier.format(
     JSON.stringify(indexSettings),
     { parser: 'json' },
   );
@@ -36,7 +36,7 @@ export const getAlgoliaSettings = async ({
   const { customRanking, attributesForFaceting, attributesToIndex } =
     await replicaIndex.getSettings();
 
-  const formattedReplicaSettings = prettier.format(
+  const formattedReplicaSettings = await prettier.format(
     JSON.stringify({
       customRanking,
       attributesForFaceting,

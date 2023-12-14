@@ -202,47 +202,50 @@ export class UserContentfulDataProvider implements UserDataProvider {
 }
 
 const cleanUser = (userToUpdate: UserUpdateDataObject) =>
-  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
-    if (key === 'avatar') {
-      return {
-        ...acc,
-        avatar: {
-          sys: {
-            type: 'Link',
-            linkType: 'Asset',
-            id: value,
+  Object.entries(userToUpdate).reduce(
+    (acc, [key, value]) => {
+      if (key === 'avatar') {
+        return {
+          ...acc,
+          avatar: {
+            sys: {
+              type: 'Link',
+              linkType: 'Asset',
+              id: value,
+            },
           },
-        },
-      };
-    }
-    if (key === 'social') {
-      // the frontend only sends the fields which have values defined
-      // so need to default all social keys to null to allow unsetting
-      return {
-        ...acc,
-        website1: null,
-        website2: null,
-        twitter: null,
-        linkedIn: null,
-        github: null,
-        researcherId: null,
-        googleScholar: null,
-        researchGate: null,
-        ...(value as UserSocialLinks),
-      };
-    }
-    if (key === 'connections') {
-      const connections = userToUpdate.connections || [];
-      return {
-        ...acc,
-        connections: connections.map(({ code }) => code),
-      };
-    }
-    if (typeof value === 'string') {
-      return { ...acc, [key]: value.trim() === '' ? null : value };
-    }
-    return { ...acc, [key]: value };
-  }, {} as { [key: string]: unknown });
+        };
+      }
+      if (key === 'social') {
+        // the frontend only sends the fields which have values defined
+        // so need to default all social keys to null to allow unsetting
+        return {
+          ...acc,
+          website1: null,
+          website2: null,
+          twitter: null,
+          linkedIn: null,
+          github: null,
+          researcherId: null,
+          googleScholar: null,
+          researchGate: null,
+          ...(value as UserSocialLinks),
+        };
+      }
+      if (key === 'connections') {
+        const connections = userToUpdate.connections || [];
+        return {
+          ...acc,
+          connections: connections.map(({ code }) => code),
+        };
+      }
+      if (typeof value === 'string') {
+        return { ...acc, [key]: value.trim() === '' ? null : value };
+      }
+      return { ...acc, [key]: value };
+    },
+    {} as { [key: string]: unknown },
+  );
 
 export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
   const normaliseArray = (

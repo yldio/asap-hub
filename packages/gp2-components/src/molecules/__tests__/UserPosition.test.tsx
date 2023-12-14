@@ -136,7 +136,7 @@ describe('UserPosition', () => {
     renderUserPosition({ onRemove, index: 2 });
     const removeButton = screen.getByRole('button');
     userEvent.click(removeButton);
-    expect(onRemove).toBeCalled();
+    expect(onRemove).toHaveBeenCalled();
   });
 
   it.each([0, 1, 2])(

@@ -54,7 +54,7 @@ describe('UserPositions', () => {
     });
     const addButton = getAddButton();
     userEvent.click(addButton);
-    expect(onChange).toBeCalledWith([
+    expect(onChange).toHaveBeenCalledWith([
       ...positions,
       { institution: '', department: '', role: '' },
     ]);
@@ -171,6 +171,6 @@ describe('UserPositions', () => {
     });
     const deleteButton = screen.getByRole('button', { name: /delete/i });
     userEvent.click(deleteButton);
-    expect(onChange).toBeCalledWith([positions[0]]);
+    expect(onChange).toHaveBeenCalledWith([positions[0]]);
   });
 });

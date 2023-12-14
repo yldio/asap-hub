@@ -85,10 +85,10 @@ export const getAllFilters = (
     sourceFilter && documentTypesFilter
       ? `(${sourceFilter}) AND (${documentTypesFilter})`
       : sourceFilter
-      ? `(${sourceFilter})`
-      : documentTypesFilter
-      ? `(${documentTypesFilter})`
-      : '';
+        ? `(${sourceFilter})`
+        : documentTypesFilter
+          ? `(${documentTypesFilter})`
+          : '';
 
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
   const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';

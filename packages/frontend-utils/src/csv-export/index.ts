@@ -1,4 +1,3 @@
-/* eslint-disable-next-line import/no-unresolved */
 import { Options, stringify } from 'csv-stringify/browser/esm';
 import streamSaver from 'streamsaver';
 import { WritableStream } from 'web-streams-polyfill/ponyfill';

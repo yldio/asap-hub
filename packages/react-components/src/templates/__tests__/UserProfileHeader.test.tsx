@@ -88,7 +88,7 @@ describe('an edit button', () => {
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
     userEvent.upload(uploadInput, testFile);
-    expect(onImageSelect).toBeCalledWith(testFile);
+    expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
 });
 

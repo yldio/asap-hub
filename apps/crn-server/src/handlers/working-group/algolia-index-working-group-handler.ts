@@ -31,9 +31,8 @@ export const indexWorkingGroupHandler =
     const eventHandlers = {
       WorkingGroupsPublished: async () => {
         try {
-          const workingGroup = await workingGroupController.fetchById(
-            workingGroupId,
-          );
+          const workingGroup =
+            await workingGroupController.fetchById(workingGroupId);
 
           logger.debug(`Fetched workingGroup ${workingGroupId}`);
 

@@ -1,5 +1,5 @@
 import { ResearchOutputDocumentType } from '@asap-hub/model';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
 import {
   article,

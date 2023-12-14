@@ -1,5 +1,5 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import {
   outputArticle,
   outputCode,

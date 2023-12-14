@@ -53,7 +53,7 @@ describe('build', () => {
         </html>
       `);
     build('/', {});
-    expect(mockReadFileSync).toBeCalledWith('/index.html');
+    expect(mockReadFileSync).toHaveBeenCalledWith('/index.html');
 
     expect(mockCopyFileSync.mock.calls).toEqual([
       ['/static/js/main.80665dab.js', '/static/js/main.chunk.js'],

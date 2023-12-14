@@ -22,7 +22,9 @@ interface DataProvider {
 
 /* istanbul ignore next */
 const sleepFn = (delay: number) =>
-  new Promise((resolve) => setTimeout(resolve, delay));
+  new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
 export const inviteHandlerFactory =
   <Provider extends DataProvider>(
     sendEmail: SendEmail,

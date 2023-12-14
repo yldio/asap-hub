@@ -63,7 +63,7 @@ describe('EditResource', () => {
     userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(updateResources).toBeCalledWith([
+    expect(updateResources).toHaveBeenCalledWith([
       {
         ...resources[0],
         title,
@@ -103,7 +103,7 @@ describe('EditResource', () => {
     userEvent.click(saveButton);
 
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(updateResources).toBeCalledWith([
+    expect(updateResources).toHaveBeenCalledWith([
       resources[0],
       {
         ...resources[1],
@@ -141,6 +141,6 @@ describe('EditResource', () => {
     userEvent.click(deleteButton);
 
     await waitFor(() => expect(deleteButton).toBeEnabled());
-    expect(updateResources).toBeCalledWith([resources[0], resources[2]]);
+    expect(updateResources).toHaveBeenCalledWith([resources[0], resources[2]]);
   });
 });

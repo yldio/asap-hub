@@ -46,9 +46,8 @@ describe('Working Group Data Provider', () => {
 
   describe('FetchById', () => {
     test('Should fetch the working group from graphql', async () => {
-      const result = await workinGroupDataProviderWithMockServer.fetchById(
-        'id',
-      );
+      const result =
+        await workinGroupDataProviderWithMockServer.fetchById('id');
 
       expect(result).toMatchObject(getWorkingGroupDataObject());
     });
@@ -65,9 +64,8 @@ describe('Working Group Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         workingGroups: workingGroup,
       });
-      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-        'id',
-      );
+      const workingGroupDataObject =
+        await workingGroupDataProvider.fetchById('id');
       const expected = getWorkingGroupDataObject();
       expect(workingGroupDataObject).toEqual(expected);
     });
@@ -76,9 +74,8 @@ describe('Working Group Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         workingGroups: { ...workingGroup, calendar: null },
       });
-      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-        'id',
-      );
+      const workingGroupDataObject =
+        await workingGroupDataProvider.fetchById('id');
       expect(workingGroupDataObject?.calendar).toBeUndefined();
     });
     describe('members', () => {
@@ -87,9 +84,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.members).toEqual([
           {
             id: '32',
@@ -111,9 +107,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.members).toEqual([]);
       });
       test('avatar urls are added if available', async () => {
@@ -138,9 +133,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.members[0]?.avatarUrl).toEqual(url);
       });
 
@@ -215,9 +209,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.members).toEqual([]);
       });
       test('undefined members should return empty array', async () => {
@@ -228,9 +221,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.members).toEqual([]);
       });
     });
@@ -246,9 +238,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.milestones).toEqual([]);
       });
       test('if present it parses the link', async () => {
@@ -272,9 +263,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.milestones[0]?.link).toEqual(
           externalLink,
         );
@@ -300,9 +290,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.milestones[0]?.description).toEqual(
           description,
         );
@@ -329,9 +318,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -362,9 +350,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -396,9 +383,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -420,9 +406,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
+        const workingGroupDataObject =
+          await workingGroupDataProvider.fetchById('id');
         expect(workingGroupDataObject?.resources).toEqual([]);
       });
     });

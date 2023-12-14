@@ -168,7 +168,7 @@ export const getPostAuthors = (
     return { externalUserName: value };
   });
 
-const isFieldDirty = (original: string = '', current: string) =>
+const isFieldDirty = (current: string, original: string = '') =>
   current !== original;
 
 const hasId = (obj: { id?: string; value?: string }): obj is { id: string } =>
@@ -288,12 +288,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const identifierType: gp2Model.OutputIdentifierType = doi
     ? gp2Model.OutputIdentifierType.DOI
     : rrid
-    ? gp2Model.OutputIdentifierType.RRID
-    : accessionNumber
-    ? gp2Model.OutputIdentifierType.AccessionNumber
-    : title // if it's editing
-    ? gp2Model.OutputIdentifierType.None
-    : gp2Model.OutputIdentifierType.Empty;
+      ? gp2Model.OutputIdentifierType.RRID
+      : accessionNumber
+        ? gp2Model.OutputIdentifierType.AccessionNumber
+        : title // if it's editing
+          ? gp2Model.OutputIdentifierType.None
+          : gp2Model.OutputIdentifierType.Empty;
   const [newIdentifierType, setNewIdentifierType] =
     useState<gp2Model.OutputIdentifierType>(identifierType);
 
@@ -381,13 +381,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
   }, [serverValidationErrors]);
 
   const isFormDirty =
-    isFieldDirty(title, newTitle) ||
-    isFieldDirty(link, newLink) ||
-    isFieldDirty(type, newType) ||
-    isFieldDirty(subtype, newSubtype) ||
-    isFieldDirty(identifierType, newIdentifierType) ||
-    isFieldDirty(sharingStatus, newSharingStatus) ||
-    isFieldDirty(gp2Supported, newGp2Supported) ||
+    isFieldDirty(newTitle, title) ||
+    isFieldDirty(newLink, link) ||
+    isFieldDirty(newType, type) ||
+    isFieldDirty(newSubtype, subtype) ||
+    isFieldDirty(newIdentifierType, identifierType) ||
+    isFieldDirty(newSharingStatus, sharingStatus) ||
+    isFieldDirty(newGp2Supported, gp2Supported) ||
     isArrayDirty(workingGroups, newWorkingGroups) ||
     isArrayDirty(projects, newProjects) ||
     isArrayDirty(tags, newTags) ||

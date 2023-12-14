@@ -201,6 +201,6 @@ describe('ShareOutput', () => {
         'There was an error and we were unable to save your changes. Please try again.',
       ),
     ).toBeInTheDocument();
-    expect(window.scrollTo).toBeCalled();
+    expect(window.scrollTo).toHaveBeenCalled();
   });
 });

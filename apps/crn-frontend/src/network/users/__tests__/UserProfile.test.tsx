@@ -455,7 +455,7 @@ it('navigates to the upcoming events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEventsFromAlgolia).toBeCalledTimes(2);
+  expect(mockUserEventsFromAlgolia).toHaveBeenCalledTimes(2);
   expect(mockUserEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,
@@ -483,7 +483,7 @@ it('navigates to the past events tab', async () => {
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockUserEventsFromAlgolia).toBeCalledTimes(2);
+  expect(mockUserEventsFromAlgolia).toHaveBeenCalledTimes(2);
   expect(mockUserEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     after: '2021-12-28T13:00:00.000Z',
     currentPage: 0,

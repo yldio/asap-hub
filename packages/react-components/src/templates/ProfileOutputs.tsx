@@ -74,8 +74,10 @@ const ProfileOutputs: React.FC<ProfileOutputsProps> = ({
       <NoOutputsPage
         title={`
           ${userAssociationMember ? 'Your' : 'This'} ${
-          workingGroupAssociation ? 'working group' : 'team'
-        } hasn’t shared any research ${workingGroupAssociation ? 'yet!' : '.'}`}
+            workingGroupAssociation ? 'working group' : 'team'
+          } hasn’t shared any research ${
+            workingGroupAssociation ? 'yet!' : '.'
+          }`}
         description={
           <>
             {!workingGroupAssociation && (

@@ -235,7 +235,7 @@ describe('KeyInformatiomModal', () => {
     );
     const saveButton = getSaveButton();
     userEvent.click(saveButton);
-    expect(onSave).toBeCalledWith(
+    expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({ positions: [...positions, position] }),
     );
     await waitFor(() => expect(saveButton).toBeEnabled());

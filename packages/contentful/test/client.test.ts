@@ -143,7 +143,9 @@ describe('graphQL and Rest clients', () => {
       >;
       mockContentful.createClient.mockReturnValue({
         getEntry: jest.fn(),
-      } as any as jest.Mocked<contentfulDeliveryApi.ContentfulClientApi<undefined>>);
+      } as any as jest.Mocked<
+        contentfulDeliveryApi.ContentfulClientApi<undefined>
+      >);
     });
     it('should create a client', () => {
       const accessToken = 'token';

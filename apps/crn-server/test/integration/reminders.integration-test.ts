@@ -316,9 +316,8 @@ describe('Reminders', () => {
           DateTime.fromISO(publishDate).plus({ hours: 25 }).toJSDate(),
         );
 
-        const researchOutput = await fixtures.createResearchOutput(
-          publishOutput,
-        );
+        const researchOutput =
+          await fixtures.createResearchOutput(publishOutput);
 
         await expectNotToContainReminderWithId(
           `research-output-published-${researchOutput.id}`,
@@ -338,9 +337,8 @@ describe('Reminders', () => {
           DateTime.fromISO(publishDate).plus({ hours: 25 }).toJSDate(),
         );
 
-        const researchOutput = await fixtures.createResearchOutput(
-          publishOutput,
-        );
+        const researchOutput =
+          await fixtures.createResearchOutput(publishOutput);
 
         await expectNotToContainReminderWithId(
           `research-output-published-${researchOutput.id}`,

@@ -154,7 +154,7 @@ describe('ResourceModal', () => {
       enterLink('http://example.com');
       const deleteButton = deleteClick();
       await waitFor(() => expect(deleteButton).toBeEnabled());
-      expect(onDelete).toBeCalledWith();
+      expect(onDelete).toHaveBeenCalledWith();
     });
   });
   it('title and description should be disabled and url is hidden', () => {
@@ -199,7 +199,7 @@ describe('ResourceModal', () => {
     enterTitle('a title');
     const saveButton = save();
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       type: 'Note',
       title: 'a title',
     });
@@ -212,7 +212,7 @@ describe('ResourceModal', () => {
     enterDescription('a description');
     const saveButton = save();
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       type: 'Note',
       title: 'a title',
       description: 'a description',
@@ -226,7 +226,7 @@ describe('ResourceModal', () => {
     enterLink('http://example.com');
     const saveButton = save();
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       type: 'Link',
       title: 'a title',
       externalLink: 'http://example.com',
@@ -241,7 +241,7 @@ describe('ResourceModal', () => {
     enterDescription('a description');
     const saveButton = save();
     await waitFor(() => expect(saveButton).toBeEnabled());
-    expect(onSave).toBeCalledWith({
+    expect(onSave).toHaveBeenCalledWith({
       type: 'Link',
       title: 'a title',
       externalLink: 'http://example.com',

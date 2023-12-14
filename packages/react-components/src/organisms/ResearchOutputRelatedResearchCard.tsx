@@ -1,6 +1,6 @@
 import { EventResponse, gp2 as gp2Model } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { ComponentPropsWithRef } from 'react';
 import { components } from 'react-select';
 

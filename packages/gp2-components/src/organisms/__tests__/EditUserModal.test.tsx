@@ -47,7 +47,7 @@ describe('EditUserModal', () => {
     );
     const saveButton = screen.getByRole('button', { name: 'Save' });
     userEvent.click(saveButton);
-    expect(handleSave).toBeCalledTimes(1);
+    expect(handleSave).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(saveButton).toBeEnabled());
   });
 });

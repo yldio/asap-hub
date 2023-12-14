@@ -57,7 +57,7 @@ it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
     wrapper: StaticRouter,
   });
-  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+  const inputUrl = getByLabelText(/Add URL/i);
 
   expect(inputUrl).toBeValid();
   expect(
@@ -69,7 +69,7 @@ it('allows url with http protocol', () => {
     wrapper: StaticRouter,
   });
 
-  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+  const inputUrl = getByLabelText(/Add URL/i);
 
   fireEvent.change(inputUrl, {
     target: { value: 'http://example.com/tool' },
@@ -86,7 +86,7 @@ it('does not allow any other uri scheme', () => {
   const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
     wrapper: StaticRouter,
   });
-  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+  const inputUrl = getByLabelText(/Add URL/i);
   fireEvent.change(inputUrl, {
     target: { value: 'slack://tool' },
   });

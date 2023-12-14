@@ -439,8 +439,8 @@ const getSharePresentationRemindersFromQuery = async (
 
   const eventIds = eventsIAmASpeaker?.map((e) => e.eventId);
 
-  const reminderEvents = eventsEndedInLast72Hours.filter((event) =>
-    eventIds?.includes(event.sys.id),
+  const reminderEvents = eventsEndedInLast72Hours.filter(
+    (event) => eventIds?.includes(event.sys.id),
   );
 
   for (let i = 0; i < reminderEvents.length; i += 1) {
@@ -523,8 +523,8 @@ const getUploadPresentationRemindersFromQuery = (
       (speaker) => speaker?.team?.sys.id,
     );
 
-    const speakersTeamsIAmAProjectManager = speakerTeams?.filter((value) =>
-      teamsIAmAProjectManager?.includes(value),
+    const speakersTeamsIAmAProjectManager = speakerTeams?.filter(
+      (value) => teamsIAmAProjectManager?.includes(value),
     );
 
     if (speakersTeamsIAmAProjectManager?.length) {

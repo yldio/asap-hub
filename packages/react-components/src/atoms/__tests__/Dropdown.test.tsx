@@ -375,7 +375,7 @@ it('can clear the value when required is false', async () => {
   expect(handleChange).toHaveBeenCalledWith('LGW');
 
   userEvent.clear(input);
-  expect(handleChange).toBeCalledTimes(2);
+  expect(handleChange).toHaveBeenCalledTimes(2);
   expect(handleChange).toHaveBeenCalledWith(undefined);
 });
 it('cannot clear the value when required is true', async () => {
@@ -397,5 +397,5 @@ it('cannot clear the value when required is true', async () => {
   expect(handleChange).toHaveBeenCalledWith('LGW');
 
   userEvent.clear(input);
-  expect(handleChange).toBeCalledTimes(1);
+  expect(handleChange).toHaveBeenCalledTimes(1);
 });

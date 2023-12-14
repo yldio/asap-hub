@@ -47,7 +47,7 @@ it('renders the remove Button if the onRemove is provided', () => {
   const onRemoveButton = getByRole('button');
   expect(onRemoveButton).toBeVisible();
   userEvent.click(onRemoveButton);
-  expect(onRemove).toBeCalled();
+  expect(onRemove).toHaveBeenCalled();
 });
 
 it('renders as a link when one is provided', () => {

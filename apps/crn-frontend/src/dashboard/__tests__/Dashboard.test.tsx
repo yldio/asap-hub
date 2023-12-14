@@ -204,7 +204,7 @@ it('renders latest users filtered by active users', async () => {
   mockGetUsers.mockResolvedValueOnce(createListUserResponse(3));
   const { container } = await renderDashboard({});
 
-  expect(mockGetUsers).toBeCalledWith(
+  expect(mockGetUsers).toHaveBeenCalledWith(
     expect.anything(),
     expect.objectContaining({
       filters: new Set([activeUserMembershipStatus]),

@@ -48,7 +48,7 @@ describe('Authors Multiselect', () => {
     );
     userEvent.click(screen.getByText('Author Two'));
 
-    expect(onChangeAuthors).toBeCalled();
+    expect(onChangeAuthors).toHaveBeenCalled();
   });
 });
 
@@ -129,7 +129,7 @@ describe('Labs Multiselect', () => {
     );
     userEvent.click(screen.getByText('One Lab'));
 
-    expect(onChangeLabs).toBeCalled();
+    expect(onChangeLabs).toHaveBeenCalled();
   });
 });
 

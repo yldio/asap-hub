@@ -20,9 +20,8 @@ describe('Guide data provider', () => {
         getContentfulGraphqlClientMockServer(getContentfulGraphql());
       const dataProviderWithMockServer: GuideDataProvider =
         new GuideContentfulDataProvider(contentfulGraphqlClientMockServer);
-      const result = await dataProviderWithMockServer.fetchByCollectionTitle(
-        'Home',
-      );
+      const result =
+        await dataProviderWithMockServer.fetchByCollectionTitle('Home');
       const expectation = {
         items: [
           {

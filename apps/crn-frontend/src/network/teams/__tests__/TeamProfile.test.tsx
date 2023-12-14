@@ -420,7 +420,7 @@ it.each`
     'Search by topic, presenting team, …',
   );
   expect(await screen.findByText(/Event 0/i)).toBeVisible();
-  expect(mockGetEventsFromAlgolia).toBeCalledTimes(2);
+  expect(mockGetEventsFromAlgolia).toHaveBeenCalledTimes(2);
 
   expect(mockGetEventsFromAlgolia).toHaveBeenCalledWith(expect.anything(), {
     before: '2021-12-28T13:00:00.000Z',

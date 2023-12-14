@@ -55,6 +55,9 @@ module.exports = {
 
     'lines-between-class-members': 'off',
 
+    'default-param-last': 'off',
+    '@typescript-eslint/default-param-last': 'error',
+
     'no-alert': 'off',
   },
   overrides: [

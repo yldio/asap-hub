@@ -505,7 +505,7 @@ it('will toast server side errors for unknown errors', async () => {
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).toBeInTheDocument();
-  expect(window.scrollTo).toBeCalled();
+  expect(window.scrollTo).toHaveBeenCalled();
 });
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
@@ -541,7 +541,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).toBeInTheDocument();
-  expect(window.scrollTo).toBeCalled();
+  expect(window.scrollTo).toHaveBeenCalled();
 });
 
 it('display a toast warning when creating a new version', async () => {

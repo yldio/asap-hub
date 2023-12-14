@@ -960,6 +960,127 @@ describe('OutputForm', () => {
     });
   });
 
+  it('closes the version modal when user clicks on cancel', async () => {
+    const getAuthorSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+
+    const publishDate = '2020-03-04';
+    const title = 'Output Title';
+    const link = 'https://example.com/output';
+    const { authors: outputAuthors } = gp2Fixtures.createOutputResponse();
+    outputAuthors[0]!.displayName = 'Tony Stark';
+    const output = {
+      ...defaultProps,
+      ...gp2Fixtures.createOutputResponse(),
+      publishDate,
+      title,
+      link,
+      authors: outputAuthors,
+      tags: [{ id: 'tag-1', name: 'Tag' }],
+      contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+      documentType: 'Dataset' as gp2.OutputDocumentType,
+    };
+
+    render(
+      <OutputForm
+        {...defaultProps}
+        {...output}
+        shareOutput={shareOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+        createVersion={true}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      'output title',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /url/i }),
+      'https://example.com',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /description/i }),
+      'An interesting article',
+    );
+    const sharingStatus = screen.getByRole('group', {
+      name: /sharing status?/i,
+    });
+    userEvent.click(
+      within(sharingStatus).getByRole('radio', { name: 'Public' }),
+    );
+    fireEvent.change(
+      screen.getByLabelText(/public repository published date/i),
+      {
+        target: { value: '2022-03-24' },
+      },
+    );
+    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    userEvent.click(authors);
+
+    userEvent.click(await screen.findByText(/Chris Reed/i));
+    userEvent.click(authors);
+    userEvent.click(screen.getByText('Chris Blue'));
+    userEvent.click(authors);
+    userEvent.type(authors, 'Alex White');
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    userEvent.click(screen.getAllByText('Alex White')[1]!);
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+
+    expect(
+      screen.getByText(/Publish new version for the whole hub?/i),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: /Publish new version/i }),
+    ).toBeVisible();
+
+    userEvent.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Cancel',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Publish new version for the whole hub?'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   describe('article', () => {
     it('renders type', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {

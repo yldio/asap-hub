@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@contentful/app-sdk": "4.23.1",
-    "@contentful/f36-components": "4.56.0",
-    "@contentful/f36-tokens": "4.0.2",
+    "@contentful/f36-components": "4.56.2",
+    "@contentful/f36-tokens": "4.0.3",
     "@contentful/field-editor-date": "^1.6.2",
     "@contentful/react-apps-toolkit": "1.2.16",
     "contentful-management": "10.46.4",
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "test:no-watch": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
@@ -37,7 +37,7 @@
     ]
   },
   "devDependencies": {
-    "@contentful/app-scripts": "1.13.1",
+    "@contentful/app-scripts": "1.13.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "11.2.7",
     "@tsconfig/create-react-app": "2.0.1",

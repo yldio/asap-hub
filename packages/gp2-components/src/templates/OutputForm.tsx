@@ -480,10 +480,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 }}
                 description={
                   <>
-                    Once published this output version will be available to all
-                    Hub members and reminders will be issued to all associated
-                    contributors. If you have any issues with this output
-                    version after it has been published, please contact{' '}
+                    All working group members listed on this output will be
+                    notified and all GP2 members will be able to access it. If
+                    you want to add or edit older versions after this new
+                    version was published, please contact{' '}
                     {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}
                     .
                   </>

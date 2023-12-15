@@ -76,10 +76,11 @@ const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
   published: boolean,
+  createVersion: boolean,
 ) =>
-  `${EntityMappper[entityType]} ${documentType} ${
-    published ? 'published' : 'saved'
-  } successfully.`;
+  `${createVersion ? 'New ' : ''}${EntityMappper[entityType]} ${documentType} ${
+    createVersion ? 'version ' : ''
+  }${published || createVersion ? 'published' : 'saved'} successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -229,6 +230,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   );
 
   const [displayPublishModal, setDisplayPublishModal] = useState(false);
+  const [displayVersionModal, setDiplayVersionModal] = useState(false);
 
   const [newTitle, setTitle] = useState(title || '');
   const [newLink, setLink] = useState(link || '');
@@ -400,11 +402,15 @@ const OutputForm: React.FC<OutputFormProps> = ({
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => {
         const isEditing = link !== undefined;
 
-        const save = async (skipPublishModal: boolean = false) => {
+        const save = async (skipConfirmationModal: boolean = false) => {
           const displayModalFn =
-            !isEditing && !skipPublishModal
+            !isEditing && !skipConfirmationModal
               ? () => {
                   setDisplayPublishModal(true);
+                }
+              : createVersion && !skipConfirmationModal
+              ? () => {
+                  setDiplayVersionModal(true);
                 }
               : null;
 
@@ -420,7 +426,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               .output({ outputId: output.id }).$;
 
             setBannerMessage(
-              getBannerMessage(entityType, documentType, !title),
+              getBannerMessage(entityType, documentType, !title, createVersion),
               'output',
               'success',
             );
@@ -453,6 +459,32 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     members listed on this output will be notified and all GP2
                     members will be able to access it. If you need to unpublish
                     this output, please contact{' '}
+                    {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}
+                    .
+                  </>
+                }
+              />
+            )}
+
+            {displayVersionModal && (
+              <ConfirmModal
+                title="Publish new version for the whole hub?"
+                cancelText="Cancel"
+                onCancel={() => setDiplayVersionModal(false)}
+                confirmText="Publish new version"
+                onSave={async () => {
+                  const skipPublishModal = true;
+                  const result = await save(skipPublishModal);
+                  if (!result) {
+                    setDiplayVersionModal(false);
+                  }
+                }}
+                description={
+                  <>
+                    All working group members listed on this output will be
+                    notified and all GP2 members will be able to access it. If
+                    you want to add or edit older versions after this new
+                    version was published, please contact{' '}
                     {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}
                     .
                   </>

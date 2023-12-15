@@ -76,10 +76,11 @@ const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
   published: boolean,
+  createVersion: boolean,
 ) =>
-  `${EntityMappper[entityType]} ${documentType} ${
-    published ? 'published' : 'saved'
-  } successfully.`;
+  `${createVersion ? 'New ' : ''}${EntityMappper[entityType]} ${documentType} ${
+    createVersion ? 'version ' : ''
+  }${published || createVersion ? 'published' : 'saved'} successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -425,7 +426,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               .output({ outputId: output.id }).$;
 
             setBannerMessage(
-              getBannerMessage(entityType, documentType, !title),
+              getBannerMessage(entityType, documentType, !title, createVersion),
               'output',
               'success',
             );

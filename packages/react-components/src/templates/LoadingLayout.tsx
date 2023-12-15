@@ -73,6 +73,14 @@ const contentHeaderContainerStyles = css({
   rowGap: rem(12),
 });
 
+const contentBodyContainerStyles = css({
+  display: `grid`,
+  gridTemplateRows: '50px 1fr 1fr',
+  boxSizing: 'border-box',
+  rowGap: rem(12),
+  height: '100%',
+});
+
 const menuRowStyles = css({
   display: 'grid',
   padding: `${rem(16)} ${rem(12)}`,
@@ -125,6 +133,18 @@ const headerTitleStyles = [
   animation('50%', rem(32)),
 ];
 
+const bodyTitleStyles = [
+  css({
+    width: '33%',
+    height: rem(32),
+    backgroundColor: neutral300.rgb,
+    marginBottom: rem(16),
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation('50%', rem(32)),
+];
+
 const headerDescriptionStyles = (width: string) => [
   css({
     width,
@@ -134,6 +154,17 @@ const headerDescriptionStyles = (width: string) => [
     alignSelf: 'center',
   }),
   animation(width, rem(12)),
+];
+
+const bodyDescriptionStyles = (width: string) => [
+  css({
+    width,
+    height: '100%',
+    backgroundColor: neutral300.rgb,
+    borderRadius: rem(4),
+    alignSelf: 'center',
+  }),
+  animation(width, '100%'),
 ];
 
 const searchIconContainerStyles = css({
@@ -166,6 +197,14 @@ export const LoadingContentHeader: React.FC = () => (
     <div css={headerDescriptionStyles('100%')} />
     <div css={headerDescriptionStyles('100%')} />
     <div css={headerDescriptionStyles('50%')} />
+  </div>
+);
+
+export const LoadingContentBody: React.FC = () => (
+  <div css={contentBodyContainerStyles}>
+    <div css={bodyTitleStyles} />
+    <div css={bodyDescriptionStyles('100%')} />
+    <div css={bodyDescriptionStyles('100%')} />
   </div>
 );
 

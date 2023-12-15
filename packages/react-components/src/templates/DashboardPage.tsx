@@ -4,8 +4,13 @@ import { perRem, rem } from '../pixels';
 import { Display } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 
+const articleStyles = css({
+  height: '100%',
+});
+
 const mainStyles = css({
   padding: `${48 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  height: '60%',
 });
 
 const headerStyles = css({
@@ -17,7 +22,7 @@ type DashboardPageProps = {
 };
 
 const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
-  <article>
+  <article css={articleStyles}>
     <main css={mainStyles}>
       <div css={headerStyles}>
         <Display styleAsHeading={2}>{`Welcome to the Hub${

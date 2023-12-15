@@ -7,4 +7,5 @@ export {
   Frame,
   SearchFrame,
   SkeletonHeaderFrame,
+  SkeletonBodyFrame,
 } from './structure';

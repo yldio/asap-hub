@@ -77,6 +77,7 @@ describe('User', () => {
         }),
       ).toEqual({
         _tags: ['Blood', 'Parkinson'],
+        expertiseAndResourceTags: ['Blood', 'Parkinson'],
         alumniSinceDate: undefined,
         avatarUrl: undefined,
         city: 'Toronto',

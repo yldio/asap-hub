@@ -27,6 +27,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   onboarded: true,
   role: 'Grantee',
   _tags: [],
+  expertiseAndResourceTags: [],
 };
 const people = [
   person,

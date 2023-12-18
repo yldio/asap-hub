@@ -110,18 +110,20 @@ type Version = Omit<ResearchOutputVersion, 'documentType'> & {
 export type OutputVersionsProps = {
   versions: Version[];
   versionAction?: 'create' | 'edit';
+  app?: 'crn' | 'gp2';
 };
 
 const OutputVersions: React.FC<OutputVersionsProps> = ({
   versions,
   versionAction,
+  app,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
 
   return (
-    <main css={versionAction ? [mainStyles] : []}>
+    <main css={versionAction && app === 'crn' ? [mainStyles] : []}>
       <div css={versionAction ? [createVersionWrapperStyles] : []}>
         <Card
           padding={false}

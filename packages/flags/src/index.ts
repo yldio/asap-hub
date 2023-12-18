@@ -7,7 +7,6 @@ export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  VERSION_RESEARCH_OUTPUT: true,
   DISPLAY_EVENTS: false,
 };
 

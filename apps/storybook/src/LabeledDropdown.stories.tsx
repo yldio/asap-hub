@@ -95,3 +95,27 @@ export const Invalid = () => (
     enabled={boolean('Enabled', true)}
   />
 );
+
+export const InvalidWithPlaceholder = () => (
+  <LabeledDropdown
+    title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '')}
+    placeholder={text('Empty Label', 'Select airport')}
+    required={true}
+    options={[
+      { value: 'LHR', label: 'Heathrow' },
+      { value: 'LGW', label: 'Gatwick' },
+      { value: 'STN', label: 'Stansted' },
+      { value: 'LTN', label: 'Luton' },
+      { value: 'LCY', label: 'City' },
+      { value: 'SEN', label: 'Southend' },
+    ]}
+    value=""
+    customValidationMessage={text(
+      'Validation Error Message',
+      'This airport is currently closed.',
+    )}
+    description={text('Description', '')}
+    enabled={boolean('Enabled', true)}
+  />
+);

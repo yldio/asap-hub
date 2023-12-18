@@ -43,6 +43,21 @@ export const Invalid = () => (
     )}
   />
 );
+
+export const InvalidWithPlaceholder = () => (
+  <LabeledTextArea
+    title="Members"
+    subtitle={text('Subtitle', '(Required)')}
+    tip={text('Tip', 'Tip: One member name per line')}
+    value={''}
+    customValidationMessage={text(
+      'Validation Error Message',
+      'Must have at least 3 members.',
+    )}
+    placeholder={text('Placeholder', 'I am a placeholder')}
+  />
+);
+
 export const MaxLength = () => {
   const value = 'John Doe';
   return (

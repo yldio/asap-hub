@@ -1,4 +1,4 @@
-import { Frame } from '@asap-hub/frontend-utils';
+import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AboutPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';

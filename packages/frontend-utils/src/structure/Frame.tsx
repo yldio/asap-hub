@@ -51,7 +51,7 @@ export const SearchFrame: React.FC<
     description={'There was a problem with your search, please try again.'}
     error={new Error()}
   >
-    <Frame title={title} fallback={fallback}>
+    <Frame title={title} fallback={<LoadingContentBody />}>
       {children}
     </Frame>
   </ErrorBoundary>

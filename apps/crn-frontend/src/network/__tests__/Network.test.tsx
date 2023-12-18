@@ -66,7 +66,7 @@ mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
 mockUseUsers.mockReturnValue(createListUserResponse(1));
 
 const renderNetworkPage = async (pathname: string, query = '') => {
-  render(
+  const { container } = render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -85,12 +85,14 @@ const renderNetworkPage = async (pathname: string, query = '') => {
   await waitForElementToBeRemoved(screen.queryByText(/loading/i), {
     timeout: 30_000,
   });
+
+  return container;
 };
 
 describe('when toggling from teams to users', () => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    await renderNetworkPage(network({}).teams({}).$);
+    const container = await renderNetworkPage(network({}).teams({}).$);
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
@@ -98,7 +100,9 @@ describe('when toggling from teams to users', () => {
 
     const peopleLink = screen.getByText(/people/i, { selector: 'nav a *' });
     userEvent.click(peopleLink);
-    await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+    await waitForElementToBeRemoved(
+      container.querySelectorAll('div[class*="animation"]')[0],
+    );
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,

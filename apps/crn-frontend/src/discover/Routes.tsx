@@ -1,4 +1,7 @@
-import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
+import {
+  SkeletonBodyFrame as Frame,
+  SearchFrame,
+} from '@asap-hub/frontend-utils';
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
 import { discover } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';

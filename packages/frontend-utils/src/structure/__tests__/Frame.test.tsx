@@ -2,7 +2,11 @@ import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
-import Frame, { SkeletonHeaderFrame } from '../Frame';
+import Frame, {
+  SearchFrame,
+  SkeletonBodyFrame,
+  SkeletonHeaderFrame,
+} from '../Frame';
 
 mockConsoleError();
 
@@ -89,7 +93,7 @@ describe('the document title', () => {
   });
 });
 
-describe('the skeleton header frame', () => {
+describe('the skeleton frames', () => {
   it('renders skeleton screen for content header', async () => {
     const { container } = render(
       <SkeletonHeaderFrame title={null}>
@@ -98,6 +102,28 @@ describe('the skeleton header frame', () => {
     );
     expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
       4,
+    );
+  });
+
+  it('renders skeleton screen for content body', async () => {
+    const { container } = render(
+      <SkeletonBodyFrame title={null}>
+        <Suspend />
+      </SkeletonBodyFrame>,
+    );
+    expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
+      3,
+    );
+  });
+
+  it('renders skeleton screen for the search', async () => {
+    const { container } = render(
+      <SearchFrame title={null}>
+        <Suspend />
+      </SearchFrame>,
+    );
+    expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
+      3,
     );
   });
 });

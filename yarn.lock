@@ -23215,14 +23215,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-transform-vite-meta-glob@npm:1.0.3":
-  version: 1.0.3
-  resolution: "babel-plugin-transform-vite-meta-glob@npm:1.0.3"
+"babel-plugin-transform-vite-meta-glob@npm:1.1.0":
+  version: 1.1.0
+  resolution: "babel-plugin-transform-vite-meta-glob@npm:1.1.0"
   dependencies:
     "@babel/runtime": ^7.13.9
     "@types/babel__core": ^7.1.12
-    glob: ^7.1.6
-  checksum: 37760bc2df8545f79e58f808b0ddc5044c541e09786d35e6ed44e79f583f21d2655ccc3ec9d9251d413bbed4459a54633c551689d69ea34e127a95edd8e2af34
+    glob: ^8.0.1
+  checksum: ce57db5ac281c50babf244d9154c65696785bf9c6dcd46327fb55f15a92c066ba5a8667a37d5b68a5bb3615333182ee5b71b4c688b696fd09267d45d47112e77
   languageName: node
   linkType: hard
 
@@ -23344,15 +23344,15 @@ __metadata:
   linkType: hard
 
 "babel-preset-vite@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "babel-preset-vite@npm:1.1.0"
+  version: 1.1.1
+  resolution: "babel-preset-vite@npm:1.1.1"
   dependencies:
     "@babel/runtime": ^7.13.9
     "@types/babel__core": ^7.1.12
     babel-plugin-transform-vite-meta-env: 1.0.3
-    babel-plugin-transform-vite-meta-glob: 1.0.3
+    babel-plugin-transform-vite-meta-glob: 1.1.0
     babel-plugin-transform-vite-meta-hot: 1.0.0
-  checksum: c0de7edf181184e2f57ad536309f64046a0e4b0d67a1f911e6148f7a52cf81fe8be34276097b78d1554cec32c9f2996882c957da8e903df869bbd37ecdce4ffd
+  checksum: 7ab31dbe72bc07e98f2a6d2f76ba200aa5605182a82e02429956172c55dc482fa18f2fb8c662761b56bd4bf7bbd32a36d0ca3ba5416dffa5b8a3c77f257ebd19
   languageName: node
   linkType: hard
 
@@ -32198,7 +32198,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^8.1.0":
+"glob@npm:^8.0.1, glob@npm:^8.1.0":
   version: 8.1.0
   resolution: "glob@npm:8.1.0"
   dependencies:

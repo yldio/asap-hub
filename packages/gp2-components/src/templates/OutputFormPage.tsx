@@ -7,22 +7,16 @@ import PageNotifications from './PageNotifications';
 const { rem } = pixels;
 
 export type OutputFormPageProps = ComponentProps<React.FC> & {
-  version?: boolean;
+  message?: string;
 };
 
-const OutputFormPage = ({ children, version = false }: OutputFormPageProps) => (
+const OutputFormPage = ({ children, message = '' }: OutputFormPageProps) => (
   <PageNotifications page="output-form">
     {(notification) => (
       <article
         css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
       >
-        {version}
-        {version && (
-          <Toast accent="warning">
-            The previous output page will be replaced with a summarised version
-            history section.
-          </Toast>
-        )}
+        {message && <Toast accent="warning">{message}</Toast>}
         <div css={layoutContentStyles}>
           <main css={mainStyles}>{children}</main>
         </div>

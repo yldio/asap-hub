@@ -67,7 +67,10 @@ const OutputDetail: FC = () => {
         }
       >
         <Frame title="Version Output">
-          <OutputFormPage version>
+          <OutputFormPage
+            message="The previous output page will be replaced with a summarised version
+            history section."
+          >
             <ShareOutput output={output} createVersion />
           </OutputFormPage>
         </Frame>

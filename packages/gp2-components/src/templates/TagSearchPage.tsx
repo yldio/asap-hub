@@ -1,5 +1,5 @@
 import { workingGroupsImage } from '../images';
-import { mainStyles } from '../layout';
+import { layoutContentStyles, mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const bannerProps = {
@@ -11,7 +11,7 @@ const bannerProps = {
 };
 
 const TagSearchPage: React.FC = ({ children }) => (
-  <div>
+  <div css={layoutContentStyles}>
     <PageBanner {...bannerProps}></PageBanner>
     <main css={mainStyles}>{children}</main>
   </div>

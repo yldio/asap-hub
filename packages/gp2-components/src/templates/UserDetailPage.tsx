@@ -1,6 +1,6 @@
 import { pixels } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { mainStyles } from '../layout';
+import { layoutContentStyles, mainStyles } from '../layout';
 
 import UserDetailHeader from '../organisms/UserDetailHeader';
 
@@ -12,7 +12,7 @@ const UserDetailPage: React.FC<UserDetailPageProps> = ({
   children,
   ...headerProps
 }) => (
-  <article>
+  <article css={layoutContentStyles}>
     <UserDetailHeader {...headerProps} />
     <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>
   </article>

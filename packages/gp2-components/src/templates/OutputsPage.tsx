@@ -1,5 +1,5 @@
 import { workingGroupsImage } from '../images';
-import { mainStyles } from '../layout';
+import { mainStyles, layoutContentStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const bannerProps = {
@@ -11,8 +11,10 @@ const bannerProps = {
 
 const OutputsPage: React.FC = ({ children }) => (
   <article>
-    <PageBanner {...bannerProps}></PageBanner>
-    <main css={mainStyles}>{children}</main>
+    <div css={layoutContentStyles}>
+      <PageBanner {...bannerProps}></PageBanner>
+      <main css={mainStyles}>{children}</main>
+    </div>
   </article>
 );
 export default OutputsPage;

@@ -67,7 +67,7 @@ const OutputDetail: FC = () => {
         }
       >
         <Frame title="Version Output">
-          <OutputFormPage>
+          <OutputFormPage version>
             <ShareOutput output={output} createVersion />
           </OutputFormPage>
         </Frame>

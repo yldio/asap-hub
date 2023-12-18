@@ -1,5 +1,5 @@
 import { projectsImage } from '../images';
-import { mainStyles } from '../layout';
+import { layoutContentStyles, mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const headerProps = {
@@ -10,7 +10,7 @@ const headerProps = {
 };
 
 const NewsPage: React.FC = ({ children }) => (
-  <article>
+  <article css={layoutContentStyles}>
     <PageBanner {...headerProps} />
     <main css={mainStyles}>{children}</main>
   </article>

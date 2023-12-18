@@ -19,7 +19,6 @@ import {
   useState,
 } from 'react';
 import { useLocation } from 'react-router-dom';
-import { layoutContentStyles } from '../layout';
 import UserMenu from '../molecules/UserMenu';
 import { NavigationHeader } from '../organisms';
 import colors from './colors';
@@ -150,9 +149,7 @@ const Layout: FC<LayoutProps> = ({
             position: 'relative',
           })}
         >
-          <main ref={mainRef} css={layoutContentStyles}>
-            {children}
-          </main>
+          <main ref={mainRef}>{children}</main>
         </div>
         <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
           <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />

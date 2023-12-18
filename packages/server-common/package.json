@@ -41,7 +41,7 @@
     "luxon": "1.28.1",
     "pino": "8.14.1",
     "pino-http": "8.3.3",
-    "pino-lambda": "4.2.1",
+    "pino-lambda": "4.4.0",
     "pino-noir": "2.2.1",
     "pino-pretty": "10.2.3",
     "pump": "3.0.0",

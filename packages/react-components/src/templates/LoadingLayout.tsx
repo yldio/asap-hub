@@ -75,10 +75,9 @@ const contentHeaderContainerStyles = css({
 
 const contentBodyContainerStyles = css({
   display: `grid`,
-  gridTemplateRows: '50px 1fr 1fr',
   boxSizing: 'border-box',
   rowGap: rem(12),
-  height: '100%',
+  width: '100%',
 });
 
 const menuRowStyles = css({
@@ -159,12 +158,12 @@ const headerDescriptionStyles = (width: string) => [
 const bodyDescriptionStyles = (width: string) => [
   css({
     width,
-    height: '100%',
+    height: rem(238),
     backgroundColor: neutral300.rgb,
     borderRadius: rem(4),
     alignSelf: 'center',
   }),
-  animation(width, '100%'),
+  animation(width, rem(238)),
 ];
 
 const searchIconContainerStyles = css({

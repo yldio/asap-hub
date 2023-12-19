@@ -1,6 +1,10 @@
 import React, { Suspense, ComponentProps, ReactNode } from 'react';
 import { Titled } from 'react-titled';
-import { Loading, LoadingContentHeader } from '@asap-hub/react-components';
+import {
+  Loading,
+  LoadingContentHeader,
+  LoadingContentBody,
+} from '@asap-hub/react-components';
 
 import ErrorBoundary from './ErrorBoundary';
 
@@ -47,7 +51,7 @@ export const SearchFrame: React.FC<
     description={'There was a problem with your search, please try again.'}
     error={new Error()}
   >
-    <Frame title={title} fallback={fallback}>
+    <Frame title={title} fallback={<LoadingContentBody />}>
       {children}
     </Frame>
   </ErrorBoundary>
@@ -56,5 +60,9 @@ export const SearchFrame: React.FC<
 export const SkeletonHeaderFrame: React.FC<
   Omit<FrameBoundaryProps, 'fallback'>
 > = (props) => <DefaultFrame {...props} fallback={<LoadingContentHeader />} />;
+
+export const SkeletonBodyFrame: React.FC<
+  Omit<FrameBoundaryProps, 'fallback'>
+> = (props) => <DefaultFrame {...props} fallback={<LoadingContentBody />} />;
 
 export default DefaultFrame;

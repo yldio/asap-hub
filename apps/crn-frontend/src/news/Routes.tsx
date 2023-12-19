@@ -1,4 +1,4 @@
-import { Frame } from '@asap-hub/frontend-utils';
+import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';

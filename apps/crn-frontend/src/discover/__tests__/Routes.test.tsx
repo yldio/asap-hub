@@ -32,7 +32,7 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
 >;
 
 const renderDiscoverPage = async (pathname: string, query = '') => {
-  render(
+  const { container } = render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -50,6 +50,8 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
+
+  return container;
 };
 
 it('redirects to the guides page when the index page accessed', async () => {
@@ -91,7 +93,7 @@ it('allows search on tutorials list', async () => {
     })),
   });
 
-  await renderDiscoverPage(discover({}).tutorials({}).$);
+  const container = await renderDiscoverPage(discover({}).tutorials({}).$);
 
   userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
@@ -103,7 +105,9 @@ it('allows search on tutorials list', async () => {
       expect.anything(),
     ),
   );
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitForElementToBeRemoved(
+    container.querySelectorAll('div[class*="animation"]')[0],
+  );
 
   expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
     /Tutorial 1/i,

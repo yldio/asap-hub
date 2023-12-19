@@ -212,6 +212,7 @@ export {
   InterestGroupProfilePage,
   Layout,
   LoadingLayout,
+  LoadingContentBody,
   LoadingContentHeader,
   NetworkInterestGroups,
   NetworkPage,

@@ -26,6 +26,7 @@ export { default as InterestGroupProfilePage } from './InterestGroupProfilePage'
 export { default as Layout } from './Layout';
 export {
   default as LoadingLayout,
+  LoadingContentBody,
   LoadingContentHeader,
 } from './LoadingLayout';
 export { default as NetworkInterestGroups } from './NetworkInterestGroups';

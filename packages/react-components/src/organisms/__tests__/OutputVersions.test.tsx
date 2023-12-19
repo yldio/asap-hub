@@ -2,7 +2,7 @@ import { createVersionList, createVersionResponse } from '@asap-hub/fixtures';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import OutputVersions, { OutputVersionsProps } from '../OutputVersions';
-import { color as colorConstructor } from '../../colors';
+import { color as colorConstructor, fern } from '../../colors';
 
 const version: OutputVersionsProps['versions'][number] = {
   id: '1',
@@ -79,6 +79,13 @@ it('displays the correct message when versionAction is undefined', () => {
 });
 
 describe('theming', () => {
+  it('applies the default icon color', () => {
+    const { getByTitle } = render(<OutputVersions {...baseProps} />);
+    const icon = getByTitle('External Link');
+    const { stroke } = getComputedStyle(icon.parentNode as Element);
+    expect(stroke).toBe(fern.rgb);
+  });
+
   it('uses theme primaryColor for the external icon svg', () => {
     const testColor = colorConstructor(12, 141, 195);
     const theme = {

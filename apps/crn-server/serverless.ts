@@ -76,7 +76,8 @@ const service = 'asap-hub';
 export const plugins = [
   './serverless-plugins/serverless-s3-sync',
   './serverless-plugins/serverless-iam-roles-per-function',
-  './serverless-plugins/serverless-webpack',
+  // './serverless-plugins/serverless-webpack',
+  './serverless-plugins/serverless-esbuild',
 ];
 const offlinePlugins = [
   './serverless-plugins/serverless-offline',
@@ -268,8 +269,9 @@ const serverlessConfig: AWS = {
         localDir: '../crn-messages/build-templates/static',
       },
     ],
-    webpack: {
-      config: './webpack.config.js',
+    esbuild: {
+      packager: 'yarn',
+      concurrency: 2,
     },
     'serverless-offline-ssm': {
       stages: ['local'],

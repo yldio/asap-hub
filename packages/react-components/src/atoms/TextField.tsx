@@ -46,6 +46,11 @@ const invalidStyles = css({
     borderColor: ember.rgb,
     backgroundColor: rose.rgb,
 
+    '::placeholder': {
+      color: ember.rgb,
+      opacity: 0.4,
+    },
+
     '~ div:last-of-type': {
       display: 'block',
     },

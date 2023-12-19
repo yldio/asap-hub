@@ -131,7 +131,8 @@ export const reactSelectStyles = (
   }),
   placeholder: (provided) => ({
     ...provided,
-    color: lead.rgb,
+    color: isInvalid ? ember.rgb : lead.rgb,
+    opacity: isInvalid ? 0.4 : provided.opacity,
   }),
   menu: (provided: CSSObject) => ({
     ...provided,
@@ -218,6 +219,8 @@ export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
   }),
   placeholder: (provided) => ({
     ...provided,
+    color: isInvalid ? ember.rgb : provided.color,
+    opacity: isInvalid ? 0.4 : provided.opacity,
     marginLeft: `${6 / perRem}em`,
   }),
 });

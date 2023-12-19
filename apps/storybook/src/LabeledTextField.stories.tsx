@@ -49,6 +49,20 @@ export const Invalid = () => (
   />
 );
 
+export const InvalidWithPlaceholder = () => (
+  <LabeledTextField
+    title={text('Title', 'Full Name')}
+    subtitle={text('Subtitle', '(Required)')}
+    value={''}
+    customValidationMessage={text(
+      'Validation Error Message',
+      "Must not include special characters, such as '|' and '%'.",
+    )}
+    placeholder={text('Placeholder', 'I am a placeholder')}
+    hint={text('Hint', 'Hint')}
+  />
+);
+
 export const LabelIndicator = () => (
   <LabeledTextField
     title={text('Title', 'Twitter')}

@@ -225,6 +225,7 @@ describe('OutputForm', () => {
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
+          createVersion: false,
           title: 'output title',
           link: 'https://example.com',
           documentType: 'Code/Software',
@@ -741,6 +742,7 @@ describe('OutputForm', () => {
 
     await waitFor(() => {
       expect(shareOutput).toHaveBeenCalledWith({
+        createVersion: false,
         title: 'output title',
         link: 'https://example.com',
         documentType: 'Procedural Form',
@@ -1294,6 +1296,7 @@ describe('OutputForm', () => {
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
+          createVersion: false,
           title: 'output title',
           link: 'https://example.com',
           documentType: 'Article',
@@ -1925,6 +1928,23 @@ describe('OutputForm', () => {
         wrapper: StaticRouter,
       });
       expect(screen.getByDisplayValue(/none/i)).toBeTruthy();
+    });
+  });
+
+  describe('versioning', () => {
+    const renderWithCreateVersion = (title = 'test versioning') =>
+      render(<OutputForm {...defaultProps} title={title} createVersion />, {
+        wrapper: StaticRouter,
+      });
+    it('displays a version history row of the current version when versioning', () => {
+      renderWithCreateVersion();
+      expect(screen.getByText('Version History')).toBeInTheDocument();
+      expect(screen.getByText('test versioning')).toBeInTheDocument();
+    });
+    it('handles empty title', () => {
+      renderWithCreateVersion('');
+      expect(screen.getByText('Version History')).toBeInTheDocument();
+      expect(screen.getByText('#1')).toBeInTheDocument();
     });
   });
 });

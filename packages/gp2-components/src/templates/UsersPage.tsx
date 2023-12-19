@@ -1,7 +1,8 @@
+import { layoutContentStyles } from '../layout';
 import { UsersHeader } from '../organisms';
 
 const UsersPage: React.FC = ({ children }) => (
-  <article>
+  <article css={layoutContentStyles}>
     <UsersHeader />
     <main>{children}</main>
   </article>

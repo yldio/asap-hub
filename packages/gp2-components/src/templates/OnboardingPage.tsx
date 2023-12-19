@@ -1,6 +1,7 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { layoutContentStyles } from '../layout';
 
 import { OnboardingPageHeader, OnboardingPageFooter } from '../organisms';
 
@@ -27,7 +28,7 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({
   steps,
   ...footerProps
 }) => (
-  <article>
+  <article css={layoutContentStyles}>
     <OnboardingPageHeader steps={steps} />
     <main css={containerStyles}>{children}</main>
     <OnboardingPageFooter {...footerProps} />

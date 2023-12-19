@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
 
 import { workingGroupsImage } from '../images';
-import { mainStyles } from '../layout';
+import { layoutContentStyles, mainStyles } from '../layout';
 import { PageBanner } from '../organisms';
 
 const { rem } = pixels;
@@ -24,7 +24,7 @@ const navStyles = css({
 const EventsPage: React.FC = ({ children }) => {
   const { isEnabled } = useFlags();
   return (
-    <article>
+    <article css={layoutContentStyles}>
       <PageBanner {...bannerProps} noMarginBottom>
         <div css={navStyles}>
           <TabNav>

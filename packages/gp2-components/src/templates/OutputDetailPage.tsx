@@ -19,6 +19,7 @@ import OutputAdditionalInformationCard from '../organisms/OutputAdditionalInform
 import OutputCohortsCard from '../organisms/OutputCohortsCard';
 import PageNotifications from './PageNotifications';
 import { getIconForDocumentType, getSourceIcon } from '../utils';
+import { layoutContentStyles } from '../layout';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -94,7 +95,10 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   <PageNotifications page="output">
     {(notification) => (
       <article
-        css={notification ? { position: 'relative', marginTop: rem(48) } : {}}
+        css={[
+          layoutContentStyles,
+          notification ? { position: 'relative', marginTop: rem(48) } : {},
+        ]}
       >
         <div css={containerStyles}>
           {isAdministrator ? (

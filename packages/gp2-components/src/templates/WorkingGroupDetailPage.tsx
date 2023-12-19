@@ -1,6 +1,6 @@
 import { pixels } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { mainStyles } from '../layout';
+import { layoutContentStyles, mainStyles } from '../layout';
 
 import WorkingGroupDetailHeader from '../organisms/WorkingGroupDetailHeader';
 
@@ -14,7 +14,7 @@ const WorkingGroupDetailPage: React.FC<WorkingGroupDetailPageProps> = ({
   children,
   ...headerProps
 }) => (
-  <article>
+  <article css={layoutContentStyles}>
     <WorkingGroupDetailHeader {...headerProps} />
     <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>
   </article>

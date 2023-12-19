@@ -293,6 +293,7 @@ describe('getOutputs', () => {
 
 describe('createOutput', () => {
   const payload = {
+    createVersion: false,
     title: 'output title',
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
@@ -325,6 +326,7 @@ describe('updateOutput', () => {
   const outputResponse = gp2Fixtures.createOutputResponse();
   const { id } = outputResponse;
   const payload = {
+    createVersion: false,
     title: 'output title',
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,

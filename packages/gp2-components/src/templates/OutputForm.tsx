@@ -18,6 +18,7 @@ import {
   ResearchOutputRelatedEventsCard,
   ajvErrors,
   ConfirmModal,
+  OutputVersions,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -136,6 +137,7 @@ type OutputFormProps = {
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
+    | 'addedDate'
     | 'title'
     | 'link'
     | 'type'
@@ -191,6 +193,7 @@ const isArrayDirty = (
 const toId = ({ id }: { id: string }) => id;
 
 const OutputForm: React.FC<OutputFormProps> = ({
+  addedDate,
   entityType,
   shareOutput,
   documentType,
@@ -325,6 +328,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
+    createVersion,
     title: newTitle,
     documentType,
     link: newLink,
@@ -352,6 +356,19 @@ const OutputForm: React.FC<OutputFormProps> = ({
     relatedEventIds: newRelatedEvents.map(({ value }) => value),
     ...createIdentifierField(newIdentifierType, identifier),
   };
+
+  const versions: ComponentProps<typeof OutputVersions>['versions'] =
+    createVersion
+      ? [
+          {
+            id: '0',
+            documentType,
+            title: title || '',
+            link,
+            addedDate,
+          },
+        ]
+      : [];
 
   useEffect(() => {
     const newisGP2SupportedAlwaysTrue = Boolean(
@@ -493,6 +510,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
             )}
 
             <div css={containerStyles}>
+              {createVersion && (
+                <OutputVersions
+                  versions={versions}
+                  versionAction={createVersion && 'edit'}
+                />
+              )}
               <FormCard title="What are you sharing?">
                 <LabeledTextField
                   title={'Title'}

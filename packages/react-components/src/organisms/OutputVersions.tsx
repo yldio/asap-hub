@@ -1,14 +1,23 @@
 import { ResearchOutputVersion } from '@asap-hub/model';
-import { css } from '@emotion/react';
+import { css, SerializedStyles, Theme } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { charcoal, fern, lead, neutral200, steel } from '../colors';
+import {
+  charcoal,
+  fern,
+  lead,
+  neutral200,
+  paper,
+  pine,
+  steel,
+} from '../colors';
 import { formatDateToTimezone } from '../date';
 import { externalLinkIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
+import { defaultThemeVariant, ThemeVariant } from '../theme';
 
 const container = css({
   display: 'grid',
@@ -79,15 +88,21 @@ const showMoreStyles = css({
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
-const iconsStyles = css({
-  position: 'relative',
-  top: '6px',
-  display: 'inline-flex',
-  alignSelf: 'center',
-  svg: {
+export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
+  light: css({
     stroke: fern.rgb,
-  },
-});
+  }),
+  grey: css({ stroke: fern.rgb, ':active': { stroke: pine.rgb } }),
+  dark: css({ stroke: paper.rgb, ':active': { stroke: paper.rgb } }),
+};
+
+const getSvgColors = (
+  colors: Theme['colors'],
+  themeVariant: ThemeVariant,
+): SerializedStyles =>
+  colors?.primary500
+    ? css({ stroke: colors.primary500.rgba })
+    : themeStyles[themeVariant];
 
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
@@ -108,12 +123,14 @@ type Version = Omit<ResearchOutputVersion, 'documentType'> & {
 };
 
 export type OutputVersionsProps = {
+  readonly themeVariant?: ThemeVariant;
   versions: Version[];
   versionAction?: 'create' | 'edit';
   app?: 'crn' | 'gp2';
 };
 
 const OutputVersions: React.FC<OutputVersionsProps> = ({
+  themeVariant = defaultThemeVariant,
   versions,
   versionAction,
   app,
@@ -121,6 +138,15 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
+
+  const iconsStyles = ({ colors }: Theme) =>
+    css({
+      position: 'relative',
+      top: '6px',
+      display: 'inline-flex',
+      alignSelf: 'center',
+      svg: getSvgColors(colors, themeVariant),
+    });
 
   return (
     <main css={versionAction && app === 'crn' ? [mainStyles] : []}>
@@ -188,7 +214,10 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
                     <span css={[titleStyles, rowTitleStyles]}>Link</span>
                     <p css={paragraphStyle}>
                       <Link ellipsed href={link}>
-                        Output <span css={iconsStyles}>{externalLinkIcon}</span>
+                        Output{' '}
+                        <span css={(theme) => iconsStyles(theme)}>
+                          {externalLinkIcon}
+                        </span>
                       </Link>
                     </p>
                   </div>

@@ -240,8 +240,7 @@ const serverlessConfig: AWS = {
     },
   },
   package: {
-    individually: true,
-    excludeDevDependencies: false,
+    excludeDevDependencies: true,
   },
   custom: {
     apiHostname: new URL(apiUrl).hostname,
@@ -271,7 +270,10 @@ const serverlessConfig: AWS = {
     ],
     esbuild: {
       packager: 'yarn',
-      concurrency: 2,
+      platform: 'node',
+      target: 'node18',
+      exclude: ['googleapis'],
+      logLevel: 'debug',
     },
     'serverless-offline-ssm': {
       stages: ['local'],

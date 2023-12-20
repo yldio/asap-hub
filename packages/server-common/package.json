@@ -24,7 +24,7 @@
     "@aws-sdk/client-eventbridge": "^3.306.0",
     "@aws-sdk/client-secrets-manager": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",
-    "@aws-sdk/client-sqs": "3.476.0",
+    "@aws-sdk/client-sqs": "3.477.0",
     "@babel/runtime-corejs3": "7.23.6",
     "@hapi/boom": "9.1.4",
     "@sentry/serverless": "6.19.7",

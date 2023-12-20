@@ -42,7 +42,19 @@ it('prefers an explicit contact email address', () => {
     'mailto:contact@example.com',
   );
 });
-
+it('copy button adds email to clipboard', async () => {
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: jest.fn(),
+    },
+  });
+  jest.spyOn(navigator.clipboard, 'writeText');
+  render(<UserProfileHeader {...boilerplateProps} email="me@example.com" />);
+  const copyButton = screen.getByRole('button', { name: 'Copy' });
+  expect(copyButton).toBeVisible();
+  userEvent.click(copyButton);
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith('me@example.com');
+});
 describe('an edit button', () => {
   it('is not rendered by default', () => {
     const { queryByLabelText } = render(

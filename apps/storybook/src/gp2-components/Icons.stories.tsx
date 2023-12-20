@@ -5,7 +5,6 @@ export default { title: 'GP2 / Icons' };
 export const addIcon = () => components.addIcon;
 export const ArticleIcon = () => <components.ArticleIcon />;
 export const binIcon = () => components.binIcon;
-export const copyIcon = () => components.copyIcon;
 export const dashboardIcon = () => components.dashboardIcon;
 export const dateIcon = () => components.dateIcon;
 export const editIcon = () => components.editIcon;

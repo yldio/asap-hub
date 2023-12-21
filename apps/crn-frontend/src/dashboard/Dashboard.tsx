@@ -1,7 +1,7 @@
 import { usePrefetchCalendars } from '@asap-hub/crn-frontend/src/events/calendar/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/crn-frontend/src/hooks';
 import { usePrefetchTeams } from '@asap-hub/crn-frontend/src/network/teams/state';
-import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
+import { Frame } from '@asap-hub/frontend-utils';
 import { ConfirmModal, DashboardPage } from '@asap-hub/react-components';
 import {
   useCurrentUserCRN,

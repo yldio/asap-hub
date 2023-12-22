@@ -1,5 +1,8 @@
 import { mapLimit } from 'async';
-import { Auth, calendar_v3 as calendarV3, Common, google } from 'googleapis';
+import {
+  calendar_v3 as calendarV3,
+  calendar as googleCalendar,
+} from '@googleapis/calendar';
 import { DateTime } from 'luxon';
 import { GetJWTCredentials } from './aws-secret-manager';
 import { getAuthClient } from './google-auth-client';
@@ -24,8 +27,8 @@ export const syncCalendarFactory = (
     syncToken: SyncToken,
     pageToken?: PageToken,
   ): Promise<calendarV3.Schema$Events | null> => {
-    const auth = (await getAuthClient(getJWTCredentials)) as Auth.JWT;
-    const calendar = google.calendar({ version: 'v3', auth });
+    const auth = await getAuthClient(getJWTCredentials);
+    const calendar = googleCalendar({ version: 'v3', auth });
     try {
       const { data } = await calendar.events.list({
         pageToken: pageToken || undefined,
@@ -41,7 +44,12 @@ export const syncCalendarFactory = (
       });
       return data;
     } catch (error) {
-      if (error instanceof Common.GaxiosError && error.status === 410) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        error.status === 410
+      ) {
         logger.warn(error, 'Token is Gone, doing full sync');
         return null;
       }

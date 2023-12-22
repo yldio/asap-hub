@@ -273,7 +273,6 @@ const serverlessConfig: AWS = {
       packager: 'yarn',
       platform: 'node',
       target: 'node18',
-      exclude: ['googleapis'],
       bundle: true,
       concurrency: 2,
       zipConcurrency: 10,

@@ -1,4 +1,3 @@
-import { Common } from 'googleapis';
 import {
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
@@ -7,30 +6,27 @@ import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
-const mockGoogleAuth = jest.fn();
+var mockGoogleAuth = jest.fn();
 const mockWatch = jest.fn();
 const mockStop = jest.fn();
 
-jest.mock('googleapis', () => ({
-  ...jest.requireActual('googleapis'),
-  google: {
-    auth: {
-      GoogleAuth: jest.fn(),
+jest.mock('@googleapis/calendar', () => ({
+  ...jest.requireActual('@googleapis/calendar'),
+  calendar: () => ({
+    events: {
+      watch: mockWatch,
     },
-    calendar: () => ({
-      events: {
-        watch: mockWatch,
-      },
-      channels: {
-        stop: mockStop,
-      },
-    }),
-  },
-  Auth: {
-    GoogleAuth: jest
-      .fn()
-      .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
-  },
+    channels: {
+      stop: mockStop,
+    },
+  }),
+}));
+
+jest.mock('google-auth-library', () => ({
+  ...jest.requireActual('google-auth-library'),
+  GoogleAuth: jest
+    .fn()
+    .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
 }));
 
 describe('Subscription', () => {
@@ -86,11 +82,7 @@ describe('Subscription', () => {
   test('404 - should return empty resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
-    mockGoogleAuth.mockRejectedValueOnce(
-      new Common.GaxiosError('Not Found', {}, {
-        status: 404,
-      } as unknown as Common.GaxiosResponse),
-    );
+    mockGoogleAuth.mockRejectedValueOnce(new NotFoundError());
 
     const subscribeToEventChanges = subscribeToEventChangesFactory(
       getJWTCredentials,
@@ -108,11 +100,7 @@ describe('Subscription', () => {
   test('500 - should throw', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
-    mockGoogleAuth.mockRejectedValueOnce(
-      new Common.GaxiosError('Internal Server Error', {}, {
-        status: 500,
-      } as unknown as Common.GaxiosResponse),
-    );
+    mockGoogleAuth.mockRejectedValueOnce(new InternalServerError());
 
     const subscribeToEventChanges = subscribeToEventChangesFactory(
       getJWTCredentials,
@@ -194,3 +182,11 @@ describe('Unsubscribing', () => {
     });
   });
 });
+
+class NotFoundError extends Error {
+  status = 404;
+}
+
+class InternalServerError extends Error {
+  status = 500;
+}

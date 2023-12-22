@@ -1767,6 +1767,7 @@ __metadata:
     "@babel/core": 7.23.6
     "@babel/parser": 7.23.6
     "@babel/runtime-corejs3": 7.23.6
+    "@googleapis/calendar": ^9.5.0
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
@@ -1789,7 +1790,7 @@ __metadata:
     csv-parse: 4.16.3
     express: 4.18.2
     express-async-errors: 3.1.1
-    googleapis: 128.0.0
+    google-auth-library: 9.4.1
     got: 11.8.6
     jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
@@ -13057,6 +13058,15 @@ __metadata:
   peerDependencies:
     react: ^16.14.0 || ^17.0.0
   checksum: 27d7e2f6854c2381d4e7343312195788b53cc094079edc700ac26bc950763a735effaa09eb9df0ec8b4e7c941ff5e00a77e0e3692ee7b756193e285fd9e47558
+  languageName: node
+  linkType: hard
+
+"@googleapis/calendar@npm:^9.5.0":
+  version: 9.5.0
+  resolution: "@googleapis/calendar@npm:9.5.0"
+  dependencies:
+    googleapis-common: ^7.0.0
+  checksum: 7d1fcac0c0366321c60b4d617a0254684ff9fcabc46d71529a21c06be23f7fd2044563a5fb9da55d9141bba018f8197cd10752bd5e63d98e183480eba2bcd27a
   languageName: node
   linkType: hard
 
@@ -32190,7 +32200,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gaxios@npm:^6.0.0, gaxios@npm:^6.0.3":
+"gaxios@npm:^6.0.0, gaxios@npm:^6.0.3, gaxios@npm:^6.1.1":
   version: 6.1.1
   resolution: "gaxios@npm:6.1.1"
   dependencies:
@@ -32202,13 +32212,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gcp-metadata@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "gcp-metadata@npm:6.0.0"
+"gcp-metadata@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "gcp-metadata@npm:6.1.0"
   dependencies:
     gaxios: ^6.0.0
     json-bigint: ^1.0.0
-  checksum: c86a362819cee8d29cce02d9ce7e4e11687bfc6a91cb015f19a14f5015f66ef9cf2c93aa59f66e10915e4b0b8ed9ea90f0ac473594ad1dec5402f2e984a5662b
+  checksum: 55de8ae4a6b7664379a093abf7e758ae06e82f244d41bd58d881a470bf34db94c4067ce9e1b425d9455b7705636d5f8baad844e49bb73879c338753ba7785b2b
   languageName: node
   linkType: hard
 
@@ -32683,17 +32693,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-auth-library@npm:^9.0.0":
-  version: 9.2.0
-  resolution: "google-auth-library@npm:9.2.0"
+"google-auth-library@npm:9.4.1, google-auth-library@npm:^9.0.0":
+  version: 9.4.1
+  resolution: "google-auth-library@npm:9.4.1"
   dependencies:
     base64-js: ^1.3.0
     ecdsa-sig-formatter: ^1.0.11
-    gaxios: ^6.0.0
-    gcp-metadata: ^6.0.0
+    gaxios: ^6.1.1
+    gcp-metadata: ^6.1.0
     gtoken: ^7.0.0
     jws: ^4.0.0
-  checksum: 0da686964a769c79b5a1f7e518cb885f7c433edd50c8adf5cc310bfce607235184ebe6f9bc5290618d760c25e4ce1e273d444c9914c815353faa9d9dea37d1b3
+  checksum: c7d2d40ab704e0412db71e505a50b8b149233b9714db20b75c522e43c2a02033de52d4fc37787a8907875c93ff895a0a9582ed1217a990dfbf7389b1d7e2b3d0
   languageName: node
   linkType: hard
 
@@ -32708,16 +32718,6 @@ __metadata:
     url-template: ^2.0.8
     uuid: ^9.0.0
   checksum: b87f3e14aed5fab82d3327d924e82a1f1527715c93c0b3534b2e28de698abc02daea00bebe375966ca8bb491394f5fd521e6b615cb89e1bfbe8870b7caa5f899
-  languageName: node
-  linkType: hard
-
-"googleapis@npm:128.0.0":
-  version: 128.0.0
-  resolution: "googleapis@npm:128.0.0"
-  dependencies:
-    google-auth-library: ^9.0.0
-    googleapis-common: ^7.0.0
-  checksum: ac03a2e715073c6b73f1433672b926e8c96e0804216c5e042903b79f0ff8622552f8ec0ebce11a67fe9d575ffe125f324711865726b2954f8963f1eb5beac398
   languageName: node
   linkType: hard
 
@@ -43742,7 +43742,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.11.2":
+"qs@npm:6.11.2, qs@npm:^6.7.0":
   version: 6.11.2
   resolution: "qs@npm:6.11.2"
   dependencies:
@@ -43776,7 +43776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.5.1, qs@npm:^6.7.0":
+"qs@npm:^6.5.1":
   version: 6.9.4
   resolution: "qs@npm:6.9.4"
   checksum: 5ac0bd145f32d346d20c2fdcf19c8e548c5916458851e32527efb25be0c2cff8a3a81140c145c98a1184779b5b625c91bc7c50e147073bffb978fb7f4a9c8c8a

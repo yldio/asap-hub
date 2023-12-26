@@ -119,6 +119,8 @@ export type OutputVersionCoreObject = Pick<
   'documentType' | 'type' | 'title' | 'link' | 'addedDate'
 >;
 
+export type OutputVersionPostObject = OutputVersionCoreObject;
+
 export type OutputVersion = OutputVersionCoreObject & {
   id: string;
 };
@@ -170,6 +172,7 @@ export type OutputCreateDataObject = OutputUpsertDataObject & {
 
 export type OutputUpdateDataObject = OutputUpsertDataObject & {
   updatedBy: string;
+  versions: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;

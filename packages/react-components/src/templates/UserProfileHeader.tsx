@@ -3,7 +3,7 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Avatar, Display, Link, TabLink, StateTag } from '../atoms';
+import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -14,6 +14,7 @@ import {
   largeDesktopScreen,
   mobileScreen,
   perRem,
+  rem,
   tabletScreen,
   vminLinearCalc,
 } from '../pixels';
@@ -102,11 +103,14 @@ const editContactStyles = css({
 });
 const contactStyles = css({
   gridArea: 'contact',
+
   [middleSizeQuery]: {
     justifySelf: 'start',
+    gridTemplateColumns: 'min-content min-content',
   },
 
-  display: 'flex',
+  display: 'grid',
+  gridTemplateColumns: 'auto min-content',
   alignItems: 'start',
 });
 const contactNoEditStyles = css({
@@ -316,7 +320,19 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           >
             Contact
           </Link>
+          <div
+            css={{
+              margin: `${rem(12)} ${rem(8)}`,
+            }}
+          >
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() => navigator.clipboard.writeText(email)}
+            />
+          </div>
         </section>
+
         {editContactInfoHref && (
           <div css={editContactStyles}>
             <Link

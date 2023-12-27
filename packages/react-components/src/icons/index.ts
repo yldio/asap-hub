@@ -16,6 +16,7 @@ export { default as chevronRightIcon } from './chevron-right';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
 export { default as confidentialIcon } from './confidential';
+export { default as copyIcon } from './copy-icon';
 export { default as crnReportIcon } from './crnReport';
 export { default as crossIcon } from './cross';
 export { default as crossInCircleIcon } from './cross-in-circle';

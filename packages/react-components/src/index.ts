@@ -16,6 +16,7 @@ export {
   Button,
   Caption,
   Card,
+  CopyButton,
   Display,
   Divider,
   Ellipsis,

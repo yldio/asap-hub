@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { OutputVersionCoreObject } from '@asap-hub/model/src/gp2';
 import {
   OutputContentfulDataProvider,
   OutputItem,
@@ -1072,6 +1073,82 @@ describe('Outputs data provider', () => {
       await expect(
         outputDataProvider.update(outputId, OutputRequest),
       ).rejects.toThrow(GenericError);
+    });
+    describe('create Version', () => {
+      const baseVersion: OutputVersionCoreObject = {
+        documentType: 'Article',
+        title: 'Test',
+        addedDate: '2022-01-01T12:00:00.000Z',
+        link: 'https://example.com',
+        type: 'Blog',
+      };
+      test('can create a first version', async () => {
+        const newVersion = {
+          ...baseVersion,
+          title: 'First Version',
+        };
+        const publish = jest.fn();
+        const outputMock = getEntry({});
+        environmentMock.getEntry.mockResolvedValue(outputMock);
+        environmentMock.createEntry.mockResolvedValue({
+          sys: { id: '1' },
+          publish,
+        } as unknown as Entry);
+        await outputDataProvider.update('1', getOutputUpdateDataObject(), {
+          newVersion,
+        });
+
+        expect(environmentMock.createEntry).toHaveBeenCalledWith(
+          'outputVersions',
+          {
+            fields: addLocaleToFields(newVersion),
+          },
+        );
+      });
+      test('can create a second version', async () => {
+        const outputMock = getEntry({
+          versions: ['version-1'],
+          // {
+          //   'en-US': [getEntry(addLocaleToFields(baseVersion), 'version-1')],
+          // },
+        });
+        environmentMock.getEntry.mockResolvedValue(outputMock);
+        environmentMock.createEntry.mockResolvedValue(
+          getEntry({}, 'version-2'),
+        );
+
+        await outputDataProvider.update('1', getOutputUpdateDataObject(), {
+          newVersion: {
+            ...baseVersion,
+            title: 'Version 2',
+          },
+        });
+
+        const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+          typeof patchAndPublish
+        >;
+        expect(mockPatchAndPublish).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            versions: [
+              {
+                sys: {
+                  id: 'version-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'version-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          }),
+        );
+      });
     });
   });
 });

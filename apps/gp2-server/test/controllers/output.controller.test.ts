@@ -358,9 +358,13 @@ describe('outputs controller', () => {
       expect(result).toEqual(getOutputResponse());
 
       const outputUpdateDataObject = getOutputUpdateDataObject();
-      expect(outputDataProviderMock.update).toBeCalledWith(outputId, {
-        ...outputUpdateDataObject,
-      });
+      expect(outputDataProviderMock.update).toHaveBeenCalledWith(
+        outputId,
+        {
+          ...outputUpdateDataObject,
+        },
+        { newVersion: undefined },
+      );
     });
 
     describe('Validation', () => {
@@ -533,10 +537,10 @@ describe('outputs controller', () => {
           authors: [{ externalUserName: 'Chris Blue' }],
         });
 
-        expect(externalUserDataProviderMock.create).toBeCalledWith({
+        expect(externalUserDataProviderMock.create).toHaveBeenCalledWith({
           name: 'Chris Blue',
         });
-        expect(outputDataProviderMock.update).toBeCalledWith(
+        expect(outputDataProviderMock.update).toHaveBeenCalledWith(
           outputId,
           expect.objectContaining({
             authors: [
@@ -545,6 +549,7 @@ describe('outputs controller', () => {
               },
             ],
           }),
+          { newVersion: undefined },
         );
       });
     });

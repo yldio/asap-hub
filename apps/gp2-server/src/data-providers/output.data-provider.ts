@@ -206,12 +206,12 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       mainEntityId,
       ...data
     }: gp2Model.OutputUpdateDataObject,
-    updateOptions: UpdateOutputOptions,
+    updateOptions?: UpdateOutputOptions,
   ) {
     const environment = await this.getRestClient();
     const entry = await environment.getEntry(id);
 
-    if (updateOptions.newVersion) {
+    if (updateOptions?.newVersion) {
       const versionEntry = await environment.createEntry('outputVersions', {
         fields: addLocaleToFields({
           ...updateOptions.newVersion,
@@ -489,39 +489,44 @@ const cleanOutput = (
     'mainEntityId'
   >,
 ) =>
-  Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
-    switch (key) {
-      case 'authors':
-        return {
-          ...acc,
-          authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
-            (author) =>
-              getLinkEntity(author.userId || (author.externalUserId as string)),
-          ),
-        };
-      case 'createdBy':
-        return {
-          ...acc,
-          createdBy: linkEntityValue(value as string),
-          updatedBy: linkEntityValue(value as string),
-        };
-      case 'updatedBy':
-        return { ...acc, updatedBy: linkEntityValue(value as string) };
-      case 'tagIds':
-        return { ...acc, tags: linkEntityValue(value as string[]) };
-      case 'contributingCohortIds':
-        return {
-          ...acc,
-          contributingCohorts: linkEntityValue(value as string[]),
-        };
-      case 'relatedOutputIds':
-        return { ...acc, relatedOutputs: linkEntityValue(value as string[]) };
-      case 'relatedEventIds':
-        return { ...acc, relatedEvents: linkEntityValue(value as string[]) };
-      default:
-        return { ...acc, [key]: value };
-    }
-  }, {} as { [key: string]: unknown });
+  Object.entries(outputToUpdate).reduce(
+    (acc, [key, value]) => {
+      switch (key) {
+        case 'authors':
+          return {
+            ...acc,
+            authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
+              (author) =>
+                getLinkEntity(
+                  author.userId || (author.externalUserId as string),
+                ),
+            ),
+          };
+        case 'createdBy':
+          return {
+            ...acc,
+            createdBy: linkEntityValue(value as string),
+            updatedBy: linkEntityValue(value as string),
+          };
+        case 'updatedBy':
+          return { ...acc, updatedBy: linkEntityValue(value as string) };
+        case 'tagIds':
+          return { ...acc, tags: linkEntityValue(value as string[]) };
+        case 'contributingCohortIds':
+          return {
+            ...acc,
+            contributingCohorts: linkEntityValue(value as string[]),
+          };
+        case 'relatedOutputIds':
+          return { ...acc, relatedOutputs: linkEntityValue(value as string[]) };
+        case 'relatedEventIds':
+          return { ...acc, relatedEvents: linkEntityValue(value as string[]) };
+        default:
+          return { ...acc, [key]: value };
+      }
+    },
+    {} as { [key: string]: unknown },
+  );
 
 type OutputsCollection = gp2Contentful.FetchOutputsQuery['outputsCollection'];
 const parseOutputsCollection = (outputsCollection: OutputsCollection) => {

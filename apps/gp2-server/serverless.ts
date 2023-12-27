@@ -70,27 +70,11 @@ const sesRegion = process.env.SES_REGION!;
 const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
-
-console.log({
-  algoliaIndex,
-  region,
-  envAlias,
-  envRef,
-  sentryDsnApi,
-  sentryDsnHandlers,
-  auth0ClientId,
-  contentfulEnvironment,
-  contentfulSpaceId,
-  sesRegion,
-  hostname,
-  appUrl,
-  apiUrl,
-  gp2AwsAcmCertificateArn,
-});
+const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
 export const plugins = [
-  './serverless-plugins/serverless-webpack',
-  './serverless-plugins/serverless-s3-sync',
+  './serverless-plugins/serverless-esbuild',
+  ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 
 const serverlessConfig: AWS = {
@@ -220,9 +204,11 @@ const serverlessConfig: AWS = {
     excludeDevDependencies: false,
   },
   custom: {
-    webpack: {
-      config: './webpack.config.js',
+    esbuild: {
       packager: 'yarn',
+      platform: 'node',
+      target: 'node18',
+      bundle: true,
     },
     s3Sync: [
       {

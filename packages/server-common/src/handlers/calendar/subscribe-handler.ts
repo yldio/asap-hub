@@ -1,5 +1,5 @@
-import { Common, google } from 'googleapis';
 import 'source-map-support/register';
+import { calendar as googleCalendar } from '@googleapis/calendar';
 import { getAuthClient, GetJWTCredentials, Logger } from '../../utils';
 
 type Config = {
@@ -30,7 +30,7 @@ export const subscribeToEventChangesFactory =
   async (calendarId, subscriptionId) => {
     try {
       const auth = await getAuthClient(getJWTCredentials);
-      const calendar = google.calendar({
+      const calendar = googleCalendar({
         version: 'v3',
         auth,
       });
@@ -61,7 +61,12 @@ export const subscribeToEventChangesFactory =
         expiration: parseInt(expiration, 10),
       };
     } catch (err: unknown) {
-      if (err instanceof Common.GaxiosError && err.status === 404) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'status' in err &&
+        err.status === 404
+      ) {
         logger.warn(
           `Calendar not found when subscribing to calendarId: ${calendarId}`,
         );
@@ -89,7 +94,7 @@ export const unsubscribeFromEventChangesFactory =
   async (resourceId, channelId) => {
     const auth = await getAuthClient(getJWTCredentials);
 
-    const calendar = google.calendar({
+    const calendar = googleCalendar({
       version: 'v3',
       auth,
     });

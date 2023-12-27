@@ -1,8 +1,19 @@
 /* istanbul ignore file */
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
-import { Auth } from 'googleapis';
 
-export type GetJWTCredentials = () => Promise<Auth.JWTInput>;
+interface JWTInput {
+  type?: string;
+  client_email?: string;
+  private_key?: string;
+  private_key_id?: string;
+  project_id?: string;
+  client_id?: string;
+  client_secret?: string;
+  refresh_token?: string;
+  quota_project_id?: string;
+}
+
+export type GetJWTCredentials = () => Promise<JWTInput>;
 
 export const getJWTCredentialsFactory =
   ({

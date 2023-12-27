@@ -67,6 +67,7 @@ const currentRevision = process.env.CURRENT_REVISION!;
 const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 const slackWebhook = process.env.SLACK_WEBHOOK!;
 const logLevel = process.env.LOG_LEVEL!;
+const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
@@ -74,9 +75,9 @@ const algoliaIndex = process.env.ALGOLIA_INDEX
 const service = 'asap-hub';
 
 export const plugins = [
-  './serverless-plugins/serverless-s3-sync',
+  './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
-  './serverless-plugins/serverless-webpack',
+  ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 const offlinePlugins = [
   './serverless-plugins/serverless-offline',
@@ -268,8 +269,11 @@ const serverlessConfig: AWS = {
         localDir: '../crn-messages/build-templates/static',
       },
     ],
-    webpack: {
-      config: './webpack.config.js',
+    esbuild: {
+      packager: 'yarn',
+      platform: 'node',
+      target: 'node18',
+      bundle: true,
     },
     'serverless-offline-ssm': {
       stages: ['local'],

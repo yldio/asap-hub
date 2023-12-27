@@ -1,28 +1,24 @@
-import { Common } from 'googleapis';
 import { GetJWTCredentials, syncCalendarFactory } from '../../src';
 import { getListEventsResponse } from '../fixtures/google-events.fixtures';
 import { loggerMock as logger } from '../mocks/logger.mock';
 
-const mockGoogleAuth = jest.fn();
+var mockGoogleAuth = jest.fn();
 const mockList = jest.fn();
 
-jest.mock('googleapis', () => ({
-  ...jest.requireActual('googleapis'),
-  google: {
-    auth: {
-      GoogleAuth: jest.fn(),
+jest.mock('@googleapis/calendar', () => ({
+  ...jest.requireActual('@googleapis/calendar'),
+  calendar: () => ({
+    events: {
+      list: mockList,
     },
-    calendar: () => ({
-      events: {
-        list: mockList,
-      },
-    }),
-  },
-  Auth: {
-    GoogleAuth: jest
-      .fn()
-      .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
-  },
+  }),
+}));
+
+jest.mock('google-auth-library', () => ({
+  ...jest.requireActual('google-auth-library'),
+  GoogleAuth: jest
+    .fn()
+    .mockImplementation(() => ({ fromJSON: mockGoogleAuth })),
 }));
 
 describe('Sync calendar util hook', () => {
@@ -72,11 +68,7 @@ describe('Sync calendar util hook', () => {
   test('Should trigger full sync when syncToken is invalidated', async () => {
     const listEventsResponse = getListEventsResponse();
     jest.spyOn(global.Date, 'now').mockImplementationOnce(() => 1677926270000);
-    mockList.mockRejectedValueOnce(
-      new Common.GaxiosError('Gone', {}, {
-        status: 410,
-      } as unknown as Common.GaxiosResponse),
-    );
+    mockList.mockRejectedValueOnce(new GoneError());
     mockList.mockResolvedValueOnce({ data: listEventsResponse });
 
     const result = await syncCalendarHandler(
@@ -179,3 +171,7 @@ describe('Sync calendar util hook', () => {
     expect(syncEvent).toHaveBeenCalledTimes(4);
   });
 });
+
+class GoneError extends Error {
+  status = 410;
+}

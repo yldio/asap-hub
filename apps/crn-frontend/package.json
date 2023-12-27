@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "cross-env TSC_COMPILE_ON_ERROR=true vite",
-    "build": "node ./scripts/build-unsupported-browser-page.js && vite build",
+    "build": "vite build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "release:frontend": "node ./scripts/sentry-release.js"

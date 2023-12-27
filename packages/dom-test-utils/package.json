@@ -6,7 +6,7 @@
     "node": "18.x"
   },
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "src/index.ts",
   "scripts": {
     "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
     "watch:babel": "yarn build:babel -w --verbose"

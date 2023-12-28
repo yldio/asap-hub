@@ -152,7 +152,7 @@ export default class ResearchOutputController {
     }
 
     let version: ResearchOutputVersionPostRequest | undefined;
-    if (currentResearchOutput && researchOutputUpdateData.createVersion) {
+    if (researchOutputUpdateData.createVersion) {
       version = {
         title: currentResearchOutput.title || '',
         link: currentResearchOutput.link,

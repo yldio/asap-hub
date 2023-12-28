@@ -307,18 +307,17 @@ const parseGraphQLResearchOutput = (
   const teams = mapTeams(researchOutputs.teamsCollection?.items || []);
   const contactEmails =
     (researchOutputs.teamsCollection?.items || [])
-      .flatMap(
-        (team: TeamItem | null) =>
-          team?.linkedFrom?.teamMembershipCollection?.items
-            .filter(
-              (membership) =>
-                membership?.role === 'Project Manager' &&
-                membership?.inactiveSinceDate === null,
-            )
-            .map(
-              (membership) =>
-                membership?.linkedFrom?.usersCollection?.items[0]?.email,
-            ),
+      .flatMap((team: TeamItem | null) =>
+        team?.linkedFrom?.teamMembershipCollection?.items
+          .filter(
+            (membership) =>
+              membership?.role === 'Project Manager' &&
+              membership?.inactiveSinceDate === null,
+          )
+          .map(
+            (membership) =>
+              membership?.linkedFrom?.usersCollection?.items[0]?.email,
+          ),
       )
       .filter((x): x is string => !!x) || [];
   return {

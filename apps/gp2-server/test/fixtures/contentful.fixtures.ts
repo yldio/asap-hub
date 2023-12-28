@@ -21,7 +21,7 @@ export const contenfulUserLink: Link<'User'> = {
 };
 
 export const getEntry = (
-  fields: Record<string, unknown>,
+  overrides: Partial<Entry>,
   id = 'entry-id',
 ): Entry => ({
   update: jest.fn(),
@@ -60,7 +60,8 @@ export const getEntry = (
     version: 1,
     contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'news' } },
   },
-  fields,
+  fields: {},
+  ...overrides,
 });
 
 export const getEntryCollection = (

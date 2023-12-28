@@ -357,7 +357,10 @@ describe('outputs controller', () => {
 
       expect(result).toEqual(getOutputResponse());
 
-      const outputUpdateDataObject = getOutputUpdateDataObject();
+      const outputUpdateDataObject = {
+        ...getOutputUpdateDataObject(),
+        versions: ['1'],
+      };
       expect(outputDataProviderMock.update).toHaveBeenCalledWith(
         outputId,
         {

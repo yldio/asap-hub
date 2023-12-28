@@ -118,8 +118,9 @@ const createVersionCardStyles = css({
   background: neutral200.rgb,
 });
 
-type Version = Omit<ResearchOutputVersion, 'documentType'> & {
+type Version = Omit<ResearchOutputVersion, 'documentType' | 'type'> & {
   documentType?: string;
+  type?: string;
 };
 
 export type OutputVersionsProps = {

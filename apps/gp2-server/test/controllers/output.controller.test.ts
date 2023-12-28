@@ -1,7 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { when } from 'jest-when';
-import Outputs from '../../src/controllers/output.controller';
+import Outputs, {
+  ERROR_UNIQUE_LINK,
+} from '../../src/controllers/output.controller';
 import {
   getOutputCreateData,
   getOutputCreateDataObject,
@@ -267,7 +269,7 @@ describe('outputs controller', () => {
         ).rejects.toThrow(GenericError);
       });
 
-      test('Should create a new external user and associate with the -output', async () => {
+      test('Should create a new external user and associate with the output', async () => {
         const externalUserId = 'external-user-id-1';
         externalUserDataProviderMock.create.mockResolvedValueOnce(
           externalUserId,
@@ -553,6 +555,75 @@ describe('outputs controller', () => {
             ],
           }),
           { newVersion: undefined },
+        );
+      });
+    });
+
+    describe('Versioning', () => {
+      test('Should create a new version when flag is set', async () => {
+        await outputs.update(outputId, {
+          ...getOutputUpdateData(),
+          createVersion: true,
+          link: 'https://newUniqueLink.com',
+          title: 'new title',
+        });
+        expect(outputDataProviderMock.update).toHaveBeenCalledWith(
+          outputId,
+          expect.anything(),
+          {
+            newVersion: {
+              documentType: 'Article',
+              link: 'http://a.link',
+              title: 'Test Proposal 1234',
+              type: 'Research',
+              addedDate: '2021-05-21T13:18:31.000Z',
+            },
+          },
+        );
+      });
+
+      test('Should throw when trying to create a new version with the same link', async () => {
+        const currentOutput = getOutputDataObject();
+        const outputUpdateData = getOutputUpdateData();
+        currentOutput.link = 'http://v1.com';
+        outputDataProviderMock.fetchById.mockResolvedValue(currentOutput);
+
+        await expect(
+          outputs.update(outputId, {
+            ...outputUpdateData,
+            createVersion: true,
+            link: currentOutput.link,
+          }),
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [ERROR_UNIQUE_LINK],
+          }),
+        );
+      });
+
+      test('Should create an Article new version when flag is set and document type is missing', async () => {
+        outputDataProviderMock.fetchById.mockResolvedValueOnce({
+          ...getOutputDataObject(),
+          documentType: undefined as unknown as 'Article',
+        });
+        await outputs.update(outputId, {
+          ...getOutputUpdateData(),
+          createVersion: true,
+          link: 'https://newUniqueLink.com',
+          title: 'new title',
+        });
+        expect(outputDataProviderMock.update).toHaveBeenCalledWith(
+          outputId,
+          expect.anything(),
+          {
+            newVersion: {
+              documentType: 'Article',
+              link: 'http://a.link',
+              title: 'Test Proposal 1234',
+              type: 'Research',
+              addedDate: '2021-05-21T13:18:31.000Z',
+            },
+          },
         );
       });
     });

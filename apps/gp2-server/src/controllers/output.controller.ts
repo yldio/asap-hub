@@ -104,16 +104,20 @@ export default class OutputController {
     const normalisedData = this.normaliseResearchOutputData(data);
 
     const currentOutput = await this.outputDataProvider.fetchById(id);
+
+    if (!currentOutput) {
+      throw new NotFoundError(undefined, `output with id ${id} not found`);
+    }
+
     let version: OutputVersionPostObject | undefined;
+
     if (data.createVersion) {
       version = {
-        title: currentOutput?.title || '',
-        link: currentOutput?.link,
-        type: currentOutput?.type,
-        addedDate: currentOutput?.addedDate || '',
-        documentType: currentOutput?.documentType
-          ? currentOutput.documentType
-          : 'Article',
+        title: currentOutput.title || '',
+        link: currentOutput.link,
+        type: currentOutput.type,
+        addedDate: currentOutput.addedDate || '',
+        documentType: currentOutput.documentType,
       };
 
       this.validateVersionUniqueness(
@@ -121,9 +125,6 @@ export default class OutputController {
         version,
         currentOutput?.versions,
       );
-    }
-    if (!currentOutput) {
-      throw new NotFoundError(undefined, `output with id ${id} not found`);
     }
 
     await this.validateOutput(data, id);

@@ -600,32 +600,6 @@ describe('outputs controller', () => {
           }),
         );
       });
-
-      test('Should create an Article new version when flag is set and document type is missing', async () => {
-        outputDataProviderMock.fetchById.mockResolvedValueOnce({
-          ...getOutputDataObject(),
-          documentType: undefined as unknown as 'Article',
-        });
-        await outputs.update(outputId, {
-          ...getOutputUpdateData(),
-          createVersion: true,
-          link: 'https://newUniqueLink.com',
-          title: 'new title',
-        });
-        expect(outputDataProviderMock.update).toHaveBeenCalledWith(
-          outputId,
-          expect.anything(),
-          {
-            newVersion: {
-              documentType: 'Article',
-              link: 'http://a.link',
-              title: 'Test Proposal 1234',
-              type: 'Research',
-              addedDate: '2021-05-21T13:18:31.000Z',
-            },
-          },
-        );
-      });
     });
   });
 });

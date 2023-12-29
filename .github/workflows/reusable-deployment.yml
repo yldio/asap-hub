@@ -70,7 +70,7 @@ jobs:
       group: crn-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -117,7 +117,7 @@ jobs:
       group: gp2-${{ github.head_ref || inputs.environment-name }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -203,7 +203,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -244,7 +244,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -301,7 +301,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -356,7 +356,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -393,7 +393,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

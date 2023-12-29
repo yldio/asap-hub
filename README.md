@@ -233,7 +233,7 @@ Then repeat the command without `--dry-run` if all looks good.
 
 ### Image name
 
-The current image tag in use is: f93db8bae8be7528565c2510dbc8e3eece97983d
+The current image tag in use is: 86a189edc900d4e1afdcf3935c697292f69d409b
 
 ### Build new image
 
@@ -259,7 +259,7 @@ To build new images:
 To change the image tag, run:
 
 ```sh
-  gsed -i s/f93db8bae8be7528565c2510dbc8e3eece97983d/some-new-tag/g .github/**/*.yml README.md
+  gsed -i s/86a189edc900d4e1afdcf3935c697292f69d409b/some-new-tag/g .github/**/*.yml README.md
 ```
 
 ## Manage GitHub workflow runs logs

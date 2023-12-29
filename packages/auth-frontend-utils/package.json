@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
@@ -27,7 +27,7 @@
     "@babel/preset-react": "7.23.3",
     "@types/auth0-js": "9.21.5",
     "@types/jest": "29.5.11",
-    "@types/node": "18.18.13",
+    "@types/node": "20.10.5",
     "@types/pify": "5.0.4"
   }
 }

@@ -113,7 +113,7 @@ const serverlessConfig: AWS = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs20.x',
     architecture: 'arm64',
     timeout: 16,
     memorySize: 1024,
@@ -272,7 +272,7 @@ const serverlessConfig: AWS = {
     esbuild: {
       packager: 'yarn',
       platform: 'node',
-      target: 'node18',
+      target: 'node20',
       bundle: true,
     },
     'serverless-offline-ssm': {

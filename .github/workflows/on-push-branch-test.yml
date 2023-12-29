@@ -1,0 +1,6 @@
+name: Pipeline branch
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+    branches:
+      - master

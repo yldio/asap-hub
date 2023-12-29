@@ -56,3 +56,6 @@ auto-save-list
 tramp
 .\#*
 
+
+# turborepo
+.turbo

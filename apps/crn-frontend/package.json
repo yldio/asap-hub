@@ -62,7 +62,7 @@
     "@types/history": "4.7.11",
     "@types/jest": "29.5.11",
     "@types/nock": "11.1.0",
-    "@types/node": "18.18.13",
+    "@types/node": "18.19.4",
     "@types/qs": "6.9.11",
     "@types/react": "17.0.65",
     "@types/react-dom": "17.0.20",

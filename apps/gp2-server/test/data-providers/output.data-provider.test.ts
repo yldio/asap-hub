@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { OutputVersionCoreObject } from '@asap-hub/model/src/gp2';
 import {
   OutputContentfulDataProvider,
   OutputItem,
@@ -1058,10 +1059,10 @@ describe('Outputs data provider', () => {
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         ...fields,
       });
-      expect(environmentMock.createEntry).toBeCalledTimes(0);
-      expect(environmentMock.createPublishBulkAction).not.toBeCalled();
-      expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
-      expect(environmentMock.getEntries).not.toBeCalled();
+      expect(environmentMock.createEntry).toHaveBeenCalledTimes(0);
+      expect(environmentMock.createPublishBulkAction).not.toHaveBeenCalled();
+      expect(environmentMock.createUnpublishBulkAction).not.toHaveBeenCalled();
+      expect(environmentMock.getEntries).not.toHaveBeenCalled();
     });
 
     test('Should throw when fails to update the output', async () => {
@@ -1072,6 +1073,114 @@ describe('Outputs data provider', () => {
       await expect(
         outputDataProvider.update(outputId, OutputRequest),
       ).rejects.toThrow(GenericError);
+    });
+  });
+
+  describe('create Version', () => {
+    const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+      typeof patchAndPublish
+    >;
+    beforeEach(() => {
+      jest.resetAllMocks();
+
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      graphqlClientMock.request.mockResolvedValue({
+        outputs: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+    });
+    const baseVersion: OutputVersionCoreObject = {
+      documentType: 'Article',
+      title: 'Test',
+      addedDate: '2022-01-01T12:00:00.000Z',
+      link: 'https://example.com',
+      type: 'Blog',
+    };
+    test('can create a first version', async () => {
+      const newVersion = {
+        ...baseVersion,
+        title: 'First Version',
+      };
+      const publish = jest.fn();
+      const outputMock = getEntry({
+        fields: {
+          title: 'Version testing',
+          versions: [],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValue(outputMock);
+      environmentMock.createEntry.mockResolvedValue({
+        sys: { id: '1' },
+        publish,
+      } as unknown as Entry);
+      await outputDataProvider.update('1', getOutputUpdateDataObject(), {
+        newVersion,
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'outputVersion',
+        {
+          fields: addLocaleToFields(newVersion),
+        },
+      );
+    });
+    test('can create a second version', async () => {
+      const outputMock = getEntry({
+        fields: {
+          title: 'Second version test',
+          versions: {
+            ['en-US']: [
+              getEntry(
+                {
+                  fields: {
+                    ...baseVersion,
+                    title: 'Version 1',
+                  },
+                },
+                'version-1',
+              ),
+            ],
+          },
+        },
+      });
+      environmentMock.getEntry.mockResolvedValue(outputMock);
+      environmentMock.createEntry.mockResolvedValue(getEntry({}, 'version-2'));
+
+      await outputDataProvider.update('1', getOutputUpdateDataObject(), {
+        newVersion: {
+          ...baseVersion,
+          title: 'Version 2',
+        },
+      });
+
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          versions: [
+            {
+              sys: {
+                id: 'version-1',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+            {
+              sys: {
+                id: 'version-2',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        }),
+      );
     });
   });
 });

@@ -4,6 +4,10 @@ import {
   ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
+import {
+  OutputPostRequest,
+  OutputVersionPostObject,
+} from '@asap-hub/model/src/gp2';
 import Boom from '@hapi/boom';
 import { OutputDataProvider } from '../data-providers/types';
 import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
@@ -97,21 +101,47 @@ export default class OutputController {
     id: string,
     data: OutputUpdateData,
   ): Promise<gp2Model.OutputResponse | null> {
+    const normalisedData = this.normaliseResearchOutputData(data);
+
     const currentOutput = await this.outputDataProvider.fetchById(id);
 
     if (!currentOutput) {
       throw new NotFoundError(undefined, `output with id ${id} not found`);
     }
 
+    let version: OutputVersionPostObject | undefined;
+
+    if (data.createVersion) {
+      version = {
+        title: currentOutput.title || '',
+        link: currentOutput.link,
+        type: currentOutput.type,
+        addedDate: currentOutput.addedDate || '',
+        documentType: currentOutput.documentType,
+      };
+
+      this.validateVersionUniqueness(
+        normalisedData,
+        version,
+        currentOutput?.versions,
+      );
+    }
+
     await this.validateOutput(data, id);
 
     const dataObject = await this.parseToDataObject(data);
 
-    await this.outputDataProvider.update(id, {
-      ...dataObject,
-      updatedBy: data.updatedBy,
-      addedDate: currentOutput.addedDate,
-    });
+    await this.outputDataProvider.update(
+      id,
+      {
+        ...dataObject,
+        versions:
+          currentOutput.versions?.map(({ id: versionId }) => versionId) || [],
+        updatedBy: data.updatedBy,
+        addedDate: currentOutput.addedDate,
+      },
+      { newVersion: version },
+    );
 
     return this.fetchById(id);
   }
@@ -131,14 +161,7 @@ export default class OutputController {
       ])
     ).filter(isError);
 
-    if (errors.length > 0) {
-      // TODO: Remove Boom from the controller layer
-      // https://asaphub.atlassian.net/browse/CRN-777
-      throw Boom.badRequest<ValidationErrorResponse['data']>(
-        VALIDATION_ERROR_MESSAGE,
-        errors,
-      );
-    }
+    this.handleErrors(errors);
   }
 
   private async validateTitleUniqueness(
@@ -160,15 +183,7 @@ export default class OutputController {
       return null;
     }
 
-    return {
-      instancePath: '/title',
-      keyword: 'unique',
-      message: 'must be unique',
-      params: {
-        type: 'string',
-      },
-      schemaPath: '#/properties/title/unique',
-    };
+    return ERROR_UNIQUE_TITLE;
   }
 
   private async validateLinkUniqueness(
@@ -189,15 +204,41 @@ export default class OutputController {
       return null;
     }
 
-    return {
-      instancePath: '/link',
-      keyword: 'unique',
-      message: 'must be unique',
-      params: {
-        type: 'string',
-      },
-      schemaPath: '#/properties/link/unique',
-    };
+    return ERROR_UNIQUE_LINK;
+  }
+
+  private validateVersionUniqueness(
+    newOutput: OutputUpdateData,
+    newVersion: OutputVersionPostObject,
+    versions: OutputVersionPostObject[] | undefined,
+  ): void {
+    const errors: ValidationErrorResponse['data'] = [];
+    if (
+      newOutput.link === newVersion.link ||
+      (versions && versions.some((version) => version.link === newVersion.link))
+    ) {
+      errors.push(ERROR_UNIQUE_LINK);
+    }
+    this.handleErrors(errors);
+  }
+
+  private normaliseResearchOutputData = <T extends OutputPostRequest>(
+    outputData: T,
+  ): T => ({
+    ...outputData,
+    title: (outputData.title || '').trim(),
+    link: outputData.link?.trim() ?? outputData.link,
+  });
+
+  private handleErrors(errors: ValidationErrorResponse['data']) {
+    // TODO: Remove Boom from the controller layer
+    // https://asaphub.atlassian.net/browse/CRN-777
+    if (errors.length > 0) {
+      throw Boom.badRequest<ValidationErrorResponse['data']>(
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
+        errors,
+      );
+    }
   }
 
   private mapAuthorsPostRequestToId = async (
@@ -228,3 +269,23 @@ export type OutputUpdateData = gp2Model.OutputPutRequest & {
   updatedBy: string;
 };
 type OutputFilter = gp2Model.OutputDocumentType[] | gp2Model.FetchOutputFilter;
+
+export const ERROR_UNIQUE_LINK = {
+  instancePath: '/link',
+  keyword: 'unique',
+  message: 'must be unique',
+  params: {
+    type: 'string',
+  },
+  schemaPath: '#/properties/link/unique',
+};
+
+export const ERROR_UNIQUE_TITLE = {
+  instancePath: '/title',
+  keyword: 'unique',
+  message: 'must be unique',
+  params: {
+    type: 'string',
+  },
+  schemaPath: '#/properties/title/unique',
+};

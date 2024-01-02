@@ -3,7 +3,6 @@ import Boom from '@hapi/boom';
 import {
   AuthorPostRequest,
   AuthorUpsertDataObject,
-  isResearchOutputDocumentType,
   ListResearchOutputResponse,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
@@ -145,30 +144,27 @@ export default class ResearchOutputController {
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 
-    let version: ResearchOutputVersionPostRequest | undefined;
-    if (researchOutputUpdateData.createVersion) {
-      version = {
-        title: currentResearchOutput?.title || '',
-        link: currentResearchOutput?.link,
-        type: currentResearchOutput?.type,
-        addedDate: currentResearchOutput?.addedDate,
-        documentType:
-          currentResearchOutput?.documentType &&
-          isResearchOutputDocumentType(currentResearchOutput?.documentType)
-            ? currentResearchOutput?.documentType
-            : 'Grant Document',
-      };
-      this.validateVersionUniqueness(
-        normalisedResearchOutputUpdateData,
-        version,
-        currentResearchOutput?.versions,
-      );
-    }
-
     if (!currentResearchOutput) {
       throw new NotFoundError(
         undefined,
         `research-output with id ${id} not found`,
+      );
+    }
+
+    let version: ResearchOutputVersionPostRequest | undefined;
+    if (researchOutputUpdateData.createVersion) {
+      version = {
+        title: currentResearchOutput.title || '',
+        link: currentResearchOutput.link,
+        type: currentResearchOutput.type,
+        addedDate: currentResearchOutput?.addedDate,
+        documentType: currentResearchOutput.documentType,
+      };
+
+      this.validateVersionUniqueness(
+        normalisedResearchOutputUpdateData,
+        version,
+        currentResearchOutput?.versions,
       );
     }
 

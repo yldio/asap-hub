@@ -12,7 +12,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
 import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
-import { OutputDataProvider } from './types';
+import { OutputDataProvider, UpdateOutputOptions } from './types';
 
 export type OutputItem = NonNullable<
   NonNullable<
@@ -204,14 +204,38 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       workingGroupIds,
       projectIds,
       mainEntityId,
-      ...data
+      ...input
     }: gp2Model.OutputUpdateDataObject,
+    updateOptions?: UpdateOutputOptions,
   ) {
     const environment = await this.getRestClient();
-    const user = await environment.getEntry(id);
+    const entry = await environment.getEntry(id);
+    const data = input;
+
+    if (updateOptions?.newVersion) {
+      const versionEntry = await environment.createEntry('outputVersion', {
+        fields: addLocaleToFields({
+          ...updateOptions.newVersion,
+        }),
+      });
+      await versionEntry.publish();
+
+      const { id: versionId } = versionEntry.sys;
+
+      data.versions = entry.fields?.versions?.['en-US']
+        ? [
+            ...entry.fields.versions['en-US']
+              .filter(
+                (version: { sys: { id: string } } | null) => version !== null,
+              )
+              .map(({ sys }: { sys: { id: string } }) => sys.id),
+            versionId,
+          ]
+        : [versionId];
+    }
 
     const fields = cleanOutput(data);
-    const result = await patchAndPublish(user, {
+    const result = await patchAndPublish(entry, {
       ...fields,
       relatedEntities: getLinkEntities([
         mainEntityId as string,
@@ -499,6 +523,11 @@ const cleanOutput = (
           return { ...acc, relatedOutputs: linkEntityValue(value as string[]) };
         case 'relatedEventIds':
           return { ...acc, relatedEvents: linkEntityValue(value as string[]) };
+        case 'versions':
+          return {
+            ...acc,
+            versions: value ? getLinkEntities(value as string[]) : undefined,
+          };
         default:
           return { ...acc, [key]: value };
       }

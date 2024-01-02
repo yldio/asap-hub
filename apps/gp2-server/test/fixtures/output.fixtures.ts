@@ -172,6 +172,7 @@ export const getOutputUpdateDataObject =
 
     return {
       ...outputCreateDataObject,
+      versions: [],
       updatedBy: 'userId',
     };
   };

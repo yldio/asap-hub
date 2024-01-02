@@ -156,6 +156,7 @@ type OutputFormProps = {
     | 'projects'
     | 'relatedOutputs'
     | 'relatedEvents'
+    | 'versions'
   >
 >;
 
@@ -226,6 +227,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   serverValidationErrors = [],
   clearServerValidationError = noop,
   createVersion = false,
+  versions = [],
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -357,18 +359,20 @@ const OutputForm: React.FC<OutputFormProps> = ({
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
-  const versions: ComponentProps<typeof OutputVersions>['versions'] =
+  const versionList: ComponentProps<typeof OutputVersions>['versions'] =
     createVersion
       ? [
+          ...versions,
           {
             id: '0',
             documentType,
+            type,
             title: title || '',
             link,
             addedDate,
           },
         ]
-      : [];
+      : versions;
 
   useEffect(() => {
     const newisGP2SupportedAlwaysTrue = Boolean(
@@ -512,7 +516,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
             <div css={containerStyles}>
               {createVersion && (
                 <OutputVersions
-                  versions={versions}
+                  versions={versionList}
                   versionAction={createVersion && 'edit'}
                 />
               )}

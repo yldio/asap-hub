@@ -9,6 +9,7 @@ import {
   RelatedEventsCard,
   RelatedResearchCard,
   SharedResearchDetailsTagsCard,
+  OutputVersions,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -83,6 +84,7 @@ type OutputDetailPageProps = Pick<
   | 'contributingCohorts'
   | 'description'
   | 'tags'
+  | 'versions'
 > & {
   isAdministrator: boolean;
   canVersion?: boolean;
@@ -175,9 +177,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               descriptionMD={output.description}
             />
           )}
-
           <OutputCohortsCard contributingCohorts={output.contributingCohorts} />
-
           {output.relatedOutputs?.length > 0 && (
             <RelatedResearchCard
               title="Related Outputs"
@@ -188,12 +188,12 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               tableTitles={['Type of Output', 'Output Name', 'Source Type']}
             />
           )}
-
           <RelatedEventsCard
             relatedEvents={output.relatedEvents}
             truncateFrom={3}
             hub="GP2"
           />
+          {output.versions && <OutputVersions versions={output.versions} />}
           <OutputAdditionalInformationCard {...output} />
           <CtaCard
             href={createMailTo(INVITE_SUPPORT_EMAIL)}

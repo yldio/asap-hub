@@ -1545,41 +1545,5 @@ describe('ResearchOutputs controller', () => {
         }),
       );
     });
-
-    test('Should create a grant document new version when flag is set and document type is missing', async () => {
-      researchOutputDataProviderMock.update.mockResolvedValueOnce(
-        researchOutputId,
-      );
-      researchOutputDataProviderMock.fetchById.mockResolvedValueOnce({
-        ...getResearchOutputUpdateData(),
-        teams: [{ id: 'team-id-a', displayName: 'Team A' }],
-        documentType: undefined,
-        title: 'Old Version Title',
-        type: '3D Printing',
-        link: 'http://example.com',
-        addedDate: '2021-05-21T13:18:31Z',
-      });
-
-      await researchOutputs.update(researchOutputId, {
-        ...getResearchOutputUpdateData(),
-        teams: ['team-id-a'],
-        createVersion: true,
-      });
-
-      expect(researchOutputDataProviderMock.update).toBeCalledWith(
-        researchOutputId,
-        expect.anything(),
-        {
-          newVersion: {
-            documentType: 'Grant Document',
-            link: 'http://example.com',
-            title: 'Old Version Title',
-            type: '3D Printing',
-            addedDate: '2021-05-21T13:18:31Z',
-          },
-          publish: true,
-        },
-      );
-    });
   });
 });

@@ -25,7 +25,7 @@
     "@aws-sdk/client-secrets-manager": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",
     "@aws-sdk/client-sqs": "3.478.0",
-    "@babel/runtime-corejs3": "7.23.6",
+    "@babel/runtime-corejs3": "7.23.7",
     "@googleapis/calendar": "^9.5.0",
     "@hapi/boom": "9.1.4",
     "@sentry/serverless": "6.19.7",
@@ -53,7 +53,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@babel/core": "7.23.6",
+    "@babel/core": "7.23.7",
     "@babel/parser": "7.23.6",
     "@types/apr-intercept": "workspace:*",
     "@types/async": "^3",

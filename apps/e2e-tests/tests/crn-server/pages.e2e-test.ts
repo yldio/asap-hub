@@ -1,10 +1,9 @@
-import nodeFetch from 'node-fetch';
 import { config } from '../../config';
 
 describe('Pages endpoints', () => {
   test('Should get the privacy-policy page', async () => {
     console.log({ origin: config.apiOrigin });
-    const response = await nodeFetch(
+    const response = await fetch(
       `${config.apiOrigin}/pages/privacy-policy`,
     );
     const body = await response.json();

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
@@ -22,7 +22,7 @@
     "@emotion/cache": "11.11.0",
     "@emotion/react": "11.11.1",
     "@emotion/server": "11.11.0",
-    "@types/node": "18.18.13",
+    "@types/node": "20.10.5",
     "aws-sdk": "2.1524.0",
     "babel-loader": "8.3.0",
     "babel-preset-react-app": "10.0.1",

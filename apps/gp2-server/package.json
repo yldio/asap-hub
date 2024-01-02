@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
@@ -81,7 +81,7 @@
     "@types/lodash.matches": "4.6.9",
     "@types/luxon": "1.27.1",
     "@types/mime-types": "2.1.4",
-    "@types/node": "18.18.13",
+    "@types/node": "20.10.5",
     "@types/parse-data-url": "3.0.2",
     "@types/serverless": "3.12.20",
     "@types/source-map-support": "0.5.10",

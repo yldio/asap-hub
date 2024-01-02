@@ -43,13 +43,13 @@ describe('ResearchTags controller', () => {
       await researchTags.fetch({
         take: 10,
         skip: 5,
-        filter: { entity: 'Research Output', type: 'some-type' },
+        filter: { type: 'some-type' },
       });
 
       const expectedParameters: Parameters<
         ResearchTagDataProvider['fetch']
       >[0] = {
-        filter: { entity: 'Research Output', type: 'some-type' },
+        filter: { type: 'some-type' },
         skip: 5,
         take: 10,
       };
@@ -93,42 +93,19 @@ describe('ResearchTags controller', () => {
       researchTagDataProvider.fetch.mockResolvedValue(tags);
 
       await researchTags.fetchAll({
-        filter: { entity: 'Research Output', type: 'some-type' },
+        filter: { type: 'some-type' },
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
         take: 100,
         skip: 0,
-        filter: { entity: 'Research Output', type: 'some-type' },
+        filter: { type: 'some-type' },
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
         take: 100,
         skip: 100,
-        filter: { entity: 'Research Output', type: 'some-type' },
-      });
-    });
-
-    test('Should pass the entity filter parameters as expected', async () => {
-      const tags = {
-        items: [],
-        total: 0,
-      };
-
-      researchTagDataProvider.fetch.mockResolvedValue(tags);
-
-      await researchTags.fetchAll({
-        filter: {
-          entity: 'Research Output',
-        },
-      });
-
-      expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 100,
-        skip: 0,
-        filter: {
-          entity: 'Research Output',
-        },
+        filter: { type: 'some-type' },
       });
     });
 
@@ -165,7 +142,6 @@ describe('ResearchTags controller', () => {
 
       await researchTags.fetchAll({
         filter: {
-          entity: 'Research Output',
           type: 'Software',
         },
       });
@@ -174,7 +150,6 @@ describe('ResearchTags controller', () => {
         take: 100,
         skip: 0,
         filter: {
-          entity: 'Research Output',
           type: 'Software',
         },
       });

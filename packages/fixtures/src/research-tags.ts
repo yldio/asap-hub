@@ -5,7 +5,6 @@ export const researchTagMethodResponse: ResearchTagResponse = {
   name: 'ELISA',
   category: 'Method',
   types: ['Protein Data', 'Assay', 'Spectroscopy'],
-  entities: ['Research Output'],
 };
 
 export const researchTagOrganismResponse: ResearchTagResponse = {
@@ -13,7 +12,6 @@ export const researchTagOrganismResponse: ResearchTagResponse = {
   name: 'Rat',
   category: 'Organism',
   types: ['Electrophysiology', 'Microscopy & Imaging', 'Model System'],
-  entities: ['Research Output'],
 };
 
 export const researchTagEnvironmentResponse: ResearchTagResponse = {
@@ -21,7 +19,6 @@ export const researchTagEnvironmentResponse: ResearchTagResponse = {
   name: 'In Vitro',
   category: 'Environment',
   types: ['Proposal', 'Report', 'Model System', 'Microscopy & Imaging'],
-  entities: ['Research Output'],
 };
 
 export const researchTagSubtypeResponse: ResearchTagResponse = {
@@ -29,7 +26,6 @@ export const researchTagSubtypeResponse: ResearchTagResponse = {
   name: 'Metabolite',
   category: 'Subtype',
   types: ['Microscopy & Imaging', 'Report', 'Model System'],
-  entities: ['Research Output'],
 };
 
 export const researchTagKeywordResponse: ResearchTagResponse = {
@@ -37,7 +33,6 @@ export const researchTagKeywordResponse: ResearchTagResponse = {
   name: 'Keyword1',
   category: 'Keyword',
   types: [],
-  entities: ['Research Output'],
 };
 
 export const researchTagsResponse: ResearchTagResponse[] = [

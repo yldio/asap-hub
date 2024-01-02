@@ -51,7 +51,6 @@ describe('/research-tags/ route', () => {
           take: 15,
           skip: 5,
           filter: {
-            entity: 'Research Output',
             type: 'Software',
           },
         });
@@ -60,7 +59,6 @@ describe('/research-tags/ route', () => {
         take: 15,
         skip: 5,
         filter: {
-          entity: 'Research Output',
           type: 'Software',
         },
       };

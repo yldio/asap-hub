@@ -1,7 +1,4 @@
-import {
-  isResearchTagCategory,
-  isResearchTagEntity,
-} from '../src/research-tag';
+import { isResearchTagCategory } from '../src/research-tag';
 
 describe('Research Tag Model', () => {
   describe('Category', () => {
@@ -11,16 +8,6 @@ describe('Research Tag Model', () => {
 
     it('should not recognise incorrect category', () => {
       expect(isResearchTagCategory('not-a-category')).toEqual(false);
-    });
-  });
-
-  describe('Entity', () => {
-    it('should recognise correct entity', () => {
-      expect(isResearchTagEntity('User')).toEqual(true);
-    });
-
-    it('should not recognise incorrect entity', () => {
-      expect(isResearchTagEntity('not-an-entity')).toEqual(false);
     });
   });
 });

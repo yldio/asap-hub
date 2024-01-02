@@ -14635,7 +14635,7 @@ export type FetchResearchOutputsQuery = {
 
 export type ResearchTagsContentFragment = Pick<
   ResearchTags,
-  'name' | 'category' | 'types' | 'entities'
+  'name' | 'category' | 'types'
 > & { sys: Pick<Sys, 'id'> };
 
 export type FetchResearchTagsQueryVariables = Exact<{
@@ -14652,7 +14652,7 @@ export type FetchResearchTagsQuery = {
     Pick<ResearchTagsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<ResearchTags, 'name' | 'category' | 'types' | 'entities'> & {
+          Pick<ResearchTags, 'name' | 'category' | 'types'> & {
             sys: Pick<Sys, 'id'>;
           }
         >
@@ -19128,7 +19128,6 @@ export const ResearchTagsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'category' } },
           { kind: 'Field', name: { kind: 'Name', value: 'types' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'entities' } },
         ],
       },
     },

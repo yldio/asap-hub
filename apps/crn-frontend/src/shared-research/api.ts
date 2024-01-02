@@ -150,9 +150,6 @@ export const getResearchTags = async (
 ): Promise<ResearchTagResponse[]> => {
   const options: FetchResearchTagsOptions = {
     take: 200,
-    filter: {
-      entity: 'Research Output',
-    },
   };
   const query = qs.stringify(options);
 

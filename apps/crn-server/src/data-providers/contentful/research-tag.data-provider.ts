@@ -3,9 +3,7 @@ import {
   ListResearchTagDataObject,
   ResearchTagDataObject,
   ResearchTagCategory,
-  ResearchTagEntity,
   isResearchTagCategory,
-  isResearchTagEntity,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -35,9 +33,6 @@ export class ResearchTagContentfulDataProvider
 
     if (filter.type) {
       where.types_contains_all = [filter.type];
-    }
-    if (filter.entity) {
-      where.entities_contains_all = [filter.entity];
     }
 
     const { researchTagsCollection } = await this.contentfulClient.request<
@@ -69,15 +64,6 @@ const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {
     throw new TypeError('Invalid category received from Contentful');
   }
 
-  if (
-    item.entities &&
-    !item.entities.every(
-      (entity) => entity !== null && isResearchTagEntity(entity),
-    )
-  ) {
-    throw new TypeError('Invalid entity received from Contentful');
-  }
-
   const types =
     item.types?.filter((type): type is string => typeof type === 'string') ||
     undefined;
@@ -88,9 +74,6 @@ const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {
     types,
     category: item.category
       ? (item.category as ResearchTagCategory)
-      : undefined,
-    entities: item.entities
-      ? (item.entities as ResearchTagEntity[])
       : undefined,
   };
 };

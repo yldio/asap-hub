@@ -1,4 +1,4 @@
-module.exports.description = '<Put your description here>';
+module.exports.description = 'Remove field entities from researchTags';
 
 module.exports.up = (migration) => {
   const researchTags = migration.editContentType('researchTags');

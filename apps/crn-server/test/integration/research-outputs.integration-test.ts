@@ -33,13 +33,9 @@ describe('research outputs', () => {
     loggedInUser = await fixtures.createUser(getUserFixture({}));
     app = AppHelper(() => loggedInUser);
 
-    const response = await supertest(app)
-      .get('/research-tags')
-      .query({
-        filter: {
-          entity: 'Research Output',
-        },
-      });
+    const response = await supertest(app).get('/research-tags').query({
+      take: 200,
+    });
     researchTags = await response.body.items;
   });
 

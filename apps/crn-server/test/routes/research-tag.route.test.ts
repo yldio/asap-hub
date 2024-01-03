@@ -79,18 +79,6 @@ describe('/research-tags/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test('Should return a validation error when an invalid entity is given', async () => {
-        const response = await supertest(app)
-          .get('/research-tags')
-          .query({
-            filter: {
-              entity: 'some-invalid-entity',
-            },
-          });
-
-        expect(response.status).toBe(400);
-      });
-
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(app).get('/research-tags').query({
           take: 'invalid param',

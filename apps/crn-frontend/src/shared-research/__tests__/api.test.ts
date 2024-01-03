@@ -300,9 +300,6 @@ describe('getResearchTags', () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/research-tags')
       .query({
-        filter: {
-          entity: 'Research Output',
-        },
         take: 200,
       })
       .reply(200, {});

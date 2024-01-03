@@ -11,11 +11,6 @@ export const researchTagFetchOptionsValidationSchema: JSONSchemaType<FetchResear
       filter: {
         type: 'object',
         properties: {
-          entity: {
-            enum: ['Research Output', 'User'],
-            type: 'string',
-            nullable: true,
-          },
           type: {
             type: 'string',
             nullable: true,

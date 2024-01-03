@@ -52,17 +52,6 @@ describe('Research Tags Data Provider', () => {
       );
     });
 
-    test('can filter by entity', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        researchTagsCollection: getContentfulGraphqlResearchTagResponse(),
-      });
-      await researchTagsDataProvider.fetch({ filter: { entity: 'User' } });
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({ where: { entities_contains_all: ['User'] } }),
-      );
-    });
-
     test('can filter by type', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchTagsCollection: getContentfulGraphqlResearchTagResponse(),
@@ -71,24 +60,6 @@ describe('Research Tags Data Provider', () => {
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ where: { types_contains_all: ['Report'] } }),
-      );
-    });
-
-    test('can filter by entity and type', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        researchTagsCollection: getContentfulGraphqlResearchTagResponse(),
-      });
-      await researchTagsDataProvider.fetch({
-        filter: { entity: 'User', type: 'Report' },
-      });
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          where: {
-            entities_contains_all: ['User'],
-            types_contains_all: ['Report'],
-          },
-        }),
       );
     });
 
@@ -116,24 +87,6 @@ describe('Research Tags Data Provider', () => {
       );
     });
 
-    test('Should throw an error if contentful returns an invalid entity', async () => {
-      const contentfulGraphqlResponse =
-        getContentfulGraphqlResearchTagResponse();
-      contentfulGraphqlResponse!.items![0]!.entities = [
-        'Research Output',
-        'invalid entity',
-      ];
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        researchTagsCollection: contentfulGraphqlResponse,
-      });
-
-      await expect(
-        researchTagsDataProvider.fetch({ take: 10, skip: 5 }),
-      ).rejects.toThrowError(
-        TypeError('Invalid entity received from Contentful'),
-      );
-    });
-
     test('Should return default values if result has null entries', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchTagsCollection: {
@@ -146,7 +99,6 @@ describe('Research Tags Data Provider', () => {
               name: null,
               types: null,
               category: null,
-              entities: null,
             },
           ],
         },
@@ -161,7 +113,6 @@ describe('Research Tags Data Provider', () => {
             name: '',
             types: undefined,
             category: undefined,
-            entities: undefined,
           },
         ],
       });

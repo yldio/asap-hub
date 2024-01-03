@@ -51,7 +51,6 @@ describe('/research-tags/ route', () => {
           take: 15,
           skip: 5,
           filter: {
-            entity: 'Research Output',
             type: 'Software',
           },
         });
@@ -60,7 +59,6 @@ describe('/research-tags/ route', () => {
         take: 15,
         skip: 5,
         filter: {
-          entity: 'Research Output',
           type: 'Software',
         },
       };
@@ -75,18 +73,6 @@ describe('/research-tags/ route', () => {
           .query({
             filter: {
               something: 'Research Output',
-            },
-          });
-
-        expect(response.status).toBe(400);
-      });
-
-      test('Should return a validation error when an invalid entity is given', async () => {
-        const response = await supertest(app)
-          .get('/research-tags')
-          .query({
-            filter: {
-              entity: 'some-invalid-entity',
             },
           });
 

@@ -26,7 +26,7 @@ const containerStyles = css({
 const itemStyles = css({
   display: 'grid',
   columnGap: rem(16),
-  gridTemplateColumns: `1fr ${rem(32)} 1fr`,
+  gridTemplateColumns: `1fr ${rem(38)} 1fr`,
   alignItems: 'center',
 });
 

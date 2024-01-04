@@ -11,8 +11,7 @@ const positionerStyles = css({
   position: 'relative',
   height: 0,
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    position: 'absolute',
-    left: 0,
+    position: 'relative',
     width: '100%',
   },
 });
@@ -26,21 +25,22 @@ const tooltipStyles = css({
   display: 'grid',
   gridTemplateRows: `auto ${triangleHeight / perRem}em`,
 
-  clipPath: `polygon(
-    0 0,
-    0 calc(100% - ${triangleHeight / perRem}em),
-    calc(50% - ${4.5 / perRem}em) calc(100% - ${triangleHeight / perRem}em),
-    50% 100%,
-    calc(50% + ${4.5 / perRem}em) calc(100% - ${triangleHeight / perRem}em),
-    100% calc(100% - ${triangleHeight / perRem}em),
-    100% 0
-  )`,
+  '::before': {
+    content: '""',
+    display: 'block',
+    width: 0,
+    height: 0,
+    position: 'absolute',
+    borderLeft: `${triangleHeight}px solid transparent`,
+    borderRight: `${triangleHeight}px solid transparent`,
+    borderTop: `${triangleHeight}px solid #000`,
+    bottom: 0,
+    right: '50%',
+    marginRight: `-${triangleHeight / 2}px`,
+  },
 
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    width: '100vw',
-    transform: 'none',
-    left: 0,
-    clipPath: 'none',
+    width: 'max-content',
   },
 });
 const bubbleStyles = css({
@@ -57,12 +57,6 @@ const bubbleStyles = css({
     maxWidth: '100%',
     marginLeft: `${12 / perRem}em`,
     marginRight: `${12 / perRem}em`,
-  },
-});
-
-const presentationStyles = css({
-  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
-    display: 'none',
   },
 });
 
@@ -90,7 +84,6 @@ const Tooltip: React.FC<TooltipProps> = ({
       <span role="tooltip" css={bubbleStyles}>
         {children}
       </span>
-      <span role="presentation" css={[themes.dark, presentationStyles]} />
     </span>
   </span>
 );

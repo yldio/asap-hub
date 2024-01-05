@@ -1932,15 +1932,57 @@ describe('OutputForm', () => {
   });
 
   describe('versioning', () => {
-    const renderWithCreateVersion = (title = 'test versioning') =>
-      render(<OutputForm {...defaultProps} title={title} createVersion />, {
-        wrapper: StaticRouter,
-      });
+    const renderWithCreateVersion = (
+      title = 'test versioning',
+      createVersion = true,
+      versions: gp2.OutputVersion[] = [],
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          title={title}
+          createVersion={createVersion}
+          versions={versions}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('does not display version history card when editing an output with no previous versions', () => {
+      renderWithCreateVersion(undefined, false, []);
+      expect(screen.queryByText('Version History')).not.toBeInTheDocument();
+    });
+
+    it('displays a version history card with the previous versions when editing an output with previous versions', () => {
+      const versions: gp2.OutputVersion[] = [
+        {
+          addedDate: '2021-12-28T14:00:00.000Z',
+          documentType: 'Article',
+          id: '12345',
+          title: 'Previous Version Test',
+        },
+      ];
+      renderWithCreateVersion(undefined, false, versions);
+      expect(screen.getByText('Version History')).toBeInTheDocument();
+      expect(screen.getByText('Previous Version Test')).toBeInTheDocument();
+      const versionHistoryCard =
+        screen.getByText('Version History').parentElement!;
+      expect(
+        within(versionHistoryCard).queryByText('test versioning'),
+      ).not.toBeInTheDocument();
+    });
+
     it('displays a version history row of the current version when versioning', () => {
       renderWithCreateVersion();
       expect(screen.getByText('Version History')).toBeInTheDocument();
-      expect(screen.getByText('test versioning')).toBeInTheDocument();
+      const versionHistoryCard =
+        screen.getByText('Version History').parentElement!;
+      expect(
+        within(versionHistoryCard).getByText('test versioning'),
+      ).toBeInTheDocument();
     });
+
     it('handles empty title', () => {
       renderWithCreateVersion('');
       expect(screen.getByText('Version History')).toBeInTheDocument();

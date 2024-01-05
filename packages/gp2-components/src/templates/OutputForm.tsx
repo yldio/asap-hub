@@ -514,11 +514,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
             )}
 
             <div css={containerStyles}>
-              {createVersion && (
-                <OutputVersions
-                  versions={versionList}
-                  versionAction={createVersion && 'edit'}
-                />
+              {versionList.length > 0 && (
+                <OutputVersions versions={versionList} versionAction="edit" />
               )}
               <FormCard title="What are you sharing?">
                 <LabeledTextField

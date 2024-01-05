@@ -197,7 +197,7 @@ it('triggers export with the same parameters and custom file name', async () => 
     }),
   );
 
-  userEvent.click(getByText(/export/i));
+  userEvent.click(getByText(/csv/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
     expect.anything(),
@@ -232,7 +232,7 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  userEvent.click(getByText(/export as csv/i));
+  userEvent.click(getByText(/csv/i));
   await waitFor(() =>
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {

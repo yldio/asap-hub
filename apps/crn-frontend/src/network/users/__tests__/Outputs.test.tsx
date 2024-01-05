@@ -185,7 +185,7 @@ it('triggers export with the same parameters and custom filename', async () => {
     }),
   );
 
-  userEvent.click(getByText(/export/i));
+  userEvent.click(getByText(/csv/i));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
     expect.anything(),

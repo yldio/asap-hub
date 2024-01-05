@@ -1,6 +1,6 @@
+import { css } from '@emotion/react';
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
-import { css } from '@emotion/react';
 import { rem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
@@ -31,30 +31,28 @@ const ListControls: React.FC<ListControlsProps> = ({
   isListView,
   listViewHref,
   cardViewHref,
-}) => {
-  return (
-    <span css={containerStyles}>
-      <strong>View as:</strong>
-      <DropdownButton
-        noMargin
-        buttonChildren={() => (
-          <>
-            <span>{isListView ? 'List' : 'Card'}</span>
-            {dropdownChevronIcon}
-          </>
-        )}
-      >
-        {{
-          item: <>List</>,
-          href: listViewHref,
-        }}
-        {{
-          item: <>Card</>,
-          href: cardViewHref,
-        }}
-      </DropdownButton>
-    </span>
-  );
-};
+}) => (
+  <span css={containerStyles}>
+    <strong>View as:</strong>
+    <DropdownButton
+      noMargin
+      buttonChildren={() => (
+        <>
+          <span>{isListView ? 'List' : 'Card'}</span>
+          {dropdownChevronIcon}
+        </>
+      )}
+    >
+      {{
+        item: <>List</>,
+        href: listViewHref,
+      }}
+      {{
+        item: <>Card</>,
+        href: cardViewHref,
+      }}
+    </DropdownButton>
+  </span>
+);
 
 export default ListControls;

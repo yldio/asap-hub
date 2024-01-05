@@ -69,26 +69,9 @@ it('renders page controls', () => {
   );
 });
 
-it('renders export link', () => {
+it('renders export as csv button', () => {
   const { rerender } = render(
     <ResultList {...props} exportResults={undefined}>
-      cards
-    </ResultList>,
-  );
-  expect(screen.queryByText(/export/i)).toBeNull();
-  const mockExport = jest.fn(() => Promise.resolve());
-  rerender(
-    <ResultList {...props} exportResults={mockExport}>
-      cards
-    </ResultList>,
-  );
-  userEvent.click(screen.getByText(/export/i));
-  expect(mockExport).toHaveBeenCalled();
-});
-
-it('renders export csv as admin', () => {
-  const { rerender } = render(
-    <ResultList {...props} exportResults={undefined} isAdministrator>
       cards
     </ResultList>,
   );
@@ -96,7 +79,7 @@ it('renders export csv as admin', () => {
   expect(screen.queryByText(/csv/i)).toBeNull();
   const mockExport = jest.fn(() => Promise.resolve());
   rerender(
-    <ResultList {...props} exportResults={mockExport} isAdministrator>
+    <ResultList {...props} exportResults={mockExport}>
       cards
     </ResultList>,
   );
@@ -105,26 +88,27 @@ it('renders export csv as admin', () => {
   expect(mockExport).toHaveBeenCalled();
 });
 
-it('triggers an error toast when export fails', async () => {
-  const mockToast = jest.fn();
-  const mockExport = jest.fn(() => Promise.reject());
-  render(
-    <ToastContext.Provider value={mockToast}>
-      <ResultList {...props} exportResults={mockExport} isAdministrator>
-        cards
-      </ResultList>
-    </ToastContext.Provider>,
+it('renders view as dropdown when view and card links are available', () => {
+  const { rerender } = render(
+    <ResultList {...props} exportResults={undefined}>
+      cards
+    </ResultList>,
   );
-  userEvent.click(screen.getByText(/csv/i));
-  expect(mockExport).toHaveBeenCalled();
-  await waitFor(() =>
-    expect(mockToast).toHaveBeenCalledWith(
-      expect.stringMatching(/issue exporting/i),
-    ),
+  expect(screen.queryByText(/view as:/i)).toBeNull();
+  rerender(
+    <ResultList
+      {...props}
+      exportResults={undefined}
+      listViewHref="/list"
+      cardViewHref="/card"
+    >
+      cards
+    </ResultList>,
   );
+  expect(screen.getByText(/view as:/i)).toBeVisible();
 });
 
-it('triggers an error toast when export link fails', async () => {
+it('triggers an error toast when export fails', async () => {
   const mockToast = jest.fn();
   const mockExport = jest.fn(() => Promise.reject());
   render(
@@ -134,7 +118,7 @@ it('triggers an error toast when export link fails', async () => {
       </ResultList>
     </ToastContext.Provider>,
   );
-  userEvent.click(screen.getByText(/export as csv/i));
+  userEvent.click(screen.getByText(/csv/i));
   expect(mockExport).toHaveBeenCalled();
   await waitFor(() =>
     expect(mockToast).toHaveBeenCalledWith(

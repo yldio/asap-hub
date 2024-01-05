@@ -10,7 +10,6 @@ import {
   EventCard,
   ResultList as ResultListComponent,
 } from '@asap-hub/react-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { eventMapper } from '../events/EventsList';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useTagSearchResults } from './state';
@@ -21,8 +20,6 @@ export type ResultListProps = {
 };
 const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const currentUser = useCurrentUserGP2();
-  const isAdministrator = currentUser?.role === 'Administrator';
 
   const { tags } = useSearch();
   const { items, total } = useTagSearchResults({
@@ -39,7 +36,6 @@ const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
-      isAdministrator={isAdministrator}
     >
       {items.map((result) => {
         // eslint-disable-next-line no-underscore-dangle

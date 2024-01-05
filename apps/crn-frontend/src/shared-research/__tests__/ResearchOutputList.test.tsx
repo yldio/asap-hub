@@ -87,7 +87,7 @@ it('triggers and export with the same parameters', async () => {
     createResearchOutputListAlgoliaResponse(2),
   );
   const { getByText } = await renderResearchOutputList('example');
-  userEvent.click(getByText(/export/i));
+  userEvent.click(getByText(/csv/i));
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
     expect.stringMatching(/SharedOutputs_\d+\.csv/),
     expect.anything(),

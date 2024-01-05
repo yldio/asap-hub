@@ -16,10 +16,14 @@ const envDefaults: Record<string, boolean> = {
   production: false,
 };
 
+let currentEnvironment: string | undefined;
+
+export const setEnvironment = (environment?: string) => {
+  currentEnvironment = environment;
+};
+
 export const isEnabled = (flag: Flag): boolean =>
-  overrides[flag] ??
-  envDefaults[process.env.VITE_APP_ENVIRONMENT ?? 'development'] ??
-  false;
+  overrides[flag] ?? envDefaults[currentEnvironment ?? 'development'] ?? false;
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {

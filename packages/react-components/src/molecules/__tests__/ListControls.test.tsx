@@ -1,10 +1,10 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import ListControls from '../ListControls';
 
 it('passes through links', () => {
-  const { getByTitle } = render(
+  const { getAllByText, getByText, getByRole } = render(
     <ListControls
       cardViewHref="/card?123"
       listViewHref="/list?321"
@@ -12,12 +12,16 @@ it('passes through links', () => {
     />,
     { wrapper: MemoryRouter },
   );
-  expect(getByTitle(/list/i).closest('a')).toHaveAttribute('href', '/list?321');
-  expect(getByTitle(/card/i).closest('a')).toHaveAttribute('href', '/card?123');
+  fireEvent.click(getByRole('button'));
+  expect(getByText(/list/i).closest('a')).toHaveAttribute('href', '/list?321');
+  expect(getAllByText(/card/i)[1]!.closest('a')).toHaveAttribute(
+    'href',
+    '/card?123',
+  );
 });
 
 it('indicates which option is selected', () => {
-  const { getByText, rerender } = render(
+  const { getByRole, rerender } = render(
     <ListControls
       cardViewHref="/card?123"
       listViewHref="/list?321"
@@ -25,12 +29,7 @@ it('indicates which option is selected', () => {
     />,
     { wrapper: MemoryRouter },
   );
-  expect(
-    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
-  ).toBe('bold');
-  expect(
-    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
-  ).toBe('');
+  expect(getByRole('button').closest('span')).toHaveTextContent(/card/i);
   rerender(
     <ListControls
       cardViewHref="/card?123"
@@ -38,10 +37,5 @@ it('indicates which option is selected', () => {
       isListView={true}
     />,
   );
-  expect(
-    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
-  ).toBe('');
-  expect(
-    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
-  ).toBe('bold');
+  expect(getByRole('button').closest('span')).toHaveTextContent(/list/i);
 });

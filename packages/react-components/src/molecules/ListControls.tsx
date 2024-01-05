@@ -1,43 +1,24 @@
-import { Link } from 'react-router-dom';
+import { dropdownChevronIcon } from '../icons';
+import DropdownButton from './DropdownButton';
 import { css } from '@emotion/react';
-
-import { charcoal, fern, lead } from '../colors';
-import { perRem, lineHeight } from '../pixels';
-import { cardViewIcon, listViewIcon } from '../icons';
+import { rem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
-  display: 'grid',
-  gridAutoFlow: 'column',
-  columnGap: '24px',
-  width: 'fit-content',
-  margin: `${12 / perRem}em 0`,
-});
-
-const linkStyles = css({
-  color: charcoal.rgb,
-  textDecoration: 'none',
-  outline: 'none',
-});
-
-const textStyles = css({
-  margin: 0,
   display: 'flex',
-  fontSize: `${18 / perRem}em`,
-  svg: {
-    stroke: lead.rgb,
+  alignItems: 'center',
+  gap: rem(15),
+  'span + svg': {
+    width: '11px',
   },
-});
-const iconStyles = css({
-  display: 'inline-block',
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${14 / perRem}em`,
-});
+  button: {
+    padding: `${rem(8)} ${rem(24)}`,
+  },
 
-const activeStyles = css({
-  fontWeight: 'bold',
-  svg: {
-    stroke: fern.rgb,
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginTop: rem(24),
+    width: '100%',
   },
 });
 
@@ -50,21 +31,30 @@ const ListControls: React.FC<ListControlsProps> = ({
   isListView,
   listViewHref,
   cardViewHref,
-}) => (
-  <div css={containerStyles}>
-    <Link to={cardViewHref} css={linkStyles}>
-      <p css={[textStyles, !isListView && activeStyles]}>
-        <span css={iconStyles}>{cardViewIcon}</span>
-        Card View
-      </p>
-    </Link>
-    <Link to={listViewHref} css={linkStyles}>
-      <p css={[textStyles, isListView && activeStyles]}>
-        <span css={iconStyles}>{listViewIcon}</span>
-        List View
-      </p>
-    </Link>
-  </div>
-);
+}) => {
+  return (
+    <span css={containerStyles}>
+      <strong>View as:</strong>
+      <DropdownButton
+        noMargin
+        buttonChildren={() => (
+          <>
+            <span>{isListView ? 'List' : 'Card'}</span>
+            {dropdownChevronIcon}
+          </>
+        )}
+      >
+        {{
+          item: <>List</>,
+          href: listViewHref,
+        }}
+        {{
+          item: <>Card</>,
+          href: cardViewHref,
+        }}
+      </DropdownButton>
+    </span>
+  );
+};
 
 export default ListControls;

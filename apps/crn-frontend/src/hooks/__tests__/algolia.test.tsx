@@ -2,7 +2,6 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { setCurrentOverrides } from '@asap-hub/flags';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 
@@ -35,7 +34,6 @@ describe('useAlgolia', () => {
     );
   });
   it('constructs an algolia client with a junk key', async () => {
-    setCurrentOverrides({ CONTENTFUL: false });
     const mockAlgoliaSearchClientFactory =
       algoliaSearchClientFactory as jest.MockedFunction<
         typeof algoliaSearchClientFactory
@@ -64,7 +62,6 @@ describe('useAlgolia', () => {
       algoliaSearchClientFactory as jest.MockedFunction<
         typeof algoliaSearchClientFactory
       >;
-    setCurrentOverrides({ CONTENTFUL: false });
 
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (

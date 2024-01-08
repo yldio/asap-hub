@@ -5,32 +5,34 @@ import {
   getOverrides,
   setCurrentOverrides,
   enable,
+  setEnvironment,
 } from '..';
 
-const originalNodeEnv = process.env.VITE_APP_ENVIRONMENT;
 beforeEach(() => {
-  process.env.VITE_APP_ENVIRONMENT = 'unknown';
+  setEnvironment('unknown');
 });
-afterEach(() => {
-  process.env.VITE_APP_ENVIRONMENT = originalNodeEnv;
+
+it('defaults to development (in which we default flags to true) for when an environment is not set', () => {
+  setEnvironment(undefined);
+  expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });
 
 it('disables flags in unknown environments', () => {
-  process.env.VITE_APP_ENVIRONMENT = 'unknown';
+  setEnvironment('unknown');
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 it.each(['test', 'development'])('enables flags in %s', (nodeEnv) => {
-  process.env.VITE_APP_ENVIRONMENT = nodeEnv;
+  setEnvironment(nodeEnv);
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });
 it.each(['production'])('disables flags in %s', (nodeEnv) => {
-  process.env.VITE_APP_ENVIRONMENT = nodeEnv;
+  setEnvironment(nodeEnv);
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 
 describe('in test', () => {
   beforeEach(() => {
-    process.env.VITE_APP_ENVIRONMENT = 'test';
+    setEnvironment('test');
   });
 
   describe('setCurrentOverrides,', () => {

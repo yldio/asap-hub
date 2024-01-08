@@ -39,7 +39,9 @@ const ListControls: React.FC<ListControlsProps> = ({
       noMargin
       buttonChildren={() => (
         <>
-          <span css={{ marginRight: rem(10) }}>{isListView ? 'List' : 'Card'}</span>
+          <span css={{ marginRight: rem(10) }}>
+            {isListView ? 'List' : 'Card'}
+          </span>
           {dropdownChevronIcon}
         </>
       )}

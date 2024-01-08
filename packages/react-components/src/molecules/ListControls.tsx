@@ -9,9 +9,10 @@ const containerStyles = css({
   gap: rem(15),
   'span + svg': {
     width: '11px',
+    marginRight: '10px',
   },
   button: {
-    padding: `${rem(8)} ${rem(24)}`,
+    padding: `${rem(8)} ${rem(16)}`,
   },
 
   [`@media (max-width: ${tabletScreen.min}px)`]: {
@@ -38,7 +39,7 @@ const ListControls: React.FC<ListControlsProps> = ({
       noMargin
       buttonChildren={() => (
         <>
-          <span>{isListView ? 'List' : 'Card'}</span>
+          <span css={{ marginRight: rem(10) }}>{isListView ? 'List' : 'Card'}</span>
           {dropdownChevronIcon}
         </>
       )}

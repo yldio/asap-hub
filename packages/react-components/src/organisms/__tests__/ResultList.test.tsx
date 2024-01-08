@@ -88,7 +88,7 @@ it('renders export as csv button', () => {
   expect(mockExport).toHaveBeenCalled();
 });
 
-it('renders view as dropdown when view and card links are available', () => {
+it('renders view as dropdown when list and card links are available', () => {
   const { rerender } = render(
     <ResultList {...props} exportResults={undefined}>
       cards

@@ -8,6 +8,6 @@
     "@playwright/test": "^1.30.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.23.7"
+    "@babel/runtime-corejs3": "7.23.8"
   }
 }

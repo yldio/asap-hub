@@ -2,7 +2,9 @@ import { createAuthUser } from '@asap-hub/fixtures';
 import { AuthHandler } from '@asap-hub/server-common';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { getListReminderResponse } from '../fixtures/reminder.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
+import { reminderControllerMock } from '../mocks/reminder.controller.mock';
 
 describe('/reminders/ route', () => {
   const getLoggedUser = jest.fn().mockReturnValue(createAuthUser());
@@ -12,6 +14,7 @@ describe('/reminders/ route', () => {
   };
   const app = appFactory({
     authHandler: authHandlerMock,
+    reminderController: reminderControllerMock,
     logger: loggerMock,
   });
 
@@ -21,6 +24,11 @@ describe('/reminders/ route', () => {
 
   describe('GET /reminders', () => {
     test('Should return the empty result', async () => {
+      reminderControllerMock.fetch.mockResolvedValueOnce({
+        items: [],
+        total: 0,
+      });
+
       const response = await supertest(app).get('/reminders').query({
         timezone: 'Europe/London',
       });
@@ -29,6 +37,18 @@ describe('/reminders/ route', () => {
         total: 0,
         items: [],
       });
+    });
+
+    test('Should return the results correctly', async () => {
+      reminderControllerMock.fetch.mockResolvedValueOnce(
+        getListReminderResponse(),
+      );
+
+      const response = await supertest(app).get('/reminders').query({
+        timezone: 'Europe/London',
+      });
+
+      expect(response.body).toEqual(getListReminderResponse());
     });
 
     test('Should return 403 when the user is not logged in', async () => {

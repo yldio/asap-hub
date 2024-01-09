@@ -1,15 +1,18 @@
 import { DateTime } from 'luxon';
 import Boom from '@hapi/boom';
-import { ListReminderResponse } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { Response, Router } from 'express';
+import ReminderController from '../controllers/reminder.controller';
 import { validateReminderParameters } from '../validation/reminder.validation';
 
-export const reminderRouteFactory = (): Router => {
+export const reminderRouteFactory = (
+  reminderController: ReminderController,
+): Router => {
   const reminderRoutes = Router();
 
   reminderRoutes.get(
     '/reminders',
-    async (req, res: Response<ListReminderResponse>) => {
+    async (req, res: Response<gp2Model.ListReminderResponse>) => {
       // we'd not be able to get here without the user logged-in but TS doesn't know that
       /* istanbul ignore next */
       if (!req.loggedInUser) {
@@ -25,10 +28,12 @@ export const reminderRouteFactory = (): Router => {
         });
       }
 
-      res.json({
-        total: 0,
-        items: [],
+      const result = await reminderController.fetch({
+        userId: req.loggedInUser.id,
+        timezone,
       });
+
+      res.json(result);
     },
   );
 

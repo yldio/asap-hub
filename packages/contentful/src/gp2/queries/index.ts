@@ -8,6 +8,7 @@ export * from './news.queries';
 export * from './output.queries';
 export * from './page.queries';
 export * from './project.queries';
+export * from './reminder.queries';
 export * from './stats.queries';
 export * from './tag.queries';
 export * from './user.queries';

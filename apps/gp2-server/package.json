@@ -25,6 +25,7 @@
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
+    "@asap-hub/routing": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/validation": "workspace:*",
@@ -52,6 +53,7 @@
     "odata-query": "7.0.4",
     "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
+    "react-router-dom": "5.3.4",
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",
     "uuid": "8.3.2"

@@ -20,7 +20,7 @@
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@babel/runtime-corejs3": "7.23.7",
+    "@babel/runtime-corejs3": "7.23.8",
     "core-js": "3.34.0"
   },
   "devDependencies": {

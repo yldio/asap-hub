@@ -16,7 +16,7 @@
     "@algolia/client-common": "4.22.0",
     "@algolia/client-search": "4.22.0",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "7.23.7",
+    "@babel/runtime-corejs3": "7.23.8",
     "algoliasearch": "4.22.0",
     "prettier": "3.0.2"
   },

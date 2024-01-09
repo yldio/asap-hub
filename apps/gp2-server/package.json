@@ -57,9 +57,9 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.23.7",
+    "@babel/preset-env": "7.23.8",
     "@babel/preset-typescript": "7.23.3",
-    "@babel/runtime-corejs3": "7.23.7",
+    "@babel/runtime-corejs3": "7.23.8",
     "@graphql-codegen/cli": "2.16.5",
     "@graphql-codegen/gql-tag-operations-preset": "1.7.4",
     "@graphql-codegen/introspection": "2.2.3",

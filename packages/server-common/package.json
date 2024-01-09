@@ -25,7 +25,7 @@
     "@aws-sdk/client-secrets-manager": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",
     "@aws-sdk/client-sqs": "3.478.0",
-    "@babel/runtime-corejs3": "7.23.7",
+    "@babel/runtime-corejs3": "7.23.8",
     "@googleapis/calendar": "^9.5.0",
     "@hapi/boom": "9.1.4",
     "@sentry/serverless": "6.19.7",

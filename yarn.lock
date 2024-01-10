@@ -22347,6 +22347,8 @@ __metadata:
       built: false
     fsevents:
       built: false
+    prettier@3.0.3:
+      unplugged: true
     serverless-offline-aws-eventbridge@1.6.7:
       unplugged: true
     serverless-offline-ssm@6.2.0:

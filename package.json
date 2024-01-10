@@ -96,6 +96,9 @@
     "fsevents": {
       "built": false
     },
+    "prettier@3.0.3": {
+      "unplugged": true
+    },
     "serverless-offline@8.8.1": {
       "unplugged": true
     },

@@ -97,6 +97,21 @@ describe('User data provider', () => {
       expect(result).toEqual(null);
     });
 
+    test.each(['middleName', 'nickname'] satisfies Array<keyof UserDataObject>)(
+      'Should not return a field when its an emptry string for %s',
+      async (field) => {
+        const mockResponse = getContentfulGraphqlUser();
+        mockResponse[field] = '';
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+
+        expect(result![field]).toBeUndefined();
+      },
+    );
+
     test('should map social properties and orcid onto `social` object', async () => {
       const socialProps = {
         github: '@github',

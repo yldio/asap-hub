@@ -62,6 +62,23 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
+    test.each(['middleName', 'nickname'] satisfies Array<
+      keyof gp2Model.UserDataObject
+    >)(
+      'Should not return a field when its an emptry string for %s',
+      async (field) => {
+        const mockResponse = getContentfulGraphqlUser();
+        mockResponse[field] = '';
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+
+        expect(result![field]).toBeUndefined();
+      },
+    );
+
     test('Should throw an error when the ORCID Works field has invalid data', async () => {
       const mockResponse = getContentfulGraphqlUser();
       mockResponse.orcidWorks = [null];

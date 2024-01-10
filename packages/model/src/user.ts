@@ -43,6 +43,8 @@ export interface Invitee {
   institution?: string;
   jobTitle?: string;
   lastName: string;
+  middleName?: string;
+  nickname?: string;
 }
 
 export interface UserTeam {

@@ -48,7 +48,7 @@ const ResearchOutputRelatedEventsCard: React.FC<
   getRelatedEventSuggestions = noop,
   onChangeRelatedEvents = noop,
   title = 'Are there any related CRN Hub events?',
-  description = 'List all CRN Hub events that are related to this output.',
+  description = 'Find all events related to this output.',
   labelTitle = 'Related CRN Hub Events',
 }) => (
   <FormCard title={title} description={description}>

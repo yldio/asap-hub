@@ -18,7 +18,7 @@ const SharedResearchDetailsTagsCard: React.FC<
   <Card>
     {displayDescription && (
       <div css={{ paddingBottom: `${12 / perRem}em` }}>
-        <Headline2 styleAsHeading={4}>Description</Headline2>
+        <Headline2 noMargin>Description</Headline2>
         <Markdown value={descriptionMD}></Markdown>
         {descriptionMD === '' && <RichText poorText text={description} />}
       </div>

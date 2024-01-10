@@ -27,8 +27,6 @@ const headerNoResultsStyles = css({
   },
 });
 
-const exportStyles = css({ marginLeft: `${24 / perRem}em` });
-
 const exportSectionStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -54,7 +52,7 @@ const exportButton = css({
     },
 });
 
-const resultsParagraphStyles = css({
+const resultsHeaderStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   width: '100%',
@@ -63,6 +61,17 @@ const resultsParagraphStyles = css({
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+  },
+});
+
+const viewOptionsStyles = css({
+  display: 'flex',
+  gap: `${33 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+    gap: 0,
   },
 });
 
@@ -108,7 +117,6 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly noResultsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
   readonly algoliaIndexName?: string;
-  readonly isAdministrator?: boolean;
 };
 const ResultList: React.FC<ResultListProps> = ({
   icon,
@@ -120,7 +128,6 @@ const ResultList: React.FC<ResultListProps> = ({
   children,
   noResultsComponent,
   algoliaIndexName,
-  isAdministrator,
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
@@ -135,19 +142,21 @@ const ResultList: React.FC<ResultListProps> = ({
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >
         {numberOfItems > 0 && (
-          <Paragraph
-            styles={
-              exportResults && isAdministrator
-                ? resultsParagraphStyles
-                : undefined
-            }
-          >
+          <div css={exportResults && resultsHeaderStyles}>
             <strong>
               {numberOfItems} result{numberOfItems === 1 || 's'} found
             </strong>
 
-            {exportResults &&
-              (isAdministrator ? (
+            <span css={viewOptionsStyles}>
+              {cardViewHref && listViewHref && (
+                <ListControls
+                  isListView={isListView}
+                  cardViewHref={cardViewHref}
+                  listViewHref={listViewHref}
+                />
+              )}
+
+              {exportResults && (
                 <span css={exportSectionStyles}>
                   <strong>Export as:</strong>
                   <Button
@@ -165,30 +174,9 @@ const ResultList: React.FC<ResultListProps> = ({
                     CSV
                   </Button>
                 </span>
-              ) : (
-                <span css={exportStyles}>
-                  <Button
-                    linkStyle
-                    onClick={() =>
-                      exportResults().catch(() =>
-                        toast(
-                          'There was an issue exporting to CSV. Please try again.',
-                        ),
-                      )
-                    }
-                  >
-                    Export as CSV
-                  </Button>
-                </span>
-              ))}
-          </Paragraph>
-        )}
-        {cardViewHref && listViewHref && (
-          <ListControls
-            isListView={isListView}
-            cardViewHref={cardViewHref}
-            listViewHref={listViewHref}
-          />
+              )}
+            </span>
+          </div>
         )}
       </header>
       {numberOfItems > 0 ? (

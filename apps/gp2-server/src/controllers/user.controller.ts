@@ -158,9 +158,32 @@ const parseUserToResponse = (
   loggedInUserId?: string,
 ): gp2.UserResponse => ({
   ...user,
-  displayName: `${user.firstName} ${user.lastName}`,
+  displayName: getDisplayName(
+    user.firstName,
+    user.lastName,
+    user.middleName,
+    user.nickname,
+  ),
   ...(user.id === loggedInUserId && { telephone }),
   projectIds: user.projects.map(({ id }) => id),
   workingGroupIds: user.workingGroups.map(({ id }) => id),
   tagIds: user.tags.map(({ id }) => id),
 });
+
+const getFirstLettersInCapitalsAndDots = (str: string) => {
+  const firstLetters = str
+    .split(' ')
+    .map((word) => `${word.charAt(0).toUpperCase()}. `)
+    .join('');
+
+  return firstLetters;
+};
+const getDisplayName = (
+  firstName: string,
+  lastName: string,
+  middleName?: string,
+  nickname?: string,
+) =>
+  `${firstName} ${nickname ? `(${nickname}) ` : ''}${
+    middleName ? `${getFirstLettersInCapitalsAndDots(middleName)}` : ''
+  }${lastName}`;

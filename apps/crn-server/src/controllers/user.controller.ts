@@ -156,13 +156,35 @@ export const parseUserToResponse = ({
   connections: _,
   ...user
 }: UserDataObject): UserResponse => {
-  const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
   const dismissedGettingStarted = !!user.dismissedGettingStarted;
   return {
     ...user,
-    displayName,
+    displayName: getDisplayName(
+      user.firstName,
+      user.lastName,
+      user.middleName,
+      user.nickname,
+    ),
     dismissedGettingStarted,
     onboarded,
   };
 };
+
+const getFirstLettersInCapitalsAndDots = (str: string) => {
+  const firstLetters = str
+    .split(' ')
+    .map((word) => `${word.charAt(0).toUpperCase()}. `)
+    .join('');
+
+  return firstLetters;
+};
+const getDisplayName = (
+  firstName: string,
+  lastName: string,
+  middleName?: string,
+  nickname?: string,
+) =>
+  `${firstName} ${nickname ? `(${nickname}) ` : ''}${
+    middleName ? `${getFirstLettersInCapitalsAndDots(middleName)}` : ''
+  }${lastName}`;

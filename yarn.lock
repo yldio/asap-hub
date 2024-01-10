@@ -12926,11 +12926,11 @@ __metadata:
   linkType: hard
 
 "@googleapis/calendar@npm:^9.5.0":
-  version: 9.5.0
-  resolution: "@googleapis/calendar@npm:9.5.0"
+  version: 9.5.1
+  resolution: "@googleapis/calendar@npm:9.5.1"
   dependencies:
     googleapis-common: ^7.0.0
-  checksum: 7d1fcac0c0366321c60b4d617a0254684ff9fcabc46d71529a21c06be23f7fd2044563a5fb9da55d9141bba018f8197cd10752bd5e63d98e183480eba2bcd27a
+  checksum: 1920bb98fd1fa5ef80803be0555999b0b8a21d053d0937a83c4933caa212dbb50dccc4f25197f67593a4cfe9df712dbf19e21746992323a0870036c7929dd8dd
   languageName: node
   linkType: hard
 

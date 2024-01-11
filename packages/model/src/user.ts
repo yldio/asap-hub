@@ -160,6 +160,8 @@ export type UserCreateDataObject = {
   jobTitle?: string;
   labIds: string[];
   lastName: string;
+  middleName?: string;
+  nickname?: string;
   onboarded?: boolean;
   orcid?: string;
   orcidLastModifiedDate?: string;

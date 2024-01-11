@@ -313,6 +313,10 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
 
 export const userPatchRequest: gp2Model.UserPatchRequest = {
   onboarded: true,
+  firstName: 'John',
+  middleName: 'Edward',
+  lastName: 'Smith',
+  nickname: 'Johnny',
   country: 'United Kingdom',
   city: 'Manchester',
   orcid: '1234-1234-1234-1234',

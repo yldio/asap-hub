@@ -220,6 +220,10 @@ export const getListUserResponse = (): ListUserResponse => ({
 export const getUserDataObjects = () => [getUserDataObject()];
 
 export const userPatchRequest: UserPatchRequest = {
+  firstName: 'John',
+  middleName: 'Edward',
+  lastName: 'Smith',
+  nickname: 'Johnny',
   social: { github: 'johnytiago' },
   jobTitle: 'CEO',
   questions: ['To be or not to be?'],

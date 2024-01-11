@@ -850,6 +850,7 @@ describe('User data provider', () => {
           '123',
           {
             firstName: 'Colin',
+            middleName: 'Mike',
           },
 
           { suppressConflict: true },
@@ -857,6 +858,7 @@ describe('User data provider', () => {
         expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
         expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
           firstName: 'Colin',
+          middleName: 'Mike',
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();

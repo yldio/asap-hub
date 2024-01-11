@@ -161,6 +161,8 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   ],
   lastName: 'Hardy',
   membershipStatus: [inactiveUserMembershipStatus],
+  middleName: 'Edward',
+  nickname: 'Iron Man',
   onboarded: true,
   role: 'Grantee',
   _tags: [

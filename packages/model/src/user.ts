@@ -129,6 +129,8 @@ export type UserListItemDataObject = Pick<
   | 'labs'
   | 'lastName'
   | 'membershipStatus'
+  | 'middleName'
+  | 'nickname'
   | 'onboarded'
   | 'role'
 > & {

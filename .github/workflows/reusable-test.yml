@@ -95,6 +95,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: yarn cache clean
+      - run: yarn install
       - name: Build type definitions
         shell: bash
         run: yarn build:typecheck

@@ -132,6 +132,8 @@ export type UserCreateDataObject = Omit<
   | 'connections'
   | 'tags'
   | 'social'
+  | 'middleName'
+  | 'nickname'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;

@@ -48,7 +48,9 @@ describe('KeyInformatiomModal', () => {
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
     const firstName = 'Gonçalo';
+    const middleName = 'Matias';
     const lastName = 'Ramos';
+    const nickname = 'Pistoleiro';
     const degrees: KeyInformationModalProps['degrees'] = ['PhD'];
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
@@ -58,7 +60,9 @@ describe('KeyInformatiomModal', () => {
     const region = 'Europe';
     renderKeyInformation({
       firstName,
+      middleName,
       lastName,
+      nickname,
       degrees,
       positions,
       country,
@@ -69,7 +73,9 @@ describe('KeyInformatiomModal', () => {
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       firstName,
+      middleName,
       lastName,
+      nickname,
       degrees,
       positions,
       country,
@@ -81,7 +87,9 @@ describe('KeyInformatiomModal', () => {
 
   it('calls onSave with the updated fields', async () => {
     const firstName = 'Gonçalo';
+    const middleName = 'Matias';
     const lastName = 'Ramos';
+    const nickname = 'Pistoleiro';
     const degrees: KeyInformationModalProps['degrees'] = ['PhD'];
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
@@ -92,7 +100,9 @@ describe('KeyInformatiomModal', () => {
     const onSave = jest.fn();
     renderKeyInformation({
       firstName: '',
+      middleName: '',
       lastName: '',
+      nickname: '',
       degrees: [],
       positions: [],
       country: '',
@@ -109,8 +119,16 @@ describe('KeyInformatiomModal', () => {
       firstName,
     );
     userEvent.type(
+      screen.getByRole('textbox', { name: 'Middle Name(s) (optional)' }),
+      middleName,
+    );
+    userEvent.type(
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
       lastName,
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'Nickname (optional)' }),
+      nickname,
     );
     userEvent.click(screen.getByRole('textbox', { name: 'Degree (required)' }));
     userEvent.click(screen.getByText(degrees[0]!));
@@ -147,7 +165,9 @@ describe('KeyInformatiomModal', () => {
     userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       firstName,
+      middleName,
       lastName,
+      nickname,
       degrees,
       positions,
       country,

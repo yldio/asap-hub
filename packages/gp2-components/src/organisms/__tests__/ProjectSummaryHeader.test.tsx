@@ -5,6 +5,7 @@ describe('ProjectSummaryHeader', () => {
   const defaultProps = {
     status: 'Active' as const,
     traineeProject: false,
+    opportunitiesAvailable: false,
   };
   it('renders the project status', () => {
     render(<ProjectSummaryHeader {...defaultProps} />);
@@ -14,11 +15,11 @@ describe('ProjectSummaryHeader', () => {
     render(<ProjectSummaryHeader {...defaultProps} traineeProject />);
     expect(screen.getByText(/trainee project/i)).toBeVisible();
   });
-  it('render the opportunities available pill if theres a link', () => {
+  it('render the opportunities available pill', () => {
     render(
       <ProjectSummaryHeader
         {...defaultProps}
-        opportunitiesLink={'something'}
+        opportunitiesAvailable={true}
       />,
     );
     expect(screen.getByText(/opportunities available/i)).toBeVisible();

@@ -6,6 +6,7 @@ const colors = {
   error900: color(176, 10, 26),
   greyscale1000: color(77, 100, 107),
   info100: color(230, 243, 249),
+  info150: color(192, 223, 237),
   info500: color(12, 141, 195),
   info900: color(0, 106, 146),
   neutral000: color(255, 255, 255),

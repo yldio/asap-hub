@@ -24,22 +24,23 @@ export type ProjectDataObject = {
   leadEmail?: string;
   members: ProjectMember[];
   milestones: Milestone[];
-  pmEmail?: string;
+  pmEmail: string;
   projectProposalUrl?: string;
   startDate?: string;
   status: ProjectStatus;
   title: string;
   resources?: Resource[];
   traineeProject: boolean;
+  opportunitiesAvailable: boolean;
+  opportunitiesShortText?: string;
+  opportunitiesLinkName?: string;
   opportunitiesLink?: string;
   calendar?: Calendar;
 };
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
-export type ProjectResponse = ProjectDataObject & {
-  opportunitiesAvailable: boolean;
-};
+export type ProjectResponse = ProjectDataObject;
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;
 export type ProjectUpdateDataObject = Partial<

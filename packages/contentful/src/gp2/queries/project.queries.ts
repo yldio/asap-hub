@@ -28,6 +28,9 @@ export const projectsContentQueryFragment = gql`
       }
     }
     traineeProject
+    opportunitiesAvailable
+    opportunitiesShortText
+    opportunitiesLinkName
     opportunitiesLink
     membersCollection(limit: 50) {
       total

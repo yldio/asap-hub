@@ -8,7 +8,6 @@ const processProject = (
   loggedInUserId?: string,
 ): gp2.ProjectResponse => ({
   ...removeNotAllowedResources(project, loggedInUserId),
-  opportunitiesAvailable: !!project.opportunitiesLink,
 });
 
 export default class ProjectController {

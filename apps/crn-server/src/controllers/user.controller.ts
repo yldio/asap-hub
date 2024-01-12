@@ -122,10 +122,7 @@ export default class UserController {
     }
 
     const user = cachedUser || (fetchedUser as UserResponse);
-    const [error, res] = await Intercept(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      fetchOrcidProfile(user!.orcid!),
-    );
+    const [error, res] = await Intercept(fetchOrcidProfile(user!.orcid!));
     const updateToUser: UserUpdateDataObject = {
       email: user.email,
       orcidLastSyncDate: new Date().toISOString(),

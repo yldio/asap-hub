@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import { css, Theme } from '@emotion/react';

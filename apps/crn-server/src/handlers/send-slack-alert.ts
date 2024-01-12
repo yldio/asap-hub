@@ -1,5 +1,5 @@
 import { IncomingWebhook } from '@slack/webhook';
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 const url = process.env.SLACK_WEBHOOK!;
 const appEnv = process.env.ENVIRONMENT;
 

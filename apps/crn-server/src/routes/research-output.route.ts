@@ -35,13 +35,11 @@ export const researchOutputRouteFactory = (
 
       if (isRequestingDrafts) {
         const hasTeamRole = teamId
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getUserRole(loggedInUser!, 'teams', [teamId]) !== 'None'
+          ? getUserRole(loggedInUser!, 'teams', [teamId]) !== 'None'
           : false;
 
         const hasWorkingGroupRole = workingGroupId
-          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            getUserRole(loggedInUser!, 'workingGroups', [workingGroupId]) !==
+          ? getUserRole(loggedInUser!, 'workingGroups', [workingGroupId]) !==
             'None'
           : false;
 
@@ -112,7 +110,7 @@ export const researchOutputRouteFactory = (
 
     const researchOutput = await researchOutputController.create({
       ...createRequest,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       createdBy: loggedInUser!.id,
     });
 
@@ -146,7 +144,7 @@ export const researchOutputRouteFactory = (
         researchOutputId,
         {
           ...updateRequest,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
           updatedBy: loggedInUser!.id,
         },
       );

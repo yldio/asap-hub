@@ -78,7 +78,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   };
   const cohortOptions = useContributingCohorts();
   const patchUser = usePatchUserById(userId);
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
   const { items: allTags } = useTags();

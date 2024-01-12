@@ -62,7 +62,6 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (!(formRef.current!.reportValidity() && validate())) {
         toast(
           'There are some errors in the form. Please correct the fields below.',

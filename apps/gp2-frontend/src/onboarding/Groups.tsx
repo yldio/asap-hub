@@ -6,7 +6,7 @@ import { useUserById } from '../users/state';
 
 const Groups: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const userData = useUserById(currentUser!.id);
 
   if (userData) {

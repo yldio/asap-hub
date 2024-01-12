@@ -201,9 +201,9 @@ export const parseContentfulGraphQlWorkingGroup = (
     .filter((x): x is WorkingGroupDeliverable => x !== null)
     .map((deliverable) => ({
       // these two fields are required in Contentful they can't be null
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       status: deliverable.status!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       description: deliverable.description!,
     }))
     .map(mapDeliverables(!!complete));

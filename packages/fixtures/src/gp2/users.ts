@@ -77,7 +77,6 @@ export const createUserResponse = (
 export const createUserPatchRequest = (
   overrides: Partial<gp2.UserPatchRequest> = {},
 ): gp2.UserPatchRequest => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { orcid: _orcid, ...social } = mockedUser.social!;
   return {
     ...mockedUser,

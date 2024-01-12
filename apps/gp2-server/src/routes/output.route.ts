@@ -56,7 +56,7 @@ export const outputRouteFactory = (
 
     const output = await outputController.create({
       ...createRequest,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       createdBy: loggedInUser!.id,
     });
 
@@ -80,7 +80,7 @@ export const outputRouteFactory = (
 
     const output = await outputController.update(outputId, {
       ...updateRequest,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       updatedBy: loggedInUser!.id,
     });
 

@@ -2,7 +2,6 @@ import { auth0PubKeys } from '@asap-hub/auth';
 import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken';
 
 const certToPEM = (cert: string): string =>
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   `-----BEGIN CERTIFICATE-----\n${cert
     .match(/.{1,64}/g)!
     .join('\n')}\n-----END CERTIFICATE-----\n`;

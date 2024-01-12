@@ -14,10 +14,9 @@ import { useTags } from '../shared/state';
 const Background: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
   const { onboarding } = gp2;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
   const userData = useUserById(currentUser!.id);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
 
   const { items: allTags } = useTags();

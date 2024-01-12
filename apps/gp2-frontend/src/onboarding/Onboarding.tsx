@@ -7,7 +7,6 @@ import { useOnboarding } from '../hooks/onboarding';
 const Onboarding: React.FC = ({ children }) => {
   const user = useCurrentUserGP2();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const onboardingState = useOnboarding(user!.id);
 
   /* istanbul ignore next */

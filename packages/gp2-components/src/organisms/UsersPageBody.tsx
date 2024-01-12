@@ -25,8 +25,8 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
   const firstItem = !users.total
     ? 0
     : pageProps.currentPageIndex + 1 === pageProps.numberOfPages
-    ? users.total - users.items.length + 1
-    : pageProps.currentPageIndex * users.items.length + 1;
+      ? users.total - users.items.length + 1
+      : pageProps.currentPageIndex * users.items.length + 1;
   const lastItem =
     pageProps.currentPageIndex + 1 === pageProps.numberOfPages
       ? users.total

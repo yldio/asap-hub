@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useContext, useState, useCallback, createContext, FC } from 'react';
 import {
   isEnabled,

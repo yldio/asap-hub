@@ -115,10 +115,7 @@ export default class UserController {
 
     const user = cachedUser || (fetchedUser as gp2.UserResponse);
     logger.debug(user.orcid, 'ORCID');
-    const [error, res] = await Intercept(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      fetchOrcidProfile(user!.orcid!),
-    );
+    const [error, res] = await Intercept(fetchOrcidProfile(user!.orcid!));
     logger.debug(res, 'response');
     logger.debug(error, 'error');
     const updateToUser: gp2.UserUpdateDataObject = {

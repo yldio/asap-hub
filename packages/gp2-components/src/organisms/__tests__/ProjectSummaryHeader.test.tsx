@@ -17,10 +17,7 @@ describe('ProjectSummaryHeader', () => {
   });
   it('render the opportunities available pill', () => {
     render(
-      <ProjectSummaryHeader
-        {...defaultProps}
-        opportunitiesAvailable={true}
-      />,
+      <ProjectSummaryHeader {...defaultProps} opportunitiesAvailable={true} />,
     );
     expect(screen.getByText(/opportunities available/i)).toBeVisible();
   });

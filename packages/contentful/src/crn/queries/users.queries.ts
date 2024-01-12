@@ -183,6 +183,8 @@ export const userListItemContentQueryFragment = gql`
       }
     }
     lastName
+    middleName
+    nickname
     onboarded
     dismissedGettingStarted
     role

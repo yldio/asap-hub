@@ -8,6 +8,7 @@ import {
   UserEvent,
   WebhookDetail,
   UserListItemResponse,
+  UserListItemDataObject,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -134,7 +135,7 @@ export const getUserResponse = (): UserResponse => ({
   ],
 });
 
-export const getUserListItemResponse = (): UserListItemResponse => ({
+export const getUserListItemDataObject = (): UserListItemDataObject => ({
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
   city: 'London',
@@ -142,7 +143,6 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   createdDate: '2020-09-23T20:45:22.000Z',
   degree: 'MPH',
   dismissedGettingStarted: false,
-  displayName: 'Tom (Iron Man) E. Hardy',
   email: 'H@rdy.io',
   expertiseAndResourceTags: [
     'expertise 1',
@@ -179,6 +179,12 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
       displayName: 'Team A',
     },
   ],
+});
+
+export const getUserListItemResponse = (): UserListItemResponse => ({
+  ...getUserListItemDataObject(),
+  displayName: 'Tom (Iron Man) E. Hardy',
+  onboarded: true,
 });
 
 export const fetchExpectation: ListUserResponse = {
@@ -484,7 +490,9 @@ export const getContentfulGraphqlUserListItem = (
   institution: 'some institution',
   jobTitle: 'some job title',
   firstName: 'Tom',
+  middleName: 'Edward',
   lastName: 'Hardy',
+  nickname: 'Iron Man',
   email: 'H@rdy.io',
   country: 'United Kingdom',
   city: 'London',

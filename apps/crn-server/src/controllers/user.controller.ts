@@ -34,7 +34,19 @@ export default class UserController {
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
     const { total, items } = await this.userDataProvider.fetch(options);
 
-    return { total, items };
+    return {
+      total,
+      items: items.map((user) => ({
+        ...user,
+        onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+        displayName: getDisplayName(
+          user.firstName,
+          user.lastName,
+          user.middleName,
+          user.nickname,
+        ),
+      })),
+    };
   }
 
   async fetchById(id: string): Promise<UserResponse> {

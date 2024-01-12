@@ -15568,6 +15568,8 @@ export type UserListItemContentFragment = Pick<
   | 'institution'
   | 'jobTitle'
   | 'lastName'
+  | 'middleName'
+  | 'nickname'
   | 'onboarded'
   | 'dismissedGettingStarted'
   | 'role'
@@ -15613,6 +15615,8 @@ export type FetchUsersQuery = {
             | 'institution'
             | 'jobTitle'
             | 'lastName'
+            | 'middleName'
+            | 'nickname'
             | 'onboarded'
             | 'dismissedGettingStarted'
             | 'role'
@@ -15670,6 +15674,8 @@ export type FetchUsersByTeamIdQuery = {
                     | 'institution'
                     | 'jobTitle'
                     | 'lastName'
+                    | 'middleName'
+                    | 'nickname'
                     | 'onboarded'
                     | 'dismissedGettingStarted'
                     | 'role'
@@ -15731,6 +15737,8 @@ export type FetchUsersByLabIdQuery = {
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
+                | 'middleName'
+                | 'nickname'
                 | 'onboarded'
                 | 'dismissedGettingStarted'
                 | 'role'
@@ -20438,6 +20446,8 @@ export const UserListItemContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           {
             kind: 'Field',

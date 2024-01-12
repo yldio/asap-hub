@@ -415,7 +415,6 @@ export const parseContentfulGraphQlUserListItem = (
     createdDate: item.createdDate,
     degree: item.degree && isUserDegree(item.degree) ? item.degree : undefined,
     dismissedGettingStarted: item.dismissedGettingStarted ?? false,
-    displayName: `${userFirstName} ${userLastName}`,
     email: item.email ?? '',
     expertiseAndResourceTags,
     firstName: userFirstName,
@@ -429,6 +428,8 @@ export const parseContentfulGraphQlUserListItem = (
         ? inactiveUserMembershipStatus
         : activeUserMembershipStatus,
     ],
+    middleName: item.middleName ?? undefined,
+    nickname: item.nickname ?? undefined,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,

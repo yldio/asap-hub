@@ -19,7 +19,7 @@ import {
   getContentfulGraphqlUserListItem,
   getUserCreateDataObject,
   getUserDataObject,
-  getUserListItemResponse,
+  getUserListItemDataObject,
 } from '../../fixtures/users.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -389,7 +389,7 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetch({});
 
       expect(result.total).toEqual(1);
-      expect(result.items).toEqual([getUserListItemResponse()]);
+      expect(result.items).toEqual([getUserListItemDataObject()]);
     });
 
     test('should return an empty response if there is no result', async () => {
@@ -419,7 +419,7 @@ describe('User data provider', () => {
         total: 1,
         items: [
           {
-            ...getUserListItemResponse(),
+            ...getUserListItemDataObject(),
             _tags: [],
             expertiseAndResourceTags: [],
           },
@@ -463,7 +463,7 @@ describe('User data provider', () => {
         total: 1,
         items: [
           {
-            ...getUserListItemResponse(),
+            ...getUserListItemDataObject(),
             teams: [
               {
                 id: 'team-id-1',
@@ -500,7 +500,7 @@ describe('User data provider', () => {
           total: 1,
           items: [
             {
-              ...getUserListItemResponse(),
+              ...getUserListItemDataObject(),
               alumniSinceDate,
               membershipStatus: [membershipStatus],
             },

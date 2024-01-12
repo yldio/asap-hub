@@ -4,6 +4,7 @@ import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   getUserDataObject,
+  getUserListItemDataObject,
   getUserListItemResponse,
   getUserResponse,
 } from '../fixtures/users.fixtures';
@@ -22,7 +23,7 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getUserListItemResponse()],
+        items: [getUserListItemDataObject()],
       });
       const result = await userController.fetch({});
 

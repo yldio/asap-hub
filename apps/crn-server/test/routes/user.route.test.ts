@@ -1,11 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { createUserResponse } from '@asap-hub/fixtures';
-import {
-  FetchOptions,
-  UserCreateDataObject,
-  UserPatchRequest,
-  UserResponse,
-} from '@asap-hub/model';
+import { FetchOptions, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';

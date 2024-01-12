@@ -1,11 +1,15 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { ReminderResponse } from '@asap-hub/model';
+import { ReminderResponse, gp2 as gp2Model } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import { EventIcon, infoCircleIcon, LibraryIcon } from '../icons';
 import { Anchor, Markdown } from '../atoms';
 import { neutral200 } from '../colors';
+
+type ReminderEntity =
+  | ReminderResponse['entity']
+  | gp2Model.ReminderResponse['entity'];
 
 const containerStyle = css({
   display: 'grid',
@@ -35,14 +39,15 @@ const descriptionStyles = css({
   },
 });
 
-const iconMap: Record<ReminderResponse['entity'], React.ReactElement> = {
+const iconMap: Record<ReminderEntity, React.ReactElement> = {
+  Output: <LibraryIcon />,
   'Research Output': <LibraryIcon />,
   'Research Output Version': <LibraryIcon />,
   Event: <EventIcon />,
 };
 
 type ReminderProps = Pick<ReminderResponse, 'description' | 'href'> & {
-  entity?: ReminderResponse['entity'];
+  entity?: ReminderEntity;
 };
 
 const ReminderItem: React.FC<ReminderProps> = ({

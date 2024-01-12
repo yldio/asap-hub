@@ -1475,6 +1475,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/validation": "workspace:*"
@@ -1541,6 +1542,7 @@ __metadata:
     odata-query: 7.0.4
     p-throttle: 4.1.1
     parse-data-url: 3.0.0
+    react-router-dom: 5.3.4
     serverless: 3.38.0
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0

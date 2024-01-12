@@ -28,7 +28,9 @@ const paddingStyles = css({
 type PersonalInfoModalProps = Pick<
   UserPatchRequest,
   | 'firstName'
+  | 'middleName'
   | 'lastName'
+  | 'nickname'
   | 'degree'
   | 'institution'
   | 'country'
@@ -43,7 +45,9 @@ type PersonalInfoModalProps = Pick<
 
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   firstName = '',
+  middleName = '',
   lastName = '',
+  nickname = '',
   degree = '' as const,
   institution = '',
   country = '',
@@ -56,7 +60,9 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   backHref,
 }) => {
   const [newFirstName, setNewFirstName] = useState<string>(firstName);
+  const [newMiddleName, setNewMiddleName] = useState<string>(middleName);
   const [newLastName, setNewLastName] = useState<string>(lastName);
+  const [newNickname, setNewNickname] = useState<string>(nickname);
   const [newDegree, setNewDegree] = useState<UserDegree | ''>(degree);
   const [newInstitution, setNewInstitution] = useState<string>(institution);
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle);
@@ -68,7 +74,9 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
       title="Your details"
       dirty={
         newFirstName !== firstName ||
+        newMiddleName !== middleName ||
         newLastName !== lastName ||
+        newNickname !== nickname ||
         newDegree !== degree ||
         newInstitution !== institution ||
         newJobTitle !== jobTitle ||
@@ -81,7 +89,9 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
           Object.fromEntries(
             Object.entries({
               firstName: newFirstName,
+              middleName: newMiddleName,
               lastName: newLastName,
+              nickname: newNickname,
               degree: newDegree,
               institution: newInstitution,
               jobTitle: newJobTitle,
@@ -104,12 +114,28 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               required
             />
             <LabeledTextField
+              title="Middle name(s)"
+              subtitle="(Optional)"
+              onChange={setNewMiddleName}
+              value={newMiddleName}
+              enabled={!isSaving}
+              hint="It will be shown as initials."
+            />
+            <LabeledTextField
               title="Last name(s)"
               subtitle="(Required)"
               onChange={setNewLastName}
               value={newLastName}
               enabled={!isSaving}
               required
+            />
+            <LabeledTextField
+              title="Nickname"
+              subtitle="(Optional)"
+              onChange={setNewNickname}
+              value={newNickname}
+              enabled={!isSaving}
+              hint="It will be displayed in parentheses after your first name."
             />
             <LabeledDropdown<UserDegree | ''>
               title="Degree"

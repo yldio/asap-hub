@@ -525,8 +525,14 @@ export enum CalendarsLinkingCollectionsProjectsCollectionOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -2682,8 +2688,14 @@ export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -3961,8 +3973,14 @@ export enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -4008,7 +4026,10 @@ export type Projects = Entry & {
   linkedFrom?: Maybe<ProjectsLinkingCollections>;
   membersCollection?: Maybe<ProjectsMembersCollection>;
   milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
+  opportunitiesAvailable?: Maybe<Scalars['Boolean']>;
   opportunitiesLink?: Maybe<Scalars['String']>;
+  opportunitiesLinkName?: Maybe<Scalars['String']>;
+  opportunitiesShortText?: Maybe<Scalars['String']>;
   pmEmail?: Maybe<Scalars['String']>;
   projectProposal?: Maybe<Scalars['String']>;
   resourcesCollection?: Maybe<ProjectsResourcesCollection>;
@@ -4068,7 +4089,22 @@ export type ProjectsMilestonesCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsOpportunitiesAvailableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsOpportunitiesLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsOpportunitiesLinkNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsOpportunitiesShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4162,13 +4198,34 @@ export type ProjectsFilter = {
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   milestones?: InputMaybe<CfMilestonesNestedFilter>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesAvailable?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesAvailable_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesAvailable_not?: InputMaybe<Scalars['Boolean']>;
   opportunitiesLink?: InputMaybe<Scalars['String']>;
+  opportunitiesLinkName?: InputMaybe<Scalars['String']>;
+  opportunitiesLinkName_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesLinkName_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesLinkName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  opportunitiesLinkName_not?: InputMaybe<Scalars['String']>;
+  opportunitiesLinkName_not_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesLinkName_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   opportunitiesLink_contains?: InputMaybe<Scalars['String']>;
   opportunitiesLink_exists?: InputMaybe<Scalars['Boolean']>;
   opportunitiesLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   opportunitiesLink_not?: InputMaybe<Scalars['String']>;
   opportunitiesLink_not_contains?: InputMaybe<Scalars['String']>;
   opportunitiesLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  opportunitiesShortText?: InputMaybe<Scalars['String']>;
+  opportunitiesShortText_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesShortText_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesShortText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  opportunitiesShortText_not?: InputMaybe<Scalars['String']>;
+  opportunitiesShortText_not_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesShortText_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   pmEmail?: InputMaybe<Scalars['String']>;
   pmEmail_contains?: InputMaybe<Scalars['String']>;
   pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4328,8 +4385,14 @@ export enum ProjectsOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -4996,8 +5059,14 @@ export enum ResourcesLinkingCollectionsProjectsCollectionOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -5304,8 +5373,14 @@ export enum TagsLinkingCollectionsProjectsCollectionOrder {
   EndDateDesc = 'endDate_DESC',
   LeadEmailAsc = 'leadEmail_ASC',
   LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesAvailableAsc = 'opportunitiesAvailable_ASC',
+  OpportunitiesAvailableDesc = 'opportunitiesAvailable_DESC',
+  OpportunitiesLinkNameAsc = 'opportunitiesLinkName_ASC',
+  OpportunitiesLinkNameDesc = 'opportunitiesLinkName_DESC',
   OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
   OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  OpportunitiesShortTextAsc = 'opportunitiesShortText_ASC',
+  OpportunitiesShortTextDesc = 'opportunitiesShortText_DESC',
   PmEmailAsc = 'pmEmail_ASC',
   PmEmailDesc = 'pmEmail_DESC',
   ProjectProposalAsc = 'projectProposal_ASC',
@@ -11441,6 +11516,9 @@ export type ProjectsContentDataFragment = Pick<
   | 'pmEmail'
   | 'leadEmail'
   | 'traineeProject'
+  | 'opportunitiesAvailable'
+  | 'opportunitiesShortText'
+  | 'opportunitiesLinkName'
   | 'opportunitiesLink'
 > & {
   sys: Pick<
@@ -11512,6 +11590,9 @@ export type FetchProjectByIdQuery = {
       | 'pmEmail'
       | 'leadEmail'
       | 'traineeProject'
+      | 'opportunitiesAvailable'
+      | 'opportunitiesShortText'
+      | 'opportunitiesLinkName'
       | 'opportunitiesLink'
     > & {
       sys: Pick<
@@ -11591,6 +11672,9 @@ export type FetchProjectsQuery = {
             | 'pmEmail'
             | 'leadEmail'
             | 'traineeProject'
+            | 'opportunitiesAvailable'
+            | 'opportunitiesShortText'
+            | 'opportunitiesLinkName'
             | 'opportunitiesLink'
           > & {
             sys: Pick<
@@ -11682,6 +11766,9 @@ export type FetchProjectsByUserQuery = {
                       | 'pmEmail'
                       | 'leadEmail'
                       | 'traineeProject'
+                      | 'opportunitiesAvailable'
+                      | 'opportunitiesShortText'
+                      | 'opportunitiesLinkName'
                       | 'opportunitiesLink'
                     > & {
                       sys: Pick<
@@ -15064,6 +15151,18 @@ export const ProjectsContentDataFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'traineeProject' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'opportunitiesAvailable' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'opportunitiesShortText' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'opportunitiesLinkName' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'opportunitiesLink' } },
           {
             kind: 'Field',

@@ -1,5 +1,5 @@
 module.exports.description =
-  'Updates projects with additional fields for data related to opportunities';
+  'Updates projects with additional opportunities related fields';
 
 module.exports.up = (migration) => {
   const projects = migration.editContentType('projects');

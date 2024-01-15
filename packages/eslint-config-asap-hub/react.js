@@ -11,6 +11,7 @@ module.exports = {
     'prettier/prettier': 'error',
 
     '@typescript-eslint/no-non-null-assertion': 'error',
+    '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
 
     // testing-library's waitFor is sometimes used in beforeEach and requires an expect inside

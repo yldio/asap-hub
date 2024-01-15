@@ -14,6 +14,7 @@ module.exports = {
     'no-dupe-class-members': 'off',
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/no-dupe-class-members': ['error'],
+    '@typescript-eslint/no-non-null-assertion': 'error',
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': ['error'],
     'class-methods-use-this': 'off',

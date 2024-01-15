@@ -171,6 +171,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -214,6 +216,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -376,6 +380,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:
@@ -413,6 +419,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:

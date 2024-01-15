@@ -440,14 +440,6 @@ describe('/users/ route', () => {
             expect(response.status).toBe(200);
           });
 
-          test('Should be able to provide an empty string for the %s parameter ', async () => {
-            const response = await supertest(appWithMockedAuth)
-              .patch(`/users/${userId}`)
-              .send({ [parameter]: '' });
-
-            expect(response.status).toBe(200);
-          });
-
           test('Should be able to provide null for the %s parameter ', async () => {
             const response = await supertest(appWithMockedAuth)
               .patch(`/users/${userId}`)

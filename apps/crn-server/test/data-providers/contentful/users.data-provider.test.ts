@@ -98,7 +98,7 @@ describe('User data provider', () => {
     });
 
     test.each(['middleName', 'nickname'] satisfies Array<keyof UserDataObject>)(
-      'Should not return a field when its an emptry string for %s',
+      'Should not return a field when its an empty string for %s',
       async (field) => {
         const mockResponse = getContentfulGraphqlUser();
         mockResponse[field] = '';

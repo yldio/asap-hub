@@ -61,7 +61,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const asyncFunctionWrapper = async (cb: () => void | Promise<void>) => {
     const parentValidation = validate();
-
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (formRef.current!.reportValidity() && parentValidation) {
       setStatus('isSaving');
       try {

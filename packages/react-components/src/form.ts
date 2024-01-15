@@ -75,7 +75,7 @@ export function useValidation<T extends ValidationTarget>(
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
   useEffect(() => {
-    const input = inputRef.current!;
+    const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
     input.setCustomValidity(customValidationMessage);
 
     if (validationMessage || customValidationMessage) {

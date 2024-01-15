@@ -62,6 +62,7 @@ const Form = <T extends void | Record<string, unknown>>({
       onDisplayModal: (() => void) | null,
     ) =>
     async () => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (!(formRef.current!.reportValidity() && validate())) {
         addNotification(
           'There are some errors in the form. Please correct the fields below.',

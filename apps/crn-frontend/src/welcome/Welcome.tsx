@@ -50,7 +50,7 @@ const Welcome: React.FC<Record<string, never>> = () => {
       allowSignup
       onClick={() =>
         // Effect should populate this ref before a click can occur
-
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         invitationValidityCheck
           .current!.then((isValid) =>
             isValid

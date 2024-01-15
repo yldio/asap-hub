@@ -66,9 +66,12 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       .then(loadTags);
   });
 
-  const { projects = [], workingGroups = [] } = useUserById(user!.id) || {};
+  const { projects = [], workingGroups = [] } =
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    useUserById(user!.id) || {};
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
       <Switch>
         <Route exact path={path}>

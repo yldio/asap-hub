@@ -68,6 +68,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
       <Button
         primary
         onClick={() => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           if (formRef.current!.reportValidity()) {
             onSignin();
           }

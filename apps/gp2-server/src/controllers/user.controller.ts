@@ -4,6 +4,7 @@ import { gp2 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
+  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
@@ -158,7 +159,7 @@ const parseUserToResponse = (
   loggedInUserId?: string,
 ): gp2.UserResponse => ({
   ...user,
-  displayName: getDisplayName(
+  displayName: parseUserDisplayName(
     user.firstName,
     user.lastName,
     user.middleName,
@@ -169,21 +170,3 @@ const parseUserToResponse = (
   workingGroupIds: user.workingGroups.map(({ id }) => id),
   tagIds: user.tags.map(({ id }) => id),
 });
-
-const getFirstLettersInCapitalsAndDots = (str: string) => {
-  const firstLetters = str
-    .split(' ')
-    .map((word) => `${word.charAt(0).toUpperCase()}. `)
-    .join('');
-
-  return firstLetters;
-};
-const getDisplayName = (
-  firstName: string,
-  lastName: string,
-  middleName?: string,
-  nickname?: string,
-) =>
-  `${firstName} ${nickname ? `(${nickname}) ` : ''}${
-    middleName ? `${getFirstLettersInCapitalsAndDots(middleName)}` : ''
-  }${lastName}`;

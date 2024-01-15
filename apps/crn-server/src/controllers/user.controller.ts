@@ -10,6 +10,7 @@ import {
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
+  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
@@ -39,7 +40,7 @@ export default class UserController {
       items: items.map((user) => ({
         ...user,
         onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
-        displayName: getDisplayName(
+        displayName: parseUserDisplayName(
           user.firstName,
           user.lastName,
           user.middleName,
@@ -172,7 +173,7 @@ export const parseUserToResponse = ({
   const dismissedGettingStarted = !!user.dismissedGettingStarted;
   return {
     ...user,
-    displayName: getDisplayName(
+    displayName: parseUserDisplayName(
       user.firstName,
       user.lastName,
       user.middleName,
@@ -182,21 +183,3 @@ export const parseUserToResponse = ({
     onboarded,
   };
 };
-
-const getFirstLettersInCapitalsAndDots = (str: string) => {
-  const firstLetters = str
-    .split(' ')
-    .map((word) => `${word.charAt(0).toUpperCase()}. `)
-    .join('');
-
-  return firstLetters;
-};
-const getDisplayName = (
-  firstName: string,
-  lastName: string,
-  middleName?: string,
-  nickname?: string,
-) =>
-  `${firstName} ${nickname ? `(${nickname}) ` : ''}${
-    middleName ? `${getFirstLettersInCapitalsAndDots(middleName)}` : ''
-  }${lastName}`;

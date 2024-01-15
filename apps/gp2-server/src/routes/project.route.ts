@@ -18,6 +18,7 @@ export const projectRouteFactory = (
     '/projects',
     async (req, res) => {
       const query = validateFetchProjectsParameters(req.query);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
       const projects = await projectController.fetch(
         {
@@ -37,7 +38,7 @@ export const projectRouteFactory = (
       const { params } = req;
 
       const { projectId } = validateProjectParameters(params);
-
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
       const project = await projectController.fetchById(
         projectId,
@@ -55,6 +56,7 @@ export const projectRouteFactory = (
       const { projectId } = validateProjectParameters(params);
       const resources = validateProjectPutRequest(body);
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const { id: loggedInUserId, role } = req.loggedInUser!;
       const { members } = await projectController.fetchById(
         projectId,

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { UserResponse } from '@asap-hub/model';
 import {
   permissionHandler,

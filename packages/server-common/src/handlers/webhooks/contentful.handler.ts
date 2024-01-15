@@ -29,6 +29,7 @@ const getActionFromRequest = (
 };
 
 const getWebhookAction = (action: 'publish' | 'unpublish') =>
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   `${action[0]!.toUpperCase()}${action.slice(1)}ed` as
     | 'Published'
     | 'Unpublished';
@@ -36,6 +37,7 @@ const getWebhookAction = (action: 'publish' | 'unpublish') =>
 const getWebhookContentType = (
   contentType: ContentfulWebhookPayloadType,
 ): WebhookPayloadTypeFirstLetterCapitalized =>
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   (contentType[0]!.toUpperCase() +
     contentType.slice(1)) as WebhookPayloadTypeFirstLetterCapitalized;
 

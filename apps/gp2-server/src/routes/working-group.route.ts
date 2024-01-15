@@ -15,6 +15,7 @@ export const workingGroupRouteFactory = (
   workingGroupRoutes.get<unknown, gp2.ListWorkingGroupResponse>(
     '/working-groups',
     async (req, res) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
       const workingGroups = await workingGroupController.fetch(loggedInUserId);
 
@@ -28,7 +29,7 @@ export const workingGroupRouteFactory = (
       const { params } = req;
 
       const { workingGroupId } = validateWorkingGroupParameters(params);
-
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
       const workingGroup = await workingGroupController.fetchById(
         workingGroupId,
@@ -47,6 +48,7 @@ export const workingGroupRouteFactory = (
       const { workingGroupId } = validateWorkingGroupParameters(params);
       const resources = validateWorkingGroupPutRequest(body);
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const { id: loggedInUserId, role } = req.loggedInUser!;
       const { members } = await workingGroupController.fetchById(
         workingGroupId,

@@ -68,6 +68,7 @@ export const userRouteFactory = (userController: UserController): Router =>
       async (req, res) => {
         const { userId } = validateUserParameters(req.params);
 
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const loggedInUserId = req.loggedInUser!.id;
 
         if (
@@ -91,7 +92,7 @@ export const userRouteFactory = (userController: UserController): Router =>
         const payload = validateUserPatchRequest(body);
 
         // user is trying to update someone else
-
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         if (loggedInUser!.id !== userId) {
           throw Boom.forbidden();
         }
@@ -120,7 +121,7 @@ export const userRouteFactory = (userController: UserController): Router =>
       const { userId } = validateUserParameters(params);
 
       // user is trying to update someone else
-
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (loggedInUser!.id !== userId) {
         throw Boom.forbidden();
       }

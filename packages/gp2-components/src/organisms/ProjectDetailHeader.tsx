@@ -1,10 +1,12 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Card,
+  CopyButton,
   drawerQuery,
   externalLinkIcon,
   informationIcon,
   Link,
+  mail,
   Paragraph,
   pixels,
   Subtitle,
@@ -24,13 +26,24 @@ import ShareOutputButton from '../molecules/ShareOutputButton';
 
 import ProjectSummaryFooter from './ProjectSummaryFooter';
 import ProjectSummaryHeader from './ProjectSummaryHeader';
+import colors from '../templates/colors';
 
 const { rem } = pixels;
+const { createMailTo } = mail;
 
 type ProjectDetailHeaderProps = ComponentProps<typeof ProjectSummaryHeader> &
   Pick<
     gp2Model.ProjectResponse,
-    'id' | 'title' | 'startDate' | 'endDate' | 'members' | 'opportunitiesLink'
+    | 'id'
+    | 'title'
+    | 'startDate'
+    | 'endDate'
+    | 'members'
+    | 'pmEmail'
+    | 'opportunitiesLink'
+    | 'opportunitiesAvailable'
+    | 'opportunitiesLinkName'
+    | 'opportunitiesShortText'
   > & {
     isProjectMember: boolean;
     isAdministrator: boolean;
@@ -65,6 +78,23 @@ const infoIconStyles = css({
   },
 });
 
+const copyButtonStyles = css({
+  backgroundColor: 'inherit',
+  borderColor: colors.info150.rgb,
+  ':hover, :focus': {
+    borderColor: colors.info500.rgb,
+  },
+  path: {
+    fill: colors.info500.rgb,
+  },
+});
+
+const contactContainerStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  marginTop: rem(12),
+});
+
 const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   id,
   title,
@@ -72,9 +102,13 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   startDate,
   endDate,
   members,
+  pmEmail,
   projectProposalUrl,
   isProjectMember,
   traineeProject,
+  opportunitiesAvailable,
+  opportunitiesLinkName,
+  opportunitiesShortText,
   opportunitiesLink,
   isAdministrator,
   outputsTotal,
@@ -83,22 +117,51 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
 }) => {
   const { isEnabled } = useFlags();
   const route = gp2Routing.projects({}).project({ projectId: id });
+  const isExternalOpportunityLink = (link: string) =>
+    new URL(link).origin !== window.location.origin;
   return (
     <header css={detailHeaderStyles}>
-      {opportunitiesLink && (
+      {opportunitiesAvailable && pmEmail && (
         <Card accent="information" padding={false}>
           <div css={opportunitiesCardStyles}>
             <div>{informationIcon}</div>
             <div css={cardTextContainerStyles}>
               <Subtitle noMargin>Opportunities Available</Subtitle>
               <Paragraph noMargin>
-                This project is currently looking for additional team members.
+                {opportunitiesShortText ??
+                  'This project is currently looking for additional team members.'}
+                {opportunitiesLink && (
+                  <Link href={opportunitiesLink}>
+                    <span
+                      css={css({ display: 'inline-flex', textIndent: rem(3) })}
+                    >
+                      {opportunitiesLinkName ?? 'Read more'}{' '}
+                      {isExternalOpportunityLink(opportunitiesLink) && (
+                        <span css={infoIconStyles}>{externalLinkIcon}</span>
+                      )}
+                    </span>
+                  </Link>
+                )}
               </Paragraph>
-              <Link href={opportunitiesLink}>
-                <span css={css({ display: 'inline-flex' })}>
-                  Read more <span css={infoIconStyles}>{externalLinkIcon}</span>
+              <div css={contactContainerStyles}>
+                <span>
+                  <Link
+                    buttonStyle
+                    small
+                    noMargin
+                    primary
+                    href={createMailTo(pmEmail)}
+                  >
+                    Contact PM
+                  </Link>
                 </span>
-              </Link>
+                <CopyButton
+                  hoverTooltipText="Copy Email"
+                  clickTooltipText="Email Copied"
+                  onClick={() => navigator.clipboard.writeText(pmEmail)}
+                  overrideStyles={copyButtonStyles}
+                />
+              </div>
             </div>
           </div>
         </Card>
@@ -108,7 +171,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
           projectProposalUrl={projectProposalUrl}
           status={status}
           traineeProject={traineeProject}
-          opportunitiesLink={opportunitiesLink}
+          opportunitiesAvailable={opportunitiesAvailable}
         />
         <Subtitle>Project</Subtitle>
         <h2>{title}</h2>

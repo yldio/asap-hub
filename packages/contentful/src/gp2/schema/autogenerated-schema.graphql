@@ -312,8 +312,14 @@ enum CalendarsLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -1888,8 +1894,14 @@ enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -2811,8 +2823,14 @@ enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -2858,7 +2876,10 @@ type Projects implements Entry {
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
+  opportunitiesAvailable(locale: String): Boolean
   opportunitiesLink(locale: String): String
+  opportunitiesLinkName(locale: String): String
+  opportunitiesShortText(locale: String): String
   pmEmail(locale: String): String
   projectProposal(locale: String): String
   resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ProjectsResourcesCollection
@@ -2910,13 +2931,30 @@ input ProjectsFilter {
   membersCollection_exists: Boolean
   milestones: cfMilestonesNestedFilter
   milestonesCollection_exists: Boolean
+  opportunitiesAvailable: Boolean
+  opportunitiesAvailable_exists: Boolean
+  opportunitiesAvailable_not: Boolean
   opportunitiesLink: String
+  opportunitiesLinkName: String
+  opportunitiesLinkName_contains: String
+  opportunitiesLinkName_exists: Boolean
+  opportunitiesLinkName_in: [String]
+  opportunitiesLinkName_not: String
+  opportunitiesLinkName_not_contains: String
+  opportunitiesLinkName_not_in: [String]
   opportunitiesLink_contains: String
   opportunitiesLink_exists: Boolean
   opportunitiesLink_in: [String]
   opportunitiesLink_not: String
   opportunitiesLink_not_contains: String
   opportunitiesLink_not_in: [String]
+  opportunitiesShortText: String
+  opportunitiesShortText_contains: String
+  opportunitiesShortText_exists: Boolean
+  opportunitiesShortText_in: [String]
+  opportunitiesShortText_not: String
+  opportunitiesShortText_not_contains: String
+  opportunitiesShortText_not_in: [String]
   pmEmail: String
   pmEmail_contains: String
   pmEmail_exists: Boolean
@@ -3059,8 +3097,14 @@ enum ProjectsOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -3264,8 +3308,14 @@ enum ResourcesLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -3505,8 +3555,14 @@ enum TagsLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC

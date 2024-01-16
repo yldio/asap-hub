@@ -20,19 +20,21 @@ const rowStyles = css({
 
 type ProjectSummaryHeaderProps = Pick<
   gp2Model.ProjectResponse,
-  'status' | 'projectProposalUrl' | 'traineeProject' | 'opportunitiesLink'
+  'status' | 'projectProposalUrl' | 'traineeProject' | 'opportunitiesAvailable'
 >;
 
 const ProjectSummaryHeader: React.FC<ProjectSummaryHeaderProps> = ({
   status,
   projectProposalUrl,
   traineeProject,
-  opportunitiesLink,
+  opportunitiesAvailable,
 }) => (
   <div css={[rowStyles, css({ gap: rem(4) })]}>
     <div css={css({ display: 'inline-flex', gap: rem(8) })}>
       <StatusPill status={status} />
-      {opportunitiesLink && <Pill small={false}>Opportunities available</Pill>}
+      {opportunitiesAvailable && (
+        <Pill small={false}>Opportunities available</Pill>
+      )}
       {traineeProject && <Pill small={false}>Trainee project</Pill>}
     </div>
     {projectProposalUrl && (

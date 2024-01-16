@@ -32,28 +32,7 @@ describe('Project controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
-    test('Should not set opportunitiesAvailable if there is no opportunity link', async () => {
-      const listProjectDataObject = getListProjectsResponse();
 
-      projectDataProviderMock.fetch.mockResolvedValue({
-        ...listProjectDataObject,
-        items: listProjectDataObject.items.map(
-          ({ opportunitiesLink: _, ...projectDataObject }) => projectDataObject,
-        ),
-      });
-      const result = await projectController.fetch({}, '11');
-
-      const listProjectResponse = getListProjectsResponse();
-      expect(result).toEqual({
-        ...listProjectResponse,
-        items: listProjectResponse.items.map(
-          ({ opportunitiesLink: __, ...expected }) => ({
-            ...expected,
-            opportunitiesAvailable: false,
-          }),
-        ),
-      });
-    });
     describe('resources', () => {
       const member = {
         userId: '7',
@@ -132,18 +111,6 @@ describe('Project controller', () => {
       const result = await projectController.fetchById('project-id', '11');
 
       expect(result).toEqual(getProjectResponse());
-    });
-    test('Should not set opportunitiesAvailable if there is no opportunity link', async () => {
-      const { opportunitiesLink: _, ...projectDataObject } =
-        getProjectDataObject();
-      projectDataProviderMock.fetchById.mockResolvedValue(projectDataObject);
-      const result = await projectController.fetchById('project-id', '11');
-
-      const { opportunitiesLink: __, ...expected } = getProjectResponse();
-      expect(result).toEqual({
-        ...expected,
-        opportunitiesAvailable: false,
-      });
     });
 
     describe('resources', () => {

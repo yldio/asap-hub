@@ -11,6 +11,7 @@ describe('ProjectCard', () => {
     projectProposalUrl: 'http://a-proposal',
     members: [],
     traineeProject: false,
+    opportunitiesAvailable: false,
   };
   it('renders the status', () => {
     render(<ProjectCard {...defaultProps} />);

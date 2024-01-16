@@ -53,14 +53,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   id,
   projectProposalUrl,
   traineeProject,
-  opportunitiesLink,
+  opportunitiesAvailable,
 }) => (
   <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
     <ProjectSummaryHeader
       projectProposalUrl={projectProposalUrl}
       status={status}
       traineeProject={traineeProject}
-      opportunitiesLink={opportunitiesLink}
+      opportunitiesAvailable={opportunitiesAvailable}
     />
     <LinkHeadline
       href={

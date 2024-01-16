@@ -17,6 +17,8 @@ describe('ProjectDetailPage', () => {
     outputsTotal: 0,
     upcomingTotal: 0,
     pastTotal: 0,
+    pmEmail: 'tony@stark.com',
+    opportunitiesAvailable: false,
   };
   it('renders header', () => {
     render(<ProjectDetailPage {...defaultProps} />);

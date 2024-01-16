@@ -7,6 +7,7 @@ describe('ProjectOverview', () => {
     tags: [],
     milestones: [],
     members: [],
+    pmEmail: 'tony@stark.com',
   };
   it('renders the description', () => {
     const description = 'this is a description';
@@ -27,18 +28,12 @@ describe('ProjectOverview', () => {
     expect(
       screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeInTheDocument();
-  });
-  it('renders the PM email information', () => {
-    render(<ProjectOverview {...defaultProps} pmEmail={'tony@stark.com'} />);
-    expect(
-      screen.getByRole('link', { name: 'tony@stark.com' }),
-    ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'PM Email' }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('heading', { name: 'Lead Email' }),
-    ).not.toBeInTheDocument();
+      screen.getByRole('link', { name: 'tony@stark.com' }),
+    ).toBeInTheDocument();
   });
   it('renders the lead email information', () => {
     render(
@@ -50,9 +45,6 @@ describe('ProjectOverview', () => {
     expect(
       screen.getByRole('heading', { name: 'Lead Email' }),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole('heading', { name: 'PM Email' }),
-    ).not.toBeInTheDocument();
   });
   it('renders both the lead email and PM email information', () => {
     render(

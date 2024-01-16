@@ -1,6 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { FetchOptions, UserResponse } from '@asap-hub/model';
+import { FetchOptions, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import Crypto from 'crypto';
@@ -309,6 +309,23 @@ describe('/users/ route', () => {
       expect(response.body).toEqual(getUserResponse());
     });
 
+    test('Should call the controller method with the correct parameters', async () => {
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
+
+      await supertest(appWithMockedAuth)
+        .patch(`/users/${userId}`)
+        .send(userPatchRequest);
+      const { onboarded, ...remainingParams } = userPatchRequest;
+
+      expect(userControllerMock.update).toHaveBeenCalledWith(
+        userId,
+        remainingParams,
+      );
+      expect(userControllerMock.update).toHaveBeenCalledWith(userId, {
+        onboarded,
+      });
+    });
+
     test('Returns 403 when user is changing other user', async () => {
       const response = await supertest(appWithMockedAuth)
         .patch('/users/not-me')
@@ -350,10 +367,20 @@ describe('/users/ route', () => {
       await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send(requestParams);
-      const { onboarded, ...remainingParams } = userPatchRequest;
+      const {
+        onboarded,
+        firstName: _firstName,
+        contactEmail: _contactEmail,
+        ...remainingParams
+      } = requestParams;
 
-      expect(userControllerMock.update).toBeCalledWith(userId, remainingParams);
-      expect(userControllerMock.update).toBeCalledWith(userId, { onboarded });
+      expect(userControllerMock.update).toHaveBeenCalledWith(
+        userId,
+        remainingParams,
+      );
+      expect(userControllerMock.update).toHaveBeenCalledWith(userId, {
+        onboarded,
+      });
     });
 
     test('Should not call the controller method if parameters are not allowed (orcid)', async () => {
@@ -379,70 +406,51 @@ describe('/users/ route', () => {
         expect(response.status).toBe(400);
       });
 
-      test.each([
-        'contactEmail',
-        'firstName',
-        'lastName',
-        'jobTitle',
-        'degree',
-        'institution',
+      type StringKeys<T> = Array<
+        keyof {
+          [K in keyof T]: T[K] extends string ? K : never;
+        }
+      >;
+
+      const stringFields: StringKeys<UserPatchRequest> = [
         'biography',
-        'country',
         'city',
+        'contactEmail',
+        'country',
         'expertiseAndResourceDescription',
+        'firstName',
+        'institution',
+        'jobTitle',
+        'lastName',
+        'middleName',
+        'nickname',
+        'reachOut',
         'researchInterests',
         'responsibilities',
-        'reachOut',
-      ])(
-        'Should be able to provide an empty string for the %s parameter ',
-        async (parameter) => {
-          const response = await supertest(appWithMockedAuth)
-            .patch(`/users/${userId}`)
-            .send({ [parameter]: '' });
+      ];
 
-          expect(response.status).toBe(200);
+      describe.each([...stringFields, 'degree'])(
+        'For the %s field',
+        (parameter) => {
+          test('Should be able to provide an empty string for the %s parameter ', async () => {
+            const response = await supertest(appWithMockedAuth)
+              .patch(`/users/${userId}`)
+              .send({ [parameter]: '' });
+
+            expect(response.status).toBe(200);
+          });
+
+          test('Should be able to provide null for the %s parameter ', async () => {
+            const response = await supertest(appWithMockedAuth)
+              .patch(`/users/${userId}`)
+              .send({ [parameter]: null });
+
+            expect(response.status).toBe(200);
+          });
         },
       );
 
-      test.each([
-        'contactEmail',
-        'firstName',
-        'lastName',
-        'jobTitle',
-        'degree',
-        'institution',
-        'biography',
-        'country',
-        'city',
-        'expertiseAndResourceDescription',
-        'researchInterests',
-        'responsibilities',
-        'reachOut',
-      ])(
-        'Should be able to provide null for the %s parameter ',
-        async (parameter) => {
-          const response = await supertest(appWithMockedAuth)
-            .patch(`/users/${userId}`)
-            .send({ [parameter]: null });
-
-          expect(response.status).toBe(200);
-        },
-      );
-
-      test.each([
-        'contactEmail',
-        'firstName',
-        'lastName',
-        'jobTitle',
-        'institution',
-        'biography',
-        'country',
-        'city',
-        'expertiseAndResourceDescription',
-        'researchInterests',
-        'responsibilities',
-        'reachOut',
-      ])(
+      test.each(stringFields)(
         'Should be able to provide a random string for the %s parameter ',
         async (parameter) => {
           const response = await supertest(appWithMockedAuth)

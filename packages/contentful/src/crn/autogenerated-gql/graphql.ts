@@ -930,6 +930,10 @@ export enum DiscoverMembersCollectionOrder {
   LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -1011,6 +1015,10 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -3214,6 +3222,10 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -5495,7 +5507,6 @@ export enum ResearchOutputsVersionsCollectionOrder {
 export type ResearchTags = Entry & {
   category?: Maybe<Scalars['String']>;
   contentfulMetadata: ContentfulMetadata;
-  entities?: Maybe<Array<Maybe<Scalars['String']>>>;
   linkedFrom?: Maybe<ResearchTagsLinkingCollections>;
   name?: Maybe<Scalars['String']>;
   sys: Sys;
@@ -5504,11 +5515,6 @@ export type ResearchTags = Entry & {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
 export type ResearchTagsCategoryArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
-export type ResearchTagsEntitiesArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5545,10 +5551,6 @@ export type ResearchTagsFilter = {
   category_not_contains?: InputMaybe<Scalars['String']>;
   category_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  entities_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_exists?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   name_contains?: InputMaybe<Scalars['String']>;
   name_exists?: InputMaybe<Scalars['Boolean']>;
@@ -5926,6 +5928,10 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -6903,6 +6909,8 @@ export type Users = Entry & {
   lastUpdated?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<UsersLinkingCollections>;
   linkedIn?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
   orcid?: Maybe<Scalars['String']>;
   orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
@@ -7050,6 +7058,16 @@ export type UsersLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersLinkedInArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersMiddleNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersNicknameArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -7312,6 +7330,20 @@ export type UsersFilter = {
   linkedIn_not?: InputMaybe<Scalars['String']>;
   linkedIn_not_contains?: InputMaybe<Scalars['String']>;
   linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName?: InputMaybe<Scalars['String']>;
+  middleName_contains?: InputMaybe<Scalars['String']>;
+  middleName_exists?: InputMaybe<Scalars['Boolean']>;
+  middleName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName_not?: InputMaybe<Scalars['String']>;
+  middleName_not_contains?: InputMaybe<Scalars['String']>;
+  middleName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname?: InputMaybe<Scalars['String']>;
+  nickname_contains?: InputMaybe<Scalars['String']>;
+  nickname_exists?: InputMaybe<Scalars['Boolean']>;
+  nickname_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname_not?: InputMaybe<Scalars['String']>;
+  nickname_not_contains?: InputMaybe<Scalars['String']>;
+  nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -7698,6 +7730,10 @@ export enum UsersOrder {
   LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -9130,10 +9166,6 @@ export type CfResearchTagsNestedFilter = {
   category_not_contains?: InputMaybe<Scalars['String']>;
   category_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  entities_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  entities_exists?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   name_contains?: InputMaybe<Scalars['String']>;
   name_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9486,6 +9518,20 @@ export type CfUsersNestedFilter = {
   linkedIn_not?: InputMaybe<Scalars['String']>;
   linkedIn_not_contains?: InputMaybe<Scalars['String']>;
   linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName?: InputMaybe<Scalars['String']>;
+  middleName_contains?: InputMaybe<Scalars['String']>;
+  middleName_exists?: InputMaybe<Scalars['Boolean']>;
+  middleName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName_not?: InputMaybe<Scalars['String']>;
+  middleName_not_contains?: InputMaybe<Scalars['String']>;
+  middleName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname?: InputMaybe<Scalars['String']>;
+  nickname_contains?: InputMaybe<Scalars['String']>;
+  nickname_exists?: InputMaybe<Scalars['Boolean']>;
+  nickname_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname_not?: InputMaybe<Scalars['String']>;
+  nickname_not_contains?: InputMaybe<Scalars['String']>;
+  nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -15244,9 +15290,11 @@ export type UsersContentFragment = Pick<
   | 'contactEmail'
   | 'dismissedGettingStarted'
   | 'firstName'
+  | 'middleName'
+  | 'lastName'
+  | 'nickname'
   | 'institution'
   | 'jobTitle'
-  | 'lastName'
   | 'country'
   | 'city'
   | 'onboarded'
@@ -15383,9 +15431,11 @@ export type FetchUserByIdQuery = {
       | 'contactEmail'
       | 'dismissedGettingStarted'
       | 'firstName'
+      | 'middleName'
+      | 'lastName'
+      | 'nickname'
       | 'institution'
       | 'jobTitle'
-      | 'lastName'
       | 'country'
       | 'city'
       | 'onboarded'
@@ -15518,6 +15568,8 @@ export type UserListItemContentFragment = Pick<
   | 'institution'
   | 'jobTitle'
   | 'lastName'
+  | 'middleName'
+  | 'nickname'
   | 'onboarded'
   | 'dismissedGettingStarted'
   | 'role'
@@ -15563,6 +15615,8 @@ export type FetchUsersQuery = {
             | 'institution'
             | 'jobTitle'
             | 'lastName'
+            | 'middleName'
+            | 'nickname'
             | 'onboarded'
             | 'dismissedGettingStarted'
             | 'role'
@@ -15620,6 +15674,8 @@ export type FetchUsersByTeamIdQuery = {
                     | 'institution'
                     | 'jobTitle'
                     | 'lastName'
+                    | 'middleName'
+                    | 'nickname'
                     | 'onboarded'
                     | 'dismissedGettingStarted'
                     | 'role'
@@ -15681,6 +15737,8 @@ export type FetchUsersByLabIdQuery = {
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
+                | 'middleName'
+                | 'nickname'
                 | 'onboarded'
                 | 'dismissedGettingStarted'
                 | 'role'
@@ -19698,9 +19756,11 @@ export const UsersContentFragmentDoc = {
             name: { kind: 'Name', value: 'dismissedGettingStarted' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
           { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
@@ -20386,6 +20446,8 @@ export const UserListItemContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           {
             kind: 'Field',

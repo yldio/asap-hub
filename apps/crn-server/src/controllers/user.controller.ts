@@ -10,6 +10,7 @@ import {
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
+  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
@@ -34,7 +35,19 @@ export default class UserController {
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
     const { total, items } = await this.userDataProvider.fetch(options);
 
-    return { total, items };
+    return {
+      total,
+      items: items.map((user) => ({
+        ...user,
+        onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+        displayName: parseUserDisplayName(
+          user.firstName,
+          user.lastName,
+          user.middleName,
+          user.nickname,
+        ),
+      })),
+    };
   }
 
   async fetchById(id: string): Promise<UserResponse> {
@@ -156,12 +169,16 @@ export const parseUserToResponse = ({
   connections: _,
   ...user
 }: UserDataObject): UserResponse => {
-  const displayName = `${user.firstName} ${user.lastName}`;
   const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
   const dismissedGettingStarted = !!user.dismissedGettingStarted;
   return {
     ...user,
-    displayName,
+    displayName: parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      user.middleName,
+      user.nickname,
+    ),
     dismissedGettingStarted,
     onboarded,
   };

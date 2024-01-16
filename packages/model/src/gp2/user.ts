@@ -86,9 +86,7 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
-  id: string;
   activatedDate?: string;
-  lastModifiedDate: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -101,8 +99,11 @@ export type UserDataObject = {
   email: string;
   firstName: string;
   fundingStreams?: string;
-  tags: TagDataObject[];
+  id: string;
+  lastModifiedDate: string;
   lastName: string;
+  middleName?: string;
+  nickname?: string;
   onboarded: boolean;
   orcid?: string;
   orcidLastModifiedDate?: string;
@@ -114,6 +115,7 @@ export type UserDataObject = {
   region: UserRegion;
   role: UserRole;
   social?: UserSocial;
+  tags: TagDataObject[];
   telephone?: Telephone;
   workingGroups: UserWorkingGroup[];
 };

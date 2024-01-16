@@ -4,6 +4,7 @@ import { gp2 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
+  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
@@ -158,7 +159,12 @@ const parseUserToResponse = (
   loggedInUserId?: string,
 ): gp2.UserResponse => ({
   ...user,
-  displayName: `${user.firstName} ${user.lastName}`,
+  displayName: parseUserDisplayName(
+    user.firstName,
+    user.lastName,
+    user.middleName,
+    user.nickname,
+  ),
   ...(user.id === loggedInUserId && { telephone }),
   projectIds: user.projects.map(({ id }) => id),
   workingGroupIds: user.workingGroups.map(({ id }) => id),

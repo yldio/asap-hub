@@ -35,7 +35,9 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
   type: 'object',
   properties: {
     firstName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
+    middleName: { type: 'string', nullable: true },
     lastName: { type: 'string', nullable: true, minLength: 1, maxLength: 50 },
+    nickname: { type: 'string', nullable: true },
     degrees: {
       type: 'array',
       items: {

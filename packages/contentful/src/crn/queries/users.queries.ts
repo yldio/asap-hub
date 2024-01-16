@@ -21,9 +21,11 @@ export const usersContentQueryFragment = gql`
     contactEmail
     dismissedGettingStarted
     firstName
+    middleName
+    lastName
+    nickname
     institution
     jobTitle
-    lastName
     country
     city
     onboarded
@@ -181,6 +183,8 @@ export const userListItemContentQueryFragment = gql`
       }
     }
     lastName
+    middleName
+    nickname
     onboarded
     dismissedGettingStarted
     role

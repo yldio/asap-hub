@@ -12,7 +12,9 @@ export const usersContentQueryFragment = gql`
     }
     activatedDate
     firstName
+    middleName
     lastName
+    nickname
     avatar {
       url
     }

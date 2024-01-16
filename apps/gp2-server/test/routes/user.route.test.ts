@@ -239,6 +239,23 @@ describe('/users/ route', () => {
       expect(response.body).toEqual(getUserResponse());
     });
 
+    test('Should call the controller method with the correct parameters', async () => {
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
+
+      await supertest(app)
+        .patch(`/users/${loggedInUserId}`)
+        .send(userPatchRequest);
+      const { onboarded, ...remainingParams } = userPatchRequest;
+
+      expect(userControllerMock.update).toBeCalledWith(
+        loggedInUserId,
+        remainingParams,
+      );
+      expect(userControllerMock.update).toBeCalledWith(loggedInUserId, {
+        onboarded,
+      });
+    });
+
     test('Should return 500 when it fails to update the user', async () => {
       userControllerMock.update.mockRejectedValueOnce(
         Boom.badImplementation('contentful', {
@@ -280,7 +297,12 @@ describe('/users/ route', () => {
       await supertest(app)
         .patch(`/users/${loggedInUserId}`)
         .send(requestParams);
-      const { onboarded, ...remainingParams } = userPatchRequest;
+      const {
+        onboarded,
+        firstName: _firstName,
+        lastName: _lastName,
+        ...remainingParams
+      } = userPatchRequest;
 
       expect(userControllerMock.update).toBeCalledWith(
         loggedInUserId,

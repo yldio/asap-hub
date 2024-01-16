@@ -12,5 +12,6 @@ export * from './should-handle-error';
 export * from './sync-google-calendar';
 export * from './sync-google-event';
 export * from './types';
+export * from './user-data';
 export * from './validate-auth0-request';
 export * from './validate-token';

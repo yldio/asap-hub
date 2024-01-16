@@ -90,7 +90,7 @@ describe('Users controller', () => {
 
     test('Should return the user when it finds it', async () => {
       const user = getUserDataObject();
-      userDataProviderMock.fetchById.mockResolvedValue(getUserDataObject());
+      userDataProviderMock.fetchById.mockResolvedValue(user);
       const result = await userController.fetchById(user.id, user.id);
 
       expect(result).toEqual(getUserResponse());
@@ -104,6 +104,56 @@ describe('Users controller', () => {
       );
 
       expect(result.telephone).toBeUndefined();
+    });
+
+    describe('Display name', () => {
+      test('Should drop nickname and middle name when not available', async () => {
+        const user = getUserDataObject() as gp2.UserDataObject;
+        user.firstName = 'John';
+        user.lastName = 'Smith';
+        delete user.middleName;
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(
+          user.id,
+          user.id,
+        );
+
+        expect(displayName).toEqual('John Smith');
+      });
+
+      test('Should use all middle name initials', async () => {
+        const user = getUserDataObject() as gp2.UserDataObject;
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(
+          user.id,
+          user.id,
+        );
+
+        expect(displayName).toEqual('John W. T. G. Smith');
+      });
+
+      test('Should put any nickname in brackets', async () => {
+        const user = getUserDataObject() as gp2.UserDataObject;
+        user.firstName = 'John';
+        user.nickname = 'R2 D2';
+        user.lastName = 'Smith';
+        delete user.middleName;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(
+          user.id,
+          user.id,
+        );
+
+        expect(displayName).toEqual('John (R2 D2) Smith');
+      });
     });
   });
 

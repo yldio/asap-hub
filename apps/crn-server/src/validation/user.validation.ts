@@ -10,7 +10,9 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
     dismissedGettingStarted: { type: 'boolean', nullable: true },
     contactEmail: { type: 'string', nullable: true },
     firstName: { type: 'string', nullable: true },
+    middleName: { type: 'string', nullable: true },
     lastName: { type: 'string', nullable: true },
+    nickname: { type: 'string', nullable: true },
     degree: {
       type: 'string',
       enum: [...userDegree, '', null],

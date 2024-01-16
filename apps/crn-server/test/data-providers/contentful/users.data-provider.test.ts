@@ -19,7 +19,7 @@ import {
   getContentfulGraphqlUserListItem,
   getUserCreateDataObject,
   getUserDataObject,
-  getUserListItemResponse,
+  getUserListItemDataObject,
 } from '../../fixtures/users.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -96,6 +96,21 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetchById('abc');
       expect(result).toEqual(null);
     });
+
+    test.each(['middleName', 'nickname'] satisfies Array<keyof UserDataObject>)(
+      'Should not return a field when its an empty string for %s',
+      async (field) => {
+        const mockResponse = getContentfulGraphqlUser();
+        mockResponse[field] = '';
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+
+        expect(result![field]).toBeUndefined();
+      },
+    );
 
     test('should map social properties and orcid onto `social` object', async () => {
       const socialProps = {
@@ -374,7 +389,7 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetch({});
 
       expect(result.total).toEqual(1);
-      expect(result.items).toEqual([getUserListItemResponse()]);
+      expect(result.items).toEqual([getUserListItemDataObject()]);
     });
 
     test('should return an empty response if there is no result', async () => {
@@ -404,7 +419,7 @@ describe('User data provider', () => {
         total: 1,
         items: [
           {
-            ...getUserListItemResponse(),
+            ...getUserListItemDataObject(),
             _tags: [],
             expertiseAndResourceTags: [],
           },
@@ -448,7 +463,7 @@ describe('User data provider', () => {
         total: 1,
         items: [
           {
-            ...getUserListItemResponse(),
+            ...getUserListItemDataObject(),
             teams: [
               {
                 id: 'team-id-1',
@@ -485,7 +500,7 @@ describe('User data provider', () => {
           total: 1,
           items: [
             {
-              ...getUserListItemResponse(),
+              ...getUserListItemDataObject(),
               alumniSinceDate,
               membershipStatus: [membershipStatus],
             },
@@ -835,6 +850,7 @@ describe('User data provider', () => {
           '123',
           {
             firstName: 'Colin',
+            middleName: 'Mike',
           },
 
           { suppressConflict: true },
@@ -842,6 +858,7 @@ describe('User data provider', () => {
         expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
         expect(patchAndPublishConflict).toHaveBeenCalledWith(entry, {
           firstName: 'Colin',
+          middleName: 'Mike',
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();

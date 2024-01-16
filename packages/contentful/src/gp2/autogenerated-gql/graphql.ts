@@ -851,6 +851,10 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -5347,6 +5351,10 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -5434,6 +5442,8 @@ export type Users = Entry & {
   lastName?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<UsersLinkingCollections>;
   linkedIn?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
   orcid?: Maybe<Scalars['String']>;
   orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
@@ -5547,6 +5557,16 @@ export type UsersLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersLinkedInArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersMiddleNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersNicknameArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5765,6 +5785,20 @@ export type UsersFilter = {
   linkedIn_not?: InputMaybe<Scalars['String']>;
   linkedIn_not_contains?: InputMaybe<Scalars['String']>;
   linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName?: InputMaybe<Scalars['String']>;
+  middleName_contains?: InputMaybe<Scalars['String']>;
+  middleName_exists?: InputMaybe<Scalars['Boolean']>;
+  middleName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName_not?: InputMaybe<Scalars['String']>;
+  middleName_not_contains?: InputMaybe<Scalars['String']>;
+  middleName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname?: InputMaybe<Scalars['String']>;
+  nickname_contains?: InputMaybe<Scalars['String']>;
+  nickname_exists?: InputMaybe<Scalars['Boolean']>;
+  nickname_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname_not?: InputMaybe<Scalars['String']>;
+  nickname_not_contains?: InputMaybe<Scalars['String']>;
+  nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -6015,6 +6049,10 @@ export enum UsersOrder {
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
@@ -7512,6 +7550,20 @@ export type CfUsersNestedFilter = {
   linkedIn_not?: InputMaybe<Scalars['String']>;
   linkedIn_not_contains?: InputMaybe<Scalars['String']>;
   linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName?: InputMaybe<Scalars['String']>;
+  middleName_contains?: InputMaybe<Scalars['String']>;
+  middleName_exists?: InputMaybe<Scalars['Boolean']>;
+  middleName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  middleName_not?: InputMaybe<Scalars['String']>;
+  middleName_not_contains?: InputMaybe<Scalars['String']>;
+  middleName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname?: InputMaybe<Scalars['String']>;
+  nickname_contains?: InputMaybe<Scalars['String']>;
+  nickname_exists?: InputMaybe<Scalars['Boolean']>;
+  nickname_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  nickname_not?: InputMaybe<Scalars['String']>;
+  nickname_not_contains?: InputMaybe<Scalars['String']>;
+  nickname_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
@@ -11806,7 +11858,9 @@ export type UsersContentDataFragment = Pick<
   Users,
   | 'activatedDate'
   | 'firstName'
+  | 'middleName'
   | 'lastName'
+  | 'nickname'
   | 'degrees'
   | 'country'
   | 'city'
@@ -11937,7 +11991,9 @@ export type FetchUserByIdQuery = {
       Users,
       | 'activatedDate'
       | 'firstName'
+      | 'middleName'
       | 'lastName'
+      | 'nickname'
       | 'degrees'
       | 'country'
       | 'city'
@@ -12076,7 +12132,9 @@ export type FetchUsersQuery = {
             Users,
             | 'activatedDate'
             | 'firstName'
+            | 'middleName'
             | 'lastName'
+            | 'nickname'
             | 'degrees'
             | 'country'
             | 'city'
@@ -15304,7 +15362,9 @@ export const UsersContentDataFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'avatar' },

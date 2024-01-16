@@ -553,6 +553,10 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -3548,6 +3552,10 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -3635,6 +3643,8 @@ type Users implements Entry {
   lastName(locale: String): String
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
+  middleName(locale: String): String
+  nickname(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
   orcidLastModifiedDate(locale: String): DateTime
@@ -3788,6 +3798,20 @@ input UsersFilter {
   linkedIn_not: String
   linkedIn_not_contains: String
   linkedIn_not_in: [String]
+  middleName: String
+  middleName_contains: String
+  middleName_exists: Boolean
+  middleName_in: [String]
+  middleName_not: String
+  middleName_not_contains: String
+  middleName_not_in: [String]
+  nickname: String
+  nickname_contains: String
+  nickname_exists: Boolean
+  nickname_in: [String]
+  nickname_not: String
+  nickname_not_contains: String
+  nickname_not_in: [String]
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
@@ -3985,6 +4009,10 @@ enum UsersOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -5260,6 +5288,20 @@ input cfUsersNestedFilter {
   linkedIn_not: String
   linkedIn_not_contains: String
   linkedIn_not_in: [String]
+  middleName: String
+  middleName_contains: String
+  middleName_exists: Boolean
+  middleName_in: [String]
+  middleName_not: String
+  middleName_not_contains: String
+  middleName_not_in: [String]
+  nickname: String
+  nickname_contains: String
+  nickname_exists: Boolean
+  nickname_in: [String]
+  nickname_not: String
+  nickname_not_contains: String
+  nickname_not_in: [String]
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean

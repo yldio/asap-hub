@@ -1,7 +1,7 @@
 import { framework as lambda } from '@asap-hub/services-common';
 import pThrottle from 'p-throttle';
 import { DateTime } from 'luxon';
-import { UserListItemResponse } from '@asap-hub/model';
+import { UserListItemDataObject } from '@asap-hub/model';
 import Users from '../../controllers/user.controller';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
@@ -33,7 +33,7 @@ const rawHandler = async (): Promise<lambda.Response> => {
   });
 
   const throttledSyncOrcidProfile = throttle(
-    async (user: UserListItemResponse) => users.syncOrcidProfile(user.id),
+    async (user: UserListItemDataObject) => users.syncOrcidProfile(user.id),
   );
 
   for (const outdatedUser of outdatedUsers) {

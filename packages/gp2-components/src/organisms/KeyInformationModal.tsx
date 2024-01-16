@@ -23,7 +23,9 @@ const optional = '(optional)';
 type KeyInformationModalProps = Pick<
   gp2.UserResponse,
   | 'firstName'
+  | 'middleName'
   | 'lastName'
+  | 'nickname'
   | 'degrees'
   | 'role'
   | 'region'
@@ -43,7 +45,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   onSave,
   backHref,
   firstName,
+  middleName = '',
   lastName,
+  nickname = '',
   degrees,
   role,
   region,
@@ -54,7 +58,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   loadInstitutionOptions,
 }) => {
   const [newFirstName, setNewFirstName] = useState(firstName);
+  const [newMiddleName, setNewMiddleName] = useState(middleName);
   const [newLastName, setNewLastName] = useState(lastName);
+  const [newNickname, setNewNickname] = useState(nickname);
   const [newDegrees, setNewDegrees] = useState(degrees || []);
   const [newRole, setNewRole] = useState(role);
   const [newRegion, setNewRegion] = useState(region);
@@ -69,7 +75,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
 
   const isDirty =
     newFirstName !== firstName ||
+    newMiddleName !== middleName ||
     newLastName !== lastName ||
+    newNickname !== nickname ||
     newDegrees.some((newDegree, index) => newDegree !== degrees[index]) ||
     newRole !== role ||
     newRegion !== region ||
@@ -89,7 +97,9 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
       onSave={() =>
         onSave({
           firstName: newFirstName,
+          middleName: newMiddleName,
           lastName: newLastName,
+          nickname: newNickname,
           degrees: newDegrees,
           region: newRegion,
           country: newCountry,
@@ -112,6 +122,15 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             maxLength={50}
           />
           <LabeledTextField
+            title="Middle Name(s)"
+            subtitle={optional}
+            enabled={!isSaving}
+            value={newMiddleName}
+            onChange={setNewMiddleName}
+            maxLength={50}
+            hint="It will be shown as initials."
+          />
+          <LabeledTextField
             title="Last Name"
             subtitle={required}
             required
@@ -119,6 +138,15 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             value={newLastName}
             onChange={setNewLastName}
             maxLength={50}
+          />
+          <LabeledTextField
+            title="Nickname"
+            subtitle={optional}
+            enabled={!isSaving}
+            value={newNickname}
+            onChange={setNewNickname}
+            maxLength={50}
+            hint="It will be displayed in parentheses after your first name."
           />
           <LabeledMultiSelect
             title="Degree"

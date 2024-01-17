@@ -1,0 +1,18 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build:babel": {},
+    "//#build:typecheck": {
+      "dependsOn": [],
+      "outputs": ["build/**/*"]
+    },
+    "build": {
+      "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],
+      "outputs": [".build/**", ".dist/**"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

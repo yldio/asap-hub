@@ -1,10 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build:babel": {},
+    "build:babel": {
+      "outputs": ["build/**/*", "build-cjs/**/*"]
+    },
     "//#build:typecheck": {
       "dependsOn": [],
-      "outputs": ["build/**/*"]
+      "outputs": ["build/**/*", "build-cjs/**/*"]
     },
     "build": {
       "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],

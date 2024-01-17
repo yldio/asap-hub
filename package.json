@@ -5,8 +5,7 @@
   "workspaces": [
     "apps/*",
     "packages/**",
-    "@types/*",
-    "!packages/contentful-app-extensions"
+    "@types/*"
   ],
   "engines": {
     "node": "20.x"

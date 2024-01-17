@@ -54,32 +54,6 @@ on:
         required: false
 
 jobs:
-  transpile:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Build
-        run: |
-          yarn build:babel
-        env:
-          VITE_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
-      - name: Cache transpile output
-        uses: ./.github/actions/cache-build
-        with:
-          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
-          environment-name: ${{ inputs.environment-name }}
-
   rebuild:
     runs-on: ubuntu-latest
     container:
@@ -95,6 +69,44 @@ jobs:
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
         with:
+          environment-name: ${{ inputs.environment-name }}
+
+  transpile:
+    needs: [rebuild]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Cache turbo build setup
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+      - name: Cache build output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Build
+        run: |
+          yarn turbo build:babel --cache-dir=.turbo
+        env:
+          VITE_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
+      - name: Cache transpile output
+        uses: ./.github/actions/cache-build
+        with:
+          cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
           environment-name: ${{ inputs.environment-name }}
 
   definitions:

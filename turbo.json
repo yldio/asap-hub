@@ -6,7 +6,14 @@
     },
     "//#build:typecheck": {
       "dependsOn": [],
-      "outputs": ["apps/**/build/**/*", "packages/**/build/**/*"]
+      "outputs": [
+        "{apps,packages}/**/build/**/*.d.ts",
+        "{apps,packages}/**/*.tsbuildinfo"
+      ],
+      "inputs": [
+        "{apps,packages}/src/**/*.{ts,tsx}",
+        "{apps,packages}/test/**/*.ts"
+      ]
     },
     "build": {
       "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],

@@ -91,9 +91,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-transpile-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-
+            ${{ runner.os }}-turbo-transpile
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -125,13 +125,20 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Cache turbo build setup
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-definitions-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-definitions
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
-          yarn build:typecheck
+          yarn turbo build:typecheck --cache-dir=.turbo
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-build
         with:

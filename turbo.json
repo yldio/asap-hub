@@ -6,7 +6,7 @@
     },
     "//#build:typecheck": {
       "dependsOn": [],
-      "outputs": ["build/**/*", "build-cjs/**/*"]
+      "outputs": ["apps/**/build/**/*", "packages/**/build/**/*"]
     },
     "build": {
       "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],

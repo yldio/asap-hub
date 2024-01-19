@@ -15,6 +15,9 @@
         "{apps,packages}/test/**/*.ts"
       ]
     },
+    "typecheck": {
+      "dependsOn": ["//#build:typecheck"]
+    },
     "build": {
       "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],
       "outputs": [".build/**", ".dist/**"]

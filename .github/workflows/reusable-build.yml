@@ -233,7 +233,7 @@ jobs:
           path: apps/gp2-auth-frontend/dist
           retention-days: 5
   typecheck:
-    needs: [definitions]
+    needs: [rebuild, definitions]
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
@@ -248,14 +248,25 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache build typecheck output
+      - name: Cache turbo build setup
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-typecheck-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-typecheck
+      - name: Restore .unplugged from cache
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Restore build:typecheck output from cache
         uses: ./.github/actions/cache-build
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
           environment-name: ${{ inputs.environment-name }}
       - name: TypeCheck
         run: |
-          yarn typecheck
+          yarn turbo typecheck --cache-dir=.turbo --only
 
   crn-sls-package:
     needs: [definitions, transpile, rebuild]

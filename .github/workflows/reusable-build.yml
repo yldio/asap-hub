@@ -100,7 +100,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
-          yarn turbo build:babel --cache-dir=.turbo
+          yarn build:babel --cache-dir=.turbo --only
         env:
           VITE_APP_ENVIRONMENT: ${{ steps.setup.outputs.react-app-environment }}
       - name: Cache transpile output
@@ -132,13 +132,13 @@ jobs:
           key: ${{ runner.os }}-turbo-definitions-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-definitions
-      - name: Cache build output
+      - name: Restore
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
       - name: Build
         run: |
-          yarn turbo build:typecheck --cache-dir=.turbo
+          yarn build:typecheck --cache-dir=.turbo --only
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-build
         with:
@@ -179,12 +179,23 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-      - name: Cache transpile output
+      - name: Cache turbo build setup
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-frontend-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-frontend
+      - name: Restore .unplugged from cache
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Restore transpile output
         uses: ./.github/actions/cache-build
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-transpile }}
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache build typecheck output
+      - name: Restore build typecheck output
         uses: ./.github/actions/cache-build
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-definitions }}
@@ -214,7 +225,7 @@ jobs:
           VITE_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
           VITE_APP_CRN_SENTRY_DSN: ${{ steps.setup.outputs.react-app-crn-sentry-dsn }}
         run: |
-          yarn build:frontend
+          yarn build:frontend --cache-dir=.turbo
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:
@@ -266,7 +277,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: TypeCheck
         run: |
-          yarn turbo typecheck --cache-dir=.turbo --only
+          yarn typecheck --cache-dir=.turbo --only
 
   crn-sls-package:
     needs: [definitions, transpile, rebuild]

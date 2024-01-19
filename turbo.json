@@ -4,7 +4,7 @@
     "build:babel": {
       "outputs": ["build/**/*", "build-cjs/**/*"]
     },
-    "//#build:typecheck": {
+    "//#build:typecheck:tsc": {
       "dependsOn": [],
       "outputs": [
         "{apps,packages}/**/build/**/*.d.ts",
@@ -16,10 +16,10 @@
       ]
     },
     "typecheck": {
-      "dependsOn": ["//#build:typecheck"]
+      "dependsOn": ["//#build:typecheck:tsc"]
     },
     "build": {
-      "dependsOn": ["^build", "^build:babel", "//#build:typecheck"],
+      "dependsOn": ["typecheck", "build:babel", "//#build:typecheck:tsc"],
       "outputs": [".build/**", ".dist/**"]
     },
     "start": {

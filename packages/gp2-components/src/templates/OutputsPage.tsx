@@ -1,6 +1,6 @@
 import { workingGroupsImage } from '../images';
 import { mainStyles, layoutContentStyles } from '../layout';
-import { PageBanner } from '../organisms';
+import { OutputDropdown, PageBanner } from '../organisms';
 
 const bannerProps = {
   image: workingGroupsImage,
@@ -12,7 +12,9 @@ const bannerProps = {
 const OutputsPage: React.FC = ({ children }) => (
   <article>
     <div css={layoutContentStyles}>
-      <PageBanner {...bannerProps}></PageBanner>
+      <PageBanner {...bannerProps}>
+        <OutputDropdown />
+      </PageBanner>
       <main css={mainStyles}>{children}</main>
     </div>
   </article>

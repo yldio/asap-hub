@@ -56,3 +56,4 @@ export { default as UserNavigationAssociationSection } from './UserNavigationAss
 export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as WorkingGroupsList } from './WorkingGroupsList';
+export type { ItemType } from './DropdownButton';

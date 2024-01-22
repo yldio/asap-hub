@@ -119,7 +119,7 @@ const itemStyles = ({
     },
   });
 
-type ItemData = {
+export type ItemData = {
   item: ReactNode;
   type?: ItemType;
   asTitle?: boolean;

@@ -4,16 +4,8 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { OutputDropdownWrapper } from '../OutputDropdown';
-import { useCurrentUserRoleGP2 } from '@asap-hub/react-context';
-
-jest.mock('@asap-hub/react-context', () => ({
-  useCurrentUserRoleGP2: jest.fn(),
-}));
 
 describe('OutputDropdown', () => {
-  const mockUseCurrentUserRoleGP2 =
-    useCurrentUserRoleGP2 as jest.MockedFunction<typeof useCurrentUserRoleGP2>;
-
   const user = gp2Fixtures.createAuthUser();
   const renderWithContent = ({
     groups = [],
@@ -23,13 +15,12 @@ describe('OutputDropdown', () => {
     groups?: gp2Model.UserWorkingGroup[];
     projects?: gp2Model.UserProject[];
     role?: gp2Model.UserRole;
-  }) => {
-    return render(
+  }) =>
+    render(
       <OutputDropdownWrapper
         user={{ ...user, workingGroups: groups, projects, role }}
       />,
     );
-  };
 
   describe('permissions', () => {
     it('displays working groups and projects if the user is an Admin', () => {
@@ -58,7 +49,6 @@ describe('OutputDropdown', () => {
     });
 
     it('displays projects if the user is a PM for the project', () => {
-      mockUseCurrentUserRoleGP2.mockReturnValueOnce('Project manager');
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -92,7 +82,6 @@ describe('OutputDropdown', () => {
     });
 
     it('does not display working groups if the user is not an Admin', () => {
-      mockUseCurrentUserRoleGP2.mockReturnValueOnce('Project manager');
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -128,7 +117,7 @@ describe('OutputDropdown', () => {
   });
 
   describe('document type options', () => {
-    it('link to create output page', () => {
+    it('links to create output page', () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {

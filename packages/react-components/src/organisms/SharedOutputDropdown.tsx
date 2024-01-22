@@ -12,7 +12,7 @@ import {
   getUserRole,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
-
+import type { User } from '@asap-hub/auth';
 import {
   article,
   bioinformatics,
@@ -31,7 +31,6 @@ import DropdownButton, {
   ItemData,
 } from '../molecules/DropdownButton';
 import { perRem } from '../pixels';
-import { User } from '@asap-hub/auth';
 
 const ITEM_HEIGHT = 48;
 const DROPDOWN_TOP_PADDING = 5;
@@ -104,7 +103,7 @@ export const AssociationItem: React.FC<{
 
 type SharedOutputDropdownBaseProps = {
   children?: never;
-  associations: Association[];
+  associations: ReadonlyArray<Association>;
   dropdownOptions: (association: Association) => ReadonlyArray<ItemData>;
 };
 

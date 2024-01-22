@@ -3,12 +3,11 @@ import {
   ItemType,
   SharedOutputDropdownBase,
 } from '@asap-hub/react-components';
-import {
-  useCurrentUserGP2,
-  useCurrentUserRoleGP2,
-} from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import type { gp2 as gp2Auth } from '@asap-hub/auth';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 import {
   outputArticle,
   outputCode,
@@ -17,11 +16,10 @@ import {
   outputMaterial,
   outputReport,
 } from '../icons';
-import { gp2 } from '@asap-hub/auth';
 
 type OutputDropdownWrapperProps = {
   children?: never;
-  user: gp2.User | null;
+  user: gp2Auth.User | null;
 };
 
 export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
@@ -31,8 +29,11 @@ export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
     ...(user?.projects ?? [])
       .concat()
       .filter((project) => {
-        const userRole = useCurrentUserRoleGP2(project.id, 'Projects');
-        console.log(userRole);
+        const userRole = gp2Validation.getUserRole(
+          user,
+          'Projects',
+          project.id,
+        );
         return user?.role === 'Administrator' || userRole === 'Project manager';
       })
       .sort((a, b) => a.title.localeCompare(b.title)),

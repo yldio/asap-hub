@@ -20,7 +20,7 @@
     },
     "build": {
       "dependsOn": ["typecheck", "build:babel", "//#build:typecheck:tsc"],
-      "outputs": [".build/**", ".dist/**"]
+      "outputs": [".build/**/*", ".dist/**/*", "build-templates/**/*"]
     },
     "start": {
       "cache": false,

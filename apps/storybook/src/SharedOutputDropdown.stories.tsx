@@ -1,10 +1,10 @@
-import { SharedOutputDropdownBase } from '@asap-hub/react-components';
+import { SharedOutputDropdownWrapper } from '@asap-hub/react-components';
 import { createAuthUser } from '@asap-hub/fixtures';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Shared Output Dropdown',
-  component: SharedOutputDropdownBase,
+  component: SharedOutputDropdownWrapper,
 };
 
 const workingGroups: WorkingGroupMembership[] = [
@@ -29,4 +29,4 @@ const user = {
   teams,
 };
 
-export const Normal = () => <SharedOutputDropdownBase user={user} />;
+export const Normal = () => <SharedOutputDropdownWrapper user={user} />;

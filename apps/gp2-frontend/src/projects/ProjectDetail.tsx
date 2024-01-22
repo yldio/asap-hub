@@ -127,7 +127,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
         )}
         <ProjectDetailPage
           isProjectMember={isProjectMember}
-          isAdministrator={isAdministrator}
+          isAdministrator={canDuplicateOutput}
           outputsTotal={total}
           upcomingTotal={upcomingEvents?.total || 0}
           pastTotal={pastEvents?.total || 0}

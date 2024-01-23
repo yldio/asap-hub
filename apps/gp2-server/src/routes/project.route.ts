@@ -65,6 +65,8 @@ export const projectRouteFactory = (
         projectId,
         loggedInUserId,
       );
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const projectRole = getUserRole(req.loggedInUser!, 'Projects', projectId);
       if (
         !(

@@ -297,49 +297,55 @@ export const tags = [
   [0, 'Yongxing Gong'],
 ];
 
-export const updateUserTags = async () => {
-    for(let i = 0;i< tags.length;i++) {
-        const tag = tags[i];
+const findOrCreateTag = async (tagName: string) => {
+  const researchTag = await tagsDataProvider.fetch({search: tagName})
+  let tagId = null;
+  // Create tag if doesn't exist
+  if (researchTag.total === 0 ) {
+      tagId = await tagsDataProvider.create(tagName)
+      console.log(`created tag: ${tagName} - id: ${tagId}`)
+  } else {
+      tagId = researchTag.items[0]?.id
+      console.log('tag exists', tagId)
+  }
+  return tagId;
+};
 
-        // legacy tag moving to research tag
-        if (tag && tag[0] === 1) {
-          const tagWord = tag[1] as string;
-        console.log(tag)
-        const researchTag = await tagsDataProvider.fetch({search: tagWord})
-        let tagId = null;
-        // Create tag if doesn't exist
-        if (researchTag.total === 0 ) {
-            tagId = await tagsDataProvider.create(tag[1] as string)
-            console.log(`created tag: ${tag[1]} - id: ${tagId}`)
-        } else {
-            tagId = researchTag.items[0]?.id
-            console.log('tag exists', tagId)
-        }
-
-        // find users that have the legacy tag
-        const users = await userDataProvider.fetch({take: 30, search: tagWord});
-        for(let j = 0;i<users.items.length;j++) {
-          const user = users.items[j];
-          if (user?.expertiseAndResourceTags.includes(tagWord)) {
-            console.log(`USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id} - ${user?.expertiseAndResourceTags}`)
-            console.log(user.tags)
-            const result = tagId && await userDataProvider.update(user.id, {tags: getLinkEntities([tagId])})
-            console.log(result)
-          }
-        }
-        console.log(`
-        TAG: ${tag[1]} - USERS FOUND: ${users.total}
+const findAndUpdateUsers = async(oldTagName: string, newTagId: string) => {
+  const users = await userDataProvider.fetch({take: 30, search: oldTagName});
+  for(let j = 0;j<users.items.length;j++) {
+    const user = users.items[j];
+    if (user?.expertiseAndResourceTags.includes(oldTagName)) {
+      console.log(`USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id} - ${user?.expertiseAndResourceTags}`)
+      console.log(user.tags)
+      console.log(`
+        TAG: ${oldTagName} - USERS FOUND: ${users.total}
         ${users.items.map(user => {return user.expertiseAndResourceTags})}
         `);
+      const result = await userDataProvider.update(user.id, {tags: getLinkEntities([newTagId])})
+      console.log(result)
+    }
+  }
+};
 
+export const updateUserTags = async () => {
+    for(let i = 0;i< tags.length;i++) {
+      const tag = tags[i];
 
-    //   const users = await userDataProvider.fetch(); // pick users that have the tag
-    //   users.items.forEach(async (user) => {
-    //     // TODO add tag to item
-    //     console.log(user)
-    //   });
-    } else if (tag && tag.length === 3) {
+      // legacy tag moving to research tag
+      if (tag && tag[0] === 1) {
+        const tagWord = tag[1] as string;
+        const tagId = await findOrCreateTag(tagWord)
+        tagId && findAndUpdateUsers(tagWord, tagId)
+        
       // legacy tag going to a different name 
+    } else if (tag && tag.length === 3) {
+      const oldTagWord = tag[1] as string;
+      const newTagWord = tag[2] as string;
+      console.log(oldTagWord,newTagWord)
+      const tagId = await findOrCreateTag(newTagWord)
+      tagId && findAndUpdateUsers(oldTagWord, tagId)
+
     }
     }
 };

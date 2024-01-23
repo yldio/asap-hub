@@ -5,15 +5,11 @@
       "outputs": ["build/**/*", "build-cjs/**/*"]
     },
     "//#build:typecheck:tsc": {
-      "dependsOn": [],
       "outputs": [
         "{apps,packages}/**/build/**/*.d.ts",
         "{apps,packages}/**/*.tsbuildinfo"
       ],
-      "inputs": [
-        "{apps,packages}/src/**/*.{ts,tsx}",
-        "{apps,packages}/test/**/*.ts"
-      ]
+      "cache": false
     },
     "typecheck": {
       "dependsOn": ["//#build:typecheck:tsc"]

@@ -27,6 +27,7 @@ import { useOutputById, useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
 
 const { projects } = gp2Routing;
+const { getUserRole } = gp2Validation;
 
 type ProjectDetailProps = {
   currentTime: Date;
@@ -84,11 +85,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
-  const userRole = gp2Validation.getUserRole(
-    currentUser,
-    'Projects',
-    projectId,
-  );
+  const userRole = getUserRole(currentUser, 'Projects', projectId);
   const isAdministrator =
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
   const projectRoute = projects({}).project({ projectId });

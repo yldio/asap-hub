@@ -17,6 +17,8 @@ import {
   outputReport,
 } from '../icons';
 
+const { getUserRole } = gp2Validation;
+
 type OutputDropdownWrapperProps = {
   children?: never;
   user: gp2Auth.User | null;
@@ -29,11 +31,7 @@ export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
     ...(user?.projects ?? [])
       .concat()
       .filter((project) => {
-        const userRole = gp2Validation.getUserRole(
-          user,
-          'Projects',
-          project.id,
-        );
+        const userRole = getUserRole(user, 'Projects', project.id);
         return user?.role === 'Administrator' || userRole === 'Project manager';
       })
       .sort((a, b) => a.title.localeCompare(b.title)),

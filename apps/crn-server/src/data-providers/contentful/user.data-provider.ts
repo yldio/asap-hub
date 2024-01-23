@@ -42,6 +42,7 @@ import {
 import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
+import { ResearchTagItem } from './research-tag.data-provider';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -123,7 +124,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
   private async fetchUsers(options: FetchUsersOptions) {
     const { take = 8, skip = 0 } = options;
 
-    const where = generateFetchQueryFilter(options);
+    const where: UsersFilter = generateFetchQueryFilter(options);
+    const words = (options.search || '').split(' ').filter(Boolean)
+
+    if (words.length){
+      const filters: UsersFilter[] = words.reduce((acc: UsersFilter[], word) => 
+      acc.concat([{
+        OR: [
+          {expertiseAndResourceDescription_contains: word}
+        ]
+      }]),[] )
+      where.AND = filters
+    }
 
     if (options.filter?.labId) {
       const { labs } = await this.contentfulClient.request<
@@ -321,7 +333,6 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     ...parseToInterestGroups(teamsCollection),
     ...parseLeadersToInterestGroups(interestGroupLeadersCollection),
   ]);
-
   return {
     id: item.sys.id,
     membershipStatus: [
@@ -363,6 +374,14 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     connections: connections.map((connection) => ({ code: connection })),
     teams,
     labs,
+    tags:
+      item.tagsCollection?.items
+      .filter((tag): tag is ResearchTagItem => tag !== null)
+      .map((tag) =>({ 
+        id: tag.sys.id,
+        name: tag.name ?? '',
+      })
+      ).filter(Boolean) || [],
     social: {
       website1: item.website1 ?? undefined,
       website2: item.website2 ?? undefined,
@@ -430,6 +449,14 @@ export const parseContentfulGraphQlUserListItem = (
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,
+    tags:
+      item.tagsCollection?.items
+      .filter((tag): tag is ResearchTagItem => tag !== null)
+      .map((tag) =>({ 
+        id: tag.sys.id,
+        name: tag.name ?? '',
+      })
+      ).filter(Boolean) || [],
   };
 };
 const generateFetchQueryFilter = ({

@@ -2,6 +2,7 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
+import { updateUserTags} from './update-tags';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
@@ -43,6 +44,28 @@ yargs(hideBin(process.argv))
           | 'news',
         filename,
       ),
+  })
+  .command<{entity: string}>({
+    command: 'tags <entity>',
+    describe: 'update tags for an entity',
+    builder: (cli) =>
+    cli.positional('entity', {
+      describe: 'specify an entity to update tags for',
+      type: 'string',
+      choices: [
+        'user'
+      ]
+    }),
+    handler: async({entity}) => {
+      console.log(entity)
+      switch (entity) {
+        case 'user':
+        await updateUserTags();
+          break;
+          default:
+            console.error('no matching entity');
+      }
+    }
   })
   .demandCommand(1)
   .help('h')

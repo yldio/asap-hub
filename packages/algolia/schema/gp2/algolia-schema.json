@@ -17,6 +17,7 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "title",
+    "_tags",
     "role",
     "degrees",
     "city",

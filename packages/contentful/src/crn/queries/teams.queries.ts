@@ -26,6 +26,14 @@ export const FETCH_TEAM_BY_ID = gql`
           url
         }
       }
+      tagsCollection(limit: 20) {
+        items {
+          sys {
+            id
+          }
+          name
+        }
+      }
       linkedFrom {
         teamMembershipCollection(limit: 100) {
           items {
@@ -80,6 +88,14 @@ export const FETCH_TEAMS = gql`
         inactiveSince
         projectTitle
         expertiseAndResourceTags
+        tagsCollection(limit: 20) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         linkedFrom {
           teamMembershipCollection(limit: 100) {
             items {

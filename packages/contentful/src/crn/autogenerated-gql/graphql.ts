@@ -10663,6 +10663,9 @@ export type EventsContentFragment = Pick<
   | 'meetingMaterials'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+  researchTagsCollection?: Maybe<{
+    items: Array<Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -10964,6 +10967,11 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterials'
     > & {
       sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+      researchTagsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -11306,6 +11314,11 @@ export type FetchEventsQuery = {
             | 'meetingMaterials'
           > & {
             sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
+            researchTagsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -11743,6 +11756,15 @@ export type FetchEventsByUserIdQuery = {
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
                         >;
+                        researchTagsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<ResearchTags, 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -12252,6 +12274,15 @@ export type FetchEventsByExternalAuthorIdQuery = {
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
                         >;
+                        researchTagsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<ResearchTags, 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -12761,6 +12792,15 @@ export type FetchEventsByTeamIdQuery = {
                           Sys,
                           'id' | 'publishedVersion' | 'publishedAt'
                         >;
+                        researchTagsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<ResearchTags, 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -13322,6 +13362,9 @@ export type InterestGroupsContentFragment = Pick<
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
+  researchTagsCollection?: Maybe<{
+    items: Array<Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
   teamsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -13394,6 +13437,11 @@ export type FetchInterestGroupByIdQuery = {
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
+      researchTagsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
       teamsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -13476,6 +13524,11 @@ export type FetchInterestGroupsQuery = {
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
             thumbnail?: Maybe<Pick<Asset, 'url'>>;
+            researchTagsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -13572,6 +13625,13 @@ export type FetchInterestGroupsByUserIdQuery = {
                       | 'publishedVersion'
                     >;
                     thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                    researchTagsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }
+                        >
+                      >;
+                    }>;
                     teamsCollection?: Maybe<{
                       items: Array<
                         Maybe<
@@ -15084,6 +15144,11 @@ export type FetchTeamByIdQuery = {
           Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
         >;
       }>;
+      tagsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
       linkedFrom?: Maybe<{
         teamMembershipCollection?: Maybe<{
           items: Array<
@@ -15144,6 +15209,11 @@ export type FetchTeamsQuery = {
             | 'expertiseAndResourceTags'
           > & {
             sys: Pick<Sys, 'id'>;
+            tagsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             linkedFrom?: Maybe<{
               teamMembershipCollection?: Maybe<{
                 items: Array<
@@ -16806,6 +16876,45 @@ export const EventsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'researchTagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           {
             kind: 'Field',
@@ -17830,6 +17939,45 @@ export const InterestGroupsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'researchTagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -25580,6 +25728,48 @@ export const FetchTeamByIdDocument = {
                 },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'tagsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '20' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'linkedFrom' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -25949,6 +26139,48 @@ export const FetchTeamsDocument = {
                         name: {
                           kind: 'Name',
                           value: 'expertiseAndResourceTags',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tagsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
                         },
                       },
                       {

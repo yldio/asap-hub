@@ -31,5 +31,4 @@ export type FetchResearchTagsFilter = {
   type?: string;
 };
 
-export type FetchResearchTagsOptions = 
-  FetchOptions<FetchResearchTagsFilter>
+export type FetchResearchTagsOptions = FetchOptions<FetchResearchTagsFilter>;

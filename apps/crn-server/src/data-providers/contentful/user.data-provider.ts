@@ -125,16 +125,19 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const { take = 8, skip = 0 } = options;
 
     const where: UsersFilter = generateFetchQueryFilter(options);
-    const words = (options.search || '').split(' ').filter(Boolean)
+    const words = (options.search || '').split(' ').filter(Boolean);
 
-    if (words.length){
-      const filters: UsersFilter[] = words.reduce((acc: UsersFilter[], word) => 
-      acc.concat([{
-        OR: [
-          {expertiseAndResourceDescription_contains: word}
-        ]
-      }]),[] )
-      where.AND = filters
+    if (words.length) {
+      const filters: UsersFilter[] = words.reduce(
+        (acc: UsersFilter[], word) =>
+          acc.concat([
+            {
+              OR: [{ expertiseAndResourceDescription_contains: word }],
+            },
+          ]),
+        [],
+      );
+      where.AND = filters;
     }
 
     if (options.filter?.labId) {
@@ -378,12 +381,12 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     labs,
     tags:
       item.tagsCollection?.items
-      .filter((tag): tag is ResearchTagItem => tag !== null)
-      .map((tag) =>({ 
-        id: tag.sys.id,
-        name: tag.name ?? '',
-      })
-      ).filter(Boolean) || [],
+        .filter((tag): tag is ResearchTagItem => tag !== null)
+        .map((tag) => ({
+          id: tag.sys.id,
+          name: tag.name ?? '',
+        }))
+        .filter(Boolean) || [],
     social: {
       website1: item.website1 ?? undefined,
       website2: item.website2 ?? undefined,
@@ -454,12 +457,12 @@ export const parseContentfulGraphQlUserListItem = (
     teams: userTeams,
     tags:
       item.tagsCollection?.items
-      .filter((tag): tag is ResearchTagItem => tag !== null)
-      .map((tag) =>({ 
-        id: tag.sys.id,
-        name: tag.name ?? '',
-      })
-      ).filter(Boolean) || [],
+        .filter((tag): tag is ResearchTagItem => tag !== null)
+        .map((tag) => ({
+          id: tag.sys.id,
+          name: tag.name ?? '',
+        }))
+        .filter(Boolean) || [],
   };
 };
 const generateFetchQueryFilter = ({

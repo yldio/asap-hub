@@ -19,6 +19,14 @@ export const interestGroupContentQueryFragment = gql`
     thumbnail {
       url
     }
+    researchTagsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     teamsCollection(limit: 50) {
       items {
         sys {

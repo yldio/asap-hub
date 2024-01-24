@@ -1,4 +1,7 @@
-import { getGraphQLClient as getContentfulGraphQLClient, getLinkEntities } from '@asap-hub/contentful';
+import {
+  getGraphQLClient as getContentfulGraphQLClient,
+  getLinkEntities,
+} from '@asap-hub/contentful';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -7,6 +10,9 @@ import {
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
 import { ResearchTagContentfulDataProvider } from '../src/data-providers/contentful/research-tag.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+import { EventContentfulDataProvider } from '../src/data-providers/contentful/event.data-provider';
+import { TeamContentfulDataProvider } from '../src/data-providers/contentful/team.data-provider';
+import { InterestGroupContentfulDataProvider } from '../src/data-providers/contentful/interest-group.data-provider';
 /* 
 STEPS:
 - add the research tag field (in addition to the legacy field)
@@ -25,6 +31,22 @@ const userDataProvider = new UserContentfulDataProvider(
   contentfulGraphQLClient,
   getContentfulRestClientFactory,
 );
+
+const eventDataProvider = new EventContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
+
+const teamDataProvider = new TeamContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
+
+const interestGroupDataProvider = new InterestGroupContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
+
 const tagsDataProvider = new ResearchTagContentfulDataProvider(
   contentfulGraphQLClient,
   getContentfulRestClientFactory,
@@ -298,57 +320,129 @@ export const tags = [
 ];
 
 const findOrCreateTag = async (tagName: string) => {
-  const researchTag = await tagsDataProvider.fetch({search: tagName})
+  const researchTag = await tagsDataProvider.fetch({ search: tagName });
   let tagId = null;
   // Create tag if doesn't exist
-  if (researchTag.total === 0 ) {
-      tagId = await tagsDataProvider.create(tagName)
-      console.log(`created tag: ${tagName} - id: ${tagId}`)
+  if (researchTag.total === 0) {
+    tagId = await tagsDataProvider.create(tagName);
+    console.log(`created tag: ${tagName} - id: ${tagId}`);
   } else {
-      tagId = researchTag.items[0]?.id
-      console.log('tag exists', tagId)
+    tagId = researchTag.items[0]?.id;
+    console.log('tag exists', tagId);
   }
   return tagId;
 };
 
-const findAndUpdateUsers = async(oldTagName: string, newTagId: string) => {
-  const users = await userDataProvider.fetch({take: 30, search: oldTagName});
-  for(let j = 0;j<users.items.length;j++) {
-    const user = users.items[j];
+const findAndUpdateUsers = async (oldTagName: string, newTagId: string) => {
+  const users = await userDataProvider.fetch({ take: 30, search: oldTagName });
+  for (let i = 0; i < users.items.length; i++) {
+    const user = users.items[i];
     if (user?.expertiseAndResourceTags.includes(oldTagName)) {
-      console.log(`USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id} - ${user?.expertiseAndResourceTags}`)
-      console.log(user.tags)
+      console.log(
+        `USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id} - ${user?.expertiseAndResourceTags}`,
+      );
+      console.log(user.tags);
       console.log(`
         TAG: ${oldTagName} - USERS FOUND: ${users.total}
-        ${users.items.map(user => {return user.expertiseAndResourceTags})}
+        ${users.items.map((user) => {
+          return user.expertiseAndResourceTags;
+        })}
         `);
 
-      const existingTagIds = user.tags?.map(({id}) => id) || [];
-      const result = await userDataProvider.update(user.id, {tags: getLinkEntities([...existingTagIds, newTagId])})
-      console.log(result)
+      const existingTagIds = user.tags?.map(({ id }) => id) || [];
+      const result = await userDataProvider.update(user.id, {
+        tags: getLinkEntities([...existingTagIds, newTagId]),
+      });
+      console.log(result);
     }
   }
 };
 
-export const updateUserTags = async () => {
-    for(let i = 0;i< tags.length;i++) {
-      const tag = tags[i];
+const findAndUpdateEvents = async (oldTagName: string, newTagId: string) => {
+  const events = await eventDataProvider.fetch({
+    take: 30,
+    search: oldTagName,
+  });
+  console.log(`TAG: ${oldTagName} - EVENTS FOUND: ${events.total}`);
+  for (let i = 0; i < events.items.length; i++) {
+    const event = events.items[i];
+    if (event?.tags.includes(oldTagName)) {
+      console.log(
+        `EVENT FOUND  - ${event.title} - ${event.id} - ${event?.tags}`,
+      );
+      const existingTagIds = event.researchTags?.map(({ id }) => id) || [];
+      const result = await userDataProvider.update(event.id, {
+        researchTags: getLinkEntities([...existingTagIds, newTagId]),
+      });
+      console.log(result);
+    }
+  }
+};
 
+const findAndUpdateTeams = async (oldTagName: string, newTagId: string) => {
+  const teams = await teamDataProvider.fetch({ take: 30, search: oldTagName });
+  console.log(`TAG: ${oldTagName} - TEAMS FOUND: ${teams.total}`);
+  for (let i = 0; i < teams.items.length; i++) {
+    const team = teams.items[i];
+    if (team?.expertiseAndResourceTags.includes(oldTagName)) {
+      console.log(
+        `EVENT FOUND  - ${team.displayName} - ${team.id} - ${team?.expertiseAndResourceTags}`,
+      );
+      const existingTagIds = team.tags?.map(({ id }) => id) || [];
+      const result = await userDataProvider.update(team.id, {
+        tags: getLinkEntities([...existingTagIds, newTagId]),
+      });
+      console.log(result);
+    }
+  }
+};
+
+const findAndUpdateInterestGroups = async (
+  oldTagName: string,
+  newTagId: string,
+) => {
+  const groups = await interestGroupDataProvider.fetch({
+    take: 30,
+    search: oldTagName,
+  });
+  console.log(`TAG: ${oldTagName} - GROUPS FOUND: ${groups.total}`);
+  for (let i = 0; i < groups.items.length; i++) {
+    const group = groups.items[i];
+    if (group?.tags.includes(oldTagName)) {
+      console.log(
+        `EVENT FOUND  - ${group.name} - ${group.id} - ${group?.tags}`,
+      );
+      const existingTagIds = group.researchTags?.map(({ id }) => id) || [];
+      const result = await userDataProvider.update(group.id, {
+        researchTags: getLinkEntities([...existingTagIds, newTagId]),
+      });
+      console.log(result);
+    }
+  }
+};
+
+export const updateEntityTags =
+  (findAndUpdateEntity: (a: string, b: string) => void) => async () => {
+    for (let i = 0; i < tags.length; i++) {
+      const tag = tags[i];
       // legacy tag moving to research tag
       if (tag && tag[0] === 1) {
         const tagWord = tag[1] as string;
-        const tagId = await findOrCreateTag(tagWord)
-        tagId && findAndUpdateUsers(tagWord, tagId)
-        
-      // legacy tag going to a different name 
-    } else if (tag && tag.length === 3) {
-      const oldTagWord = tag[1] as string;
-      const newTagWord = tag[2] as string;
-      console.log(oldTagWord,newTagWord)
-      const tagId = await findOrCreateTag(newTagWord)
-      tagId && findAndUpdateUsers(oldTagWord, tagId)
-
+        const tagId = await findOrCreateTag(tagWord);
+        tagId && findAndUpdateEntity(tagWord, tagId);
+        // legacy tag going to a different name
+      } else if (tag && tag.length === 3) {
+        const oldTagWord = tag[1] as string;
+        const newTagWord = tag[2] as string;
+        console.log(oldTagWord, newTagWord);
+        const tagId = await findOrCreateTag(newTagWord);
+        tagId && findAndUpdateEntity(oldTagWord, tagId);
+      }
     }
-    }
-};
-
+  };
+export const updateUsersTags = updateEntityTags(findAndUpdateUsers);
+export const updateEventsTags = updateEntityTags(findAndUpdateEvents);
+export const updateTeamsTags = updateEntityTags(findAndUpdateTeams);
+export const updateInterestGroupsTags = updateEntityTags(
+  findAndUpdateInterestGroups,
+);

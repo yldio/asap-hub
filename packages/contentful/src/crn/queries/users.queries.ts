@@ -53,7 +53,7 @@ export const usersContentQueryFragment = gql`
     }
     tagsCollection(limit: 20) {
       items {
-        sys { 
+        sys {
           id
         }
         name

@@ -24,7 +24,10 @@ export type ResearchTagItem = NonNullable<
 export class ResearchTagContentfulDataProvider
   implements ResearchTagDataProvider
 {
-  constructor(private contentfulClient: GraphQLClient, private getRestClient: () => Promise<Environment> ) {}
+  constructor(
+    private contentfulClient: GraphQLClient,
+    private getRestClient: () => Promise<Environment>,
+  ) {}
 
   async fetch(
     options: FetchResearchTagsOptions,
@@ -36,17 +39,15 @@ export class ResearchTagContentfulDataProvider
 
     if (words.length) {
       const filters: ResearchTagsFilter[] = words.reduce(
-(acc: ResearchTagsFilter[], word: string) =>
+        (acc: ResearchTagsFilter[], word: string) =>
           acc.concat([
             {
-              OR: [
-                { name_contains: word },
-              ],
+              OR: [{ name_contains: word }],
             },
           ]),
         [],
-      )
-      where.AND = filters
+      );
+      where.AND = filters;
     }
 
     if (filter.type) {
@@ -76,20 +77,19 @@ export class ResearchTagContentfulDataProvider
     throw new Error('Method not implemented');
   }
 
-  async create(
-    name: string): Promise<string> {
-const environment = await this.getRestClient();
+  async create(name: string): Promise<string> {
+    const environment = await this.getRestClient();
 
-const researchTagEntry = await environment.createEntry(
-  'researchTags',
-  {fields: addLocaleToFields({
-name
-  })});
+    const researchTagEntry = await environment.createEntry('researchTags', {
+      fields: addLocaleToFields({
+        name,
+      }),
+    });
 
-  await researchTagEntry.publish();
+    await researchTagEntry.publish();
 
-  return researchTagEntry.sys.id;
-    }
+    return researchTagEntry.sys.id;
+  }
 }
 
 const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {

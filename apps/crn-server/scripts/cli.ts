@@ -2,7 +2,7 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
-import { updateUserTags} from './update-tags';
+import * as updateTags from './update-tags';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
@@ -45,27 +45,34 @@ yargs(hideBin(process.argv))
         filename,
       ),
   })
-  .command<{entity: string}>({
+  .command<{ entity: string }>({
     command: 'tags <entity>',
     describe: 'update tags for an entity',
     builder: (cli) =>
-    cli.positional('entity', {
-      describe: 'specify an entity to update tags for',
-      type: 'string',
-      choices: [
-        'user'
-      ]
-    }),
-    handler: async({entity}) => {
-      console.log(entity)
+      cli.positional('entity', {
+        describe: 'specify an entity to update tags for',
+        type: 'string',
+        choices: ['user', 'event', 'team', 'group'],
+        demandOption: true,
+      }),
+    handler: async ({ entity }: { entity: string }) => {
       switch (entity) {
         case 'user':
-        await updateUserTags();
+          await updateTags.updateUsersTags();
           break;
-          default:
-            console.error('no matching entity');
+        case 'event':
+          await updateTags.updateEventsTags();
+          break;
+        case 'team':
+          await updateTags.updateTeamsTags();
+          break;
+        case 'group':
+          await updateTags.updateInterestGroupsTags();
+          break;
+        default:
+          console.error('no matching entity');
       }
-    }
+    },
   })
   .demandCommand(1)
   .help('h')

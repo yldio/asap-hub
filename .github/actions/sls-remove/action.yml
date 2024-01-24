@@ -80,6 +80,8 @@ runs:
           yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
         fi
       env:
+        ACTIVE_CAMPAIGN_ACCOUNT: 'n-a'
+        ACTIVE_CAMPAIGN_TOKEN: 'n-a'
         ALGOLIA_INDEX: 'n-a'
         AUTH0_AUDIENCE: ${{ inputs.auth0-audience }}
         AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}

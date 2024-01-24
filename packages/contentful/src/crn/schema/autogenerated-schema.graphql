@@ -594,6 +594,10 @@ type DiscoverMembersCollection {
 }
 
 enum DiscoverMembersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -679,6 +683,10 @@ type DiscoverScientificAdvisoryBoardCollection {
 }
 
 enum DiscoverScientificAdvisoryBoardCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -2270,6 +2278,10 @@ enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
 }
 
 enum LabsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -2738,6 +2750,7 @@ type PagesTextResources {
 scalar Quality
 
 type Query {
+  _node(id: ID!, locale: String, preview: Boolean): _Node
   announcements(id: String!, locale: String, preview: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
@@ -3893,6 +3906,10 @@ type TeamMembershipLinkingCollections {
 }
 
 enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -4621,6 +4638,8 @@ type TutorialsTextResources {
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
 type Users implements Entry {
+  activeCampaignCreatedAt(locale: String): DateTime
+  activeCampaignId(locale: String): String
   adminNotes(locale: String): String
   alumniLocation(locale: String): String
   alumniSinceDate(locale: String): DateTime
@@ -4678,6 +4697,22 @@ type UsersCollection {
 input UsersFilter {
   AND: [UsersFilter]
   OR: [UsersFilter]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean
@@ -5119,6 +5154,10 @@ enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
 }
 
 enum UsersOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -5681,6 +5720,10 @@ enum WorkingGroupsTagsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+interface _Node {
+  _id: ID!
 }
 
 input cfAnnouncementsNestedFilter {
@@ -6549,6 +6592,22 @@ input cfTutorialsNestedFilter {
 input cfUsersNestedFilter {
   AND: [cfUsersNestedFilter]
   OR: [cfUsersNestedFilter]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean

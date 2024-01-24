@@ -1,0 +1,63 @@
+import { NotFoundError } from '@asap-hub/errors';
+import { UserEvent, gp2, UserResponse } from '@asap-hub/model';
+import { isBoom } from '@hapi/boom';
+import { UserPayload } from '../event-bus';
+import { EventBridgeHandler, Logger, getContactIdByEmail } from '../../utils';
+
+interface UserController {
+  fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;
+  createActiveCampaignContact(
+    user: gp2.UserResponse | UserResponse,
+  ): Promise<void>;
+  updateActiveCampaignContact(
+    user: gp2.UserResponse | UserResponse,
+  ): Promise<void>;
+}
+
+/* istanbul ignore next */
+export const syncActiveCampaignContactFactory =
+  <Controller extends UserController>(
+    userController: Controller,
+    log: Logger,
+    activeCampaignAccount: string,
+    activeCampaignToken: string,
+  ): EventBridgeHandler<UserEvent, UserPayload> =>
+  async (event) => {
+    log.info(`Event ${event['detail-type']}`);
+
+    try {
+      const user = await userController.fetchById(event.detail.resourceId);
+
+      log.info(`Fetched user ${user.id}`);
+
+      if (user.onboarded) {
+        const contactId = await getContactIdByEmail(
+          activeCampaignAccount,
+          activeCampaignToken,
+          user.email,
+        );
+
+        if (!contactId) {
+          await userController.createActiveCampaignContact(user);
+          log.info(`Contact created ${user.id}`);
+          return;
+        }
+
+        await userController.updateActiveCampaignContact(user);
+        log.info(`Contact updated ${user.id}`);
+      }
+    } catch (e) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
+        return;
+      }
+
+      log.info(
+        e,
+        `Error creating/updating user ${event.detail.resourceId} to Active Campaign`,
+      );
+      throw e;
+    }
+  };

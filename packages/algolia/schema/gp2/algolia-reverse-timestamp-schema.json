@@ -32,6 +32,12 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "title",
+    "role",
+    "degrees",
+    "city",
+    "country",
+    "region",
+    "contributingCohorts.name",
     "workingGroup.title"
   ]
 }

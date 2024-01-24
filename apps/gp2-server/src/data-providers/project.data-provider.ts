@@ -189,7 +189,7 @@ export function parseProjectToDataObject(
     endDate: project.endDate ?? undefined,
     status: project.status as gp2Model.ProjectStatus,
     projectProposalUrl: project.projectProposal ?? undefined,
-    pmEmail: project.pmEmail ?? undefined,
+    pmEmail: project.pmEmail ?? '',
     leadEmail: project.leadEmail ?? undefined,
     description: project.description ?? undefined,
     members,
@@ -197,6 +197,9 @@ export function parseProjectToDataObject(
     milestones,
     resources,
     traineeProject: project.traineeProject ?? false,
+    opportunitiesAvailable: project.opportunitiesAvailable ?? false,
+    opportunitiesLinkName: project.opportunitiesLinkName ?? undefined,
+    opportunitiesShortText: project.opportunitiesShortText ?? undefined,
     opportunitiesLink: project.opportunitiesLink ?? undefined,
     calendar,
   };

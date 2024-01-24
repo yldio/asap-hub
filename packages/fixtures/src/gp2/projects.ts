@@ -35,6 +35,7 @@ const mockedProject: gp2.ProjectResponse = {
   ],
   resources: projectResources,
   traineeProject: false,
+  pmEmail: 'tony@stark.com',
   opportunitiesAvailable: false,
 };
 

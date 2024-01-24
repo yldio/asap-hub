@@ -5,7 +5,6 @@ import {
   OutputCard,
 } from '@asap-hub/gp2-components';
 import { ResultList, SearchAndFilter } from '@asap-hub/react-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { useAlgolia } from '../hooks/algolia';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
@@ -26,8 +25,6 @@ const OutputList: React.FC<OutputListProps> = ({
   authorId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const currentUser = useCurrentUserGP2();
-  const isAdministrator = currentUser?.role === 'Administrator';
 
   const { client } = useAlgolia();
 
@@ -64,7 +61,6 @@ const OutputList: React.FC<OutputListProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       exportResults={exportOutputs}
-      isAdministrator={isAdministrator}
     >
       {items.map((output) => (
         <OutputCard key={output.id} {...output} />

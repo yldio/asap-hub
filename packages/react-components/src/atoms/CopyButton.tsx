@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import copyIcon from '../icons/copy-icon';
 import { secondaryStyles } from '../button';
@@ -20,12 +20,14 @@ type CopyButtonProps = {
   hoverTooltipText: string;
   clickTooltipText: string;
   onClick: () => void;
+  readonly overrideStyles?: SerializedStyles;
 };
 
 const CopyButton: React.FC<CopyButtonProps> = ({
   onClick,
   hoverTooltipText,
   clickTooltipText,
+  overrideStyles,
 }) => {
   const [tooltipClickShown, setTooltipClickShown] = useState<boolean>(false);
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
@@ -41,7 +43,7 @@ const CopyButton: React.FC<CopyButtonProps> = ({
 
   return (
     <button
-      css={[secondaryStyles, copyButtonStyles]}
+      css={[secondaryStyles, copyButtonStyles, overrideStyles]}
       onClick={async () => {
         onClick();
         setTooltipHoverShown(false);

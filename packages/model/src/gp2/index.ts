@@ -12,6 +12,7 @@ export * from './guides';
 export * from './news';
 export * from './output';
 export * from './project';
+export * from './reminder';
 export * from './stats';
 export * from './tag';
 export * from './user';

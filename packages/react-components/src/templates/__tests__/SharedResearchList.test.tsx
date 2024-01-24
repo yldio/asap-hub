@@ -16,36 +16,27 @@ const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
 };
 
 it('renders multiple shared outputs cards in card view', () => {
-  const { queryAllByRole, getByText } = render(
+  const { queryAllByRole, getByRole } = render(
     <SharedResearchList {...props} isListView={false} />,
     {
       wrapper: StaticRouter,
     },
   );
-  expect(
-    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
-  ).toBe('bold');
-  expect(
-    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
-  ).toBe('');
+  expect(getByRole('button').closest('span')).toHaveTextContent(/card/i);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);
 });
 
 it('renders multiple research outputs in list view', () => {
-  const { queryAllByRole, getByText } = render(
+  const { queryAllByRole, getByRole } = render(
     <SharedResearchList {...props} isListView />,
     {
       wrapper: StaticRouter,
     },
   );
-  expect(
-    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
-  ).toBe('');
-  expect(
-    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
-  ).toBe('bold');
+
+  expect(getByRole('button').closest('span')).toHaveTextContent(/list/i);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

@@ -8,6 +8,7 @@ import {
   UserEvent,
   WebhookDetail,
   UserListItemResponse,
+  UserListItemDataObject,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -82,7 +83,7 @@ export const getUserResponse = (): UserResponse => ({
     'expertise 4',
     'expertise 5',
   ],
-  displayName: 'Tom Hardy',
+  displayName: 'Tom (Iron Man) E. Hardy',
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -91,7 +92,9 @@ export const getUserResponse = (): UserResponse => ({
   email: 'H@rdy.io',
   contactEmail: 'T@rdy.io',
   firstName: 'Tom',
+  middleName: 'Edward',
   lastName: 'Hardy',
+  nickname: 'Iron Man',
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
@@ -132,7 +135,7 @@ export const getUserResponse = (): UserResponse => ({
   ],
 });
 
-export const getUserListItemResponse = (): UserListItemResponse => ({
+export const getUserListItemDataObject = (): UserListItemDataObject => ({
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
   city: 'London',
@@ -140,7 +143,6 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   createdDate: '2020-09-23T20:45:22.000Z',
   degree: 'MPH',
   dismissedGettingStarted: false,
-  displayName: 'Tom Hardy',
   email: 'H@rdy.io',
   expertiseAndResourceTags: [
     'expertise 1',
@@ -159,6 +161,8 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   ],
   lastName: 'Hardy',
   membershipStatus: [inactiveUserMembershipStatus],
+  middleName: 'Edward',
+  nickname: 'Iron Man',
   onboarded: true,
   role: 'Grantee',
   _tags: [
@@ -175,6 +179,12 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
       displayName: 'Team A',
     },
   ],
+});
+
+export const getUserListItemResponse = (): UserListItemResponse => ({
+  ...getUserListItemDataObject(),
+  displayName: 'Tom (Iron Man) E. Hardy',
+  onboarded: true,
 });
 
 export const fetchExpectation: ListUserResponse = {
@@ -218,6 +228,10 @@ export const getListUserResponse = (): ListUserResponse => ({
 export const getUserDataObjects = () => [getUserDataObject()];
 
 export const userPatchRequest: UserPatchRequest = {
+  firstName: 'John',
+  middleName: 'Edward',
+  lastName: 'Smith',
+  nickname: 'Johnny',
   social: { github: 'johnytiago' },
   jobTitle: 'CEO',
   questions: ['To be or not to be?'],
@@ -268,7 +282,9 @@ export const getUserDataObject = (): UserDataObject => ({
   email: 'H@rdy.io',
   contactEmail: 'T@rdy.io',
   firstName: 'Tom',
+  middleName: 'Edward',
   lastName: 'Hardy',
+  nickname: 'Iron Man',
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
@@ -393,7 +409,9 @@ export const getContentfulGraphqlUser = (
   email: 'H@rdy.io',
   contactEmail: 'T@rdy.io',
   firstName: 'Tom',
+  middleName: 'Edward',
   lastName: 'Hardy',
+  nickname: 'Iron Man',
   country: 'United Kingdom',
   city: 'London',
   orcid: '123-456-789',
@@ -472,7 +490,9 @@ export const getContentfulGraphqlUserListItem = (
   institution: 'some institution',
   jobTitle: 'some job title',
   firstName: 'Tom',
+  middleName: 'Edward',
   lastName: 'Hardy',
+  nickname: 'Iron Man',
   email: 'H@rdy.io',
   country: 'United Kingdom',
   city: 'London',

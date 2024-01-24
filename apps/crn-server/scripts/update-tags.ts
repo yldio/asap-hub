@@ -322,7 +322,9 @@ const findAndUpdateUsers = async(oldTagName: string, newTagId: string) => {
         TAG: ${oldTagName} - USERS FOUND: ${users.total}
         ${users.items.map(user => {return user.expertiseAndResourceTags})}
         `);
-      const result = await userDataProvider.update(user.id, {tags: getLinkEntities([newTagId])})
+
+      const existingTagIds = user.tags?.map(({id}) => id) || [];
+      const result = await userDataProvider.update(user.id, {tags: getLinkEntities([...existingTagIds, newTagId])})
       console.log(result)
     }
   }
@@ -349,5 +351,4 @@ export const updateUserTags = async () => {
     }
     }
 };
-
 

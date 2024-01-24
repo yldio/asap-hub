@@ -4,6 +4,7 @@ import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   getUserDataObject,
+  getUserListItemDataObject,
   getUserListItemResponse,
   getUserResponse,
 } from '../fixtures/users.fixtures';
@@ -22,7 +23,7 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getUserListItemResponse()],
+        items: [getUserListItemDataObject()],
       });
       const result = await userController.fetch({});
 
@@ -60,6 +61,47 @@ describe('Users controller', () => {
       const result = await userController.fetchById('user-id');
 
       expect(result?.onboarded).toEqual(true);
+    });
+
+    describe('Display name', () => {
+      test('Should drop nickname and middle name when not available', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.lastName = 'Smith';
+        delete user.middleName;
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(user.id);
+
+        expect(displayName).toEqual('John Smith');
+      });
+
+      test('Should use all middle name initials', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(user.id);
+
+        expect(displayName).toEqual('John W. T. G. Smith');
+      });
+
+      test('Should put any nickname in brackets', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.nickname = 'R2 D2';
+        user.lastName = 'Smith';
+        delete user.middleName;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { displayName } = await userController.fetchById(user.id);
+
+        expect(displayName).toEqual('John (R2 D2) Smith');
+      });
     });
   });
 

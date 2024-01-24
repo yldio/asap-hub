@@ -175,146 +175,10 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-  guideCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsGuideCollectionOrder], preview: Boolean, skip: Int = 0): GuideCollection
-  newsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
-  usersCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
-}
-
-enum AssetLinkingCollectionsEventsCollectionOrder {
-  copyMeetingLink_ASC
-  copyMeetingLink_DESC
-  endDateTimeZone_ASC
-  endDateTimeZone_DESC
-  endDate_ASC
-  endDate_DESC
-  eventLink_ASC
-  eventLink_DESC
-  googleId_ASC
-  googleId_DESC
-  hidden_ASC
-  hidden_DESC
-  hideMeetingLink_ASC
-  hideMeetingLink_DESC
-  meetingLink_ASC
-  meetingLink_DESC
-  meetingMaterialsPermanentlyUnavailable_ASC
-  meetingMaterialsPermanentlyUnavailable_DESC
-  notesPermanentlyUnavailable_ASC
-  notesPermanentlyUnavailable_DESC
-  notesUpdatedAt_ASC
-  notesUpdatedAt_DESC
-  presentationPermanentlyUnavailable_ASC
-  presentationPermanentlyUnavailable_DESC
-  presentationUpdatedAt_ASC
-  presentationUpdatedAt_DESC
-  startDateTimeZone_ASC
-  startDateTimeZone_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  videoRecordingPermanentlyUnavailable_ASC
-  videoRecordingPermanentlyUnavailable_DESC
-  videoRecordingUpdatedAt_ASC
-  videoRecordingUpdatedAt_DESC
-}
-
-enum AssetLinkingCollectionsGuideCollectionOrder {
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-}
-
-enum AssetLinkingCollectionsNewsCollectionOrder {
-  linkText_ASC
-  linkText_DESC
-  link_ASC
-  link_DESC
-  publishDate_ASC
-  publishDate_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  type_ASC
-  type_DESC
-}
-
-enum AssetLinkingCollectionsUsersCollectionOrder {
-  activatedDate_ASC
-  activatedDate_DESC
-  alternativeEmail_ASC
-  alternativeEmail_DESC
-  blog_ASC
-  blog_DESC
-  city_ASC
-  city_DESC
-  country_ASC
-  country_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  lastName_ASC
-  lastName_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  onboarded_ASC
-  onboarded_DESC
-  orcidLastModifiedDate_ASC
-  orcidLastModifiedDate_DESC
-  orcidLastSyncDate_ASC
-  orcidLastSyncDate_DESC
-  orcid_ASC
-  orcid_DESC
-  region_ASC
-  region_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  role_ASC
-  role_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  telephoneCountryCode_ASC
-  telephoneCountryCode_DESC
-  telephoneNumber_ASC
-  telephoneNumber_DESC
-  twitter_ASC
-  twitter_DESC
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  guideCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): GuideCollection
+  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
+  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum AssetOrder {
@@ -448,8 +312,14 @@ enum CalendarsLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -689,6 +559,10 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -2020,8 +1894,14 @@ enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -2943,8 +2823,14 @@ enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -2990,7 +2876,10 @@ type Projects implements Entry {
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
+  opportunitiesAvailable(locale: String): Boolean
   opportunitiesLink(locale: String): String
+  opportunitiesLinkName(locale: String): String
+  opportunitiesShortText(locale: String): String
   pmEmail(locale: String): String
   projectProposal(locale: String): String
   resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ProjectsResourcesCollection
@@ -3042,13 +2931,30 @@ input ProjectsFilter {
   membersCollection_exists: Boolean
   milestones: cfMilestonesNestedFilter
   milestonesCollection_exists: Boolean
+  opportunitiesAvailable: Boolean
+  opportunitiesAvailable_exists: Boolean
+  opportunitiesAvailable_not: Boolean
   opportunitiesLink: String
+  opportunitiesLinkName: String
+  opportunitiesLinkName_contains: String
+  opportunitiesLinkName_exists: Boolean
+  opportunitiesLinkName_in: [String]
+  opportunitiesLinkName_not: String
+  opportunitiesLinkName_not_contains: String
+  opportunitiesLinkName_not_in: [String]
   opportunitiesLink_contains: String
   opportunitiesLink_exists: Boolean
   opportunitiesLink_in: [String]
   opportunitiesLink_not: String
   opportunitiesLink_not_contains: String
   opportunitiesLink_not_in: [String]
+  opportunitiesShortText: String
+  opportunitiesShortText_contains: String
+  opportunitiesShortText_exists: Boolean
+  opportunitiesShortText_in: [String]
+  opportunitiesShortText_not: String
+  opportunitiesShortText_not_contains: String
+  opportunitiesShortText_not_in: [String]
   pmEmail: String
   pmEmail_contains: String
   pmEmail_exists: Boolean
@@ -3191,8 +3097,14 @@ enum ProjectsOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -3396,8 +3308,14 @@ enum ResourcesLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -3637,8 +3555,14 @@ enum TagsLinkingCollectionsProjectsCollectionOrder {
   endDate_DESC
   leadEmail_ASC
   leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
   opportunitiesLink_ASC
   opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
   pmEmail_ASC
   pmEmail_DESC
   projectProposal_ASC
@@ -3684,6 +3608,10 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -3771,6 +3699,8 @@ type Users implements Entry {
   lastName(locale: String): String
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
+  middleName(locale: String): String
+  nickname(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
   orcidLastModifiedDate(locale: String): DateTime
@@ -3924,6 +3854,20 @@ input UsersFilter {
   linkedIn_not: String
   linkedIn_not_contains: String
   linkedIn_not_in: [String]
+  middleName: String
+  middleName_contains: String
+  middleName_exists: Boolean
+  middleName_in: [String]
+  middleName_not: String
+  middleName_not_contains: String
+  middleName_not_in: [String]
+  nickname: String
+  nickname_contains: String
+  nickname_exists: Boolean
+  nickname_in: [String]
+  nickname_not: String
+  nickname_not_contains: String
+  nickname_not_in: [String]
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
@@ -4121,6 +4065,10 @@ enum UsersOrder {
   lastName_DESC
   linkedIn_ASC
   linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
   onboarded_ASC
   onboarded_DESC
   orcidLastModifiedDate_ASC
@@ -5396,6 +5344,20 @@ input cfUsersNestedFilter {
   linkedIn_not: String
   linkedIn_not_contains: String
   linkedIn_not_in: [String]
+  middleName: String
+  middleName_contains: String
+  middleName_exists: Boolean
+  middleName_in: [String]
+  middleName_not: String
+  middleName_not_contains: String
+  middleName_not_in: [String]
+  nickname: String
+  nickname_contains: String
+  nickname_exists: Boolean
+  nickname_in: [String]
+  nickname_not: String
+  nickname_not_contains: String
+  nickname_not_in: [String]
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean

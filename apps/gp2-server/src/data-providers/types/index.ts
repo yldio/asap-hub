@@ -7,6 +7,7 @@ export * from './news.data-provider.type';
 export * from './output.data-provider.type';
 export * from './page.data-provider.type';
 export * from './project.data-provider.type';
+export * from './reminder.data-provider.type';
 export * from './user.data-provider.type';
 export * from './working-group-network.data-provider.type';
 export * from './working-group.data-provider.type';

@@ -18,6 +18,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: Production
       - name: Add safe directory
         run: git config --system --add safe.directory /__w/asap-hub/asap-hub
       - name: Check if some app has changed

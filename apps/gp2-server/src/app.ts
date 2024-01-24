@@ -26,6 +26,7 @@ import NewsController from './controllers/news.controller';
 import OutputController from './controllers/output.controller';
 import PageController from './controllers/page.controller';
 import ProjectController from './controllers/project.controller';
+import ReminderController from './controllers/reminder.controller';
 import UserController from './controllers/user.controller';
 import WorkingGroupNetworkController from './controllers/working-group-network.controller';
 import WorkingGroupController from './controllers/working-group.controller';
@@ -38,6 +39,7 @@ import { NewsContentfulDataProvider } from './data-providers/news.data-provider'
 import { OutputContentfulDataProvider } from './data-providers/output.data-provider';
 import { PageContentfulDataProvider } from './data-providers/page.data-provider';
 import { ProjectContentfulDataProvider } from './data-providers/project.data-provider';
+import { ReminderContentfulDataProvider } from './data-providers/reminder.data-provider';
 import {
   AssetDataProvider,
   ContributingCohortDataProvider,
@@ -46,6 +48,7 @@ import {
   NewsDataProvider,
   OutputDataProvider,
   PageDataProvider,
+  ReminderDataProvider,
   UserDataProvider,
   WorkingGroupNetworkDataProvider,
 } from './data-providers/types';
@@ -178,6 +181,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const outputDataProvider =
     libs.outputDataProvider || outputContentfulDataProvider;
 
+  const reminderDataProvider =
+    libs.reminderDataProvider ||
+    new ReminderContentfulDataProvider(contentfulGraphQLClient);
+
   const tagDataProvider =
     libs.tagDataProvider ||
     new TagContentfulDataProvider(
@@ -208,6 +215,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     new ExternalUserController(externalUserDataProvider);
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
+  const reminderController =
+    libs.reminderController || new ReminderController(reminderDataProvider);
   const outputController =
     libs.outputController ||
     new OutputController(outputDataProvider, externalUserDataProvider);
@@ -252,7 +261,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     workingGroupNetworkController,
   );
   const projectRoutes = projectRouteFactory(projectController);
-  const reminderRoutes = reminderRouteFactory();
+  const reminderRoutes = reminderRouteFactory(reminderController);
   const eventRoutes = eventRouteFactory(eventController);
   const externalUsersRoutes = externalUserRouteFactory(externalUserController);
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -351,6 +360,8 @@ export type Libs = {
   projectContentfulDataProvider?: ProjectDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
+  reminderController?: ReminderController;
+  reminderDataProvider?: ReminderDataProvider;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

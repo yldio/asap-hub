@@ -75,8 +75,8 @@ const props = (): ComponentProps<typeof EventCard> => {
       meetingMaterials === 'Yes'
         ? [{ title: 'example', url: 'http://example.com' }]
         : meetingMaterials === 'Coming Soon'
-        ? []
-        : null,
+          ? []
+          : null,
 
     startDate: new Date(
       date('Start Date', addHours(new Date(), 23)),

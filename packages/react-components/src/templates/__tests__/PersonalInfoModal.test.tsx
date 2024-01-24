@@ -40,7 +40,9 @@ it('indicates which fields are required or optional', () => {
 
   [
     { title: 'First name', subtitle: 'Required' },
+    { title: 'Middle name(s)', subtitle: 'Optional' },
     { title: 'Last name(s)', subtitle: 'Required' },
+    { title: 'Nickname', subtitle: 'Optional' },
     { title: 'Degree', subtitle: 'Optional' },
     { title: 'Institution', subtitle: 'Required' },
     { title: 'Position', subtitle: 'Required' },
@@ -59,7 +61,9 @@ it('renders default values into text inputs', () => {
       {...props}
       countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
+      middleName="middleName"
       lastName="lastName"
+      nickname="nickname"
       country="United States"
       city="city"
       jobTitle="jobTitle"
@@ -74,7 +78,9 @@ it('renders default values into text inputs', () => {
   ).toMatchInlineSnapshot(`
     [
       "firstName",
+      "middleName",
       "lastName",
+      "nickname",
       "",
       "institution",
       "jobTitle",
@@ -195,7 +201,9 @@ it('triggers the save function', async () => {
       {...props}
       countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
+      middleName="middleName"
       lastName="lastName"
+      nickname="nickname"
       country="United States"
       city="city"
       jobTitle="jobTitle"
@@ -209,7 +217,9 @@ it('triggers the save function', async () => {
   userEvent.click(screen.getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
+    middleName: 'middleName',
     lastName: 'lastName',
+    nickname: 'nickname',
     country: 'United States',
     city: 'city',
     degree: 'MPH',

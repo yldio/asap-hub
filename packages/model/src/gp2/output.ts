@@ -15,6 +15,11 @@ export const outputDocumentTypes = [
 
 export type OutputDocumentType = (typeof outputDocumentTypes)[number];
 
+export const isOutputDocumentType = (
+  type: string,
+): type is OutputDocumentType =>
+  (outputDocumentTypes as ReadonlyArray<string>).includes(type);
+
 export enum OutputIdentifierType {
   Empty = '',
   None = 'None',

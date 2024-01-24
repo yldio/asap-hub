@@ -31,6 +31,11 @@ import {
   UploadPresentationReminder,
   VideoEventReminder,
 } from '@asap-hub/model';
+import {
+  getReferenceDates,
+  inLast24Hours,
+  getUserName,
+} from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 import { isCMSAdministrator } from '@asap-hub/validation';
 import { ReminderDataProvider } from '../types';
@@ -234,45 +239,6 @@ export const getSortDate = (reminder: ReminderDataObject): DateTime => {
   return DateTime.fromISO(reminder.data.endDate);
 };
 
-export const getReferenceDates = (zone: string) => {
-  const lastMidnightISO = DateTime.fromObject({
-    zone,
-  })
-    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-    .toUTC();
-
-  const todayMidnightISO = DateTime.fromObject({
-    zone,
-  })
-    .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-    .plus({ day: 1 })
-    .toUTC();
-
-  const last24HoursISO = DateTime.fromObject({
-    zone,
-  })
-    .minus({ hours: 24 })
-    .toUTC();
-
-  const last72HoursISO = DateTime.fromObject({
-    zone,
-  })
-    .minus({ hours: 72 })
-    .toUTC();
-
-  const now = DateTime.fromObject({
-    zone,
-  }).toUTC();
-
-  return {
-    lastMidnightISO,
-    todayMidnightISO,
-    last24HoursISO,
-    last72HoursISO,
-    now,
-  };
-};
-
 export const getResearchOutputFilter = (
   zone: string,
 ): ResearchOutputsFilter => {
@@ -357,13 +323,6 @@ const hasEventEndedInLast72hours = (event: EventItem, zone: string) => {
   const endedInLast72Hours = eventEndDate >= last72HoursISO;
 
   return eventHasEnded && endedInLast72Hours;
-};
-
-const inLast24Hours = (date: string, zone: string) => {
-  const convertedDate = convertEventDate(date, zone);
-  const { last24HoursISO, now } = getReferenceDates(zone);
-
-  return convertedDate >= last24HoursISO && convertedDate <= now;
 };
 
 const getEventHappeningNowOrTodayRemindersFromQuery = (
@@ -1080,17 +1039,4 @@ const getAssociationNameAndType = (
     associationType: null,
     associationName: null,
   };
-};
-
-const getUserName = (researchOutput: ResearchOutputItem) => {
-  if (
-    researchOutput &&
-    researchOutput.createdBy &&
-    researchOutput.createdBy.firstName &&
-    researchOutput.createdBy.lastName
-  ) {
-    const { firstName, lastName } = researchOutput.createdBy;
-    return `${firstName} ${lastName}`;
-  }
-  return null;
 };

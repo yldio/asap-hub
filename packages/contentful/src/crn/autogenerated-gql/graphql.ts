@@ -15646,9 +15646,11 @@ export type UsersContentFragment = Pick<
   | 'contactEmail'
   | 'dismissedGettingStarted'
   | 'firstName'
+  | 'middleName'
+  | 'lastName'
+  | 'nickname'
   | 'institution'
   | 'jobTitle'
-  | 'lastName'
   | 'country'
   | 'city'
   | 'onboarded'
@@ -15788,9 +15790,11 @@ export type FetchUserByIdQuery = {
       | 'contactEmail'
       | 'dismissedGettingStarted'
       | 'firstName'
+      | 'middleName'
+      | 'lastName'
+      | 'nickname'
       | 'institution'
       | 'jobTitle'
-      | 'lastName'
       | 'country'
       | 'city'
       | 'onboarded'
@@ -15928,6 +15932,8 @@ export type UserListItemContentFragment = Pick<
   | 'institution'
   | 'jobTitle'
   | 'lastName'
+  | 'middleName'
+  | 'nickname'
   | 'onboarded'
   | 'dismissedGettingStarted'
   | 'role'
@@ -15976,6 +15982,8 @@ export type FetchUsersQuery = {
             | 'institution'
             | 'jobTitle'
             | 'lastName'
+            | 'middleName'
+            | 'nickname'
             | 'onboarded'
             | 'dismissedGettingStarted'
             | 'role'
@@ -16038,6 +16046,8 @@ export type FetchUsersByTeamIdQuery = {
                     | 'institution'
                     | 'jobTitle'
                     | 'lastName'
+                    | 'middleName'
+                    | 'nickname'
                     | 'onboarded'
                     | 'dismissedGettingStarted'
                     | 'role'
@@ -16106,6 +16116,8 @@ export type FetchUsersByLabIdQuery = {
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
+                | 'middleName'
+                | 'nickname'
                 | 'onboarded'
                 | 'dismissedGettingStarted'
                 | 'role'
@@ -20128,9 +20140,11 @@ export const UsersContentFragmentDoc = {
             name: { kind: 'Name', value: 'dismissedGettingStarted' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
           { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
@@ -20855,6 +20869,8 @@ export const UserListItemContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           {
             kind: 'Field',

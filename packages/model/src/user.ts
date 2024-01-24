@@ -44,6 +44,8 @@ export interface Invitee {
   institution?: string;
   jobTitle?: string;
   lastName: string;
+  middleName?: string;
+  nickname?: string;
 }
 
 export interface UserTeam {
@@ -111,7 +113,7 @@ export interface UserResponse
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
 export type UserListItemDataObject = Pick<
-  UserResponse,
+  UserDataObject,
   | 'alumniSinceDate'
   | 'avatarUrl'
   | 'city'
@@ -119,7 +121,6 @@ export type UserListItemDataObject = Pick<
   | 'createdDate'
   | 'degree'
   | 'dismissedGettingStarted'
-  | 'displayName'
   | 'email'
   | 'expertiseAndResourceTags'
   | 'firstName'
@@ -129,6 +130,8 @@ export type UserListItemDataObject = Pick<
   | 'labs'
   | 'lastName'
   | 'membershipStatus'
+  | 'middleName'
+  | 'nickname'
   | 'onboarded'
   | 'role'
   | 'tags'
@@ -138,7 +141,10 @@ export type UserListItemDataObject = Pick<
 };
 export type ListUserDataObject = ListResponse<UserListItemDataObject>;
 
-export type UserListItemResponse = UserListItemDataObject;
+export type UserListItemResponse = UserListItemDataObject & {
+  displayName: string;
+  onboarded: boolean;
+};
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string | null;
@@ -161,6 +167,8 @@ export type UserCreateDataObject = {
   jobTitle?: string;
   labIds: string[];
   lastName: string;
+  middleName?: string;
+  nickname?: string;
   onboarded?: boolean;
   orcid?: string;
   orcidLastModifiedDate?: string;
@@ -253,6 +261,8 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     labs,
     lastName,
     membershipStatus,
+    middleName,
+    nickname,
     onboarded,
     role,
     teams,
@@ -276,6 +286,8 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     labs,
     lastName,
     membershipStatus,
+    middleName,
+    nickname,
     onboarded,
     role,
     teams: teams.map((teamItem) => ({

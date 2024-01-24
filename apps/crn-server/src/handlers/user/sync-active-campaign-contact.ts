@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { syncActiveCampaignContactFactory } from '@asap-hub/server-common';
 import { activeCampaignAccount, activeCampaignToken } from '../../config';
 import UserController from '../../controllers/user.controller';

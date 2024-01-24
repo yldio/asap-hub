@@ -3,8 +3,9 @@ import { UserEvent, gp2, UserResponse } from '@asap-hub/model';
 import { isBoom } from '@hapi/boom';
 import { UserPayload } from '../event-bus';
 import { EventBridgeHandler, Logger, getContactIdByEmail } from '../../utils';
+import { EventBridgeEvent } from 'aws-lambda';
 
-interface UserController {
+export interface UserController {
   fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;
   createActiveCampaignContact(
     user: gp2.UserResponse | UserResponse,
@@ -14,7 +15,6 @@ interface UserController {
   ): Promise<void>;
 }
 
-/* istanbul ignore next */
 export const syncActiveCampaignContactFactory =
   <Controller extends UserController>(
     userController: Controller,
@@ -27,7 +27,6 @@ export const syncActiveCampaignContactFactory =
 
     try {
       const user = await userController.fetchById(event.detail.resourceId);
-
       log.info(`Fetched user ${user.id}`);
 
       if (user.onboarded) {
@@ -39,18 +38,19 @@ export const syncActiveCampaignContactFactory =
 
         if (!contactId) {
           await userController.createActiveCampaignContact(user);
-          log.info(`Contact created ${user.id}`);
+          log.info(`Contact ${user.id} created`);
           return;
         }
 
         await userController.updateActiveCampaignContact(user);
-        log.info(`Contact updated ${user.id}`);
+        log.info(`Contact ${user.id} updated`);
       }
     } catch (e) {
       if (
         (isBoom(e) && e.output.statusCode === 404) ||
         e instanceof NotFoundError
       ) {
+        log.info(e, 'User not found');
         return;
       }
 
@@ -61,3 +61,8 @@ export const syncActiveCampaignContactFactory =
       throw e;
     }
   };
+
+export type UserEventBridgeEvent = EventBridgeEvent<
+  'UsersPublished',
+  UserPayload
+>;

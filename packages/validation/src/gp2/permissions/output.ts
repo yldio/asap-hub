@@ -20,7 +20,6 @@ export const getUserRole = (
   user
     ? association === 'Projects'
       ? user.projects
-      ? user.projects
           .find((proj: gp2Model.UserProject) => proj.id === associationId)
           ?.members.find(
             (member: gp2Model.UserProjectMember) => member.userId === user.id,

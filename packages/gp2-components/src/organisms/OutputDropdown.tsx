@@ -92,6 +92,7 @@ export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
     <SharedOutputDropdownBase
       associations={associations}
       dropdownOptions={dropdownOptions}
+      alignLeft
     />
   );
 };

@@ -95,6 +95,10 @@ const resetButtonStyles = css({
   },
 });
 
+const alignLeftStyles = css({
+  left: 0,
+});
+
 export type ItemType = 'title' | 'inner' | 'default';
 
 const itemStyles = ({
@@ -141,12 +145,14 @@ type DropdownButtonProps = {
   buttonChildren: (menuShown: boolean) => ReactNode;
   noMargin?: boolean;
   dropdownHeight?: number;
+  alignLeft?: boolean;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
   children = [],
   buttonChildren,
   noMargin = false,
+  alignLeft = false,
   primary,
   dropdownHeight,
 }) => {
@@ -188,6 +194,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
             menuContainerStyles,
             menuShown && showMenuStyles,
             trimmedListStyles,
+            alignLeft && alignLeftStyles,
           ]}
         >
           <ul css={listStyles}>

@@ -105,6 +105,7 @@ type SharedOutputDropdownBaseProps = {
   children?: never;
   associations: ReadonlyArray<Association>;
   dropdownOptions: (association: Association) => ReadonlyArray<ItemData>;
+  alignLeft?: boolean;
 };
 
 type SharedOutputDropdownProps = {
@@ -114,7 +115,7 @@ type SharedOutputDropdownProps = {
 
 export const SharedOutputDropdownBase: React.FC<
   SharedOutputDropdownBaseProps
-> = ({ associations, dropdownOptions }) => {
+> = ({ associations, dropdownOptions, alignLeft = false }) => {
   const [selectedAssociation, setSelectedAssociation] = useState<
     Association | undefined
   >(undefined);
@@ -138,6 +139,7 @@ export const SharedOutputDropdownBase: React.FC<
           <div css={iconStyles}>{plusIcon}</div> Share an output
         </>
       )}
+      alignLeft={alignLeft}
     >
       {selectedAssociation
         ? [

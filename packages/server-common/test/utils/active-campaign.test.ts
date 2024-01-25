@@ -2,6 +2,7 @@ import nock from 'nock';
 
 import {
   createContact,
+  updateContact,
   getCustomFields,
   getCustomFieldIdByTitle,
   getContactIdByEmail,
@@ -44,6 +45,52 @@ describe('createActiveCampaignContact', () => {
     nock(`https://${account}.api-us1.com`).post('/api/3/contacts').reply(500);
 
     await expect(createContact(account, token, contact)).rejects.toThrow();
+  });
+});
+
+describe('updateContact', () => {
+  const contact = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    fieldValues: [{ field: 'field1', value: 'value1' }],
+  };
+
+  const mockContact = {
+    contact: {
+      id: '123',
+      cdate: '2024-01-18T03:00:00-06:00',
+      udate: '2024-01-18T03:00:00-06:00',
+    },
+  };
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should make a successful request and return contact response', async () => {
+    nock(`https://${account}.api-us1.com`)
+      .put(`/api/3/contacts/${mockContact.contact.id}`)
+      .reply(201, mockContact);
+
+    const result = await updateContact(
+      account,
+      token,
+      mockContact.contact.id,
+      contact,
+    );
+
+    expect(result).toEqual(mockContact);
+  });
+
+  it('should throw an error if api returns an error', async () => {
+    nock(`https://${account}.api-us1.com`)
+      .put(`/api/3/contacts/${mockContact.contact.id}`)
+      .reply(500);
+
+    await expect(
+      updateContact(account, token, mockContact.contact.id, contact),
+    ).rejects.toThrow();
   });
 });
 

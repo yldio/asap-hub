@@ -27,6 +27,21 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
       items: { type: 'string' },
       nullable: true,
     },
+    tags: {
+      type: 'array',
+      minItems: 1,
+      maxItems: 10,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          id: { type: 'string' },
+          name: { type: 'string' },
+        },
+        required: ['id'],
+      },
+      nullable: true,
+    },
     expertiseAndResourceDescription: { type: 'string', nullable: true },
     researchInterests: { type: 'string', nullable: true },
     responsibilities: { type: 'string', nullable: true },

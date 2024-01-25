@@ -12,24 +12,42 @@ import {
   FetchResearchTagsQueryVariables,
   ResearchTagsOrder,
   ResearchTagsFilter,
+  Environment,
+  addLocaleToFields,
 } from '@asap-hub/contentful';
 import { ResearchTagDataProvider } from '../types';
 
-type ResearchTagItem = NonNullable<
+export type ResearchTagItem = NonNullable<
   NonNullable<FetchResearchTagsQuery['researchTagsCollection']>['items'][number]
 >;
 
 export class ResearchTagContentfulDataProvider
   implements ResearchTagDataProvider
 {
-  constructor(private contentfulClient: GraphQLClient) {}
-
+  constructor(
+    private contentfulClient: GraphQLClient,
+    private getRestClient: () => Promise<Environment>,
+  ) {}
   async fetch(
     options: FetchResearchTagsOptions,
   ): Promise<ListResearchTagDataObject> {
-    const { take = 8, skip = 0, filter = {} } = options;
+    const { search, take = 8, skip = 0, filter = {} } = options;
 
     const where: ResearchTagsFilter = {};
+    const words = (search || '').split(' ').filter(Boolean); // removes whitespaces
+
+    if (words.length) {
+      const filters: ResearchTagsFilter[] = words.reduce(
+        (acc: ResearchTagsFilter[], word: string) =>
+          acc.concat([
+            {
+              OR: [{ name_contains: word }],
+            },
+          ]),
+        [],
+      );
+      where.AND = filters;
+    }
 
     if (filter.type) {
       where.types_contains_all = [filter.type];
@@ -56,6 +74,20 @@ export class ResearchTagContentfulDataProvider
 
   async fetchById(): Promise<null> {
     throw new Error('Method not implemented');
+  }
+
+  async create(name: string): Promise<string> {
+    const environment = await this.getRestClient();
+
+    const researchTagEntry = await environment.createEntry('researchTags', {
+      fields: addLocaleToFields({
+        name,
+      }),
+    });
+
+    await researchTagEntry.publish();
+
+    return researchTagEntry.sys.id;
   }
 }
 

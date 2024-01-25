@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
+import { ResearchTagDataObject } from './research-tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
 
@@ -101,6 +102,7 @@ export interface UserDataObject extends Invitee {
   teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
+  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
 }
 
 export interface UserResponse
@@ -132,6 +134,7 @@ export type UserListItemDataObject = Pick<
   | 'nickname'
   | 'onboarded'
   | 'role'
+  | 'tags'
 > & {
   _tags: string[];
   teams: UserListItemTeam[];
@@ -178,6 +181,7 @@ export type UserCreateDataObject = {
   role: Role;
   social?: Omit<UserSocialLinks, 'orcid'>;
   teams?: Pick<UserTeam, 'id' | 'role' | 'inactiveSinceDate'>[];
+  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
@@ -234,7 +238,7 @@ export type FetchUsersFilter =
       orcidLastSyncDate?: string;
     };
 
-export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;
+export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
 
 export type UserRole = 'Staff' | 'Member' | 'None';
 

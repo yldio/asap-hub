@@ -51,6 +51,14 @@ export const usersContentQueryFragment = gql`
     avatar {
       url
     }
+    tagsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     teamsCollection(limit: 10) {
       items {
         team {
@@ -188,6 +196,14 @@ export const userListItemContentQueryFragment = gql`
     onboarded
     dismissedGettingStarted
     role
+    tagsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     teamsCollection(limit: 10) {
       items {
         team {

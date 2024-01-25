@@ -1,0 +1,26 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build:babel": {
+      "outputs": ["build/**/*", "build-cjs/**/*"]
+    },
+    "//#build:typecheck:tsc": {
+      "outputs": [
+        "{apps,packages}/**/build/**/*.d.ts",
+        "{apps,packages}/**/*.tsbuildinfo"
+      ],
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": ["//#build:typecheck:tsc"]
+    },
+    "build": {
+      "dependsOn": ["typecheck", "build:babel", "//#build:typecheck:tsc"],
+      "outputs": ["build/**/*", "dist/**/*", "build-templates/**/*"]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

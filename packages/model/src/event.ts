@@ -6,6 +6,7 @@ import {
   ResearchOutputResponse,
   ResearchOutputWorkingGroupResponse,
 } from './research-output';
+import { ResearchTagDataObject } from './research-tag';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -49,6 +50,7 @@ export interface EventDataObject extends BasicEvent {
   >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
+  researchTags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   relatedResearch: (Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'id' | 'title'
@@ -88,6 +90,7 @@ export type EventCreateDataObject = Pick<
   | 'endDateTimeZone'
   | 'status'
   | 'tags'
+  | 'researchTags'
   | 'hideMeetingLink'
 > & {
   googleId: string;

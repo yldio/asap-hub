@@ -31,6 +31,7 @@ import {
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
   FETCH_USER_BY_ID,
+  getLinkEntities,
   GraphQLClient,
   Maybe,
   patchAndPublish,
@@ -208,7 +209,12 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
-    const result = await patchMethod(user, fields);
+    const result = await patchMethod(user, {
+      ...fields,
+      ...(data.tags
+        ? { tags: getLinkEntities(data.tags.map((tag) => tag.id)) }
+        : {}),
+    });
     if (!result) {
       return;
     }

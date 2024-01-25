@@ -1,4 +1,4 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import { Environment, getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
 import {
   getFullListResearchTagDataObject,
@@ -6,11 +6,17 @@ import {
 } from '../../fixtures/research-tag.fixtures';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Research Tags Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
   const researchTagsDataProvider = new ResearchTagContentfulDataProvider(
     contentfulGraphqlClientMock,
+    contentfulRestClientMock,
   );
 
   const contentfulGraphqlClientMockServer =
@@ -18,7 +24,7 @@ describe('Research Tags Data Provider', () => {
       ResearchTagsCollection: () => getContentfulGraphqlResearchTagResponse(),
     });
   const researchTagsDataProviderMockGraphql =
-    new ResearchTagContentfulDataProvider(contentfulGraphqlClientMockServer);
+    new ResearchTagContentfulDataProvider(contentfulGraphqlClientMockServer, contentfulRestClientMock);
 
   afterEach(() => {
     jest.resetAllMocks();

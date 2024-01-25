@@ -5,6 +5,7 @@ import {
   InterestGroupRole,
   InterestGroupLeader as GroupLeader,
   ListInterestGroupDataObject,
+  InterestGroupUpdateDataObject,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -20,6 +21,9 @@ import {
   InterestGroupsOrder,
   InterestGroupsFilter,
   Teams,
+  patchAndPublish,
+  pollContentfulGql,
+  Environment,
 } from '@asap-hub/contentful';
 
 import { InterestGroupDataProvider } from '../types';
@@ -48,13 +52,19 @@ type InterestGroupsQueryResult =
 export class InterestGroupContentfulDataProvider
   implements InterestGroupDataProvider
 {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(private contentfulClient: GraphQLClient,
+    private getRestClient: () => Promise<Environment>,
+    ) {}
+
+  private fetchGroupById(id: string) {
+    return this.contentfulClient.request<
+    FetchInterestGroupByIdQuery,
+    FetchInterestGroupByIdQueryVariables
+    >(FETCH_INTEREST_GROUP_BY_ID, { id });
+  }
 
   async fetchById(id: string): Promise<InterestGroupDataObject | null> {
-    const { interestGroups } = await this.contentfulClient.request<
-      FetchInterestGroupByIdQuery,
-      FetchInterestGroupByIdQueryVariables
-    >(FETCH_INTEREST_GROUP_BY_ID, { id });
+    const { interestGroups } = await this.fetchGroupById(id);
 
     if (!interestGroups) {
       return null;
@@ -160,7 +170,22 @@ export class InterestGroupContentfulDataProvider
 
     return this.parseCollection(interestGroupsCollection);
   }
+
+  async update(id: string, data:InterestGroupUpdateDataObject ): Promise<void> {
+    const environment = await this.getRestClient();
+    const group = await environment.getEntry(id);
+    const result = await patchAndPublish(group, data);
+    const fetchGroupById = () => this.fetchGroupById(id);
+
+    await pollContentfulGql<FetchInterestGroupByIdQuery>(
+      result.sys.publishedVersion || Infinity,
+      fetchGroupById,
+      'interestGroups'
+    )
+  }
+
 }
+
 
 const parseGraphQLInterestGroup = (
   interestGroup: InterestGroupItem,

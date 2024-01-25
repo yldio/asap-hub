@@ -3,6 +3,7 @@ import {
   InterestGroupLeaders,
   FETCH_INTEREST_GROUPS,
   FETCH_INTEREST_GROUPS_BY_USER_ID,
+  Environment,
 } from '@asap-hub/contentful';
 import {
   getContentfulGraphql,
@@ -13,16 +14,20 @@ import {
 import { InterestGroupDataProvider } from '../../../src/data-providers/types';
 import { InterestGroupContentfulDataProvider } from '../../../src/data-providers/contentful/interest-group.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('User data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer(getContentfulGraphql());
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
 
   const dataProvider: InterestGroupDataProvider =
-    new InterestGroupContentfulDataProvider(contentfulGraphqlClientMock);
+    new InterestGroupContentfulDataProvider(contentfulGraphqlClientMock, contentfulRestClientMock);
   const dataProviderWithMockServer: InterestGroupDataProvider =
-    new InterestGroupContentfulDataProvider(contentfulGraphqlClientMockServer);
+    new InterestGroupContentfulDataProvider(contentfulGraphqlClientMockServer, contentfulRestClientMock);
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -308,6 +313,7 @@ describe('User data provider', () => {
         const dataProviderWithMockServer: InterestGroupDataProvider =
           new InterestGroupContentfulDataProvider(
             contentfulGraphqlClientMockServer,
+            contentfulRestClientMock
           );
 
         const result = await dataProviderWithMockServer.fetch({

@@ -339,7 +339,7 @@ const findAndUpdateUsers = async (oldTagName: string, newTagId: string) => {
     const user = users.items[i];
     if (user?.expertiseAndResourceTags.includes(oldTagName)) {
       console.log(
-        `USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id} - ${user?.expertiseAndResourceTags}`,
+        `USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id}`,
       );
       console.log(user.tags);
       console.log(`
@@ -350,10 +350,14 @@ const findAndUpdateUsers = async (oldTagName: string, newTagId: string) => {
         `);
 
       const existingTagIds = user.tags?.map(({ id }) => id) || [];
-      const result = await userDataProvider.update(user.id, {
-        tags: getLinkEntities([...existingTagIds, newTagId]),
-      });
-      console.log(result);
+      try {
+        const result = await userDataProvider.update(user.id, {
+          tags: [...existingTagIds, newTagId].map(id => ({id, name: ''})),
+        });
+        console.log(result);
+      } catch(e) {
+        console.error(e);
+      }
     }
   }
 };
@@ -371,7 +375,7 @@ const findAndUpdateEvents = async (oldTagName: string, newTagId: string) => {
         `EVENT FOUND  - ${event.title} - ${event.id} - ${event?.tags}`,
       );
       const existingTagIds = event.researchTags?.map(({ id }) => id) || [];
-      const result = await userDataProvider.update(event.id, {
+      const result = await eventDataProvider.update(event.id, {
         researchTags: getLinkEntities([...existingTagIds, newTagId]),
       });
       console.log(result);
@@ -389,7 +393,7 @@ const findAndUpdateTeams = async (oldTagName: string, newTagId: string) => {
         `EVENT FOUND  - ${team.displayName} - ${team.id} - ${team?.expertiseAndResourceTags}`,
       );
       const existingTagIds = team.tags?.map(({ id }) => id) || [];
-      const result = await userDataProvider.update(team.id, {
+      const result = await teamDataProvider.update(team.id, {
         tags: getLinkEntities([...existingTagIds, newTagId]),
       });
       console.log(result);
@@ -413,7 +417,7 @@ const findAndUpdateInterestGroups = async (
         `EVENT FOUND  - ${group.name} - ${group.id} - ${group?.tags}`,
       );
       const existingTagIds = group.researchTags?.map(({ id }) => id) || [];
-      const result = await userDataProvider.update(group.id, {
+      const result = await interestGroupDataProvider.update(group.id, {
         researchTags: getLinkEntities([...existingTagIds, newTagId]),
       });
       console.log(result);

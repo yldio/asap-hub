@@ -1,9 +1,10 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { UserEvent, gp2, UserResponse } from '@asap-hub/model';
 import { isBoom } from '@hapi/boom';
+import { EventBridgeEvent } from 'aws-lambda';
+
 import { UserPayload } from '../event-bus';
 import { EventBridgeHandler, Logger, getContactIdByEmail } from '../../utils';
-import { EventBridgeEvent } from 'aws-lambda';
 
 export interface UserController {
   fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;

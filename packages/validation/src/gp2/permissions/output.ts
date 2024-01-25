@@ -20,14 +20,15 @@ export const getUserRole = (
   user
     ? association === 'Projects'
       ? user.projects
-          .filter((proj: gp2Model.UserProject) => proj.id === associationId)[0]
-          ?.members.filter(
+      ? user.projects
+          .find((proj: gp2Model.UserProject) => proj.id === associationId)
+          ?.members.find(
             (member: gp2Model.UserProjectMember) => member.userId === user.id,
-          )[0]?.role
+          )?.role
       : user.workingGroups
-          .filter((wg: gp2Model.UserWorkingGroup) => wg.id === associationId)[0]
-          ?.members.filter(
+          .find((wg: gp2Model.UserWorkingGroup) => wg.id === associationId)
+          ?.members.find(
             (member: gp2Model.UserWorkingGroupMember) =>
               member.userId === user.id,
-          )[0]?.role
+          )?.role
     : undefined;

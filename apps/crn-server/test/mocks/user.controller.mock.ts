@@ -8,4 +8,5 @@ export const userControllerMock = {
   update: jest.fn(),
   updateAvatar: jest.fn(),
   syncOrcidProfile: jest.fn(),
+  createActiveCampaignContact: jest.fn(),
 } as unknown as jest.Mocked<UserController>;

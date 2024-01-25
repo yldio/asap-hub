@@ -898,6 +898,10 @@ export type DiscoverMembersCollection = {
 };
 
 export enum DiscoverMembersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -983,6 +987,10 @@ export type DiscoverScientificAdvisoryBoardCollection = {
 };
 
 export enum DiscoverScientificAdvisoryBoardCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -3190,6 +3198,10 @@ export enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
 }
 
 export enum LabsLinkingCollectionsUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -3819,6 +3831,7 @@ export type PagesTextResources = {
 };
 
 export type Query = {
+  _node?: Maybe<_Node>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -3882,6 +3895,12 @@ export type Query = {
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type Query_NodeArgs = {
+  id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAnnouncementsArgs = {
@@ -5896,6 +5915,10 @@ export type TeamMembershipLinkingCollectionsUsersCollectionArgs = {
 };
 
 export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -6883,6 +6906,8 @@ export type TutorialsTextResources = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type Users = Entry & {
+  activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
+  activeCampaignId?: Maybe<Scalars['String']>;
   adminNotes?: Maybe<Scalars['String']>;
   alumniLocation?: Maybe<Scalars['String']>;
   alumniSinceDate?: Maybe<Scalars['DateTime']>;
@@ -6928,6 +6953,16 @@ export type Users = Entry & {
   twitter?: Maybe<Scalars['String']>;
   website1?: Maybe<Scalars['String']>;
   website2?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersActiveCampaignCreatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersActiveCampaignIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -7166,6 +7201,26 @@ export type UsersCollection = {
 export type UsersFilter = {
   AND?: InputMaybe<Array<InputMaybe<UsersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<UsersFilter>>>;
+  activeCampaignCreatedAt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignCreatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignCreatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignId?: InputMaybe<Scalars['String']>;
+  activeCampaignId_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  activeCampaignId_not?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   adminNotes?: InputMaybe<Scalars['String']>;
   adminNotes_contains?: InputMaybe<Scalars['String']>;
   adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7698,6 +7753,10 @@ export enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
 }
 
 export enum UsersOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -8472,6 +8531,10 @@ export enum WorkingGroupsTagsCollectionOrder {
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
+
+export type _Node = {
+  _id: Scalars['ID'];
+};
 
 export type CfAnnouncementsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
@@ -9355,6 +9418,26 @@ export type CfTutorialsNestedFilter = {
 export type CfUsersNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
+  activeCampaignCreatedAt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignCreatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignCreatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignId?: InputMaybe<Scalars['String']>;
+  activeCampaignId_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  activeCampaignId_not?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   adminNotes?: InputMaybe<Scalars['String']>;
   adminNotes_contains?: InputMaybe<Scalars['String']>;
   adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
@@ -15279,6 +15362,7 @@ export type FetchTutorialsQuery = {
 
 export type UsersContentFragment = Pick<
   Users,
+  | 'activeCampaignId'
   | 'lastUpdated'
   | 'alumniSinceDate'
   | 'alumniLocation'
@@ -15420,6 +15504,7 @@ export type FetchUserByIdQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'activeCampaignId'
       | 'lastUpdated'
       | 'alumniSinceDate'
       | 'alumniLocation'
@@ -19742,6 +19827,7 @@ export const UsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'activeCampaignId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },

@@ -9,6 +9,8 @@ export const userControllerMock = {
   update: jest.fn(),
   updateAvatar: jest.fn(),
   syncOrcidProfile: jest.fn(),
+  createActiveCampaignContact: jest.fn(),
+  updateActiveCampaignContact: jest.fn(),
 } satisfies jest.Mocked<
   PublicInterface<UserController>
 > as unknown as jest.Mocked<UserController>;

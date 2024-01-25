@@ -299,6 +299,7 @@ export const parseUserToDataObject = (
 
   return {
     id: user.sys.id,
+    activeCampaignId: user.activeCampaignId || undefined,
     createdDate: user.sys.firstPublishedAt,
     activatedDate: user.activatedDate ?? undefined,
     lastModifiedDate: user.sys.publishedAt,

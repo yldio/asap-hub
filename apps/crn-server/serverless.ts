@@ -3,6 +3,8 @@ import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
 [
+  'ACTIVE_CAMPAIGN_ACCOUNT',
+  'ACTIVE_CAMPAIGN_TOKEN',
   'ALGOLIA_INDEX',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
@@ -40,6 +42,8 @@ if (stage === 'dev' || stage === 'production') {
   });
 }
 
+const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT!;
+const activeCampaignToken = process.env.ACTIVE_CAMPAIGN_TOKEN!;
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
@@ -146,6 +150,8 @@ const serverlessConfig: AWS = {
       lambda: true,
     },
     environment: {
+      ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+      ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
       APP_ORIGIN: appUrl,
       DEBUG: stage === 'production' ? '' : 'crn-server,http',
       NODE_ENV: nodeEnv,
@@ -367,6 +373,25 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         LOG_LEVEL: 'warn',
+      },
+    },
+    syncActiveCampaignContact: {
+      handler: './src/handlers/user/sync-active-campaign-contact.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['UsersPublished'] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+        ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
+        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     syncUserOrcidContentful: {

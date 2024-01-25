@@ -324,6 +324,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 
   return {
     id: item.sys.id,
+    activeCampaignId: item.activeCampaignId || undefined,
     membershipStatus: [
       item.alumniSinceDate
         ? inactiveUserMembershipStatus

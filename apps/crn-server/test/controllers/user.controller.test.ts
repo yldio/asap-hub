@@ -1,4 +1,9 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import {
+  createContact,
+  getCustomFields,
+  updateContact,
+} from '@asap-hub/server-common';
 import nock from 'nock';
 import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
@@ -9,6 +14,25 @@ import {
   getUserResponse,
 } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
+
+jest.mock('@asap-hub/server-common', () => ({
+  ...jest.requireActual('@asap-hub/server-common'),
+  getCustomFields: jest.fn(),
+  createContact: jest.fn(),
+  updateContact: jest.fn(),
+}));
+
+const mockGetCustomFields = getCustomFields as jest.MockedFunction<
+  typeof getCustomFields
+>;
+
+const mockCreateContact = createContact as jest.MockedFunction<
+  typeof createContact
+>;
+
+const mockUpdateContact = updateContact as jest.MockedFunction<
+  typeof updateContact
+>;
 
 describe('Users controller', () => {
   const assetDataProviderMock = getDataProviderMock();
@@ -470,6 +494,152 @@ describe('Users controller', () => {
         }),
         { suppressConflict: true },
       );
+    });
+  });
+
+  describe('ActiveCampaign', () => {
+    const customFieldsMock = {
+      fields: [
+        { title: 'Team', id: '10' },
+        { title: 'CRN Team Role', id: '15' },
+        { title: 'Lab', id: '7' },
+        { title: 'ORCID', id: '16' },
+        { title: 'Nickname', id: '19' },
+        { title: 'Middlename', id: '20' },
+        { title: 'Alumnistatus', id: '12' },
+        { title: 'Country', id: '3' },
+        { title: 'Institution', id: '9' },
+        { title: 'Working Group', id: '33' },
+        { title: 'Interest Group', id: '35' },
+        { title: 'LinkedIn', id: '28' },
+      ],
+    };
+
+    describe('createActiveCampaignContact', () => {
+      test('calls createContact function and updates user with ActiveCampaign createAt and id', async () => {
+        const user = getUserResponse();
+
+        mockGetCustomFields.mockResolvedValue(customFieldsMock);
+
+        const activeCampaignId = '123';
+        const date = '2024-01-18T09:00:00.000Z';
+        mockCreateContact.mockResolvedValue({
+          contact: {
+            id: activeCampaignId,
+            cdate: date,
+            udate: date,
+          },
+        });
+
+        await userController.createActiveCampaignContact(user);
+
+        expect(mockCreateContact).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.any(String),
+          {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            fieldValues: [
+              { field: '10', value: `Team ${user.teams[0]?.displayName}` },
+              { field: '15', value: user.teams[0]?.role },
+              { field: '7', value: user.labs[0]?.name || '' },
+              { field: '16', value: user.orcid },
+              { field: '19', value: user.nickname },
+              { field: '20', value: user.middleName },
+              { field: '12', value: 'Alumni' },
+              { field: '3', value: user.country },
+              { field: '9', value: user.institution },
+              { field: '33', value: user.workingGroups[0]?.name || '' },
+              { field: '35', value: user.interestGroups[0]?.name || '' },
+              { field: '28', value: user.social?.linkedIn || '' },
+            ],
+          },
+        );
+
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+          activeCampaignCreatedAt: new Date(date),
+          activeCampaignId: activeCampaignId,
+        });
+      });
+    });
+
+    describe('updateActiveCampaignContact', () => {
+      test('calls updateContact function', async () => {
+        const activeCampaignId = '2';
+
+        const user = {
+          ...getUserResponse(),
+          activeCampaignId,
+        };
+
+        mockGetCustomFields.mockResolvedValue(customFieldsMock);
+
+        const date = '2024-01-18T09:00:00.000Z';
+        mockUpdateContact.mockResolvedValue({
+          contact: {
+            id: activeCampaignId,
+            cdate: date,
+            udate: date,
+          },
+        });
+
+        await userController.updateActiveCampaignContact(
+          activeCampaignId,
+          user,
+        );
+
+        expect(mockUpdateContact).toHaveBeenCalledWith(
+          expect.any(String),
+          expect.any(String),
+          activeCampaignId,
+          {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            fieldValues: [
+              { field: '10', value: `Team ${user.teams[0]?.displayName}` },
+              { field: '15', value: user.teams[0]?.role },
+              { field: '7', value: user.labs[0]?.name || '' },
+              { field: '16', value: user.orcid },
+              { field: '19', value: user.nickname },
+              { field: '20', value: user.middleName },
+              { field: '12', value: 'Alumni' },
+              { field: '3', value: user.country },
+              { field: '9', value: user.institution },
+              { field: '33', value: user.workingGroups[0]?.name || '' },
+              { field: '35', value: user.interestGroups[0]?.name || '' },
+              { field: '28', value: user.social?.linkedIn || '' },
+            ],
+          },
+        );
+      });
+
+      test('updates user data if it has not an activeCampaignId', async () => {
+        const activeCampaignId = '2';
+
+        const user = getUserResponse();
+
+        mockGetCustomFields.mockResolvedValue(customFieldsMock);
+
+        const date = '2024-01-18T09:00:00.000Z';
+        mockUpdateContact.mockResolvedValue({
+          contact: {
+            id: activeCampaignId,
+            cdate: date,
+            udate: date,
+          },
+        });
+
+        await userController.updateActiveCampaignContact(
+          activeCampaignId,
+          user,
+        );
+
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+          activeCampaignId: activeCampaignId,
+        });
+      });
     });
   });
 });

@@ -2,11 +2,16 @@ import Intercept from 'apr-intercept';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import {
+  createContact,
   fetchOrcidProfile,
+  getCustomFieldIdByTitle,
+  getCustomFields,
   isValidOrcidResponse,
   parseUserDisplayName,
   transformOrcidWorks,
+  updateContact,
 } from '@asap-hub/server-common';
+import { activeCampaignAccount, activeCampaignToken } from '../config';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import logger from '../utils/logger';
 
@@ -35,6 +40,43 @@ export default class UserController {
       contentType,
     });
     return this.update(id, { avatar: assetId });
+  }
+
+  async createActiveCampaignContact(user: gp2.UserResponse): Promise<void> {
+    const contactPayload = await getContactPayload(user);
+
+    const contactResponse = await createContact(
+      activeCampaignAccount,
+      activeCampaignToken,
+      contactPayload,
+    );
+
+    if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
+      await this.userDataProvider.update(user.id, {
+        activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
+        activeCampaignId: contactResponse.contact.id,
+      });
+    }
+  }
+
+  async updateActiveCampaignContact(
+    contactId: string,
+    user: gp2.UserResponse,
+  ): Promise<void> {
+    const contactPayload = await getContactPayload(user);
+
+    await updateContact(
+      activeCampaignAccount,
+      activeCampaignToken,
+      contactId,
+      contactPayload,
+    );
+
+    if (!user.activeCampaignId) {
+      await this.userDataProvider.update(user.id, {
+        activeCampaignId: contactId,
+      });
+    }
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {
@@ -170,3 +212,64 @@ const parseUserToResponse = (
   workingGroupIds: user.workingGroups.map(({ id }) => id),
   tagIds: user.tags.map(({ id }) => id),
 });
+
+const getContactPayload = async (user: gp2.UserResponse) => {
+  const customFields = await getCustomFields(
+    activeCampaignAccount,
+    activeCampaignToken,
+  );
+
+  const fieldIdByTitle = getCustomFieldIdByTitle(customFields);
+
+  return {
+    firstName: user.firstName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    lastName: user.lastName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    email: user.email!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    fieldValues: [
+      {
+        field: fieldIdByTitle.Nickname!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.nickname || '',
+      },
+      {
+        field: fieldIdByTitle.Middlename!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.middleName || '',
+      },
+      {
+        field: fieldIdByTitle.ORCID!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.orcid || '',
+      },
+      {
+        field: fieldIdByTitle.Country!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.country || '',
+      },
+      {
+        field: fieldIdByTitle.Region!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.region || '',
+      },
+      {
+        field: fieldIdByTitle.Department!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.positions[0]?.department || '',
+      },
+      {
+        field: fieldIdByTitle.Institution!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.positions[0]?.institution || '',
+      },
+      {
+        field: fieldIdByTitle['GP2 Hub Role']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.role || '',
+      },
+      {
+        field: fieldIdByTitle['GP2 Working Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.workingGroups[0]?.title || '',
+      },
+      {
+        field: fieldIdByTitle.Project!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.projects[0]?.title || '',
+      },
+      {
+        field: fieldIdByTitle.LinkedIn!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: user.social?.linkedIn || '',
+      },
+    ],
+  };
+};

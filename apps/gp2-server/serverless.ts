@@ -3,6 +3,8 @@ import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
 [
+  'ACTIVE_CAMPAIGN_ACCOUNT',
+  'ACTIVE_CAMPAIGN_TOKEN',
   'ALGOLIA_INDEX',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
@@ -28,6 +30,8 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
+const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT!;
+const activeCampaignToken = process.env.ACTIVE_CAMPAIGN_TOKEN!;
 const auth0Audience = process.env.AUTH0_AUDIENCE!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
 const auth0SharedSecret = process.env.AUTH0_SHARED_SECRET!;
@@ -113,6 +117,8 @@ const serverlessConfig: AWS = {
     environment: {
       NODE_ENV: nodeEnv,
       LOG_LEVEL: stage === 'production' ? 'error' : 'info',
+      ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+      ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
       APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
       ALGOLIA_APP_ID: `\${ssm:gp2-algolia-app-id-${envAlias}}`,
@@ -849,6 +855,27 @@ const serverlessConfig: AWS = {
         CLOUDFRONT_DISTRIBUTION_ID: {
           Ref: 'CloudFrontDistribution',
         },
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    syncActiveCampaignContact: {
+      handler: './src/handlers/user/sync-active-campaign-contact.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'UsersPublished',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+        ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

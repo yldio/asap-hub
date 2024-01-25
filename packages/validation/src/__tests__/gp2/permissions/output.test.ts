@@ -41,7 +41,7 @@ describe.each`
     test(`returns undefined when user data is null`, () => {
       expect(
         getUserRole(null, associationType, associationId),
-      ).not.toBeDefined();
+      ).toBeUndefined();
     });
   },
 );

@@ -25,8 +25,8 @@ export interface UserController {
 }
 
 export const syncActiveCampaignContactFactory =
-  <Controller extends UserController>(
-    userController: Controller,
+  (
+    userController: UserController,
     log: Logger,
     getContactIdByEmail: (
       account: string,

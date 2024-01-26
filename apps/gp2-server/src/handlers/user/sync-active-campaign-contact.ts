@@ -4,6 +4,9 @@ import {
   ContactPayload,
   getCustomFieldIdByTitle,
   getCustomFields,
+  getContactIdByEmail,
+  createContact,
+  updateContact,
   syncActiveCampaignContactFactory,
 } from '@asap-hub/server-common';
 import { activeCampaignAccount, activeCampaignToken } from '../../config';
@@ -93,6 +96,9 @@ export const handler = sentryWrapper(
   syncActiveCampaignContactFactory(
     new UserController(userDataProvider, assetDataProvider),
     logger,
+    getContactIdByEmail,
+    createContact,
+    updateContact,
     activeCampaignAccount,
     activeCampaignToken,
     getContactPayload,

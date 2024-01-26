@@ -12,10 +12,8 @@ import { UserPayload } from '../event-bus';
 import {
   EventBridgeHandler,
   Logger,
-  getContactIdByEmail,
-  createContact,
-  updateContact,
   ContactPayload,
+  ContactResponse,
 } from '../../utils';
 
 export interface UserController {
@@ -30,6 +28,22 @@ export const syncActiveCampaignContactFactory =
   <Controller extends UserController>(
     userController: Controller,
     log: Logger,
+    getContactIdByEmail: (
+      account: string,
+      token: string,
+      email: string,
+    ) => Promise<string | null>,
+    createContact: (
+      account: string,
+      token: string,
+      contact: ContactPayload,
+    ) => Promise<ContactResponse>,
+    updateContact: (
+      account: string,
+      token: string,
+      id: string,
+      contact: ContactPayload,
+    ) => Promise<ContactResponse>,
     activeCampaignAccount: string,
     activeCampaignToken: string,
     getContactPayload:

@@ -10,7 +10,7 @@ export type ContactPayload = {
   }[];
 };
 
-type ContactResponse = {
+export type ContactResponse = {
   contact: {
     id: string;
     cdate: string;

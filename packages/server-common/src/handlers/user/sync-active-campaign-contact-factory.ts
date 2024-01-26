@@ -1,20 +1,29 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { UserEvent, gp2, UserResponse } from '@asap-hub/model';
+import {
+  UserEvent,
+  gp2,
+  UserResponse,
+  UserUpdateRequest,
+} from '@asap-hub/model';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 
 import { UserPayload } from '../event-bus';
-import { EventBridgeHandler, Logger, getContactIdByEmail } from '../../utils';
+import {
+  EventBridgeHandler,
+  Logger,
+  getContactIdByEmail,
+  createContact,
+  updateContact,
+  ContactPayload,
+} from '../../utils';
 
 export interface UserController {
   fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;
-  createActiveCampaignContact(
-    user: gp2.UserResponse | UserResponse,
-  ): Promise<void>;
-  updateActiveCampaignContact(
-    contactId: string,
-    user: gp2.UserResponse | UserResponse,
-  ): Promise<void>;
+  update(
+    id: string,
+    update: UserUpdateRequest | gp2.UserUpdateRequest,
+  ): Promise<gp2.UserResponse | UserResponse>;
 }
 
 export const syncActiveCampaignContactFactory =
@@ -23,6 +32,9 @@ export const syncActiveCampaignContactFactory =
     log: Logger,
     activeCampaignAccount: string,
     activeCampaignToken: string,
+    getContactPayload:
+      | ((user: gp2.UserResponse) => Promise<ContactPayload>)
+      | ((user: UserResponse) => Promise<ContactPayload>),
   ): EventBridgeHandler<UserEvent, UserPayload> =>
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
@@ -38,13 +50,51 @@ export const syncActiveCampaignContactFactory =
           user.email,
         );
 
+        let contactPayload: ContactPayload;
+
+        if ('teams' in user) {
+          contactPayload = await (
+            getContactPayload as (user: UserResponse) => Promise<ContactPayload>
+          )(user);
+        } else {
+          contactPayload = await (
+            getContactPayload as (
+              user: gp2.UserResponse,
+            ) => Promise<ContactPayload>
+          )(user);
+        }
+
         if (!contactId) {
-          await userController.createActiveCampaignContact(user);
+          const contactResponse = await createContact(
+            activeCampaignAccount,
+            activeCampaignToken,
+            contactPayload,
+          );
+
+          if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
+            await userController.update(user.id, {
+              activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
+              activeCampaignId: contactResponse.contact.id,
+            });
+          }
+
           log.info(`Contact ${user.id} created`);
           return;
         }
 
-        await userController.updateActiveCampaignContact(contactId, user);
+        await updateContact(
+          activeCampaignAccount,
+          activeCampaignToken,
+          contactId,
+          contactPayload,
+        );
+
+        if (!user.activeCampaignId) {
+          await userController.update(user.id, {
+            activeCampaignId: contactId,
+          });
+        }
+
         log.info(
           `Contact with cms id ${user.id} and active campaign id ${contactId} updated`,
         );

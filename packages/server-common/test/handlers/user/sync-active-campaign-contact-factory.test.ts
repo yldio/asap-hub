@@ -54,13 +54,23 @@ mockUpdateContact.mockResolvedValue({
   },
 });
 
+const mockContactPayload = {
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'johndoe@asap.com',
+  fieldValues: [
+    { field: '1', value: 'Brazil' },
+    { field: '2', value: 'Alumni' },
+    { field: '3', value: 'South America' },
+  ],
+};
+
 describe('Sync ActiveCampaign Contact Factory', () => {
   const activeCampaignAccount = 'account';
   const activeCampaignToken = 'token';
   const userController = {
     fetchById: jest.fn(),
-    createActiveCampaignContact: jest.fn(),
-    updateActiveCampaignContact: jest.fn(),
+    update: jest.fn(),
   } as unknown as jest.Mocked<UserController>;
 
   const syncActiveCampaignContactHandler = syncActiveCampaignContactFactory(
@@ -68,10 +78,11 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     loggerMock,
     activeCampaignAccount,
     activeCampaignToken,
+    jest.fn().mockResolvedValue(mockContactPayload),
   );
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   test('should create ActiveCampaign contact if user is onboarded and no contactId exists', async () => {
@@ -90,18 +101,23 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignToken,
       user.email,
     );
-    expect(userController.createActiveCampaignContact).toHaveBeenCalledWith(
-      user,
+    expect(mockCreateContact).toHaveBeenCalledWith(
+      activeCampaignAccount,
+      activeCampaignToken,
+      mockContactPayload,
     );
+    expect(userController.update).toHaveBeenCalledWith(user.id, {
+      activeCampaignCreatedAt: new Date(date),
+      activeCampaignId,
+    });
     expect(logger.info).toHaveBeenCalledWith('Contact user-id-1 created');
   });
 
   it('should update ActiveCampaign contact if user is onboarded and contactId exists', async () => {
-    const contactId = '1';
     const userId = getUserDataObject().id;
     const user = getUserResponse();
     userController.fetchById.mockResolvedValue(user);
-    mockedGetContactIdByEmail.mockResolvedValue(contactId);
+    mockedGetContactIdByEmail.mockResolvedValue(activeCampaignId);
 
     const event = getEventBridgeEventMock(userId);
 
@@ -113,12 +129,17 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignToken,
       user.email,
     );
-    expect(userController.updateActiveCampaignContact).toHaveBeenCalledWith(
-      contactId,
-      user,
+    expect(mockUpdateContact).toHaveBeenCalledWith(
+      activeCampaignAccount,
+      activeCampaignToken,
+      activeCampaignId,
+      mockContactPayload,
     );
+    expect(userController.update).toHaveBeenCalledWith(user.id, {
+      activeCampaignId,
+    });
     expect(logger.info).toHaveBeenCalledWith(
-      'Contact with cms id user-id-1 and active campaign id 1 updated',
+      'Contact with cms id user-id-1 and active campaign id 123 updated',
     );
   });
 

@@ -1,6 +1,6 @@
 import Got from 'got';
 
-type ContactPayload = {
+export type ContactPayload = {
   firstName: string;
   lastName: string;
   email: string;

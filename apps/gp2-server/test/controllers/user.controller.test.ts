@@ -1,10 +1,5 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
-import {
-  createContact,
-  getCustomFields,
-  updateContact,
-} from '@asap-hub/server-common';
 import nock from 'nock';
 import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
@@ -12,25 +7,6 @@ import { getUserDataObject, getUserResponse } from '../fixtures/user.fixtures';
 import { assetDataProviderMock } from '../mocks/asset.data-provider.mock';
 import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 jest.mock('../../src/utils/logger');
-
-jest.mock('@asap-hub/server-common', () => ({
-  ...jest.requireActual('@asap-hub/server-common'),
-  getCustomFields: jest.fn(),
-  createContact: jest.fn(),
-  updateContact: jest.fn(),
-}));
-
-const mockGetCustomFields = getCustomFields as jest.MockedFunction<
-  typeof getCustomFields
->;
-
-const mockCreateContact = createContact as jest.MockedFunction<
-  typeof createContact
->;
-
-const mockUpdateContact = updateContact as jest.MockedFunction<
-  typeof updateContact
->;
 
 describe('Users controller', () => {
   const userController = new Users(userDataProviderMock, assetDataProviderMock);
@@ -548,148 +524,6 @@ describe('Users controller', () => {
           ).toISOString(),
         }),
       );
-    });
-  });
-
-  describe('ActiveCampaign', () => {
-    const customFieldsMock = {
-      fields: [
-        { title: 'Nickname', id: '19' },
-        { title: 'Middlename', id: '20' },
-        { title: 'ORCID', id: '16' },
-        { title: 'Country', id: '3' },
-        { title: 'Region', id: '9' },
-        { title: 'Department', id: '10' },
-        { title: 'Institution', id: '11' },
-        { title: 'GP2 Hub Role', id: '12' },
-        { title: 'GP2 Working Group', id: '13' },
-        { title: 'Project', id: '14' },
-        { title: 'LinkedIn', id: '28' },
-      ],
-    };
-
-    describe('createActiveCampaignContact', () => {
-      test('calls createContact function and updates user with ActiveCampaign createAt and id', async () => {
-        const user = getUserResponse();
-
-        mockGetCustomFields.mockResolvedValue(customFieldsMock);
-
-        const activeCampaignId = '123';
-        const date = '2024-01-18T09:00:00.000Z';
-        mockCreateContact.mockResolvedValue({
-          contact: {
-            id: activeCampaignId,
-            cdate: date,
-            udate: date,
-          },
-        });
-
-        await userController.createActiveCampaignContact(user);
-
-        expect(mockCreateContact).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(String),
-          {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            fieldValues: [
-              { field: '19', value: user.nickname },
-              { field: '20', value: user.middleName },
-              { field: '16', value: user.orcid },
-              { field: '3', value: user.country },
-              { field: '9', value: user.region },
-              { field: '10', value: user.positions[0]?.department || '' },
-              { field: '11', value: user.positions[0]?.institution || '' },
-              { field: '12', value: user.role },
-              { field: '13', value: user.workingGroups[0]?.title || '' },
-              { field: '14', value: user.projects[0]?.title || '' },
-              { field: '28', value: user.social?.linkedIn },
-            ],
-          },
-        );
-
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
-          activeCampaignCreatedAt: new Date(date),
-          activeCampaignId,
-        });
-      });
-    });
-
-    describe('updateActiveCampaignContact', () => {
-      test('calls updateContact function', async () => {
-        const activeCampaignId = '2';
-
-        const user = {
-          ...getUserResponse(),
-          activeCampaignId,
-        };
-
-        mockGetCustomFields.mockResolvedValue(customFieldsMock);
-
-        const date = '2024-01-18T09:00:00.000Z';
-        mockUpdateContact.mockResolvedValue({
-          contact: {
-            id: activeCampaignId,
-            cdate: date,
-            udate: date,
-          },
-        });
-
-        await userController.updateActiveCampaignContact(
-          activeCampaignId,
-          user,
-        );
-
-        expect(mockUpdateContact).toHaveBeenCalledWith(
-          expect.any(String),
-          expect.any(String),
-          activeCampaignId,
-          {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            fieldValues: [
-              { field: '19', value: user.nickname },
-              { field: '20', value: user.middleName },
-              { field: '16', value: user.orcid },
-              { field: '3', value: user.country },
-              { field: '9', value: user.region },
-              { field: '10', value: user.positions[0]?.department || '' },
-              { field: '11', value: user.positions[0]?.institution || '' },
-              { field: '12', value: user.role },
-              { field: '13', value: user.workingGroups[0]?.title || '' },
-              { field: '14', value: user.projects[0]?.title || '' },
-              { field: '28', value: user.social?.linkedIn },
-            ],
-          },
-        );
-      });
-
-      test('does not call updateContact function when user does not have an activeCampaignId', async () => {
-        const activeCampaignId = '2';
-        const user = getUserResponse();
-        delete user.activeCampaignId;
-
-        const date = '2024-01-18T09:00:00.000Z';
-        mockUpdateContact.mockResolvedValue({
-          contact: {
-            id: activeCampaignId,
-            cdate: date,
-            udate: date,
-          },
-        });
-        mockGetCustomFields.mockResolvedValue(customFieldsMock);
-
-        await userController.updateActiveCampaignContact(
-          activeCampaignId,
-          user,
-        );
-
-        expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
-          activeCampaignId,
-        });
-      });
     });
   });
 });

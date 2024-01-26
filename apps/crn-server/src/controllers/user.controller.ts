@@ -8,17 +8,12 @@ import {
   UserUpdateRequest,
 } from '@asap-hub/model';
 import {
-  createContact,
   fetchOrcidProfile,
-  getCustomFields,
-  getCustomFieldIdByTitle,
   isValidOrcidResponse,
   parseUserDisplayName,
   transformOrcidWorks,
-  updateContact,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
-import { activeCampaignAccount, activeCampaignToken } from '../config';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import logger from '../utils/logger';
 
@@ -35,42 +30,6 @@ export default class UserController {
   ): Promise<UserResponse> {
     await this.userDataProvider.update(id, update, { suppressConflict });
     return this.fetchById(id);
-  }
-  async createActiveCampaignContact(user: UserResponse): Promise<void> {
-    const contactPayload = await getContactPayload(user);
-
-    const contactResponse = await createContact(
-      activeCampaignAccount,
-      activeCampaignToken,
-      contactPayload,
-    );
-
-    if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
-      await this.userDataProvider.update(user.id, {
-        activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
-        activeCampaignId: contactResponse.contact.id,
-      });
-    }
-  }
-
-  async updateActiveCampaignContact(
-    contactId: string,
-    user: UserResponse,
-  ): Promise<void> {
-    const contactPayload = await getContactPayload(user);
-
-    await updateContact(
-      activeCampaignAccount,
-      activeCampaignToken,
-      contactId,
-      contactPayload,
-    );
-
-    if (!user.activeCampaignId) {
-      await this.userDataProvider.update(user.id, {
-        activeCampaignId: contactId,
-      });
-    }
   }
 
   async fetch(options: FetchUsersOptions): Promise<ListUserResponse> {
@@ -222,70 +181,5 @@ export const parseUserToResponse = ({
     ),
     dismissedGettingStarted,
     onboarded,
-  };
-};
-
-const getContactPayload = async (user: UserResponse) => {
-  const customFields = await getCustomFields(
-    activeCampaignAccount,
-    activeCampaignToken,
-  );
-
-  const fieldIdByTitle = getCustomFieldIdByTitle(customFields);
-
-  return {
-    firstName: user.firstName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    lastName: user.lastName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    email: user.email!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    fieldValues: [
-      {
-        field: fieldIdByTitle.Team!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.teams.length ? `Team ${user.teams[0]!.displayName!}` : '', // eslint-disable-line @typescript-eslint/no-non-null-assertion
-      },
-      {
-        field: fieldIdByTitle['CRN Team Role']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.teams[0]?.role || '',
-      },
-      {
-        field: fieldIdByTitle.Lab!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.labs[0]?.name || '',
-      },
-      {
-        field: fieldIdByTitle.ORCID!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.orcid || '',
-      },
-      {
-        field: fieldIdByTitle.Nickname!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.nickname || '',
-      },
-      {
-        field: fieldIdByTitle.Middlename!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.middleName || '',
-      },
-      {
-        field: fieldIdByTitle.Alumnistatus!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.alumniSinceDate ? 'Alumni' : 'Non Alumni',
-      },
-      {
-        field: fieldIdByTitle.Country!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.country || '',
-      },
-      {
-        field: fieldIdByTitle.Institution!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.institution || '',
-      },
-      {
-        field: fieldIdByTitle['Working Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.workingGroups[0]?.name || '',
-      },
-      {
-        field: fieldIdByTitle['Interest Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.interestGroups[0]?.name || '',
-      },
-      {
-        field: fieldIdByTitle.LinkedIn!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.social?.linkedIn || '',
-      },
-    ],
   };
 };

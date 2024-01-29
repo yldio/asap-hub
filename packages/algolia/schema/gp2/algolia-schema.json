@@ -17,6 +17,13 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "title",
+    "_tags",
+    "role",
+    "degrees",
+    "city",
+    "country",
+    "region",
+    "contributingCohorts.name",
     "workingGroup.title",
     "projectIds",
     "workingGroupIds"

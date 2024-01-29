@@ -126,7 +126,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       {announcements.length > 0 && (
         <div>
           <Headline2 styleAsHeading={3}>Announcements</Headline2>
-          <div css={infoStyles}>Last announcements from admins.</div>
+          <div css={infoStyles}>Latest admin announcements.</div>
           <RemindersCard
             reminders={announcements}
             limit={3}

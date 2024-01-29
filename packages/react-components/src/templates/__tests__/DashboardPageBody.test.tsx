@@ -238,6 +238,7 @@ describe('the announcements card', () => {
       />,
     );
     expect(screen.getByText('Announcements')).toBeVisible();
+    expect(screen.getByText('Latest admin announcements.')).toBeVisible();
   });
 });
 

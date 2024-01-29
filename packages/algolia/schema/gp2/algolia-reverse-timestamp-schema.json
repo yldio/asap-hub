@@ -28,6 +28,7 @@
     "id",
     "lastName",
     "project.title",
+    "projects.title",
     "speakers.externalUser.name",
     "speakers.team.displayName",
     "speakers.user.displayName",
@@ -40,6 +41,7 @@
     "region",
     "contributingCohorts.name",
     "workingGroup.title",
+    "workingGroups.title",
     "projectIds",
     "workingGroupIds"
   ]

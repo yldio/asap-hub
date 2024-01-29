@@ -130,8 +130,8 @@ describe('Research Tags Data Provider', () => {
       });
     });
     test('Should query data properly when passing search param', async () => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-researchTagsCollection: {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchTagsCollection: {
           total: 1,
           items: [
             {
@@ -144,28 +144,26 @@ researchTagsCollection: {
             },
           ],
         },
-        });
-
-        const search = 'Tag';
-        await researchTagsDataProvider.fetch({
-          search,
-        });
-
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.objectContaining({
-            limit: 8,
-            order: ['name_ASC'],
-            skip: 0,
-            where: {
-              AND: [
-                { OR: [{ name_contains: 'Tag' }] },
-              ],
-            },
-          }),
-        );
       });
+
+      const search = 'Tag';
+      await researchTagsDataProvider.fetch({
+        search,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          limit: 8,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            AND: [{ OR: [{ name_contains: 'Tag' }] }],
+          },
+        }),
+      );
     });
+  });
 
   describe('Fetch-by-id', () => {
     test('should throw an error', async () => {
@@ -174,7 +172,7 @@ researchTagsCollection: {
   });
 
   describe('create', () => {
-beforeEach(() => {
+    beforeEach(() => {
       environmentMock.createEntry.mockResolvedValue({
         sys: { id: '1' },
         publish: jest.fn(),
@@ -187,16 +185,14 @@ beforeEach(() => {
         sys: { id: '1' },
         publish,
       } as unknown as Entry);
-      const response = await researchTagsDataProvider.create(
-        'tag'
-      );
+      const response = await researchTagsDataProvider.create('tag');
       expect(environmentMock.createEntry).toHaveBeenCalled();
       expect(environmentMock.createEntry).toHaveBeenCalledWith(
         'researchTags',
         expect.anything(),
       );
       expect(publish).toHaveBeenCalled();
-      expect(response).toBe('1')
+      expect(response).toBe('1');
     });
   });
 });

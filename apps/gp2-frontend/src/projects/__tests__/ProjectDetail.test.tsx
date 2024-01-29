@@ -262,7 +262,7 @@ describe('ProjectDetail', () => {
   });
 
   it.each(gp2Model.userRoles.filter((role) => role !== 'Administrator'))(
-    'does not render the add modal when the user is not an Administrator',
+    'does not render the add modal when the user is not an Administrator or Project manager',
     async (role) => {
       const project = gp2Fixtures.createProjectResponse();
       project.members = [
@@ -305,6 +305,33 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
       role: 'Administrator',
+      route: gp2Routing
+        .projects({})
+        .project({ projectId: project.id })
+        .workspace({})
+        .add({}).$,
+    });
+    expect(
+      screen.getByRole('heading', { name: /Add resource/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the add modal when the user is not Administrator but is a Project manager', async () => {
+    const project = gp2Fixtures.createProjectResponse();
+    project.members = [
+      {
+        userId: '23',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Project manager',
+      },
+    ];
+    mockGetProject.mockResolvedValueOnce(project);
+    await renderProjectDetail({
+      id: project.id,
+      userId: '23',
+      role: 'Trainee',
+      projects: [project],
       route: gp2Routing
         .projects({})
         .project({ projectId: project.id })

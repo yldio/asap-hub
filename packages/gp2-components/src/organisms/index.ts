@@ -20,6 +20,7 @@ export { default as OnboardingPageHeader } from './OnboardingPageHeader';
 export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as OutputCard } from './OutputCard';
 export { default as OutputCohortsCard } from './OutputCohortsCard';
+export { default as OutputDropdown } from './OutputDropdown';
 export { default as OutputIdentifier } from './OutputIdentifier';
 export { default as PageBanner } from './PageBanner';
 export { default as ProjectCard } from './ProjectCard';

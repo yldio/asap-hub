@@ -8,11 +8,9 @@ import {
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
-import {
-  useCurrentUserGP2,
-  useCurrentUserRoleGP2,
-} from '@asap-hub/react-context';
+import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 import { FC, lazy, useEffect } from 'react';
 import {
   Redirect,
@@ -29,6 +27,7 @@ import { useOutputById, useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
 
 const { projects } = gp2Routing;
+const { getUserRole } = gp2Validation;
 
 type ProjectDetailProps = {
   currentTime: Date;
@@ -86,8 +85,9 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
     project?.members.some(({ userId }) => userId === currentUser?.id) || false;
-  const isAdministrator = currentUser?.role === 'Administrator';
-  const userRole = useCurrentUserRoleGP2(projectId, 'Projects');
+  const userRole = getUserRole(currentUser, 'Projects', projectId);
+  const isAdministrator =
+    currentUser?.role === 'Administrator' || userRole === 'Project manager';
   const projectRoute = projects({}).project({ projectId });
   const createOutputRoute = projectRoute.createOutput;
   const duplicateOutputRoute = projectRoute.duplicateOutput;
@@ -106,7 +106,6 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,
   });
-  const canDuplicateOutput = isAdministrator || userRole === 'Project manager';
 
   if (project) {
     return (
@@ -118,7 +117,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             </OutputFormPage>
           </Frame>
         </Route>
-        {canDuplicateOutput && (
+        {isAdministrator && (
           <Route exact path={path + duplicateOutputRoute.template}>
             <Frame title="Duplicate Output">
               <DuplicateOutput />

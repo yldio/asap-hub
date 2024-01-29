@@ -86,6 +86,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: Production
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Build ${{matrix.app}}
         run: yarn workspace @asap-hub/contentful-app-${{ matrix.app }} build
       - name: Deploy ${{matrix.app}}

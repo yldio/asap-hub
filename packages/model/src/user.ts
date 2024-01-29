@@ -254,6 +254,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     displayName,
     email,
     expertiseAndResourceTags,
+    tags,
     firstName,
     id,
     institution,
@@ -279,6 +280,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     displayName,
     email,
     expertiseAndResourceTags,
+    tags,
     firstName,
     id,
     institution,
@@ -295,6 +297,6 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
       role: teamItem.role,
       displayName: teamItem.displayName,
     })),
-    _tags: expertiseAndResourceTags,
+    _tags: tags?.map(({ name }) => name) || [],
   };
 };

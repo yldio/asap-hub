@@ -15,5 +15,8 @@ export const getResearchTagDataProvider = (): ResearchTagDataProvider => {
     environment: contentfulEnvId,
   });
 
-  return new ResearchTagContentfulDataProvider(contentfulGraphQLClient, getContentfulRestClientFactory);
+  return new ResearchTagContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
 };

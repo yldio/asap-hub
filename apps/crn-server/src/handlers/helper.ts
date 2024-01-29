@@ -4,12 +4,14 @@ export const addTagsFunction = <T extends Payload>(
   data: T['data'],
 ): T['data'] & { _tags: string[] } => {
   if ('tags' in data) {
-    return { ...data, _tags: data.tags };
-  }
+    const tags = data.tags?.map((tag) => {
+      if (typeof tag === 'object' && 'name' in tag) {
+        return tag.name;
+      }
+      return tag;
+    });
 
-  if ('expertiseAndResourceTags' in data) {
-    return { ...data, _tags: data.expertiseAndResourceTags };
+    return { ...data, _tags: tags || [] };
   }
-
   return { ...data, _tags: [] };
 };

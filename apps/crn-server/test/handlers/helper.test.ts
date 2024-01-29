@@ -3,7 +3,7 @@ import { getEventDataObject } from '../fixtures/events.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
 
 describe('addTagsFunction', () => {
-  test('add tags to _tags when this field is present', () => {
+  test('add string tags to _tags when this field is present', () => {
     const tags = ['Protein', 'Blood'];
     const event = {
       ...getEventDataObject(),
@@ -12,13 +12,19 @@ describe('addTagsFunction', () => {
     expect(addTagsFunction(event)).toEqual({ ...event, _tags: tags });
   });
 
-  test('add expertiseAndResourceTags to _tags when this field is present', () => {
-    const tags = ['Protein', 'Blood'];
+  test('add object tags to _tags when this field is present', () => {
+    const tags = [
+      { id: '1', name: 'Protein' },
+      { id: '2', name: 'Blood' },
+    ];
     const user = {
       ...getUserResponse(),
-      expertiseAndResourceTags: tags,
+      tags: tags,
     };
-    expect(addTagsFunction(user)).toEqual({ ...user, _tags: tags });
+    expect(addTagsFunction(user)).toEqual({
+      ...user,
+      _tags: ['Protein', 'Blood'],
+    });
   });
 
   test('add empty _tags when tags and expertiseAndResourceTags fields are not present', () => {

@@ -214,7 +214,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const researchTagDataProvider =
     libs.researchTagDataProvider ||
-    new ResearchTagContentfulDataProvider(contentfulGraphQLClient);
+    new ResearchTagContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||

@@ -4,7 +4,6 @@ import assert from 'assert';
 
 [
   'ACTIVE_CAMPAIGN_ACCOUNT',
-  'ACTIVE_CAMPAIGN_TOKEN',
   'ALGOLIA_INDEX',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
@@ -30,7 +29,7 @@ assert.ok(
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
-const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT!;
+const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT || '';
 const activeCampaignToken = process.env.ACTIVE_CAMPAIGN_TOKEN!;
 const auth0Audience = process.env.AUTH0_AUDIENCE!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;

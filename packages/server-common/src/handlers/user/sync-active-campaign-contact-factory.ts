@@ -53,6 +53,12 @@ export const syncActiveCampaignContactFactory =
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
 
+    /* istanbul ignore next */
+    if (activeCampaignToken === '') {
+      log.info('Active Campaign Token not defined, skipping...');
+      return;
+    }
+
     try {
       const user = await userController.fetchById(event.detail.resourceId);
       log.info(`Fetched user ${user.id}`);

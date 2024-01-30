@@ -4,7 +4,6 @@ import assert from 'assert';
 
 [
   'ACTIVE_CAMPAIGN_ACCOUNT',
-  'ACTIVE_CAMPAIGN_TOKEN',
   'ALGOLIA_INDEX',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
@@ -42,7 +41,7 @@ if (stage === 'dev' || stage === 'production') {
   });
 }
 
-const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT!;
+const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT || '';
 const activeCampaignToken = process.env.ACTIVE_CAMPAIGN_TOKEN!;
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;

@@ -324,7 +324,7 @@ const findAndUpdateUsers = async (oldTagName: string, newTagId: string) => {
       const existingTagIds = user.tags?.map(({ id }) => id) || [];
       try {
         const result = await userDataProvider.update(user.id, {
-          tags: [...existingTagIds, newTagId].map((id) => ({ id, name: '' })),
+          tagIds: [...existingTagIds, newTagId],
         });
         console.log(result);
       } catch (e) {

@@ -3819,6 +3819,7 @@ export type PagesTextResources = {
 };
 
 export type Query = {
+  _node?: Maybe<_Node>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -3882,6 +3883,12 @@ export type Query = {
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type Query_NodeArgs = {
+  id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAnnouncementsArgs = {
@@ -8473,6 +8480,10 @@ export enum WorkingGroupsTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type _Node = {
+  _id: Scalars['ID'];
+};
+
 export type CfAnnouncementsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
@@ -10500,6 +10511,11 @@ export type EventsContentFragment = Pick<
     }
   >;
   linkedFrom?: Maybe<{
+    tutorialsCollection?: Maybe<{
+      items: Array<
+        Maybe<Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }>;
     researchOutputsCollection?: Maybe<{
       items: Array<
         Maybe<
@@ -10831,6 +10847,13 @@ export type FetchEventByIdQuery = {
         }
       >;
       linkedFrom?: Maybe<{
+        tutorialsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }>;
         researchOutputsCollection?: Maybe<{
           items: Array<
             Maybe<
@@ -11251,6 +11274,15 @@ export type FetchEventsQuery = {
               }
             >;
             linkedFrom?: Maybe<{
+              tutorialsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Tutorials, 'title' | 'addedDate'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
+                  >
+                >;
+              }>;
               researchOutputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -11739,6 +11771,15 @@ export type FetchEventsByUserIdQuery = {
                           }
                         >;
                         linkedFrom?: Maybe<{
+                          tutorialsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Tutorials, 'title' | 'addedDate'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >
+                            >;
+                          }>;
                           researchOutputsCollection?: Maybe<{
                             items: Array<
                               Maybe<
@@ -12248,6 +12289,15 @@ export type FetchEventsByExternalAuthorIdQuery = {
                           }
                         >;
                         linkedFrom?: Maybe<{
+                          tutorialsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Tutorials, 'title' | 'addedDate'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >
+                            >;
+                          }>;
                           researchOutputsCollection?: Maybe<{
                             items: Array<
                               Maybe<
@@ -12757,6 +12807,15 @@ export type FetchEventsByTeamIdQuery = {
                           }
                         >;
                         linkedFrom?: Maybe<{
+                          tutorialsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Tutorials, 'title' | 'addedDate'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >
+                            >;
+                          }>;
                           researchOutputsCollection?: Maybe<{
                             items: Array<
                               Maybe<
@@ -16842,6 +16901,52 @@ export const EventsContentFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tutorialsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '10' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'addedDate' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'researchOutputsCollection' },

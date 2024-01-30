@@ -2738,6 +2738,7 @@ type PagesTextResources {
 scalar Quality
 
 type Query {
+  _node(id: ID!, locale: String, preview: Boolean): _Node
   announcements(id: String!, locale: String, preview: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
@@ -5681,6 +5682,10 @@ enum WorkingGroupsTagsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+interface _Node {
+  _id: ID!
 }
 
 input cfAnnouncementsNestedFilter {

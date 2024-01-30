@@ -115,6 +115,15 @@ export const eventsContentQueryFragment = gql`
     meetingMaterialsPermanentlyUnavailable
     meetingMaterials
     linkedFrom {
+      tutorialsCollection(limit: 10) {
+        items {
+          sys {
+            id
+          }
+          title
+          addedDate
+        }
+      }
       researchOutputsCollection(limit: 10) {
         items {
           sys {

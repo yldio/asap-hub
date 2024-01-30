@@ -16,6 +16,9 @@ on:
         type: string
         required: true
     secrets:
+      ACTIVE_CAMPAIGN_TOKEN:
+        description: 'Active Campaign Token'
+        required: true
       AWS_ACCESS_KEY_ID:
         description: 'AWS Access Key ID'
         required: true
@@ -299,6 +302,8 @@ jobs:
       - name: Package sls for crn
         uses: ./.github/actions/sls-package
         with:
+          active-campaign-account: ${{ steps.setup.outputs.active-campaign-account }}
+          active-campaign-token: ${{ secrets.ACTIVE_CAMPAIGN_TOKEN}}
           algolia-index: ${{ steps.setup.outputs.crn-algolia-index }}
           app: crn-server
           auth0-audience: ${{ steps.setup.outputs.crn-auth0-audience }}
@@ -341,6 +346,8 @@ jobs:
       - name: Package sls for gp2
         uses: ./.github/actions/sls-package
         with:
+          active-campaign-account: ${{ steps.setup.outputs.active-campaign-account }}
+          active-campaign-token: ${{ secrets.ACTIVE_CAMPAIGN_TOKEN}}
           algolia-index: ${{ steps.setup.outputs.gp2-algolia-index }}
           app: gp2-server
           auth0-audience: ${{ steps.setup.outputs.gp2-auth0-audience }}

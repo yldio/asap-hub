@@ -539,6 +539,10 @@ type ContributingCohortsMembershipLinkingCollections {
 enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   activatedDate_ASC
   activatedDate_DESC
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
   blog_ASC
@@ -3177,6 +3181,7 @@ enum ProjectsTagsCollectionOrder {
 scalar Quality
 
 type Query {
+  _node(id: ID!, locale: String, preview: Boolean): _Node
   announcements(id: String!, locale: String, preview: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
@@ -3588,6 +3593,10 @@ enum TagsLinkingCollectionsProjectsCollectionOrder {
 enum TagsLinkingCollectionsUsersCollectionOrder {
   activatedDate_ASC
   activatedDate_DESC
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
   blog_ASC
@@ -3681,6 +3690,8 @@ enum TagsOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
 type Users implements Entry {
   activatedDate(locale: String): DateTime
+  activeCampaignCreatedAt(locale: String): DateTime
+  activeCampaignId(locale: String): String
   alternativeEmail(locale: String): String
   avatar(locale: String, preview: Boolean): Asset
   biography(locale: String): String
@@ -3758,6 +3769,22 @@ input UsersFilter {
   activatedDate_lte: DateTime
   activatedDate_not: DateTime
   activatedDate_not_in: [DateTime]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   alternativeEmail: String
   alternativeEmail_contains: String
   alternativeEmail_exists: Boolean
@@ -4045,6 +4072,10 @@ enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
 enum UsersOrder {
   activatedDate_ASC
   activatedDate_DESC
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
   blog_ASC
@@ -4627,6 +4658,10 @@ enum WorkingGroupsTagsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+interface _Node {
+  _id: ID!
 }
 
 input cfAnnouncementsNestedFilter {
@@ -5249,6 +5284,22 @@ input cfUsersNestedFilter {
   activatedDate_lte: DateTime
   activatedDate_not: DateTime
   activatedDate_not_in: [DateTime]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   alternativeEmail: String
   alternativeEmail_contains: String
   alternativeEmail_exists: Boolean

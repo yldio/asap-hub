@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 const {
+  ACTIVE_CAMPAIGN_ACCOUNT,
+  ACTIVE_CAMPAIGN_TOKEN,
   ALGOLIA_API_KEY,
   ALGOLIA_APP_ID,
   ALGOLIA_INDEX,
@@ -36,6 +38,8 @@ const {
   SES_REGION,
 } = process.env;
 
+export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
+export const activeCampaignToken = ACTIVE_CAMPAIGN_TOKEN || '';
 export const algoliaApiKey = ALGOLIA_API_KEY || '';
 export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
 export const algoliaAppId = ALGOLIA_APP_ID || 'R44097HEU2';

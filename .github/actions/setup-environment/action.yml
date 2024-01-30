@@ -14,6 +14,9 @@ inputs:
     description: 'Setup a dedicated GP2 environment'
     required: false
 outputs:
+  active-campaign-account:
+    description: 'Active Campaign Account'
+    value: ${{ steps.vars.outputs.active-campaign-account}}
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}

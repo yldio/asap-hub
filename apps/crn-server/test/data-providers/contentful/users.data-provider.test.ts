@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
+  parseResearchTags,
   parseToWorkingGroups,
   UserContentfulDataProvider,
 } from '../../../src/data-providers/contentful/user.data-provider';
@@ -825,7 +826,7 @@ describe('User data provider', () => {
         await userDataProvider.update('123', {
           tagIds: ['1'],
         });
-        console.log(entry);
+
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
           tags: [
             {
@@ -1285,6 +1286,14 @@ describe('User data provider', () => {
         isAlumni,
       );
       expect(parsedWorkingGroups[0]!.active).toBe(false);
+    });
+  });
+
+  describe('parseResearchTags ', () => {
+    it('filters null', () => {
+      expect(parseResearchTags([null, { sys: { id: '1' } }])).toStrictEqual([
+        { id: '1', name: '' },
+      ]);
     });
   });
 });

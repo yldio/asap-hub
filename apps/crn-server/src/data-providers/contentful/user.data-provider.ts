@@ -37,6 +37,8 @@ import {
   patchAndPublish,
   patchAndPublishConflict,
   pollContentfulGql,
+  ResearchTags,
+  Sys,
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
@@ -211,9 +213,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
       : patchAndPublish;
     const result = await patchMethod(user, {
       ...fields,
-      ...(data.tags
-        ? { tags: getLinkEntities(data.tags.map((tag) => tag.id)) }
-        : {}),
+      ...(data.tagIds ? { tags: getLinkEntities(data.tagIds) } : {}),
     });
     if (!result) {
       return;
@@ -222,7 +222,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 }
 
-const cleanUser = (userToUpdate: UserUpdateDataObject) =>
+const cleanUser = ({
+  tagIds: _tagIds,
+  ...userToUpdate
+}: UserUpdateDataObject) =>
   Object.entries(userToUpdate).reduce(
     (acc, [key, value]) => {
       if (key === 'avatar') {
@@ -385,14 +388,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     degree,
     connections: connections.map((connection) => ({ code: connection })),
     teams,
-    tags:
-      item.tagsCollection?.items
-        .filter((tag): tag is ResearchTagItem => tag !== null)
-        .map((tag) => ({
-          id: tag.sys.id,
-          name: tag.name ?? '',
-        }))
-        .filter(Boolean) || [],
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
     labs,
     social: {
       website1: item.website1 ?? undefined,
@@ -462,14 +458,7 @@ export const parseContentfulGraphQlUserListItem = (
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,
-    tags:
-      item.tagsCollection?.items
-        .filter((tag): tag is ResearchTagItem => tag !== null)
-        .map((tag) => ({
-          id: tag.sys.id,
-          name: tag.name ?? '',
-        }))
-        .filter(Boolean) || [],
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
   };
 };
 const generateFetchQueryFilter = ({
@@ -531,6 +520,21 @@ export const parseLabsCollection = (
     },
     [],
   );
+
+export const parseResearchTags = (
+  items: Maybe<
+    Pick<ResearchTags, 'name'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >[],
+) =>
+  items
+    .filter((tag): tag is ResearchTagItem => tag !== null)
+    .map((tag) => ({
+      id: tag.sys.id,
+      name: tag.name ?? '',
+    }))
+    .filter(Boolean) || [];
 
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],

@@ -51,7 +51,7 @@ export const usersContentQueryFragment = gql`
     avatar {
       url
     }
-    tagsCollection(limit: 20) {
+    researchTagsCollection(limit: 20) {
       items {
         sys {
           id
@@ -196,7 +196,7 @@ export const userListItemContentQueryFragment = gql`
     onboarded
     dismissedGettingStarted
     role
-    tagsCollection(limit: 20) {
+    researchTagsCollection(limit: 20) {
       items {
         sys {
           id

@@ -3,7 +3,7 @@ module.exports.description = 'Add tags field';
 module.exports.up = (migration) => {
   const teams = migration.editContentType('teams');
   teams
-    .createField('tags')
+    .createField('researchTags')
     .name('Tags')
     .type('Array')
     .localized(false)
@@ -26,5 +26,5 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const teams = migration.editContentType('teams');
-  teams.deleteField('tags');
+  teams.deleteField('researchTags');
 };

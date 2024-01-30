@@ -181,7 +181,7 @@ export type UserCreateDataObject = {
   role: Role;
   social?: Omit<UserSocialLinks, 'orcid'>;
   teams?: Pick<UserTeam, 'id' | 'role' | 'inactiveSinceDate'>[];
-  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
+  tagIds?: string[];
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;

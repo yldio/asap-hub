@@ -6267,8 +6267,8 @@ export type Teams = Entry & {
   projectSummary?: Maybe<Scalars['String']>;
   projectTitle?: Maybe<Scalars['String']>;
   proposal?: Maybe<ResearchOutputs>;
+  researchTagsCollection?: Maybe<TeamsResearchTagsCollection>;
   sys: Sys;
-  tagsCollection?: Maybe<TeamsTagsCollection>;
   toolsCollection?: Maybe<TeamsToolsCollection>;
 };
 
@@ -6315,10 +6315,10 @@ export type TeamsProposalArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsTagsCollectionArgs = {
+export type TeamsResearchTagsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<TeamsTagsCollectionOrder>>>;
+  order?: InputMaybe<Array<InputMaybe<TeamsResearchTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchTagsFilter>;
@@ -6394,9 +6394,9 @@ export type TeamsFilter = {
   projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   proposal?: InputMaybe<CfResearchOutputsNestedFilter>;
   proposal_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
-  tags?: InputMaybe<CfResearchTagsNestedFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   tools?: InputMaybe<CfExternalToolsNestedFilter>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -6629,14 +6629,14 @@ export enum TeamsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-export type TeamsTagsCollection = {
+export type TeamsResearchTagsCollection = {
   items: Array<Maybe<ResearchTags>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
 
-export enum TeamsTagsCollectionOrder {
+export enum TeamsResearchTagsCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -7234,11 +7234,11 @@ export type Users = Entry & {
   reachOut?: Maybe<Scalars['String']>;
   researchGate?: Maybe<Scalars['String']>;
   researchInterests?: Maybe<Scalars['String']>;
+  researchTagsCollection?: Maybe<UsersResearchTagsCollection>;
   researcherId?: Maybe<Scalars['String']>;
   responsibilities?: Maybe<Scalars['String']>;
   role?: Maybe<Scalars['String']>;
   sys: Sys;
-  tagsCollection?: Maybe<UsersTagsCollection>;
   teamsCollection?: Maybe<UsersTeamsCollection>;
   twitter?: Maybe<Scalars['String']>;
   website1?: Maybe<Scalars['String']>;
@@ -7432,6 +7432,16 @@ export type UsersResearchInterestsArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersResearchTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersResearchTagsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersResearcherIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -7444,16 +7454,6 @@ export type UsersResponsibilitiesArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersRoleArgs = {
   locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersTagsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<UsersTagsCollectionOrder>>>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ResearchTagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -7722,6 +7722,8 @@ export type UsersFilter = {
   researchInterests_not?: InputMaybe<Scalars['String']>;
   researchInterests_not_contains?: InputMaybe<Scalars['String']>;
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7744,8 +7746,6 @@ export type UsersFilter = {
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tags?: InputMaybe<CfResearchTagsNestedFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   teams?: InputMaybe<CfTeamMembershipNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   twitter?: InputMaybe<Scalars['String']>;
@@ -8091,14 +8091,14 @@ export enum UsersOrder {
   Website2Desc = 'website2_DESC',
 }
 
-export type UsersTagsCollection = {
+export type UsersResearchTagsCollection = {
   items: Array<Maybe<ResearchTags>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
 
-export enum UsersTagsCollectionOrder {
+export enum UsersResearchTagsCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -9610,8 +9610,8 @@ export type CfTeamsNestedFilter = {
   projectTitle_not_contains?: InputMaybe<Scalars['String']>;
   projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   proposal_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -9940,6 +9940,7 @@ export type CfUsersNestedFilter = {
   researchInterests_not?: InputMaybe<Scalars['String']>;
   researchInterests_not_contains?: InputMaybe<Scalars['String']>;
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9962,7 +9963,6 @@ export type CfUsersNestedFilter = {
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   twitter?: InputMaybe<Scalars['String']>;
   twitter_contains?: InputMaybe<Scalars['String']>;
@@ -15679,7 +15679,7 @@ export type UsersContentFragment = Pick<
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
   avatar?: Maybe<Pick<Asset, 'url'>>;
-  tagsCollection?: Maybe<{
+  researchTagsCollection?: Maybe<{
     items: Array<Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
   }>;
   teamsCollection?: Maybe<{
@@ -15823,7 +15823,7 @@ export type FetchUserByIdQuery = {
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
       avatar?: Maybe<Pick<Asset, 'url'>>;
-      tagsCollection?: Maybe<{
+      researchTagsCollection?: Maybe<{
         items: Array<
           Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
         >;
@@ -15943,7 +15943,7 @@ export type UserListItemContentFragment = Pick<
   labsCollection?: Maybe<{
     items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
   }>;
-  tagsCollection?: Maybe<{
+  researchTagsCollection?: Maybe<{
     items: Array<Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
   }>;
   teamsCollection?: Maybe<{
@@ -15995,7 +15995,7 @@ export type FetchUsersQuery = {
                 Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
               >;
             }>;
-            tagsCollection?: Maybe<{
+            researchTagsCollection?: Maybe<{
               items: Array<
                 Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
               >;
@@ -16059,7 +16059,7 @@ export type FetchUsersByTeamIdQuery = {
                         Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                       >;
                     }>;
-                    tagsCollection?: Maybe<{
+                    researchTagsCollection?: Maybe<{
                       items: Array<
                         Maybe<
                           Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }
@@ -16129,7 +16129,7 @@ export type FetchUsersByLabIdQuery = {
                     Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
                   >;
                 }>;
-                tagsCollection?: Maybe<{
+                researchTagsCollection?: Maybe<{
                   items: Array<
                     Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
                   >;
@@ -20188,7 +20188,7 @@ export const UsersContentFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'tagsCollection' },
+            name: { kind: 'Name', value: 'researchTagsCollection' },
             arguments: [
               {
                 kind: 'Argument',
@@ -20879,7 +20879,7 @@ export const UserListItemContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'tagsCollection' },
+            name: { kind: 'Name', value: 'researchTagsCollection' },
             arguments: [
               {
                 kind: 'Argument',

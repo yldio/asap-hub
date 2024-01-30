@@ -422,7 +422,7 @@ export const getContentfulGraphqlUser = (
     'expertise 4',
     'expertise 5',
   ],
-  tagsCollection: {
+  researchTagsCollection: {
     items: [
       { sys: { id: '1' }, name: 'expertise 1' },
       { sys: { id: '2' }, name: 'expertise 2' },
@@ -517,7 +517,7 @@ export const getContentfulGraphqlUserListItem = (
     'expertise 4',
     'expertise 5',
   ],
-  tagsCollection: {
+  researchTagsCollection: {
     items: [
       { sys: { id: '1' }, name: 'expertise 1' },
       { sys: { id: '2' }, name: 'expertise 2' },

@@ -381,7 +381,7 @@ describe('User data provider', () => {
       const id = 'user-id-1';
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
-          tagsCollection: {
+          researchTagsCollection: {
             items: [null, { sys: { id: '1' }, name: 'Lysosomes' }],
           },
         }),
@@ -823,8 +823,9 @@ describe('User data provider', () => {
       });
       test('map tag value to a linked resource', async () => {
         await userDataProvider.update('123', {
-          tags: [{ id: '1', name: '1' }],
+          tagIds: ['1'],
         });
+        console.log(entry);
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
           tags: [
             {

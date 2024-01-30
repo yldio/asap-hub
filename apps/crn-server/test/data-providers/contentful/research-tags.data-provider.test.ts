@@ -186,7 +186,6 @@ describe('Research Tags Data Provider', () => {
         publish,
       } as unknown as Entry);
       const response = await researchTagsDataProvider.create('tag');
-      expect(environmentMock.createEntry).toHaveBeenCalled();
       expect(environmentMock.createEntry).toHaveBeenCalledWith(
         'researchTags',
         expect.anything(),

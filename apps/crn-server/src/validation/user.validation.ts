@@ -27,18 +27,10 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
       items: { type: 'string' },
       nullable: true,
     },
-    tags: {
+    tagIds: {
       type: 'array',
-      minItems: 1,
-      maxItems: 10,
       items: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          id: { type: 'string' },
-          name: { type: 'string' },
-        },
-        required: ['id'],
+        type: 'string',
       },
       nullable: true,
     },

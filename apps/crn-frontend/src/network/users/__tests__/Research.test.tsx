@@ -9,14 +9,16 @@ import { network } from '@asap-hub/routing';
 import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Research from '../Research';
 import { patchUser } from '../api';
-import {getResearchTags} from '../../../shared-research/api'
+import { getResearchTags } from '../../../shared-research/api';
 
 jest.mock('../api');
 jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-const mockGetResearchTags = getResearchTags as jest.MockedFunction<typeof getResearchTags>;
+const mockGetResearchTags = getResearchTags as jest.MockedFunction<
+  typeof getResearchTags
+>;
 
 const id = '42';
 const makeWrapper =
@@ -52,7 +54,7 @@ it('renders the profile research section', async () => {
     <Research
       user={{
         ...createUserResponse(),
-        tags: [{name: 'Some Expertise', id: '1'}],
+        tags: [{ name: 'Some Expertise', id: '1' }],
       }}
     />,
     { wrapper },
@@ -98,7 +100,9 @@ describe('when editing', () => {
   const tags = ['1', '2', '3', '4', '5'];
   let result!: RenderResult;
   beforeEach(async () => {
-    mockGetResearchTags.mockResolvedValue(tags.map((tag) => ({name: tag, id: tag})));
+    mockGetResearchTags.mockResolvedValue(
+      tags.map((tag) => ({ name: tag, id: tag })),
+    );
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });

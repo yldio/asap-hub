@@ -3,7 +3,7 @@ import { UserProfileContext } from '@asap-hub/react-context';
 
 import ProfileExpertiseAndResources from '../ProfileExpertiseAndResources';
 
-const mapTags = (tags: string[]) => tags.map(tag => ({name: tag, id: tag}));
+const mapTags = (tags: string[]) => tags.map((tag) => ({ name: tag, id: tag }));
 
 it('renders expertiseAndResourceTags and expertise', () => {
   const { getByText, getAllByRole } = render(

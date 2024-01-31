@@ -103,7 +103,7 @@ it('renders the expertise and resources list', () => {
   const { getByText, queryByText } = render(
     <TeamProfileAbout
       {...props}
-      tags={[{name: 'example expertise', id: '1'}]}
+      tags={[{ name: 'example expertise', id: '1' }]}
     />,
   );
   expect(getByText(/example expertise/i)).toBeVisible();

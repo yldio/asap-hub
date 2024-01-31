@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import { ResearchTagDataObject, UserPatchRequest, UserResponse } from '@asap-hub/model';
+import {
+  ResearchTagDataObject,
+  UserPatchRequest,
+  UserResponse,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
@@ -15,7 +19,7 @@ type ExpertiseAndResourcesModalProps = Pick<
 > & {
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
-  suggestions: ResearchTagDataObject[],
+  suggestions: ResearchTagDataObject[];
 };
 const fieldsContainerStyles = css({
   display: 'grid',
@@ -38,8 +42,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
     setExpertiseAndResourceDescription,
   ] = useState(expertiseAndResourceDescription);
 
-  const [newTags, setNewTags] =
-    useState(tags);
+  const [newTags, setNewTags] = useState(tags);
 
   const [
     expertiseAndResourcesCustomValidationMessage,
@@ -52,17 +55,14 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
       backHref={backHref}
       dirty={
         expertiseAndResourceDescription !==
-          newExpertiseAndResourceDescription ||
-        tags !== newTags
+          newExpertiseAndResourceDescription || tags !== newTags
       }
-      validate={() =>
-        validateExpertiseAndResources(newTags)
-      }
+      validate={() => validateExpertiseAndResources(newTags)}
       onSave={() =>
         onSave({
           expertiseAndResourceDescription:
             newExpertiseAndResourceDescription || undefined,
-          tagIds: newTags.map(({id})=>id),
+          tagIds: newTags.map(({ id }) => id),
         })
       }
     >
@@ -86,22 +86,26 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                 enabled={!isSaving}
                 onChange={(newValues) => {
                   setNewTags(
-                    newValues.map(({ value, label }) => ({name: label, id: value})),
+                    newValues.map(({ value, label }) => ({
+                      name: label,
+                      id: value,
+                    })),
                   );
                   validateExpertiseAndResources(
-                    newValues.map(({ value, label }) => ({name: label, id: value})),
+                    newValues.map(({ value, label }) => ({
+                      name: label,
+                      id: value,
+                    })),
                   )
                     ? setExpertiseAndResourcesCustomValidationMessage('')
                     : setExpertiseAndResourcesCustomValidationMessage(
                         `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,
                       );
                 }}
-                suggestions={suggestions.map(
-                  (suggestion) => ({
-                    label: suggestion.name,
-                    value: suggestion.id,
-                  }),
-                )}
+                suggestions={suggestions.map((suggestion) => ({
+                  label: suggestion.name,
+                  value: suggestion.id,
+                }))}
                 noOptionsMessage={({ inputValue }) =>
                   `Sorry, No current tags match "${inputValue}"`
                 }

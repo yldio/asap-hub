@@ -8,7 +8,7 @@ import { perRem } from '../pixels';
 import { ResearchTagDataObject } from '@asap-hub/model';
 
 type ProfileExpertiseAndResourcesProps = {
-  readonly tags?: Pick<ResearchTagDataObject, "id" | "name">[] | undefined;
+  readonly tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[] | undefined;
   readonly expertiseAndResourceDescription?: string;
   readonly hideExpertiseAndResources?: boolean;
 };
@@ -53,7 +53,7 @@ const ProfileExpertiseAndResources: React.FC<
             </Paragraph>
           </div>
 
-          <TagList tags={tags.map(({name}) => name)} />
+          <TagList tags={tags.map(({ name }) => name)} />
         </>
       ) : (
         <div css={{ marginTop: `${4 / perRem}em` }}>

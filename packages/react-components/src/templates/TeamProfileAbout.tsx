@@ -47,10 +47,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     ) : null}
     {tags && tags.length ? (
-      <ProfileExpertiseAndResources
-        hideExpertiseAndResources
-        tags={tags}
-      />
+      <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard

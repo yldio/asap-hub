@@ -87,18 +87,15 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           </Route>
           <Route path={path + route.editQuestions.template}>
             <Frame title="Edit Open Questions">
-              <OpenQuestionsModal
-                {...user}
-                {...commonModalProps}
-              />
+              <OpenQuestionsModal {...user} {...commonModalProps} />
             </Frame>
           </Route>
           <Route path={path + route.editExpertiseAndResources.template}>
             <Frame title="Edit Expertise and Resources">
-              <ExpertiseAndResourcesModal 
-              {...user}
-              {...commonModalProps}
-              suggestions={researchTagsSuggestions}
+              <ExpertiseAndResourcesModal
+                {...user}
+                {...commonModalProps}
+                suggestions={researchTagsSuggestions}
               />
             </Frame>
           </Route>

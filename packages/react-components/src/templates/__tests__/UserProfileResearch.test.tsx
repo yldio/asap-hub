@@ -47,7 +47,7 @@ it('renders the expertiseAndResourceTags list', () => {
   const { getByText } = render(
     <UserProfileResearch
       {...commonProps}
-     tags={[{name: 'Neurological Diseases', id: '1'}]}
+      tags={[{ name: 'Neurological Diseases', id: '1' }]}
     />,
   );
   expect(getByText(/expertise/i, { selector: 'h2' })).toBeVisible();

@@ -21,7 +21,7 @@ export const Normal = () => (
         'Movement Disorders',
         'Neurodegenerative Diseases',
         'Neurological Diseases',
-      ]).map((tag) => ({name: tag, id: tag}))}
+      ]).map((tag) => ({ name: tag, id: tag }))}
       backHref="#"
     />
   </StaticRouter>

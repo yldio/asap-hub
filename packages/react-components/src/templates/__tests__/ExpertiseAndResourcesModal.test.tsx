@@ -8,7 +8,7 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import ExpertiseAndResourcesModal from '../ExpertiseAndResourcesModal';
 import { ember, steel } from '../../colors';
 
-const mapTags = (tags: string[]) => tags.map(tag => ({name: tag, id: tag}));
+const mapTags = (tags: string[]) => tags.map((tag) => ({ name: tag, id: tag }));
 
 const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
   ...createUserResponse(),
@@ -108,10 +108,7 @@ it('disables the form elements while submitting', async () => {
 describe('tags selection', () => {
   it('displays a no options message', async () => {
     const { getByLabelText, getByText } = render(
-      <ExpertiseAndResourcesModal
-        {...props}
-        suggestions={mapTags(['abc'])}
-      />,
+      <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
       { wrapper: StaticRouter },
     );
 

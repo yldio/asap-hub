@@ -17,7 +17,11 @@ import {
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
-import { AssetDataProvider, ResearchTagDataProvider, UserDataProvider } from '../data-providers/types';
+import {
+  AssetDataProvider,
+  ResearchTagDataProvider,
+  UserDataProvider,
+} from '../data-providers/types';
 import logger from '../utils/logger';
 
 export default class UserController {
@@ -171,28 +175,33 @@ export default class UserController {
     });
   }
 
-  private async validateResearchTags(id: string) {
-        const result = await this.researchTagsDataProvider.fetchById(id);
+  private async validateResearchTags(
+    id: string,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    const result = await this.researchTagsDataProvider.fetchById(id);
 
-        if (result === null) {
-          return { instancePath: '/tags',
-            keyword: 'exist',
-            message: 'must exist',
-            params: {
-              type: 'string',
-            },
-            schemaPath: '#/properties/tags/exist',
-          };
-        }
-        return null;
+    if (!result) {
+      return {
+        instancePath: '/tags',
+        keyword: 'exist',
+        message: 'must exist',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/tags/exist',
+      };
+    }
+    return null;
   }
 
   private async validateUser(tagIds: string[]): Promise<void> {
     const isError = (
       error: ValidationErrorResponse['data'][0] | null,
-    ): error is ValidationErrorResponse['data'][0] => !!error;
+    ): error is ValidationErrorResponse['data'][0] => !!error && error !== null;
 
-    const errors = await (await Promise.all(tagIds.map(this.validateResearchTags))).filter(isError)
+    const errors = await (
+      await Promise.all(tagIds.map(this.validateResearchTags.bind(this)))
+    ).filter(isError);
 
     this.handleErrors(errors);
   }

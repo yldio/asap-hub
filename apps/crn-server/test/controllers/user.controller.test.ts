@@ -13,7 +13,12 @@ import { getDataProviderMock } from '../mocks/data-provider.mock';
 describe('Users controller', () => {
   const assetDataProviderMock = getDataProviderMock();
   const userDataProviderMock = getDataProviderMock();
-  const userController = new Users(userDataProviderMock, assetDataProviderMock);
+  const researchTagDataProviderMock = getDataProviderMock();
+  const userController = new Users(
+    userDataProviderMock,
+    assetDataProviderMock,
+    researchTagDataProviderMock,
+  );
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -180,9 +185,11 @@ describe('Users controller', () => {
   });
 
   describe('update', () => {
-    test('Should return the newly updated user', async () => {
+    beforeEach(() => {
       const mockResponse = getUserDataObject();
       userDataProviderMock.fetchById.mockResolvedValue(mockResponse);
+    });
+    test('Should return the newly updated user', async () => {
       const result = await userController.update('user-id', {});
 
       expect(result).toEqual(getUserResponse());
@@ -190,6 +197,27 @@ describe('Users controller', () => {
         'user-id',
         {},
         { suppressConflict: false },
+      );
+    });
+
+    test('Should reject if tag id does not exist', async () => {
+      researchTagDataProviderMock.fetchById.mockResolvedValueOnce(null);
+      await expect(
+        userController.update('user-id', { tagIds: ['wrong-id'] }),
+      ).rejects.toThrow(
+        expect.objectContaining({
+          data: [
+            {
+              instancePath: '/tags',
+              keyword: 'exist',
+              message: 'must exist',
+              params: {
+                type: 'string',
+              },
+              schemaPath: '#/properties/tags/exist',
+            },
+          ],
+        }),
       );
     });
   });

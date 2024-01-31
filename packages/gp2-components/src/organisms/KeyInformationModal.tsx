@@ -191,9 +191,11 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           />
           <LabeledTextField
             title="City"
-            subtitle={optional}
+            subtitle={required}
             enabled={!isSaving}
             value={newCity || ''}
+            required
+            getValidationMessage={() => 'Please add your city'}
             onChange={setNewCity}
           />
           <UserPositions

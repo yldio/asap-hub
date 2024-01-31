@@ -24,6 +24,8 @@ type UserCardProps = Pick<
   | 'avatarUrl'
   | 'degrees'
   | 'region'
+  | 'country'
+  | 'city'
   | 'role'
 > &
   Pick<ComponentProps<typeof UserCardInfo>, 'projects' | 'workingGroups'> & {
@@ -69,6 +71,8 @@ const UserCard: React.FC<UserCardProps> = ({
   degrees,
   role,
   region,
+  country,
+  city,
   workingGroups,
   projects,
   tags = [],
@@ -98,6 +102,8 @@ const UserCard: React.FC<UserCardProps> = ({
             projects={projects}
             role={role}
             region={region}
+            country={country}
+            city={city}
             workingGroups={workingGroups}
           />
           <TagList max={3} tags={tags} />

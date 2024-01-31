@@ -7,6 +7,7 @@ const defaultProps: ComponentProps<typeof UserCardInfo> = {
   workingGroups: [],
   role: 'Network Investigator',
   region: 'Europe',
+  country: 'Spain',
 };
 
 describe('UserCardInfo', () => {
@@ -20,6 +21,18 @@ describe('UserCardInfo', () => {
     render(<UserCardInfo {...defaultProps} />);
     expect(screen.getByTitle('Europe').closest('div')).toHaveTextContent(
       'Europe',
+    );
+  });
+  it('renders country', () => {
+    render(<UserCardInfo {...defaultProps} />);
+    expect(screen.getByTitle('Location').closest('div')).toHaveTextContent(
+      'Spain',
+    );
+  });
+  it('renders city and country', () => {
+    render(<UserCardInfo {...defaultProps} city={'Madrid'} />);
+    expect(screen.getByTitle('Location').closest('div')).toHaveTextContent(
+      'Madrid, Spain',
     );
   });
   it('renders empty working groups section', () => {

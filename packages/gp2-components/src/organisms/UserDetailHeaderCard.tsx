@@ -88,6 +88,7 @@ const validateCompleted = ({
   degrees,
   region,
   country,
+  city,
   positions,
   role,
 }: Pick<
@@ -98,6 +99,7 @@ const validateCompleted = ({
   | 'region'
   | 'role'
   | 'country'
+  | 'city'
   | 'positions'
 >) =>
   firstName &&
@@ -105,6 +107,7 @@ const validateCompleted = ({
   degrees?.length &&
   region &&
   country &&
+  city &&
   positions.length &&
   role;
 
@@ -234,6 +237,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                 region,
                 role,
                 country,
+                city,
                 positions,
               })
                 ? 'Edit'
@@ -245,6 +249,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                 region,
                 role,
                 country,
+                city,
                 positions,
               })
                 ? editIcon

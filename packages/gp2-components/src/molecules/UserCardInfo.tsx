@@ -3,7 +3,12 @@ import { crossQuery, Link, pixels } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
-import { roleIcon, workingGroupIcon, projectIcon } from '../icons';
+import {
+  locationIcon,
+  roleIcon,
+  workingGroupIcon,
+  projectIcon,
+} from '../icons';
 import colors from '../templates/colors';
 import IconWithLabel from './IconWithLabel';
 import UserRegion from './UserRegion';
@@ -11,10 +16,19 @@ import UserRegion from './UserRegion';
 const { rem } = pixels;
 
 type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> &
-  Pick<gp2Model.UserResponse, 'workingGroups' | 'projects' | 'role'>;
+  Pick<
+    gp2Model.UserResponse,
+    'workingGroups' | 'projects' | 'country' | 'city' | 'role'
+  >;
 
 const containerStyles = css({
-  marginBottom: rem(12),
+  display: 'flex',
+  flexDirection: 'column',
+  marginBottom: rem(9),
+  [crossQuery]: {
+    marginBottom: rem(17),
+    rowGap: rem(9),
+  },
 });
 
 const dotDivider = css({
@@ -60,6 +74,8 @@ const caseInsensitiveTitle = <T extends { title: string }>(a: T, b: T) =>
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,
   region,
+  country,
+  city,
   workingGroups,
   projects,
 }) => (
@@ -67,6 +83,14 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
     <div css={rowStyles}>
       <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
       <UserRegion region={region} />
+    </div>
+    <div css={rowStyles}>
+      <IconWithLabel icon={locationIcon}>
+        <span>
+          {city && `${city}, `}
+          {country}
+        </span>
+      </IconWithLabel>
     </div>
     <div css={rowStyles}>
       <IconWithLabel icon={workingGroupIcon}>

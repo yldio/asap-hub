@@ -5,7 +5,7 @@ import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import KeyInformationModal from '../KeyInformationModal';
 
-describe('KeyInformatiomModal', () => {
+describe('KeyInformationModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
   const getAddButton = () =>
     screen.getByRole('button', {
@@ -145,7 +145,7 @@ describe('KeyInformatiomModal', () => {
     );
     userEvent.click(screen.getByText(country));
     userEvent.type(
-      screen.getByRole('textbox', { name: 'City (optional)' }),
+      screen.getByRole('textbox', { name: 'City (required)' }),
       city,
     );
     userEvent.click(

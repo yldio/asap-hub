@@ -10,7 +10,8 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
-    "watch:babel": "../../scripts/build-babel.sh watch"
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "test": "WORKSPACE_PATH=packages/flags yarn workspace asap-hub test:workspace"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.23.8",

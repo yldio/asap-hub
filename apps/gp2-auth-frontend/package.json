@@ -9,7 +9,7 @@
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true vite",
     "build": "vite build",
     "typecheck": "tsc",
-    "test": "echo Run the workspace root script instead"
+    "test": "WORKSPACE_PATH=apps/gp2-auth-frontend yarn workspace asap-hub test:workspace"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

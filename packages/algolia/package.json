@@ -10,7 +10,8 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
-    "watch:babel": "../../scripts/build-babel.sh watch"
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "test": "WORKSPACE_PATH=packages/algolia yarn workspace asap-hub test:workspace"
   },
   "dependencies": {
     "@algolia/client-common": "4.22.1",

@@ -11,7 +11,8 @@
     "typecheck": "tsc",
     "deploy": "yarn sync:dependencies && yarn deploy:tennant",
     "sync:dependencies": "ts-node ./scripts/dependencies-sync.ts",
-    "deploy:tennant": "a0deploy import --input_file ./build/tenant.yaml"
+    "deploy:tennant": "a0deploy import --input_file ./build/tenant.yaml",
+    "test": "WORKSPACE_PATH=apps/auth0 yarn workspace asap-hub test:workspace"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.23.8",

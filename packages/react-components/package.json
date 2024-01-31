@@ -11,7 +11,8 @@
   "sideEffects": false,
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
-    "watch:babel": "../../scripts/build-babel.sh watch"
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "test": "WORKSPACE_PATH=packages/react-components yarn workspace asap-hub test:workspace"
   },
   "peerDependencies": {
     "@asap-hub/react-context": "*",

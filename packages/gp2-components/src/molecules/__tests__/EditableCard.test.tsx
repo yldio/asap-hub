@@ -53,12 +53,12 @@ describe('Editable Card', () => {
           ).href,
         ).toContain('/');
       });
-      it('renders a link with Required if no optional', () => {
+      it('renders a link with Add if no optional', () => {
         render(<EditableCard title="Card Title" editHref="/" edit={false} />);
         expect(
           (
             screen.getByRole('link', {
-              name: 'Required Add',
+              name: 'Add Add',
             }) as HTMLAnchorElement
           ).href,
         ).toContain('/');

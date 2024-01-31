@@ -85,6 +85,17 @@ describe('KeyInformationModal', () => {
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
 
+  it('shows validation message when city is not provided', async () => {
+    const onSave = jest.fn();
+    renderKeyInformation({
+      city: '',
+      onSave,
+    });
+    userEvent.click(screen.getByRole('textbox', { name: /city/i }));
+    userEvent.tab();
+    expect(screen.getByText(/Please add your city/i)).toBeVisible();
+  });
+
   it('calls onSave with the updated fields', async () => {
     const firstName = 'Gonçalo';
     const middleName = 'Matias';

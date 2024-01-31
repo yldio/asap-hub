@@ -69,7 +69,14 @@ const EditableCard: React.FC<EditableCardProps> = ({
             },
           ]}
         >
-          <Link href={editHref} buttonStyle noMargin small fullWidth>
+          <Link
+            href={editHref}
+            {...(edit ? {} : optional ? {} : { primary: true })}
+            buttonStyle
+            noMargin
+            small
+            fullWidth
+          >
             <span
               css={{
                 display: 'inline-flex',
@@ -77,7 +84,7 @@ const EditableCard: React.FC<EditableCardProps> = ({
                 marginLeft: rem(6),
               }}
             >
-              {edit ? 'Edit' : optional ? 'Optional' : 'Required'}
+              {edit ? 'Edit' : optional ? 'Optional' : 'Add'}
               {edit ? editIcon : addIcon}
             </span>
           </Link>

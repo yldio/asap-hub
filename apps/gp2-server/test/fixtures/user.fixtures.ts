@@ -10,6 +10,7 @@ export const getUserResponse = (
   overrides: Partial<gp2Model.UserResponse> = {},
 ): gp2Model.UserResponse => ({
   id: 'user-id-1',
+  activeCampaignId: '1',
   avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
@@ -152,6 +153,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
 
 export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
   id: 'user-id-1',
+  activeCampaignId: '1',
   avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
@@ -348,6 +350,7 @@ export const getContentfulGraphqlUser = (
     firstPublishedAt: '2020-09-23T20:45:22.000Z',
     publishedAt: '2023-07-06T07:23:32.000Z',
   },
+  activeCampaignId: '1',
   activatedDate: '2020-09-24T20:45:22.000Z',
   avatar: {
     url: 'https://example.com',

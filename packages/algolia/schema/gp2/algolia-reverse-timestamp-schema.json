@@ -28,10 +28,21 @@
     "id",
     "lastName",
     "project.title",
+    "projects.title",
     "speakers.externalUser.name",
     "speakers.team.displayName",
     "speakers.user.displayName",
     "title",
-    "workingGroup.title"
+    "_tags",
+    "role",
+    "degrees",
+    "city",
+    "country",
+    "region",
+    "contributingCohorts.name",
+    "workingGroup.title",
+    "workingGroups.title",
+    "projectIds",
+    "workingGroupIds"
   ]
 }

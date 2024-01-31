@@ -74,6 +74,7 @@ export interface Connection {
 }
 
 export interface UserDataObject extends Invitee {
+  activeCampaignId?: string;
   membershipStatus?: UserMembershipStatus[];
   alumniLocation?: string;
   alumniSinceDate?: string;
@@ -184,7 +185,10 @@ export type UserCreateDataObject = {
   tagIds?: string[];
 };
 
-export type UserUpdateDataObject = Partial<UserCreateDataObject>;
+export type UserUpdateDataObject = Partial<UserCreateDataObject> & {
+  activeCampaignCreatedAt?: Date;
+  activeCampaignId?: string;
+};
 
 export type UserUpdateRequest = UserUpdateDataObject;
 export type UserPatchRequest = Omit<
@@ -198,6 +202,8 @@ export type UserPatchRequest = Omit<
   | 'orcidLastSyncDate'
   | 'orcidWorks'
   | 'role'
+  | 'activeCampaignCreatedAt'
+  | 'activeCampaignId'
 >;
 
 export interface UserAvatarPostRequest {

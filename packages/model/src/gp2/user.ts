@@ -86,6 +86,7 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
+  activeCampaignId?: string;
   activatedDate?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
@@ -145,7 +146,11 @@ export type UserUpdateDataObject = Partial<
   Partial<Pick<UserDataObject, 'connections'>> & {
     alternativeEmail?: string | null;
     tags?: Omit<TagDataObject, 'name'>[];
+  } & {
+    activeCampaignCreatedAt?: Date;
+    activeCampaignId?: string;
   };
+
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
   | 'avatar'
@@ -157,6 +162,8 @@ export type UserPatchRequest = Omit<
   | 'orcidLastModifiedDate'
   | 'orcidLastSyncDate'
   | 'orcidWorks'
+  | 'activeCampaignCreatedAt'
+  | 'activeCampaignId'
 >;
 
 export type UserAvatarPostRequest = {

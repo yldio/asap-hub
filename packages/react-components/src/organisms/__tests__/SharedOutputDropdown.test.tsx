@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createAuthUser } from '@asap-hub/fixtures';
-import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
+import { UserTeam, WorkingGroupMembership, gp2 } from '@asap-hub/model';
 
 import {
   AssociationItem,
-  SharedOutputDropdownBase,
+  SharedOutputDropdownWrapper,
 } from '../SharedOutputDropdown';
 
 describe('AssociationItem', () => {
@@ -30,6 +30,29 @@ describe('AssociationItem', () => {
     const { getByText } = render(<AssociationItem association={team} />);
     expect(getByText('A Team')).toBeInTheDocument();
   });
+
+  it('can display a Project item', () => {
+    const project: gp2.UserProject = {
+      title: 'A Project',
+      id: '1',
+      status: 'Active',
+      members: [],
+    };
+    const { getByText } = render(<AssociationItem association={project} />);
+
+    expect(getByText('A Project')).toBeInTheDocument();
+  });
+
+  it('can display a GP2 Working Group Item', () => {
+    const group: gp2.UserWorkingGroup = {
+      title: 'A Working Group',
+      id: '1',
+      members: [],
+    };
+    const { getByText } = render(<AssociationItem association={group} />);
+
+    expect(getByText('A Working Group')).toBeInTheDocument();
+  });
 });
 
 describe('ShareOutputDropdown', () => {
@@ -43,7 +66,7 @@ describe('ShareOutputDropdown', () => {
     const user = createAuthUser();
 
     return render(
-      <SharedOutputDropdownBase
+      <SharedOutputDropdownWrapper
         user={{ ...user, workingGroups: groups, teams }}
       />,
     );

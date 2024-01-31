@@ -2,6 +2,12 @@ name: sls deploy action
 description: Reusable sls deploy
 
 inputs:
+  active-campaign-account:
+    description: 'Active Campaign Account'
+    required: true
+  active-campaign-token:
+    description: 'Active Campaign Token'
+    required: true
   algolia-index:
     description: 'Algolia index name'
     required: true
@@ -95,6 +101,8 @@ runs:
       run: |
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
       env:
+        ACTIVE_CAMPAIGN_ACCOUNT: ${{ inputs.active-campaign-account }}
+        ACTIVE_CAMPAIGN_TOKEN: ${{ inputs.active-campaign-token }}
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         AUTH0_AUDIENCE: ${{ inputs.auth0-audience }}
         AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}

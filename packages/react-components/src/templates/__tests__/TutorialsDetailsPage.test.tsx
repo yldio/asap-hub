@@ -55,7 +55,7 @@ it('conditionally renders related tutorials', () => {
       ]}
     />,
   );
-  expect(getByText(/Related Tutorials/i)).toBeVisible();
+  expect(getByText('Related Tutorials')).toBeVisible();
   expect(getByText(/Tutorial1/i)).toBeVisible();
 });
 

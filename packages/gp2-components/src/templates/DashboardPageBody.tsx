@@ -112,7 +112,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={columnContainer}>
           <Headline2>Announcements</Headline2>
           <Paragraph accent="lead" noMargin>
-            Here are the latest announcements from admins.
+            Latest admin announcements.
           </Paragraph>
           <div css={contentCardsStyles}>
             <RemindersCard limit={3} reminders={announcements} canPublish />

@@ -98,6 +98,7 @@ describe('DashboardPageBody', () => {
         screen.getByRole('heading', { name: 'Announcements' }),
       ).toBeVisible();
       expect(screen.getByText('This is an announcement')).toBeVisible();
+      expect(screen.getByText('Latest admin announcements.')).toBeVisible();
     });
   });
 

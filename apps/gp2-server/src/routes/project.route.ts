@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import type { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Router } from 'express';
 import ProjectController from '../controllers/project.controller';
@@ -8,6 +9,8 @@ import {
   validateProjectParameters,
   validateProjectPutRequest,
 } from '../validation/project.validation';
+
+const { getUserRole } = gp2Validation;
 
 export const projectRouteFactory = (
   projectController: ProjectController,
@@ -62,9 +65,12 @@ export const projectRouteFactory = (
         projectId,
         loggedInUserId,
       );
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const projectRole = getUserRole(req.loggedInUser!, 'Projects', projectId);
       if (
         !(
-          role === 'Administrator' &&
+          (role === 'Administrator' || projectRole === 'Project manager') &&
           members.some(({ userId }) => userId === loggedInUserId)
         )
       ) {

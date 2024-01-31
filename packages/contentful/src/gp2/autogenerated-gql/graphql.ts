@@ -837,6 +837,10 @@ export type ContributingCohortsMembershipLinkingCollectionsUsersCollectionArgs =
 export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   ActivatedDateAsc = 'activatedDate_ASC',
   ActivatedDateDesc = 'activatedDate_DESC',
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
@@ -4462,6 +4466,7 @@ export enum ProjectsTagsCollectionOrder {
 }
 
 export type Query = {
+  _node?: Maybe<_Node>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -4517,6 +4522,12 @@ export type Query = {
   workingGroupNetworkCollection?: Maybe<WorkingGroupNetworkCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type Query_NodeArgs = {
+  id: Scalars['ID'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAnnouncementsArgs = {
@@ -5406,6 +5417,10 @@ export enum TagsLinkingCollectionsProjectsCollectionOrder {
 export enum TagsLinkingCollectionsUsersCollectionOrder {
   ActivatedDateAsc = 'activatedDate_ASC',
   ActivatedDateDesc = 'activatedDate_DESC',
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
@@ -5499,6 +5514,8 @@ export enum TagsOrder {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type Users = Entry & {
   activatedDate?: Maybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
+  activeCampaignId?: Maybe<Scalars['String']>;
   alternativeEmail?: Maybe<Scalars['String']>;
   avatar?: Maybe<Asset>;
   biography?: Maybe<Scalars['String']>;
@@ -5539,6 +5556,16 @@ export type Users = Entry & {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersActivatedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersActiveCampaignCreatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersActiveCampaignIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5764,6 +5791,26 @@ export type UsersFilter = {
   activatedDate_lte?: InputMaybe<Scalars['DateTime']>;
   activatedDate_not?: InputMaybe<Scalars['DateTime']>;
   activatedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  activeCampaignCreatedAt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignCreatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignCreatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignId?: InputMaybe<Scalars['String']>;
+  activeCampaignId_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  activeCampaignId_not?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   alternativeEmail?: InputMaybe<Scalars['String']>;
   alternativeEmail_contains?: InputMaybe<Scalars['String']>;
   alternativeEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6104,6 +6151,10 @@ export enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
 export enum UsersOrder {
   ActivatedDateAsc = 'activatedDate_ASC',
   ActivatedDateDesc = 'activatedDate_DESC',
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
@@ -6896,6 +6947,10 @@ export enum WorkingGroupsTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type _Node = {
+  _id: Scalars['ID'];
+};
+
 export type CfAnnouncementsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
@@ -7530,6 +7585,26 @@ export type CfUsersNestedFilter = {
   activatedDate_lte?: InputMaybe<Scalars['DateTime']>;
   activatedDate_not?: InputMaybe<Scalars['DateTime']>;
   activatedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  activeCampaignCreatedAt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignCreatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignCreatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  activeCampaignCreatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  activeCampaignId?: InputMaybe<Scalars['String']>;
+  activeCampaignId_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_exists?: InputMaybe<Scalars['Boolean']>;
+  activeCampaignId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  activeCampaignId_not?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
+  activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   alternativeEmail?: InputMaybe<Scalars['String']>;
   alternativeEmail_contains?: InputMaybe<Scalars['String']>;
   alternativeEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -11943,6 +12018,7 @@ export type FetchTagsQuery = {
 
 export type UsersContentDataFragment = Pick<
   Users,
+  | 'activeCampaignId'
   | 'activatedDate'
   | 'firstName'
   | 'middleName'
@@ -12076,6 +12152,7 @@ export type FetchUserByIdQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'activeCampaignId'
       | 'activatedDate'
       | 'firstName'
       | 'middleName'
@@ -12217,6 +12294,7 @@ export type FetchUsersQuery = {
         Maybe<
           Pick<
             Users,
+            | 'activeCampaignId'
             | 'activatedDate'
             | 'firstName'
             | 'middleName'
@@ -15459,6 +15537,7 @@ export const UsersContentDataFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'activeCampaignId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },

@@ -160,6 +160,7 @@ export {
   SearchAndFilter,
   SharedOutputDropdown,
   SharedOutputDropdownBase,
+  SharedOutputDropdownWrapper,
   SharedResearchCard,
   SharedResearchDetailsTagsCard,
   SharedResearchListCard,
@@ -263,4 +264,6 @@ export * from './theme';
 export { noop, getIconForDocumentType } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
+export type { ItemType } from './molecules';
+export type { Association } from './organisms';
 export type { ResearchOutputOption } from './utils';

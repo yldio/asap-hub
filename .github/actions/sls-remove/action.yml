@@ -61,12 +61,12 @@ runs:
       uses: ./.github/actions/is-number
       with:
         number: ${{ github.event.inputs.pr-number }}
-    - name: Build type definitions
-      shell: bash
-      run: yarn build:typecheck
     - name: Rebuild dependencies
       shell: bash
       run: yarn rebuild
+    - name: Build type definitions
+      shell: bash
+      run: yarn build:typecheck
     - name: Remove CF Stack
       if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
       shell: bash
@@ -80,6 +80,8 @@ runs:
           yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
         fi
       env:
+        ACTIVE_CAMPAIGN_ACCOUNT: 'n-a'
+        ACTIVE_CAMPAIGN_TOKEN: 'n-a'
         ALGOLIA_INDEX: 'n-a'
         AUTH0_AUDIENCE: ${{ inputs.auth0-audience }}
         AUTH0_CLIENT_ID: ${{ inputs.auth0-client-id }}

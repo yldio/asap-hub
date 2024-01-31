@@ -10,6 +10,7 @@ export const usersContentQueryFragment = gql`
       publishedAt
       publishedVersion
     }
+    activeCampaignId
     lastUpdated
     alumniSinceDate
     alumniLocation

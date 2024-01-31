@@ -1,7 +1,10 @@
 import { Auth0User, gp2, User } from '@asap-hub/auth';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Validation } from '@asap-hub/validation';
 
 import { useAuth0CRN, useAuth0GP2 } from './auth0';
+
+const { getUserRole } = gp2Validation;
 
 export const getUserClaimKey = (): string =>
   new URL('/user', window.location.href).toString();
@@ -23,15 +26,7 @@ export const useCurrentUserRoleGP2 = (
   entityType: 'WorkingGroups' | 'Projects' | undefined,
 ) => {
   const user = useCurrentUserGP2();
-  return user
-    ? entityType === 'Projects'
-      ? user.projects
-          .filter((proj: gp2Model.UserProject) => proj.id === entityId)[0]
-          ?.members.filter(
-            (member: gp2Model.UserProjectMember) => member.userId === user.id,
-          )[0]?.role
-      : undefined
-    : undefined;
+  return getUserRole(user, entityType, entityId);
 };
 
 export const useCurrentUserProjectRolesGP2 =

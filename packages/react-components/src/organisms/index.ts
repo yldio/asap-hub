@@ -56,6 +56,7 @@ export { default as SearchAndFilter } from './SearchAndFilter';
 export {
   default as SharedOutputDropdown,
   SharedOutputDropdownBase,
+  SharedOutputDropdownWrapper,
 } from './SharedOutputDropdown';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';
@@ -89,3 +90,4 @@ export { default as WelcomeCard } from './WelcomeCard';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';
 export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
+export type { Association } from './SharedOutputDropdown';

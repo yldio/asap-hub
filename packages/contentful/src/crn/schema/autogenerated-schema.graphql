@@ -594,6 +594,10 @@ type DiscoverMembersCollection {
 }
 
 enum DiscoverMembersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -679,6 +683,10 @@ type DiscoverScientificAdvisoryBoardCollection {
 }
 
 enum DiscoverScientificAdvisoryBoardCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -2320,6 +2328,10 @@ enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
 }
 
 enum LabsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -3898,6 +3910,10 @@ enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
 }
 
 enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -4102,6 +4118,10 @@ type TeamMembershipLinkingCollections {
 }
 
 enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -4855,6 +4875,8 @@ type TutorialsTextResources {
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
 type Users implements Entry {
+  activeCampaignCreatedAt(locale: String): DateTime
+  activeCampaignId(locale: String): String
   adminNotes(locale: String): String
   alumniLocation(locale: String): String
   alumniSinceDate(locale: String): DateTime
@@ -4913,6 +4935,22 @@ type UsersCollection {
 input UsersFilter {
   AND: [UsersFilter]
   OR: [UsersFilter]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean
@@ -5356,6 +5394,10 @@ enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
 }
 
 enum UsersOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -6814,6 +6856,22 @@ input cfTutorialsNestedFilter {
 input cfUsersNestedFilter {
   AND: [cfUsersNestedFilter]
   OR: [cfUsersNestedFilter]
+  activeCampaignCreatedAt: DateTime
+  activeCampaignCreatedAt_exists: Boolean
+  activeCampaignCreatedAt_gt: DateTime
+  activeCampaignCreatedAt_gte: DateTime
+  activeCampaignCreatedAt_in: [DateTime]
+  activeCampaignCreatedAt_lt: DateTime
+  activeCampaignCreatedAt_lte: DateTime
+  activeCampaignCreatedAt_not: DateTime
+  activeCampaignCreatedAt_not_in: [DateTime]
+  activeCampaignId: String
+  activeCampaignId_contains: String
+  activeCampaignId_exists: Boolean
+  activeCampaignId_in: [String]
+  activeCampaignId_not: String
+  activeCampaignId_not_contains: String
+  activeCampaignId_not_in: [String]
   adminNotes: String
   adminNotes_contains: String
   adminNotes_exists: Boolean

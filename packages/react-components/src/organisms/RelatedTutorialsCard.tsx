@@ -96,7 +96,7 @@ const RelatedTutorialsCard: React.FC<RelatedTutorialsCardProps> = ({
         <Headline2 noMargin>Related Tutorials</Headline2>
         <div css={descriptionStyles}>
           <Paragraph noMargin accent="lead">
-            Find all tutorials that are related to this one.
+            Find all related tutorials.
           </Paragraph>
         </div>
         {relatedTutorials.length === 0 ? (

@@ -43,6 +43,7 @@ export {
   OpenQuestionsModal,
   OutputCard,
   OutputCohortsCard,
+  OutputDropdown,
   OutputIdentifier,
   PageBanner,
   ProjectCard,

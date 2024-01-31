@@ -1,31 +1,37 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { UserResponse } from '@asap-hub/model';
+import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import {
-  ExpertiseAndResourcesModal,
   OpenQuestionsModal,
   RoleModal,
   UserProfileResearch,
   WorkingGroupsTabbedCard,
   UserTeamsTabbedCard,
+  ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { Route, useRouteMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
-
-import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
+import { useResearchTags } from '../../shared-research';
 
 type ResearchProps = {
   user: UserResponse;
 };
 const Research: React.FC<ResearchProps> = ({ user }) => {
+  const researchTagsSuggestions = useResearchTags();
+
   const { id } = useCurrentUserCRN() ?? {};
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
+
+  const commonModalProps = {
+    backHref: route.$,
+    onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
+  };
 
   return (
     <>
@@ -68,10 +74,9 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           <Route path={path + route.editRole.template}>
             <Frame title="Edit Role">
               <RoleModal
+                {...commonModalProps}
                 teams={user.teams}
                 labs={user.labs}
-                backHref={route.$}
-                onSave={patchUser}
                 researchInterests={user.researchInterests}
                 responsibilities={user.responsibilities}
                 role={user.role}
@@ -84,20 +89,16 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
             <Frame title="Edit Open Questions">
               <OpenQuestionsModal
                 {...user}
-                backHref={route.$}
-                onSave={patchUser}
+                {...commonModalProps}
               />
             </Frame>
           </Route>
           <Route path={path + route.editExpertiseAndResources.template}>
             <Frame title="Edit Expertise and Resources">
-              <ExpertiseAndResourcesModal
-                {...user}
-                expertiseAndResourceSuggestions={
-                  expertiseAndResourceSuggestions
-                }
-                backHref={route.$}
-                onSave={patchUser}
+              <ExpertiseAndResourcesModal 
+              {...user}
+              {...commonModalProps}
+              suggestions={researchTagsSuggestions}
               />
             </Frame>
           </Route>

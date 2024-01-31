@@ -28,7 +28,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   firstName,
   email,
   contactEmail,
-  expertiseAndResourceTags,
   expertiseAndResourceDescription,
   questions,
   isOwnProfile,
@@ -40,6 +39,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   editQuestionsHref,
   editRoleHref,
   role,
+  tags,
   ...roleProps
 }) => {
   const isRoleEmpty =
@@ -110,7 +110,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
           card: (
             <ProfileExpertiseAndResources
               expertiseAndResourceDescription={expertiseAndResourceDescription}
-              expertiseAndResourceTags={expertiseAndResourceTags}
+              tags={tags}
             />
           ),
 

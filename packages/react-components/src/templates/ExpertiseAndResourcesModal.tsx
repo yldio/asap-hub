@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserPatchRequest, UserResponse } from '@asap-hub/model';
+import { ResearchTagDataObject, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
@@ -11,11 +11,11 @@ import { perRem } from '../pixels';
 
 type ExpertiseAndResourcesModalProps = Pick<
   UserResponse,
-  'expertiseAndResourceDescription' | 'expertiseAndResourceTags'
+  'tags' | 'expertiseAndResourceDescription'
 > & {
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
-  expertiseAndResourceSuggestions: string[];
+  suggestions: ResearchTagDataObject[],
 };
 const fieldsContainerStyles = css({
   display: 'grid',
@@ -23,22 +23,24 @@ const fieldsContainerStyles = css({
 });
 
 const MINIMUM_EXPERTISE_AND_RESOURCES = 5;
-const validateExpertiseAndResources = (expertiseAndResourceTags: string[]) =>
-  expertiseAndResourceTags.length >= MINIMUM_EXPERTISE_AND_RESOURCES;
+const validateExpertiseAndResources = (tags: ResearchTagDataObject[]) =>
+  tags.length >= MINIMUM_EXPERTISE_AND_RESOURCES;
 
 const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
   onSave = noop,
   backHref,
   expertiseAndResourceDescription = '',
-  expertiseAndResourceTags,
-  expertiseAndResourceSuggestions,
+  tags = [],
+  suggestions,
 }) => {
   const [
     newExpertiseAndResourceDescription,
     setExpertiseAndResourceDescription,
   ] = useState(expertiseAndResourceDescription);
-  const [newExpertiseAndResourceTags, setNewExpertiseAndResourceTags] =
-    useState(expertiseAndResourceTags);
+
+  const [newTags, setNewTags] =
+    useState(tags);
+
   const [
     expertiseAndResourcesCustomValidationMessage,
     setExpertiseAndResourcesCustomValidationMessage,
@@ -51,16 +53,16 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
       dirty={
         expertiseAndResourceDescription !==
           newExpertiseAndResourceDescription ||
-        expertiseAndResourceTags !== newExpertiseAndResourceTags
+        tags !== newTags
       }
       validate={() =>
-        validateExpertiseAndResources(newExpertiseAndResourceTags)
+        validateExpertiseAndResources(newTags)
       }
       onSave={() =>
         onSave({
           expertiseAndResourceDescription:
             newExpertiseAndResourceDescription || undefined,
-          expertiseAndResourceTags: newExpertiseAndResourceTags,
+          tagIds: newTags.map(({id})=>id),
         })
       }
     >
@@ -77,27 +79,27 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                 subtitle="(Required)"
                 description="Select 5 to 10 tags that best apply to your work."
                 placeholder="Start typing…"
-                values={newExpertiseAndResourceTags.map((tag) => ({
-                  label: tag,
-                  value: tag,
+                values={newTags.map((tag) => ({
+                  label: tag.name,
+                  value: tag.id,
                 }))}
                 enabled={!isSaving}
                 onChange={(newValues) => {
-                  setNewExpertiseAndResourceTags(
-                    newValues.map(({ value }) => value),
+                  setNewTags(
+                    newValues.map(({ value, label }) => ({name: label, id: value})),
                   );
                   validateExpertiseAndResources(
-                    newValues.map(({ value }) => value),
+                    newValues.map(({ value, label }) => ({name: label, id: value})),
                   )
                     ? setExpertiseAndResourcesCustomValidationMessage('')
                     : setExpertiseAndResourcesCustomValidationMessage(
                         `Please add a minimum of ${MINIMUM_EXPERTISE_AND_RESOURCES} tags`,
                       );
                 }}
-                suggestions={expertiseAndResourceSuggestions.map(
+                suggestions={suggestions.map(
                   (suggestion) => ({
-                    label: suggestion,
-                    value: suggestion,
+                    label: suggestion.name,
+                    value: suggestion.id,
                   }),
                 )}
                 noOptionsMessage={({ inputValue }) =>

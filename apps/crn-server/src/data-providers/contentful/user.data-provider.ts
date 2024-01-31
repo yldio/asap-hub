@@ -213,7 +213,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
       : patchAndPublish;
     const result = await patchMethod(user, {
       ...fields,
-      ...(data.tagIds ? { tags: getLinkEntities(data.tagIds) } : {}),
+      ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
     if (!result) {
       return;

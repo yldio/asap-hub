@@ -828,7 +828,7 @@ describe('User data provider', () => {
         });
 
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-          tags: [
+          researchTags: [
             {
               sys: {
                 type: 'Link',

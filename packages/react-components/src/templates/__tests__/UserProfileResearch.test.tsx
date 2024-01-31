@@ -7,7 +7,7 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   firstName: 'Phillip',
   displayName: 'Phillip Winter',
   email: 'test@example.com',
-  expertiseAndResourceTags: [],
+  tags: [],
   questions: [],
   role: 'Grantee',
 };
@@ -47,7 +47,7 @@ it('renders the expertiseAndResourceTags list', () => {
   const { getByText } = render(
     <UserProfileResearch
       {...commonProps}
-      expertiseAndResourceTags={['Neurological Diseases']}
+     tags={[{name: 'Neurological Diseases', id: '1'}]}
     />,
   );
   expect(getByText(/expertise/i, { selector: 'h2' })).toBeVisible();

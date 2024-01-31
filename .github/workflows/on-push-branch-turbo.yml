@@ -1,0 +1,43 @@
+name: Pipeline branch - test turborepo
+
+on:
+  push:
+    branches:
+      - feat/asap-285-use-turbo-for-tests
+
+jobs:
+  setup-turbo:
+    runs-on: ubuntu-latest
+    environment: Branch
+    outputs:
+      matrix: ${{ steps.setup.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Setup turborepo test pipeline
+        id: setup
+        run: |
+          MATRIX=$(yarn node ./.github/scripts/manage-workflows/create-test-matrix.js)
+          echo $MATRIX
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+  test-turbo:
+    needs: setup-turbo
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.setup-turbo.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Cache .turbo
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ matrix.package }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ matrix.package }}-
+      - name: Test ${{ matrix.package }}
+        run: yarn turbo test --filter="${{ matrix.package }}" --cache-dir=.turbo --only --no-deps

@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import { UserProfileContext } from '@asap-hub/react-context';
+import { ResearchTagDataObject } from '@asap-hub/model';
 
 import { Card, Divider, Headline2, Paragraph } from '../atoms';
 import { TagList } from '../molecules';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 import { perRem } from '../pixels';
-import { ResearchTagDataObject } from '@asap-hub/model';
 
 type ProfileExpertiseAndResourcesProps = {
   readonly tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[] | undefined;

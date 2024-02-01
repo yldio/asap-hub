@@ -27,8 +27,8 @@ import logger from '../utils/logger';
 export default class UserController {
   constructor(
     private userDataProvider: UserDataProvider,
-    private researchTagsDataProvider: ResearchTagDataProvider,
     private assetDataProvider: AssetDataProvider,
+    private researchTagsDataProvider: ResearchTagDataProvider,
   ) {}
 
   async update(
@@ -101,6 +101,7 @@ export default class UserController {
       avatar,
       contentType,
     });
+    console.log(assetId);
     return this.update(id, { avatar: assetId });
   }
 

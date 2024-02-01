@@ -20,7 +20,7 @@
       "outputs": ["build/**/*", "dist/**/*", "build-templates/**/*"]
     },
     "test": {
-      "dependsOn": ["^build:babel", "^test"],
+      "dependsOn": ["^build:babel"],
       "outputs": ["coverage/**/*"]
     }
   }

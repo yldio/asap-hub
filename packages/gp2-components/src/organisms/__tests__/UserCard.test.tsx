@@ -34,7 +34,6 @@ describe('UserCard', () => {
   });
   it('renders user info', () => {
     render(<UserCard {...defaultProps} />);
-    screen.debug(undefined, 10000000);
     expect(screen.getByText('Administrator')).toBeInTheDocument();
     expect(
       screen.getByText('Europe', { selector: 'span' }),

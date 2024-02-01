@@ -101,7 +101,6 @@ export default class UserController {
       avatar,
       contentType,
     });
-    console.log(assetId);
     return this.update(id, { avatar: assetId });
   }
 

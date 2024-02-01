@@ -38,6 +38,11 @@ const containerStyles = css({
   },
 });
 
+const addIconStyles = css({
+  display: 'flex',
+  'svg > path': { fill: 'white' },
+});
+
 const EditableCard: React.FC<EditableCardProps> = ({
   title,
   editHref,
@@ -85,7 +90,7 @@ const EditableCard: React.FC<EditableCardProps> = ({
               }}
             >
               {edit ? 'Edit' : optional ? 'Optional' : 'Add'}
-              {edit ? editIcon : addIcon}
+              {edit ? editIcon : <span css={addIconStyles}>{addIcon}</span>}
             </span>
           </Link>
         </div>

@@ -66,6 +66,7 @@ const priorities: Record<TeamRole, number> = {
   'Key Personnel': 5,
   'ASAP Staff': 6,
   'Scientific Advisory Board': 7,
+  Trainee: 8,
 };
 
 type UserTeamsTabbedCardProps = Pick<

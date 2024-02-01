@@ -8,6 +8,7 @@ export const priorities: Record<TeamRole, number> = {
   'Key Personnel': 5,
   'ASAP Staff': 6,
   'Scientific Advisory Board': 7,
+  Trainee: 8,
 };
 export const sortMembers = (a: TeamMember, b: TeamMember) => {
   if (priorities[a.role] === priorities[b.role]) {

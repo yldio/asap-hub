@@ -26,6 +26,7 @@ jobs:
     needs: setup-turbo
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.setup-turbo.outputs.matrix) }}
     steps:
       - name: Checkout

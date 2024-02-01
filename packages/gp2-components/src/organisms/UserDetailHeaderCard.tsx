@@ -81,6 +81,10 @@ const editButtonStyles = css({
     marginLeft: 'auto',
   },
 });
+const addIconStyles = css({
+  display: 'flex',
+  'svg > path': { fill: 'white' },
+});
 
 const validateCompleted = ({
   firstName,
@@ -253,9 +257,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
                 {completed ? (
                   editIcon
                 ) : (
-                  <span css={{ 'svg > path': { fill: 'white' } }}>
-                    {addIcon}
-                  </span>
+                  <span css={addIconStyles}>{addIcon}</span>
                 )}
               </span>
             </Link>

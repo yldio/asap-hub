@@ -10,6 +10,7 @@ jest.mock('../../../src/utils/logger');
 jest.mock('../../../src/dependencies/users.dependencies', () => ({
   getUserDataProvider: () => mockDataProvider,
   getAssetDataProvider: jest.fn(),
+  getResearchTagsDataProvider: () => mockDataProvider,
 }));
 
 describe('Cronjob - Sync Users ORCID', () => {

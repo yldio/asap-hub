@@ -267,7 +267,11 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.tutorialsController || new TutorialController(tutorialDataProvider);
   const userController =
     libs.userController ||
-    new UserController(userDataProvider, assetDataProvider);
+    new UserController(
+      userDataProvider,
+      assetDataProvider,
+      researchTagDataProvider,
+    );
   const labController =
     libs.labController || new LabController(labDataProvider);
   const workingGroupsController =

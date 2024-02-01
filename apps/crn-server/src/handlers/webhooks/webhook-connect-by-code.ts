@@ -9,6 +9,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   getUserDataProvider,
   getAssetDataProvider,
+  getResearchTagsDataProvider,
 } from '../../dependencies/users.dependencies';
 
 export const connectByCodeHandler = (users: UserController) =>
@@ -17,7 +18,11 @@ export const connectByCodeHandler = (users: UserController) =>
   );
 
 export const unloggedHandler: lambda.Handler = connectByCodeHandler(
-  new UserController(getUserDataProvider(), getAssetDataProvider()),
+  new UserController(
+    getUserDataProvider(),
+    getAssetDataProvider(),
+    getResearchTagsDataProvider(),
+  ),
 );
 
 export const handler: Handler = sentryWrapper(unloggedHandler);

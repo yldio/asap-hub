@@ -14,12 +14,14 @@ import UserController from '../../controllers/user.controller';
 import {
   getUserDataProvider,
   getAssetDataProvider,
+  getResearchTagsDataProvider,
 } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 const userDataProvider = getUserDataProvider();
 const assetDataProvider = getAssetDataProvider();
+const researchTagDataProvider = getResearchTagsDataProvider();
 
 const getContactPayload = async (
   user: UserResponse,
@@ -90,7 +92,11 @@ const getContactPayload = async (
 
 export const handler = sentryWrapper(
   syncActiveCampaignContactFactory(
-    new UserController(userDataProvider, assetDataProvider),
+    new UserController(
+      userDataProvider,
+      assetDataProvider,
+      researchTagDataProvider,
+    ),
     logger,
     getContactIdByEmail,
     createContact,

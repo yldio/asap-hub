@@ -8,11 +8,16 @@ import { sentryWrapper } from '../../../utils/sentry-wrapper';
 import {
   getUserDataProvider,
   getAssetDataProvider,
+  getResearchTagsDataProvider,
 } from '../../../dependencies/users.dependencies';
 
 export const handler: Handler = sentryWrapper(
   fetchUserByCodeHandlerFactory(
-    new Users(getUserDataProvider(), getAssetDataProvider()),
+    new Users(
+      getUserDataProvider(),
+      getAssetDataProvider(),
+      getResearchTagsDataProvider(),
+    ),
     algoliaSearchClientNativeFactory({ algoliaAppId, algoliaApiKey }),
   ),
 );

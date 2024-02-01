@@ -87,7 +87,11 @@ describe('POST /webhook/users/connections - success', () => {
   test('returns 202 for valid code and updates the user', async () => {
     const mockDataProvider = getDataProviderMock();
     const handler = connectByCodeHandler(
-      new UserController(mockDataProvider, getDataProviderMock()),
+      new UserController(
+        mockDataProvider,
+        getDataProviderMock(),
+        getDataProviderMock(),
+      ),
     );
     const user = {
       ...fetchUserResponseDataObject(),
@@ -127,7 +131,11 @@ describe('POST /webhook/users/connections - success', () => {
   test('returns 500 for invalid code', async () => {
     const mockDataProvider = mockGetDataProvider();
     const handler = connectByCodeHandler(
-      new UserController(mockDataProvider, getDataProviderMock()),
+      new UserController(
+        mockDataProvider,
+        getDataProviderMock(),
+        getDataProviderMock(),
+      ),
     );
     mockDataProvider.fetch.mockRejectedValue(new Error('some error'));
 

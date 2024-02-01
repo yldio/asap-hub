@@ -6,6 +6,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   getUserDataProvider,
   getAssetDataProvider,
+  getResearchTagsDataProvider,
 } from '../../dependencies/users.dependencies';
 import { UserPayload } from '../event-bus';
 
@@ -30,6 +31,10 @@ export const syncOrcidUserHandler =
 
 export const handler = sentryWrapper(
   syncOrcidUserHandler(
-    new UserController(getUserDataProvider(), getAssetDataProvider()),
+    new UserController(
+      getUserDataProvider(),
+      getAssetDataProvider(),
+      getResearchTagsDataProvider(),
+    ),
   ),
 );

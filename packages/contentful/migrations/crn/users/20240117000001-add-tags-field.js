@@ -22,6 +22,8 @@ module.exports.up = (migration) => {
 
       linkType: 'Entry',
     });
+
+  users.moveField('researchTags').afterField('expertiseAndResourceTags');
 };
 
 module.exports.down = (migration) => {

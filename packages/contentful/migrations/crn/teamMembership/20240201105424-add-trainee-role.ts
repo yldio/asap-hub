@@ -6,12 +6,12 @@ module.exports.up = function (migration) {
   teamMembership.editField('role').validations([
     {
       in: [
-        'Lead PI (Core Leadership)',
-        'Co-PI (Core Leadership)',
-        'Project Manager',
-        'Collaborating PI',
-        'Key Personnel',
         'ASAP Staff',
+        'Collaborating PI',
+        'Co-PI (Core Leadership)',
+        'Key Personnel',
+        'Lead PI (Core Leadership)',
+        'Project Manager',
         'Scientific Advisory Board',
         'Trainee',
       ],

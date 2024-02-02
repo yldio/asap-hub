@@ -7,6 +7,7 @@ import {
   ResearchOutputWorkingGroupResponse,
 } from './research-output';
 import { TeamResponse } from './team';
+import { TutorialsDataObject } from './tutorials';
 import { WorkingGroupResponse } from './working-group';
 
 export interface EventSpeakerUserData {
@@ -49,6 +50,9 @@ export interface EventDataObject extends BasicEvent {
   >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
+  relatedTutorials: Array<
+    Pick<TutorialsDataObject, 'id' | 'title' | 'created'>
+  >;
   relatedResearch: (Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'id' | 'title'

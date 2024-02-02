@@ -140,6 +140,30 @@ it('renders related research when there are items to display', () => {
   expect(getByText('My Research')).toBeVisible();
 });
 
+it('renders related tutorials when there are items to display', () => {
+  const { getByText, rerender, queryByText } = render(
+    <EventPage {...props} relatedTutorials={[]} />,
+  );
+  expect(
+    queryByText(/Related Tutorials/i, { selector: 'h2' }),
+  ).not.toBeInTheDocument();
+
+  rerender(
+    <EventPage
+      {...props}
+      relatedTutorials={[
+        {
+          title: 'Tutorial1',
+          id: 'tutorial-1',
+          created: new Date(2003, 1, 1, 1).toISOString(),
+        },
+      ]}
+    />,
+  );
+  expect(getByText('Related Tutorials')).toBeVisible();
+  expect(getByText(/Tutorial1/i)).toBeVisible();
+});
+
 it('renders the children', () => {
   const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
   expect(queryByText('Children')).toBeVisible();

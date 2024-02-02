@@ -478,6 +478,13 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     status,
     hidden: hidden || false,
     tags: tags ?? [],
+    relatedTutorials: (item.linkedFrom?.tutorialsCollection?.items ?? []).map(
+      (data) => ({
+        id: data?.sys.id,
+        title: data?.title || '',
+        created: data?.addedDate,
+      }),
+    ),
     relatedResearch: (
       item.linkedFrom?.researchOutputsCollection?.items ?? []
     ).map((data) => ({

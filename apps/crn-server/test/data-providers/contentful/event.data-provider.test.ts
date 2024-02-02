@@ -18,6 +18,7 @@ import {
   getContentfulGraphqlEventsResponse,
   getContentfulListEventDataObject,
   getContentfulRelatedResearch,
+  getContentfulRelatedTutorial,
   getContentfulUserSpeakerTeams,
   getEventCreateDataObject,
   getEventsByExternalAuthorIdGraphqlResponse,
@@ -60,6 +61,7 @@ describe('Events Contentful Data Provider', () => {
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
       InterestGroups: () => getContentfulGraphqlInterestGroup(),
       ResearchOutputs: () => getContentfulRelatedResearch(),
+      Tutorials: () => getContentfulRelatedTutorial(),
     });
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(

@@ -15,6 +15,7 @@ import {
   EventAbout,
   CalendarList,
   RelatedResearchCard,
+  RelatedTutorialsCard,
 } from '../organisms';
 
 const containerStyles = css({
@@ -45,7 +46,8 @@ type EventPageProps<
     | 'meetingMaterials'
     | 'hideMeetingLink'
     | 'calendar'
-  > & {
+  > &
+  Pick<EventResponse, 'relatedTutorials'> & {
     readonly relatedResearch?: T;
     readonly backHref?: string;
     readonly displayCalendar: boolean;
@@ -68,6 +70,7 @@ const EventPage = <
   eventConversation,
   displayCalendar,
   children,
+  relatedTutorials,
   relatedResearch,
   titleOutputs,
   descriptionOutput,
@@ -109,6 +112,12 @@ const EventPage = <
           getIconForDocumentType={getIconForDocumentType}
           getSourceIcon={getSourceIcon}
           tableTitles={tableTitles}
+        />
+      )}
+      {relatedTutorials && relatedTutorials.length > 0 && (
+        <RelatedTutorialsCard
+          relatedTutorials={relatedTutorials}
+          truncateFrom={3}
         />
       )}
       {displayCalendar && (

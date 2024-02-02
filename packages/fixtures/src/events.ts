@@ -124,6 +124,7 @@ export const createEventResponse = (
     numberOfExternalSpeakers,
     numberOfUnknownSpeakers,
   ),
+  relatedTutorials: [],
   relatedResearch: [],
 });
 

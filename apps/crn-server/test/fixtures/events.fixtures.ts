@@ -32,6 +32,14 @@ export const getContentfulUserSpeakerTeams = () => ({
   role: 'Lead PI (Core Leadership)',
 });
 
+export const getContentfulRelatedTutorial = () => ({
+  sys: {
+    id: 'tutorial-1',
+  },
+  title: 'Tutorial 1',
+  addedDate: '2020-07-09T14:48:46.000Z',
+});
+
 export const getContentfulRelatedResearch = (isList: boolean = false) => ({
   sys: {
     id: 'research-output-id',
@@ -225,6 +233,9 @@ export const getContentfulGraphqlEvent = (
   linkedFrom: {
     researchOutputsCollection: {
       items: [getContentfulRelatedResearch(isList)],
+    },
+    tutorialsCollection: {
+      items: [getContentfulRelatedTutorial()],
     },
   },
   presentationUpdatedAt: '2010-09-01T08:00:04.000Z',
@@ -466,6 +477,13 @@ export const getEventDataObject = (
               title: 'Working group name',
             },
           ],
+    },
+  ],
+  relatedTutorials: [
+    {
+      id: 'tutorial-1',
+      title: 'Tutorial 1',
+      created: '2020-07-09T14:48:46.000Z',
     },
   ],
 });

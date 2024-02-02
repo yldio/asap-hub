@@ -138,11 +138,11 @@ it('shows validation message country when it not selected', async () => {
 });
 
 it.each`
-  label             | message
-  ${/city/i}        | ${'Please add your city'}
-  ${/city/i}        | ${'Please add your city'}
-  ${/institution/i} | ${'Please add your institution'}
-  ${/position/i}    | ${'Please add your position'}
+  label                 | message
+  ${/city/i}            | ${'Please add your city'}
+  ${/state\/province/i} | ${'Please add your state/province'}
+  ${/institution/i}     | ${'Please add your institution'}
+  ${/position/i}        | ${'Please add your position'}
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, message }) => {

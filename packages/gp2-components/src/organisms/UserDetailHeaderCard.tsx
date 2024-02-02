@@ -81,6 +81,10 @@ const editButtonStyles = css({
     marginLeft: 'auto',
   },
 });
+const addIconStyles = css({
+  display: 'flex',
+  'svg > path': { fill: 'white' },
+});
 
 const validateCompleted = ({
   firstName,
@@ -88,6 +92,7 @@ const validateCompleted = ({
   degrees,
   region,
   country,
+  city,
   positions,
   role,
 }: Pick<
@@ -98,6 +103,7 @@ const validateCompleted = ({
   | 'region'
   | 'role'
   | 'country'
+  | 'city'
   | 'positions'
 >) =>
   firstName &&
@@ -105,6 +111,7 @@ const validateCompleted = ({
   degrees?.length &&
   region &&
   country &&
+  city &&
   positions.length &&
   role;
 
@@ -122,138 +129,142 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   editHref,
   onImageSelect,
   avatarSaving = false,
-}) => (
-  <CardWithBackground image={usersHeaderImage}>
-    <div css={containerStyles}>
-      <div
-        css={css({
-          gridArea: 'avatar',
-          display: 'grid',
-          width: rem(avatarSize),
-          height: rem(avatarSize),
-        })}
-      >
-        <div css={css({ gridRow: 1, gridColumn: 1 })}>
-          <Avatar
-            imageUrl={avatarUrl}
-            firstName={firstName}
-            lastName={lastName}
-            overrideStyles={avatarStyles}
-          />
-        </div>
+}) => {
+  const completed = validateCompleted({
+    degrees,
+    firstName,
+    lastName,
+    region,
+    role,
+    country,
+    city,
+    positions,
+  });
+
+  return (
+    <CardWithBackground image={usersHeaderImage}>
+      <div css={containerStyles}>
         <div
           css={css({
-            gridRow: 1,
-            gridColumn: 1,
-            alignSelf: 'flex-end',
-            justifySelf: 'flex-end',
+            gridArea: 'avatar',
+            display: 'grid',
+            width: rem(avatarSize),
+            height: rem(avatarSize),
           })}
         >
-          {onImageSelect && (
-            <label>
-              <Link
-                small
-                buttonStyle
-                noMargin
-                href={undefined}
-                label="Edit Avatar"
-                enabled={!avatarSaving}
-              >
-                <span
-                  css={css({
-                    display: 'flex',
-                    margin: `${rem(3)} 0`,
-                    svg: {
-                      stroke: colors.neutral900.rgb,
-                    },
-                  })}
+          <div css={css({ gridRow: 1, gridColumn: 1 })}>
+            <Avatar
+              imageUrl={avatarUrl}
+              firstName={firstName}
+              lastName={lastName}
+              overrideStyles={avatarStyles}
+            />
+          </div>
+          <div
+            css={css({
+              gridRow: 1,
+              gridColumn: 1,
+              alignSelf: 'flex-end',
+              justifySelf: 'flex-end',
+            })}
+          >
+            {onImageSelect && (
+              <label>
+                <Link
+                  small
+                  buttonStyle
+                  noMargin
+                  href={undefined}
+                  label="Edit Avatar"
+                  enabled={!avatarSaving}
                 >
-                  {uploadIcon}
-                </span>
-                <input
-                  disabled={avatarSaving}
-                  type="file"
-                  accept="image/x-png,image/jpeg"
-                  aria-label="Upload Avatar"
-                  onChange={(event) =>
-                    event.target.files?.length &&
-                    event.target.files[0] &&
-                    onImageSelect(event.target.files[0])
-                  }
-                  css={{ display: 'none' }}
-                />
-              </Link>
-            </label>
+                  <span
+                    css={css({
+                      display: 'flex',
+                      margin: `${rem(3)} 0`,
+                      svg: {
+                        stroke: colors.neutral900.rgb,
+                      },
+                    })}
+                  >
+                    {uploadIcon}
+                  </span>
+                  <input
+                    disabled={avatarSaving}
+                    type="file"
+                    accept="image/x-png,image/jpeg"
+                    aria-label="Upload Avatar"
+                    onChange={(event) =>
+                      event.target.files?.length &&
+                      event.target.files[0] &&
+                      onImageSelect(event.target.files[0])
+                    }
+                    css={{ display: 'none' }}
+                  />
+                </Link>
+              </label>
+            )}
+          </div>
+        </div>
+
+        <div
+          css={[rowStyles, { gridArea: 'headline', overflowWrap: 'anywhere' }]}
+        >
+          <Headline3 noMargin>
+            {displayName}
+            {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+          </Headline3>
+        </div>
+        <div css={[rowContainerStyles, { gridArea: 'details' }]}>
+          <div css={rowStyles}>
+            <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
+            <UserRegion region={region} />
+          </div>
+          <div css={rowContainerStyles}>
+            <IconWithLabel icon={locationIcon}>
+              <span>
+                {city && `${city}, `}
+                {country}
+              </span>
+            </IconWithLabel>
+          </div>
+          {positions.map(
+            ({ role: positionRole, department, institution }, idx) => (
+              <div css={rowContainerStyles} key={`position-${idx}`}>
+                {positionRole} in {department} at {institution}
+              </div>
+            ),
           )}
         </div>
-      </div>
-
-      <div
-        css={[rowStyles, { gridArea: 'headline', overflowWrap: 'anywhere' }]}
-      >
-        <Headline3 noMargin>
-          {displayName}
-          {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-        </Headline3>
-      </div>
-      <div css={[rowContainerStyles, { gridArea: 'details' }]}>
-        <div css={rowStyles}>
-          <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
-          <UserRegion region={region} />
-        </div>
-        <div css={rowContainerStyles}>
-          <IconWithLabel icon={locationIcon}>
-            <span>
-              {city && `${city}, `}
-              {country}
-            </span>
-          </IconWithLabel>
-        </div>
-        {positions.map(
-          ({ role: positionRole, department, institution }, idx) => (
-            <div css={rowContainerStyles} key={`position-${idx}`}>
-              {positionRole} in {department} at {institution}
-            </div>
-          ),
+        {editHref && (
+          <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
+            <Link
+              href={editHref}
+              buttonStyle
+              {...(completed ? {} : { primary: true })}
+              noMargin
+              small
+              fullWidth
+            >
+              <span
+                css={{
+                  display: 'inline-flex',
+                  gap: rem(8),
+                  marginLeft: rem(6),
+                }}
+              >
+                {completed ? 'Edit' : 'Add'}
+                {completed ? (
+                  editIcon
+                ) : (
+                  <span css={addIconStyles}>{addIcon}</span>
+                )}
+              </span>
+            </Link>
+          </div>
         )}
       </div>
-      {editHref && (
-        <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-          <Link href={editHref} buttonStyle noMargin small fullWidth>
-            <span
-              css={{
-                display: 'inline-flex',
-                gap: rem(8),
-                marginLeft: rem(6),
-              }}
-            >
-              {validateCompleted({
-                degrees,
-                firstName,
-                lastName,
-                region,
-                role,
-                country,
-                positions,
-              })
-                ? 'Edit'
-                : 'Required'}
-              {validateCompleted({
-                degrees,
-                firstName,
-                lastName,
-                region,
-                role,
-                country,
-                positions,
-              })
-                ? editIcon
-                : addIcon}
-            </span>
-          </Link>
-        </div>
-      )}
-    </div>
-  </CardWithBackground>
-);
+    </CardWithBackground>
+  );
+};
 export default UserDetailHeaderCard;

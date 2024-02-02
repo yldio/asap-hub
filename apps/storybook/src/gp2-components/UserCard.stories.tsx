@@ -30,6 +30,8 @@ export const Normal = () => {
         avatarUrl={text('Avatar URL', '')}
         role={'Administrator'}
         region={region}
+        country={text('Country', 'Spain')}
+        city={text('City', 'Madrid')}
         workingGroups={Array(number('Number of Working Groups', 1))
           .fill({
             title: text('Working Group Name', 'Underrepresented Populations'),

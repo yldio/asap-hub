@@ -38,6 +38,11 @@ const containerStyles = css({
   },
 });
 
+const addIconStyles = css({
+  display: 'flex',
+  'svg > path': { fill: 'white' },
+});
+
 const EditableCard: React.FC<EditableCardProps> = ({
   title,
   editHref,
@@ -69,7 +74,14 @@ const EditableCard: React.FC<EditableCardProps> = ({
             },
           ]}
         >
-          <Link href={editHref} buttonStyle noMargin small fullWidth>
+          <Link
+            href={editHref}
+            {...(edit ? {} : optional ? {} : { primary: true })}
+            buttonStyle
+            noMargin
+            small
+            fullWidth
+          >
             <span
               css={{
                 display: 'inline-flex',
@@ -77,8 +89,8 @@ const EditableCard: React.FC<EditableCardProps> = ({
                 marginLeft: rem(6),
               }}
             >
-              {edit ? 'Edit' : optional ? 'Optional' : 'Required'}
-              {edit ? editIcon : addIcon}
+              {edit ? 'Edit' : optional ? 'Optional' : 'Add'}
+              {edit ? editIcon : <span css={addIconStyles}>{addIcon}</span>}
             </span>
           </Link>
         </div>

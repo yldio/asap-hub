@@ -12,6 +12,7 @@ describe('UserCard', () => {
     workingGroups: [],
     role: 'Administrator' as const,
     region: 'Europe' as const,
+    country: 'Spain',
     tags: [
       'Genetics',
       'Neurology',
@@ -37,6 +38,7 @@ describe('UserCard', () => {
     expect(
       screen.getByText('Europe', { selector: 'span' }),
     ).toBeInTheDocument();
+    expect(screen.getByText('Spain', { selector: 'span' })).toBeInTheDocument();
     expect(
       screen.getByText('This member isn’t part of any working groups'),
     ).toBeInTheDocument();

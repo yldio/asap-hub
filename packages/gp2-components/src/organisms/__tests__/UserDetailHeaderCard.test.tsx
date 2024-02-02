@@ -105,13 +105,11 @@ describe('UserDetailHeaderCard', () => {
       render(<UserDetailHeaderCard {...defaultProps} editHref="/" />);
       expect(screen.getByRole('link', { name: /edit.+edit/i })).toBeVisible();
     });
-    it('renders required button when information is incomplete', () => {
+    it('renders add button when information is incomplete', () => {
       render(
         <UserDetailHeaderCard {...defaultProps} editHref="/" degrees={[]} />,
       );
-      expect(
-        screen.getByRole('link', { name: /required.+add/i }),
-      ).toBeVisible();
+      expect(screen.getByRole('link', { name: /add.+add/i })).toBeVisible();
     });
   });
 });

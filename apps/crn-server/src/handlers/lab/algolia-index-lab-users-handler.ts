@@ -9,6 +9,7 @@ import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
 import {
   getAssetDataProvider,
+  getResearchTagsDataProvider,
   getUserDataProvider,
 } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
@@ -58,7 +59,11 @@ export const indexLabUsersHandler =
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexLabUsersHandler(
-    new UserController(getUserDataProvider(), getAssetDataProvider()),
+    new UserController(
+      getUserDataProvider(),
+      getAssetDataProvider(),
+      getResearchTagsDataProvider(),
+    ),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

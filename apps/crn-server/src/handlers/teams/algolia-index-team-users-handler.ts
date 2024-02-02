@@ -16,6 +16,7 @@ import UserController from '../../controllers/user.controller';
 import {
   getAssetDataProvider,
   getUserDataProvider,
+  getResearchTagsDataProvider,
 } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -51,7 +52,11 @@ export const indexTeamUsersHandler = (
 };
 
 const rawHandler = indexTeamUsersHandler(
-  new UserController(getUserDataProvider(), getAssetDataProvider()),
+  new UserController(
+    getUserDataProvider(),
+    getAssetDataProvider(),
+    getResearchTagsDataProvider(),
+  ),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

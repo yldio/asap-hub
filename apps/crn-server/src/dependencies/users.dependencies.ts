@@ -6,15 +6,23 @@ import {
 } from '../config';
 import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
 import { AssetContentfulDataProvider } from '../data-providers/contentful/asset.data-provider';
-import { UserDataProvider, AssetDataProvider } from '../data-providers/types';
+import {
+  UserDataProvider,
+  AssetDataProvider,
+  ResearchTagDataProvider,
+} from '../data-providers/types';
 import { getContentfulRestClientFactory } from './clients.dependencies';
+import { ResearchTagContentfulDataProvider } from '../data-providers/contentful/research-tag.data-provider';
 
-export const getUserDataProvider = (): UserDataProvider => {
-  const contentfulGraphQLClient = getContentfulGraphQLClient({
+const getGraphQLClient = () =>
+  getContentfulGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
+
+export const getUserDataProvider = (): UserDataProvider => {
+  const contentfulGraphQLClient = getGraphQLClient();
 
   return new UserContentfulDataProvider(
     contentfulGraphQLClient,
@@ -24,3 +32,12 @@ export const getUserDataProvider = (): UserDataProvider => {
 
 export const getAssetDataProvider = (): AssetDataProvider =>
   new AssetContentfulDataProvider(getContentfulRestClientFactory);
+
+export const getResearchTagsDataProvider = (): ResearchTagDataProvider => {
+  const contentfulGraphQLClient = getGraphQLClient();
+
+  return new ResearchTagContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
+};

@@ -8,9 +8,11 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import ExpertiseAndResourcesModal from '../ExpertiseAndResourcesModal';
 import { ember, steel } from '../../colors';
 
+const mapTags = (tags: string[]) => tags.map((tag) => ({ name: tag, id: tag }));
+
 const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
   ...createUserResponse(),
-  expertiseAndResourceSuggestions: [],
+  suggestions: [],
   backHref: '/wrong',
 };
 it('renders the title', () => {
@@ -51,8 +53,8 @@ it('triggers the save function', async () => {
   const { getByLabelText, getByText } = render(
     <ExpertiseAndResourcesModal
       {...props}
-      expertiseAndResourceTags={['1', '2', '3', '4']}
-      expertiseAndResourceSuggestions={['1', '2', '3', '4', '5']}
+      tags={mapTags(['1', '2', '3', '4'])}
+      suggestions={mapTags(['1', '2', '3', '4', '5'])}
       onSave={handleSave}
     />,
     { wrapper: MemoryRouter },
@@ -70,7 +72,7 @@ it('triggers the save function', async () => {
   );
   expect(handleSave).toHaveBeenCalledWith({
     expertiseAndResourceDescription: 'example description',
-    expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
+    tagIds: ['1', '2', '3', '4', '5'],
   });
 });
 
@@ -83,7 +85,7 @@ it('disables the form elements while submitting', async () => {
   const { getByText } = render(
     <ExpertiseAndResourcesModal
       {...props}
-      expertiseAndResourceTags={['1', '2', '3', '4', '5']}
+      tags={mapTags(['1', '2', '3', '4', '5'])}
       onSave={handleSave}
     />,
     {
@@ -106,10 +108,7 @@ it('disables the form elements while submitting', async () => {
 describe('tags selection', () => {
   it('displays a no options message', async () => {
     const { getByLabelText, getByText } = render(
-      <ExpertiseAndResourcesModal
-        {...props}
-        expertiseAndResourceSuggestions={['abc']}
-      />,
+      <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
       { wrapper: StaticRouter },
     );
 
@@ -122,7 +121,7 @@ describe('tags selection', () => {
     const { getByText, getByLabelText } = render(
       <ExpertiseAndResourcesModal
         {...props}
-        expertiseAndResourceTags={['1', '2', '3', '4']}
+        tags={mapTags(['1', '2', '3', '4'])}
         onSave={handleSave}
       />,
       {
@@ -145,8 +144,8 @@ describe('tags selection', () => {
     const { getByLabelText, getByText, queryByText } = render(
       <ExpertiseAndResourcesModal
         {...props}
-        expertiseAndResourceTags={['1', '2', '3']}
-        expertiseAndResourceSuggestions={['1', '2', '3', '4', '5']}
+        tags={mapTags(['1', '2', '3'])}
+        suggestions={mapTags(['1', '2', '3', '4', '5'])}
         onSave={handleSave}
       />,
       {

@@ -96,10 +96,10 @@ describe('User index handler', () => {
   test('Should populate _tags field before saving the user to Algolia', async () => {
     const event = publishedEvent();
     const userResponse = getUserResponse();
-    userResponse.expertiseAndResourceTags = [
-      'Bitopertin',
-      'A53T',
-      'Adapter ligation',
+    userResponse.tags = [
+      { id: '1', name: 'Bitopertin' },
+      { id: '2', name: 'A53T' },
+      { id: '3', name: 'Adapter ligation' },
     ];
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 

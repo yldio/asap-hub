@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { UserProfileContext } from '@asap-hub/react-context';
+import { ResearchTagDataObject } from '@asap-hub/model';
 
 import { Card, Divider, Headline2, Paragraph } from '../atoms';
 import { TagList } from '../molecules';
@@ -7,7 +8,7 @@ import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 import { perRem } from '../pixels';
 
 type ProfileExpertiseAndResourcesProps = {
-  readonly expertiseAndResourceTags: string[];
+  readonly tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[] | undefined;
   readonly expertiseAndResourceDescription?: string;
   readonly hideExpertiseAndResources?: boolean;
 };
@@ -15,12 +16,12 @@ type ProfileExpertiseAndResourcesProps = {
 const ProfileExpertiseAndResources: React.FC<
   ProfileExpertiseAndResourcesProps
 > = ({
-  expertiseAndResourceTags,
+  tags = [],
   expertiseAndResourceDescription,
   hideExpertiseAndResources,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
-  return expertiseAndResourceTags.length || isOwnProfile ? (
+  return tags.length || isOwnProfile ? (
     <Card>
       {!hideExpertiseAndResources && (
         <>
@@ -38,7 +39,7 @@ const ProfileExpertiseAndResources: React.FC<
         </>
       )}
       <Headline2 styleAsHeading={3}>Tags</Headline2>
-      {expertiseAndResourceTags.length ? (
+      {tags.length ? (
         <>
           <div
             css={{
@@ -52,7 +53,7 @@ const ProfileExpertiseAndResources: React.FC<
             </Paragraph>
           </div>
 
-          <TagList tags={expertiseAndResourceTags} />
+          <TagList tags={tags.map(({ name }) => name)} />
         </>
       ) : (
         <div css={{ marginTop: `${4 / perRem}em` }}>

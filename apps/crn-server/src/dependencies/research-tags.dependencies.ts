@@ -6,6 +6,7 @@ import {
 } from '../config';
 import { ResearchTagContentfulDataProvider } from '../data-providers/contentful/research-tag.data-provider';
 import { ResearchTagDataProvider } from '../data-providers/types';
+import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getResearchTagDataProvider = (): ResearchTagDataProvider => {
   const contentfulGraphQLClient = getContentfulGraphQLClient({
@@ -14,5 +15,8 @@ export const getResearchTagDataProvider = (): ResearchTagDataProvider => {
     environment: contentfulEnvId,
   });
 
-  return new ResearchTagContentfulDataProvider(contentfulGraphQLClient);
+  return new ResearchTagContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
 };

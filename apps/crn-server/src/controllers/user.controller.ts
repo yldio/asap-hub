@@ -1,4 +1,5 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import Boom from '@hapi/boom';
 import {
   FetchUsersOptions,
   ListUserResponse,
@@ -6,6 +7,8 @@ import {
   UserResponse,
   UserUpdateDataObject,
   UserUpdateRequest,
+  ValidationErrorResponse,
+  VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
@@ -14,13 +17,18 @@ import {
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
-import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
+import {
+  AssetDataProvider,
+  ResearchTagDataProvider,
+  UserDataProvider,
+} from '../data-providers/types';
 import logger from '../utils/logger';
 
 export default class UserController {
   constructor(
     private userDataProvider: UserDataProvider,
     private assetDataProvider: AssetDataProvider,
+    private researchTagsDataProvider: ResearchTagDataProvider,
   ) {}
 
   async update(
@@ -28,6 +36,9 @@ export default class UserController {
     update: UserUpdateRequest,
     { suppressConflict = false } = {},
   ): Promise<UserResponse> {
+    if (update.tagIds) {
+      await this.validateUser(update.tagIds);
+    }
     await this.userDataProvider.update(id, update, { suppressConflict });
     return this.fetchById(id);
   }
@@ -162,6 +173,48 @@ export default class UserController {
       take: 1,
       skip: 0,
     });
+  }
+
+  private async validateResearchTags(
+    id: string,
+  ): Promise<ValidationErrorResponse['data'][0] | null> {
+    const result = await this.researchTagsDataProvider.fetchById(id);
+
+    if (!result) {
+      return {
+        instancePath: '/tags',
+        keyword: 'exist',
+        message: 'must exist',
+        params: {
+          type: 'string',
+        },
+        schemaPath: '#/properties/tags/exist',
+      };
+    }
+    return null;
+  }
+
+  private async validateUser(tagIds: string[]): Promise<void> {
+    const isError = (
+      error: ValidationErrorResponse['data'][0] | null,
+    ): error is ValidationErrorResponse['data'][0] => !!error && error !== null;
+
+    const errors = await (
+      await Promise.all(tagIds.map(this.validateResearchTags.bind(this)))
+    ).filter(isError);
+
+    this.handleErrors(errors);
+  }
+
+  private handleErrors(errors: ValidationErrorResponse['data']) {
+    if (errors.length > 0) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest<ValidationErrorResponse['data']>(
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
+        errors,
+      );
+    }
   }
 }
 

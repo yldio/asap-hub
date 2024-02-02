@@ -9,16 +9,16 @@ import { network } from '@asap-hub/routing';
 import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Research from '../Research';
 import { patchUser } from '../api';
+import { getResearchTags } from '../../../shared-research/api';
 
 jest.mock('../api');
 jest.mock('../interest-groups/api');
+jest.mock('../../../shared-research/api');
 
-const suggestedExpertiseAndResources = ['1', '2', '3', '4', '5'];
-jest.mock('../expertise-and-resource-suggestions', () => ({
-  __esModule: true,
-  default: suggestedExpertiseAndResources,
-}));
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockGetResearchTags = getResearchTags as jest.MockedFunction<
+  typeof getResearchTags
+>;
 
 const id = '42';
 const makeWrapper =
@@ -54,7 +54,7 @@ it('renders the profile research section', async () => {
     <Research
       user={{
         ...createUserResponse(),
-        expertiseAndResourceTags: ['Some Expertise'],
+        tags: [{ name: 'Some Expertise', id: '1' }],
       }}
     />,
     { wrapper },
@@ -97,8 +97,12 @@ describe('when editing', () => {
     ],
   };
 
+  const tags = ['1', '2', '3', '4', '5'];
   let result!: RenderResult;
   beforeEach(async () => {
+    mockGetResearchTags.mockResolvedValue(
+      tags.map((tag) => ({ name: tag, id: tag })),
+    );
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });
@@ -173,7 +177,7 @@ describe('when editing', () => {
       userEvent.click(await findByLabelText(/edit.+resources/i));
       userEvent.type(getByDisplayValue('Expertise Description'), ' 2');
       expect(getByDisplayValue('Expertise Description 2')).toBeVisible();
-      suggestedExpertiseAndResources.forEach((expertise) => {
+      tags.forEach((expertise) => {
         userEvent.type(getByLabelText(/tags/i), expertise);
         userEvent.tab();
       });
@@ -188,7 +192,7 @@ describe('when editing', () => {
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
         {
-          expertiseAndResourceTags: suggestedExpertiseAndResources,
+          tagIds: tags,
           expertiseAndResourceDescription: 'Expertise Description 2',
         },
         expect.any(String),

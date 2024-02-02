@@ -31,17 +31,21 @@ import {
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
   FETCH_USER_BY_ID,
+  getLinkEntities,
   GraphQLClient,
   Maybe,
   patchAndPublish,
   patchAndPublishConflict,
   pollContentfulGql,
+  ResearchTags,
+  Sys,
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
 import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
+import { ResearchTagItem } from './research-tag.data-provider';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -123,7 +127,21 @@ export class UserContentfulDataProvider implements UserDataProvider {
   private async fetchUsers(options: FetchUsersOptions) {
     const { take = 8, skip = 0 } = options;
 
-    const where = generateFetchQueryFilter(options);
+    const where: UsersFilter = generateFetchQueryFilter(options);
+    const words = (options.search || '').split(' ').filter(Boolean);
+
+    if (words.length) {
+      const filters: UsersFilter[] = words.reduce(
+        (acc: UsersFilter[], word) =>
+          acc.concat([
+            {
+              OR: [{ expertiseAndResourceDescription_contains: word }],
+            },
+          ]),
+        [],
+      );
+      where.AND = filters;
+    }
 
     if (options.filter?.labId) {
       const { labs } = await this.contentfulClient.request<
@@ -193,7 +211,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
-    const result = await patchMethod(user, fields);
+    const result = await patchMethod(user, {
+      ...fields,
+      ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
+    });
     if (!result) {
       return;
     }
@@ -201,7 +222,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 }
 
-const cleanUser = (userToUpdate: UserUpdateDataObject) =>
+const cleanUser = ({
+  tagIds: _tagIds,
+  ...userToUpdate
+}: UserUpdateDataObject) =>
   Object.entries(userToUpdate).reduce(
     (acc, [key, value]) => {
       if (key === 'avatar') {
@@ -365,6 +389,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     degree,
     connections: connections.map((connection) => ({ code: connection })),
     teams,
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
     labs,
     social: {
       website1: item.website1 ?? undefined,
@@ -434,6 +459,7 @@ export const parseContentfulGraphQlUserListItem = (
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
   };
 };
 const generateFetchQueryFilter = ({
@@ -495,6 +521,21 @@ export const parseLabsCollection = (
     },
     [],
   );
+
+export const parseResearchTags = (
+  items: Maybe<
+    Pick<ResearchTags, 'name'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >[],
+) =>
+  items
+    .filter((tag): tag is ResearchTagItem => tag !== null)
+    .map((tag) => ({
+      id: tag.sys.id,
+      name: tag.name ?? '',
+    }))
+    .filter(Boolean) || [];
 
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],

@@ -31,7 +31,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   inactiveSince,
   projectTitle,
   projectSummary,
-  expertiseAndResourceTags,
+  tags,
   pointOfContact,
   members,
   proposalURL,
@@ -46,11 +46,8 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         proposalURL={proposalURL}
       />
     ) : null}
-    {expertiseAndResourceTags.length ? (
-      <ProfileExpertiseAndResources
-        hideExpertiseAndResources
-        expertiseAndResourceTags={expertiseAndResourceTags}
-      />
+    {tags && tags.length ? (
+      <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard

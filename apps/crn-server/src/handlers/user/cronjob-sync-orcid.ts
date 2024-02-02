@@ -6,13 +6,19 @@ import Users from '../../controllers/user.controller';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   getAssetDataProvider,
+  getResearchTagsDataProvider,
   getUserDataProvider,
 } from '../../dependencies/users.dependencies';
 
 const rawHandler = async (): Promise<lambda.Response> => {
   const userDataProvider = getUserDataProvider();
   const assetDataProvider = getAssetDataProvider();
-  const users = new Users(userDataProvider, assetDataProvider);
+  const researchTagDataProvider = getResearchTagsDataProvider();
+  const users = new Users(
+    userDataProvider,
+    assetDataProvider,
+    researchTagDataProvider,
+  );
   const orcidLastSyncDate = DateTime.now()
     .set({ hour: 0, minute: 0 })
     .minus({ months: 1 })

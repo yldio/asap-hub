@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
+  parseResearchTags,
   parseToWorkingGroups,
   UserContentfulDataProvider,
 } from '../../../src/data-providers/contentful/user.data-provider';
@@ -376,6 +377,20 @@ describe('User data provider', () => {
         },
       );
     });
+
+    test('should filter null tag items', async () => {
+      const id = 'user-id-1';
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          researchTagsCollection: {
+            items: [null, { sys: { id: '1' }, name: 'Lysosomes' }],
+          },
+        }),
+      });
+
+      const response = await userDataProvider.fetchById(id);
+      expect(response!.tags).toEqual([{ id: '1', name: 'Lysosomes' }]);
+    });
   });
 
   describe('Fetch', () => {
@@ -680,6 +695,32 @@ describe('User data provider', () => {
           }),
         );
       });
+      test('Should query data properly when passing search param', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulGraphqlUser(),
+        );
+
+        const search = 'Tag';
+        await userDataProvider.fetch({
+          search,
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: 8,
+            order: ['lastName_ASC'],
+            skip: 0,
+            where: {
+              AND: [
+                { OR: [{ expertiseAndResourceDescription_contains: 'Tag' }] },
+              ],
+              onboarded: true,
+              role_not: 'Hidden',
+            },
+          }),
+        );
+      });
     });
   });
 
@@ -779,6 +820,23 @@ describe('User data provider', () => {
               id: 'abc123',
             },
           },
+        });
+      });
+      test('map tag value to a linked resource', async () => {
+        await userDataProvider.update('123', {
+          tagIds: ['1'],
+        });
+
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          researchTags: [
+            {
+              sys: {
+                type: 'Link',
+                linkType: 'Entry',
+                id: '1',
+              },
+            },
+          ],
         });
       });
       test('converts empty string values to `null`', async () => {
@@ -1228,6 +1286,14 @@ describe('User data provider', () => {
         isAlumni,
       );
       expect(parsedWorkingGroups[0]!.active).toBe(false);
+    });
+  });
+
+  describe('parseResearchTags ', () => {
+    it('filters null', () => {
+      expect(parseResearchTags([null, { sys: { id: '1' } }])).toStrictEqual([
+        { id: '1', name: '' },
+      ]);
     });
   });
 });

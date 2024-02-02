@@ -45,7 +45,11 @@ describe('User', () => {
           city: 'Toronto',
           orcid: '0000-0001-8203-6901',
           orcidWorks: [],
-          expertiseAndResourceTags: ['Blood', 'Parkinson'],
+          expertiseAndResourceTags: [],
+          tags: [
+            { id: '1', name: 'Blood' },
+            { id: '2', name: 'Parkinson' },
+          ],
           questions: [],
           role: 'Grantee',
           social: {
@@ -77,7 +81,11 @@ describe('User', () => {
         }),
       ).toEqual({
         _tags: ['Blood', 'Parkinson'],
-        expertiseAndResourceTags: ['Blood', 'Parkinson'],
+        tags: [
+          { id: '1', name: 'Blood' },
+          { id: '2', name: 'Parkinson' },
+        ],
+        expertiseAndResourceTags: [],
         alumniSinceDate: undefined,
         avatarUrl: undefined,
         city: 'Toronto',

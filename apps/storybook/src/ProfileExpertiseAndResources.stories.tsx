@@ -13,7 +13,7 @@ export const Normal = () => (
       'Description',
       "Multiple years of experience in research on Parkinson's Disease.",
     )}
-    expertiseAndResourceTags={array('Expertise and Resources', [
+    tags={array('Expertise and Resources', [
       'Neurological Diseases',
       'Clinical Neurology',
       'Adult Neurology',
@@ -23,6 +23,6 @@ export const Normal = () => (
       'Movement Disorders',
       'Neurodegenerative Diseases',
       'Neurological Diseases',
-    ])}
+    ]).map((tag) => ({ name: tag, id: tag }))}
   />
 );

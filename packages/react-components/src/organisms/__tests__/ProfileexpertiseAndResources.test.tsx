@@ -3,9 +3,11 @@ import { UserProfileContext } from '@asap-hub/react-context';
 
 import ProfileExpertiseAndResources from '../ProfileExpertiseAndResources';
 
+const mapTags = (tags: string[]) => tags.map((tag) => ({ name: tag, id: tag }));
+
 it('renders expertiseAndResourceTags and expertise', () => {
   const { getByText, getAllByRole } = render(
-    <ProfileExpertiseAndResources expertiseAndResourceTags={['a', 'b', 'c']} />,
+    <ProfileExpertiseAndResources tags={mapTags(['a', 'b', 'c'])} />,
   );
   expect(getByText('a')).toBeVisible();
   expect(getByText('b')).toBeVisible();
@@ -19,7 +21,7 @@ it('renders expertiseAndResourceTags and expertises with description', () => {
   const { getByText, getAllByRole } = render(
     <ProfileExpertiseAndResources
       expertiseAndResourceDescription={'description'}
-      expertiseAndResourceTags={['a', 'b', 'c']}
+      tags={mapTags(['a', 'b', 'c'])}
     />,
   );
 
@@ -37,7 +39,7 @@ it('renders description placeholder component when no description and own profil
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription=""
-        expertiseAndResourceTags={['test']}
+        tags={mapTags(['test'])}
       />
       ,
     </UserProfileContext.Provider>,
@@ -48,7 +50,7 @@ it('renders description placeholder component when no description and own profil
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription=""
-        expertiseAndResourceTags={['test']}
+        tags={mapTags(['test'])}
       />
       ,
     </UserProfileContext.Provider>,
@@ -62,7 +64,7 @@ it('renders tags placeholder component when description, no tags and own profile
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription="test"
-        expertiseAndResourceTags={[]}
+        tags={[]}
       />
       ,
     </UserProfileContext.Provider>,
@@ -73,7 +75,7 @@ it('renders tags placeholder component when description, no tags and own profile
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription="test"
-        expertiseAndResourceTags={[]}
+        tags={mapTags([])}
       />
       ,
     </UserProfileContext.Provider>,
@@ -86,7 +88,7 @@ it('is not rendered when not own profile and without expertiseAndResourceTags', 
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription=""
-        expertiseAndResourceTags={[]}
+        tags={[]}
       />
     </UserProfileContext.Provider>,
   );
@@ -99,7 +101,7 @@ it('should not render the first section when hideExpertiseAndResources is true',
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <ProfileExpertiseAndResources
         expertiseAndResourceDescription="Description that should not be rendered"
-        expertiseAndResourceTags={[]}
+        tags={[]}
         hideExpertiseAndResources
       />
     </UserProfileContext.Provider>,

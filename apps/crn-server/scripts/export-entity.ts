@@ -20,6 +20,7 @@ import { getTutorialDataProvider } from '../src/dependencies/tutorial.dependenci
 import {
   getAssetDataProvider,
   getUserDataProvider,
+  getResearchTagsDataProvider,
 } from '../src/dependencies/users.dependencies';
 import { getWorkingGroupDataProvider } from '../src/dependencies/working-groups.dependencies';
 
@@ -84,7 +85,11 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const newsDataProvider = getNewsDataProvider();
 
   const controllerMap = {
-    user: new Users(userDataProvider, assetDataProvider),
+    user: new Users(
+      userDataProvider,
+      assetDataProvider,
+      getResearchTagsDataProvider(),
+    ),
     'research-output': new ResearchOutputs(
       researchOutputDataProvider,
       researchTagDataProvider,

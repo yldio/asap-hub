@@ -15,7 +15,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   researchInterests: 'My Research interests',
   responsibilities: 'My responsibilities',
   reachOut: 'If you need my help',
-  expertiseAndResourceTags: array('Expertise and Resources', [
+  tags: array('Expertise and Resources', [
     'Neurological Diseases',
     'Clinical Neurology',
     'Adult Neurology',
@@ -25,7 +25,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
     'Movement Disorders',
     'Neurodegenerative Diseases',
     'Neurological Diseases',
-  ]),
+  ]).map((tag) => ({ name: tag, id: 'tag' })),
   questions: array('Questions', [
     'What is the meaning of life?',
     'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',

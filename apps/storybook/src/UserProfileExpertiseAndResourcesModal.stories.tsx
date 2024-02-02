@@ -10,8 +10,8 @@ export const Normal = () => (
   <StaticRouter>
     <ExpertiseAndResourcesModal
       expertiseAndResourceDescription={text('Description', '')}
-      expertiseAndResourceTags={[]}
-      expertiseAndResourceSuggestions={array('Expertise and Resources', [
+      tags={[]}
+      suggestions={array('Expertise and Resources', [
         'Neurological Diseases',
         'Clinical Neurology',
         'Adult Neurology',
@@ -21,7 +21,7 @@ export const Normal = () => (
         'Movement Disorders',
         'Neurodegenerative Diseases',
         'Neurological Diseases',
-      ])}
+      ]).map((tag) => ({ name: tag, id: tag }))}
       backHref="#"
     />
   </StaticRouter>

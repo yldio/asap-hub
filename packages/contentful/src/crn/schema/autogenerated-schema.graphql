@@ -913,6 +913,7 @@ type Events implements Entry {
   presentation(locale: String): EventsPresentation
   presentationPermanentlyUnavailable(locale: String): Boolean
   presentationUpdatedAt(locale: String): DateTime
+  researchTagsCollection(limit: Int = 100, locale: String, order: [EventsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): EventsResearchTagsCollection
   speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventsSpeakersCollection
   startDate(locale: String): DateTime
   startDateTimeZone(locale: String): String
@@ -1032,6 +1033,8 @@ input EventsFilter {
   presentation_contains: String
   presentation_exists: Boolean
   presentation_not_contains: String
+  researchTags: cfResearchTagsNestedFilter
+  researchTagsCollection_exists: Boolean
   speakers: cfEventSpeakersNestedFilter
   speakersCollection_exists: Boolean
   startDate: DateTime
@@ -1272,6 +1275,28 @@ type EventsPresentationResources {
   block: [ResourceLink!]!
   hyperlink: [ResourceLink!]!
   inline: [ResourceLink!]!
+}
+
+type EventsResearchTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum EventsResearchTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type EventsSpeakersCollection {
@@ -2051,6 +2076,7 @@ type InterestGroups implements Entry {
   leadersCollection(limit: Int = 100, locale: String, order: [InterestGroupsLeadersCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupsLeadersCollection
   linkedFrom(allowedLocales: [String]): InterestGroupsLinkingCollections
   name(locale: String): String
+  researchTagsCollection(limit: Int = 100, locale: String, order: [InterestGroupsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): InterestGroupsResearchTagsCollection
   slack(locale: String): String
   sys: Sys!
   tags(locale: String): [String]
@@ -2106,6 +2132,8 @@ input InterestGroupsFilter {
   name_not: String
   name_not_contains: String
   name_not_in: [String]
+  researchTags: cfResearchTagsNestedFilter
+  researchTagsCollection_exists: Boolean
   slack: String
   slack_contains: String
   slack_exists: Boolean
@@ -2160,6 +2188,28 @@ enum InterestGroupsOrder {
   name_DESC
   slack_ASC
   slack_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type InterestGroupsResearchTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum InterestGroupsResearchTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3667,10 +3717,84 @@ input ResearchTagsFilter {
 
 type ResearchTagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
   newsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum ResearchTagsLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum ResearchTagsLinkingCollectionsInterestGroupsCollectionOrder {
+  active_ASC
+  active_DESC
+  googleDrive_ASC
+  googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  name_ASC
+  name_DESC
+  slack_ASC
+  slack_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
@@ -3737,6 +3861,23 @@ enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   usedInAPublication_DESC
 }
 
+enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
   addedDate_ASC
   addedDate_DESC
@@ -3766,6 +3907,77 @@ enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
   title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
+}
+
+enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
 }
 
 enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -4002,6 +4214,7 @@ type Teams implements Entry {
   projectSummary(locale: String): String
   projectTitle(locale: String): String
   proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
+  researchTagsCollection(limit: Int = 100, locale: String, order: [TeamsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): TeamsResearchTagsCollection
   sys: Sys!
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
 }
@@ -4060,6 +4273,8 @@ input TeamsFilter {
   projectTitle_not_in: [String]
   proposal: cfResearchOutputsNestedFilter
   proposal_exists: Boolean
+  researchTags: cfResearchTagsNestedFilter
+  researchTagsCollection_exists: Boolean
   sys: SysFilter
   tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
@@ -4216,6 +4431,28 @@ enum TeamsOrder {
   displayName_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type TeamsResearchTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TeamsResearchTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4677,6 +4914,7 @@ type Users implements Entry {
   reachOut(locale: String): String
   researchGate(locale: String): String
   researchInterests(locale: String): String
+  researchTagsCollection(limit: Int = 100, locale: String, order: [UsersResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): UsersResearchTagsCollection
   researcherId(locale: String): String
   responsibilities(locale: String): String
   role(locale: String): String
@@ -4932,6 +5170,8 @@ input UsersFilter {
   researchInterests_not: String
   researchInterests_not_contains: String
   researchInterests_not_in: [String]
+  researchTags: cfResearchTagsNestedFilter
+  researchTagsCollection_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean
@@ -5222,6 +5462,28 @@ enum UsersOrder {
   website1_DESC
   website2_ASC
   website2_DESC
+}
+
+type UsersResearchTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum UsersResearchTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type UsersTeamsCollection {
@@ -5892,6 +6154,7 @@ input cfEventsNestedFilter {
   presentation_contains: String
   presentation_exists: Boolean
   presentation_not_contains: String
+  researchTagsCollection_exists: Boolean
   speakersCollection_exists: Boolean
   startDate: DateTime
   startDateTimeZone: String
@@ -6493,6 +6756,7 @@ input cfTeamsNestedFilter {
   projectTitle_not_contains: String
   projectTitle_not_in: [String]
   proposal_exists: Boolean
+  researchTagsCollection_exists: Boolean
   sys: SysFilter
   toolsCollection_exists: Boolean
 }
@@ -6826,6 +7090,7 @@ input cfUsersNestedFilter {
   researchInterests_not: String
   researchInterests_not_contains: String
   researchInterests_not_in: [String]
+  researchTagsCollection_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean

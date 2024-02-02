@@ -1,4 +1,8 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  Entry,
+  Environment,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
 import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
 import {
   getFullListResearchTagDataObject,
@@ -6,11 +10,16 @@ import {
 } from '../../fixtures/research-tag.fixtures';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Research Tags Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
   const researchTagsDataProvider = new ResearchTagContentfulDataProvider(
     contentfulGraphqlClientMock,
+    contentfulRestClientMock,
   );
 
   const contentfulGraphqlClientMockServer =
@@ -18,7 +27,10 @@ describe('Research Tags Data Provider', () => {
       ResearchTagsCollection: () => getContentfulGraphqlResearchTagResponse(),
     });
   const researchTagsDataProviderMockGraphql =
-    new ResearchTagContentfulDataProvider(contentfulGraphqlClientMockServer);
+    new ResearchTagContentfulDataProvider(
+      contentfulGraphqlClientMockServer,
+      contentfulRestClientMock,
+    );
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -117,11 +129,69 @@ describe('Research Tags Data Provider', () => {
         ],
       });
     });
+    test('Should query data properly when passing search param', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchTagsCollection: {
+          total: 1,
+          items: [
+            {
+              sys: {
+                id: 'tag-1',
+              },
+              name: null,
+              types: null,
+              category: null,
+            },
+          ],
+        },
+      });
+
+      const search = 'Tag';
+      await researchTagsDataProvider.fetch({
+        search,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          limit: 8,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            AND: [{ OR: [{ name_contains: 'Tag' }] }],
+          },
+        }),
+      );
+    });
   });
 
   describe('Fetch-by-id', () => {
     test('should throw an error', async () => {
       await expect(researchTagsDataProvider.fetchById()).rejects.toThrow();
+    });
+  });
+
+  describe('create', () => {
+    beforeEach(() => {
+      environmentMock.createEntry.mockResolvedValue({
+        sys: { id: '1' },
+        publish: jest.fn(),
+      } as unknown as Entry);
+    });
+
+    test('can create a research tag', async () => {
+      const publish = jest.fn();
+      environmentMock.createEntry.mockResolvedValue({
+        sys: { id: '1' },
+        publish,
+      } as unknown as Entry);
+      const response = await researchTagsDataProvider.create('tag');
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchTags',
+        expect.anything(),
+      );
+      expect(publish).toHaveBeenCalled();
+      expect(response).toBe('1');
     });
   });
 });

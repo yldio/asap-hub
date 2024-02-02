@@ -65,6 +65,7 @@ it('renders default values into text inputs', () => {
       lastName="lastName"
       nickname="nickname"
       country="United States"
+      stateOrProvince="New York"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -85,6 +86,7 @@ it('renders default values into text inputs', () => {
       "institution",
       "jobTitle",
       "",
+      "New York",
       "city",
     ]
   `);
@@ -138,6 +140,7 @@ it('shows validation message country when it not selected', async () => {
 it.each`
   label             | message
   ${/city/i}        | ${'Please add your city'}
+  ${/city/i}        | ${'Please add your city'}
   ${/institution/i} | ${'Please add your institution'}
   ${/position/i}    | ${'Please add your position'}
 `(
@@ -178,6 +181,7 @@ it('disables the form elements while submitting', async () => {
       {...props}
       onSave={handleSave}
       countrySuggestions={['United States', 'Mexico']}
+      stateOrProvince="Yucatán"
       country="Mexico"
     />,
     { wrapper: StaticRouter },
@@ -205,6 +209,7 @@ it('triggers the save function', async () => {
       lastName="lastName"
       nickname="nickname"
       country="United States"
+      stateOrProvince="New York"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -225,6 +230,7 @@ it('triggers the save function', async () => {
     degree: 'MPH',
     jobTitle: 'jobTitle',
     institution: 'institution',
+    stateOrProvince: 'New York',
   });
 
   await waitFor(() =>

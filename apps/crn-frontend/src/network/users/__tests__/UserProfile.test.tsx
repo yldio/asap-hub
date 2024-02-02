@@ -240,6 +240,7 @@ describe('a header edit button', () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
       city: 'Lon',
+      stateOrProvince: 'State',
       country: 'United Kingdom of Great Britain and Northern Ireland',
       id: '42',
     };

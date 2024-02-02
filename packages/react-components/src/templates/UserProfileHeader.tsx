@@ -156,6 +156,7 @@ type UserProfileHeaderProps = Pick<
   | 'jobTitle'
   | 'lastName'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'role'
   | 'social'
@@ -180,6 +181,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   alumniLocation,
   displayName,
   country,
+  stateOrProvince,
   city,
   institution,
   firstName,
@@ -248,6 +250,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             <UserProfilePersonalText
               institution={institution}
               country={country}
+              stateOrProvince={stateOrProvince}
               city={city}
               jobTitle={jobTitle}
               teams={teams}

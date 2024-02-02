@@ -19,6 +19,7 @@ describe('UserDetailPage', () => {
       },
     ],
     country: 'USA',
+    stateOrProvince: 'Massachusetts',
     city: 'Springfield',
     outputsTotal: 0,
     upcomingTotal: 0,

@@ -52,6 +52,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
     },
     country: { type: 'string', nullable: true, minLength: 1 },
+    stateOrProvince: { type: 'string', nullable: true },
     city: { type: 'string', nullable: true },
     positions: {
       type: 'array',

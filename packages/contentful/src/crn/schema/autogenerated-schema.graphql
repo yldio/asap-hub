@@ -648,6 +648,8 @@ enum DiscoverMembersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -737,6 +739,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2382,6 +2386,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3964,6 +3970,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4172,6 +4180,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4918,6 +4928,7 @@ type Users implements Entry {
   researcherId(locale: String): String
   responsibilities(locale: String): String
   role(locale: String): String
+  stateOrProvince(locale: String): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [UsersTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamMembershipFilter): UsersTeamsCollection
   twitter(locale: String): String
@@ -5193,6 +5204,13 @@ input UsersFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
+  stateOrProvince: String
+  stateOrProvince_contains: String
+  stateOrProvince_exists: Boolean
+  stateOrProvince_in: [String]
+  stateOrProvince_not: String
+  stateOrProvince_not_contains: String
+  stateOrProvince_not_in: [String]
   sys: SysFilter
   teams: cfTeamMembershipNestedFilter
   teamsCollection_exists: Boolean
@@ -5448,6 +5466,8 @@ enum UsersOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7112,6 +7132,13 @@ input cfUsersNestedFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
+  stateOrProvince: String
+  stateOrProvince_contains: String
+  stateOrProvince_exists: Boolean
+  stateOrProvince_in: [String]
+  stateOrProvince_not: String
+  stateOrProvince_not_contains: String
+  stateOrProvince_not_in: [String]
   sys: SysFilter
   teamsCollection_exists: Boolean
   twitter: String

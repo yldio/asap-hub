@@ -1,6 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   Avatar,
+  formatUserLocation,
   Headline3,
   Link,
   pixels,
@@ -28,6 +29,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'region'
   | 'role'
   | 'city'
+  | 'stateOrProvince'
   | 'country'
   | 'positions'
 > & {
@@ -92,6 +94,7 @@ const validateCompleted = ({
   degrees,
   region,
   country,
+  stateOrProvince,
   city,
   positions,
   role,
@@ -103,6 +106,7 @@ const validateCompleted = ({
   | 'region'
   | 'role'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'positions'
 >) =>
@@ -111,6 +115,7 @@ const validateCompleted = ({
   degrees?.length &&
   region &&
   country &&
+  stateOrProvince &&
   city &&
   positions.length &&
   role;
@@ -124,6 +129,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   region,
   role,
   city,
+  stateOrProvince,
   country,
   positions,
   editHref,
@@ -137,6 +143,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
     region,
     role,
     country,
+    stateOrProvince,
     city,
     positions,
   });
@@ -222,10 +229,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           </div>
           <div css={rowContainerStyles}>
             <IconWithLabel icon={locationIcon}>
-              <span>
-                {city && `${city}, `}
-                {country}
-              </span>
+              <span>{formatUserLocation(city, stateOrProvince, country)}</span>
             </IconWithLabel>
           </div>
           {positions.map(

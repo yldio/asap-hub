@@ -34,6 +34,7 @@ type PersonalInfoModalProps = Pick<
   | 'degree'
   | 'institution'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'jobTitle'
 > & {
@@ -51,6 +52,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   degree = '' as const,
   institution = '',
   country = '',
+  stateOrProvince = '',
   city = '',
   jobTitle = '',
 
@@ -67,6 +69,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   const [newInstitution, setNewInstitution] = useState<string>(institution);
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle);
   const [newCity, setNewCity] = useState<string>(city);
+  const [newStateOrProvince, setNewStateOrProvince] =
+    useState<string>(stateOrProvince);
   const [newCountry, setNewCountry] = useState<string>(country);
 
   return (
@@ -81,7 +85,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         newInstitution !== institution ||
         newJobTitle !== jobTitle ||
         newCity !== city ||
-        newCountry !== country
+        newCountry !== country ||
+        newStateOrProvince !== stateOrProvince
       }
       backHref={backHref}
       onSave={() =>
@@ -97,6 +102,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               jobTitle: newJobTitle,
               city: newCity,
               country: newCountry,
+              stateOrProvince: newStateOrProvince,
             }).map(([key, value]) => [key, value.trim()]),
           ),
         )
@@ -215,6 +221,15 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               noOptionsMessage={(value: { inputValue: string }) =>
                 `No countries match "${value.inputValue}"`
               }
+            />
+            <LabeledTextField
+              title="State/Province"
+              subtitle="(Required)"
+              required
+              getValidationMessage={() => 'Please add your state/province'}
+              onChange={setNewStateOrProvince}
+              value={newStateOrProvince}
+              enabled={!isSaving}
             />
             <LabeledTextField
               title="City"

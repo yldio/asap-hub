@@ -8,7 +8,7 @@ import { Link, Paragraph, Ellipsis, Avatar, Anchor } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight, rem, tabletScreen } from '../pixels';
 import { lead, tin } from '../colors';
-import { getUniqueCommaStringWithSuffix } from '../utils';
+import { formatUserLocation, getUniqueCommaStringWithSuffix } from '../utils';
 
 const MAX_TEAMS = 3;
 const avatarSize = 24;
@@ -47,11 +47,18 @@ const avatarStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserListItemResponse,
-  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'labs'
+  | 'institution'
+  | 'jobTitle'
+  | 'country'
+  | 'stateOrProvince'
+  | 'city'
+  | 'teams'
+  | 'labs'
 > & { userActiveTeamsRoute?: string };
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
   country,
+  stateOrProvince,
   city,
   jobTitle,
   teams,
@@ -107,14 +114,13 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             </div>
           ))}
       </div>
-      {(country || city || isOwnProfile) && (
+      {(country || stateOrProvince || city || isOwnProfile) && (
         <Paragraph accent="lead">
           <span css={locationStyles}>
             <span css={iconStyles}>{locationIcon}</span>
-            {country || city ? (
+            {country || stateOrProvince || city ? (
               <Ellipsis>
-                {city}
-                {city && country && ','} {country}
+                {formatUserLocation(city, stateOrProvince, country)}
               </Ellipsis>
             ) : (
               <span css={{ color: tin.rgb }}>Add your location</span>

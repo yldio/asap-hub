@@ -100,6 +100,7 @@ export interface UserDataObject extends Invitee {
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
+  stateOrProvince?: string;
   teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
@@ -118,6 +119,7 @@ export type UserListItemDataObject = Pick<
   | 'alumniSinceDate'
   | 'avatarUrl'
   | 'city'
+  | 'stateOrProvince'
   | 'country'
   | 'createdDate'
   | 'degree'
@@ -181,6 +183,7 @@ export type UserCreateDataObject = {
   responsibilities?: string;
   role: Role;
   social?: Omit<UserSocialLinks, 'orcid'>;
+  stateOrProvince?: string;
   teams?: Pick<UserTeam, 'id' | 'role' | 'inactiveSinceDate'>[];
   tagIds?: string[];
 };
@@ -253,6 +256,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     alumniSinceDate,
     avatarUrl,
     city,
+    stateOrProvince,
     country,
     createdDate,
     degree,
@@ -279,6 +283,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     alumniSinceDate,
     avatarUrl,
     city,
+    stateOrProvince,
     country,
     createdDate,
     degree,

@@ -30,6 +30,7 @@ type KeyInformationModalProps = Pick<
   | 'role'
   | 'region'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'positions'
 > &
@@ -53,6 +54,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   region,
   locationSuggestions,
   country,
+  stateOrProvince,
   city,
   positions,
   loadInstitutionOptions,
@@ -65,6 +67,8 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   const [newRole, setNewRole] = useState(role);
   const [newRegion, setNewRegion] = useState(region);
   const [newCountry, setNewCountry] = useState(country);
+  const [newStateOrProvince, setNewStateOrProvince] =
+    useState<string>(stateOrProvince);
   const [newCity, setNewCity] = useState(city);
 
   const [newPositions, setPositions] = useState(
@@ -82,6 +86,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
     newRole !== role ||
     newRegion !== region ||
     newCountry !== country ||
+    newStateOrProvince !== stateOrProvince ||
     newCity !== city ||
     newPositions.some(
       (newPosition, index) =>
@@ -103,6 +108,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           degrees: newDegrees,
           region: newRegion,
           country: newCountry,
+          stateOrProvince: newStateOrProvince,
           city: newCity,
           positions: newPositions,
         })
@@ -188,6 +194,18 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             onChange={setNewCountry}
             enabled={!isSaving}
             placeholder={'Start typing to choose your location'}
+          />
+          <LabeledTextField
+            title="State/Province"
+            subtitle={required}
+            customValidationMessage={
+              newStateOrProvince?.trim() === ''
+                ? 'Please add your state/province'
+                : ''
+            }
+            enabled={!isSaving}
+            value={newStateOrProvince || ''}
+            onChange={setNewStateOrProvince}
           />
           <LabeledTextField
             title="City"

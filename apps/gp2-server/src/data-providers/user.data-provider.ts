@@ -312,6 +312,7 @@ export const parseUserToDataObject = (
     nickname: user.nickname || undefined,
     biography: user.biography ?? undefined,
     city: user.city ?? undefined,
+    stateOrProvince: user.stateOrProvince ?? '',
     country: user.country ?? '',
     region: user.region as gp2Model.UserRegion,
     avatarUrl: user.avatar?.url ?? undefined,

@@ -25,6 +25,7 @@ type UserCardProps = Pick<
   | 'degrees'
   | 'region'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'role'
 > &
@@ -72,6 +73,7 @@ const UserCard: React.FC<UserCardProps> = ({
   role,
   region,
   country,
+  stateOrProvince,
   city,
   workingGroups,
   projects,
@@ -103,6 +105,7 @@ const UserCard: React.FC<UserCardProps> = ({
             role={role}
             region={region}
             country={country}
+            stateOrProvince={stateOrProvince}
             city={city}
             workingGroups={workingGroups}
           />

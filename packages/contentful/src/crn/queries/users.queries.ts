@@ -28,6 +28,7 @@ export const usersContentQueryFragment = gql`
     institution
     jobTitle
     country
+    stateOrProvince
     city
     onboarded
     orcid
@@ -172,6 +173,7 @@ export const userListItemContentQueryFragment = gql`
       url
     }
     city
+    stateOrProvince
     country
     createdDate
     degree

@@ -583,6 +583,8 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3637,6 +3639,8 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3723,6 +3727,7 @@ type Users implements Entry {
   researchGate(locale: String): String
   researcherId(locale: String): String
   role(locale: String): String
+  stateOrProvince(locale: String): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): UsersTagsCollection
   telephoneCountryCode(locale: String): String
@@ -3957,6 +3962,13 @@ input UsersFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
+  stateOrProvince: String
+  stateOrProvince_contains: String
+  stateOrProvince_exists: Boolean
+  stateOrProvince_in: [String]
+  stateOrProvince_not: String
+  stateOrProvince_not_contains: String
+  stateOrProvince_not_in: [String]
   sys: SysFilter
   tags: cfTagsNestedFilter
   tagsCollection_exists: Boolean
@@ -4116,6 +4128,8 @@ enum UsersOrder {
   researcherId_DESC
   role_ASC
   role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5471,6 +5485,13 @@ input cfUsersNestedFilter {
   role_not: String
   role_not_contains: String
   role_not_in: [String]
+  stateOrProvince: String
+  stateOrProvince_contains: String
+  stateOrProvince_exists: Boolean
+  stateOrProvince_in: [String]
+  stateOrProvince_not: String
+  stateOrProvince_not_contains: String
+  stateOrProvince_not_in: [String]
   sys: SysFilter
   tagsCollection_exists: Boolean
   telephoneCountryCode: String

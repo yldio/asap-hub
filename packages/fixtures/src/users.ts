@@ -20,6 +20,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   jobTitle: 'Assistant Professor',
   institution: 'University of Copenhagen',
   country: 'Denmark',
+  stateOrProvince: 'Capital Region of Denmark',
   city: 'Copenhagen',
   role: 'Grantee',
   onboarded: true,

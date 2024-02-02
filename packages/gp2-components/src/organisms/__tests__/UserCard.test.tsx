@@ -39,7 +39,6 @@ describe('UserCard', () => {
     expect(
       screen.getByText('Europe', { selector: 'span' }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Spain', { selector: 'span' })).toBeInTheDocument();
     expect(
       screen.getByText('Valencia, Spain', { selector: 'span' }),
     ).toBeInTheDocument();

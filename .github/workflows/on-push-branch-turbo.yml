@@ -47,3 +47,30 @@ jobs:
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Test ${{ matrix.package }}
         run: yarn turbo test --filter="${{ matrix.package }}" --cache-dir=.turbo --only --no-deps -- --coverage --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci
+      - name: move coverage
+        shell: bash
+        run: |
+          PACKAGE="$(echo ${{ matrix.package }} | cut -c 11-)"
+          mv coverage/coverage-final.json coverage/$PACKAGE.json
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage-artifacts
+          path: coverage/
+  report-coverage:
+    runs-on: ubuntu-latest
+    needs: [test-turbo]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: coverage-artifacts
+          path: coverage
+      - name: Merge Code Coverage
+        run: npx nyc merge coverage/ merged-output/merged-coverage.json
+      - uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+          directory: merged-output
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

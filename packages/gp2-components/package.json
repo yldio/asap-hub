@@ -12,7 +12,8 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "test": "WORKSPACE_PATH=packages/gp2-components yarn workspace asap-hub test:workspace"
+    "test": "WORKSPACE_PATH=packages/gp2-components yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=packages/gp2-components; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "peerDependencies": {
     "@asap-hub/react-context": "workspace:*",

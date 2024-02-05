@@ -10,6 +10,7 @@
     "build": "node ./scripts/build-unsupported-browser-page.js && vite build",
     "typecheck": "tsc",
     "test": "WORKSPACE_PATH=apps/gp2-frontend yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=apps/gp2-frontend; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/",
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {

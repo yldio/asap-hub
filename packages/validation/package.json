@@ -11,7 +11,8 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "test": "WORKSPACE_PATH=packages/validation yarn workspace asap-hub test:workspace"
+    "test": "WORKSPACE_PATH=packages/validation yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=packages/validation; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

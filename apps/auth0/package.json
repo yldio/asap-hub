@@ -12,7 +12,8 @@
     "deploy": "yarn sync:dependencies && yarn deploy:tennant",
     "sync:dependencies": "ts-node ./scripts/dependencies-sync.ts",
     "deploy:tennant": "a0deploy import --input_file ./build/tenant.yaml",
-    "test": "WORKSPACE_PATH=apps/auth0 yarn workspace asap-hub test:workspace"
+    "test": "WORKSPACE_PATH=apps/auth0 yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=apps/auth0; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.23.8",

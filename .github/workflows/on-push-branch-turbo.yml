@@ -46,12 +46,14 @@ jobs:
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Test ${{ matrix.package }}
-        run: yarn turbo test --filter="${{ matrix.package }}" --cache-dir=.turbo --only --no-deps -- --coverage --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci
+        run: yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo --only --no-deps -- --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci
       - name: move coverage
         shell: bash
         run: |
-          PACKAGE="$(echo ${{ matrix.package }} | cut -c 11-)"
-          mv coverage/coverage-final.json coverage/$PACKAGE.json
+          PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)"
+          ## get package directory
+          mkdir -p coverage
+          yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
       - uses: actions/upload-artifact@v3
         with:
           name: coverage-artifacts

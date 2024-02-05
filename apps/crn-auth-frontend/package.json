@@ -10,7 +10,8 @@
     "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true vite",
     "build": "vite build",
     "typecheck": "tsc",
-    "test": "WORKSPACE_PATH=apps/crn-auth-frontend yarn workspace asap-hub test:workspace"
+    "test": "WORKSPACE_PATH=apps/crn-auth-frontend yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=apps/crn-auth-frontend; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

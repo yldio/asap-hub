@@ -952,8 +952,6 @@ export enum DiscoverMembersCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1043,8 +1041,6 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3328,8 +3324,6 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6004,8 +5998,6 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6253,8 +6245,6 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7270,7 +7260,6 @@ export type Users = Entry & {
   researcherId?: Maybe<Scalars['String']>;
   responsibilities?: Maybe<Scalars['String']>;
   role?: Maybe<Scalars['String']>;
-  stateOrProvince?: Maybe<Scalars['String']>;
   sys: Sys;
   teamsCollection?: Maybe<UsersTeamsCollection>;
   twitter?: Maybe<Scalars['String']>;
@@ -7496,11 +7485,6 @@ export type UsersResponsibilitiesArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersRoleArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersStateOrProvinceArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -7813,13 +7797,6 @@ export type UsersFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  stateOrProvince?: InputMaybe<Scalars['String']>;
-  stateOrProvince_contains?: InputMaybe<Scalars['String']>;
-  stateOrProvince_exists?: InputMaybe<Scalars['Boolean']>;
-  stateOrProvince_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  stateOrProvince_not?: InputMaybe<Scalars['String']>;
-  stateOrProvince_not_contains?: InputMaybe<Scalars['String']>;
-  stateOrProvince_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamMembershipNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8154,8 +8131,6 @@ export enum UsersOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
-  StateOrProvinceAsc = 'stateOrProvince_ASC',
-  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -10063,13 +10038,6 @@ export type CfUsersNestedFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  stateOrProvince?: InputMaybe<Scalars['String']>;
-  stateOrProvince_contains?: InputMaybe<Scalars['String']>;
-  stateOrProvince_exists?: InputMaybe<Scalars['Boolean']>;
-  stateOrProvince_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  stateOrProvince_not?: InputMaybe<Scalars['String']>;
-  stateOrProvince_not_contains?: InputMaybe<Scalars['String']>;
-  stateOrProvince_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   twitter?: InputMaybe<Scalars['String']>;
@@ -15809,7 +15777,6 @@ export type UsersContentFragment = Pick<
   | 'institution'
   | 'jobTitle'
   | 'country'
-  | 'stateOrProvince'
   | 'city'
   | 'onboarded'
   | 'orcid'
@@ -15955,7 +15922,6 @@ export type FetchUserByIdQuery = {
       | 'institution'
       | 'jobTitle'
       | 'country'
-      | 'stateOrProvince'
       | 'city'
       | 'onboarded'
       | 'orcid'
@@ -16083,7 +16049,6 @@ export type UserListItemContentFragment = Pick<
   Users,
   | 'alumniSinceDate'
   | 'city'
-  | 'stateOrProvince'
   | 'country'
   | 'createdDate'
   | 'degree'
@@ -16134,7 +16099,6 @@ export type FetchUsersQuery = {
             Users,
             | 'alumniSinceDate'
             | 'city'
-            | 'stateOrProvince'
             | 'country'
             | 'createdDate'
             | 'degree'
@@ -16199,7 +16163,6 @@ export type FetchUsersByTeamIdQuery = {
                     Users,
                     | 'alumniSinceDate'
                     | 'city'
-                    | 'stateOrProvince'
                     | 'country'
                     | 'createdDate'
                     | 'degree'
@@ -16270,7 +16233,6 @@ export type FetchUsersByLabIdQuery = {
                 Users,
                 | 'alumniSinceDate'
                 | 'city'
-                | 'stateOrProvince'
                 | 'country'
                 | 'createdDate'
                 | 'degree'
@@ -20357,7 +20319,6 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
           { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'stateOrProvince' } },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
@@ -21020,7 +20981,6 @@ export const UserListItemContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'stateOrProvince' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'degree' } },

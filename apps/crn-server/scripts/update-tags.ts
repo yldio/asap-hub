@@ -7,6 +7,12 @@ import {
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
 import { ResearchTagContentfulDataProvider } from '../src/data-providers/contentful/research-tag.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+import { UserDataProvider } from '../src/data-providers/types';
+
+const TAKE_ENTITIES = 200;
+const timeoutPromise = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const contentfulGraphQLClient = getContentfulGraphQLClient({
   space: contentfulSpaceId,
@@ -91,7 +97,7 @@ export const tags = [
   [1, 'Dopamine neuron subtypes'],
   [1, 'Dopamine non-responsive'],
   [1, 'Dopamine release'],
-  [0, 'dopamine release', 'Dopamine Release'], // ASK ABOUT PREVIOUS FIELD
+  [0, 'dopamine release', 'Dopamine release'],
   [1, 'drug target'],
   [1, 'early onset PD'],
   [0, 'Edmundo Vides'],
@@ -138,22 +144,8 @@ export const tags = [
   [1, 'iPSC neurons'],
   [0, 'iPSCs', '(iPSCs) Induced pluripotent stem cells'],
   [1, '(iPSCs) Induced pluripotent stem cells'],
-  [0, 'Jakobsson'],
-  [0, 'Jeff Kordower'],
-  [0, 'Jim Hurley'],
-  [0, 'Jim Surmeier'],
-  [0, 'Joe Boktor'],
-  [0, 'karin reinisch'],
-  [0, 'Khaja Syed'],
   [1, 'KO'],
-  [0, 'Kordower'],
-  [0, 'laura Volpicelli-Daley'],
-  [0, 'Lee'],
-  [0, 'Leo Lam'],
-  [0, 'livia hecke-morais'],
-  [0, 'Mar Matyszewksi'],
-  [0, 'Maria Spillantini'],
-  [0, 'Mathieu Alemida'],
+
   [1, 'meta-analysis'],
   [1, 'Metagenomics'],
   [0, 'Michael Schwarzchild'],
@@ -180,8 +172,6 @@ export const tags = [
   [1, 'Optogenetic'],
   [1, 'Organoids'],
   [1, 'Parkin(PARK2)'],
-  [0, 'patrick lewis'],
-  [0, 'Per Svenningson'],
   [1, 'Periphery-Brain Axis'],
   [1, 'Physiology'],
   [1, 'Placebo response'],
@@ -215,6 +205,7 @@ export const tags = [
   [1, 'Single-nuclear RNA-seq (snRNA-seq)'],
   [1, 'Sj1'],
   [1, 'Stem cells - embryonic'],
+  [0, 'Stem cells – embryonic', 'Stem cells - embryonic'],
   [0, 'Steve Lee'],
   [1, 'Study Design'],
   [1, '(SNpc) Substantia nigra pars compacta'],
@@ -233,45 +224,7 @@ export const tags = [
   [0, 'synapses', 'Synapses'],
   [1, 'synaptic homeostasis'],
   [1, 'T cell receptors (TCR)'],
-  [0, 'Team Alessi'],
-  [0, 'Team Awatramani'],
-  [0, 'Team Biederer'],
-  [0, 'Team Calakos'],
-  [0, 'Team Chen'],
-  [0, 'Team Cragg'],
-  [0, 'Team De Camilli'],
-  [0, 'Team Desjardins'],
-  [0, 'Team Edwards'],
-  [0, 'Team Gradinaru'],
-  [0, 'Team Hafler'],
-  [0, 'Team Hardy'],
-  [0, 'Team Harper'],
-  [0, 'Team Hurley'],
-  [0, 'Team Jakobsson'],
-  [0, 'Team Kaplitt'],
-  [0, 'Team Kirik'],
-  [0, 'Team Kordower'],
-  [0, 'Team Lee'],
-  [0, 'Team Liddle'],
-  [0, 'Team Mobley'],
-  [0, 'Team Reck-Peterson'],
-  [0, 'Team Rio'],
-  [0, 'Team Schapira'],
-  [0, 'Team Scherzer'],
-  [0, 'Team Schlossmacher'],
-  [0, 'Team Strick'],
-  [0, 'Team Studer'],
-  [0, 'Team Sulzer'],
-  [0, 'Team Surmeier'],
-  [0, 'Team Vangheluwe'],
-  [0, 'Team Vila'],
-  [0, 'Team Voet'],
-  [0, 'Team Wichmann'],
-  [0, 'Team Wood'],
-  [0, 'ted dawson'],
-  [0, 'Theirry Voet'],
-  [0, 'Tim Ryan'],
-  [0, 'Tony Schapira'],
+
   [1, 'Tool Development'],
   [0, 'Tool development', 'Tool Development'],
   [1, 'Transcranial Focused Ultrasound (tFUS)'],
@@ -281,14 +234,6 @@ export const tags = [
   [1, 'Ventral Tegmental Area'],
   [1, 'viral tracing'],
   [0, 'Viviana Gradinaru'],
-  [0, 'Voet'],
-  [0, 'Wade Harper'],
-  [0, 'Wai Kit Lam'],
-  [0, 'Waijiao Cai'],
-  [0, 'William Mobley'],
-  [0, 'Wood'],
-  [0, 'Xiang Dong Fu'],
-  [0, 'Yongxing Gong'],
 ];
 
 const findOrCreateTag = async (tagName: string) => {
@@ -305,52 +250,62 @@ const findOrCreateTag = async (tagName: string) => {
   return tagId;
 };
 
-const findAndUpdateUsers = async (oldTagName: string, newTagId: string) => {
-  const users = await userDataProvider.fetch({ take: 30, search: oldTagName });
-  for (let i = 0; i < users.items.length; i++) {
-    const user = users.items[i];
+const findUsers = async (oldTagName: string, newTagId: string, usersToUpdate: Record<string, string[]>) => {
+  const users = await userDataProvider.fetch({ take: TAKE_ENTITIES, search: oldTagName });
+    console.log(`
+      TAG: ${oldTagName} - USERS FOUND: ${users.total}
+      `);
+  for (let j = 0; j < users.items.length; j++) {
+    const user = users.items[j];
     if (user?.expertiseAndResourceTags.includes(oldTagName)) {
-      console.log(
-        `USER FOUND  - ${user.firstName} ${user.lastName} - ${user.id}`,
-      );
-      console.log(user.tags);
-      console.log(`
-          TAG: ${oldTagName} - USERS FOUND: ${users.total}
-          ${users.items.map((user) => {
-            return user.expertiseAndResourceTags;
-          })}
-          `);
-
-      const existingTagIds = user.tags?.map(({ id }) => id) || [];
-      try {
-        const result = await userDataProvider.update(user.id, {
-          tagIds: [...existingTagIds, newTagId],
-        });
-        console.log(result);
-      } catch (e) {
-        console.error(e);
-      }
+      const existingTags: string[] = usersToUpdate[user.id] || [];
+      usersToUpdate[user.id] = [...existingTags,newTagId]
     }
   }
 };
 
-export const updateEntityTags =
-  (findAndUpdateEntity: (a: string, b: string) => void) => async () => {
+const updateEntityTags = async (entitiesToUpdate: Record<string, string[]>,provider: UserDataProvider) => {
+  const ids = Object.keys(entitiesToUpdate);
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i];
+    if (id) {
+      const tagIds = entitiesToUpdate[id];
+      await provider.update(id, {
+        tagIds: [...new Set(tagIds)],
+        lastUpdated: new Date().toISOString(),
+      });
+      console.log(`${i}/${ids.length}`)
+      await timeoutPromise(2000)
+    }
+  }
+};
+
+export const updateEntities =
+  (findEntities: (a: string, b: string, list: Record<string, string[]>) => void, provider: UserDataProvider) => async () => {
+    const entitiesToUpdate = {}
     for (let i = 0; i < tags.length; i++) {
       const tag = tags[i];
       // legacy tag moving to research tag
+      try {
       if (tag && tag[0] === 1) {
         const tagWord = tag[1] as string;
         const tagId = await findOrCreateTag(tagWord);
-        tagId && findAndUpdateEntity(tagWord, tagId);
+        tagId && findEntities(tagWord, tagId, entitiesToUpdate);
         // legacy tag going to a different name
       } else if (tag && tag.length === 3) {
         const oldTagWord = tag[1] as string;
         const newTagWord = tag[2] as string;
         console.log(oldTagWord, newTagWord);
         const tagId = await findOrCreateTag(newTagWord);
-        tagId && findAndUpdateEntity(oldTagWord, tagId);
+        tagId && findEntities(oldTagWord, tagId, entitiesToUpdate);
       }
+    } catch(e) {
+      console.log(e)
     }
+
+    }
+    console.log(`total found ${Object.keys(entitiesToUpdate).length}`)
+    await updateEntityTags(entitiesToUpdate, provider);
+    console.log(`DONE`);
   };
-export const updateUsersTags = updateEntityTags(findAndUpdateUsers);
+export const updateUsersTags = updateEntities(findUsers, userDataProvider);

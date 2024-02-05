@@ -131,16 +131,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const words = (options.search || '').split(' ').filter(Boolean);
 
     if (words.length) {
-      const filters: UsersFilter[] = words.reduce(
-        (acc: UsersFilter[], word) =>
-          acc.concat([
-            {
-              OR: [{ expertiseAndResourceDescription_contains: word }],
-            },
-          ]),
-        [],
-      );
-      where.AND = filters;
+      // const filters: UsersFilter[] = words.reduce(
+      //   (acc: UsersFilter[], word) =>
+      //     acc.concat([
+      //       {
+      //         OR: [{ expertiseAndResourceTags_contains_some: [word] }],
+      //       },
+      //     ]),
+      //   [],
+      // );
+      where.AND = [{
+              OR: [{ expertiseAndResourceTags_contains_some: [words.join(' ')] }],
+      }];
     }
 
     if (options.filter?.labId) {
@@ -435,6 +437,7 @@ export const parseContentfulGraphQlUserListItem = (
     : [];
   return {
     _tags: expertiseAndResourceTags,
+    lastModifiedDate: item.lastModifiedDate,
     alumniSinceDate: item.alumniSinceDate,
     avatarUrl: item.avatar?.url ?? undefined,
     city: item.city ?? undefined,

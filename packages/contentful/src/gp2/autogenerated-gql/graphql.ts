@@ -881,6 +881,8 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5461,6 +5463,8 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5547,6 +5551,7 @@ export type Users = Entry & {
   researchGate?: Maybe<Scalars['String']>;
   researcherId?: Maybe<Scalars['String']>;
   role?: Maybe<Scalars['String']>;
+  stateOrProvince?: Maybe<Scalars['String']>;
   sys: Sys;
   tagsCollection?: Maybe<UsersTagsCollection>;
   telephoneCountryCode?: Maybe<Scalars['String']>;
@@ -5724,6 +5729,11 @@ export type UsersResearcherIdArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersStateOrProvinceArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5985,6 +5995,13 @@ export type UsersFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  stateOrProvince?: InputMaybe<Scalars['String']>;
+  stateOrProvince_contains?: InputMaybe<Scalars['String']>;
+  stateOrProvince_exists?: InputMaybe<Scalars['Boolean']>;
+  stateOrProvince_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  stateOrProvince_not?: InputMaybe<Scalars['String']>;
+  stateOrProvince_not_contains?: InputMaybe<Scalars['String']>;
+  stateOrProvince_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   tags?: InputMaybe<CfTagsNestedFilter>;
   tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6195,6 +6212,8 @@ export enum UsersOrder {
   ResearcherIdDesc = 'researcherId_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7778,6 +7797,13 @@ export type CfUsersNestedFilter = {
   role_not?: InputMaybe<Scalars['String']>;
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  stateOrProvince?: InputMaybe<Scalars['String']>;
+  stateOrProvince_contains?: InputMaybe<Scalars['String']>;
+  stateOrProvince_exists?: InputMaybe<Scalars['Boolean']>;
+  stateOrProvince_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  stateOrProvince_not?: InputMaybe<Scalars['String']>;
+  stateOrProvince_not_contains?: InputMaybe<Scalars['String']>;
+  stateOrProvince_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   telephoneCountryCode?: InputMaybe<Scalars['String']>;
@@ -12026,6 +12052,7 @@ export type UsersContentDataFragment = Pick<
   | 'nickname'
   | 'degrees'
   | 'country'
+  | 'stateOrProvince'
   | 'city'
   | 'region'
   | 'email'
@@ -12160,6 +12187,7 @@ export type FetchUserByIdQuery = {
       | 'nickname'
       | 'degrees'
       | 'country'
+      | 'stateOrProvince'
       | 'city'
       | 'region'
       | 'email'
@@ -12302,6 +12330,7 @@ export type FetchUsersQuery = {
             | 'nickname'
             | 'degrees'
             | 'country'
+            | 'stateOrProvince'
             | 'city'
             | 'region'
             | 'email'
@@ -15555,6 +15584,7 @@ export const UsersContentDataFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'degrees' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'stateOrProvince' } },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
           { kind: 'Field', name: { kind: 'Name', value: 'region' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },

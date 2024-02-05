@@ -116,6 +116,7 @@ export type UserDataObject = {
   region: UserRegion;
   role: UserRole;
   social?: UserSocial;
+  stateOrProvince: string;
   tags: TagDataObject[];
   telephone?: Telephone;
   workingGroups: UserWorkingGroup[];

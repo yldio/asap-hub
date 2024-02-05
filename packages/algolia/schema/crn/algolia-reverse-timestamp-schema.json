@@ -40,6 +40,7 @@
     "jobTitle",
     "institution",
     "city",
+    "stateOrProvince",
     "country",
     "orcid",
     "expertiseAndResourceTags",

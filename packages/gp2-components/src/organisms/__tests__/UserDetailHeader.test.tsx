@@ -18,6 +18,7 @@ describe('UserDetailHeader', () => {
     region: 'Europe' as const,
     positions: [position],
     country: 'USA',
+    stateOrProvince: 'Massachusetts',
     city: 'Springfield',
     outputsTotal: 0,
     upcomingTotal: 0,

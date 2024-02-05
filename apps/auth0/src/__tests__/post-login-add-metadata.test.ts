@@ -267,6 +267,7 @@ describe('For a GP2 login', () => {
     role: 'Trainee',
     region: 'Europe',
     country: 'Portugal',
+    stateOrProvince: 'Estremadura',
     degrees: [],
     positions: [],
     projects: [],

@@ -18,6 +18,7 @@ describe('UserDetailHeaderCard', () => {
     region: 'Europe' as const,
     positions: [position],
     country: 'USA',
+    stateOrProvince: 'Massachusetts',
     city: 'Springfield',
   };
   it('renders only the name', () => {
@@ -48,14 +49,15 @@ describe('UserDetailHeaderCard', () => {
       screen.getByText('Europe', { selector: 'span' }),
     ).toBeInTheDocument();
   });
-  it('renders user city and country', () => {
-    render(<UserDetailHeaderCard {...defaultProps} />);
-    expect(screen.getByText('Springfield, USA')).toBeInTheDocument();
+
+  it('shows user location', () => {
+    const { container, getByTitle } = render(
+      <UserDetailHeaderCard {...defaultProps} />,
+    );
+    expect(container).toHaveTextContent('Springfield, Massachusetts, USA');
+    expect(getByTitle(/location/i)).toBeInTheDocument();
   });
-  it('renders only the country', () => {
-    render(<UserDetailHeaderCard {...defaultProps} city={undefined} />);
-    expect(screen.getByText('USA')).toBeInTheDocument();
-  });
+
   it('renders the position', () => {
     render(<UserDetailHeaderCard {...defaultProps} />);
     expect(
@@ -87,7 +89,7 @@ describe('UserDetailHeaderCard', () => {
       screen.getByText('Car designer in Design at Powell Motors'),
     ).toBeInTheDocument();
   });
-  it('renders upload buttton for avatar', () => {
+  it('renders upload button for avatar', () => {
     const onImageSelect = jest.fn((file: File) => {});
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     render(

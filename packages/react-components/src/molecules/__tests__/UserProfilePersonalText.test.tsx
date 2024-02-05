@@ -21,16 +21,16 @@ it.each`
   expect(container).toHaveTextContent(text);
 });
 
-it.each`
-  country      | city         | text
-  ${undefined} | ${'City'}    | ${/City/}
-  ${'Country'} | ${undefined} | ${/Country/}
-  ${'Country'} | ${'City'}    | ${/City, Country/}
-`('generates the location description "$text"', ({ text, ...location }) => {
+it('shows user location', () => {
   const { container, getByTitle } = render(
-    <UserProfilePersonalText {...props} {...location} />,
+    <UserProfilePersonalText
+      {...props}
+      city="Toronto"
+      stateOrProvince="Ontario"
+      country="Canada"
+    />,
   );
-  expect(container).toHaveTextContent(text);
+  expect(container).toHaveTextContent('Toronto, Ontario, Canada');
   expect(getByTitle(/location/i)).toBeInTheDocument();
 });
 

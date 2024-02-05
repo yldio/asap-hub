@@ -21,6 +21,7 @@ export const usersContentQueryFragment = gql`
     }
     degrees
     country
+    stateOrProvince
     city
     region
     email

@@ -82,6 +82,7 @@ const app = async () => {
         firstName: data[0]!,
         lastName: data[1]!,
         country: data[4]!,
+        stateOrProvince: 'Unknown',
         email,
         alternativeEmail: data[3] || undefined,
         region: data[5] as gp2.UserRegion,

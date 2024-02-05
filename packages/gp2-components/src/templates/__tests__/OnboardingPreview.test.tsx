@@ -63,10 +63,17 @@ describe('OnboardingPreview', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the city and country', () => {
-    const user = createUserResponse({ city: 'London', country: 'UK' });
+  it('renders the city, state or province and country', () => {
+    const user = createUserResponse({
+      city: 'Springfield',
+      stateOrProvince: 'Massachusetts',
+      country: 'USA',
+    });
     render(<OnboardingPreview {...user} {...editHrefs} />);
-    expect(screen.getByText('London, UK')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Springfield, Massachusetts, USA'),
+    ).toBeInTheDocument();
   });
 
   it('renders the positions', () => {

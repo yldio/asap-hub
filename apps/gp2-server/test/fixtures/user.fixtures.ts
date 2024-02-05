@@ -24,6 +24,7 @@ export const getUserResponse = (
   degrees: ['MPH'],
   role: 'Trainee',
   city: 'Madrid',
+  stateOrProvince: 'Madrid',
   country: 'Spain',
   positions: [
     {
@@ -130,6 +131,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
       degrees: ['MSc'],
       role: 'Network Investigator',
       country: 'Spain',
+      stateOrProvince: 'Madrid',
       positions: [
         {
           role: 'CEO',
@@ -168,6 +170,7 @@ export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
   degrees: ['MPH'],
   role: 'Trainee',
   country: 'Spain',
+  stateOrProvince: 'Madrid',
   city: 'Madrid',
   positions: [
     {
@@ -274,6 +277,7 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   role: 'Trainee',
   region: 'Europe',
   country: 'Spain',
+  stateOrProvince: 'Madrid',
   degrees: ['PhD', 'MSc'],
   positions: [
     {
@@ -371,6 +375,7 @@ export const getContentfulGraphqlUser = (
   nickname: 'Iron Man',
   country: 'Spain',
   region: 'Europe',
+  stateOrProvince: 'Madrid',
   city: 'Madrid',
   telephoneCountryCode: '+1',
   telephoneNumber: '212-970-4133',

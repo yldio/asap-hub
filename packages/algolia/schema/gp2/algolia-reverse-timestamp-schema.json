@@ -37,6 +37,7 @@
     "role",
     "degrees",
     "city",
+    "stateOrProvince",
     "country",
     "region",
     "contributingCohorts.name",

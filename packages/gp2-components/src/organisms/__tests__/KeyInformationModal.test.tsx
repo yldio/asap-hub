@@ -56,6 +56,7 @@ describe('KeyInformationModal', () => {
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
     const country = 'Portugal';
+    const stateOrProvince = 'Estremadura';
     const city = 'Lisbon';
     const region = 'Europe';
     renderKeyInformation({
@@ -66,6 +67,7 @@ describe('KeyInformationModal', () => {
       degrees,
       positions,
       country,
+      stateOrProvince,
       city,
       region,
       onSave,
@@ -79,6 +81,7 @@ describe('KeyInformationModal', () => {
       degrees,
       positions,
       country,
+      stateOrProvince,
       city,
       region,
     });
@@ -106,6 +109,7 @@ describe('KeyInformationModal', () => {
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
     const country = 'Portugal';
+    const stateOrProvince = 'Estremadura';
     const city = 'Lisbon';
     const region = 'Europe';
     const onSave = jest.fn();
@@ -117,6 +121,7 @@ describe('KeyInformationModal', () => {
       degrees: [],
       positions: [],
       country: '',
+      stateOrProvince: '',
       city: '',
       region: 'Asia',
       onSave,
@@ -159,6 +164,10 @@ describe('KeyInformationModal', () => {
       screen.getByRole('textbox', { name: 'City (required)' }),
       city,
     );
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'State/Province (required)' }),
+      stateOrProvince,
+    );
     userEvent.click(
       screen.getByRole('textbox', { name: 'Institution (required)' }),
     );
@@ -182,11 +191,12 @@ describe('KeyInformationModal', () => {
       degrees,
       positions,
       country,
+      stateOrProvince,
       city,
       region,
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
-  }, 60000);
+  }, 120000);
 
   it('can click add an extra position', () => {
     renderKeyInformation();

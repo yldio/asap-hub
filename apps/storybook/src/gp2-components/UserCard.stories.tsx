@@ -31,6 +31,7 @@ export const Normal = () => {
         role={'Administrator'}
         region={region}
         country={text('Country', 'Spain')}
+        stateOrProvince={text('StateOrProvince', 'Madrid')}
         city={text('City', 'Madrid')}
         workingGroups={Array(number('Number of Working Groups', 1))
           .fill({

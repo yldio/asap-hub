@@ -1,5 +1,10 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { crossQuery, Link, pixels } from '@asap-hub/react-components';
+import {
+  crossQuery,
+  formatUserLocation,
+  Link,
+  pixels,
+} from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Fragment } from 'react';
@@ -18,7 +23,12 @@ const { rem } = pixels;
 type UserCardInfoProps = Pick<ComponentProps<typeof UserRegion>, 'region'> &
   Pick<
     gp2Model.UserResponse,
-    'workingGroups' | 'projects' | 'country' | 'city' | 'role'
+    | 'workingGroups'
+    | 'projects'
+    | 'country'
+    | 'stateOrProvince'
+    | 'city'
+    | 'role'
   >;
 
 const containerStyles = css({
@@ -74,10 +84,11 @@ const caseInsensitiveTitle = <T extends { title: string }>(a: T, b: T) =>
 const UserCardInfo: React.FC<UserCardInfoProps> = ({
   role,
   region,
-  country,
-  city,
   workingGroups,
   projects,
+  country,
+  stateOrProvince,
+  city,
 }) => (
   <div css={containerStyles}>
     <div css={rowStyles}>
@@ -86,10 +97,7 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
     </div>
     <div css={rowStyles}>
       <IconWithLabel icon={locationIcon}>
-        <span>
-          {city && `${city}, `}
-          {country}
-        </span>
+        <span>{formatUserLocation(city, stateOrProvince, country)}</span>
       </IconWithLabel>
     </div>
     <div css={rowStyles}>

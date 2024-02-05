@@ -21,6 +21,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
     institution: { type: 'string', nullable: true },
     biography: { type: 'string', nullable: true },
     country: { type: 'string', nullable: true },
+    stateOrProvince: { type: 'string', nullable: true },
     city: { type: 'string', nullable: true },
     expertiseAndResourceTags: {
       type: 'array',

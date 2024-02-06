@@ -10,6 +10,7 @@ import { getUserResponse } from '../fixtures/users.fixtures';
 import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { pageControllerMock } from '../mocks/page.controller.mock';
+import { researchTagControllerMock } from '../mocks/research-tag.controller.mock';
 import { userControllerMock } from '../mocks/user.controller.mock';
 
 describe('Permission middleware', () => {
@@ -36,6 +37,7 @@ describe('Permission middleware', () => {
     interestGroupController: interestGroupControllerMock,
     userController: userControllerMock,
     pageController: pageControllerMock,
+    researchTagController: researchTagControllerMock,
     authHandler: authHandlerMock,
     mockRequestHandlers: [mockRoutes],
     logger: loggerMock,
@@ -121,6 +123,18 @@ describe('Permission middleware', () => {
         const response = await supertest(appWithMockedAuth).get(
           '/pages/some-other-page',
         );
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should allow access to public /research-tags endpoint', async () => {
+        researchTagControllerMock.fetchAll.mockResolvedValueOnce({
+          total: 0,
+          items: [],
+        });
+
+        const response =
+          await supertest(appWithMockedAuth).get('/research-tags');
 
         expect(response.status).toBe(200);
       });

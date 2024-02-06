@@ -350,6 +350,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   }
 
   app.use(userRoutes);
+  app.use(researchTagRoutes);
 
   // Permission check
   app.use(permissionHandler);
@@ -367,7 +368,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(newsRoutes);
   app.use(reminderRoutes);
   app.use(researchOutputRoutes);
-  app.use(researchTagRoutes);
   app.use(teamRoutes);
   app.use(tutorialRoutes);
   app.use(workingGroupRoutes);

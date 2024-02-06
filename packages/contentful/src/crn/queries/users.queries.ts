@@ -10,147 +10,22 @@ export const usersContentQueryFragment = gql`
       publishedAt
       publishedVersion
     }
-    activeCampaignId
     lastUpdated
-    alumniSinceDate
-    alumniLocation
-    biography
-    connections
     createdDate
-    degree
-    email
-    contactEmail
-    dismissedGettingStarted
     firstName
     middleName
     lastName
     nickname
     institution
     jobTitle
-    country
-    city
-    onboarded
-    orcid
-    orcidLastModifiedDate
-    orcidLastSyncDate
-    orcidWorks
-    questions
     expertiseAndResourceTags
     expertiseAndResourceDescription
-    github
-    googleScholar
-    linkedIn
-    researcherId
-    researchGate
-    twitter
-    website1
-    website2
-    role
-    responsibilities
-    researchInterests
-    reachOut
-    avatar {
-      url
-    }
     researchTagsCollection(limit: 20) {
       items {
         sys {
           id
         }
         name
-      }
-    }
-    teamsCollection(limit: 10) {
-      items {
-        team {
-          sys {
-            id
-          }
-          displayName
-          inactiveSince
-          proposal {
-            sys {
-              id
-            }
-          }
-          linkedFrom {
-            interestGroupsCollection(limit: 10) {
-              items {
-                sys {
-                  id
-                }
-                active
-                name
-              }
-            }
-          }
-        }
-        role
-        inactiveSinceDate
-      }
-    }
-    labsCollection(limit: 10) {
-      items {
-        sys {
-          id
-        }
-        name
-      }
-    }
-    linkedFrom {
-      workingGroupMembersCollection(limit: 10) {
-        items {
-          inactiveSinceDate
-          linkedFrom {
-            workingGroupsCollection(limit: 1) {
-              items {
-                sys {
-                  id
-                }
-                title
-                complete
-              }
-            }
-          }
-          user {
-            lastName
-          }
-        }
-      }
-      workingGroupLeadersCollection(limit: 10) {
-        items {
-          role
-          inactiveSinceDate
-          linkedFrom {
-            workingGroupsCollection(limit: 1) {
-              items {
-                sys {
-                  id
-                }
-                title
-                complete
-              }
-            }
-          }
-          user {
-            lastName
-          }
-        }
-      }
-      interestGroupLeadersCollection(limit: 10) {
-        items {
-          linkedFrom {
-            interestGroupsCollection(limit: 1) {
-              items {
-                sys {
-                  id
-                }
-                active
-                name
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -168,11 +43,6 @@ export const FETCH_USER_BY_ID = gql`
 export const userListItemContentQueryFragment = gql`
   fragment UserListItemContent on Users {
     alumniSinceDate
-    avatar {
-      url
-    }
-    city
-    country
     createdDate
     degree
     email
@@ -182,38 +52,15 @@ export const userListItemContentQueryFragment = gql`
       id
     }
     institution
-    jobTitle
-    labsCollection(limit: 10) {
-      items {
-        sys {
-          id
-        }
-        name
-      }
-    }
     lastName
     middleName
     nickname
-    onboarded
-    dismissedGettingStarted
-    role
     researchTagsCollection(limit: 20) {
       items {
         sys {
           id
         }
         name
-      }
-    }
-    teamsCollection(limit: 10) {
-      items {
-        team {
-          sys {
-            id
-          }
-          displayName
-        }
-        role
       }
     }
   }

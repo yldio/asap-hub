@@ -13,7 +13,7 @@
       "cache": false
     },
     "typecheck": {
-      "dependsOn": ["//#build:typecheck:tsc"]
+      "dependsOn": ["//#build:typecheck:tsc", "^typecheck"]
     },
     "build": {
       "dependsOn": ["typecheck", "build:babel", "//#build:typecheck:tsc"],

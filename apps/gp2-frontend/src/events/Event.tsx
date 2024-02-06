@@ -23,6 +23,7 @@ const Event: React.FC = () => {
           descriptionOutput="Find all outputs that contributed to this event."
           tags={event.tags.map((t) => t.name)}
           relatedResearch={event.relatedOutputs}
+          relatedTutorials={[]}
           getIconForDocumentType={getIconForDocumentType}
           tableTitles={['Type of Output', 'Output Name', 'Source Type']}
           getSourceIcon={getSourceIcon}

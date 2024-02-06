@@ -69,32 +69,32 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  it('Should fail if Expertise and Resources are missing from user profile', async () => {
+  it('Should fail if Tags are missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
-      expertiseAndResourceTags: [],
+      tags: [],
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
-      expertiseAndResourceTags: { valid: false },
+      tags: { valid: false },
     });
   });
 
   it('Should fail if fewer than 5 Expertise and Resources are provided in user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
-      expertiseAndResourceTags: [
-        'expertise 1',
-        'expertise 2',
-        'expertise 3',
-        'expertise 4',
+      tags: [
+        { id: 'cd7be4902', name: 'Expertise 1' },
+        { id: 'cd7be4905', name: 'Expertise 2' },
+        { id: 'cd7be4901', name: 'Expertise 3' },
+        { id: 'cd7be4903', name: 'Expertise 4' },
       ],
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
-      expertiseAndResourceTags: { valid: false },
+      tags: { valid: false },
     });
   });
   it('Should fail if biography is missing from user profile', async () => {

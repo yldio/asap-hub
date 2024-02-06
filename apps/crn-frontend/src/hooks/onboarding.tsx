@@ -36,7 +36,7 @@ const fieldToStep: Record<
   jobTitle: 'Details',
   biography: 'Biography',
   questions: 'Questions',
-  expertiseAndResourceTags: 'Expertise',
+  tags: 'Expertise',
   teams: 'Role',
   researchInterests: 'Role',
   responsibilities: 'Role',

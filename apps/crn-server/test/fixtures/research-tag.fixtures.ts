@@ -1,3 +1,4 @@
+import { ResearchTagsContentFragment } from '@asap-hub/contentful';
 import {
   ListResearchTagDataObject,
   ListResearchTagResponse,
@@ -11,6 +12,16 @@ export const getResearchTagDataObject = (): ResearchTagDataObject => ({
   category: 'Method',
   types: ['Protein Data', 'Assay'],
 });
+
+export const getContentfulGraphqlResearchTag =
+  (): ResearchTagsContentFragment => ({
+    sys: {
+      id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    },
+    name: 'Activity Assay',
+    category: 'Method',
+    types: ['Protein Data', 'Assay'],
+  });
 
 export const getResearchTagResponse = (): ResearchTagResponse =>
   getResearchTagDataObject();

@@ -34,3 +34,12 @@ export const FETCH_RESEARCH_TAGS = gql`
   }
   ${researchTagsContentQueryFragment}
 `;
+
+export const FETCH_RESEARCH_TAGS_BY_ID = gql`
+  query FetchResearchTagsById($id: String!) {
+    researchTags(id: $id) {
+      ...ResearchTagsContent
+    }
+  }
+  ${researchTagsContentQueryFragment}
+`;

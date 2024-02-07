@@ -3,7 +3,11 @@
 import { gql } from 'graphql-tag';
 
 export const FETCH_REMINDERS = gql`
-  query FetchReminders($outputFilter: OutputsFilter, $userId: String!) {
+  query FetchReminders(
+    $outputFilter: OutputsFilter
+    $outputVersionFilter: OutputVersionFilter
+    $userId: String!
+  ) {
     users(id: $userId) {
       linkedFrom {
         workingGroupMembershipCollection(limit: 15) {
@@ -60,6 +64,46 @@ export const FETCH_REMINDERS = gql`
                 id
               }
               title
+            }
+          }
+        }
+      }
+    }
+    outputVersionCollection(where: $outputVersionFilter) {
+      items {
+        sys {
+          id
+          publishedAt
+        }
+        linkedFrom {
+          outputsCollection(limit: 1) {
+            items {
+              sys {
+                id
+              }
+              title
+              documentType
+              createdBy {
+                firstName
+                lastName
+              }
+              relatedEntitiesCollection(limit: 1) {
+                items {
+                  __typename
+                  ... on Projects {
+                    sys {
+                      id
+                    }
+                    title
+                  }
+                  ... on WorkingGroups {
+                    sys {
+                      id
+                    }
+                    title
+                  }
+                }
+              }
             }
           }
         }

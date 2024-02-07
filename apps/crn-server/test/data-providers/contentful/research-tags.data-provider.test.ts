@@ -168,7 +168,7 @@ describe('Research Tags Data Provider', () => {
   });
 
   describe('Fetch-by-id', () => {
-    test('Should return null when user is not found', async () => {
+    test('Should return null when tag is not found', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchTags: null,
       });

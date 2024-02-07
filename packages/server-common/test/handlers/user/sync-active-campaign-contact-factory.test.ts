@@ -5,6 +5,7 @@ import {
   UserController,
   UserEventBridgeEvent,
 } from '../../../src/handlers/user';
+import { FieldIdByTitle, FieldValuesResponse } from '../../../src/utils';
 import {
   getUserContentfulWebhookDetail,
   getUserDataObject,
@@ -31,6 +32,18 @@ const mockContactPayload = {
     { field: '1', value: 'Brazil' },
     { field: '2', value: 'Alumni' },
     { field: '3', value: 'South America' },
+  ],
+};
+const mockFieldIdByTitle: FieldIdByTitle = {
+  Alumnistatus: '12',
+  Country: '3',
+  Network: '5',
+};
+
+const mockContactFieldValues: FieldValuesResponse = {
+  fieldValues: [
+    { field: '12', value: 'Alumni' },
+    { field: '2', value: 'Brazil' },
   ],
 };
 
@@ -61,15 +74,21 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     jest.clearAllMocks();
   });
 
+  const mockUpdateContactLists = jest.fn();
+
   const syncActiveCampaignContactHandler = syncActiveCampaignContactFactory(
+    'CRN',
     userController,
     loggerMock,
     mockGetContactIdByEmail,
     mockCreateContact,
     mockUpdateContact,
+    mockUpdateContactLists,
     activeCampaignAccount,
     activeCampaignToken,
-    jest.fn().mockResolvedValue(mockContactPayload),
+    jest.fn().mockReturnValue(mockContactPayload),
+    jest.fn().mockResolvedValue(mockFieldIdByTitle),
+    jest.fn().mockResolvedValue(mockContactFieldValues),
   );
 
   test('should create ActiveCampaign contact if user is onboarded and no contactId exists', async () => {
@@ -93,6 +112,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignToken,
       mockContactPayload,
     );
+    expect(mockUpdateContactLists).toHaveBeenCalledWith(activeCampaignId);
     expect(userController.update).toHaveBeenCalledWith(user.id, {
       activeCampaignCreatedAt: new Date(date),
       activeCampaignId,
@@ -123,11 +143,72 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignId,
       mockContactPayload,
     );
+    expect(mockUpdateContactLists).toHaveBeenCalledWith(activeCampaignId);
     expect(userController.update).toHaveBeenCalledWith(user.id, {
       activeCampaignId,
     });
     expect(logger.info).toHaveBeenCalledWith(
       'Contact with cms id user-id-1 and active campaign id 123 updated',
+    );
+  });
+
+  describe('Network', () => {
+    it.each`
+      previousNetworkValue   | app      | expectedNewNetworkValue
+      ${`''`}                | ${`CRN`} | ${`ASAP CRN`}
+      ${`||ASAP CRN||`}      | ${`CRN`} | ${`ASAP CRN`}
+      ${`||GP2||`}           | ${`CRN`} | ${`||GP2||ASAP CRN||`}
+      ${`||GP2||ASAP CRN||`} | ${`CRN`} | ${`||GP2||ASAP CRN||`}
+      ${`''`}                | ${`GP2`} | ${`GP2`}
+      ${`||GP2||`}           | ${`GP2`} | ${`GP2`}
+      ${`||ASAP CRN||`}      | ${`GP2`} | ${`||GP2||ASAP CRN||`}
+      ${`||GP2||ASAP CRN||`} | ${`GP2`} | ${`||GP2||ASAP CRN||`}
+    `(
+      'should update network to $expectedNewNetworkValue when app is $app and previous value is $previousNetworkValue',
+      async ({ app, previousNetworkValue, expectedNewNetworkValue }) => {
+        const userId = getUserDataObject().id;
+        const { activeCampaignId: _, ...user } = getGP2UserResponse();
+
+        userController.fetchById.mockResolvedValue(user);
+        mockGetContactIdByEmail.mockResolvedValue(activeCampaignId);
+
+        const event = getEventBridgeEventMock(userId);
+
+        await syncActiveCampaignContactFactory(
+          app,
+          userController,
+          loggerMock,
+          mockGetContactIdByEmail,
+          mockCreateContact,
+          mockUpdateContact,
+          mockUpdateContactLists,
+          activeCampaignAccount,
+          activeCampaignToken,
+          jest.fn().mockReturnValue(mockContactPayload),
+          jest.fn().mockResolvedValue(mockFieldIdByTitle),
+          jest.fn().mockResolvedValue({
+            fieldValues: [
+              ...mockContactFieldValues.fieldValues,
+              { field: '5', value: previousNetworkValue },
+            ],
+          }),
+        )(event);
+
+        expect(mockUpdateContact).toHaveBeenCalledWith(
+          activeCampaignAccount,
+          activeCampaignToken,
+          activeCampaignId,
+          expect.objectContaining({
+            fieldValues: [
+              ...mockContactPayload.fieldValues,
+              {
+                field: '5',
+                value: expectedNewNetworkValue,
+              },
+            ],
+          }),
+        );
+      },
     );
   });
 

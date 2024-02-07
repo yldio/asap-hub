@@ -1,5 +1,36 @@
 import Got from 'got';
 
+export const getActiveCampaignApiURL = (account: string) =>
+  `https://${account}.api-us1.com/api/3`;
+
+export const getActiveCampaignHeaders = (token: string) => ({
+  'Api-Token': token,
+});
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
+ */
+export const addContactToList = (
+  account: string,
+  token: string,
+  contactId: string,
+  listId: string,
+) => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  return Got.post(`${apiURL}/contactLists`, {
+    json: {
+      contactList: {
+        list: listId,
+        contact: contactId,
+        status: 1,
+      },
+    },
+    headers,
+  }).json();
+};
+
 export type ContactPayload = {
   firstName: string;
   lastName: string;
@@ -18,31 +49,77 @@ export type ContactResponse = {
   };
 };
 
+/**
+ * @see {@link https://developers.activecampaign.com/reference/create-a-new-contact}
+ */
 export const createContact = async (
   account: string,
   token: string,
   contact: ContactPayload,
 ): Promise<ContactResponse> => {
-  const apiURL = `https://${account}.api-us1.com/api/3`;
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
 
   return Got.post(`${apiURL}/contacts`, {
     json: { contact },
-    headers: { 'Api-Token': token },
+    headers,
   }).json();
 };
 
-export const updateContact = async (
+export type FieldValuesResponse = {
+  fieldValues: {
+    field: string;
+    value: string;
+  }[];
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-contact-field-values}
+ */
+export const getContactFieldValues = async (
   account: string,
   token: string,
-  id: string,
-  contact: ContactPayload,
-): Promise<ContactResponse> => {
-  const apiURL = `https://${account}.api-us1.com/api/3`;
+  contactId: string,
+): Promise<FieldValuesResponse> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
 
-  return Got.put(`${apiURL}/contacts/${id}`, {
-    json: { contact },
-    headers: { 'Api-Token': token },
-  }).json();
+  return Got.get(`${apiURL}/contacts/${contactId}/fieldValues`, {
+    headers,
+  }).json<FieldValuesResponse>();
+};
+
+type ContactByEmailResponse = {
+  contacts: {
+    id: string;
+    email: string;
+  }[];
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/list-all-contacts}
+ */
+export const getContactIdByEmail = async (
+  account: string,
+  token: string,
+  email: string,
+): Promise<string | null> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  const result = await Got.get(`${apiURL}/contacts?filters[email]=${email}`, {
+    headers,
+  }).json<ContactByEmailResponse>();
+
+  if (result.contacts.length && result.contacts[0]?.id) {
+    return result.contacts[0].id;
+  }
+
+  return null;
+};
+
+export type FieldIdByTitle = {
+  [title: string]: string;
 };
 
 type CustomFieldsResponse = {
@@ -50,21 +127,6 @@ type CustomFieldsResponse = {
     title: string;
     id: string;
   }[];
-};
-
-export const getCustomFields = async (
-  account: string,
-  token: string,
-): Promise<CustomFieldsResponse> => {
-  const apiURL = `https://${account}.api-us1.com/api/3`;
-
-  return Got.get(`${apiURL}/fields`, {
-    headers: { 'Api-Token': token },
-  }).json();
-};
-
-type FieldIdByTitle = {
-  [title: string]: string;
 };
 
 export const getCustomFieldIdByTitle = (
@@ -78,26 +140,66 @@ export const getCustomFieldIdByTitle = (
     {},
   );
 
-type ContactByEmailResponse = {
-  contacts: {
-    id: string;
-    email: string;
-  }[];
-};
-export const getContactIdByEmail = async (
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-fields}
+ */
+export const getCustomFields = async (
   account: string,
   token: string,
-  email: string,
-): Promise<string | null> => {
-  const apiURL = `https://${account}.api-us1.com/api/3`;
+): Promise<CustomFieldsResponse> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
 
-  const result = await Got.get(`${apiURL}/contacts?filters[email]=${email}`, {
-    headers: { 'Api-Token': token },
-  }).json<ContactByEmailResponse>();
+  return Got.get(`${apiURL}/fields?limit=100`, {
+    headers,
+  }).json<CustomFieldsResponse>();
+};
 
-  if (result.contacts.length && result.contacts[0]?.id) {
-    return result.contacts[0].id;
-  }
+export type ListsResponse = {
+  lists: {
+    name: string;
+    id: string;
+  }[];
+};
 
-  return null;
+export type ListIdByName = {
+  [name: string]: string;
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-all-lists}
+ */
+export const getListIdByName = async (account: string, token: string) => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  const listsResponse = await Got.get(`${apiURL}/lists`, {
+    headers,
+  }).json<ListsResponse>();
+
+  return listsResponse.lists.reduce(
+    (listIdByName: ListIdByName, list) => ({
+      ...listIdByName,
+      [list.name]: list.id,
+    }),
+    {},
+  );
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/update-a-contact-new}
+ */
+export const updateContact = async (
+  account: string,
+  token: string,
+  id: string,
+  contact: ContactPayload,
+): Promise<ContactResponse> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  return Got.put(`${apiURL}/contacts/${id}`, {
+    json: { contact },
+    headers,
+  }).json();
 };

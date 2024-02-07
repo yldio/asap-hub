@@ -8,13 +8,25 @@ import {
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 
-import { UserPayload } from '../event-bus';
-import {
+import type { UserPayload } from '../event-bus';
+import type {
   EventBridgeHandler,
   Logger,
   ContactPayload,
   ContactResponse,
+  FieldIdByTitle,
+  FieldValuesResponse,
 } from '../../utils';
+
+type GetContactPayloadCRN = (
+  fieldIdByTitle: FieldIdByTitle,
+  user: UserResponse,
+) => ContactPayload;
+
+type GetContactPayloadGP2 = (
+  fieldIdByTitle: FieldIdByTitle,
+  user: gp2.UserResponse,
+) => ContactPayload;
 
 export interface UserController {
   fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;
@@ -26,6 +38,7 @@ export interface UserController {
 
 export const syncActiveCampaignContactFactory =
   (
+    app: 'CRN' | 'GP2',
     userController: UserController,
     log: Logger,
     getContactIdByEmail: (
@@ -44,11 +57,16 @@ export const syncActiveCampaignContactFactory =
       id: string,
       contact: ContactPayload,
     ) => Promise<ContactResponse>,
+    updateContactLists: (contactId: string) => Promise<void>,
     activeCampaignAccount: string,
     activeCampaignToken: string,
-    getContactPayload:
-      | ((user: gp2.UserResponse) => Promise<ContactPayload>)
-      | ((user: UserResponse) => Promise<ContactPayload>),
+    getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
+    getFieldIdByTitle: () => Promise<FieldIdByTitle>,
+    getContactFieldValues: (
+      account: string,
+      token: string,
+      contactId: string,
+    ) => Promise<FieldValuesResponse>,
   ): EventBridgeHandler<UserEvent, UserPayload> =>
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
@@ -62,7 +80,6 @@ export const syncActiveCampaignContactFactory =
     try {
       const user = await userController.fetchById(event.detail.resourceId);
       log.info(`Fetched user ${user.id}`);
-
       if (user.onboarded) {
         const contactId = await getContactIdByEmail(
           activeCampaignAccount,
@@ -70,18 +87,20 @@ export const syncActiveCampaignContactFactory =
           user.email,
         );
 
+        const fieldIdByTitle = await getFieldIdByTitle();
+
         let contactPayload: ContactPayload;
 
         if ('teams' in user) {
-          contactPayload = await (
-            getContactPayload as (user: UserResponse) => Promise<ContactPayload>
-          )(user);
+          contactPayload = (getContactPayload as GetContactPayloadCRN)(
+            fieldIdByTitle,
+            user,
+          );
         } else {
-          contactPayload = await (
-            getContactPayload as (
-              user: gp2.UserResponse,
-            ) => Promise<ContactPayload>
-          )(user);
+          contactPayload = (getContactPayload as GetContactPayloadGP2)(
+            fieldIdByTitle,
+            user,
+          );
         }
 
         if (!contactId) {
@@ -92,6 +111,8 @@ export const syncActiveCampaignContactFactory =
           );
 
           if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
+            await updateContactLists(contactResponse.contact.id);
+
             await userController.update(user.id, {
               activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
               activeCampaignId: contactResponse.contact.id,
@@ -102,12 +123,50 @@ export const syncActiveCampaignContactFactory =
           return;
         }
 
+        const contactFieldValues = await getContactFieldValues(
+          activeCampaignAccount,
+          activeCampaignToken,
+          contactId,
+        );
+
+        const networkFieldValue = contactFieldValues.fieldValues.find(
+          (fieldValues) => fieldValues.field === fieldIdByTitle.Network!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        );
+
+        if (networkFieldValue?.value) {
+          const getNetworkValue = (previousNetworkValue: string) => {
+            const hasGP2 = previousNetworkValue.includes('GP2');
+            const hasCRN = previousNetworkValue.includes('CRN');
+
+            if (app === 'CRN') {
+              return hasGP2 ? '||GP2||ASAP CRN||' : 'ASAP CRN';
+            }
+
+            return hasCRN ? '||GP2||ASAP CRN||' : 'GP2';
+          };
+
+          contactPayload = {
+            ...contactPayload,
+            fieldValues: [
+              ...contactPayload.fieldValues.filter(
+                (fieldValue) => fieldValue.field !== networkFieldValue.field,
+              ),
+              {
+                field: networkFieldValue.field,
+                value: getNetworkValue(networkFieldValue?.value),
+              },
+            ],
+          };
+        }
+
         await updateContact(
           activeCampaignAccount,
           activeCampaignToken,
           contactId,
           contactPayload,
         );
+
+        await updateContactLists(contactId);
 
         if (!user.activeCampaignId) {
           await userController.update(user.id, {

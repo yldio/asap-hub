@@ -1,13 +1,16 @@
 /* istanbul ignore file */
 import { UserResponse } from '@asap-hub/model';
+import type { ContactPayload, FieldIdByTitle } from '@asap-hub/server-common';
 import {
-  ContactPayload,
+  addContactToList,
+  createContact,
+  getContactFieldValues,
+  getContactIdByEmail,
   getCustomFieldIdByTitle,
   getCustomFields,
-  getContactIdByEmail,
-  createContact,
-  updateContact,
+  getListIdByName,
   syncActiveCampaignContactFactory,
+  updateContact,
 } from '@asap-hub/server-common';
 import { activeCampaignAccount, activeCampaignToken } from '../../config';
 import UserController from '../../controllers/user.controller';
@@ -23,32 +26,39 @@ const userDataProvider = getUserDataProvider();
 const assetDataProvider = getAssetDataProvider();
 const researchTagDataProvider = getResearchTagsDataProvider();
 
-const getContactPayload = async (
+export const getContactPayload = (
+  fieldIdByTitle: FieldIdByTitle,
   user: UserResponse,
-): Promise<ContactPayload> => {
-  const customFields = await getCustomFields(
-    activeCampaignAccount,
-    activeCampaignToken,
-  );
-
-  const fieldIdByTitle = getCustomFieldIdByTitle(customFields);
+): ContactPayload => {
+  const teams = user.teams.length
+    ? user.teams.flatMap((team, index) => [
+        {
+          field: fieldIdByTitle[`CRN Team ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          value: team.displayName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        },
+        {
+          field: fieldIdByTitle[`CRN Team Role ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          value: team.role!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        },
+        {
+          field: fieldIdByTitle[`CRN Team Status ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+          value:
+            team.inactiveSinceDate || team.teamInactiveSince
+              ? 'Inactive'
+              : 'Active',
+        },
+      ])
+    : [];
 
   return {
     firstName: user.firstName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     lastName: user.lastName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     email: user.email!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
     fieldValues: [
-      {
-        field: fieldIdByTitle.Team!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.teams.length ? `Team ${user.teams[0]!.displayName!}` : '', // eslint-disable-line @typescript-eslint/no-non-null-assertion
-      },
-      {
-        field: fieldIdByTitle['CRN Team Role']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.teams[0]?.role || '',
-      },
+      ...teams,
       {
         field: fieldIdByTitle.Lab!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.labs[0]?.name || '',
+        value: user.labs.map((item) => item.name).join(', '),
       },
       {
         field: fieldIdByTitle.ORCID!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
@@ -76,22 +86,54 @@ const getContactPayload = async (
       },
       {
         field: fieldIdByTitle['Working Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.workingGroups[0]?.name || '',
+        value: user.workingGroups.map((item) => item.name).join(', '),
       },
       {
         field: fieldIdByTitle['Interest Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.interestGroups[0]?.name || '',
+        value: user.interestGroups.map((item) => item.name).join(', '),
       },
       {
         field: fieldIdByTitle.LinkedIn!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
         value: user.social?.linkedIn || '',
       },
+      {
+        field: fieldIdByTitle.Network!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
+        value: '||ASAP CRN||',
+      },
     ],
   };
 };
 
+const updateContactLists = async (contactId: string) => {
+  const listIdByName = await getListIdByName(
+    activeCampaignAccount,
+    activeCampaignToken,
+  );
+
+  const masterListId = listIdByName['Master List']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+  const CRNEmailListId = listIdByName['CRN HUB Email List']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+
+  for (const listId of [masterListId, CRNEmailListId]) {
+    await await addContactToList(
+      activeCampaignAccount,
+      activeCampaignToken,
+      contactId,
+      listId,
+    );
+  }
+};
+const getFieldIdByTitle = async () => {
+  const customFields = await getCustomFields(
+    activeCampaignAccount,
+    activeCampaignToken,
+  );
+
+  return getCustomFieldIdByTitle(customFields);
+};
+
 export const handler = sentryWrapper(
   syncActiveCampaignContactFactory(
+    'CRN',
     new UserController(
       userDataProvider,
       assetDataProvider,
@@ -101,8 +143,11 @@ export const handler = sentryWrapper(
     getContactIdByEmail,
     createContact,
     updateContact,
+    updateContactLists,
     activeCampaignAccount,
     activeCampaignToken,
     getContactPayload,
+    getFieldIdByTitle,
+    getContactFieldValues,
   ),
 );

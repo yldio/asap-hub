@@ -175,17 +175,32 @@ export const getReminderUsersContent =
     },
   });
 
-export const getReminderResponse = (): gp2Model.ReminderResponse => {
-  return {
-    id: 'output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    description:
-      '**Tony Stark** in project **Sample Prioritization** published a **Article** output: "Test Proposal 1234".',
-    entity: 'Output',
-    href: '/outputs/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+export const getOutputPublishedReminderResponse =
+  (): gp2Model.ReminderResponse => {
+    return {
+      id: 'output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      description:
+        '**Tony Stark** in project **Sample Prioritization** published a **Article** output: "Test Proposal 1234".',
+      entity: 'Output',
+      href: '/outputs/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    };
   };
-};
+
+export const getOutputVersionPublishedReminderResponse =
+  (): gp2Model.ReminderResponse => {
+    return {
+      id: 'output-version-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      description:
+        '**Tony Stark** on **Sample Prioritization** published a new project article output version: "Test Proposal 1234".',
+      entity: 'Output Version',
+      href: '/outputs/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    };
+  };
 
 export const getListReminderResponse = (): gp2Model.ListReminderResponse => ({
-  total: 1,
-  items: [getReminderResponse()],
+  total: 2,
+  items: [
+    getOutputPublishedReminderResponse(),
+    getOutputVersionPublishedReminderResponse(),
+  ],
 });

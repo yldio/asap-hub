@@ -25,7 +25,7 @@ export default class ReminderController {
                 reminder.data.associationName
               }** published a new ${
                 reminder.data.associationType
-              } ${reminder.data.documentType.toLowerCase()} output version "${
+              } ${reminder.data.documentType.toLowerCase()} output version: "${
                 reminder.data.title
               }".`,
       })),

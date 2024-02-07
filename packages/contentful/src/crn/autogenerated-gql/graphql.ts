@@ -15219,6 +15219,16 @@ export type FetchResearchTagsQuery = {
   >;
 };
 
+export type FetchResearchTagsByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchResearchTagsByIdQuery = {
+  researchTags?: Maybe<
+    Pick<ResearchTags, 'name' | 'category' | 'types'> & { sys: Pick<Sys, 'id'> }
+  >;
+};
+
 export type FetchTeamByIdQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -25668,6 +25678,61 @@ export const FetchResearchTagsDocument = {
 } as unknown as DocumentNode<
   FetchResearchTagsQuery,
   FetchResearchTagsQueryVariables
+>;
+export const FetchResearchTagsByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchTagsById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'researchTags' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ResearchTagsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ResearchTagsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchResearchTagsByIdQuery,
+  FetchResearchTagsByIdQueryVariables
 >;
 export const FetchTeamByIdDocument = {
   kind: 'Document',

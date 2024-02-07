@@ -14,6 +14,9 @@ import {
   ResearchTagsFilter,
   Environment,
   addLocaleToFields,
+  FetchResearchTagsByIdQuery,
+  FetchResearchTagsByIdQueryVariables,
+  FETCH_RESEARCH_TAGS_BY_ID,
 } from '@asap-hub/contentful';
 import { ResearchTagDataProvider } from '../types';
 
@@ -72,8 +75,16 @@ export class ResearchTagContentfulDataProvider
     };
   }
 
-  async fetchById(): Promise<null> {
-    throw new Error('Method not implemented');
+  async fetchById(id: string): Promise<ResearchTagDataObject | null> {
+    const { researchTags } = await this.contentfulClient.request<
+      FetchResearchTagsByIdQuery,
+      FetchResearchTagsByIdQueryVariables
+    >(FETCH_RESEARCH_TAGS_BY_ID, { id });
+
+    if (!researchTags) {
+      return null;
+    }
+    return parseResearchTag(researchTags);
   }
 
   async create(name: string): Promise<string> {

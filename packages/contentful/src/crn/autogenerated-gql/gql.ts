@@ -83,6 +83,8 @@ const documents = {
     types.ResearchTagsContentFragmentDoc,
   '\n  query FetchResearchTags(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchTagsOrder]\n    $where: ResearchTagsFilter\n  ) {\n    researchTagsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ResearchTagsContent\n      }\n    }\n  }\n  \n':
     types.FetchResearchTagsDocument,
+  '\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n':
+    types.FetchResearchTagsByIdDocument,
   '\n  query FetchTeamById($id: String!) {\n    teams(id: $id) {\n      sys {\n        id\n        publishedAt\n      }\n      displayName\n      inactiveSince\n      projectSummary\n      projectTitle\n      expertiseAndResourceTags\n      proposal {\n        sys {\n          id\n        }\n      }\n      toolsCollection {\n        items {\n          name\n          description\n          url\n        }\n      }\n      linkedFrom {\n        teamMembershipCollection(limit: 100) {\n          items {\n            role\n            inactiveSinceDate\n            linkedFrom {\n              usersCollection(limit: 1) {\n                items {\n                  sys {\n                    id\n                  }\n                  onboarded\n                  firstName\n                  lastName\n                  email\n                  alumniSinceDate\n                  avatar {\n                    url\n                  }\n                  labsCollection(limit: 5) {\n                    items {\n                      sys {\n                        id\n                      }\n                      name\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
     types.FetchTeamByIdDocument,
   '\n  query FetchTeams(\n    $limit: Int\n    $skip: Int\n    $order: [TeamsOrder]\n    $where: TeamsFilter\n  ) {\n    teamsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        sys {\n          id\n        }\n        displayName\n        inactiveSince\n        projectTitle\n        expertiseAndResourceTags\n        linkedFrom {\n          teamMembershipCollection(limit: 100) {\n            items {\n              role\n              linkedFrom {\n                usersCollection(limit: 1) {\n                  items {\n                    sys {\n                      id\n                    }\n                    onboarded\n                    labsCollection(limit: 5) {\n                      items {\n                        sys {\n                          id\n                        }\n                      }\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
@@ -337,6 +339,12 @@ export function gql(
 export function gql(
   source: '\n  query FetchResearchTags(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchTagsOrder]\n    $where: ResearchTagsFilter\n  ) {\n    researchTagsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ResearchTagsContent\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchResearchTags(\n    $limit: Int\n    $skip: Int\n    $order: [ResearchTagsOrder]\n    $where: ResearchTagsFilter\n  ) {\n    researchTagsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ResearchTagsContent\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchResearchTagsById($id: String!) {\n    researchTags(id: $id) {\n      ...ResearchTagsContent\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

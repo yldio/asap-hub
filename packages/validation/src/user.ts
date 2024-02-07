@@ -14,7 +14,7 @@ export type UserValidationFields = Partial<
     | 'city'
     | 'country'
     | 'biography'
-    | 'expertiseAndResourceTags'
+    | 'tags'
     | 'responsibilities'
     | 'researchInterests'
   >
@@ -62,8 +62,8 @@ export const isUserOnboardable = (
     response.biography = { valid: false };
   }
 
-  if (user.expertiseAndResourceTags.length < 5) {
-    response.expertiseAndResourceTags = { valid: false };
+  if (!user.tags || user.tags.length < 5) {
+    response.tags = { valid: false };
   }
 
   if (!user.responsibilities) {

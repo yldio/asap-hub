@@ -7,6 +7,8 @@ import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/c
 import {
   getFullListResearchTagDataObject,
   getContentfulGraphqlResearchTagResponse,
+  getContentfulGraphqlResearchTag,
+  getResearchTagDataObject,
 } from '../../fixtures/research-tag.fixtures';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -166,8 +168,22 @@ describe('Research Tags Data Provider', () => {
   });
 
   describe('Fetch-by-id', () => {
-    test('should throw an error', async () => {
-      await expect(researchTagsDataProvider.fetchById()).rejects.toThrow();
+    test('Should return null when tag is not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchTags: null,
+      });
+
+      const result = await researchTagsDataProvider.fetchById('not-found');
+      expect(result).toEqual(null);
+    });
+
+    test('should return tag if id is found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchTags: getContentfulGraphqlResearchTag(),
+      });
+
+      const result = await researchTagsDataProvider.fetchById('user-id');
+      expect(result).toEqual(getResearchTagDataObject());
     });
   });
 

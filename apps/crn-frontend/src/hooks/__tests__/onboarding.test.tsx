@@ -107,7 +107,13 @@ describe('useOnboarding', () => {
   it('calculates the modal href for every step', async () => {
     const user = {
       ...emptyUser,
-      expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
+      tags: [
+        { id: 'cd7be4902', name: 'Expertise 1' },
+        { id: 'cd7be4905', name: 'Expertise 2' },
+        { id: 'cd7be4901', name: 'Expertise 3' },
+        { id: 'cd7be4903', name: 'Expertise 4' },
+        { id: 'cd7be4904', name: 'Expertise 5' },
+      ],
     };
     mockGetUser.mockResolvedValue(user);
 

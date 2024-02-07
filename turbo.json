@@ -12,6 +12,9 @@
       ],
       "cache": false
     },
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
     "typecheck": {
       "dependsOn": ["//#build:typecheck:tsc", "^typecheck"]
     },
@@ -20,10 +23,10 @@
       "outputs": ["build/**/*", "dist/**/*", "build-templates/**/*"]
     },
     "test": {
-      "dependsOn": ["^build:babel"]
+      "dependsOn": ["topo"]
     },
     "test:coverage": {
-      "dependsOn": ["^build:babel"],
+      "dependsOn": ["topo"],
       "outputs": ["coverage/**/*"]
     }
   }

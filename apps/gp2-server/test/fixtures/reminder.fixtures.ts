@@ -21,7 +21,7 @@ export const getOutputPublishedReminder =
     };
   };
 
-  export const getOutputVersionPublishedReminder =
+export const getOutputVersionPublishedReminder =
   (): gp2Model.OutputVersionPublishedReminder => {
     const outputDataObject = getOutputDataObject();
     return {
@@ -76,52 +76,51 @@ export const getReminderOutputCollectionItem = (): NonNullable<
   };
 };
 
-export const getReminderOutputVersionCollectionItem =
-  (): NonNullable<
+export const getReminderOutputVersionCollectionItem = (): NonNullable<
   gp2Contentful.FetchRemindersQuery['outputVersionCollection']
-  >['items'][number] => {
-    return {
-      sys: {
-        id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-        publishedAt: '2020-09-23T16:34:26.842Z',
-      },
-      linkedFrom: {
-        outputsCollection: {
-          items: [
-            {
-              title: 'test-output-version',
-              documentType: 'Article',
-              sys: {
-                id: 'output-1',
-              },
-              createdBy: {
-                firstName: 'Tony',
-                lastName: 'Stark',
-              },
-              relatedEntitiesCollection: {
-                items: [
-                  {
-                    __typename: 'Projects',
-                    sys: {
-                      id: 'Project-1',
-                    },
-                    title: 'Sample Prioritization',
-                  },
-                  {
-                    __typename: 'WorkingGroups',
-                    sys: {
-                      id: 'WG-1',
-                    },
-                    title: 'Data and Code Dissemination',
-                  },
-                ],
-              },
+>['items'][number] => {
+  return {
+    sys: {
+      id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      publishedAt: '2020-09-23T16:34:26.842Z',
+    },
+    linkedFrom: {
+      outputsCollection: {
+        items: [
+          {
+            title: 'test-output-version',
+            documentType: 'Article',
+            sys: {
+              id: 'output-1',
             },
-          ],
-        },
+            createdBy: {
+              firstName: 'Tony',
+              lastName: 'Stark',
+            },
+            relatedEntitiesCollection: {
+              items: [
+                {
+                  __typename: 'Projects',
+                  sys: {
+                    id: 'Project-1',
+                  },
+                  title: 'Sample Prioritization',
+                },
+                {
+                  __typename: 'WorkingGroups',
+                  sys: {
+                    id: 'WG-1',
+                  },
+                  title: 'Data and Code Dissemination',
+                },
+              ],
+            },
+          },
+        ],
       },
-    };
+    },
   };
+};
 
 export const getReminderUsersContent =
   (): gp2Contentful.FetchRemindersQuery['users'] => ({

@@ -52,8 +52,8 @@ describe('Reminders data provider', () => {
     >['items'][number];
 
     type OutputVersionItem = NonNullable<
-    gp2Contentful.FetchRemindersQuery['outputVersionCollection']
-  >['items'][number];
+      gp2Contentful.FetchRemindersQuery['outputVersionCollection']
+    >['items'][number];
     let publishedResearchOutputItem: OutputItem;
     let publishedOutputVersionItem: OutputVersionItem;
 
@@ -75,18 +75,18 @@ describe('Reminders data provider', () => {
         publishedResearchOutputItem!.addedDate = addedDate;
         setNowToLast24Hours(addedDate);
       });
-  
+
       test('Should not fetch the reminders if user data is null', async () => {
         const outputsCollection = {
           items: [publishedResearchOutputItem],
         };
         const usersResponse = null;
         setContentfulMock(outputsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test('Should not fetch the reminders if user does not belong to the output project or working group', async () => {
         publishedResearchOutputItem!.relatedEntitiesCollection!.items[0] = {
           __typename: 'Projects',
@@ -99,39 +99,39 @@ describe('Reminders data provider', () => {
           items: [publishedResearchOutputItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test('Should not fetch the reminders if output does not have a title', async () => {
         publishedResearchOutputItem!.title = null;
         const outputsCollection = {
           items: [publishedResearchOutputItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test('Should not fetch the reminders if output entity is not defined', async () => {
         publishedResearchOutputItem!.relatedEntitiesCollection!.items[0] = null;
         const outputsCollection = {
           items: [publishedResearchOutputItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test.each`
         entity             | typename           | id
         ${'project'}       | ${'Projects'}      | ${'Project-1'}
@@ -141,29 +141,31 @@ describe('Reminders data provider', () => {
         async ({ typename, id }) => {
           const addedDate = '2023-01-01T08:00:00Z';
           setNowToMoreThan24hAgo(addedDate);
-  
+
           publishedResearchOutputItem!.relatedEntitiesCollection!.items[0]! = {
             __typename: typename,
             sys: { id },
             title: 'Sample Prioritization',
           };
           publishedResearchOutputItem!.addedDate! = addedDate;
-  
+
           const outputsCollection = {
             items: [publishedResearchOutputItem],
           };
           const usersResponse = getReminderUsersContent();
-  
+
           setContentfulMock(outputsCollection, usersResponse);
-  
-          const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
           expect(result).toEqual({
             items: [],
             total: 0,
           });
         },
       );
-  
+
       test.each`
         entity             | typename           | id
         ${'project'}       | ${'Projects'}      | ${'Project-1'}
@@ -177,16 +179,18 @@ describe('Reminders data provider', () => {
             title: 'Sample Prioritization',
           };
           publishedResearchOutputItem!.addedDate! = addedDate;
-  
+
           const outputsCollection = {
             items: [publishedResearchOutputItem],
           };
-  
+
           const usersResponse = getReminderUsersContent();
-  
+
           setContentfulMock(outputsCollection, usersResponse);
-  
-          const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
           expect(result).toEqual({
             items: [
               {
@@ -205,20 +209,20 @@ describe('Reminders data provider', () => {
           });
         },
       );
-  
+
       test('Should sort the published output reminders based on added date showing most recent first', async () => {
         const date = '2024-01-05T08:00:00Z';
         setNowToLast24Hours(date);
-  
+
         const publishedResearchOutputItem1 = getReminderOutputCollectionItem();
         publishedResearchOutputItem1!.addedDate = '2024-01-05T08:02:00Z';
-  
+
         const publishedResearchOutputItem2 = getReminderOutputCollectionItem();
         publishedResearchOutputItem2!.addedDate = '2024-01-05T08:54:00Z';
-  
+
         const publishedResearchOutputItem3 = getReminderOutputCollectionItem();
         publishedResearchOutputItem3!.addedDate = '2024-01-04T23:16:00Z';
-  
+
         const outputsCollection = {
           items: [
             publishedResearchOutputItem1,
@@ -226,11 +230,11 @@ describe('Reminders data provider', () => {
             publishedResearchOutputItem3,
           ],
         };
-  
+
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           items: [
@@ -266,33 +270,33 @@ describe('Reminders data provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           outputVersionCollection,
           users: users === undefined ? getReminderUsersContent() : users,
-          outputsCollection: outputsCollection === undefined
-          ? { items: [] }
-          : outputsCollection,
+          outputsCollection:
+            outputsCollection === undefined ? { items: [] } : outputsCollection,
         });
       };
 
       const getPublishedOutputVersionItem = (
         versionId?: string,
-        publishedAt?: string, 
-        outputId?: string
-        ) => 
-      ({
+        publishedAt?: string,
+        outputId?: string,
+      ) => ({
         sys: {
           id: versionId || 'reminder-1',
-          publishedAt: publishedAt || '2024-01-04T23:16:00Z'
+          publishedAt: publishedAt || '2024-01-04T23:16:00Z',
         },
         linkedFrom: {
           outputsCollection: {
-            items: [{
-              ...publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0],
-              sys: {
-                id: outputId || 'output-3'
-              }
-            }
-            ]
-          }
-        }
+            items: [
+              {
+                ...publishedOutputVersionItem!.linkedFrom!.outputsCollection!
+                  .items[0],
+                sys: {
+                  id: outputId || 'output-3',
+                },
+              },
+            ],
+          },
+        },
       });
 
       beforeEach(() => {
@@ -300,40 +304,42 @@ describe('Reminders data provider', () => {
         publishedOutputVersionItem!.sys.publishedAt = publishedAt;
         setNowToLast24Hours(publishedAt);
       });
-  
+
       test('Should not fetch the reminder if user data is null', async () => {
         const outputVersionCollection = {
           items: [publishedOutputVersionItem],
         };
         const usersResponse = null;
         setContentfulMock(outputVersionCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
 
       test('Should not fetch the reminders if output entity is not defined', async () => {
-        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0] = null;
+        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0] =
+          null;
         const outputVersionCollection = {
           items: [publishedOutputVersionItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputVersionCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
 
       test('Should not fetch the reminder if related output does not have a title', async () => {
-        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.title = null;
+        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.title =
+          null;
         const outputVersionCollection = {
           items: [publishedOutputVersionItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputVersionCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
@@ -360,31 +366,32 @@ describe('Reminders data provider', () => {
           items: [publishedOutputVersionItem],
         };
         const users = getReminderUsersContent();
-        setContentfulMock(outputVersionsCollection, users );
+        setContentfulMock(outputVersionsCollection, users);
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test('Should not fetch the reminders if user does not belong to the related output project or working group', async () => {
-        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0] = {
-          __typename: 'Projects',
-          sys: {
-            id: 'Project-1027',
-          },
-          title: 'Sample Prioritization',
-        };
+        publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0] =
+          {
+            __typename: 'Projects',
+            sys: {
+              id: 'Project-1027',
+            },
+            title: 'Sample Prioritization',
+          };
         const outputVersionCollection = {
           items: [publishedOutputVersionItem],
         };
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputVersionCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({ items: [], total: 0 });
       });
-  
+
       test.each`
         entity             | typename           | id
         ${'project'}       | ${'Projects'}      | ${'Project-1'}
@@ -394,29 +401,32 @@ describe('Reminders data provider', () => {
         async ({ typename, id }) => {
           const publishedDate = '2023-01-01T08:00:00Z';
           setNowToMoreThan24hAgo(publishedDate);
-  
-          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0]! = {
-            __typename: typename,
-            sys: { id },
-            title: 'Sample Prioritization',
-          };
+
+          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0]! =
+            {
+              __typename: typename,
+              sys: { id },
+              title: 'Sample Prioritization',
+            };
           publishedOutputVersionItem!.sys.publishedAt = publishedDate;
-  
+
           const outputVersionsCollection = {
             items: [publishedOutputVersionItem],
           };
           const usersResponse = getReminderUsersContent();
-  
+
           setContentfulMock(outputVersionsCollection, usersResponse);
-  
-          const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
           expect(result).toEqual({
             items: [],
             total: 0,
           });
         },
       );
-  
+
       test.each`
         entity             | typename           | id
         ${'project'}       | ${'Projects'}      | ${'Project-1'}
@@ -424,23 +434,27 @@ describe('Reminders data provider', () => {
       `(
         'Should fetch the reminders if user belongs to the output $entity and output was added in the last 24h',
         async ({ entity, typename, id }) => {
-          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0] = {
-            __typename: typename,
-            sys: { id },
-            title: 'Sample Prioritization',
-          };
+          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.relatedEntitiesCollection!.items[0] =
+            {
+              __typename: typename,
+              sys: { id },
+              title: 'Sample Prioritization',
+            };
 
-          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.title = 'Test Proposal 1234';
-  
+          publishedOutputVersionItem!.linkedFrom!.outputsCollection!.items[0]!.title =
+            'Test Proposal 1234';
+
           const outputVersionsCollection = {
             items: [publishedOutputVersionItem],
           };
-  
+
           const usersResponse = getReminderUsersContent();
-  
+
           setContentfulMock(outputVersionsCollection, usersResponse);
-  
-          const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
           expect(result).toEqual({
             items: [
               {
@@ -459,14 +473,26 @@ describe('Reminders data provider', () => {
           });
         },
       );
-  
+
       test('Should sort the published output version reminders based on publishedAt showing most recent first', async () => {
         setNowToLast24Hours('2024-01-05T08:00:00Z');
-  
-        const publishedOutputVersionItem1 = getPublishedOutputVersionItem('reminder-1', '2024-01-05T08:02:00Z', 'output-1');
-        const publishedOutputVersionItem2 = getPublishedOutputVersionItem('reminder-2', '2024-01-05T08:54:00Z', 'output-2',);  
-        const publishedOutputVersionItem3 = getPublishedOutputVersionItem('reminder-3', '2024-01-04T23:16:00Z', 'output-3'); 
-  
+
+        const publishedOutputVersionItem1 = getPublishedOutputVersionItem(
+          'reminder-1',
+          '2024-01-05T08:02:00Z',
+          'output-1',
+        );
+        const publishedOutputVersionItem2 = getPublishedOutputVersionItem(
+          'reminder-2',
+          '2024-01-05T08:54:00Z',
+          'output-2',
+        );
+        const publishedOutputVersionItem3 = getPublishedOutputVersionItem(
+          'reminder-3',
+          '2024-01-04T23:16:00Z',
+          'output-3',
+        );
+
         const outputVersionsCollection = {
           items: [
             publishedOutputVersionItem1,
@@ -474,11 +500,11 @@ describe('Reminders data provider', () => {
             publishedOutputVersionItem3,
           ],
         };
-  
+
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputVersionsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           items: [
@@ -505,10 +531,19 @@ describe('Reminders data provider', () => {
       test('Should only return the most recent published output version reminder for an output', async () => {
         setNowToLast24Hours('2024-01-05T08:00:00Z');
 
-        const publishedOutputVersionItem1 = getPublishedOutputVersionItem('reminder-1', '2024-01-05T08:02:00Z');
-        const publishedOutputVersionItem2 = getPublishedOutputVersionItem('reminder-2', '2024-01-05T08:54:00Z');  
-        const publishedOutputVersionItem3 = getPublishedOutputVersionItem('reminder-3', '2024-01-04T23:16:00Z'); 
-  
+        const publishedOutputVersionItem1 = getPublishedOutputVersionItem(
+          'reminder-1',
+          '2024-01-05T08:02:00Z',
+        );
+        const publishedOutputVersionItem2 = getPublishedOutputVersionItem(
+          'reminder-2',
+          '2024-01-05T08:54:00Z',
+        );
+        const publishedOutputVersionItem3 = getPublishedOutputVersionItem(
+          'reminder-3',
+          '2024-01-04T23:16:00Z',
+        );
+
         const outputVersionsCollection = {
           items: [
             publishedOutputVersionItem1,
@@ -516,11 +551,11 @@ describe('Reminders data provider', () => {
             publishedOutputVersionItem3,
           ],
         };
-  
+
         const usersResponse = getReminderUsersContent();
-  
+
         setContentfulMock(outputVersionsCollection, usersResponse);
-  
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           items: [
@@ -538,29 +573,33 @@ describe('Reminders data provider', () => {
         publishedResearchOutputItem = getReminderOutputCollectionItem();
         publishedResearchOutputItem!.addedDate = publishedAt;
 
-        const publishedOutputVersionItem1 = getPublishedOutputVersionItem('reminder-1', publishedAt, publishedResearchOutputItem!.sys.id);
-  
+        const publishedOutputVersionItem1 = getPublishedOutputVersionItem(
+          'reminder-1',
+          publishedAt,
+          publishedResearchOutputItem!.sys.id,
+        );
+
         const outputVersionsCollection = {
-          items: [
-            publishedOutputVersionItem1,
-          ],
+          items: [publishedOutputVersionItem1],
         };
 
         const outputsCollection = {
-          items: [
-            publishedResearchOutputItem,
-          ],
+          items: [publishedResearchOutputItem],
         };
-  
+
         const usersResponse = getReminderUsersContent();
-  
-        setContentfulMock(outputVersionsCollection, usersResponse, outputsCollection);
-  
+
+        setContentfulMock(
+          outputVersionsCollection,
+          usersResponse,
+          outputsCollection,
+        );
+
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           items: [
             expect.objectContaining({
-              entity: 'Output Version'
+              entity: 'Output Version',
             }),
           ],
           total: 1,

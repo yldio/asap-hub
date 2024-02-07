@@ -173,7 +173,7 @@ const getPublishedOutputVersionRemindersFromQuery = (
   ) {
     return [];
   }
-  
+
   outputVersionCollectionItems.sort((reminderA, reminderB) => {
     const aStartDate = DateTime.fromISO(reminderA.sys.publishedAt);
     const bStartDate = DateTime.fromISO(reminderB.sys.publishedAt);
@@ -225,7 +225,6 @@ const getPublishedOutputVersionRemindersFromQuery = (
       ((associationType === 'project' && isInProject) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
-
       outputVersionReminders.push({
         id: `output-version-published-${outputVersion.sys.id}`,
         entity: 'Output Version',

@@ -18,6 +18,13 @@
     "build": {
       "dependsOn": ["typecheck", "build:babel", "//#build:typecheck:tsc"],
       "outputs": ["build/**/*", "dist/**/*", "build-templates/**/*"]
+    },
+    "test": {
+      "dependsOn": ["^build:babel"]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build:babel"],
+      "outputs": ["coverage/**/*"]
     }
   }
 }

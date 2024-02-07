@@ -62,6 +62,7 @@
     "start:storybook": "yarn workspace @asap-hub/storybook start",
     "tags": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts tags",
     "test": "LANG=en_US TZ=UTC jest",
+    "test:workspace": "yarn test --config=jest-workspace.config.js",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
     "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",

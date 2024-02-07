@@ -9,7 +9,8 @@
     "start": "cross-env TSC_COMPILE_ON_ERROR=true PORT=4000 vite",
     "build": "node ./scripts/build-unsupported-browser-page.js && vite build",
     "typecheck": "tsc",
-    "test": "echo Run the workspace root script instead",
+    "test": "WORKSPACE_PATH=apps/gp2-frontend yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=apps/gp2-frontend; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/",
     "release:frontend": "node ./scripts/sentry-release.js"
   },
   "dependencies": {

@@ -10,7 +10,9 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
-    "watch:babel": "../../scripts/build-babel.sh watch"
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "test": "WORKSPACE_PATH=packages/server-common yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=packages/server-common; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",

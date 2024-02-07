@@ -181,7 +181,7 @@ const getPublishedOutputVersionRemindersFromQuery = (
     return bStartDate.diff(aStartDate).as('seconds');
   });
 
-  const outputSeenList: string[] = [];
+  const seenOutputList: string[] = [];
 
   return outputVersionCollectionItems.reduce<
     gp2Model.OutputVersionPublishedReminder[]
@@ -198,11 +198,10 @@ const getPublishedOutputVersionRemindersFromQuery = (
       !gp2Model.isOutputDocumentType(output.documentType) ||
       !isPublished ||
       !inLast24Hours(outputVersion.sys.publishedAt, zone) ||
-      outputSeenList.includes(output.sys.id)
+      seenOutputList.includes(output.sys.id)
     )
       return outputVersionReminders;
 
-    outputSeenList.push(output.sys.id);
     const { associationName, associationType } =
       getAssociationNameAndType(output);
     const userName = getUserName(output);
@@ -225,6 +224,7 @@ const getPublishedOutputVersionRemindersFromQuery = (
       ((associationType === 'project' && isInProject) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
+      seenOutputList.push(output.sys.id);
       outputVersionReminders.push({
         id: `output-version-published-${outputVersion.sys.id}`,
         entity: 'Output Version',

@@ -1129,24 +1129,60 @@ describe('Reminders data provider', () => {
 
       test('Should fetch and sort appropriately research output version reminders when conditions are met', async () => {
         const version1 = {
-          ...researchOutputVersionItem,
           sys: {
             id: 'version-1',
             publishedAt: '2023-01-01T08:00:00Z',
           },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  ...researchOutputVersionItem!.linkedFrom!
+                    .researchOutputsCollection!.items[0],
+                  sys: {
+                    id: 'research-output-1',
+                  },
+                },
+              ],
+            },
+          },
         };
         const version2 = {
-          ...researchOutputVersionItem,
           sys: {
             id: 'version-2',
             publishedAt: '2023-01-01T09:00:00Z',
           },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  ...researchOutputVersionItem!.linkedFrom!
+                    .researchOutputsCollection!.items[0],
+                  sys: {
+                    id: 'research-output-2',
+                  },
+                },
+              ],
+            },
+          },
         };
         const version3 = {
-          ...researchOutputVersionItem,
           sys: {
             id: 'version-3',
             publishedAt: '2023-01-01T10:00:00Z',
+          },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  ...researchOutputVersionItem!.linkedFrom!
+                    .researchOutputsCollection!.items[0],
+                  sys: {
+                    id: 'research-output-3',
+                  },
+                },
+              ],
+            },
           },
         };
 

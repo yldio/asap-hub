@@ -81,7 +81,7 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  it('Should fail if fewer than 5 Expertise and Resources are provided in user profile', async () => {
+  it('Should fail if fewer than 5 Tags are provided in user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...getUserResponse(),
       tags: [

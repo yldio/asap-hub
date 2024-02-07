@@ -41,6 +41,7 @@ const descriptionStyles = css({
 
 const iconMap: Record<ReminderEntity, React.ReactElement> = {
   Output: <LibraryIcon />,
+  'Output Version': <LibraryIcon />,
   'Research Output': <LibraryIcon />,
   'Research Output Version': <LibraryIcon />,
   Event: <EventIcon />,

@@ -18,7 +18,10 @@ export default class ReminderController {
         href: gp2Routing.outputs({}).output({
           outputId: reminder.data.outputId,
         }).$,
-        description: `**${reminder.data.statusChangedBy}** in ${reminder.data.associationType} **${reminder.data.associationName}** published a **${reminder.data.documentType}** output: "${reminder.data.title}".`,
+        description:
+          reminder.entity === 'Output'
+            ? `**${reminder.data.statusChangedBy}** in ${reminder.data.associationType} **${reminder.data.associationName}** published a **${reminder.data.documentType}** output: "${reminder.data.title}".`
+            : `**${reminder.data.statusChangedBy}** on **${reminder.data.associationName}** published a new ${reminder.data.associationType} ${reminder.data.documentType.toLowerCase()} output version "${reminder.data.title}".`,
       })),
     };
   }

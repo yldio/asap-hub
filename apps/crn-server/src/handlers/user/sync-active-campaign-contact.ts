@@ -104,7 +104,7 @@ export const getContactPayload = (
   };
 };
 
-const updateContactLists = async (contactId: string) => {
+export const updateContactLists = async (contactId: string) => {
   const listIdByName = await getListIdByName(
     activeCampaignAccount,
     activeCampaignToken,
@@ -114,7 +114,7 @@ const updateContactLists = async (contactId: string) => {
   const CRNEmailListId = listIdByName['CRN HUB Email List']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
   for (const listId of [masterListId, CRNEmailListId]) {
-    await await addContactToList(
+    await addContactToList(
       activeCampaignAccount,
       activeCampaignToken,
       contactId,
@@ -122,7 +122,7 @@ const updateContactLists = async (contactId: string) => {
     );
   }
 };
-const getFieldIdByTitle = async () => {
+export const getFieldIdByTitle = async () => {
   const customFields = await getCustomFields(
     activeCampaignAccount,
     activeCampaignToken,

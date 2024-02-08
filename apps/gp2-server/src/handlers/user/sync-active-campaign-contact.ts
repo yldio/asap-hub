@@ -101,7 +101,7 @@ const updateContactLists = async (contactId: string) => {
   const CRNEmailListId = listIdByName['GP2 Hub Email list']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
 
   for (const listId of [masterListId, CRNEmailListId]) {
-    await await addContactToList(
+    await addContactToList(
       activeCampaignAccount,
       activeCampaignToken,
       contactId,

@@ -36,82 +36,6 @@ export interface UserController {
   ): Promise<gp2.UserResponse | UserResponse>;
 }
 
-export const syncActiveCampaignContactFactory =
-  (
-    app: 'CRN' | 'GP2',
-    userController: UserController,
-    log: Logger,
-    getContactIdByEmail: (
-      account: string,
-      token: string,
-      email: string,
-    ) => Promise<string | null>,
-    createContact: (
-      account: string,
-      token: string,
-      contact: ContactPayload,
-    ) => Promise<ContactResponse>,
-    updateContact: (
-      account: string,
-      token: string,
-      id: string,
-      contact: ContactPayload,
-    ) => Promise<ContactResponse>,
-    updateContactLists: (contactId: string) => Promise<void>,
-    activeCampaignAccount: string,
-    activeCampaignToken: string,
-    getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
-    getFieldIdByTitle: () => Promise<FieldIdByTitle>,
-    getContactFieldValues: (
-      account: string,
-      token: string,
-      contactId: string,
-    ) => Promise<FieldValuesResponse>,
-  ): EventBridgeHandler<UserEvent, UserPayload> =>
-  async (event) => {
-    log.info(`Event ${event['detail-type']}`);
-
-    /* istanbul ignore next */
-    if (activeCampaignToken === '') {
-      log.info('Active Campaign Token not defined, skipping...');
-      return;
-    }
-
-    const userId = event.detail.resourceId;
-
-    try {
-      await syncUserActiveCampaignData(
-        app,
-        userController,
-        userId,
-        log,
-        getContactIdByEmail,
-        createContact,
-        updateContact,
-        updateContactLists,
-        activeCampaignAccount,
-        activeCampaignToken,
-        getContactPayload,
-        getFieldIdByTitle,
-        getContactFieldValues,
-      );
-    } catch (e) {
-      if (
-        (isBoom(e) && e.output.statusCode === 404) ||
-        e instanceof NotFoundError
-      ) {
-        log.info(e, 'User not found');
-        return;
-      }
-
-      log.info(
-        e,
-        `Error creating/updating user ${event.detail.resourceId} to Active Campaign`,
-      );
-      throw e;
-    }
-  };
-
 export const syncUserActiveCampaignData = async (
   app: 'CRN' | 'GP2',
   userController: UserController,
@@ -246,6 +170,82 @@ export const syncUserActiveCampaignData = async (
     );
   }
 };
+
+export const syncActiveCampaignContactFactory =
+  (
+    app: 'CRN' | 'GP2',
+    userController: UserController,
+    log: Logger,
+    getContactIdByEmail: (
+      account: string,
+      token: string,
+      email: string,
+    ) => Promise<string | null>,
+    createContact: (
+      account: string,
+      token: string,
+      contact: ContactPayload,
+    ) => Promise<ContactResponse>,
+    updateContact: (
+      account: string,
+      token: string,
+      id: string,
+      contact: ContactPayload,
+    ) => Promise<ContactResponse>,
+    updateContactLists: (contactId: string) => Promise<void>,
+    activeCampaignAccount: string,
+    activeCampaignToken: string,
+    getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
+    getFieldIdByTitle: () => Promise<FieldIdByTitle>,
+    getContactFieldValues: (
+      account: string,
+      token: string,
+      contactId: string,
+    ) => Promise<FieldValuesResponse>,
+  ): EventBridgeHandler<UserEvent, UserPayload> =>
+  async (event) => {
+    log.info(`Event ${event['detail-type']}`);
+
+    /* istanbul ignore next */
+    if (activeCampaignToken === '') {
+      log.info('Active Campaign Token not defined, skipping...');
+      return;
+    }
+
+    const userId = event.detail.resourceId;
+
+    try {
+      await syncUserActiveCampaignData(
+        app,
+        userController,
+        userId,
+        log,
+        getContactIdByEmail,
+        createContact,
+        updateContact,
+        updateContactLists,
+        activeCampaignAccount,
+        activeCampaignToken,
+        getContactPayload,
+        getFieldIdByTitle,
+        getContactFieldValues,
+      );
+    } catch (e) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
+        log.info(e, 'User not found');
+        return;
+      }
+
+      log.info(
+        e,
+        `Error creating/updating user ${event.detail.resourceId} to Active Campaign`,
+      );
+      throw e;
+    }
+  };
 
 export type UserEventBridgeEvent = EventBridgeEvent<
   'UsersPublished',

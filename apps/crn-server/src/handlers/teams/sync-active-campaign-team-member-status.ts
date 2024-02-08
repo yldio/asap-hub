@@ -1,11 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { TeamEvent } from '@asap-hub/model';
-import { isBoom } from '@hapi/boom';
-
-import type { TeamPayload } from '../event-bus';
-
-import TeamController from '../../controllers/team.controller';
-import UserController from '../../controllers/user.controller';
 import {
   createContact,
   EventBridgeHandler,
@@ -15,12 +9,19 @@ import {
   syncUserActiveCampaignData,
   updateContact,
 } from '@asap-hub/server-common';
-import { activeCampaignAccount, activeCampaignToken } from '../../config';
+import { isBoom } from '@hapi/boom';
+
+import type { TeamPayload } from '../event-bus';
+
 import {
   getContactPayload,
   getFieldIdByTitle,
   updateContactLists,
 } from '../user/sync-active-campaign-contact';
+
+import { activeCampaignAccount, activeCampaignToken } from '../../config';
+import TeamController from '../../controllers/team.controller';
+import UserController from '../../controllers/user.controller';
 
 export const syncActiveCampaignTeamMemberStatusFactory =
   (

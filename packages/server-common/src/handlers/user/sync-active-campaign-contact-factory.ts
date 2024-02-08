@@ -9,13 +9,12 @@ import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 
 import type { UserPayload } from '../event-bus';
-import type {
+import {
   EventBridgeHandler,
   Logger,
   ContactPayload,
-  ContactResponse,
   FieldIdByTitle,
-  FieldValuesResponse,
+  ActiveCampaignType,
 } from '../../utils';
 
 type GetContactPayloadCRN = (
@@ -37,38 +36,55 @@ export interface UserController {
 }
 
 export const syncUserActiveCampaignData = async (
-  app: 'CRN' | 'GP2',
+  config: {
+    app: 'CRN' | 'GP2';
+    activeCampaignAccount: string;
+    activeCampaignToken: string;
+  },
+  ActiveCampaign: ActiveCampaignType,
   userController: UserController,
+  getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
+  listNames: string[],
   userId: string,
   log: Logger,
-  getContactIdByEmail: (
-    account: string,
-    token: string,
-    email: string,
-  ) => Promise<string | null>,
-  createContact: (
-    account: string,
-    token: string,
-    contact: ContactPayload,
-  ) => Promise<ContactResponse>,
-  updateContact: (
-    account: string,
-    token: string,
-    id: string,
-    contact: ContactPayload,
-  ) => Promise<ContactResponse>,
-  updateContactLists: (contactId: string) => Promise<void>,
-  activeCampaignAccount: string,
-  activeCampaignToken: string,
-  getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
-  getFieldIdByTitle: () => Promise<FieldIdByTitle>,
-  getContactFieldValues: (
-    account: string,
-    token: string,
-    contactId: string,
-  ) => Promise<FieldValuesResponse>,
 ) => {
+  const {
+    addContactToList,
+    createContact,
+    getContactFieldValues,
+    getContactIdByEmail,
+    getCustomFieldIdByTitle,
+    getListIdByName,
+    updateContact,
+  } = ActiveCampaign;
+
+  const updateContactLists = async (contactId: string) => {
+    const listIdByName = await getListIdByName(
+      activeCampaignAccount,
+      activeCampaignToken,
+    );
+
+    const listIds: string[] = [];
+
+    listNames.forEach((listName) => {
+      if (listName in listIdByName && listIdByName[listName]) {
+        listIds.push(listName);
+      }
+    });
+
+    for (const listId of listIds) {
+      await addContactToList(
+        activeCampaignAccount,
+        activeCampaignToken,
+        contactId,
+        listId,
+      );
+    }
+  };
+
+  const { app, activeCampaignAccount, activeCampaignToken } = config;
   const user = await userController.fetchById(userId);
+
   log.info(`Fetched user ${user.id}`);
 
   if (user.onboarded) {
@@ -78,7 +94,10 @@ export const syncUserActiveCampaignData = async (
       user.email,
     );
 
-    const fieldIdByTitle = await getFieldIdByTitle();
+    const fieldIdByTitle = await getCustomFieldIdByTitle(
+      activeCampaignAccount,
+      activeCampaignToken,
+    );
 
     let contactPayload: ContactPayload;
 
@@ -173,41 +192,22 @@ export const syncUserActiveCampaignData = async (
 
 export const syncActiveCampaignContactFactory =
   (
-    app: 'CRN' | 'GP2',
+    config: {
+      app: 'CRN' | 'GP2';
+      activeCampaignAccount: string;
+      activeCampaignToken: string;
+    },
+    ActiveCampaign: ActiveCampaignType,
     userController: UserController,
-    log: Logger,
-    getContactIdByEmail: (
-      account: string,
-      token: string,
-      email: string,
-    ) => Promise<string | null>,
-    createContact: (
-      account: string,
-      token: string,
-      contact: ContactPayload,
-    ) => Promise<ContactResponse>,
-    updateContact: (
-      account: string,
-      token: string,
-      id: string,
-      contact: ContactPayload,
-    ) => Promise<ContactResponse>,
-    updateContactLists: (contactId: string) => Promise<void>,
-    activeCampaignAccount: string,
-    activeCampaignToken: string,
     getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
-    getFieldIdByTitle: () => Promise<FieldIdByTitle>,
-    getContactFieldValues: (
-      account: string,
-      token: string,
-      contactId: string,
-    ) => Promise<FieldValuesResponse>,
+    listNames: string[],
+    log: Logger,
   ): EventBridgeHandler<UserEvent, UserPayload> =>
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
 
     /* istanbul ignore next */
-    if (activeCampaignToken === '') {
+    if (config.activeCampaignToken === '') {
       log.info('Active Campaign Token not defined, skipping...');
       return;
     }
@@ -216,19 +216,13 @@ export const syncActiveCampaignContactFactory =
 
     try {
       await syncUserActiveCampaignData(
-        app,
+        config,
+        ActiveCampaign,
         userController,
+        getContactPayload,
+        listNames,
         userId,
         log,
-        getContactIdByEmail,
-        createContact,
-        updateContact,
-        updateContactLists,
-        activeCampaignAccount,
-        activeCampaignToken,
-        getContactPayload,
-        getFieldIdByTitle,
-        getContactFieldValues,
       );
     } catch (e) {
       if (

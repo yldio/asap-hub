@@ -2,24 +2,21 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { TeamEvent } from '@asap-hub/model';
 import {
-  createContact,
+  ActiveCampaign,
   EventBridgeHandler,
-  getContactFieldValues,
-  getContactIdByEmail,
   Logger,
   syncUserActiveCampaignData,
-  updateContact,
 } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 
 import type { TeamPayload } from '../event-bus';
 import {
+  config,
   getContactPayload,
-  getFieldIdByTitle,
-  updateContactLists,
+  listNames,
 } from '../user/sync-active-campaign-contact';
 
-import { activeCampaignAccount, activeCampaignToken } from '../../config';
+import { activeCampaignToken } from '../../config';
 import TeamController from '../../controllers/team.controller';
 import UserController from '../../controllers/user.controller';
 import { getTeamDataProvider } from '../../dependencies/team.dependencies';
@@ -52,19 +49,13 @@ const syncActiveCampaignTeamMemberStatusHandler =
 
       for (const member of team.members) {
         await syncUserActiveCampaignData(
-          'CRN',
+          config,
+          ActiveCampaign,
           userController,
+          getContactPayload,
+          listNames,
           member.id,
           log,
-          getContactIdByEmail,
-          createContact,
-          updateContact,
-          updateContactLists,
-          activeCampaignAccount,
-          activeCampaignToken,
-          getContactPayload,
-          getFieldIdByTitle,
-          getContactFieldValues,
         );
       }
     } catch (e) {

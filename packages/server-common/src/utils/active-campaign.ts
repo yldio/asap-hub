@@ -10,16 +10,16 @@ export const getActiveCampaignHeaders = (token: string) => ({
 /**
  * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
  */
-export const addContactToList = (
+export const addContactToList = async (
   account: string,
   token: string,
   contactId: string,
   listId: string,
-) => {
+): Promise<void> => {
   const apiURL = getActiveCampaignApiURL(account);
   const headers = getActiveCampaignHeaders(token);
 
-  return Got.post(`${apiURL}/contactLists`, {
+  await Got.post(`${apiURL}/contactLists`, {
     json: {
       contactList: {
         list: listId,
@@ -129,30 +129,27 @@ type CustomFieldsResponse = {
   }[];
 };
 
-export const getCustomFieldIdByTitle = (
-  customFieldsResponse: CustomFieldsResponse,
-): FieldIdByTitle =>
-  customFieldsResponse.fields.reduce(
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-fields}
+ */
+export const getCustomFieldIdByTitle = async (
+  account: string,
+  token: string,
+): Promise<FieldIdByTitle> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  const customFieldsResponse = await Got.get(`${apiURL}/fields?limit=100`, {
+    headers,
+  }).json<CustomFieldsResponse>();
+
+  return customFieldsResponse.fields.reduce(
     (fieldIdByTitle: FieldIdByTitle, field) => ({
       ...fieldIdByTitle,
       [field.title]: field.id,
     }),
     {},
   );
-
-/**
- * @see {@link https://developers.activecampaign.com/reference/retrieve-fields}
- */
-export const getCustomFields = async (
-  account: string,
-  token: string,
-): Promise<CustomFieldsResponse> => {
-  const apiURL = getActiveCampaignApiURL(account);
-  const headers = getActiveCampaignHeaders(token);
-
-  return Got.get(`${apiURL}/fields?limit=100`, {
-    headers,
-  }).json<CustomFieldsResponse>();
 };
 
 export type ListsResponse = {
@@ -169,7 +166,10 @@ export type ListIdByName = {
 /**
  * @see {@link https://developers.activecampaign.com/reference/retrieve-all-lists}
  */
-export const getListIdByName = async (account: string, token: string) => {
+export const getListIdByName = async (
+  account: string,
+  token: string,
+): Promise<ListIdByName> => {
   const apiURL = getActiveCampaignApiURL(account);
   const headers = getActiveCampaignHeaders(token);
 
@@ -202,4 +202,49 @@ export const updateContact = async (
     json: { contact },
     headers,
   }).json();
+};
+
+export const ActiveCampaign = {
+  addContactToList,
+  createContact,
+  getContactFieldValues,
+  getContactIdByEmail,
+  getCustomFieldIdByTitle,
+  getListIdByName,
+  updateContact,
+};
+
+export type ActiveCampaignType = {
+  addContactToList: (
+    account: string,
+    token: string,
+    contactId: string,
+    listId: string,
+  ) => Promise<void>;
+  createContact: (
+    account: string,
+    token: string,
+    contact: ContactPayload,
+  ) => Promise<ContactResponse>;
+  getContactFieldValues: (
+    account: string,
+    token: string,
+    contactId: string,
+  ) => Promise<FieldValuesResponse>;
+  getContactIdByEmail: (
+    account: string,
+    token: string,
+    email: string,
+  ) => Promise<string | null>;
+  getCustomFieldIdByTitle: (
+    account: string,
+    token: string,
+  ) => Promise<FieldIdByTitle>;
+  getListIdByName: (account: string, token: string) => Promise<ListIdByName>;
+  updateContact: (
+    account: string,
+    token: string,
+    id: string,
+    contact: ContactPayload,
+  ) => Promise<ContactResponse>;
 };

@@ -2,16 +2,10 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import type { ContactPayload, FieldIdByTitle } from '@asap-hub/server-common';
 import {
-  addContactToList,
-  createContact,
-  getContactFieldValues,
-  getContactIdByEmail,
-  getCustomFieldIdByTitle,
-  getCustomFields,
-  getListIdByName,
+  ActiveCampaign,
   syncActiveCampaignContactFactory,
-  updateContact,
 } from '@asap-hub/server-common';
+
 import { activeCampaignAccount, activeCampaignToken } from '../../config';
 import UserController from '../../controllers/user.controller';
 import { AssetContentfulDataProvider } from '../../data-providers/asset.data-provider';
@@ -91,47 +85,21 @@ export const getContactPayload = (
   ],
 });
 
-const updateContactLists = async (contactId: string) => {
-  const listIdByName = await getListIdByName(
-    activeCampaignAccount,
-    activeCampaignToken,
-  );
+const listNames = ['Master List', 'GP2 Hub Email list'];
 
-  const masterListId = listIdByName['Master List']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-  const CRNEmailListId = listIdByName['GP2 Hub Email list']!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-
-  for (const listId of [masterListId, CRNEmailListId]) {
-    await addContactToList(
-      activeCampaignAccount,
-      activeCampaignToken,
-      contactId,
-      listId,
-    );
-  }
-};
-
-const getFieldIdByTitle = async () => {
-  const customFields = await getCustomFields(
-    activeCampaignAccount,
-    activeCampaignToken,
-  );
-
-  return getCustomFieldIdByTitle(customFields);
+const config = {
+  activeCampaignAccount,
+  activeCampaignToken,
+  app: 'GP2' as 'GP2' | 'CRN',
 };
 
 export const handler = sentryWrapper(
   syncActiveCampaignContactFactory(
-    'GP2',
+    config,
+    ActiveCampaign,
     new UserController(userDataProvider, assetDataProvider),
-    logger,
-    getContactIdByEmail,
-    createContact,
-    updateContact,
-    updateContactLists,
-    activeCampaignAccount,
-    activeCampaignToken,
     getContactPayload,
-    getFieldIdByTitle,
-    getContactFieldValues,
+    listNames,
+    logger,
   ),
 );

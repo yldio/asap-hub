@@ -12,7 +12,6 @@ import {
   getContactFieldValues,
   getContactIdByEmail,
   getCustomFieldIdByTitle,
-  getCustomFields,
   getListIdByName,
   updateContact,
 } from '../../src/utils/active-campaign';
@@ -194,22 +193,32 @@ describe('getContactIdByEmail', () => {
 });
 
 describe('getCustomFieldIdByTitle', () => {
-  it('returns the an object with fields title by id', () => {
-    expect(
-      getCustomFieldIdByTitle({
-        fields: [
-          { title: 'Team', id: '10' },
-          { title: 'CRN Team Role', id: '15' },
-          { title: 'ORCID', id: '16' },
-          { title: 'Nickname', id: '19' },
-          { title: 'Middlename', id: '20' },
-          { title: 'Alumnistatus', id: '12' },
-          { title: 'Country', id: '3' },
-          { title: 'Institution', id: '9' },
-          { title: 'LinkedIn', id: '28' },
-        ],
-      }),
-    ).toEqual({
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should make a successful request and return custom field id by title', async () => {
+    const mockCustomFields = {
+      fields: [
+        { title: 'Team', id: '10' },
+        { title: 'CRN Team Role', id: '15' },
+        { title: 'ORCID', id: '16' },
+        { title: 'Nickname', id: '19' },
+        { title: 'Middlename', id: '20' },
+        { title: 'Alumnistatus', id: '12' },
+        { title: 'Country', id: '3' },
+        { title: 'Institution', id: '9' },
+        { title: 'LinkedIn', id: '28' },
+      ],
+    };
+
+    nock(`https://${account}.api-us1.com`)
+      .get('/api/3/fields?limit=100')
+      .reply(201, mockCustomFields);
+
+    const result = await getCustomFieldIdByTitle(account, token);
+
+    expect(result).toEqual({
       Alumnistatus: '12',
       'CRN Team Role': '15',
       Country: '3',
@@ -221,36 +230,13 @@ describe('getCustomFieldIdByTitle', () => {
       Team: '10',
     });
   });
-});
-
-describe('getCustomFields', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('should make a successful request and return custom fields response', async () => {
-    const mockCustomFields = {
-      fields: [
-        { title: 'Team', id: '10' },
-        { title: 'ORCID', id: '16' },
-      ],
-    };
-
-    nock(`https://${account}.api-us1.com`)
-      .get('/api/3/fields?limit=100')
-      .reply(201, mockCustomFields);
-
-    const result = await getCustomFields(account, token);
-
-    expect(result).toEqual(mockCustomFields);
-  });
 
   it('should throw an error if api returns an error', async () => {
     nock(`https://${account}.api-us1.com`)
       .get('/api/3/fields?limit=100')
       .reply(500);
 
-    await expect(getCustomFields(account, token)).rejects.toThrow();
+    await expect(getCustomFieldIdByTitle(account, token)).rejects.toThrow();
   });
 });
 

@@ -13,11 +13,7 @@ import {
   getGP2UserResponse,
 } from '../../fixtures/users.fixtures';
 import { createEventBridgeEventMock } from '../../helpers/events';
-import {
-  mockGetContactIdByEmail,
-  mockCreateContact,
-  mockUpdateContact,
-} from '../../mocks/active-campaign.mock';
+import { mockActiveCampaign } from '../../mocks/active-campaign.mock';
 import { loggerMock as logger, loggerMock } from '../../mocks/logger.mock';
 
 const activeCampaignAccount = 'account';
@@ -34,11 +30,6 @@ const mockContactPayload = {
     { field: '3', value: 'South America' },
   ],
 };
-const mockFieldIdByTitle: FieldIdByTitle = {
-  Alumnistatus: '12',
-  Country: '3',
-  Network: '5',
-};
 
 const mockContactFieldValues: FieldValuesResponse = {
   fieldValues: [
@@ -54,19 +45,34 @@ describe('Sync ActiveCampaign Contact Factory', () => {
   } as unknown as jest.Mocked<UserController>;
 
   beforeEach(() => {
-    mockCreateContact.mockResolvedValue({
+    mockActiveCampaign.createContact.mockResolvedValue({
       contact: {
         id: activeCampaignId,
         cdate: date,
         udate: date,
       },
     });
-    mockUpdateContact.mockResolvedValue({
+    mockActiveCampaign.updateContact.mockResolvedValue({
       contact: {
         id: activeCampaignId,
         cdate: date,
         udate: date,
       },
+    });
+
+    mockActiveCampaign.getListIdByName.mockResolvedValue({
+      'List 1': 'id-1',
+      'List 2': 'id-2',
+    });
+
+    mockActiveCampaign.getContactFieldValues.mockResolvedValue(
+      mockContactFieldValues,
+    );
+
+    mockActiveCampaign.getCustomFieldIdByTitle.mockResolvedValue({
+      Alumnistatus: '12',
+      Country: '3',
+      Network: '5',
     });
   });
 
@@ -74,45 +80,56 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     jest.clearAllMocks();
   });
 
-  const mockUpdateContactLists = jest.fn();
+  const mockGetContactPayload = jest.fn().mockReturnValue(mockContactPayload);
 
   const syncActiveCampaignContactHandler = syncActiveCampaignContactFactory(
-    'CRN',
+    { app: 'CRN', activeCampaignAccount, activeCampaignToken },
+    mockActiveCampaign,
     userController,
+    mockGetContactPayload,
+    ['List 1', 'List 2'],
     loggerMock,
-    mockGetContactIdByEmail,
-    mockCreateContact,
-    mockUpdateContact,
-    mockUpdateContactLists,
-    activeCampaignAccount,
-    activeCampaignToken,
-    jest.fn().mockReturnValue(mockContactPayload),
-    jest.fn().mockResolvedValue(mockFieldIdByTitle),
-    jest.fn().mockResolvedValue(mockContactFieldValues),
   );
 
-  test('should create ActiveCampaign contact if user is onboarded and no contactId exists', async () => {
+  test('should create ActiveCampaign contact if user is onboarded and no contactId exists and add them to lists', async () => {
     const userId = getUserDataObject().id;
     const user = getUserResponse();
     userController.fetchById.mockResolvedValue(user);
-    mockGetContactIdByEmail.mockResolvedValue(null);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
 
     const event = getEventBridgeEventMock(userId);
 
     await syncActiveCampaignContactHandler(event);
 
     expect(userController.fetchById).toHaveBeenCalledWith(userId);
-    expect(mockGetContactIdByEmail).toHaveBeenCalledWith(
+    expect(mockActiveCampaign.getContactIdByEmail).toHaveBeenCalledWith(
       activeCampaignAccount,
       activeCampaignToken,
       user.email,
     );
-    expect(mockCreateContact).toHaveBeenCalledWith(
+    expect(mockActiveCampaign.createContact).toHaveBeenCalledWith(
       activeCampaignAccount,
       activeCampaignToken,
       mockContactPayload,
     );
-    expect(mockUpdateContactLists).toHaveBeenCalledWith(activeCampaignId);
+    expect(mockActiveCampaign.getListIdByName).toHaveBeenCalledWith(
+      activeCampaignAccount,
+      activeCampaignToken,
+    );
+    expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
+      1,
+      activeCampaignAccount,
+      activeCampaignToken,
+      activeCampaignId,
+      'List 1',
+    );
+    expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
+      2,
+      activeCampaignAccount,
+      activeCampaignToken,
+      activeCampaignId,
+      'List 2',
+    );
     expect(userController.update).toHaveBeenCalledWith(user.id, {
       activeCampaignCreatedAt: new Date(date),
       activeCampaignId,
@@ -120,33 +137,47 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     expect(logger.info).toHaveBeenCalledWith('Contact user-id-1 created');
   });
 
-  it('should update ActiveCampaign contact if user is onboarded and contactId exists', async () => {
+  it('should update ActiveCampaign contact if user is onboarded and contactId exists and add them to lists', async () => {
     const userId = getUserDataObject().id;
     const { activeCampaignId: _, ...user } = getGP2UserResponse();
 
     userController.fetchById.mockResolvedValue(user);
-    mockGetContactIdByEmail.mockResolvedValue(activeCampaignId);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(activeCampaignId);
 
     const event = getEventBridgeEventMock(userId);
 
     await syncActiveCampaignContactHandler(event);
 
     expect(userController.fetchById).toHaveBeenCalledWith(userId);
-    expect(mockGetContactIdByEmail).toHaveBeenCalledWith(
+    expect(mockActiveCampaign.getContactIdByEmail).toHaveBeenCalledWith(
       activeCampaignAccount,
       activeCampaignToken,
       user.email,
     );
-    expect(mockUpdateContact).toHaveBeenCalledWith(
+    expect(mockActiveCampaign.updateContact).toHaveBeenCalledWith(
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
       mockContactPayload,
     );
-    expect(mockUpdateContactLists).toHaveBeenCalledWith(activeCampaignId);
-    expect(userController.update).toHaveBeenCalledWith(user.id, {
+    expect(mockActiveCampaign.getListIdByName).toHaveBeenCalledWith(
+      activeCampaignAccount,
+      activeCampaignToken,
+    );
+    expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
+      1,
+      activeCampaignAccount,
+      activeCampaignToken,
       activeCampaignId,
-    });
+      'List 1',
+    );
+    expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
+      2,
+      activeCampaignAccount,
+      activeCampaignToken,
+      activeCampaignId,
+      'List 2',
+    );
     expect(logger.info).toHaveBeenCalledWith(
       'Contact with cms id user-id-1 and active campaign id 123 updated',
     );
@@ -170,31 +201,28 @@ describe('Sync ActiveCampaign Contact Factory', () => {
         const { activeCampaignId: _, ...user } = getGP2UserResponse();
 
         userController.fetchById.mockResolvedValue(user);
-        mockGetContactIdByEmail.mockResolvedValue(activeCampaignId);
+        mockActiveCampaign.getContactIdByEmail.mockResolvedValue(
+          activeCampaignId,
+        );
+        mockActiveCampaign.getContactFieldValues.mockResolvedValue({
+          fieldValues: [
+            ...mockContactFieldValues.fieldValues,
+            { field: '5', value: previousNetworkValue },
+          ],
+        });
 
         const event = getEventBridgeEventMock(userId);
 
         await syncActiveCampaignContactFactory(
-          app,
+          { app, activeCampaignAccount, activeCampaignToken },
+          mockActiveCampaign,
           userController,
+          mockGetContactPayload,
+          [],
           loggerMock,
-          mockGetContactIdByEmail,
-          mockCreateContact,
-          mockUpdateContact,
-          mockUpdateContactLists,
-          activeCampaignAccount,
-          activeCampaignToken,
-          jest.fn().mockReturnValue(mockContactPayload),
-          jest.fn().mockResolvedValue(mockFieldIdByTitle),
-          jest.fn().mockResolvedValue({
-            fieldValues: [
-              ...mockContactFieldValues.fieldValues,
-              { field: '5', value: previousNetworkValue },
-            ],
-          }),
         )(event);
 
-        expect(mockUpdateContact).toHaveBeenCalledWith(
+        expect(mockActiveCampaign.updateContact).toHaveBeenCalledWith(
           activeCampaignAccount,
           activeCampaignToken,
           activeCampaignId,

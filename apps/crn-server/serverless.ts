@@ -393,6 +393,26 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    syncActiveCampaignTeamMemberStatus: {
+      handler:
+        './src/handlers/teams/sync-active-campaign-team-member-status.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['TeamsPublished'] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
+        ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     syncUserOrcidContentful: {
       handler: './src/handlers/user/sync-orcid-handler.handler',
       events: [

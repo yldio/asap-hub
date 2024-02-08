@@ -464,7 +464,6 @@ describe('Reminders data provider', () => {
                 data: expect.objectContaining({
                   associationType: entity,
                   associationName: 'Sample Prioritization',
-                  statusChangedBy: 'Tony Stark',
                   title: 'Test Proposal 1234',
                 }),
               },

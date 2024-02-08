@@ -38,7 +38,6 @@ export interface OutputVersionPublishedReminder extends Reminder {
     outputId: OutputDataObject['id'];
     title: OutputDataObject['title'];
     documentType: OutputDataObject['documentType'];
-    statusChangedBy: string;
     publishedAt: string;
     associationType: 'project' | 'working group';
     associationName: string;

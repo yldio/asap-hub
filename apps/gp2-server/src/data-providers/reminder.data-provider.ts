@@ -204,7 +204,6 @@ const getPublishedOutputVersionRemindersFromQuery = (
 
     const { associationName, associationType } =
       getAssociationNameAndType(output);
-    const userName = getUserName(output);
 
     const outputEntityIds = (output?.relatedEntitiesCollection?.items || [])
       .filter((relatedEntityItem) => relatedEntityItem?.sys.id !== undefined)
@@ -220,7 +219,6 @@ const getPublishedOutputVersionRemindersFromQuery = (
     if (
       associationName &&
       associationType &&
-      userName &&
       ((associationType === 'project' && isInProject) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
@@ -234,7 +232,6 @@ const getPublishedOutputVersionRemindersFromQuery = (
           documentType: output.documentType,
           title: output.title,
           publishedAt: outputVersion.sys.publishedAt,
-          statusChangedBy: userName,
           associationType,
           associationName,
         },

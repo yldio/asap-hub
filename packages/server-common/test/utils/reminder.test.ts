@@ -6,6 +6,7 @@ import {
   cleanArray,
   filterUndefined,
   getUserName,
+  capitalizeFirstLetter,
 } from '../../src/utils/reminder';
 
 describe('getReferenceDates', () => {
@@ -150,5 +151,11 @@ describe('getUserName', () => {
     };
 
     expect(getUserName(researchOutput)).toEqual('John Doe');
+  });
+});
+
+describe('capitalizeFirstLetter', () => {
+  it('should capitalize the first letter', () => {
+    expect(capitalizeFirstLetter('working group')).toEqual('Working group');
   });
 });

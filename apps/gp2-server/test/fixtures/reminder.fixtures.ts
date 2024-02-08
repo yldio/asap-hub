@@ -33,7 +33,6 @@ export const getOutputVersionPublishedReminder =
         documentType: outputDataObject.documentType,
         title: outputDataObject.title,
         publishedAt: outputDataObject.addedDate,
-        statusChangedBy: 'Tony Stark',
         associationType: 'project',
         associationName: 'Sample Prioritization',
       },
@@ -191,7 +190,7 @@ export const getOutputVersionPublishedReminderResponse =
     return {
       id: 'output-version-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
       description:
-        '**Tony Stark** on **Sample Prioritization** published a new project article output version: "Test Proposal 1234".',
+        'Project **Sample Prioritization** published a new project **article** output version: "Test Proposal 1234".',
       entity: 'Output Version',
       href: '/outputs/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     };

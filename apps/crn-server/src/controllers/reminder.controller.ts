@@ -5,6 +5,7 @@ import {
   FetchRemindersOptions,
   ListReminderResponse,
 } from '@asap-hub/model';
+import { capitalizeFirstLetter } from '@asap-hub/server-common';
 import { ReminderDataProvider } from '../data-providers/types';
 import { crnMeetingMaterialsDrive } from '../config';
 
@@ -22,9 +23,6 @@ export const formattedMaterialByEventType = (
       throw new Error('Unknown Material Event');
   }
 };
-
-const capitalizeFirstLetter = (str: string) =>
-  str.slice(0, 1).toUpperCase() + str.slice(1);
 
 export default class ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}

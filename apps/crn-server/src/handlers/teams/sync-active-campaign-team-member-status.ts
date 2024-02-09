@@ -52,7 +52,6 @@ export const syncActiveCampaignTeamMemberStatusHandler =
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
 
-    /* istanbul ignore next */
     if (activeCampaignToken === '') {
       log.info('Active Campaign Token not defined, skipping...');
       return;

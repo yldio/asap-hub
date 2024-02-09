@@ -5,7 +5,7 @@ import {
   UserController,
   UserEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { FieldValuesResponse } from '../../../src/utils';
+import { CRNFieldIdByTitle, FieldValuesResponse } from '../../../src/utils';
 import {
   getUserContentfulWebhookDetail,
   getUserDataObject,
@@ -73,7 +73,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       Alumnistatus: '12',
       Country: '3',
       Network: '5',
-    });
+    } as unknown as CRNFieldIdByTitle);
   });
 
   afterEach(() => {

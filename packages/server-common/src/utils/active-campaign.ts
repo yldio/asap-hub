@@ -1,6 +1,24 @@
 import { UserResponse, gp2 } from '@asap-hub/model';
 import Got from 'got';
 
+export type ContactPayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  fieldValues: {
+    field: string;
+    value: string;
+  }[];
+};
+
+export type ContactResponse = {
+  contact: {
+    id: string;
+    cdate: string;
+    udate: string;
+  };
+};
+
 export type CRNFields =
   | 'Lab'
   | 'ORCID'
@@ -82,24 +100,6 @@ export const addContactToList = async (
     },
     headers,
   }).json();
-};
-
-export type ContactPayload = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  fieldValues: {
-    field: string;
-    value: string;
-  }[];
-};
-
-export type ContactResponse = {
-  contact: {
-    id: string;
-    cdate: string;
-    udate: string;
-  };
 };
 
 /**

@@ -5,7 +5,7 @@ import {
   UserController,
   UserEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { FieldIdByTitle, FieldValuesResponse } from '../../../src/utils';
+import { FieldValuesResponse } from '../../../src/utils';
 import {
   getUserContentfulWebhookDetail,
   getUserDataObject,

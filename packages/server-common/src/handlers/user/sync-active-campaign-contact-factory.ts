@@ -52,6 +52,8 @@ export const syncUserActiveCampaignData = async (
     updateContact,
   } = ActiveCampaign;
 
+  const { app, activeCampaignAccount, activeCampaignToken } = config;
+
   const updateContactLists = async (contactId: string) => {
     const listIdByName = await getListIdByName(
       activeCampaignAccount,
@@ -66,17 +68,18 @@ export const syncUserActiveCampaignData = async (
       }
     });
 
-    for (const listId of listIds) {
-      await addContactToList(
-        activeCampaignAccount,
-        activeCampaignToken,
-        contactId,
-        listId,
-      );
-    }
+    await Promise.all(
+      listIds.map(async (listId) => {
+        await addContactToList(
+          activeCampaignAccount,
+          activeCampaignToken,
+          contactId,
+          listId,
+        );
+      }),
+    );
   };
 
-  const { app, activeCampaignAccount, activeCampaignToken } = config;
   const user = await userController.fetchById(userId);
 
   log.info(`Fetched user ${user.id}`);

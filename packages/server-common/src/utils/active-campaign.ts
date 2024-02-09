@@ -173,9 +173,7 @@ export const getContactIdByEmail = async (
   return null;
 };
 
-export type FieldIdByTitle = {
-  [title: string]: string;
-};
+export type FieldIdByTitle = CRNFieldIdByTitle | GP2FieldIdByTitle;
 
 type CustomFieldsResponse = {
   fields: {
@@ -203,7 +201,7 @@ export const getCustomFieldIdByTitle = async (
       ...fieldIdByTitle,
       [field.title]: field.id,
     }),
-    {},
+    {} as FieldIdByTitle,
   );
 };
 

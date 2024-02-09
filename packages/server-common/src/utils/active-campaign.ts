@@ -1,3 +1,4 @@
+import { UserResponse, gp2 } from '@asap-hub/model';
 import Got from 'got';
 
 export const getActiveCampaignApiURL = (account: string) =>
@@ -67,12 +68,13 @@ export const createContact = async (
 };
 
 export type FieldValuesResponse = {
-  fieldValues: {
-    field: string;
-    value: string;
-  }[];
+  fieldValues: FieldValues;
 };
 
+export type FieldValues = {
+  field: string;
+  value: string;
+}[];
 /**
  * @see {@link https://developers.activecampaign.com/reference/retrieve-contact-field-values}
  */
@@ -239,7 +241,7 @@ export type ActiveCampaignType = {
   getCustomFieldIdByTitle: (
     account: string,
     token: string,
-  ) => Promise<FieldIdByTitle>;
+  ) => Promise<CRNFieldIdByTitle | FieldIdByTitle>;
   getListIdByName: (account: string, token: string) => Promise<ListIdByName>;
   updateContact: (
     account: string,
@@ -248,3 +250,55 @@ export type ActiveCampaignType = {
     contact: ContactPayload,
   ) => Promise<ContactResponse>;
 };
+
+export type CRNFields =
+  | 'Lab'
+  | 'ORCID'
+  | 'Nickname'
+  | 'Middlename'
+  | 'Alumnistatus'
+  | 'Country'
+  | 'Institution'
+  | 'Working Group'
+  | 'Interest Group'
+  | 'LinkedIn'
+  | 'Network'
+  | 'CRN Team 1'
+  | 'CRN Team Role 1'
+  | 'CRN Team Status 1'
+  | 'CRN Team 2'
+  | 'CRN Team Role 2'
+  | 'CRN Team Status 2'
+  | 'CRN Team 3'
+  | 'CRN Team Role 3'
+  | 'CRN Team Status 3';
+
+export type CRNFieldIdByTitle = Record<CRNFields, string>;
+
+export type GP2Fields =
+  | 'ORCID'
+  | 'Nickname'
+  | 'Middlename'
+  | 'Country'
+  | 'Region'
+  | 'Department'
+  | 'Institution'
+  | 'GP2 Hub Role'
+  | 'GP2 Working Group'
+  | 'Project'
+  | 'LinkedIn'
+  | 'Network';
+
+export type GP2FieldIdByTitle = Record<GP2Fields, string>;
+
+export type GetContactPayloadCRN = (
+  fieldIdByTitle: CRNFieldIdByTitle,
+  user: UserResponse,
+) => ContactPayload;
+
+export type GetContactPayloadGP2 = (
+  fieldIdByTitle: GP2FieldIdByTitle,
+  user: gp2.UserResponse,
+) => ContactPayload;
+
+export type GetContactPayload = GetContactPayloadCRN | GetContactPayloadGP2;

@@ -1,3 +1,4 @@
+import { CRNFieldIdByTitle } from '@asap-hub/server-common';
 import { getContactPayload } from '../../../src/handlers/user/sync-active-campaign-contact';
 import { getUserResponse } from '../../fixtures/users.fixtures';
 
@@ -25,7 +26,7 @@ const fieldIdByTitle = {
 };
 
 describe('getContactPayload', () => {
-  it('returns the contact payload', () => {
+  it('returns the contact payload when user has more than one team, working group and interest group', () => {
     expect(
       getContactPayload(fieldIdByTitle, {
         ...getUserResponse(),
@@ -84,15 +85,6 @@ describe('getContactPayload', () => {
       lastName: 'Hardy',
       email: 'H@rdy.io',
       fieldValues: [
-        { field: '12', value: 'A' },
-        { field: '13', value: 'ASAP Staff' },
-        { field: '14', value: 'Inactive' },
-        { field: '15', value: 'B' },
-        { field: '16', value: 'Collaborating PI' },
-        { field: '17', value: 'Active' },
-        { field: '18', value: 'C' },
-        { field: '19', value: 'Key Personnel' },
-        { field: '20', value: 'Active' },
         { field: '2', value: 'Brighton, Liverpool' },
         { field: '3', value: '123-456-789' },
         { field: '4', value: 'Iron Man' },
@@ -107,7 +99,92 @@ describe('getContactPayload', () => {
         },
         { field: '11', value: '' },
         { field: '1', value: '||ASAP CRN||' },
+        { field: '12', value: 'A' },
+        { field: '13', value: 'ASAP Staff' },
+        { field: '14', value: 'Inactive' },
+        { field: '15', value: 'B' },
+        { field: '16', value: 'Collaborating PI' },
+        { field: '17', value: 'Active' },
+        { field: '18', value: 'C' },
+        { field: '19', value: 'Key Personnel' },
+        { field: '20', value: 'Active' },
       ],
     });
+  });
+
+  it('returns the contact payload when user has one or none team, working group and interest group', () => {
+    expect(
+      getContactPayload(fieldIdByTitle, {
+        ...getUserResponse(),
+        teams: [
+          {
+            id: '1',
+            displayName: 'A',
+            role: 'ASAP Staff',
+            teamInactiveSince: '2024-04-16',
+          },
+        ],
+        workingGroups: [],
+        interestGroups: [
+          {
+            id: 'IG-1',
+            active: true,
+            name: 'Interest Group I',
+          },
+        ],
+      }),
+    ).toEqual({
+      firstName: 'Tom',
+      lastName: 'Hardy',
+      email: 'H@rdy.io',
+      fieldValues: [
+        { field: '2', value: 'Brighton, Liverpool' },
+        { field: '3', value: '123-456-789' },
+        { field: '4', value: 'Iron Man' },
+        { field: '5', value: 'Edward' },
+        { field: '6', value: 'Alumni' },
+        { field: '7', value: 'United Kingdom' },
+        { field: '8', value: 'some institution' },
+        { field: '9', value: '' },
+        { field: '10', value: 'Interest Group I' },
+        { field: '11', value: '' },
+        { field: '1', value: '||ASAP CRN||' },
+        { field: '12', value: 'A' },
+        { field: '13', value: 'ASAP Staff' },
+        { field: '14', value: 'Inactive' },
+        { field: '15', value: '' },
+        { field: '16', value: '' },
+        { field: '17', value: '' },
+        { field: '18', value: '' },
+        { field: '19', value: '' },
+        { field: '20', value: '' },
+      ],
+    });
+  });
+
+  it('throws an error when fields are missing from fieldIdByTitle', () => {
+    const fieldIdByTitle = {
+      Network: '1',
+      Lab: '2',
+      ORCID: '3',
+      Nickname: '4',
+      Middlename: '5',
+      Alumnistatus: '6',
+      Institution: '8',
+      'Working Group': '9',
+      'Interest Group': '10',
+      LinkedIn: '11',
+      'CRN Team 1': '12',
+      'CRN Team Role 1': '13',
+      'CRN Team Status 1': '14',
+    };
+    expect(() =>
+      getContactPayload(
+        fieldIdByTitle as unknown as CRNFieldIdByTitle,
+        getUserResponse(),
+      ),
+    ).toThrow(
+      'The following fields Country, CRN Team 2, CRN Team Role 2, CRN Team Status 2, CRN Team 3, CRN Team Role 3, CRN Team Status 3 are missing from the ActiveCampaign environment',
+    );
   });
 });

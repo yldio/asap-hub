@@ -1,10 +1,12 @@
-/* istanbul ignore file */
 import { NotFoundError } from '@asap-hub/errors';
 import { TeamEvent } from '@asap-hub/model';
 import {
   ActiveCampaign,
+  ActiveCampaignType,
   EventBridgeHandler,
   Logger,
+  GetContactPayloadCRN,
+  GetContactPayloadGP2,
   syncUserActiveCampaignData,
 } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -28,11 +30,24 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-const syncActiveCampaignTeamMemberStatusHandler =
+export const syncActiveCampaignTeamMemberStatusHandler =
   (
     teamController: TeamController,
     userController: UserController,
     log: Logger,
+    syncTeamMemberData: (
+      config: {
+        app: 'CRN' | 'GP2';
+        activeCampaignAccount: string;
+        activeCampaignToken: string;
+      },
+      ActiveCampaign: ActiveCampaignType,
+      userController: UserController,
+      getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
+      listNames: string[],
+      userId: string,
+      log: Logger,
+    ) => Promise<void>,
   ): EventBridgeHandler<TeamEvent, TeamPayload> =>
   async (event) => {
     log.info(`Event ${event['detail-type']}`);
@@ -48,7 +63,7 @@ const syncActiveCampaignTeamMemberStatusHandler =
       log.info(`Fetched team ${team.id}`);
 
       for (const member of team.members) {
-        await syncUserActiveCampaignData(
+        await syncTeamMemberData(
           config,
           ActiveCampaign,
           userController,
@@ -88,5 +103,6 @@ export const handler = sentryWrapper(
       researchTagDataProvider,
     ),
     logger,
+    syncUserActiveCampaignData,
   ),
 );

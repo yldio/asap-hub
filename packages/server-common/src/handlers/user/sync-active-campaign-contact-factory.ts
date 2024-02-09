@@ -13,19 +13,13 @@ import {
   EventBridgeHandler,
   Logger,
   ContactPayload,
-  FieldIdByTitle,
+  GetContactPayloadCRN,
+  GetContactPayloadGP2,
+  GetContactPayload,
   ActiveCampaignType,
+  CRNFieldIdByTitle,
+  GP2FieldIdByTitle,
 } from '../../utils';
-
-type GetContactPayloadCRN = (
-  fieldIdByTitle: FieldIdByTitle,
-  user: UserResponse,
-) => ContactPayload;
-
-type GetContactPayloadGP2 = (
-  fieldIdByTitle: FieldIdByTitle,
-  user: gp2.UserResponse,
-) => ContactPayload;
 
 export interface UserController {
   fetchById(id: string): Promise<gp2.UserResponse | UserResponse>;
@@ -43,7 +37,7 @@ export const syncUserActiveCampaignData = async (
   },
   ActiveCampaign: ActiveCampaignType,
   userController: UserController,
-  getContactPayload: GetContactPayloadCRN | GetContactPayloadGP2,
+  getContactPayload: GetContactPayload,
   listNames: string[],
   userId: string,
   log: Logger,
@@ -103,12 +97,12 @@ export const syncUserActiveCampaignData = async (
 
     if ('teams' in user) {
       contactPayload = (getContactPayload as GetContactPayloadCRN)(
-        fieldIdByTitle,
+        fieldIdByTitle as CRNFieldIdByTitle,
         user,
       );
     } else {
       contactPayload = (getContactPayload as GetContactPayloadGP2)(
-        fieldIdByTitle,
+        fieldIdByTitle as GP2FieldIdByTitle,
         user,
       );
     }

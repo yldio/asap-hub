@@ -1,6 +1,10 @@
-/* istanbul ignore file */
 import { UserResponse } from '@asap-hub/model';
-import type { ContactPayload, FieldIdByTitle } from '@asap-hub/server-common';
+import type {
+  ContactPayload,
+  CRNFieldIdByTitle,
+  CRNFields,
+  FieldValues,
+} from '@asap-hub/server-common';
 import {
   ActiveCampaign,
   syncActiveCampaignContactFactory,
@@ -19,81 +23,77 @@ const userDataProvider = getUserDataProvider();
 const assetDataProvider = getAssetDataProvider();
 const researchTagDataProvider = getResearchTagsDataProvider();
 
+type CustomFieldsData = Record<CRNFields, string>;
+
 export const getContactPayload = (
-  fieldIdByTitle: FieldIdByTitle,
+  fieldIdByTitle: CRNFieldIdByTitle,
   user: UserResponse,
 ): ContactPayload => {
-  const teams = user.teams.length
-    ? user.teams.flatMap((team, index) => [
-        {
-          field: fieldIdByTitle[`CRN Team ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          value: team.displayName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        },
-        {
-          field: fieldIdByTitle[`CRN Team Role ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          value: team.role!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        },
-        {
-          field: fieldIdByTitle[`CRN Team Status ${index + 1}`]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-          value:
-            team.inactiveSinceDate || team.teamInactiveSince
-              ? 'Inactive'
-              : 'Active',
-        },
-      ])
-    : [];
+  const getTeamDisplayName = (index: number): string =>
+    user.teams[index]?.displayName ?? '';
+  const getTeamRole = (index: number): string => user.teams[index]?.role ?? '';
+  const getTeamStatus = (index: number): string =>
+    user.teams[index]
+      ? user.teams[index]?.inactiveSinceDate ||
+        user.teams[index]?.teamInactiveSince
+        ? 'Inactive'
+        : 'Active'
+      : '';
+
+  const customFieldsData: CustomFieldsData = {
+    Lab: user.labs.map((item) => item.name).join(', '),
+    ORCID: user.orcid || '',
+    Nickname: user.nickname || '',
+    Middlename: user.middleName || '',
+    Alumnistatus: user.alumniSinceDate ? 'Alumni' : 'Non Alumni',
+    Country: user.country || '',
+    Institution: user.institution || '',
+    'Working Group': user.workingGroups.map((item) => item.name).join(', '),
+    'Interest Group': user.interestGroups.map((item) => item.name).join(', '),
+    LinkedIn: user.social?.linkedIn || '',
+    Network: '||ASAP CRN||',
+    'CRN Team 1': getTeamDisplayName(0),
+    'CRN Team Role 1': getTeamRole(0),
+    'CRN Team Status 1': getTeamStatus(0),
+    'CRN Team 2': getTeamDisplayName(1),
+    'CRN Team Role 2': getTeamRole(1),
+    'CRN Team Status 2': getTeamStatus(1),
+    'CRN Team 3': getTeamDisplayName(2),
+    'CRN Team Role 3': getTeamRole(2),
+    'CRN Team Status 3': getTeamStatus(2),
+  };
+
+  const fieldValues: FieldValues = [];
+  const missingFields: string[] = [];
+  Object.entries(customFieldsData).forEach(([fieldName, fieldValue]) => {
+    const typedFieldName: CRNFields = fieldName as CRNFields;
+
+    if (
+      typedFieldName in fieldIdByTitle &&
+      typeof fieldIdByTitle[typedFieldName] === 'string'
+    ) {
+      fieldValues.push({
+        field: fieldIdByTitle[typedFieldName],
+        value: fieldValue,
+      });
+    } else {
+      missingFields.push(fieldName);
+    }
+  });
+
+  if (missingFields.length > 0) {
+    throw new Error(
+      `The following fields ${missingFields.join(
+        ', ',
+      )} are missing from the ActiveCampaign environment`,
+    );
+  }
 
   return {
-    firstName: user.firstName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    lastName: user.lastName!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    email: user.email!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    fieldValues: [
-      ...teams,
-      {
-        field: fieldIdByTitle.Lab!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.labs.map((item) => item.name).join(', '),
-      },
-      {
-        field: fieldIdByTitle.ORCID!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.orcid || '',
-      },
-      {
-        field: fieldIdByTitle.Nickname!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.nickname || '',
-      },
-      {
-        field: fieldIdByTitle.Middlename!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.middleName || '',
-      },
-      {
-        field: fieldIdByTitle.Alumnistatus!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.alumniSinceDate ? 'Alumni' : 'Non Alumni',
-      },
-      {
-        field: fieldIdByTitle.Country!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.country || '',
-      },
-      {
-        field: fieldIdByTitle.Institution!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.institution || '',
-      },
-      {
-        field: fieldIdByTitle['Working Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.workingGroups.map((item) => item.name).join(', '),
-      },
-      {
-        field: fieldIdByTitle['Interest Group']!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.interestGroups.map((item) => item.name).join(', '),
-      },
-      {
-        field: fieldIdByTitle.LinkedIn!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: user.social?.linkedIn || '',
-      },
-      {
-        field: fieldIdByTitle.Network!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-        value: '||ASAP CRN||',
-      },
-    ],
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    fieldValues,
   };
 };
 

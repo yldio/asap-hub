@@ -55,33 +55,33 @@ export const syncUserActiveCampaignData = async (
   const { app, activeCampaignAccount, activeCampaignToken } = config;
 
   const updateContactLists = async (contactId: string) => {
-    /* eslint-disable no-restricted-syntax */
-
     const listIdByName = await getListIdByName(
       activeCampaignAccount,
       activeCampaignToken,
     );
-    log.info(`listIdByName: ${JSON.stringify(listIdByName, null, 2)}`);
 
     const listIds: string[] = [];
-    log.info(`listNames: ${listNames.join(', ')}`);
 
     listNames.forEach((listName) => {
-      if (listName in listIdByName && listIdByName[listName]) {
-        listIds.push(listName);
+      if (
+        listName in listIdByName &&
+        listIdByName[listName] &&
+        typeof listIdByName[listName] === 'string'
+      ) {
+        listIds.push(listIdByName[listName] as string);
       }
     });
 
-    log.info(`ListIds: ${listIds.join(', ')}`);
-    for (const listId of listIds) {
-      await addContactToList(
-        activeCampaignAccount,
-        activeCampaignToken,
-        contactId,
-        listId,
-      );
-    }
-    /* eslint-enable no-restricted-syntax */
+    await Promise.all(
+      listIds.map(async (listId) => {
+        await addContactToList(
+          activeCampaignAccount,
+          activeCampaignToken,
+          contactId,
+          listId,
+        );
+      }),
+    );
   };
 
   const user = await userController.fetchById(userId);

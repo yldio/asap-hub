@@ -61,8 +61,8 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     });
 
     mockActiveCampaign.getListIdByName.mockResolvedValue({
-      'List 1': 'id-1',
-      'List 2': 'id-2',
+      'List 1': 'list-id-1',
+      'List 2': 'list-id-2',
     });
 
     mockActiveCampaign.getContactFieldValues.mockResolvedValue(
@@ -121,14 +121,14 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'List 1',
+      'list-id-1',
     );
     expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
       2,
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'List 2',
+      'list-id-2',
     );
     expect(userController.update).toHaveBeenCalledWith(user.id, {
       activeCampaignCreatedAt: new Date(date),
@@ -169,14 +169,14 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'List 1',
+      'list-id-1',
     );
     expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
       2,
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'List 2',
+      'list-id-2',
     );
     expect(logger.info).toHaveBeenCalledWith(
       'Contact with cms id user-id-1 and active campaign id 123 updated',

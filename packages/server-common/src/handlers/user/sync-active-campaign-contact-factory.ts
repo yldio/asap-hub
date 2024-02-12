@@ -68,16 +68,14 @@ export const syncUserActiveCampaignData = async (
       }
     });
 
-    await Promise.all(
-      listIds.map(async (listId) => {
-        await addContactToList(
-          activeCampaignAccount,
-          activeCampaignToken,
-          contactId,
-          listId,
-        );
-      }),
-    );
+    for (const listId of listIds) {
+      await addContactToList(
+        activeCampaignAccount,
+        activeCampaignToken,
+        contactId,
+        listId,
+      );
+    }
   };
 
   const user = await userController.fetchById(userId);

@@ -879,6 +879,15 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
     return [];
   }
 
+  items.sort((reminderA, reminderB) => {
+    const aStartDate = DateTime.fromISO(reminderA.sys.publishedAt);
+    const bStartDate = DateTime.fromISO(reminderB.sys.publishedAt);
+
+    return bStartDate.diff(aStartDate).as('seconds');
+  });
+
+  const seenOutputList: string[] = [];
+
   const userTeamIds = getUserTeamIds(user);
   const userWorkingGroupIds = getWorkingGroupIds(user);
 
@@ -895,7 +904,8 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
         !researchOutput.documentType ||
         !isResearchOutputDocumentType(researchOutput.documentType) ||
         !isPublished ||
-        !inLast24Hours(researchOutputVersion.sys.publishedAt, zone)
+        !inLast24Hours(researchOutputVersion.sys.publishedAt, zone) ||
+        seenOutputList.includes(researchOutput.sys.id)
       ) {
         return reminders;
       }
@@ -925,6 +935,7 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
         ((associationType === 'team' && isInTeam) ||
           (associationType === 'working group' && isInWorkingGroup))
       ) {
+        seenOutputList.push(researchOutput.sys.id);
         reminders.push({
           id: `research-output-version-published-${researchOutputVersion.sys.id}`,
           entity: 'Research Output Version',

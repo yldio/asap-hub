@@ -1,5 +1,6 @@
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { FetchRemindersOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { capitalizeFirstLetter } from '@asap-hub/server-common';
 import { ReminderDataProvider } from '../data-providers/types';
 
 export default class ReminderController {
@@ -18,7 +19,16 @@ export default class ReminderController {
         href: gp2Routing.outputs({}).output({
           outputId: reminder.data.outputId,
         }).$,
-        description: `**${reminder.data.statusChangedBy}** in ${reminder.data.associationType} **${reminder.data.associationName}** published a **${reminder.data.documentType}** output: "${reminder.data.title}".`,
+        description:
+          reminder.entity === 'Output'
+            ? `**${reminder.data.statusChangedBy}** in ${reminder.data.associationType} **${reminder.data.associationName}** published a **${reminder.data.documentType}** output: "${reminder.data.title}".`
+            : `${capitalizeFirstLetter(reminder.data.associationType)} **${
+                reminder.data.associationName
+              }** published a new ${
+                reminder.data.associationType
+              } **${reminder.data.documentType.toLowerCase()}** output version: "${
+                reminder.data.title
+              }".`,
       })),
     };
   }

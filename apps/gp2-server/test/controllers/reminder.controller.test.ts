@@ -2,7 +2,9 @@ import { FetchRemindersOptions } from '@asap-hub/model';
 import ReminderController from '../../src/controllers/reminder.controller';
 import {
   getOutputPublishedReminder,
-  getReminderResponse,
+  getOutputPublishedReminderResponse,
+  getOutputVersionPublishedReminder,
+  getOutputVersionPublishedReminderResponse,
 } from '../fixtures/reminder.fixtures';
 import { reminderDataProviderMock } from '../mocks/reminder.data-provider.mock';
 
@@ -36,7 +38,7 @@ describe('Reminder Controller', () => {
       expect(reminderDataProviderMock.fetch).toHaveBeenCalledWith(options);
     });
 
-    test('Should return the reminders', async () => {
+    test('Should return the correct description for published output reminders', async () => {
       reminderDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [getOutputPublishedReminder()],
@@ -44,7 +46,24 @@ describe('Reminder Controller', () => {
 
       const result = await reminderController.fetch(options);
 
-      expect(result).toEqual({ items: [getReminderResponse()], total: 1 });
+      expect(result).toEqual({
+        items: [getOutputPublishedReminderResponse()],
+        total: 1,
+      });
+    });
+
+    test('Should return the correct description for published output version reminders', async () => {
+      reminderDataProviderMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [getOutputVersionPublishedReminder()],
+      });
+
+      const result = await reminderController.fetch(options);
+
+      expect(result).toEqual({
+        items: [getOutputVersionPublishedReminderResponse()],
+        total: 1,
+      });
     });
   });
 });

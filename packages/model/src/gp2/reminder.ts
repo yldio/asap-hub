@@ -1,7 +1,7 @@
 import { ListResponse } from '../common';
 import { OutputDataObject } from './output';
 
-type ReminderEntity = 'Output';
+type ReminderEntity = 'Output' | 'Output Version';
 
 type OutputReminderType = 'Published';
 
@@ -31,7 +31,22 @@ export interface OutputPublishedReminder extends ResearchOutputReminder {
   };
 }
 
-export type ReminderDataObject = OutputPublishedReminder;
+export interface OutputVersionPublishedReminder extends Reminder {
+  entity: 'Output Version';
+  type: 'Published';
+  data: {
+    outputId: OutputDataObject['id'];
+    title: OutputDataObject['title'];
+    documentType: OutputDataObject['documentType'];
+    publishedAt: string;
+    associationType: 'project' | 'working group';
+    associationName: string;
+  };
+}
+
+export type ReminderDataObject =
+  | OutputPublishedReminder
+  | OutputVersionPublishedReminder;
 
 export type ListReminderDataObject = ListResponse<ReminderDataObject>;
 

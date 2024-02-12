@@ -104,10 +104,7 @@ const EventPage = <
       {relatedResearch && relatedResearch?.length > 0 && (
         <RelatedResearchCard
           title={titleOutputs}
-          description={
-            descriptionOutput ||
-            'Find out all shared research outputs that are related to this event.'
-          }
+          description={descriptionOutput || 'Find all related research.'}
           relatedResearch={relatedResearch}
           getIconForDocumentType={getIconForDocumentType}
           getSourceIcon={getSourceIcon}

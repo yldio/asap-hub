@@ -21,6 +21,7 @@ it('truncates the related events card', () => {
       }))}
     />,
   );
+  expect(screen.getByText(/Find all related Events/i)).toBeInTheDocument();
   expect(screen.getAllByText(/Example/i)).toHaveLength(5);
   rerender(
     <RelatedEventsCard

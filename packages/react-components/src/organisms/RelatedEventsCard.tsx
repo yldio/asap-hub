@@ -101,7 +101,7 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
         <Headline2 noMargin>Related {hub} Hub Events</Headline2>
         <div css={descriptionStyles}>
           <Paragraph noMargin accent="lead">
-            Find all events related to this output.
+            Find all related Events.
           </Paragraph>
         </div>
         {relatedEvents.length === 0 ? (

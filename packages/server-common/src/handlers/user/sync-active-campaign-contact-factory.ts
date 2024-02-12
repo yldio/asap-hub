@@ -61,8 +61,10 @@ export const syncUserActiveCampaignData = async (
       activeCampaignAccount,
       activeCampaignToken,
     );
+    log.info(`listIdByName: ${JSON.stringify(listIdByName, null, 2)}`);
 
     const listIds: string[] = [];
+    log.info(`listNames: ${listNames.join(', ')}`);
 
     listNames.forEach((listName) => {
       if (listName in listIdByName && listIdByName[listName]) {
@@ -70,6 +72,7 @@ export const syncUserActiveCampaignData = async (
       }
     });
 
+    log.info(`ListIds: ${listIds.join(', ')}`);
     for (const listId of listIds) {
       await addContactToList(
         activeCampaignAccount,

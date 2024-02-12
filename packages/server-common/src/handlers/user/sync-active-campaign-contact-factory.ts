@@ -55,6 +55,8 @@ export const syncUserActiveCampaignData = async (
   const { app, activeCampaignAccount, activeCampaignToken } = config;
 
   const updateContactLists = async (contactId: string) => {
+    /* eslint-disable no-restricted-syntax */
+
     const listIdByName = await getListIdByName(
       activeCampaignAccount,
       activeCampaignToken,
@@ -76,6 +78,7 @@ export const syncUserActiveCampaignData = async (
         listId,
       );
     }
+    /* eslint-enable no-restricted-syntax */
   };
 
   const user = await userController.fetchById(userId);

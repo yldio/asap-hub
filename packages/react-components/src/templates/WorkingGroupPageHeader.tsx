@@ -6,7 +6,14 @@ import { network } from '@asap-hub/routing';
 import { useContext } from 'react';
 
 import { mobileScreen, perRem, rem } from '../pixels';
-import { Link, Display, StateTag, TabLink, Caption, CopyButton } from '../atoms';
+import {
+  Link,
+  Display,
+  StateTag,
+  TabLink,
+  Caption,
+  CopyButton,
+} from '../atoms';
 import { paper, pine, steel } from '../colors';
 import { networkPageLayoutPaddingStyle } from '../layout';
 import {
@@ -181,22 +188,24 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         />
         {pointOfContact && !canShareResearchOutput && !complete && (
           <div css={pointOfContactStyles}>
-            <div css={{display: 'flex', flexGrow: 1}}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.user.email)}`}
-              noMargin
-            >
-              Contact PM
-            </Link>
+            <div css={{ display: 'flex', flexGrow: 1 }}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(pointOfContact.user.email)}`}
+                noMargin
+              >
+                Contact PM
+              </Link>
             </div>
             <CopyButton
               hoverTooltipText="Copy Email"
               clickTooltipText="Email Copied"
               onClick={() =>
-                navigator.clipboard.writeText(createMailTo(pointOfContact.user.email))
+                navigator.clipboard.writeText(
+                  createMailTo(pointOfContact.user.email),
+                )
               }
             />
           </div>

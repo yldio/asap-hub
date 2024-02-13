@@ -56,7 +56,7 @@ const contactStyles = css({
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     alignSelf: 'center',
   },
-})
+});
 
 const buttonStyles = css({
   display: 'flex',
@@ -64,7 +64,7 @@ const buttonStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     flexGrow: 'unset',
   },
-})
+});
 
 const getInTouchStyles = css({
   display: 'flex',
@@ -72,7 +72,7 @@ const getInTouchStyles = css({
   justifyContent: 'space-between',
   gap: `${24 / perRem}em`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
 });
 
@@ -106,40 +106,42 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <TagList tags={tags} />
       </Card>
     )}
-    {!complete && (<Card accent="green">
-      <Headline3>
-        <span css={{ color: charcoal.rgb }}>
-          Would you like to collaborate with this Working Group?
-        </span>
-      </Headline3>
-      <Paragraph accent="lead">
-        We are always looking for new people to collaborate with our working
-        group to find the best solutions for our goals.
-      </Paragraph>
-      {pointOfContact && (
-        <div css={contactStyles}>
-          <div css={buttonStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.user.email)}`}
-              noMargin
-            >
-              Contact PM
-            </Link>
+    {!complete && (
+      <Card accent="green">
+        <Headline3>
+          <span css={{ color: charcoal.rgb }}>
+            Would you like to collaborate with this Working Group?
+          </span>
+        </Headline3>
+        <Paragraph accent="lead">
+          We are always looking for new people to collaborate with our working
+          group to find the best solutions for our goals.
+        </Paragraph>
+        {pointOfContact && (
+          <div css={contactStyles}>
+            <div css={buttonStyles}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(pointOfContact.user.email)}`}
+                noMargin
+              >
+                Contact PM
+              </Link>
+            </div>
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() =>
+                navigator.clipboard.writeText(pointOfContact.user.email)
+              }
+              overrideStyles={copyButtonStyles}
+            />
           </div>
-          <CopyButton
-            hoverTooltipText="Copy Email"
-            clickTooltipText="Email Copied"
-            onClick={() =>
-              navigator.clipboard.writeText(pointOfContact.user.email)
-            }
-            overrideStyles={copyButtonStyles}
-          />
-        </div>
-      )}
-    </Card>)}
+        )}
+      </Card>
+    )}
     <section id={membersListElementId}>
       <WorkingGroupMembers
         leaders={leaders}
@@ -149,22 +151,22 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
     </section>
     <Card accent="green">
       <div css={getInTouchStyles}>
-        <div css={{display: 'flex', flexDirection: 'column'}}>
-        <Subtitle noMargin>Have additional questions?</Subtitle>
-        <div>The project manager is here to help.</div>
+        <div css={{ display: 'flex', flexDirection: 'column' }}>
+          <Subtitle noMargin>Have additional questions?</Subtitle>
+          <div>The project manager is here to help.</div>
         </div>
         {pointOfContact && (
           <div css={contactStyles}>
-            <div css={{display: 'flex', flexGrow: 1}}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.user.email)}`}
-              noMargin
-            >
-              Contact PM
-            </Link>
+            <div css={{ display: 'flex', flexGrow: 1 }}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(pointOfContact.user.email)}`}
+                noMargin
+              >
+                Contact PM
+              </Link>
             </div>
             <CopyButton
               hoverTooltipText="Copy Email"

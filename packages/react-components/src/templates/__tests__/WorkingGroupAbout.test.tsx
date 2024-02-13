@@ -44,16 +44,15 @@ it('renders a list of deliverables', () => {
 
 it('renders collaboration invite if not completed', () => {
   const { getByText, queryByText, rerender } = render(
-    <WorkingGroupAbout
-      {...baseProps}
-    />,
+    <WorkingGroupAbout {...baseProps} />,
   );
-  expect(getByText('Would you like to collaborate with this Working Group?')).toBeVisible();
-  rerender(<WorkingGroupAbout
-    {...baseProps}
-    complete={true}
-  />,);
-  expect(queryByText('Would you like to collaborate with this Working Group?')).not.toBeInTheDocument();
+  expect(
+    getByText('Would you like to collaborate with this Working Group?'),
+  ).toBeVisible();
+  rerender(<WorkingGroupAbout {...baseProps} complete={true} />);
+  expect(
+    queryByText('Would you like to collaborate with this Working Group?'),
+  ).not.toBeInTheDocument();
 });
 
 it('renders CTA when pointOfContact is provided', () => {

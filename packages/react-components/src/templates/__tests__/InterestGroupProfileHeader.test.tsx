@@ -35,17 +35,18 @@ it('renders the tag for inactive groups', () => {
 
 it('renders group google drive if present', () => {
   const { queryByRole, rerender } = render(
+    <InterestGroupProfileHeader {...props} />,
+  );
+  expect(
+    queryByRole('link', { name: /access drive/i }),
+  ).not.toBeInTheDocument();
+  rerender(
     <InterestGroupProfileHeader
       {...props}
-    />
+      tools={{ googleDrive: 'http://drive.google.com/123' }}
+    />,
   );
-  expect(queryByRole('link', { name: /access drive/i})).not.toBeInTheDocument();
-  rerender(<InterestGroupProfileHeader
-    {...props}
-    tools={{ googleDrive: 'http://drive.google.com/123' }}
-  />);
-  expect(queryByRole('link', { name: /access drive/i})).toBeVisible();
-
+  expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
 });
 
 it('copy button adds emails to clipboard', async () => {

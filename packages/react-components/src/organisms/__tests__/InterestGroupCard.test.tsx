@@ -34,11 +34,20 @@ it('renders the state tag for a inactive group', () => {
 
 it('renders the link to google drive if present', () => {
   const { rerender, queryByRole } = render(
-    <InterestGroupCard {...props} id="42" name="My Group"/>,
+    <InterestGroupCard {...props} id="42" name="My Group" />,
   );
-  expect(queryByRole('link', { name: /access drive/i})).not.toBeInTheDocument();
-  rerender(<InterestGroupCard {...props} id="42" name="My Group" googleDrive='http://drive.google.com/123'/>);
-  expect(queryByRole('link', { name: /access drive/i})).toBeVisible();
+  expect(
+    queryByRole('link', { name: /access drive/i }),
+  ).not.toBeInTheDocument();
+  rerender(
+    <InterestGroupCard
+      {...props}
+      id="42"
+      name="My Group"
+      googleDrive="http://drive.google.com/123"
+    />,
+  );
+  expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
 });
 
 it('does not render team count when group is inactive', () => {

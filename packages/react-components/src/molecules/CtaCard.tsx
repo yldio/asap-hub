@@ -74,7 +74,9 @@ const CtaCard: React.FC<CtaCardProps> = ({
           <CopyButton
             hoverTooltipText="Copy Email"
             clickTooltipText="Email Copied"
-            onClick={() => navigator.clipboard.writeText(href.split(':')[1] || '')}
+            onClick={() =>
+              navigator.clipboard.writeText(href.split(':')[1] || '')
+            }
             overrideStyles={copyButtonStyles}
           />
         )}

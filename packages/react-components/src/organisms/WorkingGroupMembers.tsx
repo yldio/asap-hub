@@ -123,7 +123,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
                   id: user?.id || '',
                   firstLine: user.displayName || '',
                   thirdLine:
-                  user.teams.length <= 1 ? user.teams : 'Multiple Teams',
+                    user.teams.length <= 1 ? user.teams : 'Multiple Teams',
                 }))}
             />
           </div>

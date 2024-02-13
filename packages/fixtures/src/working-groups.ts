@@ -55,7 +55,7 @@ export const createWorkingGroupPointOfContact =
       firstName: 'Peter',
       lastName: 'Venkman',
       email: 'peter@ven.com',
-      teams:[],
+      teams: [],
     },
   });
 

@@ -3,9 +3,9 @@ import { StaticRouter } from 'react-router-dom';
 import { network, searchQueryParam } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
+import userEvent from '@testing-library/user-event';
 
 import InterestGroupProfileHeader from '../InterestGroupProfileHeader';
-import userEvent from '@testing-library/user-event';
 
 const props: ComponentProps<typeof InterestGroupProfileHeader> = {
   id: '42',

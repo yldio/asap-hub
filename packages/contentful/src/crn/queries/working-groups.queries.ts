@@ -69,6 +69,17 @@ export const workingGroupsContentQueryFragment = gql`
             firstName
             lastName
             alumniSinceDate
+            teamsCollection(limit: 5) @include(if: $singleWorkingGroup) {
+              items {
+                role
+                team {
+                  sys {
+                    id
+                  }
+                  displayName
+                }
+              }
+            }
           }
         }
         __typename
@@ -85,6 +96,17 @@ export const workingGroupsContentQueryFragment = gql`
             firstName
             lastName
             alumniSinceDate
+            teamsCollection(limit: 5) @include(if: $singleWorkingGroup) {
+              items {
+                role
+                team {
+                  sys {
+                    id
+                  }
+                  displayName
+                }
+              }
+            }
           }
         }
       }
@@ -102,7 +124,10 @@ export const workingGroupsContentQueryFragment = gql`
 `;
 
 export const FETCH_WORKING_GROUP_BY_ID = gql`
-  query FetchWorkingGroupById($id: String!) {
+  query FetchWorkingGroupById(
+    $id: String!
+    $singleWorkingGroup: Boolean = true
+  ) {
     workingGroups(id: $id) {
       ...WorkingGroupsContent
     }
@@ -116,6 +141,7 @@ export const FETCH_WORKING_GROUPS = gql`
     $skip: Int
     $order: [WorkingGroupsOrder]
     $where: WorkingGroupsFilter
+    $singleWorkingGroup: Boolean = false
   ) {
     workingGroupsCollection(
       limit: $limit

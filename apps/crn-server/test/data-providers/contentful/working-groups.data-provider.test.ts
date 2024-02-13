@@ -508,6 +508,19 @@ describe('Working Groups data provider', () => {
                     firstName: 'John',
                     lastName: 'Doe',
                     alumniSinceDate: null,
+                    teamsCollection:{
+                      items: [
+                        {
+                          role: 'Project Manager',
+                          team: {
+                            sys: {
+                              id: 'team-1'
+                            },
+                            displayName: 'Team 1'
+                          }
+                        }
+                      ]
+                    }
                   },
                 },
                 {
@@ -524,6 +537,19 @@ describe('Working Groups data provider', () => {
                     firstName: 'Jane',
                     lastName: 'Doe',
                     alumniSinceDate: null,
+                    teamsCollection:{
+                      items: [
+                        {
+                          role: 'Trainee',
+                          team: {
+                            sys: {
+                              id: 'team-2'
+                            },
+                            displayName: 'Team 2'
+                          }
+                        }
+                      ]
+                    }
                   },
                 },
               ],
@@ -546,6 +572,13 @@ describe('Working Groups data provider', () => {
           firstName: 'John',
           id: 'leader-1',
           lastName: 'Doe',
+          teams: [{
+            displayName: 'Team 1',
+            id: 'team-1',
+            inactiveSinceDate: undefined,
+            role: 'Project Manager',
+            teamInactiveSince: "",
+          }],
         });
         expect(result!.members).toHaveLength(1);
         expect(result!.members[0]?.user).toEqual({
@@ -556,6 +589,13 @@ describe('Working Groups data provider', () => {
           firstName: 'Jane',
           id: 'member-1',
           lastName: 'Doe',
+          teams: [{
+            displayName: 'Team 2',
+            id: 'team-2',
+            inactiveSinceDate: undefined,
+            role: 'Trainee',
+            teamInactiveSince: "",
+          }],
         });
       });
 

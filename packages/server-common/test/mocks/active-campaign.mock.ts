@@ -1,17 +1,25 @@
 import {
+  addContactToList,
   createContact,
+  getContactFieldValues,
   getContactIdByEmail,
+  getCustomFieldIdByTitle,
+  getListIdByName,
   updateContact,
 } from '../../src/utils/active-campaign';
 
-export const mockGetContactIdByEmail = jest.fn() as jest.MockedFunction<
-  typeof getContactIdByEmail
->;
-
-export const mockCreateContact = jest.fn() as jest.MockedFunction<
-  typeof createContact
->;
-
-export const mockUpdateContact = jest.fn() as jest.MockedFunction<
-  typeof updateContact
->;
+export const mockActiveCampaign = {
+  addContactToList: jest.fn() as jest.MockedFunction<typeof addContactToList>,
+  createContact: jest.fn() as jest.MockedFunction<typeof createContact>,
+  getContactFieldValues: jest.fn() as jest.MockedFunction<
+    typeof getContactFieldValues
+  >,
+  getContactIdByEmail: jest.fn() as jest.MockedFunction<
+    typeof getContactIdByEmail
+  >,
+  getCustomFieldIdByTitle: jest.fn() as jest.MockedFunction<
+    typeof getCustomFieldIdByTitle
+  >,
+  getListIdByName: jest.fn() as jest.MockedFunction<typeof getListIdByName>,
+  updateContact: jest.fn() as jest.MockedFunction<typeof updateContact>,
+};

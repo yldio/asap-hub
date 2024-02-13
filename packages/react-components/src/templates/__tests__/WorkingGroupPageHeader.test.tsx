@@ -19,6 +19,7 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   leaders: [],
   members: [],
   workingGroupsOutputsCount: 0,
+  calendars: [],
 };
 
 it('renders the title', () => {
@@ -116,15 +117,15 @@ it('renders number of members exceeding the limit of 5 and anchors it to the rig
   );
 });
 
-it('renders a Working Group Folder when externalLink is provided', () => {
+it('renders Access Drive button when externalLink is provided', () => {
   const { queryByText, getByText, rerender } = render(
     <WorkingGroupHeader {...baseProps} />,
   );
-  expect(queryByText('Working Group Folder')).toBeNull();
+  expect(queryByText('Access Drive')).toBeNull();
   rerender(
     <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
   );
-  expect(getByText('Working Group Folder')).toBeVisible();
+  expect(getByText('Access Drive')).toBeVisible();
 });
 
 it('renders the provided number of research outputs', () => {

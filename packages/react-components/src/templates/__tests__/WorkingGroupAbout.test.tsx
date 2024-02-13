@@ -42,6 +42,20 @@ it('renders a list of deliverables', () => {
   expect(getByText('In Progress')).toBeVisible();
 });
 
+it('renders collaboration invite if not completed', () => {
+  const { getByText, queryByText, rerender } = render(
+    <WorkingGroupAbout
+      {...baseProps}
+    />,
+  );
+  expect(getByText('Would you like to collaborate with this Working Group?')).toBeVisible();
+  rerender(<WorkingGroupAbout
+    {...baseProps}
+    complete={true}
+  />,);
+  expect(queryByText('Would you like to collaborate with this Working Group?')).not.toBeInTheDocument();
+});
+
 it('renders CTA when pointOfContact is provided', () => {
   const { queryAllByText, rerender } = render(
     <WorkingGroupAbout

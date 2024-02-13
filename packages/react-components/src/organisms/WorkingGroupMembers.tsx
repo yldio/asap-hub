@@ -1,13 +1,13 @@
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React from 'react';
-import { Card, Headline3, Paragraph, Subtitle } from '../atoms';
+import { Card, Paragraph } from '../atoms';
 import { MembersList, TabbedContent } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
 
 const containerStyles = css({
-  padding: `${rem(33)} ${rem(33)} 0 ${rem(33)}`,
+  paddingTop: `${rem(33)}`,
   display: 'grid',
   rowGap: rem(12),
   [`@media (min-width: ${tabletScreen.min}px)`]: {
@@ -48,11 +48,9 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
 
   return (
     <Card padding={false}>
-      <div css={containerStyles}>
-        <Headline3>Working Group Members</Headline3>
-        <Subtitle>Leaders</Subtitle>
-      </div>
       <TabbedContent
+        title="Working Group Members"
+        description="Leaders"
         activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {
@@ -82,15 +80,15 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
                   id: user?.id || '',
                   firstLine: user.displayName || '',
                   secondLine: workstreamRole,
+                  thirdLine:
+                    user.teams.length <= 1 ? user.teams : 'Multiple Teams',
                 }))}
             />
           </div>
         )}
       </TabbedContent>
-      <div css={containerStyles}>
-        <Subtitle>Members</Subtitle>
-      </div>
       <TabbedContent
+        description="Members"
         activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {
@@ -124,6 +122,8 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
                   ...user,
                   id: user?.id || '',
                   firstLine: user.displayName || '',
+                  thirdLine:
+                  user.teams.length <= 1 ? user.teams : 'Multiple Teams',
                 }))}
             />
           </div>

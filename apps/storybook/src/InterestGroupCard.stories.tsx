@@ -13,5 +13,6 @@ export const Normal = () => (
     tags={array('Tags', ['Tag 1', 'Tag 2'])}
     numberOfTeams={number('Number of Teams', 3)}
     active={boolean('Is the group active?', true)}
+    googleDrive={text('Google Drive', 'http://drive.google.com/123')}
   />
 );

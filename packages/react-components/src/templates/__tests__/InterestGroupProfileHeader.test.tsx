@@ -5,6 +5,7 @@ import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
 
 import InterestGroupProfileHeader from '../InterestGroupProfileHeader';
+import userEvent from '@testing-library/user-event';
 
 const props: ComponentProps<typeof InterestGroupProfileHeader> = {
   id: '42',
@@ -15,6 +16,8 @@ const props: ComponentProps<typeof InterestGroupProfileHeader> = {
   groupTeamsHref: '#teams',
   pastEventsCount: 2,
   upcomingEventsCount: 3,
+  tools: {},
+  contactEmails: [],
 };
 
 it('renders the name as a heading', () => {
@@ -28,6 +31,42 @@ it('renders the tag for inactive groups', () => {
   );
   expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+});
+
+it('renders group google drive if present', () => {
+  const { queryByRole, rerender } = render(
+    <InterestGroupProfileHeader
+      {...props}
+    />
+  );
+  expect(queryByRole('link', { name: /access drive/i})).not.toBeInTheDocument();
+  rerender(<InterestGroupProfileHeader
+    {...props}
+    tools={{ googleDrive: 'http://drive.google.com/123' }}
+  />);
+  expect(queryByRole('link', { name: /access drive/i})).toBeVisible();
+
+});
+
+it('copy button adds emails to clipboard', async () => {
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: jest.fn(),
+    },
+  });
+  jest.spyOn(navigator.clipboard, 'writeText');
+  render(
+    <InterestGroupProfileHeader
+      {...props}
+      contactEmails={['test@example.com', 'contact@example.com']}
+    />,
+  );
+  const copyButton = screen.getByRole('button', { name: 'Copy' });
+  expect(copyButton).toBeVisible();
+  userEvent.click(copyButton);
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+    'test@example.com,contact@example.com',
+  );
 });
 
 it('shows the number of teams and links to them', () => {

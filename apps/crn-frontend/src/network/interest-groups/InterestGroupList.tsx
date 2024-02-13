@@ -50,6 +50,7 @@ const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
     numberOfTeams: interestGroup.teams.filter(
       ({ inactiveSince }) => !inactiveSince,
     ).length,
+    googleDrive: interestGroup.tools.googleDrive,
   }));
 
   return (

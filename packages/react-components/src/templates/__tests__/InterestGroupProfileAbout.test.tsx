@@ -20,19 +20,6 @@ it('renders group information', () => {
   expect(getByText('Group Desc')).toBeVisible();
 });
 
-it('renders group tools', () => {
-  const { getByText } = render(
-    <InterestGroupProfileAbout
-      {...props}
-      tools={{ slack: 'https://example.com/slack' }}
-    />,
-  );
-  expect(getByText(/join slack/i).closest('a')).toHaveAttribute(
-    'href',
-    'https://example.com/slack',
-  );
-});
-
 it('renders group members', () => {
   const { getByText } = render(
     <InterestGroupProfileAbout

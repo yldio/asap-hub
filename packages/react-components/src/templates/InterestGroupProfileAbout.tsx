@@ -3,7 +3,6 @@ import { InterestGroupResponse } from '@asap-hub/model';
 
 import {
   InterestGroupInformation,
-  InterestGroupTools,
   InterestGroupLeadersTabbedCard,
   InterestGroupTeamsTabbedCard,
 } from '../organisms';
@@ -25,7 +24,7 @@ const membersSectionStyles = css({
 
 type InterestGroupProfileAboutProps = Pick<
   InterestGroupResponse,
-  'tags' | 'description' | 'tools' | 'calendars' | 'active' | 'contactEmails'
+  'tags' | 'description' | 'active' | 'contactEmails'
 > &
   Pick<InterestGroupResponse, 'teams' | 'leaders'> & {
     membersSectionId?: string;
@@ -36,9 +35,6 @@ const InterestGroupProfileAbout: React.FC<InterestGroupProfileAboutProps> = ({
   tags,
   description,
 
-  tools,
-  calendars,
-
   teams,
   leaders,
   contactEmails,
@@ -47,11 +43,6 @@ const InterestGroupProfileAbout: React.FC<InterestGroupProfileAboutProps> = ({
 }) => (
   <div css={styles}>
     <InterestGroupInformation tags={tags} description={description} />
-    <InterestGroupTools
-      calendarId={calendars[0] && calendars[0].id}
-      tools={tools}
-      active={active}
-    />
     <div id={membersSectionId}>
       <div css={membersSectionStyles}>
         <InterestGroupLeadersTabbedCard
@@ -65,9 +56,13 @@ const InterestGroupProfileAbout: React.FC<InterestGroupProfileAboutProps> = ({
       </div>
     </div>
     {contactEmails.length !== 0 && (
-      <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-        <strong>Interested in what you have seen?</strong>
-        <br /> Reach out to this group and see how you can collaborate
+      <CtaCard
+        href={createMailTo(contactEmails)}
+        buttonText="Contact PM"
+        displayCopy
+      >
+        <strong>Have additional questions?</strong>
+        <br /> The project manager is here to help.
       </CtaCard>
     )}
   </div>

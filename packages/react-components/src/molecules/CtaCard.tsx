@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import { Link, Card, Paragraph, CopyButton } from '../atoms';
+import { Card, Paragraph } from '../atoms';
 import {
   mobileScreen,
   perRem,
@@ -9,7 +9,7 @@ import {
   tabletScreen,
   smallDesktopScreen,
 } from '../pixels';
-import { activePrimaryBackgroundColorDefault, colors } from '..';
+import CtaContactSection from './CtaContactSection';
 
 const getInTouchStyles = css({
   display: 'grid',
@@ -31,23 +31,6 @@ const getInTouchStyles = css({
     },
 });
 
-const buttonStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  gap: `${8 / perRem}em`,
-});
-
-const copyButtonStyles = css({
-  backgroundColor: 'inherit',
-  borderColor: activePrimaryBackgroundColorDefault.rgba,
-  ':hover, :focus': {
-    borderColor: colors.info500.rgb,
-  },
-  path: {
-    fill: colors.fern.rgb,
-  },
-});
-
 type CtaCardProps = {
   href: string;
   buttonText: string;
@@ -59,28 +42,16 @@ const CtaCard: React.FC<CtaCardProps> = ({
   href,
   buttonText,
   children,
-  displayCopy,
+  displayCopy = false,
 }) => (
   <Card padding={false} accent="green">
     <div css={getInTouchStyles}>
       <Paragraph>{children}</Paragraph>
-      <div css={buttonStyles}>
-        <div css={{ display: 'flex', flexGrow: 1 }}>
-          <Link buttonStyle small primary href={href} noMargin>
-            {buttonText}
-          </Link>
-        </div>
-        {displayCopy && (
-          <CopyButton
-            hoverTooltipText="Copy Email"
-            clickTooltipText="Email Copied"
-            onClick={() =>
-              navigator.clipboard.writeText(href.split(':')[1] || '')
-            }
-            overrideStyles={copyButtonStyles}
-          />
-        )}
-      </div>
+      <CtaContactSection
+        href={href}
+        displayCopy={displayCopy}
+        buttonText={buttonText}
+      />
     </div>
   </Card>
 );

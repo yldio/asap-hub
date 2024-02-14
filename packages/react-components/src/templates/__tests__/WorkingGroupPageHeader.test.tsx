@@ -1,9 +1,11 @@
 import { ComponentProps } from 'react';
 import {
+  createCalendarResponse,
   createWorkingGroupMembers,
   createWorkingGroupPointOfContact,
 } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
@@ -39,6 +41,26 @@ it('renders CTA when pointOfContact is provided', () => {
   expect(queryAllByText('Contact PM')).toHaveLength(1);
   rerender(<WorkingGroupHeader {...baseProps} />);
   expect(queryAllByText('Contact PM')).toHaveLength(0);
+});
+
+it('copy button copies pointOfContact email', () => {
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: jest.fn(),
+    },
+  });
+  jest.spyOn(navigator.clipboard, 'writeText');
+  const pointOfContact = createWorkingGroupPointOfContact();
+  const { getByRole } = render(
+    <WorkingGroupHeader {...baseProps} pointOfContact={pointOfContact} />,
+  );
+
+  const copyButton = getByRole('button', { name: 'Copy' });
+  expect(copyButton).toBeVisible();
+  userEvent.click(copyButton);
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+    pointOfContact?.user.email,
+  );
 });
 
 describe('Share an output button dropdown', () => {
@@ -89,6 +111,17 @@ it('renders a complete tag when complete is true', () => {
   rerender(<WorkingGroupHeader {...baseProps} complete />);
   expect(getByTitle('Success')).toBeInTheDocument();
   expect(getByText('Complete')).toBeVisible();
+});
+
+it('renders group calendar when present and complete is false', () => {
+  const { getByText } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      calendars={[{ ...createCalendarResponse() }]}
+    />,
+  );
+
+  expect(getByText(/subscribe/i)).toBeVisible();
 });
 
 it('renders the member avatars', () => {

@@ -122,19 +122,17 @@ const MembersList: React.FC<MembersListProps> = ({
                 <span css={badgeStyles}>{alumniBadgeIcon}</span>
               )}
             </Anchor>
-            {secondLine && (
-              <Anchor href={href} css={{ display: 'contents' }}>
-                <div
-                  css={[
-                    addToColumnStyles,
-                    singleColumn || multiColumnAddToColumnStyles,
-                    textStyles,
-                  ]}
-                >
-                  <Ellipsis>{secondLine}</Ellipsis>
-                </div>
-              </Anchor>
-            )}
+            <Anchor href={href} css={{ display: 'contents' }}>
+              <div
+                css={[
+                  addToColumnStyles,
+                  singleColumn || multiColumnAddToColumnStyles,
+                  secondLine && textStyles,
+                ]}
+              >
+                <Ellipsis>{secondLine}</Ellipsis>
+              </div>
+            </Anchor>
             <div
               css={[
                 addToColumnStyles,

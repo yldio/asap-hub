@@ -40,6 +40,7 @@ const containerStyles = css({
   backgroundColor: paper.rgb,
   padding: networkPageLayoutPaddingStyle,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+  paddingBottom: 0,
 });
 
 const titleStyle = css({
@@ -58,11 +59,11 @@ const titleStyle = css({
 const rowStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${16 / perRem}em`,
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    gap: `${16 / perRem}em`,
   },
 });
 
@@ -74,9 +75,16 @@ const toolsStyles = css({
     flexFlow: 'row',
     justifyContent: 'space-between',
   },
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    '> a': {
+      marginBottom: 0,
+    },
+    gap: 0,
+  },
 });
 
 const lastUpdatedStyles = css({
+  alignSelf: 'center',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginRight: 'auto',
   },
@@ -107,6 +115,7 @@ const pointOfContactStyles = css({
   gridArea: 'contact',
   display: 'flex',
   gap: `${8 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
 });
 
 const createStyles = css({
@@ -203,9 +212,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               hoverTooltipText="Copy Email"
               clickTooltipText="Email Copied"
               onClick={() =>
-                navigator.clipboard.writeText(
-                  createMailTo(pointOfContact.user.email),
-                )
+                navigator.clipboard.writeText(pointOfContact.user.email)
               }
             />
           </div>

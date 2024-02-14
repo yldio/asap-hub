@@ -1,20 +1,11 @@
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { activePrimaryBackgroundColorDefault, colors } from '..';
-
-import {
-  Card,
-  CopyButton,
-  Headline3,
-  Link,
-  Paragraph,
-  Subtitle,
-} from '../atoms';
+import { Card, Headline3, Paragraph, Subtitle } from '../atoms';
 import { charcoal } from '../colors';
 import { createMailTo } from '../mail';
-import { Collapsible, TagList } from '../molecules';
+import { Collapsible, CtaContactSection, TagList } from '../molecules';
 import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
-import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
+import { perRem, smallDesktopScreen } from '../pixels';
 
 type WorkingGroupAboutProps = {
   readonly membersListElementId: string;
@@ -37,33 +28,6 @@ const containerStyles = css({
 const tagListStyle = css({
   marginTop: `${12 / perRem}em`,
   marginBottom: `${24 / perRem}em`,
-});
-
-const copyButtonStyles = css({
-  backgroundColor: 'inherit',
-  borderColor: activePrimaryBackgroundColorDefault.rgba,
-  ':hover, :focus': {
-    borderColor: colors.info500.rgb,
-  },
-  path: {
-    fill: colors.fern.rgb,
-  },
-});
-
-const contactStyles = css({
-  display: 'flex',
-  gap: `${8 / perRem}em`,
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
-    alignSelf: 'center',
-  },
-});
-
-const buttonStyles = css({
-  display: 'flex',
-  flexGrow: 1,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    flexGrow: 'unset',
-  },
 });
 
 const getInTouchStyles = css({
@@ -118,27 +82,11 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           group to find the best solutions for our goals.
         </Paragraph>
         {pointOfContact && (
-          <div css={contactStyles}>
-            <div css={buttonStyles}>
-              <Link
-                buttonStyle
-                small
-                primary
-                href={`${createMailTo(pointOfContact.user.email)}`}
-                noMargin
-              >
-                Contact PM
-              </Link>
-            </div>
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() =>
-                navigator.clipboard.writeText(pointOfContact.user.email)
-              }
-              overrideStyles={copyButtonStyles}
-            />
-          </div>
+          <CtaContactSection
+            href={createMailTo(pointOfContact.user.email)}
+            buttonText={'Contact PM'}
+            displayCopy
+          />
         )}
       </Card>
     )}
@@ -156,27 +104,11 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
           <div>The project manager is here to help.</div>
         </div>
         {pointOfContact && (
-          <div css={contactStyles}>
-            <div css={{ display: 'flex', flexGrow: 1 }}>
-              <Link
-                buttonStyle
-                small
-                primary
-                href={`${createMailTo(pointOfContact.user.email)}`}
-                noMargin
-              >
-                Contact PM
-              </Link>
-            </div>
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() =>
-                navigator.clipboard.writeText(pointOfContact.user.email)
-              }
-              overrideStyles={copyButtonStyles}
-            />
-          </div>
+          <CtaContactSection
+            href={createMailTo(pointOfContact.user.email)}
+            buttonText={'Contact PM'}
+            displayCopy
+          />
         )}
       </div>
     </Card>

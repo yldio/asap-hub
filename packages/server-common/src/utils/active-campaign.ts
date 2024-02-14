@@ -87,19 +87,13 @@ export const addContactToList = async (
   contactId: string,
   listId: string,
 ): Promise<void> => {
-  const apiURL = getActiveCampaignApiURL(account);
-  const headers = getActiveCampaignHeaders(token);
-
-  await Got.post(`${apiURL}/contactLists`, {
-    json: {
-      contactList: {
-        list: listId,
-        contact: contactId,
-        status: 1,
-      },
-    },
-    headers,
-  }).json();
+  await updateListStatusForContact(
+    account,
+    token,
+    'subscribe',
+    contactId,
+    listId,
+  );
 };
 
 /**
@@ -239,6 +233,42 @@ export const getListIdByName = async (
   );
 };
 
+export type ContactListsResponse = {
+  contactLists: {
+    contact: string;
+    list: string;
+  }[];
+};
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-contact-list-memberships}
+ */
+export const unsubscribeContactFromAllLists = async (
+  account: string,
+  token: string,
+  contactId: string,
+): Promise<void> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  const lists = await Got.get(`${apiURL}/contacts/${contactId}/contactLists`, {
+    headers,
+  }).json<ContactListsResponse>();
+
+  const listIds = lists.contactLists.map((item) => item.list);
+
+  await Promise.all(
+    listIds.map(async (listId) => {
+      await updateListStatusForContact(
+        account,
+        token,
+        'unsubscribe',
+        contactId,
+        listId,
+      );
+    }),
+  );
+};
+
 /**
  * @see {@link https://developers.activecampaign.com/reference/update-a-contact-new}
  */
@@ -253,6 +283,31 @@ export const updateContact = async (
 
   return Got.put(`${apiURL}/contacts/${id}`, {
     json: { contact },
+    headers,
+  }).json();
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
+ */
+export const updateListStatusForContact = async (
+  account: string,
+  token: string,
+  action: 'subscribe' | 'unsubscribe',
+  contactId: string,
+  listId: string,
+): Promise<void> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  await Got.post(`${apiURL}/contactLists`, {
+    json: {
+      contactList: {
+        list: listId,
+        contact: contactId,
+        status: action === 'subscribe' ? 1 : 2,
+      },
+    },
     headers,
   }).json();
 };
@@ -294,10 +349,22 @@ export type ActiveCampaignType = {
     token: string,
   ) => Promise<CRNFieldIdByTitle | GP2FieldIdByTitle>;
   getListIdByName: (account: string, token: string) => Promise<ListIdByName>;
+  unsubscribeContactFromAllLists: (
+    account: string,
+    token: string,
+    contactId: string,
+  ) => Promise<void>;
   updateContact: (
     account: string,
     token: string,
     id: string,
     contact: ContactPayload,
   ) => Promise<ContactResponse>;
+  updateListStatusForContact: (
+    account: string,
+    token: string,
+    action: 'subscribe' | 'unsubscribe',
+    contactId: string,
+    listId: string,
+  ) => Promise<void>;
 };

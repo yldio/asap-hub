@@ -5,7 +5,9 @@ import {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
+  unsubscribeContactFromAllLists,
   updateContact,
+  updateListStatusForContact,
 } from '../../src/utils/active-campaign';
 
 export const mockActiveCampaign = {
@@ -21,5 +23,11 @@ export const mockActiveCampaign = {
     typeof getCustomFieldIdByTitle
   >,
   getListIdByName: jest.fn() as jest.MockedFunction<typeof getListIdByName>,
+  unsubscribeContactFromAllLists: jest.fn() as jest.MockedFunction<
+    typeof unsubscribeContactFromAllLists
+  >,
   updateContact: jest.fn() as jest.MockedFunction<typeof updateContact>,
+  updateListStatusForContact: jest.fn() as jest.MockedFunction<
+    typeof updateListStatusForContact
+  >,
 };

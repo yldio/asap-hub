@@ -49,12 +49,22 @@ export const syncUserActiveCampaignData = async (
     getContactIdByEmail,
     getCustomFieldIdByTitle,
     getListIdByName,
+    unsubscribeContactFromAllLists,
     updateContact,
   } = ActiveCampaign;
 
   const { app, activeCampaignAccount, activeCampaignToken } = config;
 
-  const updateContactLists = async (contactId: string) => {
+  const updateContactLists = async (contactId: string, isAlumni: boolean) => {
+    if (isAlumni) {
+      await unsubscribeContactFromAllLists(
+        activeCampaignAccount,
+        activeCampaignToken,
+        contactId,
+      );
+      return;
+    }
+
     const listIdByName = await getListIdByName(
       activeCampaignAccount,
       activeCampaignToken,
@@ -87,6 +97,9 @@ export const syncUserActiveCampaignData = async (
   const user = await userController.fetchById(userId);
 
   log.info(`Fetched user ${user.id}`);
+
+  const isAlumni =
+    'alumniSinceDate' in user ? Boolean(user.alumniSinceDate) : false;
 
   if (user.onboarded) {
     const contactId = await getContactIdByEmail(
@@ -122,7 +135,7 @@ export const syncUserActiveCampaignData = async (
       );
 
       if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
-        await updateContactLists(contactResponse.contact.id);
+        await updateContactLists(contactResponse.contact.id, isAlumni);
 
         await userController.update(user.id, {
           activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
@@ -177,7 +190,7 @@ export const syncUserActiveCampaignData = async (
       contactPayload,
     );
 
-    await updateContactLists(contactId);
+    await updateContactLists(contactId, isAlumni);
 
     if (!user.activeCampaignId) {
       await userController.update(user.id, {

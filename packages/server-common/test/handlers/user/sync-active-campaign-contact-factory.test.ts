@@ -1,4 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
+import { UserResponse } from '@asap-hub/model';
 
 import {
   syncActiveCampaignContactFactory,
@@ -93,7 +94,10 @@ describe('Sync ActiveCampaign Contact Factory', () => {
 
   test('should create ActiveCampaign contact if user is onboarded and no contactId exists and add them to lists', async () => {
     const userId = getUserDataObject().id;
-    const user = getUserResponse();
+    const user = {
+      ...getUserResponse(),
+      alumniSinceDate: undefined,
+    } as UserResponse;
     userController.fetchById.mockResolvedValue(user);
     mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
 
@@ -181,6 +185,48 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     expect(logger.info).toHaveBeenCalledWith(
       'Contact with cms id user-id-1 and active campaign id 123 updated',
     );
+  });
+
+  it('should call unsubscribe from lists if user is alumni', async () => {
+    const userId = getUserDataObject().id;
+    const user = {
+      ...getUserResponse(),
+      alumniSinceDate: '2020-09-23T20:45:22.000Z',
+    } as UserResponse;
+    userController.fetchById.mockResolvedValue(user);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
+
+    const event = getEventBridgeEventMock(userId);
+
+    await syncActiveCampaignContactHandler(event);
+
+    expect(
+      mockActiveCampaign.unsubscribeContactFromAllLists,
+    ).toHaveBeenCalledWith(
+      activeCampaignAccount,
+      activeCampaignToken,
+      activeCampaignId,
+    );
+    expect(mockActiveCampaign.addContactToList).not.toHaveBeenCalled();
+  });
+
+  it('should not call unsubscribe from lists if user is not alumni', async () => {
+    const userId = getUserDataObject().id;
+    const user = {
+      ...getUserResponse(),
+      alumniSinceDate: undefined,
+    } as UserResponse;
+    userController.fetchById.mockResolvedValue(user);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
+
+    const event = getEventBridgeEventMock(userId);
+
+    await syncActiveCampaignContactHandler(event);
+
+    expect(
+      mockActiveCampaign.unsubscribeContactFromAllLists,
+    ).not.toHaveBeenCalled();
+    expect(mockActiveCampaign.addContactToList).toHaveBeenCalled();
   });
 
   describe('Network', () => {

@@ -44,7 +44,8 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "publishingEntity"
+    "publishingEntity",
+    "complete"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
@@ -66,7 +67,8 @@
     "workingGroup.id",
     "workingGroups.id",
     "_tags",
-    "publishingEntity"
+    "publishingEntity",
+    "complete"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

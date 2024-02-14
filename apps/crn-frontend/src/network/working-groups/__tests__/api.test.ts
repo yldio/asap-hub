@@ -1,21 +1,16 @@
-import {
-  createWorkingGroupListResponse,
-  createWorkingGroupResponse,
-} from '@asap-hub/fixtures';
+import type {
+  AlgoliaSearchClient,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
+import { createWorkingGroupResponse } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
+
 import { ResearchOutputPostRequest } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { getWorkingGroup, getWorkingGroups } from '../api';
 import { createResearchOutput } from '../../teams/api';
-
-const options: GetListOptions = {
-  filters: new Set(),
-  pageSize: CARD_VIEW_PAGE_SIZE,
-  currentPage: 0,
-  searchQuery: '',
-};
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 describe('getWorkingGroup', () => {
   it('makes an authorized GET request for the working group id', async () => {
@@ -48,36 +43,112 @@ describe('getWorkingGroup', () => {
 });
 
 describe('getWorkingGroups', () => {
-  it('makes an authorized GET request for working groups', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/working-groups')
-      .query({ take: '10', skip: '0' })
-      .reply(200, {});
-    await getWorkingGroups(options, 'Bearer x');
-    expect(nock.isDone()).toBe(true);
+  type Search = () => Promise<ClientSearchResponse<'crn', 'working-group'>>;
+
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'crn'>;
+
+  const defaultOptions: GetListOptions = {
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  };
+
+  beforeEach(() => {
+    search.mockReset();
+
+    const workingGroupResponse = createWorkingGroupResponse();
+
+    search.mockResolvedValue(
+      createAlgoliaResponse<'working-group'>([
+        {
+          ...workingGroupResponse,
+          objectID: workingGroupResponse.id,
+          __meta: { type: 'working-group' },
+        },
+      ]),
+    );
   });
 
-  it('returns successfully fetched groups', async () => {
-    const groups = createWorkingGroupListResponse(1);
-    nock(API_BASE_URL)
-      .get('/working-groups')
-      .query({ take: '10', skip: '0' })
-      .reply(200, groups);
-    expect(await getWorkingGroups(options, '')).toEqual(groups);
+  it('should not filter working groups by default', async () => {
+    await getWorkingGroups(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['working-group'],
+      '',
+      expect.objectContaining({
+        filters: undefined,
+      }),
+    );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/working-groups')
-      .query({ take: '10', skip: '0' })
-      .reply(500);
-    await expect(
-      getWorkingGroups(options, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch working group list. Expected status 2xx. Received status 500."`,
+  it('should not default to any specific page or limit hits per page', async () => {
+    await getWorkingGroups(algoliaSearchClient, {
+      ...defaultOptions,
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['working-group'],
+      '',
+      expect.objectContaining({
+        hitsPerPage: undefined,
+        page: undefined,
+      }),
+    );
+  });
+
+  it('should pass the search query to Algolia', async () => {
+    await getWorkingGroups(algoliaSearchClient, {
+      ...defaultOptions,
+      searchQuery: 'Data Analysis',
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['working-group'],
+      'Data Analysis',
+      expect.objectContaining({}),
+    );
+  });
+
+  it.each([
+    { filter: 'Complete', algoliaFilter: 'complete:true' },
+    { filter: 'Active', algoliaFilter: 'complete:false' },
+  ])(
+    'should filter the working groups by status when its value is $filter',
+    async ({ filter, algoliaFilter }) => {
+      await getWorkingGroups(algoliaSearchClient, {
+        ...defaultOptions,
+        filters: new Set([filter]),
+      });
+      expect(search).toHaveBeenCalledWith(['working-group'], '', {
+        filters: algoliaFilter,
+      });
+    },
+  );
+
+  it('should return successfully fetched working groups', async () => {
+    const workingGroups = await getWorkingGroups(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+    expect(workingGroups).toEqual(
+      expect.objectContaining({
+        items: [
+          {
+            ...createWorkingGroupResponse(),
+            __meta: { type: 'working-group' },
+            objectID: 'working-group-id-0',
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 });
+
 describe('working group research output', () => {
   const payload: ResearchOutputPostRequest = {
     teams: ['90210'],

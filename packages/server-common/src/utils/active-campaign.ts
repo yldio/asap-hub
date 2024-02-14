@@ -81,9 +81,10 @@ export const getActiveCampaignHeaders = (token: string) => ({
 /**
  * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
  */
-export const addContactToList = async (
+export const updateListStatusForContact = async (
   account: string,
   token: string,
+  action: 'subscribe' | 'unsubscribe',
   contactId: string,
   listId: string,
 ): Promise<void> => {
@@ -95,11 +96,29 @@ export const addContactToList = async (
       contactList: {
         list: listId,
         contact: contactId,
-        status: 1,
+        status: action === 'subscribe' ? 1 : 2,
       },
     },
     headers,
   }).json();
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
+ */
+export const addContactToList = async (
+  account: string,
+  token: string,
+  contactId: string,
+  listId: string,
+): Promise<void> => {
+  await updateListStatusForContact(
+    account,
+    token,
+    'subscribe',
+    contactId,
+    listId,
+  );
 };
 
 /**
@@ -239,6 +258,47 @@ export const getListIdByName = async (
   );
 };
 
+export type ContactListsResponse = {
+  contactLists: {
+    contact: string;
+    list: string;
+  }[];
+};
+/**
+ * @see {@link https://developers.activecampaign.com/reference/retrieve-contact-list-memberships}
+ */
+export const unsubscribeContactFromLists = async (
+  account: string,
+  token: string,
+  contactId: string,
+  listIdByName: ListIdByName,
+): Promise<void> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  const lists = await Got.get(`${apiURL}/contacts/${contactId}/contactLists`, {
+    headers,
+  }).json<ContactListsResponse>();
+
+  const masterListId = listIdByName['Master List'];
+  const contactListIds = lists.contactLists.map((item) => item.list);
+  const listsToUnsubscribeFrom = contactListIds.filter(
+    (id) => id !== masterListId,
+  );
+
+  await Promise.all(
+    listsToUnsubscribeFrom.map(async (listId) => {
+      await updateListStatusForContact(
+        account,
+        token,
+        'unsubscribe',
+        contactId,
+        listId,
+      );
+    }),
+  );
+};
+
 /**
  * @see {@link https://developers.activecampaign.com/reference/update-a-contact-new}
  */
@@ -264,7 +324,9 @@ export const ActiveCampaign = {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
+  unsubscribeContactFromLists,
   updateContact,
+  updateListStatusForContact,
 };
 
 export type ActiveCampaignType = {
@@ -294,10 +356,23 @@ export type ActiveCampaignType = {
     token: string,
   ) => Promise<CRNFieldIdByTitle | GP2FieldIdByTitle>;
   getListIdByName: (account: string, token: string) => Promise<ListIdByName>;
+  unsubscribeContactFromLists: (
+    account: string,
+    token: string,
+    contactId: string,
+    listIdByName: ListIdByName,
+  ) => Promise<void>;
   updateContact: (
     account: string,
     token: string,
     id: string,
     contact: ContactPayload,
   ) => Promise<ContactResponse>;
+  updateListStatusForContact: (
+    account: string,
+    token: string,
+    action: 'subscribe' | 'unsubscribe',
+    contactId: string,
+    listId: string,
+  ) => Promise<void>;
 };

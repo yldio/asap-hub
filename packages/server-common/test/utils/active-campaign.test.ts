@@ -1,7 +1,9 @@
 import nock from 'nock';
 
 import type {
+  ContactListsResponse,
   FieldValuesResponse,
+  ListIdByName,
   ListsResponse,
 } from '../../src/utils/active-campaign';
 import {
@@ -13,6 +15,7 @@ import {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
+  unsubscribeContactFromLists,
   updateContact,
 } from '../../src/utils/active-campaign';
 
@@ -270,6 +273,63 @@ describe('getListIdByName', () => {
     nock(`https://${account}.api-us1.com`).get('/api/3/lists').reply(500);
 
     await expect(getListIdByName(account, token)).rejects.toThrow();
+  });
+});
+
+describe('unsubscribeContactFromLists', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const contactId = '26';
+  const listId1 = '3';
+  const listId2 = '5';
+  const getExpectedRequestBody = (listId: string) => ({
+    contactList: {
+      list: listId,
+      contact: contactId,
+      status: 2,
+    },
+  });
+  const listIdByName: ListIdByName = {
+    'Master List': '1',
+    'GP2 Hub Email list': '2',
+    'CRN HUB Email List': '3',
+  };
+
+  it('should make a successful requests to get contact lists and unsubscribe from them', async () => {
+    const mockContactListsResponse: ContactListsResponse = {
+      contactLists: [
+        { list: listId1, contact: '1' },
+        { list: listId2, contact: '1' },
+      ],
+    };
+
+    nock(`https://${account}.api-us1.com`)
+      .get(`/api/3/contacts/${contactId}/contactLists`)
+      .reply(200, mockContactListsResponse);
+
+    nock(`https://${account}.api-us1.com`)
+      .post(`/api/3/contactLists`, getExpectedRequestBody(listId1))
+      .reply(200);
+
+    nock(`https://${account}.api-us1.com`)
+      .post(`/api/3/contactLists`, getExpectedRequestBody(listId2))
+      .reply(200);
+
+    await unsubscribeContactFromLists(account, token, contactId, listIdByName);
+
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('should throw an error if api returns an error', async () => {
+    nock(`https://${account}.api-us1.com`)
+      .get(`/api/3/contacts/${contactId}/contactLists`)
+      .reply(500);
+
+    await expect(
+      unsubscribeContactFromLists(account, token, contactId, listIdByName),
+    ).rejects.toThrow();
   });
 });
 

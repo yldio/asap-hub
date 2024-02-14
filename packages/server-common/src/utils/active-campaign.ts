@@ -319,7 +319,9 @@ export const ActiveCampaign = {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
+  unsubscribeContactFromAllLists,
   updateContact,
+  updateListStatusForContact,
 };
 
 export type ActiveCampaignType = {

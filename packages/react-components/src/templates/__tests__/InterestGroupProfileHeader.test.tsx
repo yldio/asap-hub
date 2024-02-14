@@ -33,7 +33,7 @@ it('renders the tag for inactive groups', () => {
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });
 
-it('renders group google drive if present', () => {
+it('renders group google drive link if present', () => {
   const { queryByRole, rerender } = render(
     <InterestGroupProfileHeader {...props} />,
   );
@@ -47,6 +47,22 @@ it('renders group google drive if present', () => {
     />,
   );
   expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
+});
+
+it('renders group calendar link if present and group is active', () => {
+  const { queryByRole, rerender } = render(
+    <InterestGroupProfileHeader {...props} calendarId="1234" active={false} />,
+  );
+  expect(
+    queryByRole('button', { name: /calendar/i }),
+  ).not.toBeInTheDocument();
+  rerender(
+    <InterestGroupProfileHeader
+      {...props}
+      calendarId="1234"
+    />,
+  );
+  expect(queryByRole('button', { name: /calendar/i })).toBeVisible();
 });
 
 it('copy button adds emails to clipboard', async () => {

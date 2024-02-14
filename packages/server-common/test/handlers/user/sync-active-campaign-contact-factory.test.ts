@@ -194,7 +194,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       alumniSinceDate: '2020-09-23T20:45:22.000Z',
     } as UserResponse;
     userController.fetchById.mockResolvedValue(user);
-    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(activeCampaignId);
 
     const event = getEventBridgeEventMock(userId);
 
@@ -217,7 +217,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       alumniSinceDate: undefined,
     } as UserResponse;
     userController.fetchById.mockResolvedValue(user);
-    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(null);
+    mockActiveCampaign.getContactIdByEmail.mockResolvedValue(activeCampaignId);
 
     const event = getEventBridgeEventMock(userId);
 

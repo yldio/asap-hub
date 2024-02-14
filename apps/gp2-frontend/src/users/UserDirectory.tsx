@@ -50,7 +50,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
               ...filters,
               onlyOnboarded: false,
             },
-            search: '',
+            search: searchQuery,
           },
           autorization,
         ),

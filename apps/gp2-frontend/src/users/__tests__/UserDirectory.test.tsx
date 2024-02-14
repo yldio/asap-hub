@@ -62,6 +62,7 @@ const renderUserDirectory = async ({
   displayFilters = false,
   isAdministrator = false,
   filters = {},
+  searchQuery = '',
 }: {
   listUserAlgoliaResponse?: ClientSearchResponse<'gp2', 'user'>;
   listUserResponse?: gp2Model.ListUserResponse;
@@ -71,6 +72,7 @@ const renderUserDirectory = async ({
   displayFilters?: boolean;
   isAdministrator?: boolean;
   filters?: Partial<ReturnType<typeof useSearch>['filters']>;
+  searchQuery?: string;
 } = {}) => {
   mockGetAlgoliaUsers.mockResolvedValue(listUserAlgoliaResponse);
   mockGetProjects.mockResolvedValue(listProjectResponse);
@@ -91,8 +93,8 @@ const renderUserDirectory = async ({
     },
     updateFilters: mockUpdateFilter,
     toggleFilter: mockToggleFilter,
-    searchQuery: '',
-    debouncedSearchQuery: '',
+    searchQuery,
+    debouncedSearchQuery: searchQuery,
     setSearchQuery: jest.fn(),
     tags: [],
     setTags: jest.fn(),
@@ -150,14 +152,15 @@ it.each`
   },
 );
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
-  await renderUserDirectory({ isAdministrator: true });
+  const searchQuery = 'some-user';
+  await renderUserDirectory({ isAdministrator: true, searchQuery });
   await waitFor(() =>
     expect(mockGetAlgoliaUsers).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
         currentPage: 0,
         pageSize: 10,
-        searchQuery: '',
+        searchQuery,
         tags: [],
         regions: [],
         projects: [],
@@ -180,7 +183,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
           workingGroups: [],
           onlyOnboarded: false,
         },
-        search: '',
+        search: searchQuery,
         skip: 0,
         take: MAX_RESULTS,
       }),

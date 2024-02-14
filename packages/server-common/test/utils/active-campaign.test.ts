@@ -3,6 +3,7 @@ import nock from 'nock';
 import type {
   ContactListsResponse,
   FieldValuesResponse,
+  ListIdByName,
   ListsResponse,
 } from '../../src/utils/active-campaign';
 import {
@@ -14,7 +15,7 @@ import {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
-  unsubscribeContactFromAllLists,
+  unsubscribeContactFromLists,
   updateContact,
 } from '../../src/utils/active-campaign';
 
@@ -275,7 +276,7 @@ describe('getListIdByName', () => {
   });
 });
 
-describe('unsubscribeContactFromAllLists', () => {
+describe('unsubscribeContactFromLists', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
@@ -290,6 +291,11 @@ describe('unsubscribeContactFromAllLists', () => {
       status: 2,
     },
   });
+  const listIdByName: ListIdByName = {
+    'Master List': '1',
+    'GP2 Hub Email list': '2',
+    'CRN HUB Email List': '3',
+  };
 
   it('should make a successful requests to get contact lists and unsubscribe from them', async () => {
     const mockContactListsResponse: ContactListsResponse = {
@@ -311,7 +317,7 @@ describe('unsubscribeContactFromAllLists', () => {
       .post(`/api/3/contactLists`, getExpectedRequestBody(listId2))
       .reply(200);
 
-    await unsubscribeContactFromAllLists(account, token, contactId);
+    await unsubscribeContactFromLists(account, token, contactId, listIdByName);
 
     expect(nock.isDone()).toBe(true);
   });
@@ -322,7 +328,7 @@ describe('unsubscribeContactFromAllLists', () => {
       .reply(500);
 
     await expect(
-      unsubscribeContactFromAllLists(account, token, contactId),
+      unsubscribeContactFromLists(account, token, contactId, listIdByName),
     ).rejects.toThrow();
   });
 });

@@ -6,7 +6,11 @@ import {
   UserController,
   UserEventBridgeEvent,
 } from '../../../src/handlers/user';
-import { CRNFieldIdByTitle, FieldValuesResponse } from '../../../src/utils';
+import {
+  CRNFieldIdByTitle,
+  FieldValuesResponse,
+  ListIdByName,
+} from '../../../src/utils';
 import {
   getUserContentfulWebhookDetail,
   getUserDataObject,
@@ -39,6 +43,12 @@ const mockContactFieldValues: FieldValuesResponse = {
   ],
 };
 
+const listIdByName: ListIdByName = {
+  'Master List': 'master-list-id',
+  'GP2 Hub Email list': 'gp2-list-id',
+  'CRN HUB Email List': 'crn-list-id',
+};
+
 describe('Sync ActiveCampaign Contact Factory', () => {
   const userController = {
     fetchById: jest.fn(),
@@ -61,10 +71,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       },
     });
 
-    mockActiveCampaign.getListIdByName.mockResolvedValue({
-      'List 1': 'list-id-1',
-      'List 2': 'list-id-2',
-    });
+    mockActiveCampaign.getListIdByName.mockResolvedValue(listIdByName);
 
     mockActiveCampaign.getContactFieldValues.mockResolvedValue(
       mockContactFieldValues,
@@ -88,7 +95,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     mockActiveCampaign,
     userController,
     mockGetContactPayload,
-    ['List 1', 'List 2'],
+    ['Master List', 'CRN HUB Email List'],
     loggerMock,
   );
 
@@ -125,14 +132,14 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'list-id-1',
+      'master-list-id',
     );
     expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
       2,
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'list-id-2',
+      'crn-list-id',
     );
     expect(userController.update).toHaveBeenCalledWith(user.id, {
       activeCampaignCreatedAt: new Date(date),
@@ -142,6 +149,16 @@ describe('Sync ActiveCampaign Contact Factory', () => {
   });
 
   it('should update ActiveCampaign contact if user is onboarded and contactId exists and add them to lists', async () => {
+    const syncActiveCampaignContactGP2Handler =
+      syncActiveCampaignContactFactory(
+        { app: 'GP2', activeCampaignAccount, activeCampaignToken },
+        mockActiveCampaign,
+        userController,
+        mockGetContactPayload,
+        ['Master List', 'GP2 Hub Email list'],
+        loggerMock,
+      );
+
     const userId = getUserDataObject().id;
     const { activeCampaignId: _, ...user } = getGP2UserResponse();
 
@@ -150,7 +167,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
 
     const event = getEventBridgeEventMock(userId);
 
-    await syncActiveCampaignContactHandler(event);
+    await syncActiveCampaignContactGP2Handler(event);
 
     expect(userController.fetchById).toHaveBeenCalledWith(userId);
     expect(mockActiveCampaign.getContactIdByEmail).toHaveBeenCalledWith(
@@ -173,14 +190,14 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'list-id-1',
+      'master-list-id',
     );
     expect(mockActiveCampaign.addContactToList).toHaveBeenNthCalledWith(
       2,
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
-      'list-id-2',
+      'gp2-list-id',
     );
     expect(logger.info).toHaveBeenCalledWith(
       'Contact with cms id user-id-1 and active campaign id 123 updated',
@@ -200,12 +217,11 @@ describe('Sync ActiveCampaign Contact Factory', () => {
 
     await syncActiveCampaignContactHandler(event);
 
-    expect(
-      mockActiveCampaign.unsubscribeContactFromAllLists,
-    ).toHaveBeenCalledWith(
+    expect(mockActiveCampaign.unsubscribeContactFromLists).toHaveBeenCalledWith(
       activeCampaignAccount,
       activeCampaignToken,
       activeCampaignId,
+      listIdByName,
     );
     expect(mockActiveCampaign.addContactToList).not.toHaveBeenCalled();
   });
@@ -224,7 +240,7 @@ describe('Sync ActiveCampaign Contact Factory', () => {
     await syncActiveCampaignContactHandler(event);
 
     expect(
-      mockActiveCampaign.unsubscribeContactFromAllLists,
+      mockActiveCampaign.unsubscribeContactFromLists,
     ).not.toHaveBeenCalled();
     expect(mockActiveCampaign.addContactToList).toHaveBeenCalled();
   });

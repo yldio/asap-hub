@@ -49,26 +49,27 @@ export const syncUserActiveCampaignData = async (
     getContactIdByEmail,
     getCustomFieldIdByTitle,
     getListIdByName,
-    unsubscribeContactFromAllLists,
+    unsubscribeContactFromLists,
     updateContact,
   } = ActiveCampaign;
 
   const { app, activeCampaignAccount, activeCampaignToken } = config;
 
   const updateContactLists = async (contactId: string, isAlumni: boolean) => {
-    if (isAlumni) {
-      await unsubscribeContactFromAllLists(
-        activeCampaignAccount,
-        activeCampaignToken,
-        contactId,
-      );
-      return;
-    }
-
     const listIdByName = await getListIdByName(
       activeCampaignAccount,
       activeCampaignToken,
     );
+
+    if (isAlumni) {
+      await unsubscribeContactFromLists(
+        activeCampaignAccount,
+        activeCampaignToken,
+        contactId,
+        listIdByName,
+      );
+      return;
+    }
 
     const listIds: string[] = [];
 

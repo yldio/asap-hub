@@ -267,10 +267,11 @@ export type ContactListsResponse = {
 /**
  * @see {@link https://developers.activecampaign.com/reference/retrieve-contact-list-memberships}
  */
-export const unsubscribeContactFromAllLists = async (
+export const unsubscribeContactFromLists = async (
   account: string,
   token: string,
   contactId: string,
+  listIdByName: ListIdByName,
 ): Promise<void> => {
   const apiURL = getActiveCampaignApiURL(account);
   const headers = getActiveCampaignHeaders(token);
@@ -279,10 +280,14 @@ export const unsubscribeContactFromAllLists = async (
     headers,
   }).json<ContactListsResponse>();
 
-  const listIds = lists.contactLists.map((item) => item.list);
+  const masterListId = listIdByName['Master List'];
+  const contactListIds = lists.contactLists.map((item) => item.list);
+  const listsToUnsubscribeFrom = contactListIds.filter(
+    (id) => id !== masterListId,
+  );
 
   await Promise.all(
-    listIds.map(async (listId) => {
+    listsToUnsubscribeFrom.map(async (listId) => {
       await updateListStatusForContact(
         account,
         token,
@@ -319,7 +324,7 @@ export const ActiveCampaign = {
   getContactIdByEmail,
   getCustomFieldIdByTitle,
   getListIdByName,
-  unsubscribeContactFromAllLists,
+  unsubscribeContactFromLists,
   updateContact,
   updateListStatusForContact,
 };
@@ -351,10 +356,11 @@ export type ActiveCampaignType = {
     token: string,
   ) => Promise<CRNFieldIdByTitle | GP2FieldIdByTitle>;
   getListIdByName: (account: string, token: string) => Promise<ListIdByName>;
-  unsubscribeContactFromAllLists: (
+  unsubscribeContactFromLists: (
     account: string,
     token: string,
     contactId: string,
+    listIdByName: ListIdByName,
   ) => Promise<void>;
   updateContact: (
     account: string,

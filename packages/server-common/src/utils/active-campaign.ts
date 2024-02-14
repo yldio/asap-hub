@@ -81,6 +81,31 @@ export const getActiveCampaignHeaders = (token: string) => ({
 /**
  * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
  */
+export const updateListStatusForContact = async (
+  account: string,
+  token: string,
+  action: 'subscribe' | 'unsubscribe',
+  contactId: string,
+  listId: string,
+): Promise<void> => {
+  const apiURL = getActiveCampaignApiURL(account);
+  const headers = getActiveCampaignHeaders(token);
+
+  await Got.post(`${apiURL}/contactLists`, {
+    json: {
+      contactList: {
+        list: listId,
+        contact: contactId,
+        status: action === 'subscribe' ? 1 : 2,
+      },
+    },
+    headers,
+  }).json();
+};
+
+/**
+ * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
+ */
 export const addContactToList = async (
   account: string,
   token: string,
@@ -283,31 +308,6 @@ export const updateContact = async (
 
   return Got.put(`${apiURL}/contacts/${id}`, {
     json: { contact },
-    headers,
-  }).json();
-};
-
-/**
- * @see {@link https://developers.activecampaign.com/reference/update-list-status-for-contact}
- */
-export const updateListStatusForContact = async (
-  account: string,
-  token: string,
-  action: 'subscribe' | 'unsubscribe',
-  contactId: string,
-  listId: string,
-): Promise<void> => {
-  const apiURL = getActiveCampaignApiURL(account);
-  const headers = getActiveCampaignHeaders(token);
-
-  await Got.post(`${apiURL}/contactLists`, {
-    json: {
-      contactList: {
-        list: listId,
-        contact: contactId,
-        status: action === 'subscribe' ? 1 : 2,
-      },
-    },
     headers,
   }).json();
 };

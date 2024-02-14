@@ -53,15 +53,8 @@ it('renders group calendar link if present and group is active', () => {
   const { queryByRole, rerender } = render(
     <InterestGroupProfileHeader {...props} calendarId="1234" active={false} />,
   );
-  expect(
-    queryByRole('button', { name: /calendar/i }),
-  ).not.toBeInTheDocument();
-  rerender(
-    <InterestGroupProfileHeader
-      {...props}
-      calendarId="1234"
-    />,
-  );
+  expect(queryByRole('button', { name: /calendar/i })).not.toBeInTheDocument();
+  rerender(<InterestGroupProfileHeader {...props} calendarId="1234" />);
   expect(queryByRole('button', { name: /calendar/i })).toBeVisible();
 });
 

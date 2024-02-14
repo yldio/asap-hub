@@ -5,6 +5,7 @@ import {
   FetchDashboardQueryVariables,
 } from '@asap-hub/contentful';
 import { DashboardDataObject } from '@asap-hub/model';
+import { DateTime } from 'luxon';
 import { DashboardDataProvider } from '../types';
 import { NewsItem, parseContentfulGraphQlNews } from './news.data-provider';
 import { PageItem, parseContentfulGraphQlPages } from './page.data-provider';
@@ -31,6 +32,10 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
       announcements:
         dashboard?.announcementsCollection?.items
           .filter((x): x is AnnouncementItem => x !== null)
+          .filter(
+            ({ deadline }) =>
+              DateTime.fromISO(deadline).toUTC() > DateTime.utc(),
+          )
           .map((announcement) => ({
             deadline: announcement.deadline,
             description: announcement.description || '',

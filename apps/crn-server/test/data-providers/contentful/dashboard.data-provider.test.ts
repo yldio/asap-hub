@@ -113,5 +113,45 @@ describe('DashboardDataProvider', () => {
         announcements: [],
       } satisfies DashboardDataObject);
     });
+
+    test('Should only return annoucements whose deadline has not passed yet', async () => {
+      const contentfulGraphQLResponse = getContentfulDashboardGraphqlResponse();
+      const newAnnouncement = {
+        ...getContentfulGraphqlAnnouncements(),
+        // deadline is in the future
+        deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        sys: {
+          id: 'announcement-id-new',
+        },
+      };
+      contentfulGraphQLResponse.dashboardCollection!.items[0]!.announcementsCollection!.items =
+        [
+          {
+            ...getContentfulGraphqlAnnouncements(),
+            // deadline is in the past
+            deadline: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+            sys: {
+              id: 'announcement-id-old',
+            },
+          },
+          newAnnouncement,
+        ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await dashboardDataProvider.fetch();
+
+      expect(result.announcements).toHaveLength(1);
+      expect(result.announcements).toEqual([
+        {
+          deadline: newAnnouncement.deadline,
+          description: newAnnouncement.description!,
+          href: newAnnouncement.link!,
+          id: newAnnouncement.sys.id,
+        },
+      ] satisfies DashboardDataObject['announcements']);
+    });
   });
 });

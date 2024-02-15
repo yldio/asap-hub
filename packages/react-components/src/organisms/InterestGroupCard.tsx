@@ -30,6 +30,12 @@ const descriptionStyles = css({
   marginBottom: `${24 / perRem}em`,
 });
 
+const buttonStyle = css({
+  '> a': {
+    backgroundColor: 'transparent',
+  },
+});
+
 type InterestGroupCardProps = Pick<
   InterestGroupResponse,
   'id' | 'name' | 'description' | 'tags' | 'active'
@@ -60,9 +66,11 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
       {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
     </div>
     {googleDrive && (
-      <Link href={googleDrive} buttonStyle small>
-        {googleDriveIcon} Access Drive
-      </Link>
+      <span css={buttonStyle}>
+        <Link href={googleDrive} buttonStyle small>
+          {googleDriveIcon} Access Drive
+        </Link>
+      </span>
     )}
     <Anchor
       href={
@@ -74,14 +82,12 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
       </Paragraph>
     </Anchor>
     <TagList min={2} max={3} tags={tags} />
-    {active && (
-      <Paragraph>
-        <span css={iconStyles}>
-          <TeamIcon />
-        </span>
-        {` ${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
-      </Paragraph>
-    )}
+    <Paragraph>
+      <span css={iconStyles}>
+        <TeamIcon />
+      </span>
+      {` ${numberOfTeams} Team${numberOfTeams === 1 ? '' : 's'}`}
+    </Paragraph>
   </Card>
 );
 export default InterestGroupCard;

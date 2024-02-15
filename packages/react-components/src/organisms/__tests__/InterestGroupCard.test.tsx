@@ -50,13 +50,6 @@ it('renders the link to google drive if present', () => {
   expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
 });
 
-it('does not render team count when group is inactive', () => {
-  const { queryByText } = render(
-    <InterestGroupCard {...props} active={false} numberOfTeams={3} />,
-  );
-  expect(queryByText(/3 teams/i)).toBeNull();
-});
-
 it('generates a singular team count', () => {
   const { getByText } = render(
     <InterestGroupCard {...props} numberOfTeams={1} />,

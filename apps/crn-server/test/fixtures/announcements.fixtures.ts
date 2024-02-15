@@ -7,7 +7,7 @@ export const getContentfulGraphqlAnnouncements = (): NonNullable<
     >['announcementsCollection']
   >['items'][number]
 > => ({
-  deadline: '2020-09-08T16:35:28.000Z',
+  deadline: '2050-09-08T16:35:28.000Z',
   description: 'Example Announcement',
   link: 'https://example-announcement.com',
   sys: {

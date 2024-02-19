@@ -17,7 +17,8 @@
     "interestGroup.id",
     "workingGroup.id",
     "workingGroups.id",
-    "publishingEntity"
+    "publishingEntity",
+    "complete"
   ],
   "attributesToIndex": [
     "displayName",

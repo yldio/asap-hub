@@ -62,10 +62,10 @@ it('fetches the working group information', async () => {
 
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenCalledWith(
+      expect.anything(),
       expect.objectContaining({
         currentPage: 0,
       }),
-      expect.anything(),
     ),
   );
 });

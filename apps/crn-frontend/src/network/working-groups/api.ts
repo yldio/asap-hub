@@ -1,31 +1,33 @@
+import { AlgoliaClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
-import createListApiUrl from '../../CreateListApiUrl';
 
 export const getWorkingGroups = async (
-  options: GetListOptions,
-  authorization: string,
+  algoliaClient: AlgoliaClient<'crn'>,
+  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<WorkingGroupListResponse> => {
-  const resp = await fetch(
-    createListApiUrl('working-groups', options).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
+  const algoliaFilters =
+    filters.size === 1
+      ? filters.has('Complete')
+        ? 'complete:true'
+        : 'complete:false'
+      : undefined;
+  const result = await algoliaClient.search(['working-group'], searchQuery, {
+    filters: algoliaFilters,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
 
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch working group list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getWorkingGroup = async (

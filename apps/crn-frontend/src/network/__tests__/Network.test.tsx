@@ -227,10 +227,10 @@ it('allows selection of working group filters', async () => {
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
+      expect.anything(),
       expect.objectContaining({
         filters: new Set(['Complete']),
       }),
-      expect.anything(),
     ),
   );
 });

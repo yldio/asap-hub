@@ -756,6 +756,8 @@ describe('User data provider', () => {
           googleScholar: null,
           orcid: null,
           blog: null,
+          blueSky: null,
+          threads: null,
           twitter: null,
           linkedIn: null,
           github: null,
@@ -2412,11 +2414,15 @@ describe('User data provider', () => {
         },
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        blog: null,
+        blueSky: null,
+        github: 'yldio',
         googleScholar: null,
         linkedIn: null,
-        researchGate: null,
+        orcid: null,
         researcherId: null,
-        github: 'yldio',
+        researchGate: null,
+        threads: null,
         twitter: 'yldio',
       });
     });

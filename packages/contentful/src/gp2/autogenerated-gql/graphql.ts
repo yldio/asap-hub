@@ -845,6 +845,8 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
   BlogDesc = 'blog_DESC',
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   CountryAsc = 'country_ASC',
@@ -895,6 +897,8 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   TelephoneCountryCodeDesc = 'telephoneCountryCode_DESC',
   TelephoneNumberAsc = 'telephoneNumber_ASC',
   TelephoneNumberDesc = 'telephoneNumber_DESC',
+  ThreadsAsc = 'threads_ASC',
+  ThreadsDesc = 'threads_DESC',
   TwitterAsc = 'twitter_ASC',
   TwitterDesc = 'twitter_DESC',
 }
@@ -5427,6 +5431,8 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
   BlogDesc = 'blog_DESC',
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   CountryAsc = 'country_ASC',
@@ -5477,6 +5483,8 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   TelephoneCountryCodeDesc = 'telephoneCountryCode_DESC',
   TelephoneNumberAsc = 'telephoneNumber_ASC',
   TelephoneNumberDesc = 'telephoneNumber_DESC',
+  ThreadsAsc = 'threads_ASC',
+  ThreadsDesc = 'threads_DESC',
   TwitterAsc = 'twitter_ASC',
   TwitterDesc = 'twitter_DESC',
 }
@@ -5524,6 +5532,7 @@ export type Users = Entry & {
   avatar?: Maybe<Asset>;
   biography?: Maybe<Scalars['String']>;
   blog?: Maybe<Scalars['String']>;
+  blueSky?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
   connections?: Maybe<Array<Maybe<Scalars['String']>>>;
   contentfulMetadata: ContentfulMetadata;
@@ -5556,6 +5565,7 @@ export type Users = Entry & {
   tagsCollection?: Maybe<UsersTagsCollection>;
   telephoneCountryCode?: Maybe<Scalars['String']>;
   telephoneNumber?: Maybe<Scalars['String']>;
+  threads?: Maybe<Scalars['String']>;
   twitter?: Maybe<Scalars['String']>;
 };
 
@@ -5592,6 +5602,11 @@ export type UsersBiographyArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersBlogArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersBlueSkyArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5758,6 +5773,11 @@ export type UsersTelephoneNumberArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersThreadsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersTwitterArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -5843,6 +5863,13 @@ export type UsersFilter = {
   blog_not?: InputMaybe<Scalars['String']>;
   blog_not_contains?: InputMaybe<Scalars['String']>;
   blog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky?: InputMaybe<Scalars['String']>;
+  blueSky_contains?: InputMaybe<Scalars['String']>;
+  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
+  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky_not?: InputMaybe<Scalars['String']>;
+  blueSky_not_contains?: InputMaybe<Scalars['String']>;
+  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   city?: InputMaybe<Scalars['String']>;
   city_contains?: InputMaybe<Scalars['String']>;
   city_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6021,6 +6048,13 @@ export type UsersFilter = {
   telephoneNumber_not?: InputMaybe<Scalars['String']>;
   telephoneNumber_not_contains?: InputMaybe<Scalars['String']>;
   telephoneNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  threads?: InputMaybe<Scalars['String']>;
+  threads_contains?: InputMaybe<Scalars['String']>;
+  threads_exists?: InputMaybe<Scalars['Boolean']>;
+  threads_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  threads_not?: InputMaybe<Scalars['String']>;
+  threads_not_contains?: InputMaybe<Scalars['String']>;
+  threads_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   twitter?: InputMaybe<Scalars['String']>;
   twitter_contains?: InputMaybe<Scalars['String']>;
   twitter_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6176,6 +6210,8 @@ export enum UsersOrder {
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
   BlogDesc = 'blog_DESC',
+  BlueSkyAsc = 'blueSky_ASC',
+  BlueSkyDesc = 'blueSky_DESC',
   CityAsc = 'city_ASC',
   CityDesc = 'city_DESC',
   CountryAsc = 'country_ASC',
@@ -6226,6 +6262,8 @@ export enum UsersOrder {
   TelephoneCountryCodeDesc = 'telephoneCountryCode_DESC',
   TelephoneNumberAsc = 'telephoneNumber_ASC',
   TelephoneNumberDesc = 'telephoneNumber_DESC',
+  ThreadsAsc = 'threads_ASC',
+  ThreadsDesc = 'threads_DESC',
   TwitterAsc = 'twitter_ASC',
   TwitterDesc = 'twitter_DESC',
 }
@@ -7646,6 +7684,13 @@ export type CfUsersNestedFilter = {
   blog_not?: InputMaybe<Scalars['String']>;
   blog_not_contains?: InputMaybe<Scalars['String']>;
   blog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky?: InputMaybe<Scalars['String']>;
+  blueSky_contains?: InputMaybe<Scalars['String']>;
+  blueSky_exists?: InputMaybe<Scalars['Boolean']>;
+  blueSky_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blueSky_not?: InputMaybe<Scalars['String']>;
+  blueSky_not_contains?: InputMaybe<Scalars['String']>;
+  blueSky_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   city?: InputMaybe<Scalars['String']>;
   city_contains?: InputMaybe<Scalars['String']>;
   city_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7822,6 +7867,13 @@ export type CfUsersNestedFilter = {
   telephoneNumber_not?: InputMaybe<Scalars['String']>;
   telephoneNumber_not_contains?: InputMaybe<Scalars['String']>;
   telephoneNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  threads?: InputMaybe<Scalars['String']>;
+  threads_contains?: InputMaybe<Scalars['String']>;
+  threads_exists?: InputMaybe<Scalars['Boolean']>;
+  threads_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  threads_not?: InputMaybe<Scalars['String']>;
+  threads_not_contains?: InputMaybe<Scalars['String']>;
+  threads_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   twitter?: InputMaybe<Scalars['String']>;
   twitter_contains?: InputMaybe<Scalars['String']>;
   twitter_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12098,6 +12150,8 @@ export type UsersContentDataFragment = Pick<
   | 'fundingStreams'
   | 'blog'
   | 'linkedIn'
+  | 'blueSky'
+  | 'threads'
   | 'twitter'
   | 'github'
   | 'googleScholar'
@@ -12233,6 +12287,8 @@ export type FetchUserByIdQuery = {
       | 'fundingStreams'
       | 'blog'
       | 'linkedIn'
+      | 'blueSky'
+      | 'threads'
       | 'twitter'
       | 'github'
       | 'googleScholar'
@@ -12376,6 +12432,8 @@ export type FetchUsersQuery = {
             | 'fundingStreams'
             | 'blog'
             | 'linkedIn'
+            | 'blueSky'
+            | 'threads'
             | 'twitter'
             | 'github'
             | 'googleScholar'
@@ -15673,6 +15731,8 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'fundingStreams' } },
           { kind: 'Field', name: { kind: 'Name', value: 'blog' } },
           { kind: 'Field', name: { kind: 'Name', value: 'linkedIn' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'blueSky' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'threads' } },
           { kind: 'Field', name: { kind: 'Name', value: 'twitter' } },
           { kind: 'Field', name: { kind: 'Name', value: 'github' } },
           { kind: 'Field', name: { kind: 'Name', value: 'googleScholar' } },

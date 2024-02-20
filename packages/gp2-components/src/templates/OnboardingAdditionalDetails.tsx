@@ -2,23 +2,17 @@ import { gp2 } from '@asap-hub/model';
 import { Paragraph } from '@asap-hub/react-components';
 import {
   UserContributingCohorts,
-  UserExternalProfiles,
   UserFundingStreams,
   UserQuestions,
 } from '../organisms';
 
 type OnboardingAdditionalDetailsProps = Pick<
   gp2.UserResponse,
-  | 'questions'
-  | 'firstName'
-  | 'fundingStreams'
-  | 'contributingCohorts'
-  | 'social'
+  'questions' | 'firstName' | 'fundingStreams' | 'contributingCohorts'
 > & {
   editQuestionsHref: string;
   editFundingStreamsHref: string;
   editContributingCohortsHref: string;
-  editExternalProfilesHref: string;
 };
 const OnboardingAdditionalDetails: React.FC<
   OnboardingAdditionalDetailsProps
@@ -27,11 +21,9 @@ const OnboardingAdditionalDetails: React.FC<
   firstName,
   fundingStreams,
   contributingCohorts,
-  social,
   editQuestionsHref,
   editFundingStreamsHref,
   editContributingCohortsHref,
-  editExternalProfilesHref,
 }) => (
   <>
     <Paragraph noMargin>
@@ -54,7 +46,6 @@ const OnboardingAdditionalDetails: React.FC<
       firstName={firstName}
       editHref={editContributingCohortsHref}
     />
-    <UserExternalProfiles social={social} editHref={editExternalProfilesHref} />
   </>
 );
 

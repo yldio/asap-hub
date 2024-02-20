@@ -16,7 +16,6 @@ describe('UserExternalProfilesForm', () => {
   const defaultProps: UserExternalProfilesFormProps = {
     ...gp2Fixtures.createUserResponse(),
     onChange: mockOnChange,
-    isSaving: false,
   };
 
   const renderExternalProfiles = (
@@ -59,6 +58,28 @@ describe('UserExternalProfilesForm', () => {
     expect(input).toBeVisible();
     expect(input).toBeDisabled();
   });
+
+  it.each`
+    fieldName          | name
+    ${'googleScholar'} | ${'Google Scholar (optional) Type your Google Scholar profile URL.'}
+    ${'orcid'}         | ${'ORCID (optional) Type your ORCID ID.'}
+    ${'researchGate'}  | ${'Research Gate (optional) Type your Research Gate profile URL.'}
+    ${'researcherId'}  | ${'ResearcherID (optional) Type your Researcher ID.'}
+    ${'blog'}          | ${'Blog (optional)'}
+    ${'blueSky'}       | ${'BlueSky (optional) Type your BlueSky profile URL.'}
+    ${'threads'}       | ${'Threads (optional) Type your Threads profile URL.'}
+    ${'twitter'}       | ${'X (optional) Type your X (formerly twitter) profile URL.'}
+    ${'linkedIn'}      | ${'LinkedIn (optional) Type your LinkedIn profile URL.'}
+    ${'github'}        | ${'Github (optional) Type your Github profile URL.'}
+  `(
+    'input $fieldName field is enabled by default when isSaving is not passed',
+    ({ name }) => {
+      renderExternalProfiles();
+      const input = screen.getByRole('textbox', { name });
+      expect(input).toBeVisible();
+      expect(input).toBeEnabled();
+    },
+  );
 
   it.each`
     name               | placeholder                                              | value

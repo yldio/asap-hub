@@ -114,7 +114,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
         }
       >
         {({ data }: MemberListProps) => (
-          <div css={containerStyles}>
+          <div css={[containerStyles, { paddingBottom: 12 }]}>
             <MembersList
               members={data
                 .filter((member) => member.user !== undefined)

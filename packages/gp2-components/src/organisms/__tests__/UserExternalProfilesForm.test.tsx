@@ -41,6 +41,28 @@ describe('UserExternalProfilesForm', () => {
     },
   );
 
+  it('disables all fields when isSaving is true', () => {
+    renderExternalProfiles({ isSaving: true });
+
+    const inputNames = [
+      'Google Scholar (optional) Type your Google Scholar profile URL.',
+      'ORCID (optional) Type your ORCID ID.',
+      'Research Gate (optional) Type your Research Gate profile URL.',
+      'ResearcherID (optional) Type your Researcher ID.',
+      'Blog (optional)',
+      'BlueSky (optional) Type your BlueSky profile URL.',
+      'Threads (optional) Type your Threads profile URL.',
+      'X (optional) Type your X (formerly twitter) profile URL.',
+      'LinkedIn (optional) Type your LinkedIn profile URL.',
+      'Github (optional) Type your Github profile URL.',
+    ];
+    inputNames.forEach((name) => {
+      const input = screen.getByRole('textbox', { name });
+      expect(input).toBeVisible();
+      expect(input).toBeDisabled();
+    });
+  });
+
   it.each`
     fieldName          | name
     ${'googleScholar'} | ${'Google Scholar (optional) Type your Google Scholar profile URL.'}

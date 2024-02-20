@@ -1,10 +1,10 @@
 import {
   DiscoverDataObject,
   DiscoverResponse,
-  UserResponse,
+  DiscoverMembers,
 } from '@asap-hub/model';
 
-const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
+const getDiscoverMembersResponse = (prefix = ''): DiscoverMembers[] => [
   {
     id: `${prefix}uuid-members-1`,
     onboarded: true,

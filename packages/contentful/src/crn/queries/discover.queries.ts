@@ -15,6 +15,7 @@ const usersContentQueryFragment = gql`
     firstName
     institution
     jobTitle
+    nickname
     lastName
     avatar {
       url

@@ -18,7 +18,7 @@ const avatarSize = 132;
 type UserCardProps = Pick<
   gp2Model.UserResponse,
   | 'id'
-  | 'displayName'
+  | 'fullDisplayName'
   | 'firstName'
   | 'lastName'
   | 'avatarUrl'
@@ -65,7 +65,7 @@ const avatarStyles = css({
 
 const UserCard: React.FC<UserCardProps> = ({
   id,
-  displayName,
+  fullDisplayName,
   firstName,
   lastName,
   avatarUrl,
@@ -96,7 +96,7 @@ const UserCard: React.FC<UserCardProps> = ({
         <div css={textContainerStyles}>
           <Anchor href={userHref}>
             <h3 css={titleStyles}>
-              {displayName}
+              {fullDisplayName}
               {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
             </h3>
           </Anchor>

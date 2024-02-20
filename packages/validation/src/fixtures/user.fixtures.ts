@@ -4,6 +4,7 @@ export const getUserResponse = (): UserResponse => ({
   id: 'userId',
   onboarded: true,
   displayName: 'Tony Stark',
+  fullDisplayName: 'Tony Stark',
   createdDate: '2020-09-25T09:42:51.000Z',
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
   email: 'tony@stark.com',

@@ -10597,6 +10597,7 @@ export type PartialUsersContentFragment = Pick<
   | 'firstName'
   | 'institution'
   | 'jobTitle'
+  | 'nickname'
   | 'lastName'
 > & {
   sys: Pick<
@@ -10708,6 +10709,7 @@ export type FetchDiscoverQuery = {
                 | 'firstName'
                 | 'institution'
                 | 'jobTitle'
+                | 'nickname'
                 | 'lastName'
               > & {
                 sys: Pick<
@@ -10730,6 +10732,7 @@ export type FetchDiscoverQuery = {
                 | 'firstName'
                 | 'institution'
                 | 'jobTitle'
+                | 'nickname'
                 | 'lastName'
               > & {
                 sys: Pick<
@@ -16924,6 +16927,7 @@ export const PartialUsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
           { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
           {
             kind: 'Field',

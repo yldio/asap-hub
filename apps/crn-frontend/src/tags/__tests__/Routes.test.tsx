@@ -210,7 +210,7 @@ it('Will show algolia results', async () => {
   const algoliaResponse = createAlgoliaResponse([
     {
       ...userResponse,
-      displayName: 'Tom Cruise',
+      fullDisplayName: 'Tom Cruise',
       objectID: userResponse.id,
       __meta: { type: 'user' },
     },

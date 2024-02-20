@@ -133,7 +133,7 @@ const renderUserProfile = async (
 it('renders the personal info', async () => {
   await renderUserProfile({
     ...createUserResponse(),
-    displayName: 'Someone',
+    fullDisplayName: 'Someone',
   });
   expect((await screen.findByText('Someone')).tagName).toBe('H1');
 });

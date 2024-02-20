@@ -133,7 +133,7 @@ export const createUserListAlgoliaResponse = (
   createAlgoliaResponse<'user'>(
     Array.from({ length: items }, (_, index) =>
       createUserAlgoliaRecord({
-        displayName: `Tony Stark ${index}`,
+        fullDisplayName: `Tony Stark ${index}`,
         id: `${index}`,
       }),
     ),

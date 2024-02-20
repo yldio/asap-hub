@@ -47,9 +47,6 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
   onChange,
   social,
   newSocial,
-  // codecov is not recognizing this line is covered
-  // although it is on UserExternalProfilesForm.test.tsx
-  /* istanbul ignore next */
   isSaving = false,
 }) => {
   const researchNetworks: (Pick<
@@ -183,6 +180,9 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
                 <Icon color={lead.hex} />
               </span>
             }
+            // codecov is not recognizing isSaving is covered
+            // although it is on UserExternalProfilesForm.test.tsx
+            /* istanbul ignore next */
             enabled={!isSaving}
             value={newSocial?.[key] ?? (social?.[key] || '')}
             onChange={onChangeValue(key)}
@@ -205,6 +205,9 @@ const UserExternalProfilesForm: React.FC<UserExternalProfilesFormProps> = ({
                 <Icon color={lead.hex} />
               </span>
             }
+            // codecov is not recognizing isSaving is covered
+            // although it is on UserExternalProfilesForm.test.tsx
+            /* istanbul ignore next */
             enabled={!isSaving}
             value={newSocial?.[key] ?? (social?.[key] || '')}
             onChange={onChangeValue(key)}

@@ -82,19 +82,6 @@ describe('Users controller', () => {
         expect(displayName).toEqual('John Smith');
       });
 
-      test('Should use all middle name initials', async () => {
-        const user = getUserDataObject();
-        user.firstName = 'John';
-        user.middleName = 'Wilbur Thomas Geofrey';
-        user.lastName = 'Smith';
-        delete user.nickname;
-
-        userDataProviderMock.fetchById.mockResolvedValue(user);
-        const { displayName } = await userController.fetchById(user.id);
-
-        expect(displayName).toEqual('John W. T. G. Smith');
-      });
-
       test('Should put any nickname in brackets', async () => {
         const user = getUserDataObject();
         user.firstName = 'John';
@@ -106,6 +93,21 @@ describe('Users controller', () => {
         const { displayName } = await userController.fetchById(user.id);
 
         expect(displayName).toEqual('John (R2 D2) Smith');
+      });
+    });
+
+    describe('Full display name', () => {
+      test('Should use all middle name initials', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { fullDisplayName } = await userController.fetchById(user.id);
+
+        expect(fullDisplayName).toEqual('John W. T. G. Smith');
       });
     });
   });

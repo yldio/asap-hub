@@ -90,7 +90,8 @@ export const getUserResponse = (): UserResponse => ({
     { id: '4', name: 'expertise 4' },
     { id: '5', name: 'expertise 5' },
   ],
-  displayName: 'Tom (Iron Man) E. Hardy',
+  fullDisplayName: 'Tom (Iron Man) E. Hardy',
+  displayName: 'Tom (Iron Man) Hardy',
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -197,7 +198,8 @@ export const getUserListItemDataObject = (): UserListItemDataObject => ({
 
 export const getUserListItemResponse = (): UserListItemResponse => ({
   ...getUserListItemDataObject(),
-  displayName: 'Tom (Iron Man) E. Hardy',
+  displayName: 'Tom (Iron Man) Hardy',
+  fullDisplayName: 'Tom (Iron Man) E. Hardy',
   onboarded: true,
 });
 
@@ -218,6 +220,7 @@ export const fetchExpectation: ListUserResponse = {
       _tags: [],
       expertiseAndResourceTags: [],
       displayName: 'Arnold Schwatzneger',
+      fullDisplayName: 'Arnold Schwatzneger',
       email: 'arnold@gmail.com',
       firstName: 'Arnold',
       lastName: 'Schwatzneger',

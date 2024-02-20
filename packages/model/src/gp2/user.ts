@@ -176,12 +176,13 @@ export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
   displayName: string;
+  fullDisplayName: string;
   projectIds: string[];
   workingGroupIds: string[];
   tagIds: string[];
 }
 export type ListUserResponse = ListResponse<UserResponse>;
-export type UserMetadataResponse = UserResponse & {
+export type UserMetadataResponse = Omit<UserResponse, 'fullDisplayName'> & {
   algoliaApiKey: string | null;
 };
 export type UserUpdateRequest = UserUpdateDataObject;

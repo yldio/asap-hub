@@ -259,6 +259,7 @@ describe('For a GP2 login', () => {
   const baseUser: gp2Model.UserResponse = {
     onboarded: true,
     displayName: 'Joao Tiago',
+    fullDisplayName: 'Joao Tiago',
     firstName: 'Joao',
     lastName: 'Tiago',
     email: 'joao.tiago@yld.io',

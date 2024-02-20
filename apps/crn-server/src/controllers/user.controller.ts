@@ -3,6 +3,7 @@ import Boom from '@hapi/boom';
 import {
   FetchUsersOptions,
   ListUserResponse,
+  parseUserDisplayName,
   UserDataObject,
   UserResponse,
   UserUpdateDataObject,
@@ -13,7 +14,6 @@ import {
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
-  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import Intercept from 'apr-intercept';
@@ -52,6 +52,14 @@ export default class UserController {
         ...user,
         onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
         displayName: parseUserDisplayName(
+          'short',
+          user.firstName,
+          user.lastName,
+          undefined,
+          user.nickname,
+        ),
+        fullDisplayName: parseUserDisplayName(
+          'full',
           user.firstName,
           user.lastName,
           user.middleName,
@@ -227,6 +235,14 @@ export const parseUserToResponse = ({
   return {
     ...user,
     displayName: parseUserDisplayName(
+      'short',
+      user.firstName,
+      user.lastName,
+      undefined,
+      user.nickname,
+    ),
+    fullDisplayName: parseUserDisplayName(
+      'full',
       user.firstName,
       user.lastName,
       user.middleName,

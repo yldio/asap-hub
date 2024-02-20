@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2, parseUserDisplayName } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
@@ -113,8 +113,20 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
       <div css={contentStyles}>
         <MembersList
           members={members.map(
-            ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
-              firstLine: `${firstName} ${lastName}`,
+            ({
+              role,
+              firstName,
+              nickname,
+              lastName,
+              avatarUrl,
+              userId: id,
+            }) => ({
+              firstLine: parseUserDisplayName(
+                'short',
+                firstName,
+                lastName,
+                (nickname = nickname),
+              ),
               secondLine: role,
               avatarUrl,
               firstName,

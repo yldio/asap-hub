@@ -51,4 +51,3 @@ export { default as UserWorkingGroups } from './UserWorkingGroups';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupDetailHeader } from './WorkingGroupDetailHeader';
 export { default as WorkingGroupNetwork } from './WorkingGroupNetwork';
-export { default as WorkingGroupsBody } from './WorkingGroupsBody';

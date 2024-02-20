@@ -214,6 +214,7 @@ export const getContentfulGraphqlEvent = (): NonNullable<
             id: 'user-id-3',
           },
           firstName: 'Adam',
+          nickname: 'Ad',
           lastName: 'Brown',
           onboarded: true,
           avatar: null,
@@ -311,7 +312,7 @@ export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
   id: 'user-id-3',
   firstName: 'Adam',
   lastName: 'Brown',
-  displayName: 'Adam Brown',
+  displayName: 'Adam (Ad) Brown',
   avatarUrl: undefined,
 });
 

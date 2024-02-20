@@ -167,6 +167,7 @@ export const eventsContentQueryFragment = gql`
               id
             }
             firstName
+            nickname
             lastName
             onboarded
             avatar {

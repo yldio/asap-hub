@@ -10,7 +10,11 @@ import {
   pollContentfulGql,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
+import {
+  EventStatus,
+  gp2 as gp2Model,
+  parseUserDisplayName,
+} from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
@@ -257,7 +261,13 @@ export const parseEventSpeakerUser = (
   id: user.sys.id,
   firstName: user.firstName ?? undefined,
   lastName: user.lastName ?? undefined,
-  displayName: `${user.firstName} ${user.lastName}`,
+  displayName: parseUserDisplayName(
+    'short',
+    user.firstName ?? undefined,
+    user.lastName ?? undefined,
+    undefined,
+    user.nickname ?? undefined,
+  ),
   avatarUrl: user.avatar?.url ?? undefined,
 });
 

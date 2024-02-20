@@ -1,10 +1,9 @@
 import Intercept from 'apr-intercept';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { gp2 } from '@asap-hub/model';
+import { gp2, parseUserDisplayName } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
   isValidOrcidResponse,
-  parseUserDisplayName,
   transformOrcidWorks,
 } from '@asap-hub/server-common';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
@@ -160,6 +159,14 @@ const parseUserToResponse = (
 ): gp2.UserResponse => ({
   ...user,
   displayName: parseUserDisplayName(
+    'short',
+    user.firstName,
+    user.lastName,
+    user.middleName,
+    user.nickname,
+  ),
+  fullDisplayName: parseUserDisplayName(
+    'full',
     user.firstName,
     user.lastName,
     user.middleName,

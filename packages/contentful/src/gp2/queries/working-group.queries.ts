@@ -30,6 +30,7 @@ export const workingGroupsContentQueryFragment = gql`
             id
           }
           firstName
+          nickname
           lastName
           onboarded
           avatar {

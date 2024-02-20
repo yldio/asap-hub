@@ -39,6 +39,7 @@ export type Member<T> = {
   userId: string;
   role: T;
   firstName: string;
+  nickname?: string;
   lastName: string;
   avatarUrl?: string;
 };

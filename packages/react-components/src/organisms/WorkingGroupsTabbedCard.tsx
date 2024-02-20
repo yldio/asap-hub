@@ -16,13 +16,11 @@ const containerStyles = css({
 });
 
 type WorkingGroupsTabbedCardProps = {
-  userName: string;
   groups?: ReadonlyArray<WorkingGroupMembership>;
   isUserAlumni: boolean;
 };
 
 const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
-  userName,
   groups,
   isUserAlumni,
 }) => {
@@ -35,7 +33,9 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
 
   return (
     <TabbedCard
-      title={`${userName}'s Working Groups`}
+      title="Working Groups"
+      description="Working groups allow CRN members to work together to solve problems. 
+      Find out the membership status of this member."
       activeTabIndex={isUserAlumni ? 1 : 0}
       getShowMoreText={(showMore) =>
         `View ${showMore ? 'Less' : 'More'} Memberships`

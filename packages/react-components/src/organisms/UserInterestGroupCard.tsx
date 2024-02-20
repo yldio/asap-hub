@@ -93,14 +93,13 @@ const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
 
 type UserInterestGroupCardProps = Pick<
   UserResponse,
-  'alumniSinceDate' | 'displayName' | 'id'
+  'alumniSinceDate' | 'id'
 > & {
   interestGroups: InterestGroupResponse[];
 };
 
 const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
   id,
-  displayName,
   alumniSinceDate,
   interestGroups,
 }) => {
@@ -122,8 +121,9 @@ const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
 
   return (
     <TabbedCard
-      title={`${displayName}'s Interest Groups`}
-      description="Interest groups allow teams to share findings with other teams about topics of interest."
+      title="Interest Groups"
+      description="Interest groups allow teams to share findings with other teams about topics of interest. 
+      Find out the membership status of this member."
       activeTabIndex={alumniSinceDate ? 1 : 0}
       getShowMoreText={(showMore) =>
         `View ${showMore ? 'less' : 'more'} interest groups`

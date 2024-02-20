@@ -45,7 +45,6 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         userProfileWorkingGroupsCard={
           <Frame title={null} fallback={null}>
             <WorkingGroupsTabbedCard
-              userName={user.displayName}
               isUserAlumni={!!user.alumniSinceDate}
               groups={user.workingGroups}
             />
@@ -54,7 +53,6 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         userProfileTeamsCard={
           <Frame title={null} fallback={null}>
             <UserTeamsTabbedCard
-              userName={user.displayName}
               userAlumni={!!user.alumniSinceDate}
               teams={user.teams}
             />

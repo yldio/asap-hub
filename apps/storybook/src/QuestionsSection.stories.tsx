@@ -1,4 +1,4 @@
-import { array, text } from '@storybook/addon-knobs';
+import { array } from '@storybook/addon-knobs';
 import { QuestionsSection } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
 
@@ -9,7 +9,6 @@ export default {
 
 export const Normal = () => (
   <QuestionsSection
-    firstName={text('Name', 'John')}
     questions={array('Questions', [
       'What is the meaning of life?',
       'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',

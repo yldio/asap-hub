@@ -72,7 +72,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   ];
   const defaultCards = [
     {
-      card: <QuestionsSection firstName={firstName} questions={questions} />,
+      card: <QuestionsSection questions={questions} />,
       editLink:
         editQuestionsHref === undefined
           ? undefined

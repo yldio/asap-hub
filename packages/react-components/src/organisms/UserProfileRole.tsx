@@ -30,9 +30,7 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
   const { isOwnProfile } = useContext(UserProfileContext);
   return (
     <Card>
-      <Headline2 styleAsHeading={3}>
-        {firstName}'s Role on ASAP Network
-      </Headline2>
+      <Headline2 styleAsHeading={3}>Role</Headline2>
       {(researchInterests || isOwnProfile) && role !== 'Staff' && (
         <div css={detailsContentStyle}>
           <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
@@ -48,9 +46,7 @@ const UserProfileRole: React.FC<UserProfileRoleProps> = ({
       )}
       {(responsibilities || isOwnProfile) && (
         <div css={detailsContentStyle}>
-          <Headline3 styleAsHeading={5}>
-            {firstName}'s Responsibilities
-          </Headline3>
+          <Headline3 styleAsHeading={5}>Responsibilities</Headline3>
           {responsibilities ? (
             <p css={textStyle}>{responsibilities}</p>
           ) : (

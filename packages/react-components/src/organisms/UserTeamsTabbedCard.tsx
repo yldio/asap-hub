@@ -1,7 +1,7 @@
 import { TeamRole, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import React, { ComponentProps, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
 import { inactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
@@ -69,18 +69,13 @@ const priorities: Record<TeamRole, number> = {
   Trainee: 8,
 };
 
-type UserTeamsTabbedCardProps = Pick<
-  ComponentProps<typeof TabbedCard>,
-  'description'
-> & {
-  userName: string;
+type UserTeamsTabbedCardProps = {
   userAlumni: boolean;
   teams: UserTeam[];
 };
 
 const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   userAlumni,
-  userName,
   teams,
 }) => {
   const sortedTeams = [...teams].sort(
@@ -94,7 +89,9 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   );
   return (
     <TabbedCard
-      title={`${userName}'s Teams`}
+      title="Teams"
+      description="Teams are a constellation of labs focused on a specific grant proposal. 
+      Find out the team status of this member."
       activeTabIndex={userAlumni ? 1 : 0}
       tabs={[
         {

@@ -22,7 +22,7 @@ const renderWorkingGroupsList = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
               <Route path={gp2Routing.workingGroups.template}>
-                <WorkingGroupList />
+                <WorkingGroupList role={'operational'} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -36,7 +36,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 
-it('renders a list of working groups', async () => {
+it('renders a list of operational working groups', async () => {
   const mockGetWorkingGroups = getWorkingGroupNetwork as jest.MockedFunction<
     typeof getWorkingGroupNetwork
   >;
@@ -52,7 +52,7 @@ it('renders a list of working groups', async () => {
     total: 2,
     items: [
       {
-        role: 'complexDisease' as const,
+        role: 'operational' as const,
         workingGroups: [firstGroup, secondGroup],
       },
     ],

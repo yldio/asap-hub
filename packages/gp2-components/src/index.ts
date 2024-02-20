@@ -63,7 +63,6 @@ export {
   WorkingGroupCard,
   WorkingGroupDetailHeader,
   WorkingGroupNetwork,
-  WorkingGroupsBody,
 } from './organisms';
 export {
   BasicLayout,

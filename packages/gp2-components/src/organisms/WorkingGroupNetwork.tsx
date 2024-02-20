@@ -1,34 +1,28 @@
 import { gp2 } from '@asap-hub/model';
-import {
-  drawerQuery,
-  Paragraph,
-  pixels,
-  Subtitle,
-} from '@asap-hub/react-components';
+import { Paragraph, pixels, Subtitle } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import WorkingGroupCard from './WorkingGroupCard';
-import { WorkingGroupsBodyProps } from './WorkingGroupsBody';
+
+export type WorkingGroupsNetworkProps = {
+  workingGroupNetwork: gp2.ListWorkingGroupNetworkResponse;
+  role: gp2.WorkingGroupNetworkRole;
+};
 
 const { perRem } = pixels;
 const styles = css({
   marginTop: `${48 / perRem}em`,
 });
 
-const gridContainerStyles = css({
-  display: 'grid',
-  gridGap: `${24 / perRem}em`,
-  gridTemplateColumns: '1fr 1fr',
+const container = css({
   marginTop: `${24 / perRem}em`,
-
-  [drawerQuery]: {
-    gridTemplateColumns: '1fr',
+  '& > *': {
+    marginBottom: `${32 / perRem}em`,
   },
 });
-const WorkingGroupNetwork: React.FC<
-  {
-    role: gp2.WorkingGroupNetworkRole;
-  } & WorkingGroupsBodyProps
-> = ({ role, workingGroupNetwork }) => {
+const WorkingGroupNetwork: React.FC<WorkingGroupsNetworkProps> = ({
+  role,
+  workingGroupNetwork,
+}) => {
   const complexDiseaseWorkingGroups = workingGroupNetwork.items
     .filter((network) => network.role === role)
     .flatMap(({ workingGroups }) => workingGroups);
@@ -65,7 +59,7 @@ const WorkingGroupNetwork: React.FC<
       <Paragraph noMargin accent="lead">
         {descriptions[role].paragraph}
       </Paragraph>
-      <article css={gridContainerStyles}>
+      <article css={container}>
         {complexDiseaseWorkingGroups.map((workingGroup) => (
           <WorkingGroupCard key={workingGroup.id} {...workingGroup} />
         ))}

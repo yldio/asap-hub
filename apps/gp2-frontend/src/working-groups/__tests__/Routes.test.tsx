@@ -35,7 +35,7 @@ const renderRoutes = async () => {
 jest.mock('../api');
 describe('Routes', () => {
   beforeEach(jest.resetAllMocks);
-  it('renders a list of working groups', async () => {
+  it('renders a list of operational working groups', async () => {
     const mockGetWorkingGroups = getWorkingGroupNetwork as jest.MockedFunction<
       typeof getWorkingGroupNetwork
     >;
@@ -51,7 +51,7 @@ describe('Routes', () => {
       total: 1,
       items: [
         {
-          role: 'support',
+          role: 'operational',
           workingGroups: [firstGroup, secondGroup],
         },
       ],

@@ -66,7 +66,8 @@
     "workingGroup.id",
     "workingGroups.id",
     "_tags",
-    "publishingEntity"
+    "publishingEntity",
+    "complete"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

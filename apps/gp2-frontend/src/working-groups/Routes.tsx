@@ -1,8 +1,7 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
-import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadWorkingGroupList = () =>
@@ -26,17 +25,38 @@ const Routes: React.FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
   return (
     <Switch>
-      <Route exact path={path}>
+      <Route exact path={path + gp2.workingGroups({}).operational.template}>
         <WorkingGroupsPage>
           <Frame title="Working Groups">
-            <WorkingGroupList />
+            <WorkingGroupList role={'operational'} />
+          </Frame>
+        </WorkingGroupsPage>
+      </Route>
+      <Route exact path={path + gp2.workingGroups({}).support.template}>
+        <WorkingGroupsPage>
+          <Frame title="Working Groups">
+            <WorkingGroupList role={'support'} />
+          </Frame>
+        </WorkingGroupsPage>
+      </Route>
+      <Route exact path={path + gp2.workingGroups({}).complexDisease.template}>
+        <WorkingGroupsPage>
+          <Frame title="Working Groups">
+            <WorkingGroupList role={'complexDisease'} />
+          </Frame>
+        </WorkingGroupsPage>
+      </Route>
+      <Route exact path={path + gp2.workingGroups({}).monogenic.template}>
+        <WorkingGroupsPage>
+          <Frame title="Working Groups">
+            <WorkingGroupList role={'monogenic'} />
           </Frame>
         </WorkingGroupsPage>
       </Route>
       <Route path={path + workingGroups({}).workingGroup.template}>
         <WorkingGroupDetail currentTime={currentTime} />
       </Route>
-      <Route component={NotFoundPage} />
+      <Redirect to={path + gp2.workingGroups({}).operational.template} />
     </Switch>
   );
 };

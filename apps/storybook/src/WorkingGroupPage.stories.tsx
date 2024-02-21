@@ -51,6 +51,15 @@ export const Normal = () => {
       'Adult Neurology',
       'Neuroimaging',
     ]),
+    calendars: [
+      {
+        id: 'hub@asap.science',
+        color: '#B1365F',
+        name: 'ASAP Hub',
+        interestGroups: [],
+        workingGroups: [],
+      },
+    ],
   };
 
   return (

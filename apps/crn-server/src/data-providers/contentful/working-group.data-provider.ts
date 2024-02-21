@@ -31,6 +31,7 @@ import {
   mapDeliverables,
 } from '../transformers';
 import logger from '../../utils/logger';
+import { parseTeamsCollection } from './user.data-provider';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -216,6 +217,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     alumniSinceDate: member.user?.alumniSinceDate,
     email: member.user?.email || '',
     avatarUrl: member.user?.avatar?.url || undefined,
+    teams: parseTeamsCollection(member.user?.teamsCollection),
   });
 
   const leaders = (membersCollection?.items || [])

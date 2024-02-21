@@ -2,10 +2,18 @@ import { css } from '@emotion/react';
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Paragraph, Anchor, Caption, Ellipsis, StateTag } from '../atoms';
-import { successIcon } from '../icons';
-import { ExternalLink, LinkHeadline, TagList } from '../molecules';
-import { perRem, tabletScreen } from '../pixels';
+import {
+  Card,
+  Paragraph,
+  Anchor,
+  Caption,
+  Ellipsis,
+  StateTag,
+  Link,
+} from '../atoms';
+import { googleDriveIcon, successIcon } from '../icons';
+import { LinkHeadline, TagList } from '../molecules';
+import { perRem, mobileScreen } from '../pixels';
 import { formatDate } from '../date';
 
 const wrapperStyle = css({
@@ -18,22 +26,18 @@ const wrapperStyle = css({
 
 const titleStyle = css({
   display: 'flex',
-  marginBottom: `${12 / perRem}em`,
-});
-
-const linkStyle = css({
-  display: 'flex',
   marginBottom: `${16 / perRem}em`,
-  flexFlow: 'column',
   gap: `${12 / perRem}em`,
-
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  flexFlow: 'column',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     gap: `${16 / perRem}em`,
+    marginBottom: `${12 / perRem}em`,
   },
 });
 
 const shortTextStyle = css({
+  marginTop: `${16 / perRem}em`,
   marginBottom: `${24 / perRem}em`,
 });
 
@@ -76,21 +80,17 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
       >
         {title}
       </LinkHeadline>
-    </div>
-    <div css={linkStyle}>
-      {externalLink && (
-        <ExternalLink
-          href={externalLink}
-          label="Working Group Folder"
-          full
-          noMargin
-          size="large"
-        />
-      )}
       {complete && (
         <div>
           <StateTag accent="green" icon={successIcon} label="Complete" />
         </div>
+      )}
+    </div>
+    <div>
+      {externalLink && (
+        <Link href={externalLink} buttonStyle small noMargin>
+          {googleDriveIcon} Access Drive
+        </Link>
       )}
     </div>
     <div css={shortTextStyle}>

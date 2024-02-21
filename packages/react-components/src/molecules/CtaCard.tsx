@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
-import { Link, Card, Paragraph } from '../atoms';
+import { Card, Paragraph } from '../atoms';
 import {
   mobileScreen,
   perRem,
@@ -9,6 +9,7 @@ import {
   tabletScreen,
   smallDesktopScreen,
 } from '../pixels';
+import CtaContactSection from './CtaContactSection';
 
 const getInTouchStyles = css({
   display: 'grid',
@@ -30,29 +31,27 @@ const getInTouchStyles = css({
     },
 });
 
-const buttonStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'block',
-  },
-});
-
 type CtaCardProps = {
   href: string;
   buttonText: string;
   children: ReactNode;
+  displayCopy?: boolean;
 };
 
-const CtaCard: React.FC<CtaCardProps> = ({ href, buttonText, children }) => (
+const CtaCard: React.FC<CtaCardProps> = ({
+  href,
+  buttonText,
+  children,
+  displayCopy = false,
+}) => (
   <Card padding={false} accent="green">
     <div css={getInTouchStyles}>
       <Paragraph>{children}</Paragraph>
-      <div css={buttonStyles}>
-        <Link buttonStyle small primary href={href}>
-          {buttonText}
-        </Link>
-      </div>
+      <CtaContactSection
+        href={href}
+        displayCopy={displayCopy}
+        buttonText={buttonText}
+      />
     </div>
   </Card>
 );

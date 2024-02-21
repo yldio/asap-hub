@@ -23,7 +23,6 @@ export { default as InterestGroupInformation } from './InterestGroupInformation'
 export { default as InterestGroupLeadersTabbedCard } from './InterestGroupLeadersTabbedCard';
 export { default as InterestGroupList } from './InterestGroupList';
 export { default as InterestGroupTeamsTabbedCard } from './InterestGroupTeamsTabbedCard';
-export { default as InterestGroupTools } from './InterestGroupTools';
 export { default as JoinEvent } from './JoinEvent';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MenuHeader } from './MenuHeader';

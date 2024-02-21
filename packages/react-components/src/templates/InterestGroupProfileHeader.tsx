@@ -2,32 +2,40 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import formatDistance from 'date-fns/formatDistance';
 import { network } from '@asap-hub/routing';
+import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
 import { paper, lead, steel } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { mobileScreen, perRem, tabletScreen } from '../pixels';
 import {
   contentSidePaddingWithNavigation,
   networkPageLayoutPaddingStyle,
 } from '../layout';
-import { Display, Link, StateTag, TabLink } from '../atoms';
-import { inactiveBadgeIcon, TeamIcon } from '../icons';
-import { TabNav } from '../molecules';
+import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
+import {
+  googleDriveIcon,
+  inactiveBadgeIcon,
+  systemCalendarIcon,
+  TeamIcon,
+} from '../icons';
+import { CalendarLink, TabNav } from '../molecules';
 import { EventSearch } from '../organisms';
 import { queryParamString } from '../routing';
+import { createMailTo } from '../mail';
 
 const visualHeaderStyles = css({
   backgroundColor: paper.rgb,
   padding: `${networkPageLayoutPaddingStyle} 0`,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
+
 const belowHeadlineStyles = css({
   display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'flex-end',
-  // All children must have at least +12 padding-top to avoid box breakout.
-  // Why not just subtract it from the children then? For the wrapping case.
-  // Hooray for no row-gap support in Safari.
-  marginTop: `${-12 / perRem}em`,
+  justifyContent: 'space-between',
+  flexFlow: 'column',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    flexFlow: 'row',
+    flexWrap: 'wrap',
+  },
 });
 
 const controlsStyles = css({
@@ -42,7 +50,29 @@ const titleStyle = css({
     flexFlow: 'column',
     gap: 3,
     alignItems: 'flex-start',
-    paddingBottom: `${12 / perRem}em`,
+  },
+});
+
+const contactStyles = css({
+  display: 'flex',
+  flexFlow: 'row',
+  gap: `${8 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
+});
+
+const buttonStyles = css({
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'flex',
+    flexGrow: 1,
+  },
+});
+
+const toolsStyles = css({
+  display: 'flex',
+  gap: `${12 / perRem}em`,
+  [`@media (max-width: ${mobileScreen.max - 1}px)`]: {
+    flexFlow: 'column',
+    gap: 0,
   },
 });
 
@@ -55,6 +85,9 @@ type InterestGroupProfileHeaderProps = {
   readonly active: boolean;
   readonly upcomingEventsCount: number;
   readonly pastEventsCount: number;
+  readonly tools: InterestGroupTools;
+  readonly calendarId?: InterestGroupResponse['calendars'][0]['id'];
+  readonly contactEmails: string[];
 } & ComponentProps<typeof EventSearch>;
 const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   id,
@@ -67,6 +100,9 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   onChangeSearchQuery,
   upcomingEventsCount,
   pastEventsCount,
+  tools,
+  calendarId,
+  contactEmails,
 }) => {
   const route = network({})
     .interestGroups({})
@@ -79,37 +115,71 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
           <Display styleAsHeading={2}>{name}</Display>
           {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
         </div>
-
-        <div
-          css={[belowHeadlineStyles, !active && { flexFlow: 'row-reverse' }]}
-        >
-          {active && (
-            <>
-              <div
-                css={{
-                  paddingRight: `${15 / perRem}em`,
-                  paddingTop: `${24 / perRem}em`,
-                  display: 'grid',
-                }}
+        {active && contactEmails.length !== 0 && (
+          <div css={contactStyles}>
+            <span css={buttonStyles}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(contactEmails)}`}
+                noMargin
               >
-                <TeamIcon />
+                Contact PM
+              </Link>
+            </span>
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() =>
+                navigator.clipboard.writeText(contactEmails.join())
+              }
+            />
+          </div>
+        )}
+        <div css={[belowHeadlineStyles]}>
+          <div css={toolsStyles}>
+            {tools.googleDrive && (
+              <Link href={tools.googleDrive} buttonStyle small>
+                {googleDriveIcon} Access Drive
+              </Link>
+            )}
+            {calendarId && active && (
+              <CalendarLink id={calendarId}>
+                <span css={{ display: 'flex', gap: '8px' }}>
+                  {systemCalendarIcon}Subscribe
+                </span>
+              </CalendarLink>
+            )}
+            {active && (
+              <div css={{ display: 'flex' }}>
+                <div
+                  css={{
+                    paddingRight: `${15 / perRem}em`,
+                    paddingTop: `${20 / perRem}em`,
+                    marginLeft: `${4 / perRem}em`,
+                    display: 'grid',
+                  }}
+                >
+                  <TeamIcon />
+                </div>
+                <div
+                  css={{
+                    flexGrow: 1,
+                    paddingRight: `${30 / perRem}em`,
+                    paddingTop: `${20 / perRem}em`,
+                  }}
+                >
+                  <Link href={groupTeamsHref}>
+                    {numberOfTeams} Team{numberOfTeams === 1 ? '' : 's'}
+                  </Link>
+                </div>
               </div>
-              <div
-                css={{
-                  flexGrow: 1,
-                  paddingRight: `${30 / perRem}em`,
-                  paddingTop: `${24 / perRem}em`,
-                }}
-              >
-                <Link href={groupTeamsHref}>
-                  {numberOfTeams} Team{numberOfTeams === 1 ? '' : 's'}
-                </Link>
-              </div>
-            </>
-          )}
+            )}
+          </div>
           <div
             css={{
-              paddingTop: `${24 / (13.6 / perRem) / perRem}em`,
+              paddingTop: `${20 / (13.6 / perRem) / perRem}em`,
               fontSize: `${13.6 / perRem}em`,
               color: lead.rgb,
             }}

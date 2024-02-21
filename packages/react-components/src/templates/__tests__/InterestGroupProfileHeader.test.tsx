@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { network, searchQueryParam } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
+import userEvent from '@testing-library/user-event';
 
 import InterestGroupProfileHeader from '../InterestGroupProfileHeader';
 
@@ -15,6 +16,8 @@ const props: ComponentProps<typeof InterestGroupProfileHeader> = {
   groupTeamsHref: '#teams',
   pastEventsCount: 2,
   upcomingEventsCount: 3,
+  tools: {},
+  contactEmails: [],
 };
 
 it('renders the name as a heading', () => {
@@ -28,6 +31,52 @@ it('renders the tag for inactive groups', () => {
   );
   expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+});
+
+it('renders group google drive link if present', () => {
+  const { queryByRole, rerender } = render(
+    <InterestGroupProfileHeader {...props} />,
+  );
+  expect(
+    queryByRole('link', { name: /access drive/i }),
+  ).not.toBeInTheDocument();
+  rerender(
+    <InterestGroupProfileHeader
+      {...props}
+      tools={{ googleDrive: 'http://drive.google.com/123' }}
+    />,
+  );
+  expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
+});
+
+it('renders group calendar link if present and group is active', () => {
+  const { queryByRole, rerender } = render(
+    <InterestGroupProfileHeader {...props} calendarId="1234" active={false} />,
+  );
+  expect(queryByRole('button', { name: /calendar/i })).not.toBeInTheDocument();
+  rerender(<InterestGroupProfileHeader {...props} calendarId="1234" />);
+  expect(queryByRole('button', { name: /calendar/i })).toBeVisible();
+});
+
+it('copy button adds emails to clipboard', async () => {
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: jest.fn(),
+    },
+  });
+  jest.spyOn(navigator.clipboard, 'writeText');
+  render(
+    <InterestGroupProfileHeader
+      {...props}
+      contactEmails={['test@example.com', 'contact@example.com']}
+    />,
+  );
+  const copyButton = screen.getByRole('button', { name: 'Copy' });
+  expect(copyButton).toBeVisible();
+  userEvent.click(copyButton);
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+    'test@example.com,contact@example.com',
+  );
 });
 
 it('shows the number of teams and links to them', () => {

@@ -6,14 +6,21 @@ import { network } from '@asap-hub/routing';
 import { useContext } from 'react';
 
 import { mobileScreen, perRem, rem } from '../pixels';
-import { Link, Display, StateTag, TabLink, Caption } from '../atoms';
+import {
+  Link,
+  Display,
+  StateTag,
+  TabLink,
+  Caption,
+  CopyButton,
+} from '../atoms';
 import { paper, pine, steel } from '../colors';
 import { networkPageLayoutPaddingStyle } from '../layout';
 import {
   UserAvatarList,
   TabNav,
-  ExternalLink,
   DropdownButton,
+  CalendarLink,
 } from '../molecules';
 import {
   article,
@@ -24,6 +31,8 @@ import {
   protocol,
   successIcon,
   crnReportIcon,
+  googleDriveIcon,
+  systemCalendarIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
 
@@ -31,6 +40,7 @@ const containerStyles = css({
   backgroundColor: paper.rgb,
   padding: networkPageLayoutPaddingStyle,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+  paddingBottom: 0,
 });
 
 const titleStyle = css({
@@ -49,14 +59,32 @@ const titleStyle = css({
 const rowStyles = css({
   display: 'flex',
   flexFlow: 'column',
-  gap: `${16 / perRem}em`,
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: `${16 / perRem}em`,
+  },
+});
+
+const toolsStyles = css({
+  display: 'flex',
+  flexFlow: 'column',
+  gap: `${12 / perRem}em`,
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     flexFlow: 'row',
     justifyContent: 'space-between',
   },
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    '> a': {
+      marginBottom: 0,
+    },
+    gap: 0,
+  },
 });
 
 const lastUpdatedStyles = css({
+  alignSelf: 'center',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginRight: 'auto',
   },
@@ -86,9 +114,8 @@ const contactSectionStyles = css({
 const pointOfContactStyles = css({
   gridArea: 'contact',
   display: 'flex',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'block',
-  },
+  gap: `${8 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
 });
 
 const createStyles = css({
@@ -123,6 +150,7 @@ type WorkingGroupPageHeaderProps = {
   | 'members'
   | 'externalLink'
   | 'pointOfContact'
+  | 'calendars'
 >;
 
 const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
@@ -139,6 +167,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   workingGroupsDraftOutputsCount,
   upcomingEventsCount,
   pastEventsCount,
+  calendars,
 }) => {
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
@@ -166,16 +195,26 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !canShareResearchOutput && (
+        {pointOfContact && !canShareResearchOutput && !complete && (
           <div css={pointOfContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.user.email)}`}
-            >
-              Contact PM
-            </Link>
+            <div css={{ display: 'flex', flexGrow: 1 }}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(pointOfContact.user.email)}`}
+                noMargin
+              >
+                Contact PM
+              </Link>
+            </div>
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() =>
+                navigator.clipboard.writeText(pointOfContact.user.email)
+              }
+            />
           </div>
         )}
 
@@ -230,14 +269,20 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         )}
       </section>
       <div css={rowStyles}>
-        {externalLink && (
-          <ExternalLink
-            full
-            label="Working Group Folder"
-            href={externalLink}
-            size="large"
-          />
-        )}
+        <div css={toolsStyles}>
+          {externalLink && (
+            <Link href={externalLink} buttonStyle small>
+              {googleDriveIcon} Access Drive
+            </Link>
+          )}
+          {calendars[0]?.id && !complete && (
+            <CalendarLink id={calendars[0]?.id}>
+              <span css={{ display: 'flex', gap: '8px' }}>
+                {systemCalendarIcon}Subscribe
+              </span>
+            </CalendarLink>
+          )}
+        </div>
         <div css={lastUpdatedStyles}>
           <Caption asParagraph accent="lead">
             Last updated:{' '}

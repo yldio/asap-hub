@@ -13,6 +13,7 @@ const baseProps: ComponentProps<typeof WorkingGroupPage> = {
   pointOfContact: undefined,
   leaders: [],
   members: [],
+  calendars: [],
 };
 it('renders the header', () => {
   const { getByText } = render(

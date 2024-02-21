@@ -55,6 +55,8 @@ export type UserItem = NonNullable<NonNullable<FetchUserByIdQuery['users']>>;
 
 export type LabsCollection = UserItem['labsCollection'];
 
+export type TeamsCollection = UserItem['teamsCollection'];
+
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
 >;
@@ -290,32 +292,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
   const degree =
     item.degree && isUserDegree(item.degree) ? item.degree : undefined;
 
-  const teams: UserTeam[] = (item.teamsCollection?.items || []).reduce(
-    (userTeams: UserTeam[], team: TeamMembership | null): UserTeam[] => {
-      if (!team) {
-        return userTeams;
-      }
-
-      const { role: teamRole, inactiveSinceDate } = team;
-
-      if (!teamRole || !isTeamRole(teamRole)) {
-        return userTeams;
-      }
-
-      return [
-        ...userTeams,
-        {
-          role: teamRole,
-          inactiveSinceDate: inactiveSinceDate || undefined,
-          displayName: team.team?.displayName || '',
-          id: team.team?.sys.id || '',
-          teamInactiveSince: team.team?.inactiveSince || '',
-          proposal: team.team?.proposal ? team.team.proposal.sys.id : undefined,
-        },
-      ];
-    },
-    [],
-  );
+  const teams: UserTeam[] = parseTeamsCollection(item.teamsCollection);
   const labs: LabResponse[] = parseLabsCollection(item.labsCollection);
 
   const orcidWorks: OrcidWork[] = parseOrcidWorksContentful(
@@ -518,6 +495,36 @@ export const parseLabsCollection = (
         {
           id: lab.sys.id,
           name: lab.name,
+        },
+      ];
+    },
+    [],
+  );
+
+export const parseTeamsCollection = (
+  teamsCollection: TeamsCollection,
+): UserTeam[] =>
+  (teamsCollection?.items || []).reduce(
+    (userTeams: UserTeam[], team: TeamMembership | null): UserTeam[] => {
+      if (!team) {
+        return userTeams;
+      }
+
+      const { role: teamRole, inactiveSinceDate } = team;
+
+      if (!teamRole || !isTeamRole(teamRole)) {
+        return userTeams;
+      }
+
+      return [
+        ...userTeams,
+        {
+          role: teamRole,
+          inactiveSinceDate: inactiveSinceDate || undefined,
+          displayName: team.team?.displayName || '',
+          id: team.team?.sys.id || '',
+          teamInactiveSince: team.team?.inactiveSince || '',
+          proposal: team.team?.proposal ? team.team.proposal.sys.id : undefined,
         },
       ];
     },

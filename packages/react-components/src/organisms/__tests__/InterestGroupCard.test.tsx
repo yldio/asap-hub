@@ -32,11 +32,22 @@ it('renders the state tag for a inactive group', () => {
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });
 
-it('does not render team count when group is inactive', () => {
-  const { queryByText } = render(
-    <InterestGroupCard {...props} active={false} numberOfTeams={3} />,
+it('renders the link to google drive if present', () => {
+  const { rerender, queryByRole } = render(
+    <InterestGroupCard {...props} id="42" name="My Group" />,
   );
-  expect(queryByText(/3 teams/i)).toBeNull();
+  expect(
+    queryByRole('link', { name: /access drive/i }),
+  ).not.toBeInTheDocument();
+  rerender(
+    <InterestGroupCard
+      {...props}
+      id="42"
+      name="My Group"
+      googleDrive="http://drive.google.com/123"
+    />,
+  );
+  expect(queryByRole('link', { name: /access drive/i })).toBeVisible();
 });
 
 it('generates a singular team count', () => {

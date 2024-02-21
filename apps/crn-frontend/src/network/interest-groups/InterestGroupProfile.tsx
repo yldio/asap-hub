@@ -69,6 +69,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
             .length
         }
         {...interestGroup}
+        calendarId={interestGroup.calendars[0]?.id}
       >
         <ProfileSwitch
           About={() => (

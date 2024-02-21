@@ -1,11 +1,11 @@
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-
-import { Card, Headline3, Link, Paragraph, Subtitle } from '../atoms';
+import { Card, Headline3, Paragraph, Subtitle } from '../atoms';
+import { charcoal } from '../colors';
 import { createMailTo } from '../mail';
-import { Collapsible, TagList } from '../molecules';
+import { Collapsible, CtaContactSection, TagList } from '../molecules';
 import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
-import { perRem } from '../pixels';
+import { perRem, smallDesktopScreen } from '../pixels';
 
 type WorkingGroupAboutProps = {
   readonly membersListElementId: string;
@@ -30,6 +30,16 @@ const tagListStyle = css({
   marginBottom: `${24 / perRem}em`,
 });
 
+const getInTouchStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  gap: `${24 / perRem}em`,
+  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+    flexDirection: 'row',
+  },
+});
+
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   membersListElementId,
   description,
@@ -41,32 +51,13 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
   tags,
 }) => (
   <div css={containerStyles}>
-    <DeliverablesCard deliverables={deliverables} />
-    <Card accent="green">
-      <Headline3>
-        Would you like to collaborate with this Working Group?
-      </Headline3>
-      <div>
-        We are always looking for new people to collaborate with our working
-        group to find the best solutions for our goals.
-      </div>
-      {pointOfContact && (
-        <Link
-          buttonStyle
-          small
-          primary
-          href={`${createMailTo(pointOfContact.user.email)}`}
-        >
-          Contact PM
-        </Link>
-      )}
-    </Card>
     <Card>
       <Headline3>Working Group Description</Headline3>
       <Collapsible>
         <RichText text={description} />
       </Collapsible>
     </Card>
+    <DeliverablesCard deliverables={deliverables} />
     {!!tags.length && (
       <Card>
         <Headline3>Tags</Headline3>
@@ -79,6 +70,26 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <TagList tags={tags} />
       </Card>
     )}
+    {!complete && (
+      <Card accent="green">
+        <Headline3>
+          <span css={{ color: charcoal.rgb }}>
+            Would you like to collaborate with this Working Group?
+          </span>
+        </Headline3>
+        <Paragraph accent="lead">
+          We are always looking for new people to collaborate with our working
+          group to find the best solutions for our goals.
+        </Paragraph>
+        {pointOfContact && (
+          <CtaContactSection
+            href={createMailTo(pointOfContact.user.email)}
+            buttonText={'Contact PM'}
+            displayCopy
+          />
+        )}
+      </Card>
+    )}
     <section id={membersListElementId}>
       <WorkingGroupMembers
         leaders={leaders}
@@ -87,18 +98,19 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
       />
     </section>
     <Card accent="green">
-      <Subtitle>Do you have any questions?</Subtitle>
-      <div>Reach out to this working group if you need any support.</div>
-      {pointOfContact && (
-        <Link
-          buttonStyle
-          small
-          primary
-          href={`${createMailTo(pointOfContact.user.email)}`}
-        >
-          Contact PM
-        </Link>
-      )}
+      <div css={getInTouchStyles}>
+        <div css={{ display: 'flex', flexDirection: 'column' }}>
+          <Subtitle noMargin>Have additional questions?</Subtitle>
+          <div>The project manager is here to help.</div>
+        </div>
+        {pointOfContact && (
+          <CtaContactSection
+            href={createMailTo(pointOfContact.user.email)}
+            buttonText={'Contact PM'}
+            displayCopy
+          />
+        )}
+      </div>
     </Card>
   </div>
 );

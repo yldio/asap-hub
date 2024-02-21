@@ -90,8 +90,12 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   return (
     <TabbedCard
       title="Teams"
-      description="Teams are a constellation of labs focused on a specific grant proposal. 
-      Find out the team status of this member."
+      description={
+        <Paragraph noMargin accent="lead" styles={css({ margin: '0 0 8px' })}>
+          Teams are a constellation of labs focused on a specific grant
+          proposal. Find out the team status of this member.
+        </Paragraph>
+      }
       activeTabIndex={userAlumni ? 1 : 0}
       tabs={[
         {

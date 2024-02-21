@@ -5,6 +5,7 @@ import { WorkingGroupMembership } from '@asap-hub/model';
 import { TabbedCard, WorkingGroupsList } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
+import { Paragraph } from '../atoms';
 
 const containerStyles = css({
   padding: `${rem(32)} 0`,
@@ -34,8 +35,12 @@ const WorkingGroupsTabbedCard: React.FC<WorkingGroupsTabbedCardProps> = ({
   return (
     <TabbedCard
       title="Working Groups"
-      description="Working groups allow CRN members to work together to solve problems. 
-      Find out the membership status of this member."
+      description={
+        <Paragraph noMargin accent="lead" styles={css({ margin: '0 0 8px' })}>
+          Working groups allow CRN members to work together to solve problems.
+          Find out the membership status of this member.
+        </Paragraph>
+      }
       activeTabIndex={isUserAlumni ? 1 : 0}
       getShowMoreText={(showMore) =>
         `View ${showMore ? 'Less' : 'More'} Memberships`

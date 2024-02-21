@@ -1,9 +1,11 @@
 import { ComponentProps } from 'react';
 import {
+  createCalendarResponse,
   createWorkingGroupMembers,
   createWorkingGroupPointOfContact,
 } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import WorkingGroupHeader from '../WorkingGroupPageHeader';
@@ -19,6 +21,7 @@ const baseProps: ComponentProps<typeof WorkingGroupHeader> = {
   leaders: [],
   members: [],
   workingGroupsOutputsCount: 0,
+  calendars: [],
 };
 
 it('renders the title', () => {
@@ -38,6 +41,26 @@ it('renders CTA when pointOfContact is provided', () => {
   expect(queryAllByText('Contact PM')).toHaveLength(1);
   rerender(<WorkingGroupHeader {...baseProps} />);
   expect(queryAllByText('Contact PM')).toHaveLength(0);
+});
+
+it('copy button copies pointOfContact email', () => {
+  Object.assign(navigator, {
+    clipboard: {
+      writeText: jest.fn(),
+    },
+  });
+  jest.spyOn(navigator.clipboard, 'writeText');
+  const pointOfContact = createWorkingGroupPointOfContact();
+  const { getByRole } = render(
+    <WorkingGroupHeader {...baseProps} pointOfContact={pointOfContact} />,
+  );
+
+  const copyButton = getByRole('button', { name: 'Copy' });
+  expect(copyButton).toBeVisible();
+  userEvent.click(copyButton);
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+    pointOfContact?.user.email,
+  );
 });
 
 describe('Share an output button dropdown', () => {
@@ -90,6 +113,17 @@ it('renders a complete tag when complete is true', () => {
   expect(getByText('Complete')).toBeVisible();
 });
 
+it('renders group calendar when present and complete is false', () => {
+  const { getByText } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      calendars={[{ ...createCalendarResponse() }]}
+    />,
+  );
+
+  expect(getByText(/subscribe/i)).toBeVisible();
+});
+
 it('renders the member avatars', () => {
   const { getByLabelText } = render(
     <WorkingGroupHeader
@@ -116,15 +150,15 @@ it('renders number of members exceeding the limit of 5 and anchors it to the rig
   );
 });
 
-it('renders a Working Group Folder when externalLink is provided', () => {
+it('renders Access Drive button when externalLink is provided', () => {
   const { queryByText, getByText, rerender } = render(
     <WorkingGroupHeader {...baseProps} />,
   );
-  expect(queryByText('Working Group Folder')).toBeNull();
+  expect(queryByText('Access Drive')).toBeNull();
   rerender(
     <WorkingGroupHeader {...baseProps} externalLink="http://www.hub.com" />,
   );
-  expect(getByText('Working Group Folder')).toBeVisible();
+  expect(getByText('Access Drive')).toBeVisible();
 });
 
 it('renders the provided number of research outputs', () => {

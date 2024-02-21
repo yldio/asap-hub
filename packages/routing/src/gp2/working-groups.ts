@@ -50,6 +50,15 @@ const workingGroup = (() => {
   );
 })();
 
-const workingGroups = route('/working-groups', {}, { workingGroup });
+const operational = route('/operational', {}, {});
+const monogenic = route('/monogenic', {}, {});
+const complexDisease = route('/complex-disease', {}, {});
+const support = route('/support', {}, {});
+
+const workingGroups = route(
+  '/working-groups',
+  {},
+  { workingGroup, operational, monogenic, complexDisease, support },
+);
 
 export default workingGroups;

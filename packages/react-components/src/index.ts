@@ -129,7 +129,6 @@ export {
   InterestGroupLeadersTabbedCard,
   InterestGroupList,
   InterestGroupTeamsTabbedCard,
-  InterestGroupTools,
   HelpSection,
   JoinEvent,
   MainNavigation,

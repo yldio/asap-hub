@@ -1,5 +1,5 @@
 import { InterestGroupProfilePage } from '@asap-hub/react-components';
-import { boolean, select, text } from '@storybook/addon-knobs';
+import { array, boolean, select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 
@@ -47,6 +47,14 @@ export const Normal = () => {
         }
         pastEventsCount={2}
         upcomingEventsCount={3}
+        tools={{
+          googleCalendar:
+            'https://calendar.google.com/calendar/r?cid=calendar-id-1',
+        }}
+        contactEmails={array('Emails', [
+          'contact@example.com',
+          'another@example.com',
+        ])}
       />
     </StaticRouter>
   );

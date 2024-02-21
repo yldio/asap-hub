@@ -24,6 +24,7 @@ export type WorkingGroupLeader = {
     | 'alumniSinceDate'
     | 'email'
     | 'avatarUrl'
+    | 'teams'
   >;
   readonly role: WorkingGroupRole;
   readonly workstreamRole: string;
@@ -43,6 +44,7 @@ export type WorkingGroupMember = {
     | 'alumniSinceDate'
     | 'email'
     | 'avatarUrl'
+    | 'teams'
   >;
   readonly inactiveSinceDate?: string;
 };

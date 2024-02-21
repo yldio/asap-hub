@@ -97,6 +97,7 @@ export const error500 = color(205, 20, 38);
 export const error900 = color(176, 10, 26);
 
 export const info100 = color(230, 243, 249);
+export const info200 = color(191, 227, 211);
 export const info500 = color(12, 141, 195);
 export const info900 = color(0, 106, 146);
 

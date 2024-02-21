@@ -5,11 +5,11 @@ import {
   linkIcon,
   systemCalendarIcon,
 } from '../icons';
-import { TextChildren } from '../text';
+import { AllowedChildren } from '../text';
 import DropdownButton from './DropdownButton';
 
 type CalendarLinkProps = {
-  readonly children?: TextChildren;
+  readonly children?: AllowedChildren;
   readonly id: string;
 };
 

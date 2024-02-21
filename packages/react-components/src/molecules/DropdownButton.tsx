@@ -107,7 +107,6 @@ const itemStyles = ({
   type = 'default',
 }: { type?: ItemType } & Theme['colors']) =>
   css({
-    whiteSpace: 'nowrap',
     color: lead.rgb,
     backgroundColor:
       type === 'title'

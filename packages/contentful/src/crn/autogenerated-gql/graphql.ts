@@ -16414,7 +16414,23 @@ export type WorkingGroupsContentFragment = Pick<
                 Pick<
                   Users,
                   'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
-                > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<TeamMembership, 'role'> & {
+                          team?: Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >;
+                        }
+                      >
+                    >;
+                  }>;
+                }
               >;
             })
         | ({ __typename: 'WorkingGroupMembers' } & Pick<
@@ -16425,7 +16441,23 @@ export type WorkingGroupsContentFragment = Pick<
                 Pick<
                   Users,
                   'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
-                > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<TeamMembership, 'role'> & {
+                          team?: Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >;
+                        }
+                      >
+                    >;
+                  }>;
+                }
               >;
             })
       >
@@ -16440,6 +16472,7 @@ export type WorkingGroupsContentFragment = Pick<
 
 export type FetchWorkingGroupByIdQueryVariables = Exact<{
   id: Scalars['String'];
+  singleWorkingGroup?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchWorkingGroupByIdQuery = {
@@ -16545,6 +16578,19 @@ export type FetchWorkingGroupByIdQuery = {
                     > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<TeamMembership, 'role'> & {
+                              team?: Maybe<
+                                Pick<Teams, 'displayName'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }>;
                     }
                   >;
                 })
@@ -16559,6 +16605,19 @@ export type FetchWorkingGroupByIdQuery = {
                     > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<TeamMembership, 'role'> & {
+                              team?: Maybe<
+                                Pick<Teams, 'displayName'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }>;
                     }
                   >;
                 })
@@ -16581,6 +16640,7 @@ export type FetchWorkingGroupsQueryVariables = Exact<{
     Array<InputMaybe<WorkingGroupsOrder>> | InputMaybe<WorkingGroupsOrder>
   >;
   where?: InputMaybe<WorkingGroupsFilter>;
+  singleWorkingGroup?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchWorkingGroupsQuery = {
@@ -16718,6 +16778,19 @@ export type FetchWorkingGroupsQuery = {
                           > & {
                             sys: Pick<Sys, 'id'>;
                             avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<TeamMembership, 'role'> & {
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >;
                       })
@@ -16735,6 +16808,19 @@ export type FetchWorkingGroupsQuery = {
                           > & {
                             sys: Pick<Sys, 'id'>;
                             avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<TeamMembership, 'role'> & {
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >;
                       })
@@ -21494,6 +21580,104 @@ export const WorkingGroupsContentFragmentDoc = {
                                       value: 'alumniSinceDate',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamsCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: { kind: 'IntValue', value: '5' },
+                                      },
+                                    ],
+                                    directives: [
+                                      {
+                                        kind: 'Directive',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'include',
+                                        },
+                                        arguments: [
+                                          {
+                                            kind: 'Argument',
+                                            name: { kind: 'Name', value: 'if' },
+                                            value: {
+                                              kind: 'Variable',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'singleWorkingGroup',
+                                              },
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'role',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'team',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'displayName',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -21569,6 +21753,104 @@ export const WorkingGroupsContentFragmentDoc = {
                                     name: {
                                       kind: 'Name',
                                       value: 'alumniSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamsCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: { kind: 'IntValue', value: '5' },
+                                      },
+                                    ],
+                                    directives: [
+                                      {
+                                        kind: 'Directive',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'include',
+                                        },
+                                        arguments: [
+                                          {
+                                            kind: 'Argument',
+                                            name: { kind: 'Name', value: 'if' },
+                                            value: {
+                                              kind: 'Variable',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'singleWorkingGroup',
+                                              },
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'role',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'team',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'displayName',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
                                     },
                                   },
                                 ],
@@ -27035,6 +27317,15 @@ export const FetchWorkingGroupByIdDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleWorkingGroup' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: true },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -27116,6 +27407,15 @@ export const FetchWorkingGroupsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'WorkingGroupsFilter' },
           },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleWorkingGroup' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {

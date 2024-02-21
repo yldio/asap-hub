@@ -28,7 +28,7 @@ it('renders the working group card', () => {
   );
   expect(getByText('My Working Group')).toBeVisible();
   expect(getByText('test description')).toBeVisible();
-  expect(getByText('Working Group Folder')).toBeVisible();
+  expect(getByText('Access Drive')).toBeVisible();
   expect(
     getByText(`Last updated: ${formatDate(new Date('2020-01-01'))}`),
   ).toBeVisible();

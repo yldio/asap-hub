@@ -127,7 +127,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 css={[
                   addToColumnStyles,
                   singleColumn || multiColumnAddToColumnStyles,
-                  textStyles,
+                  secondLine && textStyles,
                 ]}
               >
                 <Ellipsis>{secondLine}</Ellipsis>

@@ -12,7 +12,7 @@ it('renders open questions', () => {
     <QuestionsSection {...props} questions={['What is the meaning of life']} />,
   );
   expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
-    'Open Questions',
+    `"Open Questions"`,
   );
   expect(getByText(/meaning of life/i)).toBeVisible();
 });

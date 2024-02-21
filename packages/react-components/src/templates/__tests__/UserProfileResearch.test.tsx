@@ -14,33 +14,33 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
 
 it('doesnt renders the role on ASAP when is not ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {
   const { queryByText } = render(<UserProfileResearch {...commonProps} />);
-  expect(queryByText(/role.+asap/i)).not.toBeInTheDocument();
+  expect(queryByText(/role/i)).not.toBeInTheDocument();
 });
 it('renders the role on ASAP when is ownProfile and doesnt have labs, teams responsabilites or researchInterest', () => {
   const { queryByText } = render(
     <UserProfileResearch {...commonProps} isOwnProfile={true} />,
   );
-  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  expect(queryByText(/role/i)).toBeInTheDocument();
 });
 it('renders the role on ASAP when labs, teams responsabilites or researchInterest are defined', () => {
   const { queryByText, rerender } = render(
     <UserProfileResearch {...commonProps} />,
   );
-  expect(queryByText(/role.+asap/i)).not.toBeInTheDocument();
+  expect(queryByText(/role/i)).not.toBeInTheDocument();
   rerender(
     <UserProfileResearch
       {...commonProps}
       responsibilities="My responsibilities"
     />,
   );
-  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  expect(queryByText(/role/i)).toBeInTheDocument();
   rerender(
     <UserProfileResearch
       {...commonProps}
       researchInterests="My research interest"
     />,
   );
-  expect(queryByText(/role.+asap/i)).toBeInTheDocument();
+  expect(queryByText(/role/i)).toBeInTheDocument();
 });
 
 it('renders the expertiseAndResourceTags list', () => {

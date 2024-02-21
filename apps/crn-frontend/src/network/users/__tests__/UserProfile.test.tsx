@@ -272,13 +272,13 @@ describe('a header edit button', () => {
     userEvent.click(
       await screen.findByText(/research/i, { selector: 'nav *' }),
     );
-    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
     expect(screen.queryByText(/your details/i)).toBeNull();
     userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
     expect(screen.getByText(/your details/i)).toBeVisible();
     userEvent.click(screen.getByTitle(/Close/i));
-    expect(screen.getByText(/role on asap network/i)).toBeVisible();
+    expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
     expect(screen.queryByText(/your details/i)).toBeNull();
 
     // Open and close on background tab

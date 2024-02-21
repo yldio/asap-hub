@@ -1,7 +1,5 @@
-import { useContext } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { UserProfileContext } from '@asap-hub/react-context';
 import { Link, pixels, colors } from '@asap-hub/react-components';
 import { socialIconsMap } from '../utils';
 
@@ -42,8 +40,6 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
   researchGate,
   blog,
 }) => {
-  const { isOwnProfile } = useContext(UserProfileContext);
-
   const iconProps = { color: lead.hex };
 
   const socialLinks = [
@@ -74,7 +70,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
   return (
     <div css={socialContainerStyles}>
       {socialLinks.map(({ key, link, Icon }) =>
-        link || isOwnProfile ? (
+        link ? (
           <Link href={link} key={key}>
             <div css={[iconStyles, !link && inactiveStyles]}>
               <Icon key={key} {...iconProps} />

@@ -5,7 +5,6 @@ import { omit } from 'lodash';
 
 import { PAGE_SIZE } from '../../scripts/export-entity';
 import { AppHelper } from './helpers/app';
-import { retryable } from './helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -14,8 +13,6 @@ import {
   getWorkingGroupFixture,
   UserFixture,
 } from './fixtures';
-
-jest.setTimeout(120000);
 
 const fixtures = FixtureFactory();
 
@@ -28,19 +25,13 @@ describe('users', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of users', async () => {
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get('/users')
-        .query({ take: PAGE_SIZE })
-        .expect(200);
-      expect(response.body.total).toEqual(expect.any(Number));
-      expect(response.body.items).toEqual(expect.any(Array));
-    });
+    const response = await supertest(app)
+      .get('/users')
+      .query({ take: PAGE_SIZE })
+      .expect(200);
+    expect(response.body.total).toEqual(expect.any(Number));
+    expect(response.body.items).toEqual(expect.any(Array));
   });
 
   test('can fetch a user with a team', async () => {
@@ -55,14 +46,10 @@ describe('users', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${user.id}`)
-        .expect(200);
-      expect(response.body).toMatchObject(
-        omit(user, ['connections', 'lastUpdated']),
-      );
-    });
+    const response = await supertest(app).get(`/users/${user.id}`).expect(200);
+    expect(response.body).toMatchObject(
+      omit(user, ['connections', 'lastUpdated']),
+    );
   });
 
   test('can fetch a user with a working group', async () => {
@@ -78,14 +65,10 @@ describe('users', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${user.id}`)
-        .expect(200);
+    const response = await supertest(app).get(`/users/${user.id}`).expect(200);
 
-      expect(response.body.workingGroups.length).toEqual(1);
-      expect(response.body.workingGroups[0].name).toEqual(workingGroup.title);
-    });
+    expect(response.body.workingGroups.length).toEqual(1);
+    expect(response.body.workingGroups[0].name).toEqual(workingGroup.title);
   });
 
   test('cannot fetch user if they are not onboarded', async () => {
@@ -94,9 +77,7 @@ describe('users', () => {
         onboarded: false,
       }),
     );
-    await retryable(async () => {
-      await supertest(app).get(`/users/${user.id}`).expect(404);
-    });
+    await supertest(app).get(`/users/${user.id}`).expect(404);
   });
 
   test('can fetch a user by connection code', async () => {
@@ -106,12 +87,10 @@ describe('users', () => {
         connections: [{ code }],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/invites/${code}`)
-        .expect(200);
-      expect(response.body.id).toEqual(user.id);
-    });
+    const response = await supertest(app)
+      .get(`/users/invites/${code}`)
+      .expect(200);
+    expect(response.body.id).toEqual(user.id);
   });
 
   test('can fetch the groups for a user who is a group leader', async () => {
@@ -133,20 +112,18 @@ describe('users', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${user.id}/interest-groups`)
-        .expect(200);
+    const response = await supertest(app)
+      .get(`/users/${user.id}/interest-groups`)
+      .expect(200);
 
-      expect(response.body.total).toEqual(1);
-      expect(response.body.items).toEqual([
-        expect.objectContaining({
-          id: group.id,
-          name: 'Test interest group (leader)',
-          active: true,
-        }),
-      ]);
-    });
+    expect(response.body.total).toEqual(1);
+    expect(response.body.items).toEqual([
+      expect.objectContaining({
+        id: group.id,
+        name: 'Test interest group (leader)',
+        active: true,
+      }),
+    ]);
   });
 
   test('can fetch the groups for a user who is associated via a team', async () => {
@@ -167,19 +144,17 @@ describe('users', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${user.id}/interest-groups`)
-        .expect(200);
-      expect(response.body.total).toEqual(1);
-      expect(response.body.items).toEqual([
-        expect.objectContaining({
-          id: group.id,
-          name: 'Test interest group (team)',
-          active: true,
-        }),
-      ]);
-    });
+    const response = await supertest(app)
+      .get(`/users/${user.id}/interest-groups`)
+      .expect(200);
+    expect(response.body.total).toEqual(1);
+    expect(response.body.items).toEqual([
+      expect.objectContaining({
+        id: group.id,
+        name: 'Test interest group (team)',
+        active: true,
+      }),
+    ]);
   });
 
   test('dedupes groups if a user is associated by team and leadership', async () => {
@@ -206,19 +181,17 @@ describe('users', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${user.id}/interest-groups`)
-        .expect(200);
-      expect(response.body.total).toEqual(1);
-      expect(response.body.items).toEqual([
-        expect.objectContaining({
-          id: group.id,
-          name: 'Test interest group (team and leader)',
-          active: true,
-        }),
-      ]);
-    });
+    const response = await supertest(app)
+      .get(`/users/${user.id}/interest-groups`)
+      .expect(200);
+    expect(response.body.total).toEqual(1);
+    expect(response.body.items).toEqual([
+      expect.objectContaining({
+        id: group.id,
+        name: 'Test interest group (team and leader)',
+        active: true,
+      }),
+    ]);
   });
 
   test('can patch the logged-in user', async () => {
@@ -227,12 +200,10 @@ describe('users', () => {
       .send({ firstName: 'Changed' })
       .expect(200);
 
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/users/${loggedInUser.id}`)
-        .expect(200);
-      expect(response.body.firstName).toEqual('Changed');
-    });
+    const response = await supertest(app)
+      .get(`/users/${loggedInUser.id}`)
+      .expect(200);
+    expect(response.body.firstName).toEqual('Changed');
   });
 
   test('cannot patch a non-logged-in user', async () => {

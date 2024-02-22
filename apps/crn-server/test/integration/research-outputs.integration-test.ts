@@ -5,7 +5,6 @@ import { ResearchTagDataObject, ResearchOutputResponse } from '@asap-hub/model';
 
 import { PAGE_SIZE } from '../../scripts/export-entity';
 import { AppHelper } from './helpers/app';
-import { retryable } from './helpers/retryable';
 import './helpers/matchers';
 
 import {
@@ -19,8 +18,7 @@ import {
   getResearchOutputFixture,
   ResearchOutputCreateDataObject,
 } from './fixtures';
-
-jest.setTimeout(120000);
+import { getEnvironment } from './fixtures/contentful';
 
 const fixtures = FixtureFactory();
 
@@ -37,10 +35,6 @@ describe('research outputs', () => {
       take: 200,
     });
     researchTags = await response.body.items;
-  });
-
-  afterAll(async () => {
-    await fixtures.teardown();
   });
 
   test('can list research outputs', async () => {
@@ -77,6 +71,98 @@ describe('research outputs', () => {
           ],
         }),
       );
+    });
+
+    test('fetches the previously published version if unpublished changes are made in contentful', async () => {
+      const input = getResearchOutputFixture({
+        teams: [pmTeam.id],
+        workingGroups: [],
+        published: true,
+      });
+
+      const response = await supertest(app)
+        .post('/research-outputs')
+        .send(input)
+        .expect(201);
+
+      const id = response.body.id;
+      const title = response.body.title;
+
+      const environment = await getEnvironment();
+
+      const entry = await environment.getEntry(id);
+
+      await entry.patch([
+        {
+          op: 'replace',
+          path: '/fields/title',
+          value: { 'en-US': `${title} - (updated)` },
+        },
+      ]);
+
+      const updated = await supertest(app)
+        .get(`/research-outputs/${id}`)
+        .expect(200);
+
+      expect(updated.body.title).toEqual(title);
+    });
+
+    describe('filter by document type', () => {
+      beforeAll(async () => {
+        const article = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Article',
+        });
+        const dataset = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Dataset',
+        });
+        const report = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Report',
+        });
+
+        await supertest(app)
+          .post('/research-outputs')
+          .send(article)
+          .expect(201);
+
+        await supertest(app)
+          .post('/research-outputs')
+          .send(dataset)
+          .expect(201);
+
+        await supertest(app).post('/research-outputs').send(report).expect(201);
+      });
+
+      test('can filter for a single document type', async () => {
+        const response = await supertest(app)
+          .get(
+            `/research-outputs?teamId=${pmTeam.id}&status=draft&filter=Dataset`,
+          )
+          .expect(200);
+
+        expect(response.body.items).toHaveLength(1);
+        expect(response.body.items[0].documentType).toEqual('Dataset');
+      });
+
+      test('can filter for multiple document types', async () => {
+        const response = await supertest(app)
+          .get(
+            `/research-outputs?teamId=${pmTeam.id}&status=draft&filter=Dataset&filter=Report`,
+          )
+          .expect(200);
+
+        expect(response.body.items).toHaveLength(2);
+        expect(response.body.items[0].documentType).toEqual('Report');
+        expect(response.body.items[1].documentType).toEqual('Dataset');
+      });
     });
 
     describe('create', () => {
@@ -183,16 +269,14 @@ describe('research outputs', () => {
           })
           .expect(200);
         const now = new Date().toISOString();
-        await retryable(async () => {
-          const response = await supertest(app)
-            .get(`/research-outputs/${researchOutputId}`)
-            .expect(200);
+        const response = await supertest(app)
+          .get(`/research-outputs/${researchOutputId}`)
+          .expect(200);
 
-          expect(response.body.title).toEqual(
-            `${researchOutput.title} - updated`,
-          );
-          expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
-        });
+        expect(response.body.title).toEqual(
+          `${researchOutput.title} - updated`,
+        );
+        expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
       });
 
       test('can update a draft research output to request a review', async () => {
@@ -277,15 +361,12 @@ describe('research outputs', () => {
               published: true,
             })
             .expect(200);
+          const response = await supertest(app)
+            .get(`/research-outputs/${publishOutputId}`)
+            .expect(200);
 
-          await retryable(async () => {
-            const response = await supertest(app)
-              .get(`/research-outputs/${publishOutputId}`)
-              .expect(200);
-
-            expect(response.body.published).toEqual(true);
-            expect(response.body.addedDate).toBeCloseInTimeTo(now);
-          });
+          expect(response.body.published).toEqual(true);
+          expect(response.body.addedDate).toBeCloseInTimeTo(now);
         });
 
         test('cannot publish draft outputs for non pm teams', async () => {
@@ -308,15 +389,13 @@ describe('research outputs', () => {
 
     describe('list', () => {
       test('can list draft research outputs for a team you are a member of', async () => {
-        await retryable(async () => {
-          const response = await supertest(app)
-            .get(`/research-outputs?teamId=${nonPmTeam.id}&status=draft`)
-            .expect(200);
-          response.body.items.forEach((output: ResearchOutputResponse) => {
-            expect(
-              output.teams.some((team) => team.id === nonPmTeam.id),
-            ).toEqual(true);
-          });
+        const response = await supertest(app)
+          .get(`/research-outputs?teamId=${nonPmTeam.id}&status=draft`)
+          .expect(200);
+        response.body.items.forEach((output: ResearchOutputResponse) => {
+          expect(output.teams.some((team) => team.id === nonPmTeam.id)).toEqual(
+            true,
+          );
         });
       });
 
@@ -345,13 +424,11 @@ describe('research outputs', () => {
       });
 
       test('includes PM contact emails', async () => {
-        await retryable(async () => {
-          const response = await supertest(app)
-            .get(`/research-outputs/${researchOutputId}`)
-            .expect(200);
+        const response = await supertest(app)
+          .get(`/research-outputs/${researchOutputId}`)
+          .expect(200);
 
-          expect(response.body.contactEmails).toEqual([loggedInUser.email]);
-        });
+        expect(response.body.contactEmails).toEqual([loggedInUser.email]);
       });
     });
   });
@@ -462,31 +539,25 @@ describe('research outputs', () => {
 
     describe('list', () => {
       test('can list draft research outputs for a working group you are a member of', async () => {
-        await retryable(async () => {
-          const response = await supertest(app)
-            .get(
-              `/research-outputs?workingGroupId=${memberWorkingGroup.id}&status=draft`,
-            )
-            .expect(200);
+        const response = await supertest(app)
+          .get(
+            `/research-outputs?workingGroupId=${memberWorkingGroup.id}&status=draft`,
+          )
+          .expect(200);
 
-          response.body.items.forEach((output: ResearchOutputResponse) => {
-            expect(
-              output.workingGroups?.some(
-                (wg) => wg.id === memberWorkingGroup.id,
-              ),
-            ).toEqual(true);
-          });
+        response.body.items.forEach((output: ResearchOutputResponse) => {
+          expect(
+            output.workingGroups?.some((wg) => wg.id === memberWorkingGroup.id),
+          ).toEqual(true);
         });
       });
 
       test('cannot list draft research outputs for a working group you are not a member of', async () => {
-        await retryable(async () => {
-          await supertest(app)
-            .get(
-              `/research-outputs?workingGroupId=${nonMemberWorkingGroup.id}&status=draft`,
-            )
-            .expect(403);
-        });
+        await supertest(app)
+          .get(
+            `/research-outputs?workingGroupId=${nonMemberWorkingGroup.id}&status=draft`,
+          )
+          .expect(403);
       });
     });
   });
@@ -508,31 +579,27 @@ describe('research outputs', () => {
     });
 
     test('can list draft research outputs for a working group you are not a member of if a staff user', async () => {
-      await retryable(async () => {
-        const response = await supertest(app)
-          .get(
-            `/research-outputs?workingGroupId=${nonMemberWorkingGroup.id}&status=draft`,
-          )
-          .expect(200);
-        response.body.items.forEach((output: ResearchOutputResponse) => {
-          expect(
-            output.workingGroups?.some(
-              (wg) => wg.id === nonMemberWorkingGroup.id,
-            ),
-          ).toEqual(true);
-        });
+      const response = await supertest(app)
+        .get(
+          `/research-outputs?workingGroupId=${nonMemberWorkingGroup.id}&status=draft`,
+        )
+        .expect(200);
+      response.body.items.forEach((output: ResearchOutputResponse) => {
+        expect(
+          output.workingGroups?.some(
+            (wg) => wg.id === nonMemberWorkingGroup.id,
+          ),
+        ).toEqual(true);
       });
     });
     test('can list draft research outputs for a team you are not a member of if a staff user', async () => {
-      await retryable(async () => {
-        const response = await supertest(app)
-          .get(`/research-outputs?teamId=${nonMemberTeam.id}&status=draft`)
-          .expect(200);
-        response.body.items.forEach((output: ResearchOutputResponse) => {
-          expect(
-            output.teams.some((team) => team.id === nonMemberTeam.id),
-          ).toEqual(true);
-        });
+      const response = await supertest(app)
+        .get(`/research-outputs?teamId=${nonMemberTeam.id}&status=draft`)
+        .expect(200);
+      response.body.items.forEach((output: ResearchOutputResponse) => {
+        expect(
+          output.teams.some((team) => team.id === nonMemberTeam.id),
+        ).toEqual(true);
       });
     });
   });

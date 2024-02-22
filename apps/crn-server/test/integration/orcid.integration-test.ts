@@ -5,10 +5,7 @@ import { DateTime, Settings } from 'luxon';
 import { unloggedHandler } from '../../src/handlers/user/cronjob-sync-orcid';
 import { AppHelper } from './helpers/app';
 import { FixtureFactory, getUserFixture } from './fixtures';
-import { retryable } from './helpers/retryable';
 import './helpers/matchers';
-
-jest.setTimeout(120000);
 
 const fixtures = FixtureFactory();
 const chance = Chance();
@@ -57,13 +54,11 @@ describe('orcid handler', () => {
 
     const app = AppHelper(() => user);
 
-    await retryable(async () => {
-      const response = await supertest(app).get(`/users/${user.id}`);
+    const userResponse = await supertest(app).get(`/users/${user.id}`);
 
-      expect(response.body.orcidLastSyncDate).toBeCloseInTimeTo(
-        new Date().toString(),
-        30000,
-      );
-    });
+    expect(userResponse.body.orcidLastSyncDate).toBeCloseInTimeTo(
+      new Date().toString(),
+      30000,
+    );
   });
 });

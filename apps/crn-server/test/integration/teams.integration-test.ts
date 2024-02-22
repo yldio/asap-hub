@@ -2,7 +2,6 @@ import supertest from 'supertest';
 import { Express } from 'express';
 
 import { AppHelper } from './helpers/app';
-import { retryable } from './helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -10,8 +9,6 @@ import {
   getInterestGroupFixture,
   UserFixture,
 } from './fixtures';
-
-jest.setTimeout(120000);
 
 const fixtures = FixtureFactory();
 
@@ -24,16 +21,10 @@ describe('team', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of teams', async () => {
-    await retryable(async () => {
-      const response = await supertest(app).get('/teams').expect(200);
-      expect(response.body.total).toEqual(expect.any(Number));
-      expect(response.body.items).toEqual(expect.any(Array));
-    });
+    const response = await supertest(app).get('/teams').expect(200);
+    expect(response.body.total).toEqual(expect.any(Number));
+    expect(response.body.items).toEqual(expect.any(Array));
   });
 
   test('can fetch a team with users', async () => {
@@ -58,15 +49,11 @@ describe('team', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/teams/${team.id}`)
-        .expect(200);
-      expect(response.body).toMatchObject({
-        id: team.id,
-        displayName: team.displayName,
-        members: [{ id: user1.id }, { id: user2.id }],
-      });
+    const response = await supertest(app).get(`/teams/${team.id}`).expect(200);
+    expect(response.body).toMatchObject({
+      id: team.id,
+      displayName: team.displayName,
+      members: [{ id: user1.id }, { id: user2.id }],
     });
   });
 
@@ -87,17 +74,15 @@ describe('team', () => {
         ],
       }),
     );
-    await retryable(async () => {
-      const response = await supertest(app)
-        .get(`/teams/${team.id}/interest-groups`)
-        .expect(200);
-      expect(response.body.items).toHaveLength(1);
-      expect(response.body.items).toMatchObject([
-        expect.objectContaining({
-          id: group.id,
-          name: 'Is associated',
-        }),
-      ]);
-    });
+    const response = await supertest(app)
+      .get(`/teams/${team.id}/interest-groups`)
+      .expect(200);
+    expect(response.body.items).toHaveLength(1);
+    expect(response.body.items).toMatchObject([
+      expect.objectContaining({
+        id: group.id,
+        name: 'Is associated',
+      }),
+    ]);
   });
 });

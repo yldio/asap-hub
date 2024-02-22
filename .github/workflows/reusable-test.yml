@@ -143,8 +143,6 @@ jobs:
         run: yarn lint
 
   integration-test:
-    # TODO: enable back with ASAP-70
-    if: false
     concurrency: integration-test
     permissions:
       packages: read
@@ -172,7 +170,7 @@ jobs:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: integration-${{ github.run_id }}
-          CONTENTFUL_SOURCE_ENV: Development
+          CONTENTFUL_SOURCE_ENV: Empty
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       - name: Run integration tests
         timeout-minutes: 20

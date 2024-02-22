@@ -4,7 +4,7 @@ import { ListReminderResponse, UserCreateDataObject } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { AppHelper } from './helpers/app';
-import { retryable } from './helpers/retryable';
+
 import {
   EventCreateDataObject,
   EventFixture,
@@ -25,8 +25,6 @@ jest.mock('../../src/config', () => ({
   logLevel: 'silent',
 }));
 
-jest.setTimeout(240000);
-
 const fixtures = FixtureFactory();
 
 type AppResponse<T> = {
@@ -41,7 +39,6 @@ describe('Reminders', () => {
   let team: TeamFixture;
 
   beforeAll(async () => {
-    await fixtures.clearAllPreviousEvents();
     jest.useFakeTimers({ doNotFake: ['setTimeout', 'clearTimeout'] });
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
@@ -72,14 +69,11 @@ describe('Reminders', () => {
   });
 
   afterAll(async () => {
-    await fixtures.teardown();
     jest.useRealTimers();
   });
 
   describe('Multiple reminders', () => {
-    // TODO: add research output reminders here
-    // Re-enable with ASAP-70
-    test.skip('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
+    test('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
       // setting system time to 9:00AM in UTC
       const now = new Date('2022-08-10T09:00:00.0Z');
 
@@ -98,23 +92,21 @@ describe('Reminders', () => {
         speakers: [{ user: [loggedInUser.id], team: [team.id] }],
       });
 
-      await retryable(async () => {
-        const response: AppResponse<ListReminderResponse> = await supertest(app)
-          .get(`/reminders?timezone=Europe/London`)
-          .expect(200);
+      const response: AppResponse<ListReminderResponse> = await supertest(app)
+        .get(`/reminders?timezone=Europe/London`)
+        .expect(200);
 
-        expect(response.body.items).toEqual([
-          expect.objectContaining({
-            id: `event-happening-today-${eventHappeningToday.id}`,
-          }),
-          expect.objectContaining({
-            id: `event-happening-now-${eventHappeningNow.id}`,
-          }),
-          expect.objectContaining({
-            id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
-          }),
-        ]);
-      });
+      expect(response.body.items).toEqual([
+        expect.objectContaining({
+          id: `event-happening-today-${eventHappeningToday.id}`,
+        }),
+        expect.objectContaining({
+          id: `event-happening-now-${eventHappeningNow.id}`,
+        }),
+        expect.objectContaining({
+          id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
+        }),
+      ]);
       await fixtures.deleteEvents([
         eventHappeningToday.id,
         eventHappeningNow.id,
@@ -1325,15 +1317,13 @@ describe('Reminders', () => {
     expressApp: Express = app,
     timezone: string = 'Europe/London',
   ) => {
-    await retryable(async () => {
-      const response: AppResponse<ListReminderResponse> = await supertest(
-        expressApp,
-      )
-        .get(`/reminders?timezone=${timezone}`)
-        .expect(200);
+    const response: AppResponse<ListReminderResponse> = await supertest(
+      expressApp,
+    )
+      .get(`/reminders?timezone=${timezone}`)
+      .expect(200);
 
-      expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
-    });
+    expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
   };
 
   const expectNotToContainReminderWithId = async (
@@ -1341,16 +1331,14 @@ describe('Reminders', () => {
     expressApp: Express = app,
     timezone: string = 'Europe/London',
   ) => {
-    await retryable(async () => {
-      const response: AppResponse<ListReminderResponse> = await supertest(
-        expressApp,
-      )
-        .get(`/reminders?timezone=${timezone}`)
-        .expect(200);
-      expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
-        id,
-      );
-    });
+    const response: AppResponse<ListReminderResponse> = await supertest(
+      expressApp,
+    )
+      .get(`/reminders?timezone=${timezone}`)
+      .expect(200);
+    expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
+      id,
+    );
   };
 });
 

@@ -17,10 +17,6 @@ describe('research tags', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of research tags', async () => {
     const response = await supertest(app).get('/research-tags').expect(200);
 

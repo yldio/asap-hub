@@ -19,6 +19,7 @@ import {
   ResearchOutputCreateDataObject,
 } from './fixtures';
 import { getEnvironment } from './fixtures/contentful';
+import { beforeAllWithRetry } from './helpers/setup-methods';
 
 const fixtures = FixtureFactory();
 
@@ -27,7 +28,7 @@ describe('research outputs', () => {
   let loggedInUser: UserFixture;
   let researchTags: ResearchTagDataObject[];
 
-  beforeAll(async () => {
+  beforeAllWithRetry(async () => {
     loggedInUser = await fixtures.createUser(getUserFixture({}));
     app = AppHelper(() => loggedInUser);
 
@@ -52,7 +53,7 @@ describe('research outputs', () => {
     let nonPmTeam: TeamFixture;
     let nonMemberTeam: TeamFixture;
 
-    beforeAll(async () => {
+    beforeAllWithRetry(async () => {
       pmTeam = await fixtures.createTeam(getTeamFixture());
       nonPmTeam = await fixtures.createTeam(getTeamFixture());
       nonMemberTeam = await fixtures.createTeam(getTeamFixture());
@@ -108,7 +109,7 @@ describe('research outputs', () => {
     });
 
     describe('filter by document type', () => {
-      beforeAll(async () => {
+      beforeAllWithRetry(async () => {
         const article = getResearchOutputFixture({
           teams: [pmTeam.id],
           workingGroups: [],
@@ -242,7 +243,7 @@ describe('research outputs', () => {
       let researchOutput: ResearchOutputCreateDataObject;
       let researchOutputId: string;
 
-      beforeAll(async () => {
+      beforeAllWithRetry(async () => {
         researchOutput = getResearchOutputFixture(
           {
             teams: [nonPmTeam.id],
@@ -334,7 +335,7 @@ describe('research outputs', () => {
         let publishOutput: ResearchOutputCreateDataObject;
         let publishOutputId: string;
 
-        beforeAll(async () => {
+        beforeAllWithRetry(async () => {
           publishOutput = getResearchOutputFixture(
             {
               teams: [pmTeam.id],
@@ -409,7 +410,7 @@ describe('research outputs', () => {
     describe('fetch by ID', () => {
       let researchOutputId: string;
 
-      beforeAll(async () => {
+      beforeAllWithRetry(async () => {
         const input = getResearchOutputFixture({
           teams: [pmTeam.id],
           workingGroups: [],
@@ -439,7 +440,7 @@ describe('research outputs', () => {
     let memberWorkingGroup: WorkingGroupFixture;
     let nonMemberWorkingGroup: WorkingGroupFixture;
 
-    beforeAll(async () => {
+    beforeAllWithRetry(async () => {
       loggedInUser = await fixtures.createUser(getUserFixture({}));
       team = await fixtures.createTeam(getTeamFixture());
       leaderWorkingGroup = await fixtures.createWorkingGroup(
@@ -566,7 +567,7 @@ describe('research outputs', () => {
     let nonMemberWorkingGroup: WorkingGroupFixture;
     let nonMemberTeam: TeamFixture;
 
-    beforeAll(async () => {
+    beforeAllWithRetry(async () => {
       loggedInUser = await fixtures.createUser(
         getUserFixture({
           role: 'Staff',

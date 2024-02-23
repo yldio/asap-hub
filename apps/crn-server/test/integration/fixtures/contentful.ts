@@ -366,8 +366,12 @@ export class ContentfulFixture implements Fixture {
     }
   }
 
-  async deleteEvents(ids: string[]) {
+  async deleteContentTypeEntries(contentType: string) {
     const environment = await this.getEnvironment();
+    const entries = await environment.getEntries({
+      content_type: contentType,
+    });
+    const ids = entries.items.map((item) => item.sys.id);
 
     for (const id of ids) {
       const toDelete = await environment.getEntry(id);
@@ -376,6 +380,14 @@ export class ContentfulFixture implements Fixture {
       }
       await toDelete.delete();
     }
+  }
+
+  async deleteEvents() {
+    await this.deleteContentTypeEntries('events');
+  }
+
+  async deleteResearchOutputs() {
+    await this.deleteContentTypeEntries('researchOutputs');
   }
 
   async clearAllPreviousEvents() {

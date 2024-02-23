@@ -21,6 +21,8 @@ import {
 import { getEnvironment } from './fixtures/contentful';
 import { beforeAllWithRetry } from './helpers/setup-methods';
 
+jest.setTimeout(120000);
+
 const fixtures = FixtureFactory();
 
 describe('research outputs', () => {

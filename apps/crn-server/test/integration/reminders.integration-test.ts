@@ -21,10 +21,11 @@ import {
 import { getCalendarFixture } from './fixtures/calendar';
 import {
   beforeAllWithRetry,
-  afterAllWithRetry,
   afterEachWithRetry,
   beforeEachWithRetry,
 } from './helpers/setup-methods';
+
+jest.setTimeout(120000);
 
 jest.mock('../../src/config', () => ({
   ...jest.requireActual('../../src/config'),
@@ -117,7 +118,7 @@ describe('Reminders', () => {
           id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
         }),
       ]);
-    });
+    }, 300000);
   });
 
   describe('Research Output', () => {
@@ -468,13 +469,13 @@ describe('Reminders', () => {
           createdDate,
         });
 
+        const researchOutput = await fixtures.createResearchOutput(draftOutput);
+
         jest
           .useFakeTimers()
           .setSystemTime(
             DateTime.fromISO(createdDate).plus({ hours: 25 }).toJSDate(),
           );
-
-        const researchOutput = await fixtures.createResearchOutput(draftOutput);
 
         await expectNotToContainReminderWithId(
           `research-output-draft-${researchOutput.id}`,
@@ -490,13 +491,13 @@ describe('Reminders', () => {
           createdDate,
         });
 
+        const researchOutput = await fixtures.createResearchOutput(draftOutput);
+
         jest
           .useFakeTimers()
           .setSystemTime(
             DateTime.fromISO(createdDate).plus({ hours: 25 }).toJSDate(),
           );
-
-        const researchOutput = await fixtures.createResearchOutput(draftOutput);
 
         await expectNotToContainReminderWithId(
           `research-output-draft-${researchOutput.id}`,

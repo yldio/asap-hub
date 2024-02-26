@@ -28,10 +28,6 @@ describe('users', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of users', async () => {
     await retryable(async () => {
       const response = await supertest(app)

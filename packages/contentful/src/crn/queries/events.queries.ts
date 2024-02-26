@@ -20,7 +20,6 @@ export const eventsContentQueryFragment = gql`
     eventLink
     status
     hidden
-    tags
     title
     notesPermanentlyUnavailable
     notes {
@@ -114,6 +113,14 @@ export const eventsContentQueryFragment = gql`
     presentationUpdatedAt
     meetingMaterialsPermanentlyUnavailable
     meetingMaterials
+    researchTagsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     linkedFrom {
       tutorialsCollection(limit: 10) {
         items {

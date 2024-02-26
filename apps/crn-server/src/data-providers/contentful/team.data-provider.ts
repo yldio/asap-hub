@@ -29,6 +29,7 @@ import {
   FetchTeamsOptions,
   TeamDataProvider,
 } from '../types/teams.data-provider.types';
+import { parseResearchTags } from './research-tag.data-provider';
 
 export type TeamByIdItem = NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
@@ -71,9 +72,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
             ...searchTerms.map((term) => ({
               projectTitle_contains: term,
             })),
-            {
-              expertiseAndResourceTags_contains_some: searchTerms,
-            },
           ],
         }
       : {};
@@ -189,15 +187,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 export const parseContentfulGraphQlTeamListItem = (
   item: TeamItem,
 ): TeamListItemDataObject => {
-  const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
-    (tags: string[], tag) => {
-      if (tag) {
-        tags.push(tag);
-      }
-      return tags;
-    },
-    [],
-  );
 
   const [numberOfMembers, labIds]: [number, Set<string>] = (
     item.linkedFrom?.teamMembershipCollection?.items || []
@@ -230,7 +219,7 @@ export const parseContentfulGraphQlTeamListItem = (
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',
-    expertiseAndResourceTags,
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
     memberCount: numberOfMembers,
     labCount: labIds.size,
   };
@@ -239,15 +228,6 @@ export const parseContentfulGraphQlTeamListItem = (
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
 ): TeamDataObject => {
-  const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
-    (tags: string[], tag) => {
-      if (tag) {
-        tags.push(tag);
-      }
-      return tags;
-    },
-    [],
-  );
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
       if (!tool || !tool.name || !tool.url) {
@@ -342,7 +322,7 @@ export const parseContentfulGraphQlTeam = (
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
-    expertiseAndResourceTags,
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),

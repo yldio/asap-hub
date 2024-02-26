@@ -39,7 +39,9 @@ export const getContentfulGraphqlTeamById = (): NonNullable<
   projectSummary: null,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  expertiseAndResourceTags: ['Animal resources'],
+  researchTagsCollection: {
+    items: [],
+  },
   toolsCollection: {
     items: [],
   },
@@ -79,7 +81,9 @@ export const getContentfulGraphqlTeam = (): NonNullable<
   inactiveSince: null,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  expertiseAndResourceTags: ['Animal resources'],
+  researchTagsCollection: {
+    items: [],
+  },
   linkedFrom: {
     teamMembershipCollection: {
       items: [
@@ -149,7 +153,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   displayName: 'Team A',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
-  expertiseAndResourceTags: ['Animal resources'],
+  tags: [],
   members: [
     {
       id: 'user-id-1',
@@ -176,7 +180,7 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   id: 'team-id-0',
   displayName: 'Team A',
   labCount: 2,
-  expertiseAndResourceTags: ['Animal resources'],
+  tags: [],
   memberCount: 1,
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',

@@ -141,7 +141,16 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   createdDate: '2020-12-11T14:33:50.000Z',
   lastModifiedDate: '2020-12-11T15:06:26.000Z',
   name: "JT's Group",
-  tags: ['coding'],
+  tags: [
+    {
+  "id": "Hello World",
+  "name": "Hello World",
+  },
+ {
+  "id": "Hello World",
+  "name": "Hello World",
+  }
+],
   thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   description: 'A test Group',
   tools: {
@@ -152,7 +161,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
     {
       id: 'team-id-0',
       displayName: 'Team A',
-      expertiseAndResourceTags: ['Animal resources'],
+      tags: [],
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
     },
@@ -228,7 +237,7 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
   },
   active: true,
   name: "JT's Group",
-  tags: ['coding'],
+  tags: [],
   thumbnail: {
     url: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   },

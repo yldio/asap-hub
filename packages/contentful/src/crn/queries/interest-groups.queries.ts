@@ -12,7 +12,14 @@ export const interestGroupContentQueryFragment = gql`
     }
     name
     active
-    tags
+    researchTagsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     description
     slack
     googleDrive
@@ -26,7 +33,14 @@ export const interestGroupContentQueryFragment = gql`
         }
         displayName
         inactiveSince
-        expertiseAndResourceTags
+        researchTagsCollection(limit: 20) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         projectTitle
       }
     }

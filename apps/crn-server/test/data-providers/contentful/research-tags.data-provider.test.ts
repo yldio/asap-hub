@@ -3,7 +3,7 @@ import {
   Environment,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
-import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
+import { parseResearchTags, ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
 import {
   getFullListResearchTagDataObject,
   getContentfulGraphqlResearchTagResponse,
@@ -208,6 +208,13 @@ describe('Research Tags Data Provider', () => {
       );
       expect(publish).toHaveBeenCalled();
       expect(response).toBe('1');
+    });
+  });
+  describe('parseResearchTags ', () => {
+    it('filters null', () => {
+      expect(parseResearchTags([null, { sys: { id: '1' } }])).toStrictEqual([
+        { id: '1', name: '' },
+      ]);
     });
   });
 });

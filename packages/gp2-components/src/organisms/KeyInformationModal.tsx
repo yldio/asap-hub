@@ -4,9 +4,10 @@ import {
   LabeledMultiSelect,
   LabeledTextField,
 } from '@asap-hub/react-components';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useMemo, useState } from 'react';
 import { ContactSupport, UserPositions } from '../molecules';
 import EditUserModal from './EditUserModal';
+import UserExternalProfilesForm, { baseUrls } from './UserExternalProfilesForm';
 
 const getValues = <T extends string>(selected: T[]) =>
   selected.map((item) => ({ label: item, value: item }));
@@ -33,6 +34,7 @@ type KeyInformationModalProps = Pick<
   | 'stateOrProvince'
   | 'city'
   | 'positions'
+  | 'social'
 > &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     loadInstitutionOptions: ComponentProps<
@@ -58,6 +60,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   city,
   positions,
   loadInstitutionOptions,
+  social,
 }) => {
   const [newFirstName, setNewFirstName] = useState(firstName);
   const [newMiddleName, setNewMiddleName] = useState(middleName);
@@ -77,6 +80,16 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
       : [{ institution: '', role: '', department: '' }],
   );
 
+  const initialSocial: gp2.UserSocial = useMemo(
+    () => ({
+      ...social,
+      orcid: social?.orcid?.split(baseUrls.orcid)[1] || '',
+      researcherId: social?.researcherId?.split(baseUrls.researcherId)[1] || '',
+    }),
+    [social],
+  );
+  const [newSocial, setNewSocial] = useState(initialSocial);
+
   const isDirty =
     newFirstName !== firstName ||
     newMiddleName !== middleName ||
@@ -93,14 +106,29 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
         newPosition.department !== positions[index]?.department ||
         newPosition.role !== positions[index]?.role ||
         newPosition.institution !== positions[index]?.institution,
-    );
+    ) ||
+    newSocial?.googleScholar !== social?.googleScholar ||
+    newSocial?.orcid !== social?.orcid?.split(baseUrls.orcid)[1] ||
+    newSocial?.researchGate !== social?.researchGate ||
+    newSocial?.researcherId !==
+      social?.researcherId?.split(baseUrls.researcherId)[1] ||
+    newSocial?.blog !== social?.blog ||
+    newSocial?.blueSky !== social?.blueSky ||
+    newSocial?.threads !== social?.threads ||
+    newSocial?.twitter !== social?.twitter ||
+    newSocial?.linkedIn !== social?.linkedIn ||
+    newSocial?.github !== social?.github;
 
   return (
     <EditUserModal
+      stickyTitle={false}
       title="Key Information"
       description="Tell us a little more about yourself. This will help others to be able to connect with you or credit you in the right way."
-      onSave={() =>
-        onSave({
+      onSave={() => {
+        const { orcid: newOrcid, ...newSocialRest } =
+          newSocial as gp2.UserSocial;
+
+        return onSave({
           firstName: newFirstName,
           middleName: newMiddleName,
           lastName: newLastName,
@@ -111,8 +139,27 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           stateOrProvince: newStateOrProvince,
           city: newCity,
           positions: newPositions,
-        })
-      }
+          social: Object.entries(newSocialRest).reduce(
+            (payload, [key, value]) => {
+              if (key === 'researcherId') {
+                return {
+                  ...payload,
+                  researcherId: value
+                    ? `${baseUrls.researcherId}${value}`
+                    : undefined,
+                };
+              }
+              return {
+                ...payload,
+                [key]: value.trim().length ? value : undefined,
+              };
+            },
+            {},
+          ),
+
+          orcid: newOrcid,
+        });
+      }}
       backHref={backHref}
       dirty={isDirty}
     >
@@ -221,6 +268,12 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             isSaving={isSaving}
             loadInstitutionOptions={loadInstitutionOptions}
             positions={newPositions}
+          />
+          <UserExternalProfilesForm
+            onChange={setNewSocial}
+            newSocial={newSocial}
+            social={social}
+            isSaving={isSaving}
           />
         </>
       )}

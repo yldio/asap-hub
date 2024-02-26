@@ -42,6 +42,8 @@ export const usersContentQueryFragment = gql`
     fundingStreams
     blog
     linkedIn
+    blueSky
+    threads
     twitter
     github
     googleScholar

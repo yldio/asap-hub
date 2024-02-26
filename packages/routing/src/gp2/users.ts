@@ -9,7 +9,6 @@ const editTags = route('/edit-tags', {}, {});
 const editQuestions = route('/edit-questions', {}, {});
 const editFundingStreams = route('/edit-funding-streams', {}, {});
 const editContributingCohorts = route('/edit-contributing-cohorts', {}, {});
-const editExternalProfiles = route('/edit-external-profiles', {}, {});
 const overview = route(
   '/overview',
   {},
@@ -21,7 +20,6 @@ const overview = route(
     editQuestions,
     editFundingStreams,
     editContributingCohorts,
-    editExternalProfiles,
   },
 );
 const outputs = route('/outputs', {}, {});

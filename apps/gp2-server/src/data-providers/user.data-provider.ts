@@ -1,4 +1,4 @@
-import { gp2 as gp2Model, OrcidWork, UserSocialLinks } from '@asap-hub/model';
+import { gp2 as gp2Model, OrcidWork } from '@asap-hub/model';
 
 import {
   addLocaleToFields,
@@ -227,13 +227,17 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
         // so need to default all social keys to null to allow unsetting
         return {
           ...acc,
+          blog: null,
+          blueSky: null,
+          threads: null,
           twitter: null,
           linkedIn: null,
           github: null,
+          orcid: null,
           researcherId: null,
           googleScholar: null,
           researchGate: null,
-          ...(value as UserSocialLinks),
+          ...(value as gp2Model.UserSocial),
         };
       }
 
@@ -327,6 +331,8 @@ export const parseUserToDataObject = (
       linkedIn: user.linkedIn ?? undefined,
       orcid: user.orcid ? `https://orcid.org/${user.orcid}` : undefined,
       researcherId: user.researcherId ?? undefined,
+      blueSky: user.blueSky ?? undefined,
+      threads: user.threads ?? undefined,
       twitter: user.twitter ?? undefined,
       github: user.github ?? undefined,
       blog: user.blog ?? undefined,

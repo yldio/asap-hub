@@ -10,7 +10,7 @@ import {
   TwitterIcon,
   ResearchGateIcon,
   ResearcherIdIcon,
-  orcidSocialIcon,
+  OrcidSocialIcon,
   GoogleScholarIcon,
   GlobeIcon,
 } from '../icons';
@@ -67,7 +67,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
         link={
           orcid ? new URL(`https://orcid.org/${orcid}`).toString() : undefined
         }
-        icon={orcidSocialIcon}
+        icon={<OrcidSocialIcon />}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink

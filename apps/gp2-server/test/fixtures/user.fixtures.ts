@@ -89,6 +89,8 @@ export const getUserResponse = (
     github: 'https://github.com',
     researchGate: 'https://researchid.com/rid/',
     researcherId: 'https://researcherid.com/rid/',
+    blueSky: 'https://bsky.app/profile/yourprofilename',
+    threads: 'https://www.threads.net/@yourprofilename',
   },
   orcidWorks: [
     {
@@ -228,6 +230,8 @@ export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org/1234-5678-9123-4567',
     blog: 'https://www.blogger.com',
+    blueSky: 'https://bsky.app/profile/yourprofilename',
+    threads: 'https://www.threads.net/@yourprofilename',
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',
     github: 'https://github.com',
@@ -387,6 +391,8 @@ export const getContentfulGraphqlUser = (
   linkedIn: 'https://www.linkedin.com',
   researchGate: 'https://researchid.com/rid/',
   researcherId: 'https://researcherid.com/rid/',
+  blueSky: 'https://bsky.app/profile/yourprofilename',
+  threads: 'https://www.threads.net/@yourprofilename',
   twitter: 'https://twitter.com',
   blog: 'https://www.blogger.com',
   orcid: '1234-5678-9123-4567',

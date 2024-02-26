@@ -28,7 +28,7 @@ export {
   DashboardUserCard,
   EditResourceModal,
   EmailSection,
-  ExternalProfilesModal,
+  UserExternalProfilesForm,
   FilterPills,
   FiltersModal,
   FundingProviderModal,

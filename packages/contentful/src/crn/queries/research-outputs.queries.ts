@@ -78,6 +78,7 @@ export const researchOutputContentQueryFragment = gql`
             id
           }
           firstName
+          nickname
           lastName
           email
           onboarded

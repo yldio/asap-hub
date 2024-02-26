@@ -199,6 +199,7 @@ export const eventsContentQueryFragment = gql`
             alumniSinceDate
             alumniLocation
             firstName
+            nickname
             lastName
             onboarded
             teamsCollection(limit: 5) {

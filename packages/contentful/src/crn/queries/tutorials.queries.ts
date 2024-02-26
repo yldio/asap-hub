@@ -63,6 +63,7 @@ export const tutorialsContentQueryFragment = gql`
             id
           }
           firstName
+          nickname
           lastName
           email
           onboarded

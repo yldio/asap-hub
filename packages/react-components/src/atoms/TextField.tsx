@@ -66,7 +66,7 @@ const invalidStyles = css({
       color: paper.rgb,
       svg: {
         stroke: paper.rgb,
-        fill: 'none',
+        fill: 'white',
       },
     },
   },

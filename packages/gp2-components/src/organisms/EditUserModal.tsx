@@ -47,6 +47,7 @@ type EditUserModalProps = Partial<gp2.UserResponse> & {
     asyncWrapper: (cb: () => void | Promise<void>) => void,
   ) => ReactNode;
   buttonText?: string;
+  stickyTitle?: boolean;
 };
 
 const EditUserModal: React.FC<EditUserModalProps> = ({
@@ -57,6 +58,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   dirty,
   onSave = noop,
   buttonText = 'Save',
+  stickyTitle = true,
 }) => (
   <EditModal
     title={title}
@@ -66,7 +68,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     onSave={onSave}
   >
     {({ isSaving }, asyncWrapper) => (
-      <div css={modalStyles}>
+      <div css={[modalStyles, stickyTitle ? {} : formContainer]}>
         <header css={headerStyles}>
           <Headline3>{title}</Headline3>
           <Paragraph noMargin accent="lead">
@@ -74,7 +76,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
           </Paragraph>
         </header>
         {children ? (
-          <div css={[formContainer, contentStyles]}>
+          <div css={[contentStyles, stickyTitle ? formContainer : {}]}>
             {children({ isSaving }, asyncWrapper)}
           </div>
         ) : null}

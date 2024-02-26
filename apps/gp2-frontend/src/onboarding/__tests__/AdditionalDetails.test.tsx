@@ -57,7 +57,7 @@ describe('AdditionalDetails', () => {
       typeof getContributingCohorts
     >;
 
-  it('renders questions, funding providers, contributing cohorts and external profiles', async () => {
+  it('renders questions, funding providers and contributing cohorts', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     mockGetContributingCohorts.mockResolvedValueOnce(
@@ -72,9 +72,6 @@ describe('AdditionalDetails', () => {
     ).toBeVisible();
     expect(
       screen.getByRole('heading', { name: 'Contributing Cohort Studies' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('heading', { name: 'External Profiles' }),
     ).toBeVisible();
   });
 
@@ -172,38 +169,6 @@ describe('AdditionalDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ contributingCohorts: expectedCohorts }),
-      expect.anything(),
-    );
-  });
-
-  it('opens the external profiles modal', async () => {
-    const user = gp2Fixtures.createUserResponse();
-    mockGetUser.mockResolvedValueOnce(user);
-    await renderAdditionalDetails(user.id);
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    const [, , externalProfilesButton] = screen.getAllByRole('link', {
-      name: 'Edit Edit',
-    });
-    userEvent.click(externalProfilesButton!);
-    expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
-    await waitFor(() => {
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    });
-    expect(mockPatchUser).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        orcid: '1234-1234-1234-1234',
-        social: {
-          googleScholar: 'https://scholar.google.com',
-          researchGate: 'https://researchid.com/rid/',
-          researcherId: 'https://researcherid.com/rid/R-1234-1234',
-          blog: 'https://www.blogger.com',
-          twitter: 'https://twitter.com',
-          linkedIn: 'https://www.linkedin.com',
-          github: 'https://github.com/',
-        },
-      }),
       expect.anything(),
     );
   });

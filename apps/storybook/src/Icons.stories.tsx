@@ -62,7 +62,7 @@ export const NewsEventPlaceholder = () => components.newsEventPlaceholderIcon;
 export const NewsPlaceholder = () => components.newsPlaceholder;
 export const NextPage = () => components.nextPageIcon;
 export const Orcid = () => <components.OrcidIcon />;
-export const OrcidSocial = () => components.orcidSocialIcon;
+export const OrcidSocialIcon = () => <components.OrcidSocialIcon />;
 export const Outlook = () => components.outlookIcon;
 export const Padlock = () => components.padlockIcon;
 export const PaperClip = () => components.paperClipIcon;

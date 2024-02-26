@@ -141,7 +141,7 @@ describe('UserDetail', () => {
         name: 'Edit Edit',
       });
 
-      expect(editButtons.length).toBe(8);
+      expect(editButtons.length).toBe(7);
 
       expect(editButtons.map((button) => button.getAttribute('href'))).toEqual([
         '/users/testuserid/overview/edit-key-info',
@@ -151,7 +151,6 @@ describe('UserDetail', () => {
         '/users/testuserid/overview/edit-questions',
         '/users/testuserid/overview/edit-funding-streams',
         '/users/testuserid/overview/edit-contributing-cohorts',
-        '/users/testuserid/overview/edit-external-profiles',
       ]);
     });
 
@@ -174,8 +173,8 @@ describe('UserDetail', () => {
         name: 'Optional Add',
       });
 
-      expect((await editButtons).length).toBe(4);
-      expect((await addButtons).length).toBe(4);
+      expect(editButtons.length).toBe(4);
+      expect(addButtons.length).toBe(3);
     });
     it('renders the upload avatar button', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -372,36 +371,6 @@ describe('UserDetail', () => {
               role: 'Co-Investigator',
             },
           ],
-        }),
-        expect.anything(),
-      );
-    });
-
-    it('saves the external profiles modal', async () => {
-      const user = gp2Fixtures.createUserResponse({
-        id: 'testuserid',
-      });
-      const userRequest = gp2Fixtures.createUserPatchRequest();
-      mockGetUser.mockResolvedValueOnce(user);
-      await renderUserDetail(user.id);
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , , , , , externalProfilesEditButton] = screen.getAllByRole(
-        'link',
-        {
-          name: 'Edit Edit',
-        },
-      );
-      userEvent.click(externalProfilesEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      });
-      expect(mockPatchUser).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          social: userRequest.social,
-          orcid: userRequest.orcid,
         }),
         expect.anything(),
       );

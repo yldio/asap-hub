@@ -13,7 +13,6 @@ describe('OnboardingPreview', () => {
     editQuestionsHref: '',
     editFundingStreamsHref: '',
     editContributingCohortsHref: '',
-    editExternalProfilesHref: '',
   };
   const defaultProps = {
     ...createUserResponse(),
@@ -100,7 +99,6 @@ describe('OnboardingPreview', () => {
     'Open Questions',
     'Financial Disclosures',
     'Contributing Cohort Studies',
-    'External Profiles',
   ])('renders the %s card', (name) => {
     render(<OnboardingPreview {...defaultProps} />);
     expect(screen.getByRole('heading', { name })).toBeVisible();

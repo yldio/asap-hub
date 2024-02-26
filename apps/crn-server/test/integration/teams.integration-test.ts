@@ -24,10 +24,6 @@ describe('team', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of teams', async () => {
     await retryable(async () => {
       const response = await supertest(app).get('/teams').expect(200);

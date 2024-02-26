@@ -19,6 +19,7 @@ import {
   getResearchOutputFixture,
   ResearchOutputCreateDataObject,
 } from './fixtures';
+import { getEnvironment } from './fixtures/contentful';
 
 jest.setTimeout(120000);
 
@@ -37,10 +38,6 @@ describe('research outputs', () => {
       take: 200,
     });
     researchTags = await response.body.items;
-  });
-
-  afterAll(async () => {
-    await fixtures.teardown();
   });
 
   test('can list research outputs', async () => {
@@ -77,6 +74,97 @@ describe('research outputs', () => {
           ],
         }),
       );
+    });
+    test('fetches the previously published version if unpublished changes are made in contentful', async () => {
+      const input = getResearchOutputFixture({
+        teams: [pmTeam.id],
+        workingGroups: [],
+        published: true,
+      });
+
+      const response = await supertest(app)
+        .post('/research-outputs')
+        .send(input)
+        .expect(201);
+
+      const id = response.body.id;
+      const title = response.body.title;
+
+      const environment = await getEnvironment();
+
+      const entry = await environment.getEntry(id);
+
+      await entry.patch([
+        {
+          op: 'replace',
+          path: '/fields/title',
+          value: { 'en-US': `${title} - (updated)` },
+        },
+      ]);
+
+      const updated = await supertest(app)
+        .get(`/research-outputs/${id}`)
+        .expect(200);
+
+      expect(updated.body.title).toEqual(title);
+    });
+
+    describe('filter by document type', () => {
+      beforeAll(async () => {
+        const article = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Article',
+        });
+        const dataset = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Dataset',
+        });
+        const report = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          documentType: 'Report',
+        });
+
+        await supertest(app)
+          .post('/research-outputs')
+          .send(article)
+          .expect(201);
+
+        await supertest(app)
+          .post('/research-outputs')
+          .send(dataset)
+          .expect(201);
+
+        await supertest(app).post('/research-outputs').send(report).expect(201);
+      });
+
+      test('can filter for a single document type', async () => {
+        const response = await supertest(app)
+          .get(
+            `/research-outputs?teamId=${pmTeam.id}&status=draft&filter=Dataset`,
+          )
+          .expect(200);
+
+        expect(response.body.items).toHaveLength(1);
+        expect(response.body.items[0].documentType).toEqual('Dataset');
+      });
+
+      test('can filter for multiple document types', async () => {
+        const response = await supertest(app)
+          .get(
+            `/research-outputs?teamId=${pmTeam.id}&status=draft&filter=Dataset&filter=Report`,
+          )
+          .expect(200);
+
+        expect(response.body.items).toHaveLength(2);
+        expect(response.body.items[0].documentType).toEqual('Report');
+        expect(response.body.items[1].documentType).toEqual('Dataset');
+      });
     });
 
     describe('create', () => {

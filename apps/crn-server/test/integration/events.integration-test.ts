@@ -18,10 +18,6 @@ describe('events', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-  });
-
   test('can fetch a list of events', async () => {
     await supertest(app).get('/events').query({ take: PAGE_SIZE }).expect(200);
   });

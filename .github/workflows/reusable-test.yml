@@ -152,7 +152,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run copy-paste detection
-        run: git diff --name-only origin/master origin/${GITHUB_HEAD_REF} | xargs yarn jscpd
+        run: git diff --name-only --diff-filter=d origin/master origin/${GITHUB_HEAD_REF} | xargs yarn jscpd
 
   integration-test:
     # TODO: enable back with ASAP-70

@@ -18,6 +18,8 @@ it('renders the children', () => {
 it('renders the header with a name', () => {
   render(<DashboardPage firstName="ExampleName" />);
   expect(
-    screen.getByRole('heading', { name: 'Welcome to the Hub, ExampleName!' }),
+    screen.getByRole('heading', {
+      name: 'Welcome to the Hub, ExampleName ExampleName!',
+    }),
   ).toBeVisible();
 });

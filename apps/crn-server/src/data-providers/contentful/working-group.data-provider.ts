@@ -32,6 +32,7 @@ import {
 } from '../transformers';
 import logger from '../../utils/logger';
 import { parseTeamsCollection } from './user.data-provider';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -213,7 +214,12 @@ export const parseContentfulGraphQlWorkingGroup = (
     id: member.user?.sys.id || '',
     firstName: member.user?.firstName || '',
     lastName: member.user?.lastName || '',
-    displayName: `${member.user?.firstName} ${member.user?.lastName}`,
+    displayName: parseUserDisplayName(
+      member.user?.firstName || '',
+      member.user?.lastName || '',
+      undefined,
+      member.user?.nickname || '',
+    ),
     alumniSinceDate: member.user?.alumniSinceDate,
     email: member.user?.email || '',
     avatarUrl: member.user?.avatar?.url || undefined,

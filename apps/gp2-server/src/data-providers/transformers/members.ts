@@ -25,6 +25,7 @@ const parseMember = <T extends string>(
   role: T;
   firstName: string;
   lastName: string;
+  nickname?: string;
   avatarUrl?: string;
 } => ({
   id,
@@ -32,6 +33,7 @@ const parseMember = <T extends string>(
   role: (role ?? '') as T,
   firstName: user.firstName ?? '',
   lastName: user.lastName ?? '',
+  nickname: user.nickname ?? '',
   avatarUrl: user.avatar?.url ?? undefined,
 });
 

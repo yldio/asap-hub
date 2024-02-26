@@ -34,6 +34,7 @@ import {
   ResearchOutputDataProvider,
   UpdateResearchOutputOptions,
 } from '../types';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 type ResearchOutputItem = NonNullable<
   FetchResearchOutputByIdQuery['researchOutputs']
@@ -376,7 +377,12 @@ const parseGraphQLResearchOutput = (
               firstName: author.firstName || '',
               lastName: author.lastName || '',
               email: author.email || '',
-              displayName: `${author.firstName} ${author.lastName}`,
+              displayName: parseUserDisplayName(
+                author.firstName || '',
+                author.lastName || '',
+                undefined,
+                author.nickname || '',
+              ),
               avatarUrl: author.avatar?.url || undefined,
               alumniSinceDate: author.alumniSinceDate || undefined,
             };

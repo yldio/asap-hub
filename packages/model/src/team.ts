@@ -73,12 +73,7 @@ export type FetchTeamsOptions = FetchOptions;
 
 export type TeamListItemDataObject = Pick<
   TeamDataObject,
-  | 'id'
-  | 'displayName'
-  | 'inactiveSince'
-  | 'projectTitle'
-  | 'tags'
-  | 'labCount'
+  'id' | 'displayName' | 'inactiveSince' | 'projectTitle' | 'tags' | 'labCount'
 > & { memberCount: number };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

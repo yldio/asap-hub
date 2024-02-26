@@ -105,7 +105,9 @@ export class ResearchTagContentfulDataProvider
   }
 }
 
-export const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {
+export const parseResearchTag = (
+  item: ResearchTagItem,
+): ResearchTagDataObject => {
   if (item.category !== null && !isResearchTagCategory(item.category || '')) {
     throw new TypeError('Invalid category received from Contentful');
   }

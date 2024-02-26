@@ -46,7 +46,7 @@ export type InterestGroupDataObject = {
   readonly createdDate: string;
   readonly contactEmails: string[];
   readonly name: string;
-  readonly  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
+  readonly tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   readonly description: string;
   readonly tools: InterestGroupTools;
   readonly teams: ReadonlyArray<InterestGroupTeam>;

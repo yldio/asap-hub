@@ -3,7 +3,10 @@ import {
   Environment,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
-import { parseResearchTags, ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
+import {
+  parseResearchTags,
+  ResearchTagContentfulDataProvider,
+} from '../../../src/data-providers/contentful/research-tag.data-provider';
 import {
   getFullListResearchTagDataObject,
   getContentfulGraphqlResearchTagResponse,

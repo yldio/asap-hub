@@ -187,7 +187,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 export const parseContentfulGraphQlTeamListItem = (
   item: TeamItem,
 ): TeamListItemDataObject => {
-
   const [numberOfMembers, labIds]: [number, Set<string>] = (
     item.linkedFrom?.teamMembershipCollection?.items || []
   ).reduce(

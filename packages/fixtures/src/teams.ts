@@ -25,7 +25,6 @@ const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   displayName: 'Abu-Remaileh, M',
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-  expertiseAndResourceTags: [],
   members: [],
   lastModifiedDate: '2020-09-07T17:36:54Z',
   labCount: 0,

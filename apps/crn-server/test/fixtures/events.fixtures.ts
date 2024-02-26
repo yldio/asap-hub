@@ -85,7 +85,7 @@ export const getContentfulGraphqlEvent = (
   eventLink: 'https://zoom.com/room/123',
   status: 'Confirmed',
   hidden: false,
-  researchTagsCollection: {items: []},
+  researchTagsCollection: { items: [] },
   title: 'Example Event',
   notesPermanentlyUnavailable: false,
   notes: {
@@ -403,15 +403,15 @@ export const getContentfulEventDataObject = (
     '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
   tags: [
-//    {
-//     "id": "Hello World",
-//           "name": "Hello World",
-//    },
-// {
-//     "id": "Hello World",
-//           "name": "Hello World",
-//    }
-  ]
+    //    {
+    //     "id": "Hello World",
+    //           "name": "Hello World",
+    //    },
+    // {
+    //     "id": "Hello World",
+    //           "name": "Hello World",
+    //    }
+  ],
 });
 
 export const getContentfulEventResponse = (): EventResponse =>

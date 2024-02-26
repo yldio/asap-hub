@@ -529,8 +529,6 @@ export const parseTeamsCollection = (
     [],
   );
 
-
-
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],
   isAlumni: boolean,

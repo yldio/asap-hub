@@ -23,7 +23,7 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
       createdDate: '2020-12-11T14:33:50.000Z',
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "JT's Group",
-      tags: ['coding'],
+      tags: [],
       thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
       description: 'A test Group',
       tools: {
@@ -35,7 +35,6 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
         {
           id: 'team-id-1',
           displayName: 'Lee, M',
-          expertiseAndResourceTags: [],
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
         },
@@ -87,7 +86,7 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
       createdDate: '2020-12-11T14:33:50.000Z',
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "FP's Group",
-      tags: ['coding'],
+      tags: [],
       description: 'A test Group',
       tools: {
         slack: 'https://example.com/secure-comms',
@@ -141,16 +140,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   createdDate: '2020-12-11T14:33:50.000Z',
   lastModifiedDate: '2020-12-11T15:06:26.000Z',
   name: "JT's Group",
-  tags: [
-    {
-  "id": "Hello World",
-  "name": "Hello World",
-  },
- {
-  "id": "Hello World",
-  "name": "Hello World",
-  }
-],
+  tags: [],
   thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   description: 'A test Group',
   tools: {
@@ -237,7 +227,7 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
   },
   active: true,
   name: "JT's Group",
-  tags: [],
+  researchTagsCollection: { items: [] },
   thumbnail: {
     url: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   },

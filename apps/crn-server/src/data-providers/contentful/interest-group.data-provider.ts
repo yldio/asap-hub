@@ -166,7 +166,6 @@ export class InterestGroupContentfulDataProvider
 const parseGraphQLInterestGroup = (
   interestGroup: InterestGroupItem,
 ): InterestGroupDataObject => {
-
   const teams = (interestGroup.teamsCollection?.items || [])
     .filter((x): x is Teams => x !== null)
     .map((t) => {

@@ -54,6 +54,12 @@ export default class UserController {
         displayName: parseUserDisplayName(
           user.firstName,
           user.lastName,
+          undefined,
+          user.nickname,
+        ),
+        fullDisplayName: parseUserDisplayName(
+          user.firstName,
+          user.lastName,
           user.middleName,
           user.nickname,
         ),
@@ -227,6 +233,12 @@ export const parseUserToResponse = ({
   return {
     ...user,
     displayName: parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      undefined,
+      user.nickname,
+    ),
+    fullDisplayName: parseUserDisplayName(
       user.firstName,
       user.lastName,
       user.middleName,

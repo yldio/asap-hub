@@ -176,6 +176,7 @@ export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
   displayName: string;
+  fullDisplayName?: string;
   projectIds: string[];
   workingGroupIds: string[];
   tagIds: string[];

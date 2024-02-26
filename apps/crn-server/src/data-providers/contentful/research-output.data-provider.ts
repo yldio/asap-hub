@@ -27,6 +27,7 @@ import {
   ResearchOutputsOrder,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { isSharingStatus } from '../transformers/research-output';
 import {
   CreateResearchOutputOptions,
@@ -34,7 +35,6 @@ import {
   ResearchOutputDataProvider,
   UpdateResearchOutputOptions,
 } from '../types';
-import { parseUserDisplayName } from '@asap-hub/server-common';
 
 type ResearchOutputItem = NonNullable<
   FetchResearchOutputByIdQuery['researchOutputs']

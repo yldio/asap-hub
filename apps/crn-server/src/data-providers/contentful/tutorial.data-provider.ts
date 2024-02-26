@@ -18,9 +18,9 @@ import {
   FetchTutorialsQueryVariables,
   FETCH_TUTORIALS,
 } from '@asap-hub/contentful';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { TutorialDataProvider } from '../types';
 import { cleanArray } from '../../utils/clean-array';
-import { parseUserDisplayName } from '@asap-hub/server-common';
 
 type TutorialItem = NonNullable<FetchTutorialByIdQuery['tutorials']>;
 

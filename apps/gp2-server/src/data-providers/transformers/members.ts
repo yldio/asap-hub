@@ -33,7 +33,7 @@ const parseMember = <T extends string>(
   role: (role ?? '') as T,
   firstName: user.firstName ?? '',
   lastName: user.lastName ?? '',
-  nickname: user.nickname ?? '',
+  nickname: user.nickname ?? undefined,
   avatarUrl: user.avatar?.url ?? undefined,
 });
 

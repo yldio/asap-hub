@@ -24,6 +24,7 @@ import {
   addLocaleToFields,
   Link,
 } from '@asap-hub/contentful';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { WorkingGroupDataProvider } from '../types';
 import {
@@ -32,7 +33,6 @@ import {
 } from '../transformers';
 import logger from '../../utils/logger';
 import { parseTeamsCollection } from './user.data-provider';
-import { parseUserDisplayName } from '@asap-hub/server-common';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<

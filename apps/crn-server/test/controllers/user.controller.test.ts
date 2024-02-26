@@ -105,9 +105,9 @@ describe('Users controller', () => {
         delete user.nickname;
 
         userDataProviderMock.fetchById.mockResolvedValue(user);
-        const { displayName } = await userController.fetchById(user.id);
+        const { fullDisplayName } = await userController.fetchById(user.id);
 
-        expect(displayName).toEqual('John Smith');
+        expect(fullDisplayName).toEqual('John Smith');
       });
 
       test('Should use all middle name initials', async () => {
@@ -118,9 +118,9 @@ describe('Users controller', () => {
         delete user.nickname;
 
         userDataProviderMock.fetchById.mockResolvedValue(user);
-        const { displayName } = await userController.fetchById(user.id);
+        const { fullDisplayName } = await userController.fetchById(user.id);
 
-        expect(displayName).toEqual('John W. T. G. Smith');
+        expect(fullDisplayName).toEqual('John W. T. G. Smith');
       });
     });
   });

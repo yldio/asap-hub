@@ -343,6 +343,7 @@ describe('Outputs data provider', () => {
         {
           sys: { id: 'user-id-1' },
           firstName: 'Tony',
+          nickname: 'Iron Man',
           lastName: 'Stark',
           email: 'tony.stark@email.com',
           onboarded: true,

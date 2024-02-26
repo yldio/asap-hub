@@ -102,7 +102,7 @@ jobs:
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
       SLACK_WEBHOOK: 'n-a'
 
-  empty-integration-test-env-contentful-migration:
+  crn-contentful-migrate-empty:
     needs: [deployment-development]
     runs-on: ubuntu-latest
     container:

@@ -44,6 +44,7 @@ export const projectsContentQueryFragment = gql`
             id
           }
           firstName
+          nickname
           lastName
           onboarded
           avatar {

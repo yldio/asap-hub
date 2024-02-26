@@ -144,6 +144,8 @@ jobs:
 
   copy-paste-check:
     runs-on: ubuntu-latest
+    # Run only on PRs
+    if: ${{ inputs.environment-name == 'Branch' }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

@@ -40,7 +40,6 @@ export type Member<T> = {
   role: T;
   firstName: string;
   lastName: string;
-  nickName?: string;
   avatarUrl?: string;
 };
 

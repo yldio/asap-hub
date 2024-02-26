@@ -6,6 +6,7 @@
   "version": 2,
   "attributesToIndex": [
     "displayName",
+    "fullDisplayName",
     "title",
     "documentType",
     "type",

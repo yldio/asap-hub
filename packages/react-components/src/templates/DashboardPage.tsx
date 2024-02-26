@@ -21,7 +21,7 @@ const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
     <main css={mainStyles}>
       <div css={headerStyles}>
         <Display styleAsHeading={2}>{`Welcome to the Hub${
-          firstName ? `, ${firstName}` : ''
+          firstName ? `, ${firstName} ${firstName}` : ''
         }!`}</Display>
       </div>
       {children}

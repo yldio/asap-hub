@@ -77,6 +77,14 @@ const renderWorkingGroupDetail = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+const workingGroupMember = {
+  userId: '23',
+  firstName: 'Tony',
+  lastName: 'Stark',
+  displayName: 'Tony Stark',
+  role: 'Lead',
+} as gp2Model.WorkingGroupMember;
+
 describe('WorkingGroupDetail', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
@@ -134,14 +142,7 @@ describe('WorkingGroupDetail', () => {
 
   it('renders the members section', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.members = [
-      {
-        userId: 'uuid',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'Lead',
-      },
-    ];
+    workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(screen.getByText(/Working Group Members/i)).toBeVisible();
@@ -150,29 +151,15 @@ describe('WorkingGroupDetail', () => {
   describe('resources', () => {
     it('renders the resources tab if the user is in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-      workingGroup.members = [
-        {
-          userId: '11',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Lead',
-        },
-      ];
+      workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
-      await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
+      await renderWorkingGroupDetail({ id: workingGroup.id, userId: '23' });
       expect(screen.getByRole('link', { name: /workspace/i })).toBeVisible();
     });
 
     it('does not render the resources tab if the user is not in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-      workingGroup.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Lead',
-        },
-      ];
+      workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(
@@ -182,14 +169,7 @@ describe('WorkingGroupDetail', () => {
 
     it('does renders the resources if the user is not in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-      workingGroup.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Lead',
-        },
-      ];
+      workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -206,14 +186,7 @@ describe('WorkingGroupDetail', () => {
 
     it('does not render the resources if the user is not in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-      workingGroup.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Lead',
-        },
-      ];
+      workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -231,14 +204,7 @@ describe('WorkingGroupDetail', () => {
 
   it('clicking on the resource tab loads the resources', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Lead',
-      },
-    ];
+    workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
@@ -252,14 +218,7 @@ describe('WorkingGroupDetail', () => {
 
   it('clicking on the overview tab loads the overview', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Lead',
-      },
-    ];
+    workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
@@ -283,14 +242,7 @@ describe('WorkingGroupDetail', () => {
     'does not render the add modal when the user is not an Administrator',
     async (role) => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-      workingGroup.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Lead',
-        },
-      ];
+      workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -310,14 +262,7 @@ describe('WorkingGroupDetail', () => {
 
   it('renders the add modal when the user is an Administrator', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Lead',
-      },
-    ];
+    workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({
       id: workingGroup.id,
@@ -336,14 +281,7 @@ describe('WorkingGroupDetail', () => {
 
   describe('Resources Modal', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
-    workingGroup.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Lead',
-      },
-    ];
+    workingGroup.members = [workingGroupMember];
 
     it('does render the add and edit button to Administrators', async () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);

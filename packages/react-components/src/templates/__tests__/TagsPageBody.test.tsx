@@ -44,7 +44,7 @@ it('renders a list of cards', () => {
         {
           ...createUserListItemResponse(),
           __meta: { type: 'user' },
-          displayName: 'John Doe',
+          fullDisplayName: 'John Doe',
           degree: 'PhD',
         },
         {

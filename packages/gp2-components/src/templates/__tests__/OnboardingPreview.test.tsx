@@ -38,11 +38,11 @@ describe('OnboardingPreview', () => {
   });
 
   it('renders the full name', () => {
-    const displayName = 'Anthony Edward Stark';
-    const user = createUserResponse({ displayName });
+    const fullDisplayName = 'Anthony E. Stark';
+    const user = createUserResponse({ fullDisplayName });
     render(<OnboardingPreview {...user} {...editHrefs} />);
     expect(
-      screen.getByRole('heading', { name: /Anthony Edward Stark/i }),
+      screen.getByRole('heading', { name: /Anthony E. Stark/i }),
     ).toBeInTheDocument();
   });
 

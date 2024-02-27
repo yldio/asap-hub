@@ -9,12 +9,12 @@ const users: gp2Model.ListUserResponse = {
   items: [
     gp2Fixtures.createUserResponse({
       id: 'u42',
-      displayName: 'Tony Stark',
+      fullDisplayName: 'Tony Stark',
       degrees: ['PhD' as const],
     }),
     gp2Fixtures.createUserResponse({
       id: 'u59',
-      displayName: 'Peter Parker',
+      fullDisplayName: 'Peter Parker',
       degrees: ['BSc'],
     }),
   ],

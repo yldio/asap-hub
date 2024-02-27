@@ -38,6 +38,7 @@ describe('Project controller', () => {
         userId: '7',
         firstName: 'Peter',
         lastName: 'Parker',
+        displayName: 'Peter Parker',
         role: 'Contributor' as const,
       };
 
@@ -118,6 +119,7 @@ describe('Project controller', () => {
         userId: '7',
         firstName: 'Peter',
         lastName: 'Parker',
+        displayName: 'Peter Parker',
         role: 'Contributor' as const,
       };
       test('Should not return the resource when the user is not part of the project', async () => {

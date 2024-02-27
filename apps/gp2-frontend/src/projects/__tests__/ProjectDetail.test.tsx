@@ -71,6 +71,13 @@ const renderProjectDetail = async ({
 
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+const projectMember = {
+  userId: '23',
+  firstName: 'Tony',
+  lastName: 'Stark',
+  displayName: 'Tony Stark',
+  role: 'Project lead',
+} as gp2Model.ProjectMember;
 
 describe('ProjectDetail', () => {
   const mockGetProject = getProject as jest.MockedFunction<typeof getProject>;
@@ -116,14 +123,7 @@ describe('ProjectDetail', () => {
 
   it('renders the members section', async () => {
     const project = gp2Fixtures.createProjectResponse();
-    project.members = [
-      {
-        userId: 'uuid',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'Contributor',
-      },
-    ];
+    project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
     await renderProjectDetail({ id: project.id });
     expect(screen.getByText(/project Members/i)).toBeVisible();
@@ -134,10 +134,8 @@ describe('ProjectDetail', () => {
       const project = gp2Fixtures.createProjectResponse();
       project.members = [
         {
+          ...projectMember,
           userId: '11',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Project lead',
         },
       ];
       mockGetProject.mockResolvedValueOnce(project);
@@ -147,14 +145,7 @@ describe('ProjectDetail', () => {
 
     it('does not render the resources tab if the user is not in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
-      project.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Project lead',
-        },
-      ];
+      project.members = [projectMember];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(
@@ -164,14 +155,7 @@ describe('ProjectDetail', () => {
 
     it('renders the resources if the user is in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
-      project.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Project lead',
-        },
-      ];
+      project.members = [projectMember];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -188,14 +172,7 @@ describe('ProjectDetail', () => {
 
     it('does not render the resources if the user is not in the project', async () => {
       const project = gp2Fixtures.createProjectResponse();
-      project.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Project lead',
-        },
-      ];
+      project.members = [projectMember];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -213,14 +190,7 @@ describe('ProjectDetail', () => {
 
   it('clicking on the resource tab loads the resources', async () => {
     const project = gp2Fixtures.createProjectResponse();
-    project.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Project lead',
-      },
-    ];
+    project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
     await renderProjectDetail({
       id: project.id,
@@ -234,14 +204,7 @@ describe('ProjectDetail', () => {
 
   it('clicking on the overview tab loads the resources', async () => {
     const project = gp2Fixtures.createProjectResponse();
-    project.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Project lead',
-      },
-    ];
+    project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
     await renderProjectDetail({
       id: project.id,
@@ -265,14 +228,7 @@ describe('ProjectDetail', () => {
     'does not render the add modal when the user is not an Administrator or Project manager',
     async (role) => {
       const project = gp2Fixtures.createProjectResponse();
-      project.members = [
-        {
-          userId: '23',
-          firstName: 'Tony',
-          lastName: 'Stark',
-          role: 'Project lead',
-        },
-      ];
+      project.members = [projectMember];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -292,14 +248,7 @@ describe('ProjectDetail', () => {
 
   it('renders the add modal when the user is an Administrator', async () => {
     const project = gp2Fixtures.createProjectResponse();
-    project.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Project lead',
-      },
-    ];
+    project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
     await renderProjectDetail({
       id: project.id,
@@ -320,9 +269,7 @@ describe('ProjectDetail', () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
       {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
+        ...projectMember,
         role: 'Project manager',
       },
     ];
@@ -345,14 +292,7 @@ describe('ProjectDetail', () => {
 
   describe('Resources Modal', () => {
     const project = gp2Fixtures.createProjectResponse();
-    project.members = [
-      {
-        userId: '23',
-        firstName: 'Tony',
-        lastName: 'Stark',
-        role: 'Project lead',
-      },
-    ];
+    project.members = [projectMember];
 
     it('does render the add and edit button to Administrators', async () => {
       mockGetProject.mockResolvedValueOnce(project);

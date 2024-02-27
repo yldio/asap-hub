@@ -10,7 +10,7 @@ const boilerplateProps: Omit<
 > = createUserResponse();
 it('renders the header', () => {
   const { getByText } = render(
-    <UserProfilePage {...boilerplateProps} displayName="John Doe">
+    <UserProfilePage {...boilerplateProps} fullDisplayName="John Doe">
       Tab Content
     </UserProfilePage>,
   );

@@ -22,7 +22,7 @@ const { rem } = pixels;
 type UserDetailHeaderCardProps = Pick<
   gp2Model.UserResponse,
   | 'id'
-  | 'displayName'
+  | 'fullDisplayName'
   | 'firstName'
   | 'lastName'
   | 'avatarUrl'
@@ -123,7 +123,7 @@ const validateCompleted = ({
   role;
 
 const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
-  displayName,
+  fullDisplayName,
   avatarUrl,
   degrees,
   firstName,
@@ -221,7 +221,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           css={[rowStyles, { gridArea: 'headline', overflowWrap: 'anywhere' }]}
         >
           <Headline3 noMargin>
-            {displayName}
+            {fullDisplayName}
             {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
           </Headline3>
         </div>

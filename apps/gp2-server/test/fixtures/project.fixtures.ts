@@ -21,6 +21,7 @@ export const getProjectDataObject = (
       userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
+      displayName: 'Tony Stark',
       role: 'Project manager',
     },
   ],
@@ -87,6 +88,7 @@ export const createProjectMembersResponse = (
     userId: String(id),
     firstName: 'Tony',
     lastName: 'Stark',
+    displayName: 'Tony Stark',
     role: 'Project manager',
   }));
 
@@ -109,6 +111,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
         },
         firstName: 'Tony',
         lastName: 'Stark',
+        nickname: null,
         onboarded: true,
       },
     },

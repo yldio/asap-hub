@@ -5,7 +5,7 @@ import UserDetailPage from '../UserDetailPage';
 describe('UserDetailPage', () => {
   const defaultProps: ComponentProps<typeof UserDetailPage> = {
     id: '1',
-    displayName: 'Homer Simpson',
+    fullDisplayName: 'Homer Simpson',
     firstName: 'Homer',
     lastName: 'Simpson',
     degrees: ['PhD' as const],

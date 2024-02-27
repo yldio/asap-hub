@@ -16,7 +16,9 @@ const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
 };
 
 it('renders the name as the top-level heading', () => {
-  render(<UserProfileHeader {...boilerplateProps} displayName="John Doe" />);
+  render(
+    <UserProfileHeader {...boilerplateProps} fullDisplayName="John Doe" />,
+  );
   expect(screen.getByRole('heading')).toHaveTextContent('John Doe');
   expect(screen.getByRole('heading').tagName).toBe('H1');
 });

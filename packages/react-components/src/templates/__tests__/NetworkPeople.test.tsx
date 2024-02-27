@@ -32,7 +32,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
 };
 const people = [
   person,
-  { ...person, id: '43', displayName: 'Person B', labs: [] },
+  { ...person, id: '43', fullDisplayName: 'Person B', labs: [] },
 ];
 const props: ComponentProps<typeof NetworkPeople> = {
   people,

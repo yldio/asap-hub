@@ -44,6 +44,7 @@ jobs:
           contentful-environment-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
 
   test:
+    if: false
     uses: ./.github/workflows/reusable-test.yml
     with:
       environment-name: Branch

@@ -6,7 +6,7 @@ const props = {
   position: 'center',
   title: 'Dashboard',
   description:
-    'Hey! Discover how to use the platform and what’s currently happening within the network.',
+    'Hey! :) Discover how to use the platform and what’s currently happening within the network.',
 };
 
 const DashboardHeader: React.FC = () => <PageBanner {...props} />;

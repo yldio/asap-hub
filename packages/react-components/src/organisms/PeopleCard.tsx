@@ -47,7 +47,7 @@ const alumniBadgeStyles = css({});
 const PeopleCard: React.FC<UserListItemResponse> = ({
   id,
   alumniSinceDate,
-  displayName,
+  fullDisplayName,
   createdDate,
   firstName,
   lastName,
@@ -66,7 +66,7 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
         <div css={textContainerStyles}>
           <div css={moveStyles}>
             <LinkHeadline href={userHref} level={2} styleAsHeading={4}>
-              {displayName}
+              {fullDisplayName}
               {degree && `, ${degree}`}
             </LinkHeadline>
             {alumniSinceDate && (

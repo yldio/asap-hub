@@ -150,7 +150,7 @@ type UserProfileHeaderProps = Pick<
   | 'avatarUrl'
   | 'contactEmail'
   | 'email'
-  | 'displayName'
+  | 'fullDisplayName'
   | 'firstName'
   | 'institution'
   | 'jobTitle'
@@ -179,7 +179,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   lastModifiedDate,
   alumniSinceDate,
   alumniLocation,
-  displayName,
+  fullDisplayName,
   country,
   stateOrProvince,
   city,
@@ -234,7 +234,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           <div>
             <div css={nameHeaderStyles}>
               <div css={{ display: 'flex' }}>
-                <Display styleAsHeading={2}>{displayName}</Display>
+                <Display styleAsHeading={2}>{fullDisplayName}</Display>
                 {degree ? (
                   <Display styleAsHeading={2}>, {degree}</Display>
                 ) : isOwnProfile ? (

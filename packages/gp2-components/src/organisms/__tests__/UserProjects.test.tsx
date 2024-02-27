@@ -12,14 +12,14 @@ describe('UserProjects', () => {
       members: [],
       status: 'Active',
     }));
-  const firstName: gp2.UserResponse['firstName'] = 'John';
+
   const id = 'user-id';
   const renderUserProjects = (projects: Project[]) =>
-    render(<UserProjects projects={projects} firstName={firstName} id={id} />);
+    render(<UserProjects projects={projects} id={id} />);
   it('renders the short text when there are no projects', () => {
     renderUserProjects([]);
     expect(
-      screen.getByText(`${firstName} has been involved`, { exact: false }),
+      screen.getByText('This member has been involved', { exact: false }),
     ).toBeVisible();
     expect(
       screen.getByRole('heading', {
@@ -36,7 +36,7 @@ describe('UserProjects', () => {
 
   it.each(gp2.projectStatus)('renders the status - %s', (status) => {
     const project = { ...getProjects(1)[0]!, status };
-    render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
+    render(<UserProjects projects={[project]} id={id} />);
     expect(screen.getByText(status)).toBeVisible();
   });
 
@@ -45,7 +45,7 @@ describe('UserProjects', () => {
       ...getProjects(1)[0]!,
       members: [{ userId: id, role }],
     };
-    render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
+    render(<UserProjects projects={[project]} id={id} />);
     expect(screen.getByText(role)).toBeVisible();
   });
 
@@ -54,14 +54,7 @@ describe('UserProjects', () => {
       ...getProjects(1)[0]!,
       members: [{ userId: id, role: gp2.projectMemberRole[0] }],
     };
-    render(
-      <UserProjects
-        projects={[project]}
-        firstName={firstName}
-        id={id}
-        isOnboarding
-      />,
-    );
+    render(<UserProjects projects={[project]} id={id} isOnboarding />);
     expect(screen.queryByText('Role')).not.toBeInTheDocument();
   });
 

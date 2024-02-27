@@ -16,22 +16,16 @@ const groups = [
   { ...createInterestGroupResponse(), name: 'Group 7', id: 'g7' },
 ];
 
-const displayName = 'Octavian';
-
 const userId = 'user-id';
 
 it('renders correctly for a normal user', () => {
   const { getByText } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={groups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={groups} id={userId} />,
   );
-  expect(getByText(`${displayName}'s Interest Groups`)).toBeVisible();
+  expect(getByText('Interest Groups')).toBeVisible();
   expect(
     getByText(
-      'Interest groups allow teams to share findings with other teams about topics of interest.',
+      'Interest groups allow teams to share findings with other teams about topics of interest. Find out the membership status of this member.',
     ),
   ).toBeVisible();
 
@@ -43,11 +37,7 @@ it('renders correctly for a normal user', () => {
 
 it('cannot switch to the disabled tab', () => {
   const { getByRole, rerender } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={groups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={groups} id={userId} />,
   );
 
   expect(
@@ -59,7 +49,6 @@ it('cannot switch to the disabled tab', () => {
 
   rerender(
     <UserInterestGroupCard
-      displayName={displayName}
       interestGroups={groups}
       alumniSinceDate="2020-01-02"
       id={userId}
@@ -76,7 +65,6 @@ it('cannot switch to the disabled tab', () => {
 it('renders correctly for an alumni user', () => {
   const { getByText, getByRole } = render(
     <UserInterestGroupCard
-      displayName={displayName}
       interestGroups={groups}
       alumniSinceDate="2020-01-02"
       id={userId}
@@ -92,11 +80,7 @@ it('renders correctly for an alumni user', () => {
 
 it('can click the show more/ less button', () => {
   const { getAllByText, getByText } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={groups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={groups} id={userId} />,
   );
 
   expect(getAllByText('Member')).toHaveLength(5);
@@ -123,11 +107,7 @@ it('displays the proper role for a group leader', () => {
     },
   ];
   const { getByText } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={interestGroups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={interestGroups} id={userId} />,
   );
   expect(getByText('Chair')).toBeInTheDocument();
 });
@@ -149,11 +129,7 @@ it('renders correctly when user is inactive leader', () => {
     },
   ];
   const { getByText } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={interestGroups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={interestGroups} id={userId} />,
   );
   expect(getByText(`Active Collaborations (0)`)).toBeVisible();
   expect(getByText(`Past Collaborations (1)`)).toBeVisible();
@@ -167,11 +143,7 @@ it('renders correcly for inactive groups', () => {
     },
   ];
   const { getByText } = render(
-    <UserInterestGroupCard
-      displayName={displayName}
-      interestGroups={interestGroups}
-      id={userId}
-    />,
+    <UserInterestGroupCard interestGroups={interestGroups} id={userId} />,
   );
   expect(getByText(`Active Collaborations (0)`)).toBeVisible();
   expect(getByText(`Past Collaborations (1)`)).toBeVisible();

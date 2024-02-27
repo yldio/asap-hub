@@ -11,7 +11,6 @@ describe('UserOverview', () => {
     questions: [],
     projects: [],
     workingGroups: [],
-    firstName: 'Tony',
     contributingCohorts: [],
   };
 

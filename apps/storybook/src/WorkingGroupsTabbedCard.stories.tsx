@@ -7,7 +7,6 @@ export default {
 
 export const Normal = () => {
   const props: ComponentProps<typeof WorkingGroupsTabbedCard> = {
-    userName: 'Phillip Mars',
     isUserAlumni: false,
     groups: [
       {

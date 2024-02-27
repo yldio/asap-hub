@@ -10,20 +10,13 @@ describe('UserWorkingGroups', () => {
       title: `a title ${itemIndex}`,
       members: [],
     }));
-  const firstName: gp2.UserResponse['firstName'] = 'John';
   const id = 'user-id';
   const renderUserWorkingGroups = (workingGroups: WorkingGroup[]) =>
-    render(
-      <UserWorkingGroups
-        workingGroups={workingGroups}
-        firstName={firstName}
-        id={id}
-      />,
-    );
+    render(<UserWorkingGroups workingGroups={workingGroups} id={id} />);
   it('renders the short text when there are no working-groups', () => {
     renderUserWorkingGroups([]);
     expect(
-      screen.getByText(`${firstName} is involved`, { exact: false }),
+      screen.getByText('This member is involved', { exact: false }),
     ).toBeVisible();
     expect(
       screen.getByRole('heading', {
@@ -60,13 +53,7 @@ describe('UserWorkingGroups', () => {
       ...getWorkingGroups(1)[0]!,
       members: [{ userId: id, role }],
     };
-    render(
-      <UserWorkingGroups
-        workingGroups={[workingGroups]}
-        firstName={firstName}
-        id={id}
-      />,
-    );
+    render(<UserWorkingGroups workingGroups={[workingGroups]} id={id} />);
     expect(screen.getByText(role)).toBeVisible();
   });
   it('should not render role column if onboarding', () => {
@@ -75,12 +62,7 @@ describe('UserWorkingGroups', () => {
       members: [{ userId: id, role: gp2.workingGroupMemberRole[0] }],
     };
     render(
-      <UserWorkingGroups
-        workingGroups={[workingGroup]}
-        firstName={firstName}
-        id={id}
-        isOnboarding
-      />,
+      <UserWorkingGroups workingGroups={[workingGroup]} id={id} isOnboarding />,
     );
     expect(screen.queryByText('Role')).not.toBeInTheDocument();
   });

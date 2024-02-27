@@ -23,7 +23,6 @@ type UserOverviewProps = Pick<
   | 'fundingStreams'
   | 'projects'
   | 'workingGroups'
-  | 'firstName'
   | 'contributingCohorts'
 > &
   ComponentProps<typeof UserQuestions> & {
@@ -62,7 +61,6 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   questions,
   projects,
   workingGroups,
-  firstName,
   contributingCohorts,
   editBiographyHref,
   editContactInfoHref,
@@ -81,34 +79,22 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       <UserTags tags={tags} editHref={editTagsHref} />
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
-    {projects.length > 0 && (
-      <UserProjects projects={projects} firstName={firstName} id={id} />
-    )}
+    {projects.length > 0 && <UserProjects projects={projects} id={id} />}
     {workingGroups.length > 0 && (
-      <UserWorkingGroups
-        workingGroups={workingGroups}
-        firstName={firstName}
-        id={id}
-      />
+      <UserWorkingGroups workingGroups={workingGroups} id={id} />
     )}
     {(editQuestionsHref || questions.length > 0) && (
-      <UserQuestions
-        questions={questions}
-        firstName={firstName}
-        editHref={editQuestionsHref}
-      />
+      <UserQuestions questions={questions} editHref={editQuestionsHref} />
     )}
     {(editFundingStreamsHref || fundingStreams) && (
       <UserFundingStreams
         fundingStreams={fundingStreams}
-        firstName={firstName}
         editHref={editFundingStreamsHref}
       />
     )}
     {(editContributingCohortsHref || contributingCohorts.length > 0) && (
       <UserContributingCohorts
         contributingCohorts={contributingCohorts}
-        firstName={firstName}
         editHref={editContributingCohortsHref}
       />
     )}

@@ -3,10 +3,10 @@ import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Card, Headline2, Headline3, Divider } from '../atoms';
+import { Card, Headline2, Headline3, Divider, Paragraph } from '../atoms';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 
-type QuestionsSectionProps = Pick<UserResponse, 'firstName' | 'questions'>;
+type QuestionsSectionProps = Pick<UserResponse, 'questions'>;
 
 const containerStyles = css({
   display: 'flex',
@@ -14,15 +14,16 @@ const containerStyles = css({
 });
 
 const QuestionsSection: React.FC<QuestionsSectionProps> = ({
-  firstName,
   questions = [],
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
   return questions.length || isOwnProfile ? (
     <Card>
-      <Headline2 styleAsHeading={3}>
-        {firstName ? `${firstName}'s Open Questions` : 'Open Questions'}
-      </Headline2>
+      <Headline2 styleAsHeading={3}>Open Questions</Headline2>
+      <Paragraph accent="lead">
+        This member is interested in answering the following questions within
+        their work.
+      </Paragraph>
       {questions.length ? (
         <div css={containerStyles}>
           {questions

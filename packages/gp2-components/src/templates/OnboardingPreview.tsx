@@ -80,7 +80,6 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     {projects && (
       <UserProjects
         id={headerProps.id}
-        firstName={headerProps.firstName}
         noLinks
         projects={projects}
         subtitle={<ContactSupport />}
@@ -90,26 +89,19 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     {workingGroups && (
       <UserWorkingGroups
         id={headerProps.id}
-        firstName={headerProps.firstName}
         noLinks
         workingGroups={workingGroups}
         subtitle={<ContactSupport />}
         isOnboarding
       />
     )}
-    <UserQuestions
-      firstName={headerProps.firstName}
-      questions={questions}
-      editHref={editQuestionsHref}
-    />
+    <UserQuestions questions={questions} editHref={editQuestionsHref} />
     <UserFundingStreams
       fundingStreams={fundingStreams}
-      firstName={headerProps.firstName}
       editHref={editFundingStreamsHref}
     />
     <UserContributingCohorts
       contributingCohorts={contributingCohorts}
-      firstName={headerProps.firstName}
       editHref={editContributingCohortsHref}
     />
   </>

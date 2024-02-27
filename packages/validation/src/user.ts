@@ -29,7 +29,7 @@ export const isUserOnboardable = (
 ): UserValidationResponse => {
   const response: Omit<UserValidationResponse, 'isOnboardable'> = {};
 
-  if (user.role !== 'Staff') {
+  if (user.role !== 'Staff' && user.role !== 'Guest') {
     if (user.questions.length < 2) {
       response.questions = { valid: false };
     }

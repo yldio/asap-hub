@@ -195,4 +195,39 @@ describe('isUserOnboardable validation', () => {
       });
     });
   });
+
+  describe('when user role is Guest', () => {
+    it('Should pass when the user is not part of any team', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Guest',
+        teams: [],
+      };
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: true,
+      });
+    });
+    it('Should pass with Research Interests missing from user profile', async () => {
+      const userResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Guest',
+        researchInterests: undefined,
+      };
+
+      expect(isUserOnboardable(userResponse)).toEqual({
+        isOnboardable: true,
+      });
+    });
+    it('Should pass with Research Questions missing from user profile', async () => {
+      const userIncompleteResponse: UserResponse = {
+        ...getUserResponse(),
+        role: 'Guest',
+        questions: [],
+      };
+
+      expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+        isOnboardable: true,
+      });
+    });
+  });
 });

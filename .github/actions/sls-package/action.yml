@@ -127,6 +127,7 @@ runs:
         SES_REGION: ${{ inputs.ses-region }}
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
         SLS_STAGE: ${{ inputs.sls-stage }}
+        S3_SYNC_ENABLED: 'false'
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}

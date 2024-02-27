@@ -402,16 +402,7 @@ export const getContentfulEventDataObject = (
   videoRecording:
     '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
-  tags: [
-    //    {
-    //     "id": "Hello World",
-    //           "name": "Hello World",
-    //    },
-    // {
-    //     "id": "Hello World",
-    //           "name": "Hello World",
-    //    }
-  ],
+  tags: [],
 });
 
 export const getContentfulEventResponse = (): EventResponse =>

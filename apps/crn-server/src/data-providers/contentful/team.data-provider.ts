@@ -72,6 +72,9 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
             ...searchTerms.map((term) => ({
               projectTitle_contains: term,
             })),
+            ...searchTerms.map((term) => ({
+              researchTags: { name_contains: term },
+            })),
           ],
         }
       : {};

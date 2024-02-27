@@ -47,7 +47,7 @@ export interface TeamMember {
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
-  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
+  tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   members: TeamMember[];
   lastModifiedDate: string;
   pointOfContact?: TeamMember;

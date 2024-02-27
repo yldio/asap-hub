@@ -140,7 +140,7 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   createdDate: '2020-12-11T14:33:50.000Z',
   lastModifiedDate: '2020-12-11T15:06:26.000Z',
   name: "JT's Group",
-  tags: [],
+  tags: [{ id: 'tag-1', name: 'Animal resources 1' }],
   thumbnail: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   description: 'A test Group',
   tools: {
@@ -227,7 +227,9 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
   },
   active: true,
   name: "JT's Group",
-  researchTagsCollection: { items: [] },
+  researchTagsCollection: {
+    items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
+  },
   thumbnail: {
     url: `https://www.contentful.com/api/assets/asap-crn/uuid-thumbnail-1`,
   },

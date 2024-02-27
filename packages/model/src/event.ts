@@ -54,7 +54,7 @@ export interface EventDataObject extends BasicEvent {
   relatedTutorials: Array<
     Pick<TutorialsDataObject, 'id' | 'title' | 'created'>
   >;
-  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
+  tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   relatedResearch: (Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'id' | 'title'

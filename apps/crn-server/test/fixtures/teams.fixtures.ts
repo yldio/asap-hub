@@ -40,7 +40,7 @@ export const getContentfulGraphqlTeamById = (): NonNullable<
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   researchTagsCollection: {
-    items: [],
+    items: [{ sys: { id: 'tag-1' }, name: 'Animal resources 1' }],
   },
   toolsCollection: {
     items: [],
@@ -153,7 +153,12 @@ export const getTeamDataObject = (): TeamDataObject => ({
   displayName: 'Team A',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
-  tags: [],
+  tags: [
+    {
+      id: 'tag-1',
+      name: 'Animal resources 1',
+    },
+  ],
   members: [
     {
       id: 'user-id-1',

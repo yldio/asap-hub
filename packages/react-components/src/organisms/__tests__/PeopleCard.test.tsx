@@ -8,7 +8,7 @@ const props: ComponentProps<typeof PeopleCard> = createUserListItemResponse();
 
 it('renders the display name', () => {
   const { getByRole } = render(
-    <PeopleCard {...props} displayName="John Doe" />,
+    <PeopleCard {...props} fullDisplayName="John Doe" />,
   );
   expect(getByRole('heading').textContent).toEqual('John Doe');
   expect(getByRole('heading').tagName).toEqual('H2');
@@ -16,7 +16,7 @@ it('renders the display name', () => {
 
 it('renders the display name and degree', () => {
   const { getByRole } = render(
-    <PeopleCard {...props} displayName="John Doe" degree={'BA'} />,
+    <PeopleCard {...props} fullDisplayName="John Doe" degree={'BA'} />,
   );
   expect(getByRole('heading').textContent).toEqual('John Doe, BA');
   expect(getByRole('heading').tagName).toEqual('H2');
@@ -44,7 +44,7 @@ it('renders the date and label in the correct form for alumni users', () => {
 
 it('links to the profile', () => {
   const { getByText } = render(
-    <PeopleCard {...props} displayName="John Doe" id="42" />,
+    <PeopleCard {...props} fullDisplayName="John Doe" id="42" />,
   );
 
   expect(getByText('John Doe').closest('a')).toHaveAttribute(

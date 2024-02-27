@@ -93,6 +93,7 @@ describe('Working Group Data Provider', () => {
             role: 'Lead',
             firstName: 'Tony',
             lastName: 'Stark',
+            displayName: 'Tony Stark',
           },
         ]);
       });

@@ -30,11 +30,11 @@ it('renders the avatar', () => {
   ).toBeInTheDocument();
 });
 it('renders the full name', () => {
-  const displayName = 'Anthony Edward Stark';
-  const user = createUserResponse({ displayName });
+  const fullDisplayName = 'Anthony E. Stark';
+  const user = createUserResponse({ fullDisplayName });
   render(<OnboardingCoreDetails {...user} />);
   expect(
-    screen.getByRole('heading', { name: /Anthony Edward Stark/i }),
+    screen.getByRole('heading', { name: /Anthony E. Stark/i }),
   ).toBeInTheDocument();
 });
 it('renders the degrees', () => {

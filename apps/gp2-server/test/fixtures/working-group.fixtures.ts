@@ -108,6 +108,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
         },
         firstName: 'Tony',
         lastName: 'Stark',
+        nickname: null,
         onboarded: true,
       },
     },

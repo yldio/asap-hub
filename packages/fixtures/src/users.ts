@@ -70,7 +70,7 @@ export const createUserResponse = (
 
   id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
-  fullDisplayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
+  fullDisplayName: `${listUserResponseItem.fullDisplayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
   labs: createLabs(options),
 });
@@ -82,6 +82,7 @@ export const createUserListItemResponse = (
   ...listUserResponseItem,
   id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
+  fullDisplayName: `${listUserResponseItem.fullDisplayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
   labs: createLabs(options),
 });

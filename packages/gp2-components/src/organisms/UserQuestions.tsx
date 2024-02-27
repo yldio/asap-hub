@@ -9,7 +9,6 @@ const { rem } = pixels;
 
 type UserQuestionsProps = {
   questions: gp2.UserResponse['questions'];
-  firstName: string;
 } & Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
 const rowStyles = css({
@@ -24,14 +23,13 @@ const rowStyles = css({
 });
 const UserQuestions: React.FC<UserQuestionsProps> = ({
   questions,
-  firstName,
   editHref,
 }) => (
   <EditableCard
     editHref={editHref}
     title="Open Questions"
-    subtitle={`${firstName} is interested in answering the following questions
-    within their work:`}
+    subtitle="This member is interested in answering the following questions
+    within their work."
     edit={!!questions.length}
     optional
   >

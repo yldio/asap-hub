@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useState } from 'react';
-import { Paragraph, Headline3, TabButton, Button } from '../atoms';
+import { Headline3, TabButton, Button } from '../atoms';
 import { steel } from '../colors';
 import { perRem, rem } from '../pixels';
 import { TabNav } from '.';
@@ -35,7 +35,7 @@ export type TabProps<T> = {
 
 type TabbedCardProps<T> = {
   title?: string;
-  description?: string;
+  description?: ReactNode;
   tabs: TabProps<T>[];
   activeTabIndex?: number;
   getShowMoreText?: (showMore: boolean) => string;
@@ -65,12 +65,7 @@ export const TabbedContent = <T extends object>({
         <div css={{ marginBottom: '12px' }}>
           <Headline3>{title}</Headline3>
         </div>
-        <Paragraph
-          noMargin
-          styles={css({ fontWeight: 'bold', margin: '8px 0' })}
-        >
-          {description}
-        </Paragraph>
+        {description}
         <TabNav>
           {tabs.map(({ tabTitle, disabled }, index) => (
             <TabButton

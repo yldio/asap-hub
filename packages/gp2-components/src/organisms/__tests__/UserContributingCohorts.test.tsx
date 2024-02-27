@@ -15,7 +15,6 @@ describe('UserContributingCohorts', () => {
         studyUrl: `http://a-url-${itemIndex}`,
       }),
     );
-  const firstName: gp2.UserResponse['firstName'] = 'John';
   const renderUserCohorts = (
     contributingCohorts: ContributingCohort[],
     editHref?: string,
@@ -23,7 +22,6 @@ describe('UserContributingCohorts', () => {
     render(
       <UserContributingCohorts
         contributingCohorts={contributingCohorts}
-        firstName={firstName}
         editHref={editHref}
       />,
     );
@@ -40,12 +38,7 @@ describe('UserContributingCohorts', () => {
 
   it.each(gp2.userContributingCohortRole)('renders the role - %s', (role) => {
     const cohort = { ...getCohorts(1)[0]!, role };
-    render(
-      <UserContributingCohorts
-        contributingCohorts={[cohort]}
-        firstName={firstName}
-      />,
-    );
+    render(<UserContributingCohorts contributingCohorts={[cohort]} />);
     expect(screen.getByText(role)).toBeVisible();
   });
 

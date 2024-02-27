@@ -14,7 +14,7 @@ it('generates a heading', () => {
   const { getByRole } = render(<UserProfileRole {...defaultProps} />);
 
   expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
-    `"Phillip's Role on ASAP Network"`,
+    `"Role"`,
   );
 });
 

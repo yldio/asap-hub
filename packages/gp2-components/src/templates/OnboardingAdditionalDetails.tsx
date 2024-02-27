@@ -18,7 +18,6 @@ const OnboardingAdditionalDetails: React.FC<
   OnboardingAdditionalDetailsProps
 > = ({
   questions,
-  firstName,
   fundingStreams,
   contributingCohorts,
   editQuestionsHref,
@@ -31,19 +30,13 @@ const OnboardingAdditionalDetails: React.FC<
       your specific interests and will aid in connecting you with other members
       regarding relevant workstreams. This step is completely optional.
     </Paragraph>
-    <UserQuestions
-      firstName={firstName}
-      questions={questions}
-      editHref={editQuestionsHref}
-    />
+    <UserQuestions questions={questions} editHref={editQuestionsHref} />
     <UserFundingStreams
       fundingStreams={fundingStreams}
-      firstName={firstName}
       editHref={editFundingStreamsHref}
     />
     <UserContributingCohorts
       contributingCohorts={contributingCohorts}
-      firstName={firstName}
       editHref={editContributingCohortsHref}
     />
   </>

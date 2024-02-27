@@ -111,6 +111,7 @@ export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
+  fullDisplayName: string;
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
@@ -146,10 +147,14 @@ export type ListUserDataObject = ListResponse<UserListItemDataObject>;
 
 export type UserListItemResponse = UserListItemDataObject & {
   displayName: string;
+  fullDisplayName: string;
   onboarded: boolean;
 };
 
-export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
+export type UserMetadataResponse = Omit<
+  UserResponse,
+  'labs' | 'fullDisplayName'
+> & {
   algoliaApiKey: string | null;
 };
 
@@ -262,6 +267,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     degree,
     dismissedGettingStarted,
     displayName,
+    fullDisplayName,
     email,
     expertiseAndResourceTags,
     tags,
@@ -289,6 +295,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     degree,
     dismissedGettingStarted,
     displayName,
+    fullDisplayName,
     email,
     expertiseAndResourceTags,
     tags,

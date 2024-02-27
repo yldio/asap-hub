@@ -10595,6 +10595,7 @@ export type PartialUsersContentFragment = Pick<
   | 'lastUpdated'
   | 'email'
   | 'firstName'
+  | 'nickname'
   | 'institution'
   | 'jobTitle'
   | 'lastName'
@@ -10706,6 +10707,7 @@ export type FetchDiscoverQuery = {
                 | 'lastUpdated'
                 | 'email'
                 | 'firstName'
+                | 'nickname'
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
@@ -10728,6 +10730,7 @@ export type FetchDiscoverQuery = {
                 | 'lastUpdated'
                 | 'email'
                 | 'firstName'
+                | 'nickname'
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
@@ -11024,6 +11027,7 @@ export type EventsContentFragment = Pick<
               | 'alumniSinceDate'
               | 'alumniLocation'
               | 'firstName'
+              | 'nickname'
               | 'lastName'
               | 'onboarded'
             > & {
@@ -11365,6 +11369,7 @@ export type FetchEventByIdQuery = {
                   | 'alumniSinceDate'
                   | 'alumniLocation'
                   | 'firstName'
+                  | 'nickname'
                   | 'lastName'
                   | 'onboarded'
                 > & {
@@ -11800,6 +11805,7 @@ export type FetchEventsQuery = {
                         | 'alumniSinceDate'
                         | 'alumniLocation'
                         | 'firstName'
+                        | 'nickname'
                         | 'lastName'
                         | 'onboarded'
                       > & {
@@ -12310,6 +12316,7 @@ export type FetchEventsByUserIdQuery = {
                                     | 'alumniSinceDate'
                                     | 'alumniLocation'
                                     | 'firstName'
+                                    | 'nickname'
                                     | 'lastName'
                                     | 'onboarded'
                                   > & {
@@ -12828,6 +12835,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | 'alumniSinceDate'
                                     | 'alumniLocation'
                                     | 'firstName'
+                                    | 'nickname'
                                     | 'lastName'
                                     | 'onboarded'
                                   > & {
@@ -13346,6 +13354,7 @@ export type FetchEventsByTeamIdQuery = {
                                     | 'alumniSinceDate'
                                     | 'alumniLocation'
                                     | 'firstName'
+                                    | 'nickname'
                                     | 'lastName'
                                     | 'onboarded'
                                   > & {
@@ -13499,7 +13508,11 @@ export type InterestGroupsContentFragment = Pick<
           user?: Maybe<
             Pick<
               Users,
-              'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+              | 'firstName'
+              | 'nickname'
+              | 'lastName'
+              | 'email'
+              | 'alumniSinceDate'
             > & {
               sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13571,7 +13584,11 @@ export type FetchInterestGroupByIdQuery = {
               user?: Maybe<
                 Pick<
                   Users,
-                  'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                  | 'firstName'
+                  | 'nickname'
+                  | 'lastName'
+                  | 'email'
+                  | 'alumniSinceDate'
                 > & {
                   sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13653,7 +13670,11 @@ export type FetchInterestGroupsQuery = {
                     user?: Maybe<
                       Pick<
                         Users,
-                        'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'email'
+                        | 'alumniSinceDate'
                       > & {
                         sys: Pick<
                           Sys,
@@ -13753,6 +13774,7 @@ export type FetchInterestGroupsByUserIdQuery = {
                               Pick<
                                 Users,
                                 | 'firstName'
+                                | 'nickname'
                                 | 'lastName'
                                 | 'email'
                                 | 'alumniSinceDate'
@@ -14579,6 +14601,7 @@ export type ResearchOutputsContentFragment = Pick<
         | ({ __typename: 'Users' } & Pick<
             Users,
             | 'firstName'
+            | 'nickname'
             | 'lastName'
             | 'email'
             | 'onboarded'
@@ -14803,6 +14826,7 @@ export type FetchResearchOutputByIdQuery = {
             | ({ __typename: 'Users' } & Pick<
                 Users,
                 | 'firstName'
+                | 'nickname'
                 | 'lastName'
                 | 'email'
                 | 'onboarded'
@@ -15065,6 +15089,7 @@ export type FetchResearchOutputsQuery = {
                   | ({ __typename: 'Users' } & Pick<
                       Users,
                       | 'firstName'
+                      | 'nickname'
                       | 'lastName'
                       | 'email'
                       | 'onboarded'
@@ -15263,6 +15288,7 @@ export type FetchTeamByIdQuery = {
                           Users,
                           | 'onboarded'
                           | 'firstName'
+                          | 'nickname'
                           | 'lastName'
                           | 'email'
                           | 'alumniSinceDate'
@@ -15430,6 +15456,7 @@ export type TutorialsContentFragment = Pick<
         | ({ __typename: 'Users' } & Pick<
             Users,
             | 'firstName'
+            | 'nickname'
             | 'lastName'
             | 'email'
             | 'onboarded'
@@ -15567,6 +15594,7 @@ export type FetchTutorialByIdQuery = {
             | ({ __typename: 'Users' } & Pick<
                 Users,
                 | 'firstName'
+                | 'nickname'
                 | 'lastName'
                 | 'email'
                 | 'onboarded'
@@ -15745,6 +15773,7 @@ export type FetchTutorialsQuery = {
                   | ({ __typename: 'Users' } & Pick<
                       Users,
                       | 'firstName'
+                      | 'nickname'
                       | 'lastName'
                       | 'email'
                       | 'onboarded'
@@ -16413,7 +16442,11 @@ export type WorkingGroupsContentFragment = Pick<
               user?: Maybe<
                 Pick<
                   Users,
-                  'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                  | 'email'
+                  | 'firstName'
+                  | 'nickname'
+                  | 'lastName'
+                  | 'alumniSinceDate'
                 > & {
                   sys: Pick<Sys, 'id'>;
                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -16440,7 +16473,11 @@ export type WorkingGroupsContentFragment = Pick<
               user?: Maybe<
                 Pick<
                   Users,
-                  'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                  | 'email'
+                  | 'firstName'
+                  | 'nickname'
+                  | 'lastName'
+                  | 'alumniSinceDate'
                 > & {
                   sys: Pick<Sys, 'id'>;
                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -16574,7 +16611,11 @@ export type FetchWorkingGroupByIdQuery = {
                   user?: Maybe<
                     Pick<
                       Users,
-                      'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                      | 'email'
+                      | 'firstName'
+                      | 'nickname'
+                      | 'lastName'
+                      | 'alumniSinceDate'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -16601,7 +16642,11 @@ export type FetchWorkingGroupByIdQuery = {
                   user?: Maybe<
                     Pick<
                       Users,
-                      'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                      | 'email'
+                      | 'firstName'
+                      | 'nickname'
+                      | 'lastName'
+                      | 'alumniSinceDate'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -16773,6 +16818,7 @@ export type FetchWorkingGroupsQuery = {
                             Users,
                             | 'email'
                             | 'firstName'
+                            | 'nickname'
                             | 'lastName'
                             | 'alumniSinceDate'
                           > & {
@@ -16803,6 +16849,7 @@ export type FetchWorkingGroupsQuery = {
                             Users,
                             | 'email'
                             | 'firstName'
+                            | 'nickname'
                             | 'lastName'
                             | 'alumniSinceDate'
                           > & {
@@ -17008,6 +17055,7 @@ export const PartialUsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'nickname' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
           { kind: 'Field', name: { kind: 'Name', value: 'jobTitle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
@@ -17956,6 +18004,10 @@ export const EventsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: { kind: 'Name', value: 'nickname' },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
                                   },
                                   {
@@ -18268,6 +18320,10 @@ export const InterestGroupsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',
@@ -19060,6 +19116,10 @@ export const ResearchOutputsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',
@@ -20135,6 +20195,10 @@ export const TutorialsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',
@@ -21571,6 +21635,10 @@ export const WorkingGroupsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: { kind: 'Name', value: 'nickname' },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
                                   },
                                   {
@@ -21743,6 +21811,10 @@ export const WorkingGroupsContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'nickname' },
                                   },
                                   {
                                     kind: 'Field',
@@ -26245,6 +26317,13 @@ export const FetchTeamByIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'firstName',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'nickname',
                                                       },
                                                     },
                                                     {

@@ -117,6 +117,7 @@ export const getContentfulGraphqlTeamMembers = () => ({
   },
   email: 'H@rdy.io',
   firstName: 'Tom',
+  nickname: 'Tim',
   lastName: 'Hardy',
   avatar: null,
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
@@ -157,7 +158,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       email: 'H@rdy.io',
       firstName: 'Tom',
       lastName: 'Hardy',
-      displayName: 'Tom Hardy',
+      displayName: 'Tom (Tim) Hardy',
       role: 'Lead PI (Core Leadership)',
       avatarUrl: undefined,
       labs: [

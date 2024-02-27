@@ -39,6 +39,7 @@ export const FETCH_TEAM_BY_ID = gql`
                   }
                   onboarded
                   firstName
+                  nickname
                   lastName
                   email
                   alumniSinceDate

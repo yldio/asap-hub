@@ -22,6 +22,7 @@
   ],
   "attributesToIndex": [
     "displayName",
+    "fullDisplayName",
     "title",
     "documentType",
     "type",

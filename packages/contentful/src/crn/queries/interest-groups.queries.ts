@@ -43,6 +43,7 @@ export const interestGroupContentQueryFragment = gql`
             firstPublishedAt
           }
           firstName
+          nickname
           lastName
           email
           alumniSinceDate

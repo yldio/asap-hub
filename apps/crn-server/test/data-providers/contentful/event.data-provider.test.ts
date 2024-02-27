@@ -541,7 +541,7 @@ describe('Events Contentful Data Provider', () => {
             user: {
               alumniSinceDate: undefined,
               avatarUrl: undefined,
-              displayName: 'Adam Brown',
+              displayName: 'Adam (Ad) Brown',
               firstName: 'Adam',
               id: 'user-id-3',
               lastName: 'Brown',

@@ -8418,7 +8418,7 @@ export type EventsContentDataFragment = Pick<
               > & { sys: Pick<Sys, 'id'> })
             | ({ __typename: 'Users' } & Pick<
                 Users,
-                'firstName' | 'lastName' | 'onboarded'
+                'firstName' | 'nickname' | 'lastName' | 'onboarded'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
           >;
         }
@@ -8701,7 +8701,7 @@ export type FetchEventByIdQuery = {
                   > & { sys: Pick<Sys, 'id'> })
                 | ({ __typename: 'Users' } & Pick<
                     Users,
-                    'firstName' | 'lastName' | 'onboarded'
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
                   > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -9084,7 +9084,7 @@ export type FetchEventsQuery = {
                         > & { sys: Pick<Sys, 'id'> })
                       | ({ __typename: 'Users' } & Pick<
                           Users,
-                          'firstName' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
                         > & {
                             sys: Pick<Sys, 'id'>;
                             avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -9534,7 +9534,10 @@ export type FetchEventsByUserIdQuery = {
                                     > & { sys: Pick<Sys, 'id'> })
                                   | ({ __typename: 'Users' } & Pick<
                                       Users,
-                                      'firstName' | 'lastName' | 'onboarded'
+                                      | 'firstName'
+                                      | 'nickname'
+                                      | 'lastName'
+                                      | 'onboarded'
                                     > & {
                                         sys: Pick<Sys, 'id'>;
                                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -9994,7 +9997,10 @@ export type FetchEventsByExternalUserIdQuery = {
                                     > & { sys: Pick<Sys, 'id'> })
                                   | ({ __typename: 'Users' } & Pick<
                                       Users,
-                                      'firstName' | 'lastName' | 'onboarded'
+                                      | 'firstName'
+                                      | 'nickname'
+                                      | 'lastName'
+                                      | 'onboarded'
                                     > & {
                                         sys: Pick<Sys, 'id'>;
                                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10211,7 +10217,7 @@ export type OutputsContentDataFragment = Pick<
               })
           | ({ __typename: 'Users' } & Pick<
               Users,
-              'firstName' | 'lastName' | 'email' | 'onboarded'
+              'firstName' | 'nickname' | 'lastName' | 'email' | 'onboarded'
             > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
         >
       >;
@@ -10351,7 +10357,7 @@ export type FetchOutputByIdQuery = {
                 > & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & Pick<
                   Users,
-                  'firstName' | 'lastName' | 'email' | 'onboarded'
+                  'firstName' | 'nickname' | 'lastName' | 'email' | 'onboarded'
                 > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10507,7 +10513,11 @@ export type FetchOutputsQuery = {
                       > & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Users' } & Pick<
                         Users,
-                        'firstName' | 'lastName' | 'email' | 'onboarded'
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'email'
+                        | 'onboarded'
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10670,7 +10680,11 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                           > & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'email'
+                            | 'onboarded'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10842,7 +10856,11 @@ export type FetchOutputsByUserIdQuery = {
                           > & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'email'
+                            | 'onboarded'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11014,7 +11032,11 @@ export type FetchOutputsByExternalUserIdQuery = {
                           > & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'email'
+                            | 'onboarded'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11186,7 +11208,11 @@ export type FetchOutputsByProjectIdQuery = {
                           > & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'email'
+                            | 'onboarded'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11358,7 +11384,11 @@ export type FetchOutputsByEventIdQuery = {
                           > & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
-                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'email'
+                            | 'onboarded'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11690,10 +11720,10 @@ export type ProjectsContentDataFragment = Pick<
           Pick<ProjectMembership, 'role'> & {
             sys: Pick<Sys, 'id'>;
             user?: Maybe<
-              Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
-                sys: Pick<Sys, 'id'>;
-                avatar?: Maybe<Pick<Asset, 'url'>>;
-              }
+              Pick<
+                Users,
+                'firstName' | 'nickname' | 'lastName' | 'onboarded'
+              > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
             >;
           }
         >
@@ -11764,7 +11794,10 @@ export type FetchProjectByIdQuery = {
               Pick<ProjectMembership, 'role'> & {
                 sys: Pick<Sys, 'id'>;
                 user?: Maybe<
-                  Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                  Pick<
+                    Users,
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                  > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                   }
@@ -11848,7 +11881,10 @@ export type FetchProjectsQuery = {
                     Pick<ProjectMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -11947,7 +11983,10 @@ export type FetchProjectsByUserQuery = {
                                 user?: Maybe<
                                   Pick<
                                     Users,
-                                    'firstName' | 'lastName' | 'onboarded'
+                                    | 'firstName'
+                                    | 'nickname'
+                                    | 'lastName'
+                                    | 'onboarded'
                                   > & {
                                     sys: Pick<Sys, 'id'>;
                                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12625,7 +12664,10 @@ export type WorkingGroupNetworkContentDataFragment = {
                     Pick<WorkingGroupMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -12698,7 +12740,10 @@ export type WorkingGroupNetworkContentDataFragment = {
                     Pick<WorkingGroupMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -12771,7 +12816,10 @@ export type WorkingGroupNetworkContentDataFragment = {
                     Pick<WorkingGroupMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -12844,7 +12892,10 @@ export type WorkingGroupNetworkContentDataFragment = {
                     Pick<WorkingGroupMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -12933,7 +12984,10 @@ export type FetchWorkingGroupNetworkQuery = {
                               user?: Maybe<
                                 Pick<
                                   Users,
-                                  'firstName' | 'lastName' | 'onboarded'
+                                  | 'firstName'
+                                  | 'nickname'
+                                  | 'lastName'
+                                  | 'onboarded'
                                 > & {
                                   sys: Pick<Sys, 'id'>;
                                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13015,7 +13069,10 @@ export type FetchWorkingGroupNetworkQuery = {
                               user?: Maybe<
                                 Pick<
                                   Users,
-                                  'firstName' | 'lastName' | 'onboarded'
+                                  | 'firstName'
+                                  | 'nickname'
+                                  | 'lastName'
+                                  | 'onboarded'
                                 > & {
                                   sys: Pick<Sys, 'id'>;
                                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13097,7 +13154,10 @@ export type FetchWorkingGroupNetworkQuery = {
                               user?: Maybe<
                                 Pick<
                                   Users,
-                                  'firstName' | 'lastName' | 'onboarded'
+                                  | 'firstName'
+                                  | 'nickname'
+                                  | 'lastName'
+                                  | 'onboarded'
                                 > & {
                                   sys: Pick<Sys, 'id'>;
                                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13179,7 +13239,10 @@ export type FetchWorkingGroupNetworkQuery = {
                               user?: Maybe<
                                 Pick<
                                   Users,
-                                  'firstName' | 'lastName' | 'onboarded'
+                                  | 'firstName'
+                                  | 'nickname'
+                                  | 'lastName'
+                                  | 'onboarded'
                                 > & {
                                   sys: Pick<Sys, 'id'>;
                                   avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13258,10 +13321,10 @@ export type WorkingGroupsContentDataFragment = Pick<
           Pick<WorkingGroupMembership, 'role'> & {
             sys: Pick<Sys, 'id'>;
             user?: Maybe<
-              Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
-                sys: Pick<Sys, 'id'>;
-                avatar?: Maybe<Pick<Asset, 'url'>>;
-              }
+              Pick<
+                Users,
+                'firstName' | 'nickname' | 'lastName' | 'onboarded'
+              > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
             >;
           }
         >
@@ -13325,7 +13388,10 @@ export type FetchWorkingGroupByIdQuery = {
               Pick<WorkingGroupMembership, 'role'> & {
                 sys: Pick<Sys, 'id'>;
                 user?: Maybe<
-                  Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                  Pick<
+                    Users,
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                  > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                   }
@@ -13396,7 +13462,10 @@ export type FetchWorkingGroupsQuery = {
                     Pick<WorkingGroupMembership, 'role'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
-                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                        Pick<
+                          Users,
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                        > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
                         }
@@ -14438,6 +14507,10 @@ export const EventsContentDataFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: { kind: 'Name', value: 'nickname' },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'lastName' },
                                   },
                                   {
@@ -14706,6 +14779,10 @@ export const OutputsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',
@@ -15419,6 +15496,10 @@ export const ProjectsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',
@@ -16341,6 +16422,10 @@ export const WorkingGroupsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
                             },
                             {
                               kind: 'Field',

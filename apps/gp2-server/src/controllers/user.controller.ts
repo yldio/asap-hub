@@ -162,6 +162,12 @@ const parseUserToResponse = (
   displayName: parseUserDisplayName(
     user.firstName,
     user.lastName,
+    undefined,
+    user.nickname,
+  ),
+  fullDisplayName: parseUserDisplayName(
+    user.firstName,
+    user.lastName,
     user.middleName,
     user.nickname,
   ),

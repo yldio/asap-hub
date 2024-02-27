@@ -18283,7 +18283,7 @@ export const InterestGroupsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -18335,7 +18335,7 @@ export const InterestGroupsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '50' },
+                value: { kind: 'IntValue', value: '20' },
               },
             ],
             selectionSet: {
@@ -18375,7 +18375,7 @@ export const InterestGroupsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '5' },
+                            value: { kind: 'IntValue', value: '10' },
                           },
                         ],
                         selectionSet: {

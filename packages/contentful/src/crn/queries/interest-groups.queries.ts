@@ -12,7 +12,7 @@ export const interestGroupContentQueryFragment = gql`
     }
     name
     active
-    researchTagsCollection(limit: 20) {
+    researchTagsCollection(limit: 5) {
       items {
         sys {
           id
@@ -26,14 +26,14 @@ export const interestGroupContentQueryFragment = gql`
     thumbnail {
       url
     }
-    teamsCollection(limit: 50) {
+    teamsCollection(limit: 20) {
       items {
         sys {
           id
         }
         displayName
         inactiveSince
-        researchTagsCollection(limit: 5) {
+        researchTagsCollection(limit: 10) {
           items {
             sys {
               id

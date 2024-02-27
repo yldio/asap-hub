@@ -40,6 +40,7 @@ export type Member<T> = {
   role: T;
   firstName: string;
   lastName: string;
+  displayName: string;
   avatarUrl?: string;
 };
 

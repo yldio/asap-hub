@@ -6,6 +6,7 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { GraphQLProject } from '../project.data-provider';
 import { GraphQLWorkingGroup } from '../working-group.data-provider';
 import { getIdsToDelete } from './common';
@@ -25,6 +26,7 @@ const parseMember = <T extends string>(
   role: T;
   firstName: string;
   lastName: string;
+  displayName: string;
   avatarUrl?: string;
 } => ({
   id,
@@ -32,6 +34,12 @@ const parseMember = <T extends string>(
   role: (role ?? '') as T,
   firstName: user.firstName ?? '',
   lastName: user.lastName ?? '',
+  displayName: parseUserDisplayName(
+    user.firstName ?? '',
+    user.lastName ?? '',
+    undefined,
+    user.nickname ?? '',
+  ),
   avatarUrl: user.avatar?.url ?? undefined,
 });
 

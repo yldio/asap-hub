@@ -716,6 +716,7 @@ const serverlessConfig: AWS = {
               },
             ],
             existing: true,
+            forceDeploy: true,
           },
         },
       ],

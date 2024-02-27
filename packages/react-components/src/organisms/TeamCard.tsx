@@ -43,7 +43,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
   displayName,
   inactiveSince,
   projectTitle,
-  expertiseAndResourceTags,
+  tags,
   memberCount,
   labCount,
 }) => (
@@ -65,9 +65,9 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
         {projectTitle}
       </Paragraph>
     </Anchor>
-    {!!expertiseAndResourceTags.length && (
+    {!!tags.length && (
       <div css={tagsContainer}>
-        <TagList max={3} tags={expertiseAndResourceTags} />
+        <TagList max={3} tags={tags.map(({name}) => name)} />
       </div>
     )}
 

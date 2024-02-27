@@ -11,7 +11,7 @@ describe('UserDetailHeaderCard', () => {
   };
   const defaultProps = {
     id: '1',
-    displayName: 'Homer Simpson',
+    fullDisplayName: 'Homer Simpson',
     firstName: 'Homer',
     lastName: 'Simpson',
     degrees: ['PhD' as const],

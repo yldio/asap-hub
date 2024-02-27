@@ -54,6 +54,7 @@ describe('WorkingGroupOverview', () => {
             userId: 'uuid',
             firstName: 'John',
             lastName: 'Doe',
+            displayName: 'John Doe',
             role: 'Lead',
           },
         ]}

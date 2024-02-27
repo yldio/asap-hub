@@ -113,8 +113,15 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
       <div css={contentStyles}>
         <MembersList
           members={members.map(
-            ({ role, firstName, lastName, avatarUrl, userId: id }) => ({
-              firstLine: `${firstName} ${lastName}`,
+            ({
+              role,
+              firstName,
+              lastName,
+              displayName,
+              avatarUrl,
+              userId: id,
+            }) => ({
+              firstLine: displayName,
               secondLine: role,
               avatarUrl,
               firstName,

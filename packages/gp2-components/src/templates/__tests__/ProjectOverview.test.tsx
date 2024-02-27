@@ -113,6 +113,7 @@ describe('ProjectOverview', () => {
             userId: '11',
             firstName: 'Tony',
             lastName: 'Stark',
+            displayName: 'Tony Stark',
             role: 'Project manager',
           },
         ]}

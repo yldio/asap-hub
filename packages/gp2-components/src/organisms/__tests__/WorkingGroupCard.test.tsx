@@ -30,6 +30,7 @@ describe('WorkingGroupCard', () => {
           role: 'Lead',
           firstName: 'Tony',
           lastName: 'Stark',
+          displayName: 'Tony Stark',
         },
       ],
     };

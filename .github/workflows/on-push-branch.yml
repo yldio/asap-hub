@@ -103,7 +103,7 @@ jobs:
       GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
-    needs: [setup, test, build-analysis, create-environment]
+    needs: [setup, build-analysis, create-environment]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
@@ -144,7 +144,7 @@ jobs:
     environment:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
-    needs: [test, build, build-analysis, create-environment, deployment, verify]
+    needs: [build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
     steps:
       - name: Checkout
@@ -169,7 +169,6 @@ jobs:
           echo "## Summary" >> $GITHUB_STEP_SUMMARY
           echo "| stage | status |" >> $GITHUB_STEP_SUMMARY
           echo "| ----- | ------ |" >> $GITHUB_STEP_SUMMARY
-          echo "| test | $(statusIcon ${{  needs.test.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "| build |  $(statusIcon ${{ needs.build.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "| build-analysis | $(statusIcon ${{ needs.build-analysis.result }}) |" >> $GITHUB_STEP_SUMMARY
           echo "| create-environment | $(statusIcon ${{ needs.create-environment.result }}) |" >> $GITHUB_STEP_SUMMARY

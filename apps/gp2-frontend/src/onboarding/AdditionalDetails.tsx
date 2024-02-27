@@ -1,6 +1,5 @@
 import {
   ContributingCohortsModal,
-  ExternalProfilesModal,
   FundingProviderModal,
   OnboardingAdditionalDetails,
   OpenQuestionsModal,
@@ -36,9 +35,6 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
           editContributingCohortsHref={
             onboarding({}).additionalDetails({}).editContributingCohorts({}).$
           }
-          editExternalProfilesHref={
-            onboarding({}).additionalDetails({}).editExternalProfiles({}).$
-          }
         />
         <Route path={onboarding({}).additionalDetails({}).editQuestions({}).$}>
           <OpenQuestionsModal
@@ -66,15 +62,6 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             backHref={onboarding({}).additionalDetails({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}
             cohortOptions={cohortOptions}
-          />
-        </Route>
-        <Route
-          path={onboarding({}).additionalDetails({}).editExternalProfiles({}).$}
-        >
-          <ExternalProfilesModal
-            {...userData}
-            backHref={onboarding({}).additionalDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
           />
         </Route>
       </>

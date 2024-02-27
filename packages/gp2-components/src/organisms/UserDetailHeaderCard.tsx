@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 import { addIcon, editIcon, locationIcon, roleIcon } from '../icons';
 import { usersHeaderImage } from '../images';
 import { mobileQuery, nonMobileQuery } from '../layout';
+import { SocialIcons } from '../molecules';
 import CardWithBackground from '../molecules/CardWithBackground';
 import IconWithLabel from '../molecules/IconWithLabel';
 import UserRegion from '../molecules/UserRegion';
@@ -32,6 +33,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'stateOrProvince'
   | 'country'
   | 'positions'
+  | 'social'
 > & {
   editHref?: string;
   readonly onImageSelect?: (file: File) => void;
@@ -132,6 +134,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   stateOrProvince,
   country,
   positions,
+  social,
   editHref,
   onImageSelect,
   avatarSaving = false,
@@ -239,6 +242,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
               </div>
             ),
           )}
+          <SocialIcons {...social} />
         </div>
         {editHref && (
           <div css={[{ gridArea: 'edit' }, editButtonStyles]}>

@@ -8,7 +8,6 @@ import {
   UserContactInformation,
   UserContributingCohorts,
   UserDetailHeaderCard,
-  UserExternalProfiles,
   UserFundingStreams,
   UserTags,
   UserProjects,
@@ -50,7 +49,6 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   questions,
   fundingStreams,
   contributingCohorts,
-  social,
   editBiographyHref,
   editContactInfoHref,
   editKeyInfoHref,
@@ -58,7 +56,6 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   editQuestionsHref,
   editFundingStreamsHref,
   editContributingCohortsHref,
-  editExternalProfilesHref,
   ...headerProps
 }) => (
   <>
@@ -107,7 +104,6 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
       contributingCohorts={contributingCohorts}
       editHref={editContributingCohortsHref}
     />
-    <UserExternalProfiles social={social} editHref={editExternalProfilesHref} />
   </>
 );
 

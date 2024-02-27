@@ -2,7 +2,6 @@ import {
   BiographyModal,
   ContactInformationModal,
   ContributingCohortsModal,
-  ExternalProfilesModal,
   FundingProviderModal,
   KeyInformationModal,
   TagsModal,
@@ -47,7 +46,6 @@ const Preview: React.FC<Record<string, never>> = () => {
     editQuestions,
     editFundingStreams,
     editContributingCohorts,
-    editExternalProfiles,
     publish,
   } = onboarding({}).preview({});
 
@@ -66,7 +64,6 @@ const Preview: React.FC<Record<string, never>> = () => {
           editQuestionsHref={editQuestions({}).$}
           editFundingStreamsHref={editFundingStreams({}).$}
           editContributingCohortsHref={editContributingCohorts({}).$}
-          editExternalProfilesHref={editExternalProfiles({}).$}
         />
         <Route path={editKeyInfo({}).$}>
           <KeyInformationModal
@@ -111,9 +108,6 @@ const Preview: React.FC<Record<string, never>> = () => {
             {...commonModalProps}
             cohortOptions={cohortOptions}
           />
-        </Route>
-        <Route path={editExternalProfiles({}).$}>
-          <ExternalProfilesModal {...userData} {...commonModalProps} />
         </Route>
         <Route path={publish({}).$}>
           <PublishModal {...commonModalProps} />

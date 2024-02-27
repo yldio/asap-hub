@@ -6,7 +6,6 @@ import {
   UserBiography,
   UserContactInformation,
   UserContributingCohorts,
-  UserExternalProfiles,
   UserFundingStreams,
   UserTags,
   UserProjects,
@@ -25,13 +24,11 @@ type UserOverviewProps = Pick<
   | 'projects'
   | 'workingGroups'
   | 'contributingCohorts'
-  | 'social'
 > &
   ComponentProps<typeof UserQuestions> & {
     editBiographyHref?: string;
     editContactInfoHref?: string;
     editContributingCohortsHref?: string;
-    editExternalProfilesHref?: string;
     editFundingStreamsHref?: string;
     editTagsHref?: string;
     editQuestionsHref?: string;
@@ -65,11 +62,9 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   projects,
   workingGroups,
   contributingCohorts,
-  social,
   editBiographyHref,
   editContactInfoHref,
   editContributingCohortsHref,
-  editExternalProfilesHref,
   editFundingStreamsHref,
   editTagsHref,
   editQuestionsHref,
@@ -101,14 +96,6 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       <UserContributingCohorts
         contributingCohorts={contributingCohorts}
         editHref={editContributingCohortsHref}
-      />
-    )}
-    {(editExternalProfilesHref ||
-      (social &&
-        Object.values(social).filter((value) => !!value).length > 0)) && (
-      <UserExternalProfiles
-        social={social}
-        editHref={editExternalProfilesHref}
       />
     )}
   </div>

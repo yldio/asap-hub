@@ -547,6 +547,8 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   alternativeEmail_DESC
   blog_ASC
   blog_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   country_ASC
@@ -597,6 +599,8 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   telephoneCountryCode_DESC
   telephoneNumber_ASC
   telephoneNumber_DESC
+  threads_ASC
+  threads_DESC
   twitter_ASC
   twitter_DESC
 }
@@ -3603,6 +3607,8 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   alternativeEmail_DESC
   blog_ASC
   blog_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   country_ASC
@@ -3653,6 +3659,8 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   telephoneCountryCode_DESC
   telephoneNumber_ASC
   telephoneNumber_DESC
+  threads_ASC
+  threads_DESC
   twitter_ASC
   twitter_DESC
 }
@@ -3700,6 +3708,7 @@ type Users implements Entry {
   avatar(locale: String, preview: Boolean): Asset
   biography(locale: String): String
   blog(locale: String): String
+  blueSky(locale: String): String
   city(locale: String): String
   connections(locale: String): [String]
   contentfulMetadata: ContentfulMetadata!
@@ -3732,6 +3741,7 @@ type Users implements Entry {
   tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): UsersTagsCollection
   telephoneCountryCode(locale: String): String
   telephoneNumber(locale: String): String
+  threads(locale: String): String
   twitter(locale: String): String
 }
 
@@ -3812,6 +3822,13 @@ input UsersFilter {
   blog_not: String
   blog_not_contains: String
   blog_not_in: [String]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean
@@ -3986,6 +4003,13 @@ input UsersFilter {
   telephoneNumber_not: String
   telephoneNumber_not_contains: String
   telephoneNumber_not_in: [String]
+  threads: String
+  threads_contains: String
+  threads_exists: Boolean
+  threads_in: [String]
+  threads_not: String
+  threads_not_contains: String
+  threads_not_in: [String]
   twitter: String
   twitter_contains: String
   twitter_exists: Boolean
@@ -4092,6 +4116,8 @@ enum UsersOrder {
   alternativeEmail_DESC
   blog_ASC
   blog_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   country_ASC
@@ -4142,6 +4168,8 @@ enum UsersOrder {
   telephoneCountryCode_DESC
   telephoneNumber_ASC
   telephoneNumber_DESC
+  threads_ASC
+  threads_DESC
   twitter_ASC
   twitter_DESC
 }
@@ -5336,6 +5364,13 @@ input cfUsersNestedFilter {
   blog_not: String
   blog_not_contains: String
   blog_not_in: [String]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean
@@ -5508,6 +5543,13 @@ input cfUsersNestedFilter {
   telephoneNumber_not: String
   telephoneNumber_not_contains: String
   telephoneNumber_not_in: [String]
+  threads: String
+  threads_contains: String
+  threads_exists: Boolean
+  threads_in: [String]
+  threads_not: String
+  threads_not_contains: String
+  threads_not_in: [String]
   twitter: String
   twitter_contains: String
   twitter_exists: Boolean

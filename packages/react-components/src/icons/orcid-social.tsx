@@ -1,18 +1,25 @@
 /* istanbul ignore file */
 
-const orcidSocialIcon = (
+import { FC } from 'react';
+
+interface OrcidSocialIconProps {
+  readonly color?: string;
+}
+
+const OrcidSocialIcon: FC<OrcidSocialIconProps> = ({ color = '#00222C' }) => (
   <svg
     width={28}
     height={28}
     viewBox="0 0 28 28"
     xmlns="http://www.w3.org/2000/svg"
-    fill="#00222C"
+    fill={color}
     style={{
       stroke: 'none',
+      zIndex: 1,
     }}
   >
     <title>ORCID</title>
-    <path fill="#fff" d="M0 0h28v28H0z" />
+    <path fill="transparent" d="M0 0h28v28H0z" />
     <g
       style={{
         mixBlendMode: 'darken',
@@ -28,4 +35,4 @@ const orcidSocialIcon = (
   </svg>
 );
 
-export default orcidSocialIcon;
+export default OrcidSocialIcon;

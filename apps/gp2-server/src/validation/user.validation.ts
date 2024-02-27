@@ -154,7 +154,6 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           pattern: urlExpression,
           nullable: true,
         },
-
         researchGate: {
           type: 'string',
           pattern: urlExpression,
@@ -166,6 +165,8 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           nullable: true,
         },
         blog: { type: 'string', pattern: urlExpression, nullable: true },
+        blueSky: { type: 'string', pattern: urlExpression, nullable: true },
+        threads: { type: 'string', pattern: urlExpression, nullable: true },
         twitter: { type: 'string', pattern: urlExpression, nullable: true },
         linkedIn: { type: 'string', pattern: urlExpression, nullable: true },
         github: { type: 'string', pattern: urlExpression, nullable: true },

@@ -2,7 +2,6 @@ import {
   BiographyModal,
   ContactInformationModal,
   ContributingCohortsModal,
-  ExternalProfilesModal,
   FundingProviderModal,
   KeyInformationModal,
   OpenQuestionsModal,
@@ -71,7 +70,6 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
     editContactInfoHref: userOverviewRoute.editContactInfo({}).$,
     editContributingCohortsHref: userOverviewRoute.editContributingCohorts({})
       .$,
-    editExternalProfilesHref: userOverviewRoute.editExternalProfiles({}).$,
     editFundingStreamsHref: userOverviewRoute.editFundingStreams({}).$,
     editTagsHref: userOverviewRoute.editTags({}).$,
     editQuestionsHref: userOverviewRoute.editQuestions({}).$,
@@ -143,9 +141,6 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                         {...commonModalProps}
                         cohortOptions={cohortOptions}
                       />
-                    </Route>
-                    <Route path={userOverviewRoute.editExternalProfiles({}).$}>
-                      <ExternalProfilesModal {...user} {...commonModalProps} />
                     </Route>
                     <Route path={userOverviewRoute.editFundingStreams({}).$}>
                       <FundingProviderModal {...user} {...commonModalProps} />

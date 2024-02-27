@@ -10,7 +10,6 @@ describe('OnboardingAdditionalDetails', () => {
     editQuestionsHref: '',
     editFundingStreamsHref: '',
     editContributingCohortsHref: '',
-    editExternalProfilesHref: '',
   };
 
   it('renders the page description', () => {
@@ -26,7 +25,6 @@ describe('OnboardingAdditionalDetails', () => {
     'Open Questions',
     'Financial Disclosures',
     'Contributing Cohort Studies',
-    'External Profiles',
   ])('renders the %s card', (name) => {
     render(<OnboardingAdditionalDetails {...defaultProps} />);
     expect(screen.getByRole('heading', { name })).toBeVisible();

@@ -17,6 +17,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
       createdDate: '2020-09-07T17:36:54Z',
       dismissedGettingStarted: true,
       displayName: `Agnete Kirkeby ${i + 1}`,
+      fullDisplayName: `Agnete Kirkeby ${i + 1}`,
       firstName: 'Agnete',
       lastName: 'Kirkeby',
       email: 'agnete.kirkeby@sund.ku.dk',

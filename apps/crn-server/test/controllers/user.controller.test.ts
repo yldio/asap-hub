@@ -122,6 +122,19 @@ describe('Users controller', () => {
 
         expect(fullDisplayName).toEqual('John W. T. G. Smith');
       });
+
+      test('Should correctly display all names if provided', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        user.nickname = 'Jack';
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { fullDisplayName } = await userController.fetchById(user.id);
+
+        expect(fullDisplayName).toEqual('John (Jack) W. T. G. Smith');
+      });
     });
   });
 

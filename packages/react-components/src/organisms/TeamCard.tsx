@@ -67,7 +67,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
     </Anchor>
     {!!tags.length && (
       <div css={tagsContainer}>
-        <TagList max={3} tags={tags.map(({name}) => name)} />
+        <TagList max={3} tags={tags.map(({ name }) => name)} />
       </div>
     )}
 

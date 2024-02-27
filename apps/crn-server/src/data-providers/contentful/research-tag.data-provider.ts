@@ -138,5 +138,4 @@ export const parseResearchTags = (
     .map((tag) => ({
       id: tag.sys.id,
       name: tag.name ?? '',
-    }))
-    .filter(Boolean) || [];
+    }));

@@ -37,6 +37,7 @@ export const listInterestGroupsResponse: ListInterestGroupResponse = {
           displayName: 'Lee, M',
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
+          tags: [],
         },
       ],
       leaders: [

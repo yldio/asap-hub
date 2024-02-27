@@ -23,7 +23,7 @@ const teamCardProps = () => {
     projectTitle:
       'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
 
-    expertiseAndResourceTags: [
+    tags: [
       ...Array(numberOfExpertiseAndResources).fill(
         expertiseAndResource,
         0,

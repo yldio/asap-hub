@@ -17,6 +17,7 @@ const props = (): ComponentProps<typeof EventsList> => {
     })
       .map((_, i) => ({
         ...createEventResponse({}, i),
+        tags: [],
         eventOwner: <div>ASAP Team</div>,
         hasSpeakersToBeAnnounced: false,
       }))

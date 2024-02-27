@@ -34,7 +34,7 @@ describe('Event index handler', () => {
       event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: { ...eventResponse, _tags: ['Blood', 'LRRK2']},
+      data: { ...eventResponse, _tags: ['Blood', 'LRRK2'] },
       type: 'event',
     });
   });

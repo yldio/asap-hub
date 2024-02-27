@@ -9,7 +9,9 @@ import { RichText, TagList } from '..';
 import { Collapsible } from '../molecules';
 import { perRem } from '../pixels';
 
-type EventAboutProps = Pick<BasicEvent, 'tags' | 'description' | 'endDate'>;
+type EventAboutProps = Pick<BasicEvent, 'description' | 'endDate'> & {
+  tags: string[];
+};
 
 const EventAbout: React.FC<EventAboutProps> = ({
   tags,

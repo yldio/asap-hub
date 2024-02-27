@@ -21,7 +21,10 @@ describe('Event index handler', () => {
   test('Should populate _tags field before saving the event to Algolia', async () => {
     const event = publishEvent();
     const eventResponse = getEventResponse();
-    const tags = ['Blood', 'LRRK2'];
+    const tags = [
+      { id: '1', name: 'Blood' },
+      { id: '2', name: 'LRRK2' },
+    ];
     eventResponse.tags = tags;
 
     eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
@@ -31,7 +34,7 @@ describe('Event index handler', () => {
       event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: { ...eventResponse, _tags: tags },
+      data: { ...eventResponse, _tags: ['Blood', 'LRRK2']},
       type: 'event',
     });
   });

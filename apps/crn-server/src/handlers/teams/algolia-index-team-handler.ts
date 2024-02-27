@@ -26,14 +26,8 @@ export const indexTeamHandler =
       logger.debug(`Fetched team ${teamId}`);
 
       if (team) {
-        const {
-          id,
-          displayName,
-          inactiveSince,
-          projectTitle,
-          labCount,
-          expertiseAndResourceTags,
-        } = team;
+        const { id, displayName, inactiveSince, projectTitle, labCount, tags } =
+          team;
         await algoliaClient.save({
           data: {
             id,
@@ -41,9 +35,9 @@ export const indexTeamHandler =
             inactiveSince,
             projectTitle,
             labCount,
-            expertiseAndResourceTags,
+            tags,
             memberCount: team.members.length,
-            _tags: team.expertiseAndResourceTags,
+            _tags: team.tags.map(({ name }) => name),
           },
           type: 'team',
         });

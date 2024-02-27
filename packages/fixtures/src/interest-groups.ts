@@ -36,7 +36,7 @@ export const createInterestGroupResponse = (
     contactEmails: ['test1@test.com', 'test2@test.com'],
     lastModifiedDate: '2021-01-12T11:10:04.000Z',
     name: `Group ${itemIndex + 1}`,
-    tags: ['Tag'],
+    tags: [],
     description: `Interest Group description ${itemIndex + 1}`,
     tools: {
       slack: 'http://slack.slack.com',

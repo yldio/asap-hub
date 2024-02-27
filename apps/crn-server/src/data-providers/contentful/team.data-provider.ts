@@ -23,6 +23,7 @@ import {
   Environment,
   addLocaleToFields,
 } from '@asap-hub/contentful';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { sortMembers } from '../transformers';
 import {
@@ -269,6 +270,7 @@ export const parseContentfulGraphQlTeam = (
       const {
         sys: { id },
         firstName,
+        nickname,
         lastName,
         email,
         avatar,
@@ -304,7 +306,12 @@ export const parseContentfulGraphQlTeam = (
           inactiveSinceDate: inactiveSinceDate ?? undefined,
           alumniSinceDate,
           avatarUrl: avatar?.url ?? undefined,
-          displayName: `${firstName} ${lastName}`,
+          displayName: parseUserDisplayName(
+            firstName ?? '',
+            lastName ?? '',
+            undefined,
+            nickname ?? '',
+          ),
           labs,
         },
       ];

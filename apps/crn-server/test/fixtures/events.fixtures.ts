@@ -272,6 +272,7 @@ export const getContentfulGraphqlEvent = (
           alumniSinceDate: null,
           alumniLocation: 'some alumni location',
           firstName: 'Adam',
+          nickname: 'Ad',
           lastName: 'Brown',
           onboarded: true,
           teamsCollection: {
@@ -384,7 +385,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
     id: 'user-id-3',
     firstName: 'Adam',
     lastName: 'Brown',
-    displayName: 'Adam Brown',
+    displayName: 'Adam (Ad) Brown',
     alumniSinceDate: undefined,
     avatarUrl: undefined,
   },

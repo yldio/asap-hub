@@ -67,6 +67,7 @@ export const workingGroupsContentQueryFragment = gql`
             }
             email
             firstName
+            nickname
             lastName
             alumniSinceDate
             teamsCollection(limit: 5) @include(if: $singleWorkingGroup) {
@@ -94,6 +95,7 @@ export const workingGroupsContentQueryFragment = gql`
             }
             email
             firstName
+            nickname
             lastName
             alumniSinceDate
             teamsCollection(limit: 5) @include(if: $singleWorkingGroup) {

@@ -3,21 +3,17 @@ import { UserProfilePlaceholderCard } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { EditableCard, ExpandableText } from '../molecules';
 
-type UserFundingStreamsProps = Pick<
-  gp2.UserResponse,
-  'fundingStreams' | 'firstName'
-> &
+type UserFundingStreamsProps = Pick<gp2.UserResponse, 'fundingStreams'> &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
 const UserFundingStreams: React.FC<UserFundingStreamsProps> = ({
   fundingStreams,
   editHref,
-  firstName,
 }) => (
   <EditableCard
     editHref={editHref}
     title="Financial Disclosures"
-    subtitle={`${firstName} has funding from the following sources:`}
+    subtitle="This member has funding from the following sources:"
     edit={!!fundingStreams}
     optional
   >

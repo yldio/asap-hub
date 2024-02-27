@@ -5,10 +5,7 @@ import { ComponentProps } from 'react';
 import { EditableCard, StatusPill } from '../molecules';
 import { CardTable } from '.';
 
-type UserProjectsProps = Pick<
-  gp2.UserResponse,
-  'id' | 'firstName' | 'projects'
-> &
+type UserProjectsProps = Pick<gp2.UserResponse, 'id' | 'projects'> &
   Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
     noLinks?: boolean;
     isOnboarding?: boolean;
@@ -16,7 +13,6 @@ type UserProjectsProps = Pick<
 
 const UserProjects: React.FC<UserProjectsProps> = ({
   projects,
-  firstName,
   id,
   subtitle,
   noLinks = false,
@@ -33,7 +29,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
       title="Projects"
       subtitle={
         subtitle ||
-        `${firstName} has been involved in the following GP2 projects:`
+        'This member has been involved in the following GP2 projects.'
       }
     >
       {projects.length ? (

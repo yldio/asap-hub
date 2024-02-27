@@ -10,9 +10,9 @@ const props = {
 };
 
 it('displays the title', () => {
-  render(<WorkingGroupsTabbedCard {...props} userName="Brad B" />);
+  render(<WorkingGroupsTabbedCard {...props} />);
 
-  expect(screen.getByText("Brad B's Working Groups")).toBeInTheDocument();
+  expect(screen.getByText('Working Groups')).toBeInTheDocument();
 });
 
 it('renders the no memberships message', () => {

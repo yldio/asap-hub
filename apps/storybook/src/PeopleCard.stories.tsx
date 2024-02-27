@@ -16,6 +16,7 @@ const props = {
   alumniSinceDate: undefined,
   id: 'u42',
   displayName: text('Display Name', 'Phillip Mars, PhD'),
+  fullDisplayName: text('Display Name', 'Phillip Mars, PhD'),
   createdDate: new Date(
     date('Created Date', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),

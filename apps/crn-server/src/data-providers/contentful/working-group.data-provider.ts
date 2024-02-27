@@ -24,6 +24,7 @@ import {
   addLocaleToFields,
   Link,
 } from '@asap-hub/contentful';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { WorkingGroupDataProvider } from '../types';
 import {
@@ -213,7 +214,12 @@ export const parseContentfulGraphQlWorkingGroup = (
     id: member.user?.sys.id || '',
     firstName: member.user?.firstName || '',
     lastName: member.user?.lastName || '',
-    displayName: `${member.user?.firstName} ${member.user?.lastName}`,
+    displayName: parseUserDisplayName(
+      member.user?.firstName || '',
+      member.user?.lastName || '',
+      undefined,
+      member.user?.nickname || '',
+    ),
     alumniSinceDate: member.user?.alumniSinceDate,
     email: member.user?.email || '',
     avatarUrl: member.user?.avatar?.url || undefined,

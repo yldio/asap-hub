@@ -5,28 +5,16 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import QuestionsSection from '../QuestionsSection';
 
 const props: ComponentProps<typeof QuestionsSection> = {
-  firstName: '',
   questions: [''],
 };
 it('renders open questions', () => {
   const { getByText, getByRole } = render(
-    <QuestionsSection
-      {...props}
-      firstName="bob"
-      questions={['What is the meaning of life']}
-    />,
+    <QuestionsSection {...props} questions={['What is the meaning of life']} />,
   );
-  expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
-    `"bob's Open Questions"`,
-  );
-  expect(getByText(/meaning of life/i)).toBeVisible();
-});
-
-it('handles empty names', () => {
-  const { getByRole } = render(<QuestionsSection {...props} firstName="" />);
   expect(getByRole('heading', { level: 2 }).textContent).toMatchInlineSnapshot(
     `"Open Questions"`,
   );
+  expect(getByText(/meaning of life/i)).toBeVisible();
 });
 
 it('renders placeholder when no open questions supplied for your own profile', () => {

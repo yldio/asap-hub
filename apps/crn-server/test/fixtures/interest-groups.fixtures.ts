@@ -115,7 +115,7 @@ const getLeaderResponse = (): InterestGroupLeader['user'] => ({
   email: 'H@rdy.io',
   firstName: 'Tom',
   lastName: 'Hardy',
-  displayName: 'Tom Hardy',
+  displayName: 'Tom (Tim) Hardy',
   teams: [
     {
       id: 'team-id-0',
@@ -196,6 +196,7 @@ const getContentfulGraphQLLeader = () => ({
   alumniSinceDate: null,
   email: 'H@rdy.io',
   firstName: 'Tom',
+  nickname: 'Tim',
   lastName: 'Hardy',
   teamsCollection: {
     items: [

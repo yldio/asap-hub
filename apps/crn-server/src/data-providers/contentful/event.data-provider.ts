@@ -43,6 +43,7 @@ import {
   isEventStatus,
   ListEventDataObject,
 } from '@asap-hub/model';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
@@ -294,7 +295,12 @@ export const parseEventSpeakerUser = (
   alumniSinceDate: user.alumniSinceDate ?? undefined,
   firstName: user.firstName ?? undefined,
   lastName: user.lastName ?? undefined,
-  displayName: `${user.firstName} ${user.lastName}`,
+  displayName: parseUserDisplayName(
+    user.firstName ?? '',
+    user.lastName ?? '',
+    undefined,
+    user.nickname ?? '',
+  ),
   avatarUrl: user.avatar?.url ?? undefined,
 });
 

@@ -15,6 +15,10 @@ const containerStyles = css({
   },
 });
 
+const tabDescriptionStyles = css({
+  fontWeight: 'bold',
+  margin: '8px 0',
+});
 type Leaders = WorkingGroupResponse['leaders'];
 type Members = WorkingGroupResponse['members'];
 
@@ -50,7 +54,11 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
     <Card padding={false}>
       <TabbedContent
         title="Working Group Members"
-        description="Leaders"
+        description={
+          <Paragraph noMargin styles={tabDescriptionStyles}>
+            Leaders
+          </Paragraph>
+        }
         activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {
@@ -88,7 +96,11 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
         )}
       </TabbedContent>
       <TabbedContent
-        description="Members"
+        description={
+          <Paragraph noMargin styles={tabDescriptionStyles}>
+            Members
+          </Paragraph>
+        }
         activeTabIndex={isComplete ? 1 : 0}
         tabs={[
           {

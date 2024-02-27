@@ -256,7 +256,7 @@ describe('For a CRN login', () => {
   });
 });
 describe('For a GP2 login', () => {
-  const baseUser: gp2Model.UserResponse = {
+  const baseUser: gp2Model.UserMetadataResponse = {
     onboarded: true,
     displayName: 'Joao Tiago',
     firstName: 'Joao',
@@ -279,6 +279,7 @@ describe('For a GP2 login', () => {
     tags: [],
     tagIds: [],
     questions: [],
+    algoliaApiKey: 'test-api-key',
   };
   it('adds the user metadata on successful fetch for crn', async () => {
     nock(apiUrl)

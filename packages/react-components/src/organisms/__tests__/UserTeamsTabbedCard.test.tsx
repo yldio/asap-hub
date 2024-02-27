@@ -4,15 +4,14 @@ import { UserTeam } from '@asap-hub/model';
 import UserTeamsTabbedCard from '../UserTeamsTabbedCard';
 
 const props = {
-  userName: 'Foo B',
   teams: [],
   userAlumni: false,
 };
 
 it('displays the title', () => {
-  render(<UserTeamsTabbedCard {...props} userName="Brad B" />);
+  render(<UserTeamsTabbedCard {...props} />);
 
-  expect(screen.getByText("Brad B's Teams")).toBeInTheDocument();
+  expect(screen.getByText('Teams')).toBeInTheDocument();
 });
 
 it('renders the no teams message', () => {

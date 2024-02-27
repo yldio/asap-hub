@@ -69,7 +69,7 @@ describe('Users controller', () => {
     });
 
     describe('Display name', () => {
-      test('Should drop nickname and middle name when not available', async () => {
+      test('Should drop nickname when not available', async () => {
         const user = getUserDataObject();
         user.firstName = 'John';
         user.lastName = 'Smith';
@@ -80,19 +80,6 @@ describe('Users controller', () => {
         const { displayName } = await userController.fetchById(user.id);
 
         expect(displayName).toEqual('John Smith');
-      });
-
-      test('Should use all middle name initials', async () => {
-        const user = getUserDataObject();
-        user.firstName = 'John';
-        user.middleName = 'Wilbur Thomas Geofrey';
-        user.lastName = 'Smith';
-        delete user.nickname;
-
-        userDataProviderMock.fetchById.mockResolvedValue(user);
-        const { displayName } = await userController.fetchById(user.id);
-
-        expect(displayName).toEqual('John W. T. G. Smith');
       });
 
       test('Should put any nickname in brackets', async () => {
@@ -106,6 +93,47 @@ describe('Users controller', () => {
         const { displayName } = await userController.fetchById(user.id);
 
         expect(displayName).toEqual('John (R2 D2) Smith');
+      });
+    });
+
+    describe('Full display name', () => {
+      test('Should drop middle name when not available', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.lastName = 'Smith';
+        delete user.middleName;
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { fullDisplayName } = await userController.fetchById(user.id);
+
+        expect(fullDisplayName).toEqual('John Smith');
+      });
+
+      test('Should use all middle name initials', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        delete user.nickname;
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { fullDisplayName } = await userController.fetchById(user.id);
+
+        expect(fullDisplayName).toEqual('John W. T. G. Smith');
+      });
+
+      test('Should correctly display all names if provided', async () => {
+        const user = getUserDataObject();
+        user.firstName = 'John';
+        user.middleName = 'Wilbur Thomas Geofrey';
+        user.lastName = 'Smith';
+        user.nickname = 'Jack';
+
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+        const { fullDisplayName } = await userController.fetchById(user.id);
+
+        expect(fullDisplayName).toEqual('John (Jack) W. T. G. Smith');
       });
     });
   });

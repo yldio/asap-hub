@@ -9,6 +9,7 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import logger from '../utils/logger';
 import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
@@ -342,7 +343,12 @@ const getAuthors = (authors?: GraphQLAuthors) =>
             id: author.sys.id,
             firstName: author.firstName ?? '',
             lastName: author.lastName ?? '',
-            displayName: `${author.firstName} ${author.lastName}`,
+            displayName: parseUserDisplayName(
+              author.firstName ?? '',
+              author.lastName ?? '',
+              undefined,
+              author.nickname ?? '',
+            ),
             email: author.email ?? '',
             onboarded: author.onboarded ?? true,
             avatarUrl: author.avatar?.url ?? undefined,

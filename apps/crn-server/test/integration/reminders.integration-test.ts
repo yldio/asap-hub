@@ -71,15 +71,8 @@ describe('Reminders', () => {
     app = AppHelper(() => loggedInUser);
   });
 
-  afterAll(async () => {
-    await fixtures.teardown();
-    jest.useRealTimers();
-  });
-
   describe('Multiple reminders', () => {
-    // TODO: add research output reminders here
-    // Re-enable with ASAP-70
-    test.skip('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
+    test('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
       // setting system time to 9:00AM in UTC
       const now = new Date('2022-08-10T09:00:00.0Z');
 

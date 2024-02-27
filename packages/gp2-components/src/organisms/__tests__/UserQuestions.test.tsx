@@ -3,10 +3,10 @@ import UserQuestions from '../UserQuestions';
 
 describe('UserQuestions', () => {
   it('renders the subtitle', () => {
-    render(<UserQuestions questions={[]} firstName="Tony" />);
+    render(<UserQuestions questions={[]} />);
     expect(
       screen.getByText(
-        'Tony is interested in answering the following questions within their work:',
+        'This member is interested in answering the following questions within their work.',
       ),
     ).toBeVisible();
   });
@@ -14,7 +14,6 @@ describe('UserQuestions', () => {
     render(
       <UserQuestions
         questions={['this is a question?', 'this is another question?']}
-        firstName="Tony"
       />,
     );
     expect(screen.getByText('this is a question?')).toBeVisible();
@@ -23,9 +22,7 @@ describe('UserQuestions', () => {
 
   describe('if no question', () => {
     it('does not render placeholder when edit link is not provided', () => {
-      const { queryByText } = render(
-        <UserQuestions questions={[]} firstName="Tony" />,
-      );
+      const { queryByText } = render(<UserQuestions questions={[]} />);
 
       expect(
         queryByText(/share the research questions/i),
@@ -34,7 +31,7 @@ describe('UserQuestions', () => {
 
     it('renders placeholder when there is an edit link', () => {
       const { getByText } = render(
-        <UserQuestions questions={[]} firstName="Tony" editHref="/" />,
+        <UserQuestions questions={[]} editHref="/" />,
       );
 
       expect(getByText(/share the research questions/i)).toBeVisible();

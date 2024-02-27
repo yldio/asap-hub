@@ -8,6 +8,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   createdDate: '2020-09-07T17:36:54Z',
   dismissedGettingStarted: true,
   displayName: 'Person A',
+  fullDisplayName: 'Person A',
   firstName: 'Agnete',
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',

@@ -24,6 +24,7 @@
     "authors.firstName",
     "authors.lastName",
     "displayName",
+    "fullDisplayName",
     "firstName",
     "id",
     "lastName",

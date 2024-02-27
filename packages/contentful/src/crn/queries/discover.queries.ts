@@ -13,6 +13,7 @@ const usersContentQueryFragment = gql`
     lastUpdated
     email
     firstName
+    nickname
     institution
     jobTitle
     lastName

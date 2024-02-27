@@ -11,7 +11,7 @@ const { getCounterString } = utils;
 
 type UserWorkingGroupsProps = Pick<
   gp2Model.UserResponse,
-  'id' | 'firstName' | 'workingGroups'
+  'id' | 'workingGroups'
 > &
   Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
     noLinks?: boolean;
@@ -20,7 +20,6 @@ type UserWorkingGroupsProps = Pick<
 
 const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   workingGroups,
-  firstName,
   subtitle,
   id,
   noLinks = false,
@@ -37,7 +36,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
       title="Working Groups"
       subtitle={
         subtitle ||
-        `${firstName} is involved in the following GP2 working groups:`
+        'This member is involved in the following GP2 working groups.'
       }
     >
       {workingGroups.length ? (

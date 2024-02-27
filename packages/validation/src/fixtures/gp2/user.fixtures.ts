@@ -8,6 +8,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   firstName: 'Tony',
   lastName: 'Stark',
   displayName: 'Tony Stark',
+  fullDisplayName: 'Tony Stark',
   city: 'New York',
   stateOrProvince: 'New York',
   region: 'North America',

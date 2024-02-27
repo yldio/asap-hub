@@ -9,17 +9,17 @@ import CardTable from './CardTable';
 
 type UserContributingCohortsProps = Pick<
   gp2.UserResponse,
-  'contributingCohorts' | 'firstName'
+  'contributingCohorts'
 > &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   contributingCohorts,
-  firstName,
   editHref,
 }) => (
   <EditableCard
     editHref={editHref}
     title="Contributing Cohort Studies"
+    subtitle="This member has contributed to the following cohort studies."
     edit={!!contributingCohorts.length}
     optional
   >

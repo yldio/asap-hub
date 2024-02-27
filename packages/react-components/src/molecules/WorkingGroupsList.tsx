@@ -12,7 +12,6 @@ const containerStyles = css({
   gridColumnGap: `${12 / perRem}em`,
 
   margin: 0,
-  marginTop: `${24 / perRem}em`,
 
   padding: 0,
   listStyle: 'none',
@@ -29,9 +28,17 @@ const listItemStyle = css({
   gridTemplateRows: '1fr 1fr',
   gridRowGap: `${12 / perRem}em`,
 
+  '&:not(:last-of-type)': {
+    marginBottom: `${8 / perRem}em`,
+  },
+
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridAutoFlow: 'column',
     gridTemplateColumns: '1fr 1fr',
+
+    '&(:first-of-type)': {
+      gridTemplateRows: '1fr 2fr',
+    },
 
     '&:not(:first-of-type)': {
       gridTemplateRows: '1fr',

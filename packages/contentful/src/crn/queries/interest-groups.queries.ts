@@ -33,7 +33,7 @@ export const interestGroupContentQueryFragment = gql`
         }
         displayName
         inactiveSince
-        researchTagsCollection(limit: 20) {
+        researchTagsCollection(limit: 5) {
           items {
             sys {
               id

@@ -78,6 +78,7 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
     return <NewsCard {...(data as NewsResponse)} type="News" />;
   }
 
+  console.log(data);
   return <TeamCard {...(data as TeamListItemResponse)} />;
 };
 

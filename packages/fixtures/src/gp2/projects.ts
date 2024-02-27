@@ -16,6 +16,7 @@ const mockedProject: gp2.ProjectResponse = {
       userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
+      displayName: 'Tony Stark',
       role: 'Project manager',
     },
   ],

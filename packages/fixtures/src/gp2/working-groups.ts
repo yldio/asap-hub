@@ -15,6 +15,7 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
       userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
+      displayName: 'Tony Stark',
       role: 'Lead',
     },
   ],

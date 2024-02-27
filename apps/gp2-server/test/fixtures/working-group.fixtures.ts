@@ -22,6 +22,7 @@ export const getWorkingGroupDataObject =
         userId: '11',
         firstName: 'Tony',
         lastName: 'Stark',
+        displayName: 'Tony Stark',
         role: 'Lead',
       },
     ],
@@ -83,6 +84,7 @@ export const createWorkingGroupMembersResponse = (
     userId: String(id),
     firstName: 'Tony',
     lastName: 'Stark',
+    displayName: 'Tony Stark',
     role: 'Lead',
   }));
 

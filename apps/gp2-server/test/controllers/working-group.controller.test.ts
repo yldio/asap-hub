@@ -40,6 +40,7 @@ describe('Working Group controller', () => {
         userId: '7',
         firstName: 'Peter',
         lastName: 'Parker',
+        displayName: 'Peter Parker',
         role: 'Lead' as const,
       };
       test('Should remove the resource if the user is not a member of the working group', async () => {
@@ -124,6 +125,7 @@ describe('Working Group controller', () => {
         userId: '7',
         firstName: 'Peter',
         lastName: 'Parker',
+        displayName: 'Peter Parker',
         role: 'Lead' as const,
       };
       test('Should not return the resource when the user is not part of the working group', async () => {

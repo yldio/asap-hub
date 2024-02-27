@@ -22,6 +22,7 @@ const Event: React.FC = () => {
       <Frame title={event.title}>
         <EventPage
           {...event}
+          tags={event.tags.map((tag) => tag.name)}
           backHref={backHref}
           onRefresh={refreshEvent}
           getIconForDocumentType={getIconForDocumentType}

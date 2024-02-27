@@ -1,3 +1,4 @@
+export * from './analytics';
 export * from './authors';
 export * from './calendar';
 export * from './calendar-common';

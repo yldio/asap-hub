@@ -81,7 +81,7 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
         {description}
       </Paragraph>
     </Anchor>
-    <TagList min={2} max={3} tags={tags.map(({ name }) => name)} />
+    <TagList min={2} max={3} tags={tags.map((tag) => tag.name)} />
     <Paragraph>
       <span css={iconStyles}>
         <TeamIcon />

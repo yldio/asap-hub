@@ -24,7 +24,6 @@ type RoleModalProps = Pick<
   backHref: string;
 };
 
-
 const RoleModal: React.FC<RoleModalProps> = ({
   teams,
   labs,

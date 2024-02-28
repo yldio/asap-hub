@@ -70,7 +70,6 @@ const currentRevision = process.env.CURRENT_REVISION!;
 const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 const slackWebhook = process.env.SLACK_WEBHOOK!;
 const logLevel = process.env.LOG_LEVEL!;
-const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
@@ -80,7 +79,7 @@ const service = 'asap-hub';
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
-  ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
+  './serverless-plugins/serverless-s3-sync',
 ];
 const offlinePlugins = [
   './serverless-plugins/serverless-offline',

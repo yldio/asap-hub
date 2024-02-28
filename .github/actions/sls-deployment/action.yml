@@ -99,7 +99,7 @@ runs:
     - name: Deploy
       shell: bash
       run: |
-        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
+        yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --verbose --package $PWD/${{ inputs.app }}-sls-package
       env:
         ACTIVE_CAMPAIGN_ACCOUNT: ${{ inputs.active-campaign-account }}
         ACTIVE_CAMPAIGN_TOKEN: ${{ inputs.active-campaign-token }}

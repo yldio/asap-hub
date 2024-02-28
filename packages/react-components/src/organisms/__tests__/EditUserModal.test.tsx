@@ -29,7 +29,7 @@ describe('EditUserModal', () => {
   });
 
   it('renders buttonText if provided', () => {
-    const { rerender, getByRole } = render(
+    const { rerender, getByRole, queryByRole } = render(
       <EditUserModal
         {...defaultProps}
         title="Modal Title"
@@ -49,7 +49,7 @@ describe('EditUserModal', () => {
     );
 
     expect(getByRole('dialog')).not.toContainElement(
-      getByRole('button', { name: 'Save' }),
+      queryByRole('button', { name: 'Save' }),
     );
   });
   it('renders a dialog with given children', () => {

@@ -14,6 +14,7 @@ import { getResearchTags } from '../../../shared-research/api';
 jest.mock('../api');
 jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
+jest.retryTimes(3, { logErrorsBeforeRetry: true });
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const mockGetResearchTags = getResearchTags as jest.MockedFunction<

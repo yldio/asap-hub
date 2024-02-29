@@ -16,7 +16,7 @@ it('renders a text field containing the biography, marked as mandatory', () => {
     <BiographyModal backHref="#" biography="My Bio" />,
     { wrapper: StaticRouter },
   );
-  expect(container.querySelector('label')?.textContent).toContain('Required');
+  expect(container.querySelector('label')?.textContent).toContain('required');
   expect(getByDisplayValue('My Bio')).toBeEnabled();
 });
 

@@ -20,7 +20,7 @@ it('renders the title', () => {
     wrapper: StaticRouter,
   });
   expect(
-    getByText('Expertise and resources', { selector: 'h3' }),
+    getByText('Expertise, Resources and Tags', { selector: 'h3' }),
   ).toBeVisible();
 });
 
@@ -30,8 +30,8 @@ it('indicates which fields are required or optional', () => {
   });
 
   [
-    { title: 'Tags', subtitle: 'Required' },
-    { title: 'Overview', subtitle: 'Optional' },
+    { title: 'Tags', subtitle: 'required' },
+    { title: 'Expertise and Resources', subtitle: 'optional' },
   ].forEach(({ title, subtitle }) =>
     expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
   );
@@ -45,7 +45,9 @@ it('renders default values into text inputs', () => {
     />,
     { wrapper: StaticRouter },
   );
-  expect(getByLabelText(/overview/i)).toHaveValue('example description');
+  expect(getByLabelText(/expertise and resources/i)).toHaveValue(
+    'example description',
+  );
 });
 
 it('triggers the save function', async () => {
@@ -60,7 +62,10 @@ it('triggers the save function', async () => {
     { wrapper: MemoryRouter },
   );
 
-  userEvent.type(getByLabelText(/overview/i), 'example description');
+  userEvent.type(
+    getByLabelText(/expertise and resources/i),
+    'example description',
+  );
 
   userEvent.type(getByLabelText(/tags/i), '5');
   userEvent.tab();

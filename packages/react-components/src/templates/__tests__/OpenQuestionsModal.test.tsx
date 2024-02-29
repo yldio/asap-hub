@@ -14,7 +14,7 @@ it('renders the title', () => {
   const { getByText } = render(<OpenQuestionsModal {...props} />, {
     wrapper: StaticRouter,
   });
-  expect(getByText('Your Open Questions', { selector: 'h3' })).toBeVisible();
+  expect(getByText('Open Questions', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders which fields are mandatory/optional', () => {
@@ -23,10 +23,10 @@ it('renders which fields are mandatory/optional', () => {
   });
 
   [
-    { title: 'Open Question 1', subtitle: 'Required' },
-    { title: 'Open Question 2', subtitle: 'Required' },
-    { title: 'Open Question 3', subtitle: 'Optional' },
-    { title: 'Open Question 4', subtitle: 'Optional' },
+    { title: 'Open Question 1', subtitle: 'required' },
+    { title: 'Open Question 2', subtitle: 'required' },
+    { title: 'Open Question 3', subtitle: 'optional' },
+    { title: 'Open Question 4', subtitle: 'optional' },
   ].forEach(({ title, subtitle }) =>
     expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
   );
@@ -58,7 +58,7 @@ describe('triggers the save function', () => {
       userEvent.type(
         getByLabelText(
           `Open Question ${index}${
-            index === 1 || index === 2 ? '(Required)' : '(Optional)'
+            index === 1 || index === 2 ? '(required)' : '(optional)'
           }`,
         ),
         questions[index]!,

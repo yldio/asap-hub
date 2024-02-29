@@ -93,7 +93,10 @@ describe('Index Events on Team event handler', () => {
       items: [
         {
           ...getEventDataObject(),
-          tags: ['Proteins', 'Cell Biology'],
+          tags: [
+            { id: '1', name: 'Proteins' },
+            { id: '2', name: 'Cell Biology' },
+          ],
         },
       ],
     });

@@ -3,15 +3,6 @@ import { getEventDataObject } from '../fixtures/events.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
 
 describe('addTagsFunction', () => {
-  test('add string tags to _tags when this field is present', () => {
-    const tags = ['Protein', 'Blood'];
-    const event = {
-      ...getEventDataObject(),
-      tags,
-    };
-    expect(addTagsFunction(event)).toEqual({ ...event, _tags: tags });
-  });
-
   test('add object tags to _tags when this field is present', () => {
     const tags = [
       { id: '1', name: 'Protein' },

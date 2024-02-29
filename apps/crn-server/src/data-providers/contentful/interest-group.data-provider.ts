@@ -29,6 +29,7 @@ import {
 } from '../transformers';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
 import { parseContentfulGraphQlTeamListItem } from './team.data-provider';
+import { parseResearchTags } from './research-tag.data-provider';
 
 type InterestGroupItem = NonNullable<
   NonNullable<
@@ -165,8 +166,6 @@ export class InterestGroupContentfulDataProvider
 const parseGraphQLInterestGroup = (
   interestGroup: InterestGroupItem,
 ): InterestGroupDataObject => {
-  const isString = (x: unknown): x is string => typeof x === 'string';
-
   const teams = (interestGroup.teamsCollection?.items || [])
     .filter((x): x is Teams => x !== null)
     .map((t) => {
@@ -223,7 +222,7 @@ const parseGraphQLInterestGroup = (
     lastModifiedDate: interestGroup.lastUpdated,
     name: interestGroup.name || '',
     description: interestGroup.description || '',
-    tags: (interestGroup.tags || []).filter(isString),
+    tags: parseResearchTags(interestGroup.researchTagsCollection?.items || []),
     tools,
     thumbnail: interestGroup.thumbnail?.url ?? undefined,
     contactEmails,

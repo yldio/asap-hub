@@ -17,6 +17,9 @@ import {
   FetchResearchTagsByIdQuery,
   FetchResearchTagsByIdQueryVariables,
   FETCH_RESEARCH_TAGS_BY_ID,
+  Maybe,
+  ResearchTags,
+  Sys,
 } from '@asap-hub/contentful';
 import { ResearchTagDataProvider } from '../types';
 
@@ -102,7 +105,9 @@ export class ResearchTagContentfulDataProvider
   }
 }
 
-const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {
+export const parseResearchTag = (
+  item: ResearchTagItem,
+): ResearchTagDataObject => {
   if (item.category !== null && !isResearchTagCategory(item.category || '')) {
     throw new TypeError('Invalid category received from Contentful');
   }
@@ -120,3 +125,17 @@ const parseResearchTag = (item: ResearchTagItem): ResearchTagDataObject => {
       : undefined,
   };
 };
+
+export const parseResearchTags = (
+  items: Maybe<
+    Pick<ResearchTags, 'name'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >[],
+) =>
+  items
+    .filter((tag): tag is ResearchTagItem => tag !== null)
+    .map((tag) => ({
+      id: tag.sys.id,
+      name: tag.name ?? '',
+    }));

@@ -55,6 +55,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
     ...event,
     eventOwner: <div>ASAP Team</div>,
     hasSpeakersToBeAnnounced: false,
+    tags: event.tags.map((tag) => tag.name),
   })),
   recentSharedOutputs: createListResearchOutputResponse(
     number('Number of outputs', 5),

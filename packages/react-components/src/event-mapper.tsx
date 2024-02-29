@@ -8,6 +8,7 @@ export const eventMapper = ({
   ...event
 }: EventResponse) => ({
   ...event,
+  tags: event.tags.map(({ name }) => name),
   hasSpeakersToBeAnnounced: !!(
     speakers.length === 0 ||
     speakers.find((speaker) => 'team' in speaker && !('user' in speaker))

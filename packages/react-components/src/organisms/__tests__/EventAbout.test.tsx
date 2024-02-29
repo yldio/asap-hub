@@ -7,6 +7,7 @@ import EventAbout from '../EventAbout';
 
 const props: ComponentProps<typeof EventAbout> = {
   ...createEventResponse(),
+  tags: [],
   endDate: addDays(new Date(), 1).toISOString(),
 };
 

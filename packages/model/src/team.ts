@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
+import { ResearchTagDataObject } from './research-tag';
 
 export const teamRole = [
   'Lead PI (Core Leadership)',
@@ -46,7 +47,7 @@ export interface TeamMember {
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
-  expertiseAndResourceTags: string[];
+  tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   members: TeamMember[];
   lastModifiedDate: string;
   pointOfContact?: TeamMember;
@@ -72,12 +73,7 @@ export type FetchTeamsOptions = FetchOptions;
 
 export type TeamListItemDataObject = Pick<
   TeamDataObject,
-  | 'id'
-  | 'displayName'
-  | 'inactiveSince'
-  | 'projectTitle'
-  | 'expertiseAndResourceTags'
-  | 'labCount'
+  'id' | 'displayName' | 'inactiveSince' | 'projectTitle' | 'tags' | 'labCount'
 > & { memberCount: number };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

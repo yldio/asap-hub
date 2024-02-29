@@ -11,7 +11,7 @@ const boilerplateProps: Omit<
   displayName: 'Doe, J',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
-  expertiseAndResourceTags: [],
+  tags: [],
   teamListElementId: '',
   labCount: 15,
   upcomingEventsCount: 0,

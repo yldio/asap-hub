@@ -2,6 +2,7 @@ import { FetchOptions, ListResponse } from './common';
 import { TeamListItemResponse } from './team';
 import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
+import { ResearchTagDataObject } from './research-tag';
 
 export type InterestGroupTools = {
   readonly slack?: string;
@@ -45,7 +46,7 @@ export type InterestGroupDataObject = {
   readonly createdDate: string;
   readonly contactEmails: string[];
   readonly name: string;
-  readonly tags: ReadonlyArray<string>;
+  readonly tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   readonly description: string;
   readonly tools: InterestGroupTools;
   readonly teams: ReadonlyArray<InterestGroupTeam>;

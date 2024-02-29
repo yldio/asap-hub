@@ -52,6 +52,7 @@ import {
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
 } from '../transformers';
+import { parseResearchTags } from './research-tag.data-provider';
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]
@@ -405,7 +406,6 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     hideMeetingLink,
     status,
     hidden,
-    tags,
     speakersCollection,
   } = item;
 
@@ -483,7 +483,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     hideMeetingLink: hideMeetingLink || false,
     status,
     hidden: hidden || false,
-    tags: tags ?? [],
+    tags: parseResearchTags(item.researchTagsCollection?.items || []),
     relatedTutorials: (item.linkedFrom?.tutorialsCollection?.items ?? []).map(
       (data) => ({
         id: data?.sys.id,

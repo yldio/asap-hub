@@ -17,7 +17,9 @@ const interestGroupsProps = (): ComponentProps<
       id: `p${i}`,
       name: `My Interest Group ${i + 1}`,
       description: 'Interest Group Description',
-      tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'],
+      tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'].map(
+        (tag) => ({ name: tag, id: tag }),
+      ),
       numberOfTeams: 3,
       active: true,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

@@ -6,6 +6,7 @@ import {
   ResearchOutputResponse,
   ResearchOutputWorkingGroupResponse,
 } from './research-output';
+import { ResearchTagDataObject } from './research-tag';
 import { TeamResponse } from './team';
 import { TutorialsDataObject } from './tutorials';
 import { WorkingGroupResponse } from './working-group';
@@ -53,6 +54,7 @@ export interface EventDataObject extends BasicEvent {
   relatedTutorials: Array<
     Pick<TutorialsDataObject, 'id' | 'title' | 'created'>
   >;
+  tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   relatedResearch: (Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'id' | 'title'

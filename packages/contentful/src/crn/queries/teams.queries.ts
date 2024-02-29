@@ -13,7 +13,6 @@ export const FETCH_TEAM_BY_ID = gql`
       inactiveSince
       projectSummary
       projectTitle
-      expertiseAndResourceTags
       proposal {
         sys {
           id
@@ -24,6 +23,14 @@ export const FETCH_TEAM_BY_ID = gql`
           name
           description
           url
+        }
+      }
+      researchTagsCollection(limit: 20) {
+        items {
+          sys {
+            id
+          }
+          name
         }
       }
       linkedFrom {
@@ -80,7 +87,14 @@ export const FETCH_TEAMS = gql`
         displayName
         inactiveSince
         projectTitle
-        expertiseAndResourceTags
+        researchTagsCollection(limit: 20) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         linkedFrom {
           teamMembershipCollection(limit: 100) {
             items {

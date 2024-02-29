@@ -5,4 +5,3 @@ module.exports.up = (migration) => {
 
   entity.moveField('researchTags').afterField('tags');
 };
-

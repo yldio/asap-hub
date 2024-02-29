@@ -95,7 +95,7 @@ jobs:
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v1
       - name: Test ${{ matrix.package }}
-        run: yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --maxWorkers=1 --ci
+        run: yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci
       - name: move coverage
         shell: bash
         run: |

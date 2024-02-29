@@ -59,16 +59,16 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
-        <span css={{display: 'flex', marginBottom: 0}}>
-        <strong>{title}</strong>
-        <span css={subtitleStyles}>{subtitle}</span>
-        {info && (
-          <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
-            <Info>
-              <span css={infoStyle}>{info}</span>
-            </Info>
-          </span>
-        )}
+        <span css={{ display: 'flex', marginBottom: 0 }}>
+          <strong>{title}</strong>
+          <span css={subtitleStyles}>{subtitle}</span>
+          {info && (
+            <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
+              <Info>
+                <span css={infoStyle}>{info}</span>
+              </Info>
+            </span>
+          )}
         </span>
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

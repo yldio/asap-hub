@@ -10,10 +10,16 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/cache@v3
+    - name: Setup
+      id: setup
+      uses: ./.github/actions/setup-environment
+      with:
+        environment-name: ${{ inputs.environment-name }}
+    - name: Cache
+      uses: actions/cache@v3
       with:
         path: |
           apps/**/build*
           apps/**/dist*
           packages/**/build*
-        key: ${{ inputs.cache-prefix }}-${{ inputs.environment-name }}-${{ github.sha }}
+        key: ${{ inputs.cache-prefix }}-${{ inputs.environment-name }}-${{ github.sha }}-${{ steps.setup.outputs.crn-algolia-index }}-${{ steps.setup.outputs.gp2-algolia-index }}

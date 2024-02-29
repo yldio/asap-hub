@@ -49,11 +49,6 @@ const infoWrapperStyle = css({
   },
 });
 
-const titleStyle = css({
-  display: 'flex',
-  marginBottom: 0,
-});
-
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
   subtitle,
@@ -63,7 +58,8 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
 }) => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
-      <Paragraph styles={titleStyle}>
+      <Paragraph>
+        <span css={{display: 'flex', marginBottom: 0}}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         {info && (
@@ -73,8 +69,9 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
             </Info>
           </span>
         )}
+        </span>
+        <span css={tipStyles}>{tip}</span>
       </Paragraph>
-      <Paragraph styles={tipStyles}>{tip}</Paragraph>
     </Label>
   </div>
 );

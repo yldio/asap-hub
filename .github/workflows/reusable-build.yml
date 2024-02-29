@@ -229,12 +229,14 @@ jobs:
           VITE_APP_CRN_SENTRY_DSN: ${{ steps.setup.outputs.react-app-crn-sentry-dsn }}
         run: |
           yarn build:frontend --cache-dir=.turbo
+      - name: Log GP2 index.html before cache output
+        run: cat apps/gp2-frontend/dist/index.html
       - name: Cache build output
         uses: ./.github/actions/cache-build
         with:
           cache-prefix: ${{ steps.setup.outputs.cache-prefix-frontend }}
           environment-name: ${{ inputs.environment-name }}
-      - name: Log GP2 index.html
+      - name: Log GP2 index.html after cache output
         run: cat apps/gp2-frontend/dist/index.html
       - name: CRN frontend artifact
         uses: actions/upload-artifact@v3

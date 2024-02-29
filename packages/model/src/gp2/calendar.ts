@@ -4,14 +4,14 @@ import { WorkingGroupDataObject, WorkingGroupResponse } from './working-group';
 import { ProjectDataObject, ProjectResponse } from './project';
 
 export interface CalendarDataObject extends BasicCalendar {
-  projects?: Pick<ProjectDataObject, 'id' | 'title'>[];
+  projects?: Pick<ProjectDataObject, 'id' | 'title' | 'status'>[];
   workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'title'>[];
 }
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
 export interface CalendarResponse extends BasicCalendarResponse {
-  projects: Pick<ProjectResponse, 'id' | 'title'>[];
+  projects: Pick<ProjectResponse, 'id' | 'title' | 'status'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
 }
 

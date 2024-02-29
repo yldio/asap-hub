@@ -8027,7 +8027,9 @@ export type CalendarsContentDataFragment = Pick<
   >;
   linkedFrom?: Maybe<{
     projectsCollection?: Maybe<{
-      items: Array<Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>>;
+      items: Array<
+        Maybe<Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }>
+      >;
     }>;
     workingGroupsCollection?: Maybe<{
       items: Array<
@@ -8054,7 +8056,7 @@ export type FetchCalendarByIdQuery = {
       linkedFrom?: Maybe<{
         projectsCollection?: Maybe<{
           items: Array<
-            Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }>
           >;
         }>;
         workingGroupsCollection?: Maybe<{
@@ -8092,7 +8094,11 @@ export type FetchCalendarsQuery = {
             linkedFrom?: Maybe<{
               projectsCollection?: Maybe<{
                 items: Array<
-                  Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+                  Maybe<
+                    Pick<Projects, 'title' | 'status'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
+                  >
                 >;
               }>;
               workingGroupsCollection?: Maybe<{
@@ -13617,6 +13623,10 @@ export const CalendarsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'status' },
                             },
                           ],
                         },

@@ -4,6 +4,7 @@ import ProjectOverview from '../ProjectOverview';
 
 describe('ProjectOverview', () => {
   const defaultProps: ComponentProps<typeof ProjectOverview> = {
+    status: 'Active',
     tags: [],
     milestones: [],
     members: [],
@@ -149,6 +150,19 @@ describe('ProjectOverview', () => {
     );
 
     expect(screen.getByRole('heading', { name: 'Events' })).toBeVisible();
+  });
+  it('does not render the events card if status is completed', () => {
+    render(
+      <ProjectOverview
+        {...defaultProps}
+        status="Completed"
+        calendar={{ id: '42', name: 'test' }}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('heading', { name: 'Events' }),
+    ).not.toBeInTheDocument();
   });
   it('does not renders the events if there is no calendar', () => {
     render(<ProjectOverview {...defaultProps} calendar={undefined} />);

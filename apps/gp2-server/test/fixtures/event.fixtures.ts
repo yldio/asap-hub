@@ -329,6 +329,7 @@ export const getContentfulEventDataObject = (): gp2Model.EventDataObject => ({
       {
         id: '7',
         title: 'a project title',
+        status: 'Active',
       },
     ],
     workingGroups: [

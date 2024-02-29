@@ -35,7 +35,7 @@ export const parseCalendar = (
     : undefined;
 
 type ProjectsWorkingGroups = {
-  projects?: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
+  projects?: Pick<gp2Model.ProjectDataObject, 'id' | 'title' | 'status'>[];
   workingGroups?: Pick<gp2Model.WorkingGroupDataObject, 'id' | 'title'>[];
 };
 
@@ -53,7 +53,7 @@ export const parseContentfulWorkingGroupsProjects = (calendar?: {
     projectsCollection?:
       | gp2Contentful.Maybe<{
           items: gp2Contentful.Maybe<
-            Pick<gp2Contentful.Projects, 'title'> & {
+            Pick<gp2Contentful.Projects, 'title' | 'status'> & {
               sys: Pick<gp2Contentful.Sys, 'id'>;
             }
           >[];
@@ -65,6 +65,7 @@ export const parseContentfulWorkingGroupsProjects = (calendar?: {
     calendar?.linkedFrom?.projectsCollection?.items.map((item) => ({
       id: item?.sys.id ?? '',
       title: item?.title ?? '',
+      status: item?.status as gp2Model.ProjectStatus,
     })) || [];
 
   const workingGroups =

@@ -152,12 +152,32 @@ describe('ProjectDetailHeader', () => {
       screen.queryByRole('link', { name: 'Workspace' }),
     ).not.toBeInTheDocument();
   });
-  it('renders share output if you are an admin', () => {
-    render(<ProjectDetailHeader {...defaultProps} isAdministrator={true} />);
+  it('renders share output if you are an admin and status is not completed', () => {
+    render(
+      <ProjectDetailHeader
+        {...defaultProps}
+        isAdministrator={true}
+        status="Active"
+      />,
+    );
     expect(
       screen.getByRole('button', { name: /share an output/i }),
     ).toBeVisible();
   });
+
+  it('does not render share output if you are an admin but status is completed', () => {
+    render(
+      <ProjectDetailHeader
+        {...defaultProps}
+        isAdministrator={true}
+        status="Completed"
+      />,
+    );
+    expect(
+      screen.queryByRole('button', { name: /share an output/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it('renders outputs tab with the count', () => {
     render(<ProjectDetailHeader {...defaultProps} outputsTotal={42} />);
     expect(

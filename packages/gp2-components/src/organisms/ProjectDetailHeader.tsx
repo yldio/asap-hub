@@ -181,7 +181,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
             startDate={startDate}
             endDate={endDate}
           />
-          {isAdministrator && (
+          {isAdministrator && status !== 'Completed' && (
             <div css={css({ marginLeft: 'auto' })}>
               <ShareOutputButton id={id} entityType="project" />
             </div>

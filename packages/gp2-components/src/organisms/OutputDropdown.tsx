@@ -32,7 +32,10 @@ export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
       .concat()
       .filter((project) => {
         const userRole = getUserRole(user, 'Projects', project.id);
-        return user?.role === 'Administrator' || userRole === 'Project manager';
+        return (
+          (user?.role === 'Administrator' || userRole === 'Project manager') &&
+          project.status !== 'Completed'
+        );
       })
       .sort((a, b) => a.title.localeCompare(b.title)),
     ...(user?.workingGroups ?? [])

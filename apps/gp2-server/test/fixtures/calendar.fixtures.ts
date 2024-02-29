@@ -78,7 +78,7 @@ export const getCalendarDataObject = (): gp2.CalendarDataObject => ({
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
-  projects: [{ id: '7', title: 'a project title' }],
+  projects: [{ id: '7', title: 'a project title', status: 'Active' }],
   workingGroups: [{ id: '11', title: 'a working group title' }],
 });
 
@@ -102,7 +102,7 @@ export const getCalendarResponse = (): gp2.CalendarResponse => ({
   id: '3@group.calendar.google.com',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
-  projects: [{ id: '7', title: 'a project title' }],
+  projects: [{ id: '7', title: 'a project title', status: 'Active' }],
   workingGroups: [{ id: '11', title: 'a working group title' }],
 });
 

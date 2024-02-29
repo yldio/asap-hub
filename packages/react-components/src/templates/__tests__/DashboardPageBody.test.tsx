@@ -116,6 +116,7 @@ it('displays events cards or placeholder if there are no events', () => {
         ...event,
         hasSpeakersToBeAnnounced: false,
         eventOwner: <div>ASAP Team</div>,
+        tags: event.tags.map((k) => k.name),
       }))}
     />,
   );

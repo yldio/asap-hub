@@ -37,15 +37,13 @@ import {
   patchAndPublish,
   patchAndPublishConflict,
   pollContentfulGql,
-  ResearchTags,
-  Sys,
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
 import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
-import { ResearchTagItem } from './research-tag.data-provider';
+import { parseResearchTags } from './research-tag.data-provider';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -530,21 +528,6 @@ export const parseTeamsCollection = (
     },
     [],
   );
-
-export const parseResearchTags = (
-  items: Maybe<
-    Pick<ResearchTags, 'name'> & {
-      sys: Pick<Sys, 'id'>;
-    }
-  >[],
-) =>
-  items
-    .filter((tag): tag is ResearchTagItem => tag !== null)
-    .map((tag) => ({
-      id: tag.sys.id,
-      name: tag.name ?? '',
-    }))
-    .filter(Boolean) || [];
 
 export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],

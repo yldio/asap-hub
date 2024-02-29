@@ -59,6 +59,20 @@ it('displays the event with given id', async () => {
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
 });
 
+it('renders tags', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    id,
+    tags: [
+      { id: '1', name: 'Tag 1' },
+      { id: '2', name: 'Tag 2' },
+    ],
+  });
+  const { findByText } = render(<Event />, { wrapper });
+  expect(await findByText('Tag 1')).toBeVisible();
+  expect(await findByText('Tag 2')).toBeVisible();
+});
+
 it('renders the speakers list', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),

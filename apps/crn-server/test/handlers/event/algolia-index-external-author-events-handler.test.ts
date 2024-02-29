@@ -119,7 +119,10 @@ describe('Index Events on External Author event handler', () => {
       items: [
         {
           ...getEventDataObject(),
-          tags: ['Proteins', 'Cell Biology'],
+          tags: [
+            { id: '1', name: 'Blood' },
+            { id: '2', name: 'LRRK2' },
+          ],
         },
       ],
     });
@@ -132,7 +135,7 @@ describe('Index Events on External Author event handler', () => {
       {
         type: 'event',
         data: expect.objectContaining({
-          _tags: ['Proteins', 'Cell Biology'],
+          _tags: ['Blood', 'LRRK2'],
         }),
       },
     ]);

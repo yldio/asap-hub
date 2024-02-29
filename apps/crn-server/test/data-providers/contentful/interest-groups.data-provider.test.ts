@@ -14,7 +14,7 @@ import { InterestGroupDataProvider } from '../../../src/data-providers/types';
 import { InterestGroupContentfulDataProvider } from '../../../src/data-providers/contentful/interest-group.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
-describe('User data provider', () => {
+describe('Interest group data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer(getContentfulGraphql());

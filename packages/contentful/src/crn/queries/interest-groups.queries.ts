@@ -12,21 +12,35 @@ export const interestGroupContentQueryFragment = gql`
     }
     name
     active
-    tags
+    researchTagsCollection(limit: 5) {
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     description
     slack
     googleDrive
     thumbnail {
       url
     }
-    teamsCollection(limit: 50) {
+    teamsCollection(limit: 20) {
       items {
         sys {
           id
         }
         displayName
         inactiveSince
-        expertiseAndResourceTags
+        researchTagsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         projectTitle
       }
     }

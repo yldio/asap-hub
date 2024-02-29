@@ -28,7 +28,7 @@ const InterestGroupInformation: React.FC<InterestGroupInformationProps> = ({
         Explore keywords related to skills, techniques, resources, and tools.
       </Paragraph>
     </div>
-    <TagList tags={tags} />
+    <TagList tags={tags.map(({ name }) => name)} />
   </Card>
 );
 

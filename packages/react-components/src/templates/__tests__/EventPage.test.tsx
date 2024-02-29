@@ -10,6 +10,7 @@ import EventPage from '../EventPage';
 
 const props: ComponentProps<typeof EventPage> = {
   ...createEventResponse(),
+  tags: [],
   eventOwner: <div>ASAP Team</div>,
   eventConversation: <div>ASAP Team</div>,
   displayCalendar: false,

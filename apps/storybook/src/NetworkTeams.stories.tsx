@@ -12,6 +12,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
   const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
   return {
     teams: Array.from({ length: numberOfItems }, (_, i) => ({
+      tags: [],
       id: `t${i}`,
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:

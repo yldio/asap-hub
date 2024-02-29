@@ -13,6 +13,8 @@ export const Normal = () => (
 
 To be specific, it deals with the diagnosis and treatment of all categories of disease involving the central, peripheral, and autonomic nervous systems, including their coverings, blood vessels, and all effector tissue, such as muscle.`,
     )}
-    tags={array('Tags', ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'])}
+    tags={array('Tags', ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5']).map(
+      (tag) => ({ name: tag, id: tag }),
+    )}
   />
 );

@@ -13,6 +13,7 @@ export const Default = () => (
     upcomingEvents={createListEventResponse(numberOfEvents).items.map(
       (event) => ({
         ...event,
+        tags: event.tags.map((tag) => tag.name),
         eventOwner: <div>ASAP Team</div>,
         hasSpeakersToBeAnnounced: false,
       }),

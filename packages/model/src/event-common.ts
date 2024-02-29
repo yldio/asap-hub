@@ -26,7 +26,6 @@ export interface BasicEvent {
   hidden?: boolean;
   lastModifiedDate: string;
   thumbnail?: string;
-  tags: string[];
   googleId?: string;
   copyMeetingLink?: boolean;
 

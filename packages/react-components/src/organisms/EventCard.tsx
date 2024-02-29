@@ -19,7 +19,6 @@ import { externalLinkIcon } from '../icons';
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
     BasicEvent,
-    | 'tags'
     | 'status'
     | 'meetingLink'
     | 'hideMeetingLink'

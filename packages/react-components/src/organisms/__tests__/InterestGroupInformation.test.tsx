@@ -37,7 +37,13 @@ it('does not shows ellipses and show more button on long descriptions', () => {
 
 it('displays tags', () => {
   const { getByText } = render(
-    <InterestGroupInformation {...props} tags={['ABC', 'def']} />,
+    <InterestGroupInformation
+      {...props}
+      tags={[
+        { name: 'ABC', id: '1' },
+        { name: 'def', id: '2' },
+      ]}
+    />,
   );
   expect(getByText('ABC')).toBeVisible();
   expect(getByText('def')).toBeVisible();

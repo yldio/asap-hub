@@ -9,6 +9,7 @@ jest.mock('../../localization');
 const eventOwner = <div>ASAP Team</div>;
 const props: ComponentProps<typeof EventInfo> = {
   ...createEventResponse(),
+  tags: [],
   eventOwner,
 };
 

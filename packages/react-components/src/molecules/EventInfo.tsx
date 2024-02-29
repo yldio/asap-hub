@@ -51,8 +51,9 @@ const widthStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<BasicEvent, 'id' | 'title' | 'thumbnail' | 'status' | 'tags'> & {
+  Pick<BasicEvent, 'id' | 'title' | 'thumbnail' | 'status'> & {
     eventOwner: React.ReactNode;
+    tags: string[];
     titleLimit?: number | null;
     eventSpeakers?: React.ReactNode;
     eventTeams?: React.ReactNode;

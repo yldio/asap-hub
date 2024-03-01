@@ -1,7 +1,7 @@
-import { getMemberships } from "./api";
+import { getMemberships } from './api';
 
 export const useMemberships = () => {
-    return {
-        data: getMemberships()
-    }
-}
+  return {
+    data: getMemberships(),
+  };
+};

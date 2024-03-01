@@ -29,7 +29,7 @@ const rowStyles = css({
   paddingBottom: `${20 / perRem}em`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-child': {
-    borderBottom: 'none'
+    borderBottom: 'none',
   },
   ':last-child': {
     borderBottom: 'none',

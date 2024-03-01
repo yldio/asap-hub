@@ -5,13 +5,13 @@ import { perRem } from '../pixels';
 
 type MetricOption = 'workingGroup' | 'interestGroup';
 type MetricData = {
-    id: string;
-    name: string;
-    leadershipRoleCount: number;
-    previousLeadershipRoleCount: number;
-    memberCount: number;
-    previousMemberCount: number;
-}
+  id: string;
+  name: string;
+  leadershipRoleCount: number;
+  previousLeadershipRoleCount: number;
+  memberCount: number;
+  previousMemberCount: number;
+};
 
 const metricOptions: Record<MetricOption, string> = {
   workingGroup: 'Working Group Leadership & Membership',
@@ -29,7 +29,7 @@ interface LeadershipAndMembershipAnalyticsProps {
   data: MetricData[];
 }
 const metricDropdownStyles = css({
-marginBottom:`${48/perRem}em`
+  marginBottom: `${48 / perRem}em`,
 });
 
 const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
@@ -39,8 +39,12 @@ const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
 }) => (
   <article>
     <div css={metricDropdownStyles}>
-        <Subtitle>Metric</Subtitle>
-        <Dropdown options={metricOptionList} value={metric} onChange={setMetric} />
+      <Subtitle>Metric</Subtitle>
+      <Dropdown
+        options={metricOptionList}
+        value={metric}
+        onChange={setMetric}
+      />
     </div>
     <Headline3>{metricOptions[metric]}</Headline3>
     <Paragraph>

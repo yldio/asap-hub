@@ -1,6 +1,7 @@
 import { ComponentProps, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
@@ -19,6 +20,8 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const mockGetResearchTags = getResearchTags as jest.MockedFunction<
   typeof getResearchTags
 >;
+
+mockConsoleError();
 
 const id = '42';
 const makeWrapper =

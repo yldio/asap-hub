@@ -59,6 +59,7 @@ export { default as infoInfoIcon } from './info-info';
 export { default as LabIcon } from './lab';
 export { default as labResource } from './lab-resource';
 export { default as lastPageIcon } from './last-page';
+export { default as LeadershipIcon } from './leadership';
 export { default as learnIcon } from './learn';
 export { default as LibraryIcon } from './shared-research';
 export { default as linkIcon } from './link';

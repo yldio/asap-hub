@@ -1,6 +1,7 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'VERSION_RESEARCH_OUTPUT'
+  | 'ANALYTICS'
   | 'DISPLAY_EVENTS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;

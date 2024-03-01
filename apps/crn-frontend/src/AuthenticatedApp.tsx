@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
@@ -140,11 +141,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <About />
                 </Frame>
               </Route>
-              <Route path={analytics.template}>
-                <Frame title="Analytics">
-                  <Analytics />
-                </Frame>
-              </Route>
+              {isEnabled('ANALYTICS') && (
+                <Route path={analytics.template}>
+                  <Frame title="Analytics">
+                    <Analytics />
+                  </Frame>
+                </Route>
+              )}
               <Route path={news.template}>
                 <Frame title="News">
                   <News />

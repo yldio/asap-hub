@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 
+import { analytics } from '@asap-hub/routing';
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
 import { LeadershipIcon } from '../icons';
-import { analytics } from '@asap-hub/routing';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,

@@ -28,7 +28,7 @@ const rowStyles = css({
   paddingTop: `${20 / perRem}em`,
   paddingBottom: `${20 / perRem}em`,
   borderBottom: `1px solid ${steel.rgb}`,
-  ':first-child': {
+  ':first-of-type': {
     borderBottom: 'none',
   },
   ':last-child': {
@@ -61,38 +61,37 @@ interface LeadershipMembershipTableProps {
 
 const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
   data,
-}) => {
-  return (
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>Team</span>
-          <span css={titleStyles}>Currently in a leadership role</span>
-          <span css={titleStyles}>Previously in a leadership role</span>
+}) => (
+  <Card padding={false}>
+    <div css={container}>
+      <div css={[rowStyles, gridTitleStyles]}>
+        <span css={titleStyles}>Team</span>
+        <span css={titleStyles}>Currently in a leadership role</span>
+        <span css={titleStyles}>Previously in a leadership role</span>
 
-          <span css={titleStyles}>Currently a member</span>
-          <span css={titleStyles}>Previously a member</span>
-        </div>
-        {data.map((row) => (
-          <div css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>{row.name}</p>
-            <span css={[titleStyles, rowTitleStyles]}>
-              Currently in a leadership role
-            </span>
-            <p>{row.leadershipRoleCount}</p>
-            <span css={[titleStyles, rowTitleStyles]}>
-              Previously in a leadership role
-            </span>
-            <p>{row.previousLeadershipRoleCount}</p>
-            <span css={[titleStyles, rowTitleStyles]}>Currently a member</span>
-            <p>{row.memberCount}</p>
-            <span css={[titleStyles, rowTitleStyles]}>Previously a member</span>
-            <p>{row.previousMemberCount}</p>
-          </div>
-        ))}
+        <span css={titleStyles}>Currently a member</span>
+        <span css={titleStyles}>Previously a member</span>
       </div>
-    </Card>
-  );
-};
+      {data.map((row) => (
+        <div key={row.id} css={[rowStyles]}>
+          <span css={[titleStyles, rowTitleStyles]}>Team</span>
+          <p>{row.name}</p>
+          <span css={[titleStyles, rowTitleStyles]}>
+            Currently in a leadership role
+          </span>
+          <p>{row.leadershipRoleCount}</p>
+          <span css={[titleStyles, rowTitleStyles]}>
+            Previously in a leadership role
+          </span>
+          <p>{row.previousLeadershipRoleCount}</p>
+          <span css={[titleStyles, rowTitleStyles]}>Currently a member</span>
+          <p>{row.memberCount}</p>
+          <span css={[titleStyles, rowTitleStyles]}>Previously a member</span>
+          <p>{row.previousMemberCount}</p>
+        </div>
+      ))}
+    </div>
+  </Card>
+);
+
 export default LeadershipMembershipTable;

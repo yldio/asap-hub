@@ -10,11 +10,11 @@ const mainStyles = css({
 
 type AnalyticsPageProps = ComponentProps<typeof AnalyticsPageHeader>;
 
-const Analytics: React.FC<AnalyticsPageProps> = ({ children }) => (
+const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ children }) => (
   <article>
     <AnalyticsPageHeader />
     <main css={mainStyles}>{children}</main>
   </article>
 );
 
-export default Analytics;
+export default AnalyticsPage;

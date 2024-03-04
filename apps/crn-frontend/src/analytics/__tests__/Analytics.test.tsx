@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 
 import Analytics from '../Analytics';
 import { getMemberships } from '../api';
@@ -42,7 +43,11 @@ const data = [
 ];
 
 const renderPage = async () => {
-  render(<Analytics />);
+  render(
+    <MemoryRouter initialEntries={['/analytics']}>
+      <Analytics />
+    </MemoryRouter>,
+  );
 };
 
 it('renders with working group data', async () => {

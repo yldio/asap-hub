@@ -5,30 +5,44 @@ import {
   USER_SOCIAL_RESEARCHER_ID,
 } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 
 import { Headline4, Link } from '../atoms';
-import { charcoal } from '../colors';
-import { GlobeIcon } from '../icons';
+import { charcoal, lead } from '../colors';
+import {
+  GithubIcon,
+  GlobeIcon,
+  GoogleScholarIcon,
+  LinkedInIcon,
+  OrcidSocialIcon,
+  ResearcherIdIcon,
+  ResearchGateIcon,
+  XIcon,
+} from '../icons';
 import { mailToSupport } from '../mail';
 import { LabeledTextField } from '../molecules';
-import { EditModal } from '../organisms';
-import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
+import { EditUserModal } from '../organisms';
 import { noop } from '../utils';
 
-const fieldsContainerStyles = css({
-  display: 'grid',
-  columnGap: `${24 / perRem}em`,
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr',
-    rowGap: `${12 / perRem}em`,
-  },
+const iconStyles = css({
+  width: 24,
+  display: 'inline-flex',
+  textAlign: 'center',
+  alignItems: 'center',
 });
-const paddingStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    paddingBottom: `${12 / perRem}em`,
-  },
+
+const iconCSS = css({
+  '& > svg > path:first-of-type': { fill: 'transparent' },
 });
+
+const wrapIcon = (
+  Icon: FunctionComponent<{ color?: string }>,
+  adjustBackground?: boolean,
+) => (
+  <span css={[iconStyles, adjustBackground ? iconCSS : {}]}>
+    <Icon color={lead.hex} />
+  </span>
+);
 
 type ContactInfoModalProps = {
   readonly email?: string;
@@ -68,9 +82,9 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   const [newTwitter, setNewTwitter] = useState(twitter);
 
   return (
-    <EditModal
+    <EditUserModal
       backHref={backHref}
-      title="Your contact details"
+      title="Contact Details"
       dirty={newEmail !== email}
       onSave={() =>
         onSave({
@@ -89,141 +103,139 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       }
     >
       {({ isSaving }) => (
-        <>
-          <div css={paddingStyles}>
-            <LabeledTextField
-              type="email"
-              value={newEmail}
-              onChange={setNewEmail}
-              enabled={!isSaving}
-              title="Contact email"
-              subtitle="(Optional)"
-              description={
-                <>
-                  People in the ASAP Network will contact you using{' '}
-                  <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>
-                  . To use a different correspondence email address, please add
-                  it below.
-                </>
-              }
-              hint="Note: This will not affect the way you login into the Hub."
-            />
-          </div>
-          <div css={[fieldsContainerStyles, paddingStyles]}>
-            <LabeledTextField
-              title="Website 1"
-              subtitle="(Optional)"
-              pattern={urlExpression}
-              getValidationMessage={() =>
-                'Please enter a valid URL, starting with http://'
-              }
-              onChange={setNewWebsite1}
-              value={newWebsite1}
-              enabled={!isSaving}
-              labelIndicator={<GlobeIcon />}
-              placeholder="https://example.com"
-            />
-            <LabeledTextField
-              title="Website 2"
-              subtitle="(Optional)"
-              pattern={urlExpression}
-              getValidationMessage={() =>
-                'Please enter a valid URL, starting with http://'
-              }
-              onChange={setNewWebsite2}
-              value={newWebsite2}
-              enabled={!isSaving}
-              labelIndicator={<GlobeIcon />}
-              placeholder="https://example.com"
-            />
-          </div>
+        <div>
+          <LabeledTextField
+            type="email"
+            value={newEmail}
+            onChange={setNewEmail}
+            enabled={!isSaving}
+            title="Contact email"
+            subtitle="(optional)"
+            description={
+              <>
+                People in the ASAP Network will contact you using{' '}
+                <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>.
+                To use a different correspondence email address, please add it
+                below.
+              </>
+            }
+            hint="Note: This will not affect the way you login into the Hub."
+          />
+          <LabeledTextField
+            title="Website 1"
+            subtitle="(optional)"
+            pattern={urlExpression}
+            getValidationMessage={() =>
+              'Please enter a valid URL, starting with http://'
+            }
+            onChange={setNewWebsite1}
+            value={newWebsite1}
+            enabled={!isSaving}
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://example.com"
+          />
+          <LabeledTextField
+            title="Website 2"
+            subtitle="(optional)"
+            pattern={urlExpression}
+            getValidationMessage={() =>
+              'Please enter a valid URL, starting with http://'
+            }
+            onChange={setNewWebsite2}
+            value={newWebsite2}
+            enabled={!isSaving}
+            labelIndicator={<GlobeIcon />}
+            placeholder="https://example.com"
+          />
           <Headline4 styleAsHeading={3}>Social Networks</Headline4>
-          <div css={fieldsContainerStyles}>
-            <LabeledTextField
-              hint={
-                <>
-                  To change your ORCID please{' '}
-                  <Link
-                    href={mailToSupport({
-                      subject: `Orcid change for "${orcid}"`,
-                    })}
-                  >
-                    contact ASAP
-                  </Link>
-                </>
-              }
-              title="ORCID"
-              onChange={setNewOrcid}
-              value={newOrcid}
-              enabled={false}
-              labelIndicator="orcid.org/"
-              placeholder="xxxx-xxxx-xxxx-xxxx"
-            />
-            <LabeledTextField
-              title="ResearcherID"
-              subtitle="(Optional)"
-              pattern={USER_SOCIAL_RESEARCHER_ID.source}
-              getValidationMessage={() => 'Please enter a valid ResearcherID'}
-              onChange={setNewResearcherId}
-              value={newResearcherId}
-              enabled={!isSaving}
-              labelIndicator="researchid.com/rid/"
-              placeholder="x-xxxx-xxxx"
-            />
-            <LabeledTextField
-              title="Twitter"
-              subtitle="(Optional)"
-              pattern={USER_SOCIAL_NOT_URL.source}
-              getValidationMessage={() => 'Please enter a valid Twitter handle'}
-              onChange={setNewTwitter}
-              value={newTwitter}
-              enabled={!isSaving}
-              labelIndicator="@"
-              placeholder="twitterhandle"
-            />
-            <LabeledTextField
-              title="Github"
-              subtitle="(Optional)"
-              pattern={USER_SOCIAL_NOT_URL.source}
-              getValidationMessage={() =>
-                'Please enter a valid Github username'
-              }
-              onChange={setNewGithub}
-              value={newGithub}
-              enabled={!isSaving}
-              labelIndicator="github.com/"
-              placeholder="username"
-            />
-            <LabeledTextField
-              title="LinkedIn"
-              subtitle="(Optional)"
-              pattern={USER_SOCIAL_NOT_URL.source}
-              getValidationMessage={() =>
-                'Please enter a valid LinkedIn username'
-              }
-              onChange={setNewLinkedIn}
-              value={newLinkedIn}
-              enabled={!isSaving}
-              labelIndicator="linkedin.com/in/"
-              placeholder="username"
-            />
-            <LabeledTextField
-              title="Researchgate"
-              subtitle="(Optional)"
-              pattern={USER_SOCIAL_NOT_URL.source}
-              getValidationMessage={() =>
-                'Please enter a valid Research Gate Profile ID'
-              }
-              onChange={setNewResearchGate}
-              value={newResearchGate}
-              enabled={!isSaving}
-              labelIndicator="researchgate.net/profile/"
-              placeholder="profileID"
-            />
-          </div>
+          <LabeledTextField
+            hint={
+              <>
+                To change your ORCID please{' '}
+                <Link
+                  href={mailToSupport({
+                    subject: `Orcid change for "${orcid}"`,
+                  })}
+                >
+                  contact ASAP
+                </Link>
+              </>
+            }
+            title="ORCID"
+            onChange={setNewOrcid}
+            value={newOrcid}
+            enabled={false}
+            labelIndicator={wrapIcon(OrcidSocialIcon)}
+            placeholder="xxxx-xxxx-xxxx-xxxx"
+          />
+          <LabeledTextField
+            title="Researcher ID"
+            subtitle="(optional)"
+            description="Type your Researcher ID."
+            pattern={USER_SOCIAL_RESEARCHER_ID.source}
+            getValidationMessage={() => 'Please enter a valid Researcher ID'}
+            onChange={setNewResearcherId}
+            value={newResearcherId}
+            enabled={!isSaving}
+            labelIndicator={wrapIcon(ResearcherIdIcon, true)}
+            placeholder="x-xxxx-xxxx"
+          />
+          <LabeledTextField
+            title="Twitter"
+            subtitle="(optional)"
+            description="Type your X (formerly twitter) profile URL."
+            pattern={USER_SOCIAL_NOT_URL.source}
+            getValidationMessage={() => 'Please enter a valid Twitter handle'}
+            onChange={setNewTwitter}
+            value={newTwitter}
+            enabled={!isSaving}
+            labelIndicator={wrapIcon(XIcon)}
+            placeholder="twitterhandle"
+          />
+          <LabeledTextField
+            title="Github"
+            subtitle="(optional)"
+            description="Type your Github profile URL."
+            pattern={USER_SOCIAL_NOT_URL.source}
+            getValidationMessage={() => 'Please enter a valid Github username'}
+            onChange={setNewGithub}
+            value={newGithub}
+            enabled={!isSaving}
+            labelIndicator={wrapIcon(GithubIcon, true)}
+            placeholder="username"
+          />
+          <LabeledTextField
+            title="LinkedIn"
+            subtitle="(optional)"
+            description="Type your LinkedIn profile URL."
+            pattern={USER_SOCIAL_NOT_URL.source}
+            getValidationMessage={() =>
+              'Please enter a valid LinkedIn username'
+            }
+            onChange={setNewLinkedIn}
+            value={newLinkedIn}
+            enabled={!isSaving}
+            labelIndicator={wrapIcon(LinkedInIcon, true)}
+            placeholder="username"
+          />
+          <LabeledTextField
+            title="Research Gate"
+            subtitle="(optional)"
+            description="Type your Research Gate profile URL."
+            pattern={USER_SOCIAL_NOT_URL.source}
+            getValidationMessage={() =>
+              'Please enter a valid Research Gate Profile ID'
+            }
+            onChange={setNewResearchGate}
+            value={newResearchGate}
+            enabled={!isSaving}
+            labelIndicator={wrapIcon(ResearchGateIcon, true)}
+            placeholder="profileID"
+          />
           <LabeledTextField
             title="Google Scholar"
-            subtitle="(Optional)"
+            subtitle="(optional)"
+            description="Type your Google Scholar profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Google Scholar Profile ID'
@@ -231,12 +243,12 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             onChange={setNewGoogleScholar}
             value={newGoogleScholar}
             enabled={!isSaving}
-            labelIndicator="scholar.google.com/citations?user="
+            labelIndicator={wrapIcon(GoogleScholarIcon, true)}
             placeholder="profileID"
           />
-        </>
+        </div>
       )}
-    </EditModal>
+    </EditUserModal>
   );
 };
 

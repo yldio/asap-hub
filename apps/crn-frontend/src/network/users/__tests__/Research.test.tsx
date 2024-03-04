@@ -99,6 +99,7 @@ describe('when editing', () => {
 
   const tags = ['1', '2', '3', '4', '5'];
   let result!: RenderResult;
+
   beforeEach(async () => {
     mockGetResearchTags.mockResolvedValue(
       tags.map((tag) => ({ name: tag, id: tag })),
@@ -106,12 +107,13 @@ describe('when editing', () => {
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });
+
   describe('role', () => {
     it('opens and closes the dialog', async () => {
-      const { getByText, queryByText, findByLabelText, getByDisplayValue } =
+      const { getByText, queryByText, getByLabelText, getByDisplayValue } =
         result;
 
-      userEvent.click(await findByLabelText(/edit.+role/i));
+      userEvent.click(getByLabelText(/edit.+role/i));
       expect(getByDisplayValue('My Interests')).toBeVisible();
       expect(getByText(/close/i)).toBeInTheDocument();
       userEvent.click(getByText(/close/i));
@@ -121,9 +123,9 @@ describe('when editing', () => {
     });
 
     it('saves the changes from the dialog', async () => {
-      const { getByText, queryByText, findByLabelText } = result;
+      const { getByText, queryByText, getByLabelText } = result;
 
-      userEvent.click(await findByLabelText(/edit.+role/i));
+      userEvent.click(getByLabelText(/edit.+role/i));
 
       userEvent.click(getByText(/save/i));
 
@@ -147,12 +149,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        findByLabelText,
+        getByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(await findByLabelText(/edit.+resources/i));
+      userEvent.click(getByLabelText(/edit.+resources/i));
       expect(getByDisplayValue('Expertise Description')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
@@ -168,13 +170,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        findByLabelText,
         getByDisplayValue,
         getByLabelText,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(await findByLabelText(/edit.+resources/i));
+      userEvent.click(getByLabelText(/edit.+resources/i));
       userEvent.type(getByDisplayValue('Expertise Description'), ' 2');
       expect(getByDisplayValue('Expertise Description 2')).toBeVisible();
       tags.forEach((expertise) => {
@@ -204,12 +205,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        findByLabelText,
+        getByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(await findByLabelText(/edit.+questions/i));
+      userEvent.click(getByLabelText(/edit.+questions/i));
       expect(getByDisplayValue('question 1')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
@@ -223,12 +224,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        findByLabelText,
+        getByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(await findByLabelText(/edit.+questions/i));
+      userEvent.click(getByLabelText(/edit.+questions/i));
       userEvent.type(getByDisplayValue('question 1'), ' a');
       expect(getByDisplayValue('question 1 a')).toBeVisible();
 

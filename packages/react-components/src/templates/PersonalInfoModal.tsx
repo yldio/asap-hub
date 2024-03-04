@@ -8,7 +8,6 @@ import {
 import { EditUserModal } from '../organisms';
 import { noop } from '../utils';
 
-
 type PersonalInfoModalProps = Pick<
   UserPatchRequest,
   | 'firstName'

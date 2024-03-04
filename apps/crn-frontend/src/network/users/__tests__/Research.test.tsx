@@ -1,12 +1,9 @@
 import { ComponentProps, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  createListInterestGroupResponse,
-  createTeamResponse,
-  createUserResponse,
-} from '@asap-hub/fixtures';
+import { createTeamResponse, createUserResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
 
@@ -14,7 +11,6 @@ import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Research from '../Research';
 import { patchUser } from '../api';
 import { getResearchTags } from '../../../shared-research/api';
-import { getUserInterestGroups } from '../interest-groups/api';
 
 jest.mock('../api');
 jest.mock('../interest-groups/api');
@@ -24,9 +20,8 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const mockGetResearchTags = getResearchTags as jest.MockedFunction<
   typeof getResearchTags
 >;
-const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
-  typeof getUserInterestGroups
->;
+
+mockConsoleError();
 
 const id = '42';
 const makeWrapper =
@@ -110,9 +105,6 @@ describe('when editing', () => {
   beforeEach(async () => {
     mockGetResearchTags.mockResolvedValue(
       tags.map((tag) => ({ name: tag, id: tag })),
-    );
-    mockGetUserInterestGroups.mockResolvedValue(
-      createListInterestGroupResponse(1),
     );
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);

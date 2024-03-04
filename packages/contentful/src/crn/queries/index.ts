@@ -1,3 +1,4 @@
+export * from './analytics.queries';
 export * from './calendars.queries';
 export * from './dashboard.queries';
 export * from './discover.queries';

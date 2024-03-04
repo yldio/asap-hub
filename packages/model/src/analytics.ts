@@ -1,7 +1,7 @@
 import { ListResponse } from './common';
 import { TeamResponse } from './team';
 
-export type AnalyticsTeamLeadershipResponse = Pick<
+export type AnalyticsTeamLeadershipDataObject = Pick<
   TeamResponse,
   'id' | 'displayName'
 > & {
@@ -17,5 +17,9 @@ export type AnalyticsTeamLeadershipResponse = Pick<
   interestGroupMemberCount: number;
   interestGroupPreviousMemberCount: number;
 };
+export type ListAnalyticsTeamLeadershipDataObject =
+  ListResponse<AnalyticsTeamLeadershipDataObject>;
+
+export type AnalyticsTeamLeadershipResponse = AnalyticsTeamLeadershipDataObject;
 export type ListAnalyticsTeamLeadershipResponse =
   ListResponse<AnalyticsTeamLeadershipResponse>;

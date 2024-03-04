@@ -105,6 +105,7 @@ import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
 import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
+import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -136,6 +137,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
+  const analyticsDataProvider =
+    libs.analyticsDataProvider ||
+    new AnalyticsContentfulDataProvider(contentfulGraphQLClient);
   const dashboardDataProvider =
     libs.dashboardDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
@@ -234,7 +238,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Controllers
   const analyticsController =
-    libs.analyticsController || new AnalyticsController();
+    libs.analyticsController || new AnalyticsController(analyticsDataProvider);
   const calendarController =
     libs.calendarController || new CalendarController(calendarDataProvider);
   const dashboardController =
@@ -397,6 +401,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  analyticsDataProvider?: AnalyticsContentfulDataProvider;
   analyticsController?: AnalyticsController;
   calendarController?: CalendarController;
   dashboardController?: DashboardController;

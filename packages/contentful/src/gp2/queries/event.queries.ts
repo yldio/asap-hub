@@ -143,6 +143,7 @@ export const eventsContentQueryFragment = gql`
               id
             }
             title
+            status
           }
         }
       }

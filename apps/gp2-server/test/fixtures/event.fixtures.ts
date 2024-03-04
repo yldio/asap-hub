@@ -246,6 +246,7 @@ export const getContentfulProjectsCollection = () => ({
     {
       sys: { id: '7' },
       title: 'a project title',
+      status: 'Active',
     },
   ],
 });
@@ -400,7 +401,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   },
   speakers: [getEventSpeaker()],
   workingGroup: { id: '11', title: 'a working group title' },
-  project: { id: '7', title: 'a project title' },
+  project: { id: '7', title: 'a project title', status: 'Active' },
   relatedOutputs: [
     { id: '7', title: 'a output title', documentType: 'Article' },
   ],

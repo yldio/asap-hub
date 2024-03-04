@@ -24,7 +24,7 @@ export type EventSpeaker = SpeakerInfo & { topic?: string };
 
 export interface EventDataObject extends Omit<BasicEvent, 'tags'> {
   calendar: CalendarResponse;
-  project?: Pick<ProjectResponse, 'id' | 'title'>;
+  project?: Pick<ProjectResponse, 'id' | 'title' | 'status'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
   tags: TagDataObject[];

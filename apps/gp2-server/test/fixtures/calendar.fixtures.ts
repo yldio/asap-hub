@@ -47,6 +47,7 @@ export const getContentfulProjectsCollection = () => ({
     {
       sys: { id: '7' },
       title: 'a project title',
+      status: 'Active',
     },
   ],
 });

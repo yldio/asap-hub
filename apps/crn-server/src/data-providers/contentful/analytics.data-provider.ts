@@ -4,17 +4,23 @@ import {
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   GraphQLClient,
 } from '@asap-hub/contentful';
-import { ListAnalyticsTeamLeadershipDataObject } from '@asap-hub/model';
+import {
+  FetchPaginationOptions,
+  ListAnalyticsTeamLeadershipDataObject,
+} from '@asap-hub/model';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetchTeamLeaderShip(): Promise<ListAnalyticsTeamLeadershipDataObject> {
+  async fetchTeamLeaderShip(
+    options: FetchPaginationOptions,
+  ): Promise<ListAnalyticsTeamLeadershipDataObject> {
+    const { take = 10, skip = 0 } = options;
     const { teamsCollection } = await this.contentfulClient.request<
       FetchAnalyticsTeamLeadershipQuery,
       FetchAnalyticsTeamLeadershipQueryVariables
-    >(FETCH_ANALYTICS_TEAM_LEADERSHIP);
+    >(FETCH_ANALYTICS_TEAM_LEADERSHIP, { limit: take, skip });
 
     return {
       total: teamsCollection?.total || 0,

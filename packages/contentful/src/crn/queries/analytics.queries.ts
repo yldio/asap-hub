@@ -1,8 +1,8 @@
 import { gql } from 'graphql-tag';
 
 export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
-  query FetchAnalyticsTeamLeadership {
-    teamsCollection(limit: 10, order: displayName_ASC) {
+  query FetchAnalyticsTeamLeadership($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
       total
       items {
         sys {

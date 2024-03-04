@@ -1,4 +1,7 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  FETCH_ANALYTICS_TEAM_LEADERSHIP,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
 import {
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
@@ -30,8 +33,9 @@ describe('Analytics Data Provider', () => {
     const pastDate = DateTime.now().minus({ days: 1 }).toISODate();
 
     test('Should fetch the list of analytics team leadership from Contentful GraphQl', async () => {
-      const result =
-        await analyticsDataProviderMockGraphql.fetchTeamLeaderShip();
+      const result = await analyticsDataProviderMockGraphql.fetchTeamLeaderShip(
+        {},
+      );
 
       expect(result).toMatchObject({
         total: 1,
@@ -59,7 +63,7 @@ describe('Analytics Data Provider', () => {
         },
       });
 
-      const result = await analyticsDataProvider.fetchTeamLeaderShip();
+      const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
       expect(result).toEqual({
         total: 0,
@@ -72,7 +76,7 @@ describe('Analytics Data Provider', () => {
         analyticsTeamLeadershipCollection: null,
       });
 
-      const result = await analyticsDataProvider.fetchTeamLeaderShip();
+      const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
       expect(result).toEqual({
         total: 0,
@@ -87,9 +91,46 @@ describe('Analytics Data Provider', () => {
         contentfulGraphQLResponse,
       );
 
-      const result = await analyticsDataProvider.fetchTeamLeaderShip();
+      const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
       expect(result.items[0]!.displayName).toBe('');
+    });
+
+    describe('Pagination', () => {
+      test('Should apply pagination parameters', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getAnalyticsTeamLeadershipQuery(),
+        );
+
+        await analyticsDataProvider.fetchTeamLeaderShip({
+          take: 13,
+          skip: 3,
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_ANALYTICS_TEAM_LEADERSHIP,
+          expect.objectContaining({
+            limit: 13,
+            skip: 3,
+          }),
+        );
+      });
+
+      test('Should pass default pagination parameters', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getAnalyticsTeamLeadershipQuery(),
+        );
+
+        await analyticsDataProvider.fetchTeamLeaderShip({});
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_ANALYTICS_TEAM_LEADERSHIP,
+          expect.objectContaining({
+            limit: 10,
+            skip: 0,
+          }),
+        );
+      });
     });
 
     describe('Interest Groups', () => {
@@ -102,7 +143,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
         });
@@ -145,7 +186,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(2);
         });
@@ -201,7 +242,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(2);
         });
@@ -272,7 +313,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(2);
         });
@@ -287,7 +328,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(
             result.items[0]!.interestGroupPreviousLeadershipRoleCount,
@@ -335,7 +376,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(
             result.items[0]!.interestGroupPreviousLeadershipRoleCount,
@@ -408,7 +449,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(
             result.items[0]!.interestGroupPreviousLeadershipRoleCount,
@@ -468,7 +509,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(
             result.items[0]!.interestGroupPreviousLeadershipRoleCount,
@@ -484,7 +525,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupMemberCount).toBe(0);
         });
@@ -496,7 +537,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupMemberCount).toBe(2);
         });
@@ -510,7 +551,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupMemberCount).toBe(0);
         });
@@ -526,7 +567,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(0);
         });
@@ -540,7 +581,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(2);
         });
@@ -554,7 +595,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(0);
         });
@@ -571,7 +612,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(0);
         });
@@ -614,7 +655,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(2);
         });
@@ -670,7 +711,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(2);
         });
@@ -741,7 +782,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(2);
         });
@@ -756,7 +797,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
             0,
@@ -804,7 +845,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
             2,
@@ -877,7 +918,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
             2,
@@ -937,7 +978,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
             2,
@@ -954,7 +995,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupMemberCount).toBe(0);
         });
@@ -997,7 +1038,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupMemberCount).toBe(2);
         });
@@ -1053,7 +1094,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupMemberCount).toBe(2);
         });
@@ -1124,7 +1165,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupMemberCount).toBe(2);
         });
@@ -1139,7 +1180,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(0);
         });
@@ -1185,7 +1226,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(2);
         });
@@ -1256,7 +1297,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(2);
         });
@@ -1314,7 +1355,7 @@ describe('Analytics Data Provider', () => {
             contentfulGraphQLResponse,
           );
 
-          const result = await analyticsDataProvider.fetchTeamLeaderShip();
+          const result = await analyticsDataProvider.fetchTeamLeaderShip({});
 
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(2);
         });

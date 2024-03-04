@@ -1,5 +1,10 @@
-import { ListAnalyticsTeamLeadershipDataObject } from '@asap-hub/model';
+import {
+  FetchPaginationOptions,
+  ListAnalyticsTeamLeadershipDataObject,
+} from '@asap-hub/model';
 
 export type AnalyticsDataProvider = {
-  fetchTeamLeaderShip: () => Promise<ListAnalyticsTeamLeadershipDataObject>;
+  fetchTeamLeaderShip: (
+    options: FetchPaginationOptions,
+  ) => Promise<ListAnalyticsTeamLeadershipDataObject>;
 };

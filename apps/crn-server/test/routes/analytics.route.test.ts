@@ -1,4 +1,7 @@
-import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import {
+  FetchPaginationOptions,
+  ListAnalyticsTeamLeadershipResponse,
+} from '@asap-hub/model';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListAnalyticsTeamLeadershipResponse } from '../fixtures/analytics.fixtures';
@@ -48,6 +51,18 @@ describe('/analytics/ route', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(listAnalyticsTeamLeadershipResponse);
+    });
+
+    test('Should call the controller with the correct parameters', async () => {
+      await supertest(app).get('/analytics/team-leadership').query({
+        take: 15,
+        skip: 5,
+      });
+
+      expect(analyticsControllerMock.fetchTeamLeaderShip).toHaveBeenCalledWith({
+        take: 15,
+        skip: 5,
+      } satisfies FetchPaginationOptions);
     });
   });
 });

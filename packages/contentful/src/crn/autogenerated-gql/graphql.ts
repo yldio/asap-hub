@@ -10209,7 +10209,8 @@ export type CfuserMultiTypeNestedFilter = {
 };
 
 export type FetchAnalyticsTeamLeadershipQueryVariables = Exact<{
-  [key: string]: never;
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FetchAnalyticsTeamLeadershipQuery = {
@@ -22227,6 +22228,21 @@ export const FetchAnalyticsTeamLeadershipDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'FetchAnalyticsTeamLeadership' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -22236,13 +22252,24 @@ export const FetchAnalyticsTeamLeadershipDocument = {
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'EnumValue', value: 'displayName_ASC' },
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
               },
             ],
             selectionSet: {

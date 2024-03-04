@@ -1,4 +1,7 @@
-import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import {
+  FetchPaginationOptions,
+  ListAnalyticsTeamLeadershipResponse,
+} from '@asap-hub/model';
 import AnalyticsController from '../../src/controllers/analytics.controller';
 import {
   getListAnalyticsTeamLeadershipDataObject,
@@ -18,7 +21,7 @@ describe('Analytics controller', () => {
         items: [],
       });
 
-      const result = await analyticsController.fetchTeamLeaderShip();
+      const result = await analyticsController.fetchTeamLeaderShip({});
 
       expect(result).toEqual({
         total: 0,
@@ -31,9 +34,21 @@ describe('Analytics controller', () => {
         getListAnalyticsTeamLeadershipDataObject(),
       );
 
-      const result = await analyticsController.fetchTeamLeaderShip();
+      const result = await analyticsController.fetchTeamLeaderShip({});
 
       expect(result).toEqual(getListAnalyticsTeamLeadershipResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchTeamLeaderShip(options);
+
+      expect(analyticsDataProviderMock.fetchTeamLeaderShip).toBeCalledWith(
+        options,
+      );
     });
   });
 });

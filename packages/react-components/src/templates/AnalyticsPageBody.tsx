@@ -1,4 +1,6 @@
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
+import { PageControls } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { LeadershipMembershipTable } from '../organisms';
 import { perRem } from '../pixels';
@@ -23,19 +25,28 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
   label: metricOptions[value as MetricOption],
 }));
 
-interface LeadershipAndMembershipAnalyticsProps {
+type LeadershipAndMembershipAnalyticsProps = ComponentProps<
+  typeof PageControls
+> & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
-}
+};
 const metricDropdownStyles = css({
   marginBottom: `${48 / perRem}em`,
+});
+
+const pageControlsStyles = css({
+  justifySelf: 'center',
+  paddingTop: `${36 / perRem}em`,
+  paddingBottom: `${36 / perRem}em`,
 });
 
 const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   metric,
   setMetric,
   data,
+  ...pageControlProps
 }) => (
   <article>
     <div css={metricDropdownStyles}>
@@ -52,6 +63,9 @@ const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
       membership role within a Working Group.
     </Paragraph>
     <LeadershipMembershipTable data={data} />
+    <section css={pageControlsStyles}>
+      <PageControls {...pageControlProps} />
+    </section>
   </article>
 );
 

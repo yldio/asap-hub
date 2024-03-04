@@ -6,6 +6,7 @@ import {
   sharedResearch,
   news,
   events,
+  analytics,
 } from '@asap-hub/routing';
 
 import {
@@ -19,10 +20,12 @@ import {
   networkIcon,
   discoverIcon,
   aboutIcon,
+  analyticsIcon,
   LibraryIcon,
   newsIcon,
   calendarIcon,
 } from '../icons';
+import { isEnabled } from '@asap-hub/flags';
 
 const listStyles = css({
   listStyle: 'none',
@@ -102,6 +105,17 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
           About ASAP
         </NavigationLink>
       </li>
+      {isEnabled('ANALYTICS') && (
+        <li>
+          <NavigationLink
+            href={analytics({}).$}
+            icon={analyticsIcon}
+            enabled={userOnboarded}
+          >
+            Analytics
+          </NavigationLink>
+        </li>
+      )}
     </ul>
   </nav>
 );

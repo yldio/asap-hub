@@ -1,4 +1,5 @@
 export { default as aboutIcon } from './about';
+export { default as analyticsIcon } from './analytics';
 export { default as actionIcon } from './action';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as article } from './article';

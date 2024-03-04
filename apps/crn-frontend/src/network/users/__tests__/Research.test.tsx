@@ -29,7 +29,6 @@ const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
 >;
 
 const id = '42';
-const tags = ['1', '2', '3', '4', '5'];
 const makeWrapper =
   (userId = id, currentUserId = userId): FC =>
   ({ children }) => (
@@ -57,15 +56,6 @@ const makeWrapper =
     </RecoilRoot>
   );
 const wrapper = makeWrapper();
-
-beforeEach(async () => {
-  mockGetResearchTags.mockResolvedValue(
-    tags.map((tag) => ({ name: tag, id: tag })),
-  );
-  mockGetUserInterestGroups.mockResolvedValue(
-    createListInterestGroupResponse(1),
-  );
-});
 
 it('renders the profile research section', async () => {
   const { findByText } = render(
@@ -115,8 +105,15 @@ describe('when editing', () => {
     ],
   };
 
+  const tags = ['1', '2', '3', '4', '5'];
   let result!: RenderResult;
   beforeEach(async () => {
+    mockGetResearchTags.mockResolvedValue(
+      tags.map((tag) => ({ name: tag, id: tag })),
+    );
+    mockGetUserInterestGroups.mockResolvedValue(
+      createListInterestGroupResponse(1),
+    );
     result = render(<Research user={user} />, { wrapper });
     await result.findAllByLabelText(/edit/i);
   });

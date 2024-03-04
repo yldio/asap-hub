@@ -8,6 +8,7 @@ import {
   events,
   analytics,
 } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
 
 import {
   perRem,
@@ -25,7 +26,6 @@ import {
   newsIcon,
   calendarIcon,
 } from '../icons';
-import { isEnabled } from '@asap-hub/flags';
 
 const listStyles = css({
   listStyle: 'none',

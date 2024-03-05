@@ -316,7 +316,7 @@ describe('Users controller', () => {
           email: user.email,
           connections: [{ code: 'user-id' }],
         },
-        { suppressConflict: false, polling: true },
+        { suppressConflict: false, polling: false },
       );
       expect(result).toEqual({
         ...getUserResponse(),
@@ -347,7 +347,7 @@ describe('Users controller', () => {
             },
           ]),
         },
-        { suppressConflict: false, polling: true },
+        { suppressConflict: false, polling: false },
       );
     });
 
@@ -426,7 +426,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
-        { suppressConflict: true, polling: true },
+        { suppressConflict: true, polling: false },
       );
     });
 
@@ -452,7 +452,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
-        { suppressConflict: true, polling: true },
+        { suppressConflict: true, polling: false },
       );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
@@ -479,7 +479,7 @@ describe('Users controller', () => {
           email: user.email,
           orcidLastSyncDate: expect.any(String),
         },
-        { suppressConflict: true, polling: true },
+        { suppressConflict: true, polling: false },
       );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
@@ -505,7 +505,7 @@ describe('Users controller', () => {
           email: user.email,
           orcidLastSyncDate: expect.any(String),
         },
-        { suppressConflict: true, polling: true },
+        { suppressConflict: true, polling: false },
       );
     });
 
@@ -539,7 +539,7 @@ describe('Users controller', () => {
             orcidFixtures.orcidWorksResponse['last-modified-date']!.value,
           ).toISOString(),
         }),
-        { suppressConflict: true, polling: true },
+        { suppressConflict: true, polling: false },
       );
     });
   });

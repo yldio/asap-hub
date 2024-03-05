@@ -1,8 +1,10 @@
+import { isEnabled } from '@asap-hub/flags';
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
+  analytics,
   dashboard,
   discover,
   events,
@@ -36,6 +38,9 @@ const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
 const loadAbout = () =>
   import(/* webpackChunkName: "about" */ './about/Routes');
 
+const loadAnalytics = () =>
+  import(/* webpackChunkName: "analytics" */ './analytics/Routes');
+
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
@@ -43,6 +48,7 @@ const Dashboard = lazy(loadDashboard);
 const Discover = lazy(loadDiscover);
 const Events = lazy(loadEvents);
 const About = lazy(loadAbout);
+const Analytics = lazy(loadAnalytics);
 const Tags = lazy(loadTags);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
@@ -63,6 +69,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadSharedResearch)
       .then(loadDiscover)
       .then(loadAbout)
+      .then(loadAnalytics)
       .then(loadEvents)
       .then(loadTags);
   }, []);
@@ -134,6 +141,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <About />
                 </Frame>
               </Route>
+              {isEnabled('ANALYTICS') && (
+                <Route path={analytics.template}>
+                  <Frame title="Analytics">
+                    <Analytics />
+                  </Frame>
+                </Route>
+              )}
               <Route path={news.template}>
                 <Frame title="News">
                   <News />

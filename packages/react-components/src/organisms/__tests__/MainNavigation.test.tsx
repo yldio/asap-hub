@@ -19,6 +19,7 @@ it('renders the navigation items', () => {
     expect.stringMatching(/news/i),
     expect.stringMatching(/guides/i),
     expect.stringMatching(/about/i),
+    expect.stringMatching(/analytics/i),
   ]);
 });
 

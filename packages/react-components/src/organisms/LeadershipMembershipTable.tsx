@@ -30,7 +30,7 @@ const rowStyles = css({
   ':first-of-type': {
     borderBottom: 'none',
   },
-  ':nth-child(2n+3)': {
+  ':nth-of-type(2n+3)': {
     background: neutral200.rgb,
   },
   ':last-child': {

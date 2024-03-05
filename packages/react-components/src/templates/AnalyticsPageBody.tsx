@@ -32,8 +32,13 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
 };
+
 const metricDropdownStyles = css({
   marginBottom: `${48 / perRem}em`,
+});
+
+const tableHeaderStyles = css({
+  paddingBottom: `${24 / perRem}em`,
 });
 
 const pageControlsStyles = css({
@@ -55,13 +60,16 @@ const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         options={metricOptionList}
         value={metric}
         onChange={setMetric}
+        required
       />
     </div>
-    <Headline3>{metricOptions[metric]}</Headline3>
-    <Paragraph>
-      Teams that are currently or have been previously in a leadership or a
-      membership role within a Working Group.
-    </Paragraph>
+    <div css={tableHeaderStyles}>
+      <Headline3>{metricOptions[metric]}</Headline3>
+      <Paragraph>
+        Teams that are currently or have been previously in a leadership or a
+        membership role within a Working Group.
+      </Paragraph>
+    </div>
     <LeadershipMembershipTable data={data} />
     <section css={pageControlsStyles}>
       <PageControls {...pageControlProps} />

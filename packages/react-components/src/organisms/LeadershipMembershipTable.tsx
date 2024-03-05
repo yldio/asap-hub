@@ -5,7 +5,7 @@ import { perRem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em`,
+  padding: `${32 / perRem}em ${24 / perRem}em ${15 / perRem}em`,
 });
 
 const gridTitleStyles = css({
@@ -26,7 +26,7 @@ const rowTitleStyles = css({
 const rowStyles = css({
   display: 'grid',
   paddingTop: `${20 / perRem}em`,
-  paddingBottom: `${20 / perRem}em`,
+  paddingBottom: 0, //`${20 / perRem}em`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
@@ -40,7 +40,7 @@ const rowStyles = css({
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
     columnGap: `${15 / perRem}em`,
     paddingTop: `${0 / perRem}em`,
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: 0, //`${16 / perRem}em`,
     borderBottom: `1px solid ${steel.rgb}`,
   },
 });

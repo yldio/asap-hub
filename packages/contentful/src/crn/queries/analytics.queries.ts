@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { gql } from 'graphql-tag';
 
 export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`

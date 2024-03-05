@@ -4,9 +4,18 @@ import { network } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import MainNavigation from '../MainNavigation';
+import { renderHook } from '@testing-library/react-hooks';
+import { useFlags } from '@asap-hub/react-context';
 
 it('renders the navigation items', () => {
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+
+  current.enable('ANALYTICS');
+
   const { getAllByRole } = render(<MainNavigation userOnboarded={true} />);
+
   expect(
     getAllByRole('listitem').map((item) => {
       expect(item).toHaveStyle('opacity:');

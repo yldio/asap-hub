@@ -124,7 +124,7 @@ describe('POST /webhook/users/connections - success', () => {
         connections: [{ code: 'oauth-connection-code' }],
         email: 'test@example.com',
       },
-      { suppressConflict: false },
+      { suppressConflict: false, polling: false },
     );
   });
 

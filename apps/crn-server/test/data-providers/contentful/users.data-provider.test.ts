@@ -759,6 +759,29 @@ describe('User data provider', () => {
         },
       });
     });
+
+    describe('polling', () => {
+      test('it is true by default when no options is passed, thus it makes a graphql request', async () => {
+        await userDataProvider.update('123', {
+          firstName: 'Colin',
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalled();
+      });
+
+      test('does not call graphql request when polling is passed as false', async () => {
+        await userDataProvider.update(
+          '123',
+          {
+            firstName: 'Colin',
+          },
+          { polling: false },
+        );
+
+        expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalled();
+      });
+    });
+
     describe('suppressConflict false', () => {
       test('fetches entry from contentful and passes to `patchAndPublish`', async () => {
         await userDataProvider.update('123', {

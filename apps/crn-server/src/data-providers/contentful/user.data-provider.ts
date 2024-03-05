@@ -193,7 +193,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async update(
     id: string,
     data: UserUpdateDataObject,
-    { suppressConflict = false } = {},
+    { suppressConflict = false, polling = true } = {},
   ): Promise<void> {
     const pollForUpdate = async (publishedVersion: number | undefined) => {
       const fetchUserById = () => this.fetchUserById(id);
@@ -215,7 +215,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
       ...fields,
       ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
-    if (!result) {
+    if (!result || !polling) {
       return;
     }
     await pollForUpdate(result.sys.publishedVersion);

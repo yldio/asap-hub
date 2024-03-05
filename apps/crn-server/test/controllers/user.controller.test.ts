@@ -224,7 +224,7 @@ describe('Users controller', () => {
       expect(userDataProviderMock.update).toHaveBeenCalledWith(
         'user-id',
         {},
-        { suppressConflict: false },
+        { suppressConflict: false, polling: true },
       );
     });
 
@@ -248,6 +248,21 @@ describe('Users controller', () => {
         }),
       );
     });
+
+    test('Should call data provider with options', async () => {
+      const result = await userController.update(
+        'user-id',
+        {},
+        { suppressConflict: true, polling: false },
+      );
+
+      expect(result).toEqual(getUserResponse());
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        'user-id',
+        {},
+        { suppressConflict: true, polling: false },
+      );
+    });
   });
 
   describe('updateAvatar', () => {
@@ -269,7 +284,7 @@ describe('Users controller', () => {
         {
           avatar: '42',
         },
-        { suppressConflict: false },
+        { suppressConflict: false, polling: true },
       );
       expect(assetDataProviderMock.create).toHaveBeenCalledWith({
         id: 'user-id',
@@ -301,7 +316,7 @@ describe('Users controller', () => {
           email: user.email,
           connections: [{ code: 'user-id' }],
         },
-        { suppressConflict: false },
+        { suppressConflict: false, polling: false },
       );
       expect(result).toEqual({
         ...getUserResponse(),
@@ -332,7 +347,7 @@ describe('Users controller', () => {
             },
           ]),
         },
-        { suppressConflict: false },
+        { suppressConflict: false, polling: false },
       );
     });
 
@@ -411,7 +426,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
-        { suppressConflict: true },
+        { suppressConflict: true, polling: false },
       );
     });
 
@@ -437,7 +452,7 @@ describe('Users controller', () => {
           orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
           orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
         }),
-        { suppressConflict: true },
+        { suppressConflict: true, polling: false },
       );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
@@ -464,7 +479,7 @@ describe('Users controller', () => {
           email: user.email,
           orcidLastSyncDate: expect.any(String),
         },
-        { suppressConflict: true },
+        { suppressConflict: true, polling: false },
       );
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
@@ -490,7 +505,7 @@ describe('Users controller', () => {
           email: user.email,
           orcidLastSyncDate: expect.any(String),
         },
-        { suppressConflict: true },
+        { suppressConflict: true, polling: false },
       );
     });
 
@@ -524,7 +539,7 @@ describe('Users controller', () => {
             orcidFixtures.orcidWorksResponse['last-modified-date']!.value,
           ).toISOString(),
         }),
-        { suppressConflict: true },
+        { suppressConflict: true, polling: false },
       );
     });
   });

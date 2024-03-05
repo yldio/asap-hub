@@ -16,7 +16,7 @@ describe('Analytics controller', () => {
 
   describe('Fetch method', () => {
     test('Should return an empty result when the data provider returns an empty list', async () => {
-      analyticsDataProviderMock.fetchTeamLeaderShip.mockResolvedValue({
+      analyticsDataProviderMock.fetchTeamLeadership.mockResolvedValue({
         total: 0,
         items: [],
       });
@@ -30,7 +30,7 @@ describe('Analytics controller', () => {
     });
 
     test('Should return the analytics team leadership', async () => {
-      analyticsDataProviderMock.fetchTeamLeaderShip.mockResolvedValue(
+      analyticsDataProviderMock.fetchTeamLeadership.mockResolvedValue(
         getListAnalyticsTeamLeadershipDataObject(),
       );
 
@@ -46,7 +46,7 @@ describe('Analytics controller', () => {
       };
       await analyticsController.fetchTeamLeaderShip(options);
 
-      expect(analyticsDataProviderMock.fetchTeamLeaderShip).toBeCalledWith(
+      expect(analyticsDataProviderMock.fetchTeamLeadership).toBeCalledWith(
         options,
       );
     });

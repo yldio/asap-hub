@@ -13,7 +13,7 @@ import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetchTeamLeaderShip(
+  async fetchTeamLeadership(
     options: FetchPaginationOptions,
   ): Promise<ListAnalyticsTeamLeadershipDataObject> {
     const { take = 10, skip = 0 } = options;
@@ -36,7 +36,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterOutAlumni)
                     .flatMap(flattenInterestGroupLeaders),
-              ),
+              ) || [],
             ),
             interestGroupMemberCount:
               (!team.inactiveSince &&
@@ -48,7 +48,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenInterestGroupLeaders),
-              ),
+              ) || [],
             ),
             interestGroupPreviousMemberCount:
               (team.inactiveSince &&
@@ -60,7 +60,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterOutAlumni)
                     .flatMap(flattenWorkingGroupLeaders),
-              ),
+              ) || [],
             ),
             workingGroupMemberCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
@@ -68,7 +68,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterOutAlumni)
                     .flatMap(flattenWorkingGroupMember),
-              ),
+              ) || [],
             ),
             workingGroupPreviousLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
@@ -76,7 +76,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupLeaders),
-              ),
+              ) || [],
             ),
             workingGroupPreviousMemberCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
@@ -84,7 +84,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   item?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupMember),
-              ),
+              ) || [],
             ),
           })) || [],
     };
@@ -137,5 +137,5 @@ const flattenWorkingGroupMember = (user: User): (string | undefined)[] =>
         (item) => item?.sys.id,
       ),
   ) || [];
-const getUniqueIdCount = (arr: (string | undefined)[] | undefined): number =>
-  [...new Set(arr)].length;
+const getUniqueIdCount = (arr: (string | undefined)[]): number =>
+  [...new Set(arr.filter((elem) => !!elem))].length;

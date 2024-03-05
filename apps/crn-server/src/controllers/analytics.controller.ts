@@ -10,6 +10,6 @@ export default class AnalyticsController {
   async fetchTeamLeaderShip(
     options: FetchPaginationOptions,
   ): Promise<ListAnalyticsTeamLeadershipResponse> {
-    return this.analyticsDataProvider.fetchTeamLeaderShip(options);
+    return this.analyticsDataProvider.fetchTeamLeadership(options);
   }
 }

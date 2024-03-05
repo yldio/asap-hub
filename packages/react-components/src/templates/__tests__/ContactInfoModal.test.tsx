@@ -24,7 +24,7 @@ it('indicates which fields are optional', () => {
     { title: 'Website 1', subtitle: 'optional' },
     { title: 'Website 2', subtitle: 'optional' },
     { title: 'Researcher ID', subtitle: 'optional' },
-    { title: 'Twitter', subtitle: 'optional' },
+    { title: 'X', subtitle: 'optional' },
     { title: 'Github', subtitle: 'optional' },
     { title: 'LinkedIn', subtitle: 'optional' },
     { title: 'Research Gate', subtitle: 'optional' },
@@ -128,7 +128,7 @@ it.each`
   ${'Website 1'}      | ${`website1`}
   ${'Website 2'}      | ${`website2`}
   ${'Researcher ID'}  | ${`researcherId`}
-  ${'Twitter'}        | ${`twitter`}
+  ${'X'}              | ${`twitter`}
   ${'Github'}         | ${`github`}
   ${'LinkedIn'}       | ${`linkedIn`}
   ${'Research Gate'}  | ${`researchGate`}
@@ -154,7 +154,7 @@ it.each`
     />,
     { wrapper: StaticRouter },
   );
-  const input = getByLabelText(new RegExp(label, 'i'));
+  const input = getByLabelText(new RegExp(label));
   expect(input).toHaveValue(value);
 });
 
@@ -163,7 +163,7 @@ it.each`
   ${'Website 1'}      | ${'not url'} | ${'valid URL'}
   ${'Website 2'}      | ${'not url'} | ${'valid URL'}
   ${'Researcher ID'}  | ${'http://'} | ${'valid Researcher ID'}
-  ${'Twitter'}        | ${'http://'} | ${'valid Twitter handle'}
+  ${'X'}              | ${'http://'} | ${'valid Twitter handle'}
   ${'Github'}         | ${'http://'} | ${'valid Github username'}
   ${'LinkedIn'}       | ${'http://'} | ${'valid LinkedIn username'}
   ${'Research Gate'}  | ${'http://'} | ${'valid Research Gate Profile ID'}
@@ -175,7 +175,7 @@ it.each`
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
       { wrapper: StaticRouter },
     );
-    const input = getByLabelText(new RegExp(label, 'i'));
+    const input = getByLabelText(new RegExp(label));
     fireEvent.change(input, {
       target: { value },
     });

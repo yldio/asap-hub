@@ -166,7 +166,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newOrcid}
             enabled={false}
             labelIndicator={wrapIcon(OrcidSocialIcon)}
-            placeholder="xxxx-xxxx-xxxx-xxxx"
+            placeholder="0000-0000-0000-0000"
           />
           <LabeledTextField
             title="Researcher ID"
@@ -178,12 +178,11 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newResearcherId}
             enabled={!isSaving}
             labelIndicator={wrapIcon(ResearcherIdIcon, true)}
-            placeholder="x-xxxx-xxxx"
+            placeholder="0-0000-0000"
           />
           <LabeledTextField
-            title="Twitter"
+            title="X"
             subtitle="(optional)"
-            description="Type your X (formerly twitter) profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() => 'Please enter a valid Twitter handle'}
             onChange={setNewTwitter}
@@ -195,7 +194,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="Github"
             subtitle="(optional)"
-            description="Type your Github profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() => 'Please enter a valid Github username'}
             onChange={setNewGithub}
@@ -207,7 +205,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="LinkedIn"
             subtitle="(optional)"
-            description="Type your LinkedIn profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid LinkedIn username'
@@ -221,7 +218,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="Research Gate"
             subtitle="(optional)"
-            description="Type your Research Gate profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Research Gate Profile ID'
@@ -235,7 +231,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="Google Scholar"
             subtitle="(optional)"
-            description="Type your Google Scholar profile URL."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Google Scholar Profile ID'

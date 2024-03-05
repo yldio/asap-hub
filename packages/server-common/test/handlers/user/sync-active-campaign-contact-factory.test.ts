@@ -141,10 +141,14 @@ describe('Sync ActiveCampaign Contact Factory', () => {
       activeCampaignId,
       'crn-list-id',
     );
-    expect(userController.update).toHaveBeenCalledWith(user.id, {
-      activeCampaignCreatedAt: new Date(date),
-      activeCampaignId,
-    });
+    expect(userController.update).toHaveBeenCalledWith(
+      user.id,
+      {
+        activeCampaignCreatedAt: new Date(date),
+        activeCampaignId,
+      },
+      { polling: false },
+    );
     expect(logger.info).toHaveBeenCalledWith('Contact user-id-1 created');
   });
 

@@ -34,12 +34,15 @@ export default class UserController {
   async update(
     id: string,
     update: UserUpdateRequest,
-    { suppressConflict = false } = {},
+    { suppressConflict = false, polling = true } = {},
   ): Promise<UserResponse> {
     if (update.tagIds) {
       await this.validateUser(update.tagIds);
     }
-    await this.userDataProvider.update(id, update, { suppressConflict });
+    await this.userDataProvider.update(id, update, {
+      suppressConflict,
+      polling,
+    });
     return this.fetchById(id);
   }
 

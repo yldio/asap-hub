@@ -14,5 +14,5 @@ export type UserDataProvider = DataProvider<
   UserCreateDataObject,
   null,
   UserUpdateDataObject,
-  { suppressConflict?: boolean }
+  { suppressConflict?: boolean; polling?: boolean }
 >;

@@ -26,7 +26,7 @@ const rowTitleStyles = css({
 const rowStyles = css({
   display: 'grid',
   paddingTop: `${20 / perRem}em`,
-  paddingBottom: 0, //`${20 / perRem}em`,
+  paddingBottom: 0,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
@@ -40,7 +40,7 @@ const rowStyles = css({
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
     columnGap: `${15 / perRem}em`,
     paddingTop: `${0 / perRem}em`,
-    paddingBottom: 0, //`${16 / perRem}em`,
+    paddingBottom: 0,
     borderBottom: `1px solid ${steel.rgb}`,
   },
 });

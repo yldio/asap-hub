@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { AnalyticsPageBody } from '@asap-hub/react-components';
-import { useMemberships } from './state';
+import { useAnalyticsLeadership } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
 
 type MetricResponse = {
@@ -45,18 +45,15 @@ const About: FC<Record<string, never>> = () => {
   const [metric, setMetric] = useState<'workingGroup' | 'interestGroup'>(
     'workingGroup',
   );
-  const { data } = useMemberships();
   const { currentPage, pageSize } = usePaginationParams();
-  const { numberOfPages, renderPageHref } = usePagination(
-    data.length,
-    pageSize,
-  );
+  const { items, total } = useAnalyticsLeadership({ currentPage, pageSize });
+  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (
     <AnalyticsPageBody
       metric={metric}
       setMetric={setMetric}
-      data={getDataForMetric(data, metric)}
+      data={getDataForMetric(items, metric)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}

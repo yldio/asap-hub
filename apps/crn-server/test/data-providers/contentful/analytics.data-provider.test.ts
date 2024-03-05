@@ -150,8 +150,9 @@ describe('Analytics Data Provider', () => {
 
         test('Should return 0 for interestGroupLeadershipRoleCount when usersCollection is undefined', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection = undefined;
-            [];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection =
+            undefined;
+          [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -163,8 +164,9 @@ describe('Analytics Data Provider', () => {
 
         test('Should return 0 for interestGroupLeadershipRoleCount when teamMembershipCollection is undefined', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection = undefined;
-            [];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection =
+            undefined;
+          [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );

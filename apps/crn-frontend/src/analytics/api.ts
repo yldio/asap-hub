@@ -1,29 +1,31 @@
-export const getMemberships = () => {
-  const fakeData = [
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import createListApiUrl from '../CreateListApiUrl';
+
+export const getAnalyticsLeadership = async (
+  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  authorization: string,
+): Promise<ListAnalyticsTeamLeadershipResponse | undefined> => {
+  const { currentPage, pageSize } = options;
+  const resp = await fetch(
+    createListApiUrl('/analytics/team-leadership', {
+      currentPage,
+      pageSize,
+      filters: new Set(),
+      searchQuery: '',
+    }).toString(),
     {
-      id: '1',
-      displayName: 'Team 1',
-      workingGroupLeadershipRoleCount: 1,
-      workingGroupPreviousLeadershipRoleCount: 2,
-      workingGroupMemberCount: 3,
-      workingGroupPreviousMemberCount: 4,
-      interestGroupLeadershipRoleCount: 5,
-      interestGroupPreviousLeadershipRoleCount: 6,
-      interestGroupMemberCount: 7,
-      interestGroupPreviousMemberCount: 8,
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
     },
-    {
-      id: '2',
-      displayName: 'Team 2',
-      workingGroupLeadershipRoleCount: 2,
-      workingGroupPreviousLeadershipRoleCount: 3,
-      workingGroupMemberCount: 4,
-      workingGroupPreviousMemberCount: 5,
-      interestGroupLeadershipRoleCount: 4,
-      interestGroupPreviousLeadershipRoleCount: 3,
-      interestGroupMemberCount: 2,
-      interestGroupPreviousMemberCount: 1,
-    },
-  ];
-  return fakeData;
+  );
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch analytics team leadership list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
 };

@@ -4,7 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
 
 import About from '../Routes';
-import { getMemberships } from '../api';
+import { getAnalyticsLeadership } from '../api';
 
 jest.mock('../api');
 mockConsoleError();
@@ -12,8 +12,8 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-const mockGetMemberships = getMemberships as jest.MockedFunction<
-  typeof getMemberships
+const mockGetMemberships = getAnalyticsLeadership as jest.MockedFunction<
+  typeof getAnalyticsLeadership
 >;
 
 const renderPage = async () => {
@@ -28,7 +28,7 @@ const renderPage = async () => {
 
 describe('Analytics page', () => {
   it('renders the Analytics Page successfully', async () => {
-    mockGetMemberships.mockReturnValue([]);
+    mockGetMemberships.mockResolvedValueOnce({ items: [], total: 0 });
 
     await renderPage();
     expect(

@@ -22,7 +22,7 @@ export const createListApiUrlFactory =
         url.searchParams.set('skip', String(currentPage * pageSize));
       }
     }
-    filters.forEach((filter) => url.searchParams.append('filter', filter));
+    filters?.forEach((filter) => url.searchParams.append('filter', filter));
 
     return url;
   };

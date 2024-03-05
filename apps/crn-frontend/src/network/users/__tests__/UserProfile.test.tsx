@@ -273,13 +273,13 @@ describe('a header edit button', () => {
       await screen.findByText(/research/i, { selector: 'nav *' }),
     );
     expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
-    expect(screen.queryByText(/your details/i)).toBeNull();
+    expect(screen.queryByText(/main details/i)).toBeNull();
     userEvent.click(await screen.findByLabelText(/edit.+personal/i));
     expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
-    expect(screen.getByText(/your details/i)).toBeVisible();
+    expect(screen.getByText(/main details/i)).toBeVisible();
     userEvent.click(screen.getByTitle(/Close/i));
     expect(screen.getByRole('heading', { name: /role/i })).toBeVisible();
-    expect(screen.queryByText(/your details/i)).toBeNull();
+    expect(screen.queryByText(/main details/i)).toBeNull();
 
     // Open and close on background tab
     userEvent.click(
@@ -288,10 +288,10 @@ describe('a header edit button', () => {
     expect(await screen.findByText('My Bio')).toBeVisible();
     userEvent.click(await screen.findByLabelText(/edit.+personal/i));
     expect(screen.getByText(/my bio/i)).toBeVisible();
-    expect(screen.getByText(/your details/i)).toBeVisible();
+    expect(screen.getByText(/main details/i)).toBeVisible();
     userEvent.click(screen.getByTitle(/Close/i));
     expect(screen.getByText(/my bio/i)).toBeVisible();
-    expect(screen.queryByText(/your details/i)).toBeNull();
+    expect(screen.queryByText(/main details/i)).toBeNull();
   });
 
   it('can change contact info', async () => {

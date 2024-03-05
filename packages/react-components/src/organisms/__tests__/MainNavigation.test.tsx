@@ -2,10 +2,10 @@ import { StaticRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-
-import MainNavigation from '../MainNavigation';
 import { renderHook } from '@testing-library/react-hooks';
 import { useFlags } from '@asap-hub/react-context';
+
+import MainNavigation from '../MainNavigation';
 
 it('renders the navigation items', () => {
   const {

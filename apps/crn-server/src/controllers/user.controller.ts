@@ -139,10 +139,16 @@ export default class UserController {
     }
     const existingConnections =
       user.connections?.filter(({ code }) => code !== welcomeCode) || [];
-    return this.update(user.id, {
-      email: user.email,
-      connections: [...existingConnections, { code: userId }],
-    });
+    return this.update(
+      user.id,
+      {
+        email: user.email,
+        connections: [...existingConnections, { code: userId }],
+      },
+      {
+        polling: false,
+      },
+    );
   }
 
   async syncOrcidProfile(
@@ -174,7 +180,10 @@ export default class UserController {
       logger.warn(error, 'Failed to sync ORCID profile');
     }
 
-    return this.update(user.id, updateToUser, { suppressConflict: true });
+    return this.update(user.id, updateToUser, {
+      suppressConflict: true,
+      polling: false,
+    });
   }
   private async queryByCode(code: string) {
     return this.userDataProvider.fetch({

@@ -46,7 +46,7 @@ describe('Cronjob - Sync Users ORCID', () => {
           fixtures.ORCIDWorksDeserialisedExpectation,
         ),
       }),
-      { suppressConflict: true },
+      { suppressConflict: true, polling: false },
     );
   });
 });

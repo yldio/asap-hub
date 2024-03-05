@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 import { Card } from '../atoms';
-import { charcoal, steel } from '../colors';
+import { charcoal, neutral200, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em ${15 / perRem}em`,
+  paddingTop: `${32 / perRem}em`,
 });
 
 const gridTitleStyles = css({
@@ -25,16 +25,18 @@ const rowTitleStyles = css({
 
 const rowStyles = css({
   display: 'grid',
-  paddingTop: `${20 / perRem}em`,
-  paddingBottom: 0,
+  padding: `${20 / perRem}em ${24 / perRem}em 0`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
   },
+  ':nth-of-type(2n+3)': {
+    background: neutral200.rgb,
+  },
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
-    paddingBottom: 0,
+    paddingBottom: `${15 / perRem}em`,
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',

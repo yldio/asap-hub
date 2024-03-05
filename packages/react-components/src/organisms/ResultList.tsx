@@ -41,7 +41,11 @@ const exportSectionStyles = css({
 });
 
 const exportButton = css({
-  padding: `${8 / perRem}em`,
+  gap: `${8 / perRem}em`,
+  height: '100%',
+  alignItems: 'center',
+  paddingRight: `${15 / perRem}em`,
+
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     width: '100%',
   },
@@ -51,6 +55,8 @@ const exportButton = css({
       minWidth: 'auto',
     },
 });
+
+const exportIcon = css({ display: 'flex' });
 
 const resultsHeaderStyles = css({
   display: 'flex',
@@ -161,6 +167,7 @@ const ResultList: React.FC<ResultListProps> = ({
                   <strong>Export as:</strong>
                   <Button
                     noMargin
+                    small
                     onClick={() =>
                       exportResults().catch(() =>
                         toast(
@@ -170,8 +177,10 @@ const ResultList: React.FC<ResultListProps> = ({
                     }
                     overrideStyles={exportButton}
                   >
-                    {ExportIcon}
-                    CSV
+                    <>
+                      <div css={exportIcon}>{ExportIcon}</div>
+                      CSV
+                    </>
                   </Button>
                 </span>
               )}

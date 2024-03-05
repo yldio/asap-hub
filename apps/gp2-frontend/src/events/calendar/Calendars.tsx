@@ -17,7 +17,10 @@ const Calendars: React.FC<Record<string, never>> = () => {
           hideSupportText
         />
         <CalendarList
-          calendars={items.filter(({ projects }) => projects.length > 0)}
+          calendars={items.filter(
+            ({ projects }) =>
+              projects.length > 0 && projects[0]?.status !== 'Completed',
+          )}
           title="Subscribe to Projects Calendar"
           description="Below you can find the list of all projects. Hitting subscribe will allow you to add them to your own personal calendar."
         />

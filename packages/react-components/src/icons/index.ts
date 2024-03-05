@@ -1,4 +1,5 @@
 export { default as aboutIcon } from './about';
+export { default as analyticsIcon } from './analytics';
 export { default as actionIcon } from './action';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as article } from './article';
@@ -59,6 +60,7 @@ export { default as infoInfoIcon } from './info-info';
 export { default as LabIcon } from './lab';
 export { default as labResource } from './lab-resource';
 export { default as lastPageIcon } from './last-page';
+export { default as LeadershipIcon } from './leadership';
 export { default as learnIcon } from './learn';
 export { default as LibraryIcon } from './shared-research';
 export { default as linkIcon } from './link';

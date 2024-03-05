@@ -41,7 +41,11 @@ const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
 
       if ('sys' in entry) {
         if ((entry.sys.revision || 0) < revision) {
-          throw new Error('Not synced');
+          throw new Error(
+            `Entry with id ${entry.sys.id} not synced. Sys revision: ${
+              entry.sys.revision || 0
+            }. Revision: ${revision}.`,
+          );
         }
         return entry;
       }
@@ -53,7 +57,11 @@ const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
         }
 
         if ((data.sys.publishedVersion || 0) < revision) {
-          throw new Error('Not synced');
+          throw new Error(
+            `Entry with id ${data.sys.id} not synced. Published version: ${
+              data.sys.publishedVersion || 0
+            }. Revision: ${revision}.`,
+          );
         }
       }
     },

@@ -21,6 +21,7 @@ export const calendarsContentQueryFragment = gql`
             id
           }
           title
+          status
         }
       }
       workingGroupsCollection {

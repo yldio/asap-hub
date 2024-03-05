@@ -47,7 +47,7 @@ describe('Calendars', () => {
     >;
     const listCalendars = gp2.createListCalendarResponse(1, {
       name: 'calendar title',
-      projects: [{ id: '42', title: 'a' }],
+      projects: [{ id: '42', title: 'a', status: 'Active' }],
       workingGroups: [],
     });
     mockGetCalendars.mockResolvedValue(listCalendars);
@@ -111,13 +111,13 @@ describe('Calendars', () => {
       within(projectSection).queryByText(/calendar title/),
     ).not.toBeInTheDocument();
   });
-  it('renders a calendar in the boths sections when the calendar has a working group and a project', async () => {
+  it('renders a calendar in the both sections when the calendar has a working group and a project', async () => {
     const mockGetCalendars = getCalendars as jest.MockedFunction<
       typeof getCalendars
     >;
     const listCalendars = gp2.createListCalendarResponse(1, {
       name: 'calendar title',
-      projects: [{ id: '42', title: 'a' }],
+      projects: [{ id: '42', title: 'a', status: 'Active' }],
       workingGroups: [{ id: '42', title: 'a' }],
     });
     mockGetCalendars.mockResolvedValue(listCalendars);
@@ -132,5 +132,34 @@ describe('Calendars', () => {
       within(workingGroupSection).getByText(/calendar title/),
     ).toBeVisible();
     expect(within(projectSection).queryByText(/calendar title/)).toBeVisible();
+  });
+  it('renders calendar from not completed projects', async () => {
+    const mockGetCalendars = getCalendars as jest.MockedFunction<
+      typeof getCalendars
+    >;
+    const calendarFromActiveProject = gp2.createCalendarResponse(1, {
+      name: 'calendar active project',
+      projects: [{ id: '1', title: 'Calendar 1', status: 'Active' }],
+      workingGroups: [{ id: '42', title: 'a' }],
+    });
+    const calendarFromCompletedProject = gp2.createCalendarResponse(1, {
+      name: 'calendar completed project',
+      projects: [{ id: '2', title: 'Calendar 2', status: 'Completed' }],
+      workingGroups: [],
+    });
+    mockGetCalendars.mockResolvedValue({
+      total: 2,
+      items: [calendarFromActiveProject, calendarFromCompletedProject],
+    });
+    await renderCalendars();
+    const projectSection = screen.getByRole('heading', {
+      name: /Subscribe to Projects Calendar/i,
+    }).parentElement?.parentElement as HTMLElement;
+    expect(
+      within(projectSection).queryByText(/calendar active project/),
+    ).toBeVisible();
+    expect(
+      within(projectSection).queryByText(/calendar completed project/),
+    ).not.toBeInTheDocument();
   });
 });

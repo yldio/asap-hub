@@ -23,8 +23,8 @@ describe('OutputDropdown', () => {
     );
 
   describe('permissions', () => {
-    it('displays working groups and projects if the user is an Admin', () => {
-      const { getByText } = renderWithContent({
+    it('displays working groups and projects if the user is an Admin and project is not completed', () => {
+      const { getByText, queryByText } = renderWithContent({
         groups: [
           {
             title: 'Test Group',
@@ -39,6 +39,12 @@ describe('OutputDropdown', () => {
             status: 'Active',
             members: [],
           },
+          {
+            title: 'Completed Project',
+            id: '1',
+            status: 'Completed',
+            members: [],
+          },
         ],
         role: 'Administrator',
       });
@@ -46,9 +52,10 @@ describe('OutputDropdown', () => {
       userEvent.click(getByText('Share an output'));
       expect(getByText('Test Group')).toBeInTheDocument();
       expect(getByText('Test Project')).toBeInTheDocument();
+      expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
-    it('displays projects if the user is a PM for the project', () => {
+    it('displays projects if the user is a PM for the project and if project is not completed', () => {
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -73,12 +80,24 @@ describe('OutputDropdown', () => {
               },
             ],
           },
+          {
+            title: 'Completed Project',
+            id: '3',
+            status: 'Completed',
+            members: [
+              {
+                userId: user.id,
+                role: 'Project manager',
+              },
+            ],
+          },
         ],
       });
 
       userEvent.click(getByText('Share an output'));
       expect(getByText('Test Project 1')).toBeInTheDocument();
       expect(queryByText('Test Project 2')).not.toBeInTheDocument();
+      expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
     it('does not display working groups if the user is not an Admin', () => {

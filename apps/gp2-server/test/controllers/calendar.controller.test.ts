@@ -80,10 +80,10 @@ describe('Calendars Controller', () => {
       });
       test('calendars with projects or groups are sorted alphabetically', async () => {
         const calendar1 = getCalendarDataObject();
-        calendar1.projects = [{ id: '42', title: 'a' }];
+        calendar1.projects = [{ id: '42', title: 'a', status: 'Active' }];
         calendar1.workingGroups = [];
         const calendar2 = getCalendarDataObject();
-        calendar2.projects = [{ id: '42', title: 'a' }];
+        calendar2.projects = [{ id: '42', title: 'a', status: 'Active' }];
         calendar2.workingGroups = [];
         const calendar3 = getCalendarDataObject();
         calendar3.projects = [];
@@ -112,7 +112,7 @@ describe('Calendars Controller', () => {
         const calendar3 = getCalendarDataObject();
 
         calendar1.name = 'b';
-        calendar1.projects = [{ id: '42', title: 'a' }];
+        calendar1.projects = [{ id: '42', title: 'a', status: 'Active' }];
         calendar1.workingGroups = [];
         calendar2.name = 'c';
         calendar2.projects = [];

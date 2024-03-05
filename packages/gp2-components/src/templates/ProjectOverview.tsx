@@ -17,6 +17,7 @@ import Events from '../organisms/Events';
 
 type ProjectOverviewProps = Pick<
   gp2.ProjectResponse,
+  | 'status'
   | 'pmEmail'
   | 'leadEmail'
   | 'description'
@@ -52,6 +53,7 @@ const cardStyles = css({
   padding: rem(24),
 });
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
+  status,
   description,
   pmEmail,
   leadEmail,
@@ -81,7 +83,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
           />
         </div>
       </Card>
-      {calendar ? (
+      {calendar && status !== 'Completed' ? (
         <Card overrideStyles={cardStyles}>
           <Headline3 noMargin>Events</Headline3>
           <Events

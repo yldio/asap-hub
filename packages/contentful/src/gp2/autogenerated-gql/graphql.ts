@@ -8027,7 +8027,9 @@ export type CalendarsContentDataFragment = Pick<
   >;
   linkedFrom?: Maybe<{
     projectsCollection?: Maybe<{
-      items: Array<Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>>;
+      items: Array<
+        Maybe<Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }>
+      >;
     }>;
     workingGroupsCollection?: Maybe<{
       items: Array<
@@ -8054,7 +8056,7 @@ export type FetchCalendarByIdQuery = {
       linkedFrom?: Maybe<{
         projectsCollection?: Maybe<{
           items: Array<
-            Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }>
           >;
         }>;
         workingGroupsCollection?: Maybe<{
@@ -8092,7 +8094,11 @@ export type FetchCalendarsQuery = {
             linkedFrom?: Maybe<{
               projectsCollection?: Maybe<{
                 items: Array<
-                  Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+                  Maybe<
+                    Pick<Projects, 'title' | 'status'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
+                  >
                 >;
               }>;
               workingGroupsCollection?: Maybe<{
@@ -8400,7 +8406,7 @@ export type EventsContentDataFragment = Pick<
         }>;
         projectsCollection?: Maybe<{
           items: Array<
-            Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+            Maybe<Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }>
           >;
         }>;
       }>;
@@ -8683,7 +8689,9 @@ export type FetchEventByIdQuery = {
             }>;
             projectsCollection?: Maybe<{
               items: Array<
-                Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+                Maybe<
+                  Pick<Projects, 'title' | 'status'> & { sys: Pick<Sys, 'id'> }
+                >
               >;
             }>;
           }>;
@@ -9066,7 +9074,11 @@ export type FetchEventsQuery = {
                   }>;
                   projectsCollection?: Maybe<{
                     items: Array<
-                      Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+                      Maybe<
+                        Pick<Projects, 'title' | 'status'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
                     >;
                   }>;
                 }>;
@@ -9513,7 +9525,7 @@ export type FetchEventsByUserIdQuery = {
                               projectsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
-                                    Pick<Projects, 'title'> & {
+                                    Pick<Projects, 'title' | 'status'> & {
                                       sys: Pick<Sys, 'id'>;
                                     }
                                   >
@@ -9976,7 +9988,7 @@ export type FetchEventsByExternalUserIdQuery = {
                               projectsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
-                                    Pick<Projects, 'title'> & {
+                                    Pick<Projects, 'title' | 'status'> & {
                                       sys: Pick<Sys, 'id'>;
                                     }
                                   >
@@ -13618,6 +13630,10 @@ export const CalendarsContentDataFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'title' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'status' },
+                            },
                           ],
                         },
                       },
@@ -14393,6 +14409,10 @@ export const EventsContentDataFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'title' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
                                   },
                                 ],
                               },

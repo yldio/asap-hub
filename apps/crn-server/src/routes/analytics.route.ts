@@ -14,7 +14,7 @@ export const analyticsRouteFactory = (
       const parameters = req.query;
       const query = validateFetchPaginationOptions(parameters);
 
-      const result = await analyticsController.fetchTeamLeaderShip(query);
+      const result = await analyticsController.fetchTeamLeadership(query);
 
       res.json(result);
     },

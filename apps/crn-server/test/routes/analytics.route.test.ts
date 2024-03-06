@@ -18,7 +18,7 @@ describe('/analytics/ route', () => {
 
   describe('GET /analytics/team-leadership', () => {
     test('Should return 200 when no results are found', async () => {
-      analyticsControllerMock.fetchTeamLeaderShip.mockResolvedValueOnce({
+      analyticsControllerMock.fetchTeamLeadership.mockResolvedValueOnce({
         total: 0,
         items: [],
       });
@@ -32,7 +32,7 @@ describe('/analytics/ route', () => {
     });
 
     test('Should return 500 when an error occurs', async () => {
-      analyticsControllerMock.fetchTeamLeaderShip.mockRejectedValueOnce(
+      analyticsControllerMock.fetchTeamLeadership.mockRejectedValueOnce(
         new Error('Test error'),
       );
       const response = await supertest(app).get('/analytics/team-leadership');
@@ -44,7 +44,7 @@ describe('/analytics/ route', () => {
       const listAnalyticsTeamLeadershipResponse =
         getListAnalyticsTeamLeadershipResponse();
 
-      analyticsControllerMock.fetchTeamLeaderShip.mockResolvedValueOnce(
+      analyticsControllerMock.fetchTeamLeadership.mockResolvedValueOnce(
         listAnalyticsTeamLeadershipResponse,
       );
       const response = await supertest(app).get('/analytics/team-leadership');
@@ -59,7 +59,7 @@ describe('/analytics/ route', () => {
         skip: 5,
       });
 
-      expect(analyticsControllerMock.fetchTeamLeaderShip).toHaveBeenCalledWith({
+      expect(analyticsControllerMock.fetchTeamLeadership).toHaveBeenCalledWith({
         take: 15,
         skip: 5,
       } satisfies FetchPaginationOptions);

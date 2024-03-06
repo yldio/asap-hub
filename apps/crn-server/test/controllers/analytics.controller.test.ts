@@ -21,7 +21,7 @@ describe('Analytics controller', () => {
         items: [],
       });
 
-      const result = await analyticsController.fetchTeamLeaderShip({});
+      const result = await analyticsController.fetchTeamLeadership({});
 
       expect(result).toEqual({
         total: 0,
@@ -34,7 +34,7 @@ describe('Analytics controller', () => {
         getListAnalyticsTeamLeadershipDataObject(),
       );
 
-      const result = await analyticsController.fetchTeamLeaderShip({});
+      const result = await analyticsController.fetchTeamLeadership({});
 
       expect(result).toEqual(getListAnalyticsTeamLeadershipResponse());
     });
@@ -44,7 +44,7 @@ describe('Analytics controller', () => {
         take: 10,
         skip: 5,
       };
-      await analyticsController.fetchTeamLeaderShip(options);
+      await analyticsController.fetchTeamLeadership(options);
 
       expect(analyticsDataProviderMock.fetchTeamLeadership).toBeCalledWith(
         options,

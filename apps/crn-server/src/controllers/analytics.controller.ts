@@ -7,7 +7,7 @@ import { AnalyticsDataProvider } from '../data-providers/types/analytics.data-pr
 export default class AnalyticsController {
   constructor(private analyticsDataProvider: AnalyticsDataProvider) {}
 
-  async fetchTeamLeaderShip(
+  async fetchTeamLeadership(
     options: FetchPaginationOptions,
   ): Promise<ListAnalyticsTeamLeadershipResponse> {
     return this.analyticsDataProvider.fetchTeamLeadership(options);

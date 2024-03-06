@@ -5,7 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { useEffect, useState } from 'react';
 import NotificationMessages from '../NotificationMessages';
 
-const TestNotificationComponent: React.FC = ({ children }) => {
+const TestNotificationComponent: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const { addNotification } = useNotificationContext();
 
   const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(true);

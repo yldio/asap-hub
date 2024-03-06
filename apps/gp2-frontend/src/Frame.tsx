@@ -8,7 +8,10 @@ const { createMailTo } = mail;
 
 type FrameProps = ComponentProps<typeof DefaultFrame>;
 
-const Frame: React.FC<FrameProps> = ({ children, ...props }) => (
+const Frame: React.FC<React.PropsWithChildren<FrameProps>> = ({
+  children,
+  ...props
+}) => (
   <DefaultFrame
     {...props}
     boundaryProps={{

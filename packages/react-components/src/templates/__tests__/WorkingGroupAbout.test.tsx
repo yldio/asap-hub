@@ -67,6 +67,17 @@ it('renders CTA when pointOfContact is provided', () => {
   expect(queryAllByText('Contact PM')).toHaveLength(0);
 });
 
+it('does not render CTA when pointOfContact is provided but working group is complete', () => {
+  const { queryAllByText } = render(
+    <WorkingGroupAbout
+      {...baseProps}
+      pointOfContact={createWorkingGroupPointOfContact()}
+      complete
+    />,
+  );
+  expect(queryAllByText('Contact PM')).toHaveLength(0);
+});
+
 it('renders a list of tags', () => {
   const { getByRole } = render(
     <WorkingGroupAbout {...baseProps} tags={['Tag One', 'Tag Two']} />,

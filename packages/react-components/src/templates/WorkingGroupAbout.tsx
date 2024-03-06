@@ -97,21 +97,23 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         isComplete={complete}
       />
     </section>
-    <Card accent="green">
-      <div css={getInTouchStyles}>
-        <div css={{ display: 'flex', flexDirection: 'column' }}>
-          <Subtitle noMargin>Have additional questions?</Subtitle>
-          <div>The project manager is here to help.</div>
+    {!complete && (
+      <Card accent="green">
+        <div css={getInTouchStyles}>
+          <div css={{ display: 'flex', flexDirection: 'column' }}>
+            <Subtitle noMargin>Have additional questions?</Subtitle>
+            <div>The project manager is here to help.</div>
+          </div>
+          {pointOfContact && (
+            <CtaContactSection
+              href={createMailTo(pointOfContact.user.email)}
+              buttonText={'Contact PM'}
+              displayCopy
+            />
+          )}
         </div>
-        {pointOfContact && (
-          <CtaContactSection
-            href={createMailTo(pointOfContact.user.email)}
-            buttonText={'Contact PM'}
-            displayCopy
-          />
-        )}
-      </div>
-    </Card>
+      </Card>
+    )}
   </div>
 );
 

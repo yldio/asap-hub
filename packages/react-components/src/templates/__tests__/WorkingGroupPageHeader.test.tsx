@@ -43,6 +43,17 @@ it('renders CTA when pointOfContact is provided', () => {
   expect(queryAllByText('Contact PM')).toHaveLength(0);
 });
 
+it('does not render CTA when pointOfContact is provided but working group is complete', () => {
+  const { queryAllByText } = render(
+    <WorkingGroupHeader
+      {...baseProps}
+      pointOfContact={createWorkingGroupPointOfContact()}
+      complete
+    />,
+  );
+  expect(queryAllByText('Contact PM')).toHaveLength(0);
+});
+
 it('copy button copies pointOfContact email', () => {
   Object.assign(navigator, {
     clipboard: {

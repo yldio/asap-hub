@@ -23,7 +23,7 @@ const wrapper =
   }: {
     currentRoute: string;
     user?: Partial<User>;
-  }): React.FC =>
+  }): React.FC<React.PropsWithChildren<unknown>> =>
   ({ children }) => (
     <RecoilRoot
       initializeState={({ set }) => {

@@ -47,7 +47,7 @@ const wrapper =
       auth0Client?: Auth0Client,
       auth0User?: Auth0User<gp2.User>,
     ) => Partial<Auth0<gp2.User>>,
-  ): React.FC =>
+  ): React.FC<React.PropsWithChildren<unknown>> =>
   ({ children }) => (
     <RecoilRoot>
       <Suspense fallback="loading">

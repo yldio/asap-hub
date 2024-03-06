@@ -30,7 +30,7 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC = ({ children }) => (
+const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
   <RecoilRoot
     initializeState={({ set }) => set(refreshEventState(id), Math.random())}
   >

@@ -17,7 +17,7 @@ import {
 } from '../auth0';
 
 const userProvider =
-  (user: Auth0User | undefined): React.FC =>
+  (user: Auth0User | undefined): React.FC<React.PropsWithChildren> =>
   ({ children }) => {
     const ctx = useAuth0CRN();
 
@@ -36,7 +36,7 @@ const userProvider =
   };
 
 const userProviderGP2 =
-  (user: Auth0User<gp2.User> | undefined): React.FC =>
+  (user: Auth0User<gp2.User> | undefined): React.FC<React.PropsWithChildren> =>
   ({ children }) => {
     const ctx = useAuth0GP2();
 

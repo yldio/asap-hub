@@ -145,6 +145,18 @@ describe('When the role is not staff', () => {
     expect(queryByText(/contact/i)).not.toBeInTheDocument();
   });
 
+  it('does not render contact card if user is alumni', () => {
+    const { queryByText } = render(
+      <UserProfileResearch
+        {...granteeRole}
+        email="email@example.com"
+        contactEmail="contactEmail@example.com"
+        alumniSinceDate="2022-09-04T00:00:00.000Z"
+      />,
+    );
+    expect(queryByText(/contact/i)).not.toBeInTheDocument();
+  });
+
   it('renders user profile groups card', () => {
     const { getByText } = render(
       <UserProfileResearch

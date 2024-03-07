@@ -190,7 +190,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newTwitter}
             enabled={!isSaving}
             labelIndicator={wrapIcon(XIcon)}
-            placeholder="username"
+            placeholder="Username"
           />
           <LabeledTextField
             title="Github"
@@ -202,7 +202,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newGithub}
             enabled={!isSaving}
             labelIndicator={wrapIcon(GithubIcon, true)}
-            placeholder="username"
+            placeholder="Username"
           />
           <LabeledTextField
             title="LinkedIn"
@@ -216,7 +216,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newLinkedIn}
             enabled={!isSaving}
             labelIndicator={wrapIcon(LinkedInIcon, true)}
-            placeholder="username"
+            placeholder="Username"
           />
           <LabeledTextField
             title="Research Gate"
@@ -230,7 +230,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newResearchGate}
             enabled={!isSaving}
             labelIndicator={wrapIcon(ResearchGateIcon, true)}
-            placeholder="profileID"
+            placeholder="Profile ID"
           />
           <LabeledTextField
             title="Google Scholar"
@@ -244,7 +244,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newGoogleScholar}
             enabled={!isSaving}
             labelIndicator={wrapIcon(GoogleScholarIcon, true)}
-            placeholder="profileID"
+            placeholder="Profile ID"
           />
         </div>
       )}

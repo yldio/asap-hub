@@ -18,7 +18,7 @@ describe('ConfirmAndSaveOutput', () => {
   const history = createMemoryHistory();
   const shareOutput = jest.fn();
 
-  const wrapper: React.ComponentType<{}> = ({ children }) => (
+  const wrapper: React.ComponentType = ({ children }) => (
     <NotificationContext.Provider
       value={{
         notifications: [],

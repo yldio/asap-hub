@@ -405,14 +405,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -433,14 +433,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -460,14 +460,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -488,14 +488,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -516,14 +516,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -543,14 +543,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -571,14 +571,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -600,14 +600,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -629,14 +629,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -657,14 +657,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -685,14 +685,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -714,14 +714,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -741,14 +741,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -768,14 +768,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -797,14 +797,14 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.46.4
     cross-env: 7.0.3
     emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-scripts: 5.0.1
     typescript: 4.9.5
   languageName: unknown
@@ -17110,15 +17110,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.20":
-  version: 17.0.20
-  resolution: "@types/react-dom@npm:17.0.20"
-  dependencies:
-    "@types/react": ^17
-  checksum: 525439fb14a033fc5dbe74711ecc50ec82273a528df9656594066a6219401e975101dafffd15d9a1a57a9442d52ea0c92eaacae09554dde27cd792e773f67467
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:18.2.20":
   version: 18.2.20
   resolution: "@types/react-dom@npm:18.2.20"
@@ -17230,17 +17221,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.65":
-  version: 17.0.65
-  resolution: "@types/react@npm:17.0.65"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: bb862f0f97a49e690cd5c62743307d17398ee62b87bbb2c85c1b01cb992244c0aef4ecdedaab0e8d33c6315d5a8f067cf90e7f1c366b8819678c59204e202932
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:18.2.63":
   version: 18.2.63
   resolution: "@types/react@npm:18.2.63"
@@ -17249,17 +17229,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: f3d496b9e3c40fe984aa2f22e0f3776a4f0be223f436ad3a2b79fed4b496ba1549999083408c2c975e5c8b029bfc9e8a2924788325e00de205cf70a10ef772d0
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^17":
-  version: 17.0.76
-  resolution: "@types/react@npm:17.0.76"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 2bee42fc8328b3e93281601e53d0f1e6e6a8826c3b2a41635432fc859839a614245486d9bf559e98695d658a72f71f97d487f46c06a6148cfc827c7c50876af0
   languageName: node
   linkType: hard
 
@@ -39558,19 +39527,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react-dom@npm:17.0.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: ^0.20.2
-  peerDependencies:
-    react: 17.0.2
-  checksum: 1c1eaa3bca7c7228d24b70932e3d7c99e70d1d04e13bb0843bbf321582bc25d7961d6b8a6978a58a598af2af496d1cedcfb1bf65f6b0960a0a8161cb8dab743c
-  languageName: node
-  linkType: hard
-
 "react-dom@npm:18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
@@ -39977,16 +39933,6 @@ __metadata:
     react: ">=16.6.0"
     react-dom: ">=16.6.0"
   checksum: 0bcd8af483709832e318dcef84c26ebddeb866bf4f58010286367ef0c1e7c5106e00cfc65688b9102414cb3d572c63909c2eb7ea972b4420fc70a78c10b6e8ad
-  languageName: node
-  linkType: hard
-
-"react@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react@npm:17.0.2"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
   languageName: node
   linkType: hard
 

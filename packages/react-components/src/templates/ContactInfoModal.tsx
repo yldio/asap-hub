@@ -183,17 +183,19 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="X"
             subtitle="(optional)"
+            description="Type your X (formerly Twitter) username."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() => 'Please enter a valid Twitter handle'}
             onChange={setNewTwitter}
             value={newTwitter}
             enabled={!isSaving}
             labelIndicator={wrapIcon(XIcon)}
-            placeholder="twitterhandle"
+            placeholder="username"
           />
           <LabeledTextField
             title="Github"
             subtitle="(optional)"
+            description="Type your Github username."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() => 'Please enter a valid Github username'}
             onChange={setNewGithub}
@@ -205,6 +207,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="LinkedIn"
             subtitle="(optional)"
+            description="Type your LinkedIn username."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid LinkedIn username'
@@ -218,6 +221,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="Research Gate"
             subtitle="(optional)"
+            description="Type your Research Gate Profile ID."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Research Gate Profile ID'
@@ -231,6 +235,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="Google Scholar"
             subtitle="(optional)"
+            description="Type your Google Scholar Profile ID."
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Google Scholar Profile ID'

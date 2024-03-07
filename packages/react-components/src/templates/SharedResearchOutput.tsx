@@ -258,9 +258,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </Card>
           )}
           {!!contactEmails.length && (
-            <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-              <strong>Interested in what you have seen?</strong>
-              <br /> Reach out to the PMs associated with this output
+            <CtaCard
+              href={createMailTo(contactEmails)}
+              buttonText="Contact PM"
+              displayCopy
+            >
+              <strong>Have additional questions?</strong>
+              <br /> The project managers associated with this output are here
+              to help.
             </CtaCard>
           )}
         </div>

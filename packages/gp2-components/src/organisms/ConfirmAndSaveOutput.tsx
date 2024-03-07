@@ -5,8 +5,9 @@ import {
   mailToSupport,
 } from '@asap-hub/react-components/src/mail';
 import { gp2 } from '@asap-hub/model';
-import { EntityMappper } from '../templates/CreateOutputPage';
 import { useNotificationContext } from '@asap-hub/react-context';
+
+import { EntityMappper } from '../templates/CreateOutputPage';
 import { GetWrappedOnSave } from './Form';
 
 const capitalizeFirstLetter = (string: string) =>
@@ -28,7 +29,18 @@ export type ConfirmAndSaveOutputProps = {
   ) => Promise<gp2.OutputResponse | void>;
   entityType: 'workingGroup' | 'project';
 };
-export const ConfirmAndSaveOutput = <T extends void | gp2.OutputResponse>({
+
+const getBannerMessage = (
+  entityType: 'workingGroup' | 'project',
+  documentType: gp2.OutputDocumentType,
+  published: boolean,
+  createVersion: boolean,
+) =>
+  `${createVersion ? 'New ' : ''}${EntityMappper[entityType]} ${documentType} ${
+    createVersion ? 'version ' : ''
+  }${published || createVersion ? 'published' : 'saved'} successfully.`;
+
+export const ConfirmAndSaveOutput = ({
   children,
   getWrappedOnSave,
   setRedirectOnSave,
@@ -46,17 +58,6 @@ export const ConfirmAndSaveOutput = <T extends void | gp2.OutputResponse>({
 
   const { addNotification, removeNotification, notifications } =
     useNotificationContext();
-  const getBannerMessage = (
-    entityType: 'workingGroup' | 'project',
-    documentType: gp2.OutputDocumentType,
-    published: boolean,
-    createVersion: boolean,
-  ) =>
-    `${createVersion ? 'New ' : ''}${
-      EntityMappper[entityType]
-    } ${documentType} ${createVersion ? 'version ' : ''}${
-      published || createVersion ? 'published' : 'saved'
-    } successfully.`;
 
   const setBannerMessage = (
     message: string,
@@ -92,7 +93,6 @@ export const ConfirmAndSaveOutput = <T extends void | gp2.OutputResponse>({
       (error) => setBannerMessage(error, 'output-form', 'error'),
       displayModalFn,
     )();
-
 
     if (output && typeof output.id === 'string') {
       setBannerMessage(

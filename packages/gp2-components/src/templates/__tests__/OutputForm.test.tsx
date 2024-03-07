@@ -204,9 +204,6 @@ describe('OutputForm', () => {
 
       userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
-      container
-        .querySelectorAll(':invalid ~ div')
-        .forEach((node) => console.log(node));
       expect(
         screen.getByText('Publish output for the whole hub?'),
       ).toBeVisible();
@@ -722,7 +719,6 @@ describe('OutputForm', () => {
       });
     });
   });
-
 
   describe('article', () => {
     it('renders type', () => {

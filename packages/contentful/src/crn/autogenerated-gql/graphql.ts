@@ -10595,10 +10595,7 @@ export type PartialUsersContentFragment = Pick<
   | 'lastUpdated'
   | 'email'
   | 'firstName'
-<<<<<<< Updated upstream
   | 'nickname'
-=======
->>>>>>> Stashed changes
   | 'institution'
   | 'jobTitle'
   | 'lastName'
@@ -10710,10 +10707,7 @@ export type FetchDiscoverQuery = {
                 | 'lastUpdated'
                 | 'email'
                 | 'firstName'
-<<<<<<< Updated upstream
                 | 'nickname'
-=======
->>>>>>> Stashed changes
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'
@@ -10736,10 +10730,7 @@ export type FetchDiscoverQuery = {
                 | 'lastUpdated'
                 | 'email'
                 | 'firstName'
-<<<<<<< Updated upstream
                 | 'nickname'
-=======
->>>>>>> Stashed changes
                 | 'institution'
                 | 'jobTitle'
                 | 'lastName'

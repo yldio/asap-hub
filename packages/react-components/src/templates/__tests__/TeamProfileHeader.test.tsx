@@ -3,7 +3,6 @@ import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';

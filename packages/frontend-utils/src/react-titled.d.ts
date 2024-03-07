@@ -7,5 +7,5 @@ declare module 'react-titled' {
     readonly title: (parentTitle: string) => string;
     readonly onChange?: (title: string) => void;
   }
-  export declare const Titled: React.FC<TitledProps>;
+  export declare const Titled: React.FC<React.PropsWithChildren<TitledProps>>;
 }

@@ -17,10 +17,8 @@ import {
   pixels,
   ResearchOutputRelatedEventsCard,
   ajvErrors,
-  ConfirmModal,
   OutputVersions,
 } from '@asap-hub/react-components';
-import { useNotificationContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -35,7 +33,8 @@ import OutputRelatedEventsCard from '../organisms/OutputRelatedEventsCard';
 import { Form, OutputIdentifier } from '../organisms';
 import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField, getIconForDocumentType } from '../utils';
-import { EntityMappper } from './CreateOutputPage';
+import { ConfirmAndSaveOutput } from '../organisms/ConfirmAndSaveOutput';
+import { GetWrappedOnSave } from '../organisms/Form';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
@@ -73,18 +72,6 @@ export const getRelatedEvents = (
     label,
     endDate,
   }));
-const getBannerMessage = (
-  entityType: 'workingGroup' | 'project',
-  documentType: gp2Model.OutputDocumentType,
-  published: boolean,
-  createVersion: boolean,
-) =>
-  `${createVersion ? 'New ' : ''}${EntityMappper[entityType]} ${documentType} ${
-    createVersion ? 'version ' : ''
-  }${published || createVersion ? 'published' : 'saved'} successfully.`;
-
-const capitalizeFirstLetter = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
 
 const footerStyles = css({
   display: 'flex',
@@ -234,9 +221,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
     Boolean(type === 'Blog' || documentType === 'GP2 Reports'),
   );
 
-  const [displayPublishModal, setDisplayPublishModal] = useState(false);
-  const [displayVersionModal, setDiplayVersionModal] = useState(false);
-
   const [newTitle, setTitle] = useState(title || '');
   const [newLink, setLink] = useState(link || '');
   const [newType, setType] = useState<gp2Model.OutputType | ''>(type || '');
@@ -307,26 +291,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>(
     doi || rrid || accessionNumber || '',
   );
-  const { addNotification, removeNotification, notifications } =
-    useNotificationContext();
-
-  const setBannerMessage = (
-    message: string,
-    page: 'output' | 'output-form',
-    bannerType: 'error' | 'success',
-  ) => {
-    if (
-      notifications[0] &&
-      notifications[0]?.message !== capitalizeFirstLetter(message)
-    ) {
-      removeNotification(notifications[0]);
-    }
-    addNotification({
-      message: capitalizeFirstLetter(message),
-      page,
-      type: bannerType,
-    });
-  };
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
@@ -423,394 +387,200 @@ const OutputForm: React.FC<OutputFormProps> = ({
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => {
         const isEditing = link !== undefined;
 
-        const save = async (skipConfirmationModal: boolean = false) => {
-          const displayModalFn =
-            !isEditing && !skipConfirmationModal
-              ? () => {
-                  setDisplayPublishModal(true);
-                }
-              : createVersion && !skipConfirmationModal
-                ? () => {
-                    setDiplayVersionModal(true);
-                  }
-                : null;
-
-          const output = await getWrappedOnSave(
-            () => shareOutput(currentPayload),
-            (error) => setBannerMessage(error, 'output-form', 'error'),
-            displayModalFn,
-          )();
-
-          if (output && typeof output.id === 'string') {
-            const path = gp2Routing
-              .outputs({})
-              .output({ outputId: output.id }).$;
-
-            setBannerMessage(
-              getBannerMessage(entityType, documentType, !title, createVersion),
-              'output',
-              'success',
-            );
-            setRedirectOnSave(path);
-          }
-          return output;
-        };
-
         return (
           <>
-            {displayPublishModal && (
-              <ConfirmModal
-                title="Publish output for the whole hub?"
-                cancelText="Cancel"
-                onCancel={() => setDisplayPublishModal(false)}
-                confirmText="Publish Output"
-                onSave={async () => {
-                  const skipPublishModal = true;
-                  const result = await save(skipPublishModal);
-                  if (!result) {
-                    setDisplayPublishModal(false);
-                  }
-                }}
-                description={
-                  <>
-                    All{' '}
-                    {entityType === 'workingGroup'
-                      ? 'working group'
-                      : 'project'}{' '}
-                    members listed on this output will be notified and all GP2
-                    members will be able to access it. If you need to unpublish
-                    this output, please contact{' '}
-                    {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}
-                    .
-                  </>
-                }
-              />
-            )}
+            <ConfirmAndSaveOutput
+              getWrappedOnSave={
+                getWrappedOnSave as unknown as GetWrappedOnSave<gp2Model.OutputResponse>
+              }
+              setRedirectOnSave={setRedirectOnSave}
+              documentType={documentType}
+              title={title}
+              shareOutput={shareOutput}
+              createVersion={createVersion}
+              isEditing={isEditing}
+              entityType={entityType}
+              path={(id: string) =>
+                gp2Routing.outputs({}).output({ outputId: id }).$
+              }
+              currentPayload={currentPayload}
+            >
+              {({ save }) => (
+                <div css={containerStyles}>
+                  {versionList.length > 0 && (
+                    <OutputVersions
+                      versions={versionList}
+                      versionAction="edit"
+                    />
+                  )}
+                  <FormCard title="What are you sharing?">
+                    <LabeledTextField
+                      title={'Title'}
+                      subtitle={'(required)'}
+                      value={newTitle}
+                      customValidationMessage={titleValidationMessage}
+                      getValidationMessage={(validationState) =>
+                        validationState.valueMissing ||
+                        validationState.patternMismatch
+                          ? 'Please enter a title.'
+                          : undefined
+                      }
+                      onChange={(newValue) => {
+                        clearServerValidationError('/title');
+                        setTitle(newValue);
+                      }}
+                      required
+                      enabled={!isSaving}
+                    />
+                    <LabeledTextField
+                      title="URL"
+                      subtitle={'(required)'}
+                      required
+                      pattern={urlExpression}
+                      onChange={(newValue) => {
+                        clearServerValidationError('/link');
+                        setLink(newValue);
+                      }}
+                      getValidationMessage={(validationState) =>
+                        validationState.valueMissing ||
+                        validationState.patternMismatch
+                          ? 'Please enter a valid URL, starting with http://'
+                          : undefined
+                      }
+                      customValidationMessage={urlValidationMessage}
+                      value={newLink ?? ''}
+                      enabled={!isSaving}
+                      labelIndicator={<GlobeIcon />}
+                      placeholder="https://example.com"
+                    />
+                    {documentType === 'Article' && (
+                      <LabeledDropdown
+                        title="Type"
+                        subtitle={'(required)'}
+                        required
+                        value={newType}
+                        options={gp2Model.outputTypes.map((name) => ({
+                          label: name,
+                          value: name,
+                        }))}
+                        onChange={setType}
+                      />
+                    )}
+                    {newType === 'Research' && (
+                      <LabeledDropdown
+                        title="Subtype"
+                        subtitle={'(required)'}
+                        required
+                        value={newSubtype}
+                        options={gp2Model.outputSubtypes.map((name) => ({
+                          label: name,
+                          value: name,
+                        }))}
+                        onChange={setSubtype}
+                      />
+                    )}
 
-            {displayVersionModal && (
-              <ConfirmModal
-                title="Publish new version for the whole hub?"
-                cancelText="Cancel"
-                onCancel={() => setDiplayVersionModal(false)}
-                confirmText="Publish new version"
-                onSave={async () => {
-                  const skipPublishModal = true;
-                  const result = await save(skipPublishModal);
-                  if (!result) {
-                    setDiplayVersionModal(false);
-                  }
-                }}
-                description={
-                  <>
-                    All working group members listed on this output will be
-                    notified and all GP2 members will be able to access it. If
-                    you want to add or edit older versions after this new
-                    version was published, please contact{' '}
-                    {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}
-                    .
-                  </>
-                }
-              />
-            )}
-
-            <div css={containerStyles}>
-              {versionList.length > 0 && (
-                <OutputVersions versions={versionList} versionAction="edit" />
-              )}
-              <FormCard title="What are you sharing?">
-                <LabeledTextField
-                  title={'Title'}
-                  subtitle={'(required)'}
-                  value={newTitle}
-                  customValidationMessage={titleValidationMessage}
-                  getValidationMessage={(validationState) =>
-                    validationState.valueMissing ||
-                    validationState.patternMismatch
-                      ? 'Please enter a title.'
-                      : undefined
-                  }
-                  onChange={(newValue) => {
-                    clearServerValidationError('/title');
-                    setTitle(newValue);
-                  }}
-                  required
-                  enabled={!isSaving}
-                />
-                <LabeledTextField
-                  title="URL"
-                  subtitle={'(required)'}
-                  required
-                  pattern={urlExpression}
-                  onChange={(newValue) => {
-                    clearServerValidationError('/link');
-                    setLink(newValue);
-                  }}
-                  getValidationMessage={(validationState) =>
-                    validationState.valueMissing ||
-                    validationState.patternMismatch
-                      ? 'Please enter a valid URL, starting with http://'
-                      : undefined
-                  }
-                  customValidationMessage={urlValidationMessage}
-                  value={newLink ?? ''}
-                  enabled={!isSaving}
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                />
-                {documentType === 'Article' && (
-                  <LabeledDropdown
-                    title="Type"
-                    subtitle={'(required)'}
-                    required
-                    value={newType}
-                    options={gp2Model.outputTypes.map((name) => ({
-                      label: name,
-                      value: name,
-                    }))}
-                    onChange={setType}
-                  />
-                )}
-                {newType === 'Research' && (
-                  <LabeledDropdown
-                    title="Subtype"
-                    subtitle={'(required)'}
-                    required
-                    value={newSubtype}
-                    options={gp2Model.outputSubtypes.map((name) => ({
-                      label: name,
-                      value: name,
-                    }))}
-                    onChange={setSubtype}
-                  />
-                )}
-
-                <LabeledTextArea
-                  title="Description"
-                  subtitle="(required)"
-                  tip="Add an abstract or a summary that describes this work."
-                  onChange={setDescription}
-                  getValidationMessage={() => 'Please enter a description'}
-                  required
-                  enabled={!isSaving}
-                  value={newDescription}
-                  info={
-                    <Markdown
-                      value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
+                    <LabeledTextArea
+                      title="Description"
+                      subtitle="(required)"
+                      tip="Add an abstract or a summary that describes this work."
+                      onChange={setDescription}
+                      getValidationMessage={() => 'Please enter a description'}
+                      required
+                      enabled={!isSaving}
+                      value={newDescription}
+                      info={
+                        <Markdown
+                          value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
         `}
-                    ></Markdown>
-                  }
-                />
-                {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(
-                  documentType,
-                ) ? (
-                  <LabeledRadioButtonGroup<gp2Model.DecisionOption>
-                    title="Has this output been supported by GP2?"
-                    subtitle="(required)"
-                    options={[
-                      {
-                        value: 'Yes',
-                        label: 'Yes',
-                        disabled: isSaving,
-                      },
-                      {
-                        value: 'No',
-                        label: 'No',
-                        disabled: isGP2SupportedAlwaysTrue || isSaving,
-                      },
-                      {
-                        value: "Don't Know",
-                        label: "Don't Know",
-                        disabled: isGP2SupportedAlwaysTrue || isSaving,
-                      },
-                    ]}
-                    value={newGp2Supported}
-                    onChange={setGp2Supported}
-                    tooltipText="This option is not available for this document type."
-                  />
-                ) : null}
-                <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
-                  title="Sharing status"
-                  subtitle="(required)"
-                  options={[
-                    {
-                      value: 'GP2 Only',
-                      label: 'GP2 Only',
-                      disabled: isAlwaysPublic || isSaving,
-                    },
-                    {
-                      value: 'Public',
-                      label: 'Public',
-                      disabled: isSaving,
-                    },
-                  ]}
-                  value={newSharingStatus}
-                  onChange={setSharingStatus}
-                  tooltipText="This option is not available for this document type."
-                />
-                {newSharingStatus === 'Public' ? (
-                  <LabeledDateField
-                    title="Public Repository Published Date"
-                    subtitle="(optional)"
-                    description="This should be the date your output was shared publicly on its repository."
-                    onChange={(date) =>
-                      setPublishDate(date ? new Date(date) : undefined)
-                    }
-                    enabled={!isSaving}
-                    value={newPublishDate}
-                    max={new Date()}
-                    getValidationMessage={(e) =>
-                      getPublishDateValidationMessage(e)
-                    }
-                  />
-                ) : null}
-              </FormCard>
-              <FormCard title="What extra information can you provide?">
-                <LabeledMultiSelect
-                  title="Additional Tags"
-                  subtitle="(optional)"
-                  description={
-                    <>
-                      Increase the discoverability of this output by adding
-                      keywords.{' '}
-                    </>
-                  }
-                  values={newTags.map(({ id, name }) => ({
-                    label: name,
-                    value: id,
-                  }))}
-                  enabled={!isSaving}
-                  suggestions={tagSuggestions.map(({ id, name }) => ({
-                    label: name,
-                    value: id,
-                  }))}
-                  onChange={(newValues) => {
-                    setNewTags(
-                      newValues
-                        .slice(0, 10)
-                        .reduce(
-                          (acc, curr) => [
-                            ...acc,
-                            { id: curr.value, name: curr.label },
-                          ],
-                          [] as gp2Model.TagDataObject[],
-                        ),
-                    );
-                  }}
-                  placeholder="Start typing... (E.g. Neurology)"
-                  maxMenuHeight={160}
-                />
-                <div css={linkStyles}>
-                  <Link
-                    href={mailToSupport({
-                      email: INVITE_SUPPORT_EMAIL,
-                      subject: 'New Keyword',
-                    })}
-                  >
-                    Ask GP2 to add a new keyword
-                  </Link>
-                </div>
-
-                {!DOC_TYPES_IDENTIFIER_NOT_REQUIRED.includes(documentType) ? (
-                  <OutputIdentifier
-                    documentType={documentType}
-                    identifier={identifier}
-                    setIdentifier={setIdentifier}
-                    identifierType={newIdentifierType}
-                    setIdentifierType={setNewIdentifierType}
-                    enabled={!isSaving}
-                  />
-                ) : null}
-              </FormCard>
-              <FormCard title="Who were the contributors?">
-                <LabeledMultiSelect
-                  title="Working Groups"
-                  description="Add other working groups that contributed to this output. Those working groups will also then be able to edit."
-                  subtitle={
-                    entityType === 'project' ? '(optional)' : '(required)'
-                  }
-                  required={entityType === 'workingGroup'}
-                  enabled={!isSaving}
-                  placeholder="Start typing..."
-                  suggestions={workingGroupSuggestions.map((workingGroup) => ({
-                    label: workingGroup.title,
-                    value: workingGroup.id,
-                  }))}
-                  onChange={(newValues) => {
-                    setWorkingGroups(
-                      newValues
-                        .slice(0, 10)
-                        .reduce(
-                          (acc, curr) => [
-                            ...acc,
-                            { id: curr.value, title: curr.label },
-                          ],
-                          [] as gp2Model.OutputOwner[],
-                        ),
-                    );
-                  }}
-                  values={newWorkingGroups.map((workingGroup, idx) => ({
-                    label: workingGroup.title,
-                    value: workingGroup.id,
-                    isFixed: idx === 0 && entityType === 'workingGroup',
-                  }))}
-                  noOptionsMessage={({ inputValue }) =>
-                    `Sorry, no working groups match ${inputValue}`
-                  }
-                />
-                <LabeledMultiSelect
-                  title="Projects"
-                  description="Add other projects that contributed to this output. Those projects will also then be able to edit."
-                  subtitle={
-                    entityType === 'project' ? '(required)' : '(optional)'
-                  }
-                  enabled={!isSaving}
-                  required={entityType === 'project'}
-                  placeholder="Start typing..."
-                  suggestions={projectSuggestions.map((project) => ({
-                    label: project.title,
-                    value: project.id,
-                  }))}
-                  onChange={(newValues) => {
-                    setProjects(
-                      newValues
-                        .slice(0, 10)
-                        .reduce(
-                          (acc, curr) => [
-                            ...acc,
-                            { id: curr.value, title: curr.label },
-                          ],
-                          [] as gp2Model.OutputOwner[],
-                        ),
-                    );
-                  }}
-                  values={newProjects.map((project, idx) => ({
-                    label: project.title,
-                    value: project.id,
-                    isFixed: idx === 0 && entityType === 'project',
-                  }))}
-                  noOptionsMessage={({ inputValue }) =>
-                    `Sorry, no projects match ${inputValue}`
-                  }
-                />
-                {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
-                  <>
+                        ></Markdown>
+                      }
+                    />
+                    {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(
+                      documentType,
+                    ) ? (
+                      <LabeledRadioButtonGroup<gp2Model.DecisionOption>
+                        title="Has this output been supported by GP2?"
+                        subtitle="(required)"
+                        options={[
+                          {
+                            value: 'Yes',
+                            label: 'Yes',
+                            disabled: isSaving,
+                          },
+                          {
+                            value: 'No',
+                            label: 'No',
+                            disabled: isGP2SupportedAlwaysTrue || isSaving,
+                          },
+                          {
+                            value: "Don't Know",
+                            label: "Don't Know",
+                            disabled: isGP2SupportedAlwaysTrue || isSaving,
+                          },
+                        ]}
+                        value={newGp2Supported}
+                        onChange={setGp2Supported}
+                        tooltipText="This option is not available for this document type."
+                      />
+                    ) : null}
+                    <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
+                      title="Sharing status"
+                      subtitle="(required)"
+                      options={[
+                        {
+                          value: 'GP2 Only',
+                          label: 'GP2 Only',
+                          disabled: isAlwaysPublic || isSaving,
+                        },
+                        {
+                          value: 'Public',
+                          label: 'Public',
+                          disabled: isSaving,
+                        },
+                      ]}
+                      value={newSharingStatus}
+                      onChange={setSharingStatus}
+                      tooltipText="This option is not available for this document type."
+                    />
+                    {newSharingStatus === 'Public' ? (
+                      <LabeledDateField
+                        title="Public Repository Published Date"
+                        subtitle="(optional)"
+                        description="This should be the date your output was shared publicly on its repository."
+                        onChange={(date) =>
+                          setPublishDate(date ? new Date(date) : undefined)
+                        }
+                        enabled={!isSaving}
+                        value={newPublishDate}
+                        max={new Date()}
+                        getValidationMessage={(e) =>
+                          getPublishDateValidationMessage(e)
+                        }
+                      />
+                    ) : null}
+                  </FormCard>
+                  <FormCard title="What extra information can you provide?">
                     <LabeledMultiSelect
-                      title="Cohorts"
+                      title="Additional Tags"
                       subtitle="(optional)"
                       description={
-                        <>Add other cohorts that contributed to this output.</>
+                        <>
+                          Increase the discoverability of this output by adding
+                          keywords.{' '}
+                        </>
                       }
-                      values={newCohorts.map(({ id, name }) => ({
+                      values={newTags.map(({ id, name }) => ({
                         label: name,
                         value: id,
                       }))}
                       enabled={!isSaving}
-                      suggestions={cohortSuggestions.map(({ id, name }) => ({
+                      suggestions={tagSuggestions.map(({ id, name }) => ({
                         label: name,
                         value: id,
                       }))}
                       onChange={(newValues) => {
-                        setCohorts(
+                        setNewTags(
                           newValues
                             .slice(0, 10)
                             .reduce(
@@ -818,70 +588,213 @@ const OutputForm: React.FC<OutputFormProps> = ({
                                 ...acc,
                                 { id: curr.value, name: curr.label },
                               ],
-                              [] as gp2Model.ContributingCohortDataObject[],
+                              [] as gp2Model.TagDataObject[],
                             ),
                         );
                       }}
-                      placeholder="Start typing..."
+                      placeholder="Start typing... (E.g. Neurology)"
                       maxMenuHeight={160}
                     />
                     <div css={linkStyles}>
-                      Don’t see a cohort in this list?{' '}
                       <Link
                         href={mailToSupport({
                           email: INVITE_SUPPORT_EMAIL,
-                          subject: 'New Cohort',
+                          subject: 'New Keyword',
                         })}
                       >
-                        Contact {INVITE_SUPPORT_EMAIL}
+                        Ask GP2 to add a new keyword
                       </Link>
                     </div>
-                  </>
-                ) : null}
-                <AuthorSelect
-                  title="Authors"
-                  description=""
-                  subtitle={'(required)'}
-                  enabled={!isSaving}
-                  placeholder="Start typing..."
-                  loadOptions={getAuthorSuggestions}
-                  externalLabel="Non GP2"
-                  onChange={setAuthors}
-                  values={newAuthors}
-                  required
-                  noOptionsMessage={({ inputValue }) =>
-                    `Sorry, no authors match ${inputValue}`
-                  }
-                />
-              </FormCard>
-              <OutputRelatedResearchCard
-                isSaving={isSaving}
-                relatedResearch={newRelatedOutputs}
-                onChangeRelatedResearch={setRelatedOutputs}
-                getRelatedResearchSuggestions={getRelatedOutputSuggestions}
-                getIconForDocumentType={getIconForDocumentType}
-                isEditMode={true}
-              />
-              <OutputRelatedEventsCard
-                getRelatedEventSuggestions={getRelatedEventSuggestions}
-                isSaving={isSaving}
-                relatedEvents={newRelatedEvents}
-                onChangeRelatedEvents={setRelatedEvents}
-                isEditMode={true}
-              />
-              <div css={footerStyles}>
-                <div css={[buttonWrapperStyle, { margin: 0 }]}>
-                  <Button noMargin enabled={!isSaving} onClick={onCancel}>
-                    Cancel
-                  </Button>
+
+                    {!DOC_TYPES_IDENTIFIER_NOT_REQUIRED.includes(
+                      documentType,
+                    ) ? (
+                      <OutputIdentifier
+                        documentType={documentType}
+                        identifier={identifier}
+                        setIdentifier={setIdentifier}
+                        identifierType={newIdentifierType}
+                        setIdentifierType={setNewIdentifierType}
+                        enabled={!isSaving}
+                      />
+                    ) : null}
+                  </FormCard>
+                  <FormCard title="Who were the contributors?">
+                    <LabeledMultiSelect
+                      title="Working Groups"
+                      description="Add other working groups that contributed to this output. Those working groups will also then be able to edit."
+                      subtitle={
+                        entityType === 'project' ? '(optional)' : '(required)'
+                      }
+                      required={entityType === 'workingGroup'}
+                      enabled={!isSaving}
+                      placeholder="Start typing..."
+                      suggestions={workingGroupSuggestions.map(
+                        (workingGroup) => ({
+                          label: workingGroup.title,
+                          value: workingGroup.id,
+                        }),
+                      )}
+                      onChange={(newValues) => {
+                        setWorkingGroups(
+                          newValues
+                            .slice(0, 10)
+                            .reduce(
+                              (acc, curr) => [
+                                ...acc,
+                                { id: curr.value, title: curr.label },
+                              ],
+                              [] as gp2Model.OutputOwner[],
+                            ),
+                        );
+                      }}
+                      values={newWorkingGroups.map((workingGroup, idx) => ({
+                        label: workingGroup.title,
+                        value: workingGroup.id,
+                        isFixed: idx === 0 && entityType === 'workingGroup',
+                      }))}
+                      noOptionsMessage={({ inputValue }) =>
+                        `Sorry, no working groups match ${inputValue}`
+                      }
+                    />
+                    <LabeledMultiSelect
+                      title="Projects"
+                      description="Add other projects that contributed to this output. Those projects will also then be able to edit."
+                      subtitle={
+                        entityType === 'project' ? '(required)' : '(optional)'
+                      }
+                      enabled={!isSaving}
+                      required={entityType === 'project'}
+                      placeholder="Start typing..."
+                      suggestions={projectSuggestions.map((project) => ({
+                        label: project.title,
+                        value: project.id,
+                      }))}
+                      onChange={(newValues) => {
+                        setProjects(
+                          newValues
+                            .slice(0, 10)
+                            .reduce(
+                              (acc, curr) => [
+                                ...acc,
+                                { id: curr.value, title: curr.label },
+                              ],
+                              [] as gp2Model.OutputOwner[],
+                            ),
+                        );
+                      }}
+                      values={newProjects.map((project, idx) => ({
+                        label: project.title,
+                        value: project.id,
+                        isFixed: idx === 0 && entityType === 'project',
+                      }))}
+                      noOptionsMessage={({ inputValue }) =>
+                        `Sorry, no projects match ${inputValue}`
+                      }
+                    />
+                    {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
+                      <>
+                        <LabeledMultiSelect
+                          title="Cohorts"
+                          subtitle="(optional)"
+                          description={
+                            <>
+                              Add other cohorts that contributed to this output.
+                            </>
+                          }
+                          values={newCohorts.map(({ id, name }) => ({
+                            label: name,
+                            value: id,
+                          }))}
+                          enabled={!isSaving}
+                          suggestions={cohortSuggestions.map(
+                            ({ id, name }) => ({
+                              label: name,
+                              value: id,
+                            }),
+                          )}
+                          onChange={(newValues) => {
+                            setCohorts(
+                              newValues
+                                .slice(0, 10)
+                                .reduce(
+                                  (acc, curr) => [
+                                    ...acc,
+                                    { id: curr.value, name: curr.label },
+                                  ],
+                                  [] as gp2Model.ContributingCohortDataObject[],
+                                ),
+                            );
+                          }}
+                          placeholder="Start typing..."
+                          maxMenuHeight={160}
+                        />
+                        <div css={linkStyles}>
+                          Don’t see a cohort in this list?{' '}
+                          <Link
+                            href={mailToSupport({
+                              email: INVITE_SUPPORT_EMAIL,
+                              subject: 'New Cohort',
+                            })}
+                          >
+                            Contact {INVITE_SUPPORT_EMAIL}
+                          </Link>
+                        </div>
+                      </>
+                    ) : null}
+                    <AuthorSelect
+                      title="Authors"
+                      description=""
+                      subtitle={'(required)'}
+                      enabled={!isSaving}
+                      placeholder="Start typing..."
+                      loadOptions={getAuthorSuggestions}
+                      externalLabel="Non GP2"
+                      onChange={setAuthors}
+                      values={newAuthors}
+                      required
+                      noOptionsMessage={({ inputValue }) =>
+                        `Sorry, no authors match ${inputValue}`
+                      }
+                    />
+                  </FormCard>
+                  <OutputRelatedResearchCard
+                    isSaving={isSaving}
+                    relatedResearch={newRelatedOutputs}
+                    onChangeRelatedResearch={setRelatedOutputs}
+                    getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+                    getIconForDocumentType={getIconForDocumentType}
+                    isEditMode={true}
+                  />
+                  <OutputRelatedEventsCard
+                    getRelatedEventSuggestions={getRelatedEventSuggestions}
+                    isSaving={isSaving}
+                    relatedEvents={newRelatedEvents}
+                    onChangeRelatedEvents={setRelatedEvents}
+                    isEditMode={true}
+                  />
+                  <div css={footerStyles}>
+                    <div css={[buttonWrapperStyle, { margin: 0 }]}>
+                      <Button noMargin enabled={!isSaving} onClick={onCancel}>
+                        Cancel
+                      </Button>
+                    </div>
+                    <div
+                      css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}
+                    >
+                      <Button
+                        primary
+                        noMargin
+                        onClick={save}
+                        enabled={!isSaving}
+                      >
+                        {isEditing && !createVersion ? 'Save' : 'Publish'}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div css={[buttonWrapperStyle, { margin: `0 0 ${rem(32)}` }]}>
-                  <Button primary noMargin onClick={save} enabled={!isSaving}>
-                    {isEditing && !createVersion ? 'Save' : 'Publish'}
-                  </Button>
-                </div>
-              </div>
-            </div>
+              )}
+            </ConfirmAndSaveOutput>
           </>
         );
       }}

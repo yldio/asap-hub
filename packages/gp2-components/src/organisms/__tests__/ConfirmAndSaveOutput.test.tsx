@@ -89,7 +89,6 @@ describe('ConfirmAndSaveOutput', () => {
     it('closes the version modal when user clicks on cancel', async () => {
       renderElement({ isEditing: true, createVersion: true });
 
-      screen.debug();
       userEvent.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(

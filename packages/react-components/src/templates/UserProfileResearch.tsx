@@ -13,7 +13,10 @@ import UserProfileRole from '../organisms/UserProfileRole';
 
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<UserResponse, 'email' | 'contactEmail' | 'displayName'> &
+  Pick<
+    UserResponse,
+    'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate'
+  > &
   ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
     userProfileWorkingGroupsCard?: ReactNode;
@@ -28,6 +31,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   firstName,
   email,
   contactEmail,
+  alumniSinceDate,
   expertiseAndResourceDescription,
   questions,
   isOwnProfile,
@@ -90,17 +94,19 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
     userProfileTeamsCard !== undefined && {
       card: userProfileTeamsCard,
     },
-    !isOwnProfile && {
-      card: (
-        <CtaCard
-          href={createMailTo(contactEmail || email)}
-          buttonText="Contact"
-        >
-          <strong>Interested in what you have seen?</strong> <br />
-          Why not get in touch with {displayName}?
-        </CtaCard>
-      ),
-    },
+    !isOwnProfile &&
+      !alumniSinceDate && {
+        card: (
+          <CtaCard
+            href={createMailTo(contactEmail || email)}
+            buttonText="Contact"
+            displayCopy
+          >
+            <strong>Have additional questions?</strong> <br />
+            {displayName} is available to help.
+          </CtaCard>
+        ),
+      },
   ];
   return (
     <ProfileCardList>

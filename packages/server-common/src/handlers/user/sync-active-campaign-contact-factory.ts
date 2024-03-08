@@ -26,6 +26,7 @@ export interface UserController {
   update(
     id: string,
     update: UserUpdateRequest | gp2.UserUpdateRequest,
+    options?: { suppressConflict?: boolean; polling?: boolean } | null,
   ): Promise<gp2.UserResponse | UserResponse>;
 }
 
@@ -138,10 +139,14 @@ export const syncUserActiveCampaignData = async (
       if (contactResponse?.contact.cdate && contactResponse?.contact.id) {
         await updateContactLists(contactResponse.contact.id, isAlumni);
 
-        await userController.update(user.id, {
-          activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
-          activeCampaignId: contactResponse.contact.id,
-        });
+        await userController.update(
+          user.id,
+          {
+            activeCampaignCreatedAt: new Date(contactResponse.contact.cdate),
+            activeCampaignId: contactResponse.contact.id,
+          },
+          { polling: false },
+        );
       }
 
       log.info(`Contact ${user.id} created`);
@@ -194,9 +199,13 @@ export const syncUserActiveCampaignData = async (
     await updateContactLists(contactId, isAlumni);
 
     if (!user.activeCampaignId) {
-      await userController.update(user.id, {
-        activeCampaignId: contactId,
-      });
+      await userController.update(
+        user.id,
+        {
+          activeCampaignId: contactId,
+        },
+        { polling: false },
+      );
     }
 
     log.info(

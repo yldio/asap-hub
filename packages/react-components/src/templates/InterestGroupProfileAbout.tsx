@@ -55,7 +55,7 @@ const InterestGroupProfileAbout: React.FC<InterestGroupProfileAboutProps> = ({
         />
       </div>
     </div>
-    {contactEmails.length !== 0 && (
+    {contactEmails.length !== 0 && active && (
       <CtaCard
         href={createMailTo(contactEmails)}
         buttonText="Contact PM"

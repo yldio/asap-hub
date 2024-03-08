@@ -188,7 +188,7 @@ describe('When the role is staff', () => {
         contactEmail="contactEmail@example.com"
       />,
     );
-    expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+    expect(getByText(/contact tech support/i).closest('a')).toHaveAttribute(
       'href',
       'mailto:techsupport@asap.science?subject=ASAP%20Hub%3A%20Tech%20support',
     );

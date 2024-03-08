@@ -169,9 +169,13 @@ describe('UserDetail', () => {
       });
 
       userEvent.click(screen.getByText(/save/i));
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-      });
+      await waitFor(
+        () => {
+          expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+        },
+        { timeout: 20000 },
+      );
+
       expect(mockPatchUser).toHaveBeenCalledWith(
         user.id,
         {

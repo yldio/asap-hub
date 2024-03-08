@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { TeamRole } from '@asap-hub/model';
+import { fireEvent, render } from '@testing-library/react';
 
 import TeamProfileAbout from '../TeamProfileAbout';
 
@@ -171,4 +172,59 @@ it('renders team members section when team is active and there isnt any members'
   );
 
   expect(queryByText('Active Team Members (0)')).toBeVisible();
+});
+
+describe('footer', () => {
+  const originalNavigator = window.navigator;
+  Object.assign(window.navigator, {
+    clipboard: {
+      writeText: () => {},
+    },
+  });
+
+  beforeEach(() => {
+    jest.spyOn(window.navigator.clipboard, 'writeText');
+  });
+  afterEach(() => {
+    Object.assign(window.navigator, originalNavigator);
+  });
+  const pointOfContact = {
+    id: 'uuid',
+    displayName: 'Patricia Mendes',
+    firstName: 'Patricia',
+    lastName: 'Mendes',
+    role: 'Project Manager' as TeamRole,
+    email: 'pm@asap.com',
+  };
+
+  it('does not render the footer when there is not a point of contact', () => {
+    const { queryByText, queryByTitle } = render(
+      <TeamProfileAbout {...props} pointOfContact={undefined} />,
+    );
+
+    expect(queryByText('Contact PM')).not.toBeInTheDocument();
+    expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
+  });
+
+  it('renders a contact button when there is a pointOfContact', () => {
+    const { getByText } = render(
+      <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
+    );
+
+    expect(getByText('Contact PM').parentElement).toHaveAttribute(
+      'href',
+      'mailto:pm@asap.com',
+    );
+  });
+
+  it('adds the pm email to clipboard when user clicks on copy button', () => {
+    const { getByTitle } = render(
+      <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
+    );
+
+    fireEvent.click(getByTitle(/copy/i));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+      expect.stringMatching(/pm@asap.com/i),
+    );
+  });
 });

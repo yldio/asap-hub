@@ -1,4 +1,5 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
+import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
@@ -227,4 +228,47 @@ it('does not display the draft shared output count', () => {
     />,
   );
   expect(screen.queryByText('Draft Outputs')).toBeNull();
+});
+
+describe('copy button', () => {
+  const originalNavigator = window.navigator;
+  Object.assign(window.navigator, {
+    clipboard: {
+      writeText: () => {},
+    },
+  });
+
+  beforeEach(() => {
+    jest.spyOn(window.navigator.clipboard, 'writeText');
+  });
+  afterEach(() => {
+    Object.assign(window.navigator, originalNavigator);
+  });
+
+  it('adds pm email to clipboard when user clicks on copy button', async () => {
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: jest.fn(),
+      },
+    });
+    jest.spyOn(navigator.clipboard, 'writeText');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact={{
+          id: 'uuid',
+          displayName: 'Patricia Mendes',
+          firstName: 'Patricia',
+          lastName: 'Mendes',
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@asap.com',
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByTitle(/copy/i));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+      expect.stringMatching(/pm@asap.com/i),
+    );
+  });
 });

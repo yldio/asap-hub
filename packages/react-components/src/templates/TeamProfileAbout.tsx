@@ -61,9 +61,10 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       <CtaCard
         href={createMailTo(pointOfContact.email)}
         buttonText="Contact PM"
+        displayCopy
       >
-        <strong>Interested in what you have seen?</strong>
-        <br /> Reach out to this team and see how you can collaborate
+        <strong>Have additional questions?</strong>
+        <br /> The project manager is here to help.
       </CtaCard>
     )}
   </div>

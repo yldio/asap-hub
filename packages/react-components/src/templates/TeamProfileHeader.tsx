@@ -3,7 +3,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { Display, Link, StateTag, TabLink } from '../atoms';
+import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
 import { lead, paper, pine } from '../colors';
 import {
   article,
@@ -19,7 +19,7 @@ import {
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
-import { mobileScreen, perRem } from '../pixels';
+import { mobileScreen, perRem, tabletScreen } from '../pixels';
 import { getCounterString } from '../utils';
 
 const containerStyles = css({
@@ -47,8 +47,8 @@ const contactSectionStyles = css({
 
   grid: `
     "members" auto
-    "lab"    auto
     "contact" auto
+    "lab"    auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
@@ -67,22 +67,29 @@ const createSectionStyles = css({
 
   grid: `
     "members" auto
-    "lab"    auto
+    "contact" auto
     "create" auto
+    "lab"    auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
-      "members create"
-      "lab lab"/ 1fr max-content
+      "contact members create" 
+      "lab lab lab"/ auto auto 1fr
     `,
   },
 });
 const pointOfContactStyles = css({
-  gridArea: 'contact',
   display: 'flex',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'block',
+  flexFlow: 'row',
+  gap: `${8 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
+});
+
+const buttonStyles = css({
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'flex',
+    flexGrow: 1,
   },
 });
 
@@ -98,6 +105,7 @@ const createStyles = css({
   display: 'flex',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'block',
+    justifySelf: 'end',
   },
 });
 
@@ -160,16 +168,26 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           members={members}
           fullListRoute={`${route.about({}).$}#${teamListElementId}`}
         />
-        {pointOfContact && !canShareResearchOutput && (
+        {pointOfContact && (
           <div css={pointOfContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.email)}`}
-            >
-              Contact PM
-            </Link>
+            <span css={buttonStyles}>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={`${createMailTo(pointOfContact.email)}`}
+                noMargin
+              >
+                Contact PM
+              </Link>
+            </span>
+            <CopyButton
+              hoverTooltipText="Copy Email"
+              clickTooltipText="Email Copied"
+              onClick={() =>
+                navigator.clipboard.writeText(pointOfContact.email)
+              }
+            />
           </div>
         )}
         {labCount > 0 && (

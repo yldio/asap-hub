@@ -8,8 +8,8 @@ import { css } from '@emotion/react';
 
 import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
-import { Link, Paragraph } from '../atoms';
-import { EditModal } from '../organisms';
+import { Link } from '../atoms';
+import { EditUserModal } from '../organisms';
 import { mailToSupport } from '../mail';
 import { perRem } from '../pixels';
 
@@ -23,7 +23,7 @@ type ExpertiseAndResourcesModalProps = Pick<
 };
 const fieldsContainerStyles = css({
   display: 'grid',
-  rowGap: `${24 / perRem}em`,
+  rowGap: `${14 / perRem}em`,
 });
 
 const MINIMUM_EXPERTISE_AND_RESOURCES = 5;
@@ -50,8 +50,10 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
   ] = useState('');
 
   return (
-    <EditModal
-      title="Expertise and resources"
+    <EditUserModal
+      title="Expertise, Resources and Tags"
+      description="Help ASAP researchers find you in search results by describing your
+      unique expertise, techniques, resources, and tools."
       backHref={backHref}
       dirty={
         expertiseAndResourceDescription !==
@@ -68,17 +70,25 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
     >
       {({ isSaving }) => (
         <>
-          <Paragraph accent="lead">
-            Help ASAP researchers find you in search results by describing your
-            unique expertise, techniques, resources, and tools.
-          </Paragraph>
           <div css={fieldsContainerStyles}>
+            <LabeledTextArea
+              title="Expertise and Resources"
+              subtitle="(optional)"
+              tip="Summarize your expertise and resources in one to two sentences"
+              placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
+              maxLength={200}
+              enabled={!isSaving}
+              onChange={(newValue) =>
+                setExpertiseAndResourceDescription(newValue)
+              }
+              value={newExpertiseAndResourceDescription}
+            />
             <div>
               <LabeledMultiSelect
                 title="Tags"
-                subtitle="(Required)"
-                description="Select 5 to 10 tags that best apply to your work."
-                placeholder="Start typing…"
+                subtitle="(required)"
+                description="Select 5 to 10 keywords that best apply to your work."
+                placeholder="Start typing… (E.g. Cell Biology)"
                 values={newTags.map((tag) => ({
                   label: tag.name,
                   value: tag.id,
@@ -117,22 +127,10 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
                 Ask ASAP to add a new tag
               </Link>
             </div>
-            <LabeledTextArea
-              title="Overview"
-              subtitle="(Optional)"
-              tip="Summarize your expertise and resources in one to two sentences"
-              placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
-              maxLength={200}
-              enabled={!isSaving}
-              onChange={(newValue) =>
-                setExpertiseAndResourceDescription(newValue)
-              }
-              value={newExpertiseAndResourceDescription}
-            />
           </div>
         </>
       )}
-    </EditModal>
+    </EditUserModal>
   );
 };
 

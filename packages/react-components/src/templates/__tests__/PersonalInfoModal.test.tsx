@@ -23,7 +23,7 @@ it('renders the title', () => {
       wrapper: StaticRouter,
     },
   );
-  expect(screen.getByText('Your details', { selector: 'h3' })).toBeVisible();
+  expect(screen.getByText('Main details', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
@@ -39,15 +39,15 @@ it('indicates which fields are required or optional', () => {
   );
 
   [
-    { title: 'First name', subtitle: 'Required' },
-    { title: 'Middle name(s)', subtitle: 'Optional' },
-    { title: 'Last name(s)', subtitle: 'Required' },
-    { title: 'Nickname', subtitle: 'Optional' },
-    { title: 'Degree', subtitle: 'Optional' },
-    { title: 'Institution', subtitle: 'Required' },
-    { title: 'Position', subtitle: 'Required' },
-    { title: 'Country', subtitle: 'Required' },
-    { title: 'City', subtitle: 'Required' },
+    { title: 'First name', subtitle: 'required' },
+    { title: 'Middle name(s)', subtitle: 'optional' },
+    { title: 'Last name(s)', subtitle: 'required' },
+    { title: 'Nickname', subtitle: 'optional' },
+    { title: 'Degree', subtitle: 'optional' },
+    { title: 'Institution', subtitle: 'required' },
+    { title: 'Position', subtitle: 'required' },
+    { title: 'Country', subtitle: 'required' },
+    { title: 'City', subtitle: 'required' },
   ].forEach(({ title, subtitle }) =>
     expect(screen.getByText(title).nextSibling?.textContent).toContain(
       subtitle,

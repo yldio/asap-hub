@@ -15,7 +15,7 @@ it('renders the title', () => {
   const { getByText } = render(<RoleModal {...props} />, {
     wrapper: StaticRouter,
   });
-  expect(getByText('Your Role on ASAP', { selector: 'h3' })).toBeVisible();
+  expect(getByText('Role', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders teams and lan names into inputs', async () => {
@@ -52,10 +52,10 @@ describe('User Role', () => {
       wrapper: StaticRouter,
     });
     expect(getByText(/research interests/i).nextSibling).toHaveTextContent(
-      'Required',
+      'required',
     );
     expect(getByText(/responsibilities/i).nextSibling).toHaveTextContent(
-      'Required',
+      'required',
     );
   });
 

@@ -20,17 +20,19 @@ it('indicates which fields are optional', () => {
   );
 
   [
-    { title: 'Contact email', subtitle: 'Optional' },
-    { title: 'Website 1', subtitle: 'Optional' },
-    { title: 'Website 2', subtitle: 'Optional' },
-    { title: 'ResearcherID', subtitle: 'Optional' },
-    { title: 'Twitter', subtitle: 'Optional' },
-    { title: 'Github', subtitle: 'Optional' },
-    { title: 'LinkedIn', subtitle: 'Optional' },
-    { title: 'Researchgate', subtitle: 'Optional' },
-    { title: 'Google Scholar', subtitle: 'Optional' },
+    { title: 'Contact email', subtitle: 'optional' },
+    { title: 'Website 1', subtitle: 'optional' },
+    { title: 'Website 2', subtitle: 'optional' },
+    { title: 'Researcher ID', subtitle: 'optional' },
+    { title: 'X', subtitle: 'optional' },
+    { title: 'Github', subtitle: 'optional' },
+    { title: 'LinkedIn', subtitle: 'optional' },
+    { title: 'Research Gate', subtitle: 'optional' },
+    { title: 'Google Scholar', subtitle: 'optional' },
   ].forEach(({ title, subtitle }) =>
-    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+    expect(
+      getByText(title, { selector: 'strong' }).nextSibling?.textContent,
+    ).toContain(subtitle),
   );
 });
 
@@ -125,11 +127,11 @@ it.each`
   label               | value
   ${'Website 1'}      | ${`website1`}
   ${'Website 2'}      | ${`website2`}
-  ${'ResearcherID'}   | ${`researcherId`}
-  ${'Twitter'}        | ${`twitter`}
+  ${'Researcher ID'}  | ${`researcherId`}
+  ${'X'}              | ${`twitter`}
   ${'Github'}         | ${`github`}
   ${'LinkedIn'}       | ${`linkedIn`}
-  ${'Researchgate'}   | ${`researchGate`}
+  ${'Research Gate'}  | ${`researchGate`}
   ${'Google Scholar'} | ${`googleScholar`}
 `('displays value $value for $label', ({ label, value }) => {
   const social: Required<UserResponse['social']> = {
@@ -152,7 +154,7 @@ it.each`
     />,
     { wrapper: StaticRouter },
   );
-  const input = getByLabelText(new RegExp(label, 'i'));
+  const input = getByLabelText(new RegExp(label));
   expect(input).toHaveValue(value);
 });
 
@@ -160,11 +162,11 @@ it.each`
   label               | value        | message
   ${'Website 1'}      | ${'not url'} | ${'valid URL'}
   ${'Website 2'}      | ${'not url'} | ${'valid URL'}
-  ${'ResearcherID'}   | ${'http://'} | ${'valid ResearcherID'}
-  ${'Twitter'}        | ${'http://'} | ${'valid Twitter handle'}
+  ${'Researcher ID'}  | ${'http://'} | ${'valid Researcher ID'}
+  ${'X'}              | ${'http://'} | ${'valid Twitter handle'}
   ${'Github'}         | ${'http://'} | ${'valid Github username'}
   ${'LinkedIn'}       | ${'http://'} | ${'valid LinkedIn username'}
-  ${'Researchgate'}   | ${'http://'} | ${'valid Research Gate Profile ID'}
+  ${'Research Gate'}  | ${'http://'} | ${'valid Research Gate Profile ID'}
   ${'Google Scholar'} | ${'http://'} | ${'valid Google Scholar Profile ID'}
 `(
   'shows validation message "$message" for $label input',
@@ -173,7 +175,7 @@ it.each`
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
       { wrapper: StaticRouter },
     );
-    const input = getByLabelText(new RegExp(label, 'i'));
+    const input = getByLabelText(new RegExp(label));
     fireEvent.change(input, {
       target: { value },
     });

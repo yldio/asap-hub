@@ -312,18 +312,45 @@ describe('Not Grant Documents', () => {
   });
 });
 
-it('displays contact pm card when there are contact emails', () => {
-  const { queryByText, getByText, rerender } = render(
-    <SharedResearchOutput {...props} contactEmails={[]} />,
-  );
-  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
-  rerender(
-    <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />,
-  );
-  expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/blah/i),
-  );
+describe('footer', () => {
+  const originalNavigator = window.navigator;
+  Object.assign(window.navigator, {
+    clipboard: {
+      writeText: () => {},
+    },
+  });
+
+  beforeEach(() => {
+    jest.spyOn(window.navigator.clipboard, 'writeText');
+  });
+  afterEach(() => {
+    Object.assign(window.navigator, originalNavigator);
+  });
+
+  it('displays contact pm card when there are contact emails', () => {
+    const { queryByText, getByText, rerender } = render(
+      <SharedResearchOutput {...props} contactEmails={[]} />,
+    );
+    expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+    rerender(
+      <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />,
+    );
+    expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/blah/i),
+    );
+  });
+
+  it('adds the pm email to clipboard when user clicks on copy button', () => {
+    const { getByTitle } = render(
+      <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />,
+    );
+
+    fireEvent.click(getByTitle(/copy/i));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+      expect.stringMatching(/blah@gmail.com/i),
+    );
+  });
 });
 
 it('merges different tag types in the correct order', () => {

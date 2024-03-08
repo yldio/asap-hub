@@ -12,9 +12,9 @@ const bottomStyles = css({
 
 const HelpSection: React.FC = () => (
   <section css={bottomStyles}>
-    <CtaCard href={mailToGrants()} buttonText="Request grant help">
+    <CtaCard href={mailToGrants()} buttonText="Contact grants team" displayCopy>
       <strong>Need help with a grant-related matter?</strong>
-      <br /> ASAP and the Michael J Fox Foundation are here to help
+      <br /> The grants team is here to help.
     </CtaCard>
     <Paragraph accent="lead">
       If you're facing a technical issue with the Hub, our team is happy to

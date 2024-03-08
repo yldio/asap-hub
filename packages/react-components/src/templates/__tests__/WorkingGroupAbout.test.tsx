@@ -5,6 +5,7 @@ import { ComponentProps } from 'react';
 import WorkingGroupAbout from '../WorkingGroupAbout';
 
 const baseProps: ComponentProps<typeof WorkingGroupAbout> = {
+  showCollaborationCard: true,
   membersListElementId: '',
   description: '',
   pointOfContact: undefined,
@@ -42,14 +43,14 @@ it('renders a list of deliverables', () => {
   expect(getByText('In Progress')).toBeVisible();
 });
 
-it('renders collaboration invite if not completed', () => {
+it('renders collaboration invite if showCollaborationCard is true', () => {
   const { getByText, queryByText, rerender } = render(
-    <WorkingGroupAbout {...baseProps} />,
+    <WorkingGroupAbout {...baseProps} showCollaborationCard={true} />,
   );
   expect(
     getByText('Would you like to collaborate with this Working Group?'),
   ).toBeVisible();
-  rerender(<WorkingGroupAbout {...baseProps} complete={true} />);
+  rerender(<WorkingGroupAbout {...baseProps} showCollaborationCard={false} />);
   expect(
     queryByText('Would you like to collaborate with this Working Group?'),
   ).not.toBeInTheDocument();
@@ -72,6 +73,7 @@ it('does not render CTA when pointOfContact is provided but working group is com
     <WorkingGroupAbout
       {...baseProps}
       pointOfContact={createWorkingGroupPointOfContact()}
+      showCollaborationCard={false}
       complete
     />,
   );

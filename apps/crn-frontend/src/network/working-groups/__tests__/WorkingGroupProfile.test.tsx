@@ -81,9 +81,12 @@ const renderWorkingGroupProfile = async (
       network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
     ],
   }),
+  workingGroupOverrides = {},
 ) => {
   mockGetWorkingGroup.mockImplementation(async (id) =>
-    id === workingGroupResponse.id ? workingGroupResponse : undefined,
+    id === workingGroupResponse.id
+      ? { ...workingGroupResponse, ...workingGroupOverrides }
+      : undefined,
   );
 
   render(
@@ -181,6 +184,79 @@ describe('the share outputs page', () => {
     );
     expect(screen.queryByText('About')).toBeInTheDocument();
     expect(screen.queryByText(/share an output/i)).toBeNull();
+  });
+});
+
+describe('collaboration card', () => {
+  it('is not rendered when user is the pm of the team', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      ],
+    });
+
+    await renderWorkingGroupProfile(
+      {
+        ...createUserResponse({}, 1),
+        workingGroups: [
+          {
+            id: workingGroupId,
+            role: 'Project Manager',
+            active: true,
+            name: 'test',
+          },
+        ],
+      },
+      history,
+    );
+    expect(
+      screen.queryByText(
+        'Would you like to collaborate with this Working Group?',
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it('is not rendered when user is not the pm of the team but the working group is complete', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      ],
+    });
+
+    await renderWorkingGroupProfile(
+      {
+        ...createUserResponse({}, 1),
+        workingGroups: [],
+      },
+      history,
+      { complete: true },
+    );
+    expect(
+      screen.queryByText(
+        'Would you like to collaborate with this Working Group?',
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it('is rendered when user is not the pm of the team', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      ],
+    });
+
+    await renderWorkingGroupProfile(
+      {
+        ...createUserResponse({}, 1),
+        workingGroups: [],
+      },
+      history,
+    );
+    expect(
+      screen.getByText(
+        'Would you like to collaborate with this Working Group?',
+      ),
+    ).toBeVisible();
   });
 });
 

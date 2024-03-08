@@ -8,6 +8,7 @@ import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
 import { perRem, smallDesktopScreen } from '../pixels';
 
 type WorkingGroupAboutProps = {
+  readonly showCollaborationCard: boolean;
   readonly membersListElementId: string;
 } & Pick<
   WorkingGroupResponse,
@@ -41,6 +42,7 @@ const getInTouchStyles = css({
 });
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
+  showCollaborationCard,
   membersListElementId,
   description,
   deliverables,
@@ -70,7 +72,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <TagList tags={tags} />
       </Card>
     )}
-    {!complete && (
+    {showCollaborationCard && (
       <Card accent="green">
         <Headline3>
           <span css={{ color: charcoal.rgb }}>

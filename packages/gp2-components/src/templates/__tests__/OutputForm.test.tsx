@@ -109,6 +109,10 @@ describe('OutputForm', () => {
         <OutputForm
           {...defaultProps}
           {...entity}
+          description="An interesting article"
+          gp2Supported="Yes"
+          sharingStatus="GP2 Only"
+          tags={[{ id: '27' }]}
           entityType={entityType}
           documentType="Code/Software"
           shareOutput={shareOutput}
@@ -138,30 +142,17 @@ describe('OutputForm', () => {
           ),
         },
       );
-      userEvent.type(
-        screen.getByRole('textbox', { name: /title/i }),
-        'output title',
-      );
+
       userEvent.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
+
       userEvent.type(
-        screen.getByRole('textbox', { name: /description/i }),
-        'An interesting article',
+        screen.getByRole('textbox', { name: /title/i }),
+        'output title',
       );
-      const gp2Supported = screen.getByRole('group', {
-        name: /has this output been supported by gp2?/i,
-      });
-      userEvent.click(
-        within(gp2Supported).getByRole('radio', { name: /yes/i }),
-      );
-      const sharingStatus = screen.getByRole('group', {
-        name: /sharing status?/i,
-      });
-      userEvent.click(
-        within(sharingStatus).getByRole('radio', { name: 'GP2 Only' }),
-      );
+
       userEvent.click(
         screen.getByRole('textbox', { name: /identifier type/i }),
       );
@@ -193,6 +184,7 @@ describe('OutputForm', () => {
 
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
       userEvent.click(screen.getAllByText('Alex White')[1]!);
+
       userEvent.click(
         screen.getByRole('textbox', {
           name: /related output/i,
@@ -205,8 +197,6 @@ describe('OutputForm', () => {
         }),
       );
       userEvent.click(await screen.findByText('some related event'));
-      userEvent.click(screen.getByLabelText(/additional tags/i));
-      userEvent.click(screen.getByText('some tag name'));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
@@ -322,41 +312,7 @@ describe('OutputForm', () => {
         ),
       },
     );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(
-      screen.getByLabelText(/public repository published date/i),
-      {
-        target: { value: '2022-03-24' },
-      },
-    );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
 
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByRole('button', { name: 'Publish' }));
     userEvent.click(
       screen.getByRole('button', { name: 'Publish new version' }),
@@ -764,443 +720,6 @@ describe('OutputForm', () => {
     });
   });
 
-  it('closes the version modal when user clicks on save and there are server side errors', async () => {
-    const getAuthorSuggestions = jest.fn();
-    const history = createMemoryHistory();
-    const shareOutput = jest.fn();
-    const addNotification = jest.fn();
-    getAuthorSuggestions.mockResolvedValue([
-      {
-        author: {
-          ...gp2Fixtures.createUserResponse(),
-          displayName: 'Chris Blue',
-        },
-        label: 'Chris Blue',
-        value: 'u2',
-      },
-      {
-        author: {
-          ...gp2Fixtures.createExternalUserResponse(),
-          displayName: 'Chris Reed',
-        },
-        label: 'Chris Reed (Non CRN)',
-        value: 'u1',
-      },
-    ]);
-
-    shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
-
-    const publishDate = '2020-03-04';
-    const title = 'Output Title';
-    const link = 'https://example.com/output';
-    const { authors: outputAuthors } = gp2Fixtures.createOutputResponse();
-    outputAuthors[0]!.displayName = 'Tony Stark';
-    const output = {
-      ...defaultProps,
-      ...gp2Fixtures.createOutputResponse(),
-      publishDate,
-      title,
-      link,
-      authors: outputAuthors,
-      tags: [{ id: 'tag-1', name: 'Tag' }],
-      contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
-      documentType: 'Dataset' as gp2.OutputDocumentType,
-    };
-
-    render(
-      <OutputForm
-        {...defaultProps}
-        {...output}
-        shareOutput={shareOutput}
-        getAuthorSuggestions={getAuthorSuggestions}
-        createVersion={true}
-      />,
-      {
-        wrapper: ({ children }) => (
-          <NotificationContext.Provider
-            value={{
-              notifications: [],
-              addNotification,
-              removeNotification: jest.fn(),
-            }}
-          >
-            <Router history={history}>{children}</Router>
-          </NotificationContext.Provider>
-        ),
-      },
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(
-      screen.getByLabelText(/public repository published date/i),
-      {
-        target: { value: '2022-03-24' },
-      },
-    );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-
-    expect(
-      screen.getByText(/Publish new version for the whole hub?/i),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('button', { name: /Publish new version/i }),
-    ).toBeVisible();
-
-    userEvent.click(
-      screen.getByRole('button', { name: /Publish new version/i }),
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText('Publish new version for the whole hub?'),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('closes the publish modal when user clicks on publish and there are server side errors', async () => {
-    const getAuthorSuggestions = jest.fn();
-    const history = createMemoryHistory();
-    const shareOutput = jest.fn();
-    const addNotification = jest.fn();
-    getAuthorSuggestions.mockResolvedValue([
-      {
-        author: {
-          ...gp2Fixtures.createUserResponse(),
-          displayName: 'Chris Blue',
-        },
-        label: 'Chris Blue',
-        value: 'u2',
-      },
-      {
-        author: {
-          ...gp2Fixtures.createExternalUserResponse(),
-          displayName: 'Chris Reed',
-        },
-        label: 'Chris Reed (Non CRN)',
-        value: 'u1',
-      },
-    ]);
-
-    shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
-
-    render(
-      <OutputForm
-        {...defaultProps}
-        shareOutput={shareOutput}
-        getAuthorSuggestions={getAuthorSuggestions}
-      />,
-      {
-        wrapper: ({ children }) => (
-          <NotificationContext.Provider
-            value={{
-              notifications: [],
-              addNotification,
-              removeNotification: jest.fn(),
-            }}
-          >
-            <Router history={history}>{children}</Router>
-          </NotificationContext.Provider>
-        ),
-      },
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(
-      screen.getByLabelText(/public repository published date/i),
-      {
-        target: { value: '2022-03-24' },
-      },
-    );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText('None'));
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-
-    expect(screen.getByText('Publish output for the whole hub?')).toBeVisible();
-
-    userEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'Publish Output',
-      }),
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('closes the publish modal when user clicks on cancel', async () => {
-    const getAuthorSuggestions = jest.fn();
-    const history = createMemoryHistory();
-    const shareOutput = jest.fn();
-    const addNotification = jest.fn();
-    getAuthorSuggestions.mockResolvedValue([
-      {
-        author: {
-          ...gp2Fixtures.createUserResponse(),
-          displayName: 'Chris Blue',
-        },
-        label: 'Chris Blue',
-        value: 'u2',
-      },
-      {
-        author: {
-          ...gp2Fixtures.createExternalUserResponse(),
-          displayName: 'Chris Reed',
-        },
-        label: 'Chris Reed (Non CRN)',
-        value: 'u1',
-      },
-    ]);
-    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
-    render(
-      <OutputForm
-        {...defaultProps}
-        shareOutput={shareOutput}
-        getAuthorSuggestions={getAuthorSuggestions}
-      />,
-      {
-        wrapper: ({ children }) => (
-          <NotificationContext.Provider
-            value={{
-              notifications: [],
-              addNotification,
-              removeNotification: jest.fn(),
-            }}
-          >
-            <Router history={history}>{children}</Router>
-          </NotificationContext.Provider>
-        ),
-      },
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(
-      screen.getByLabelText(/public repository published date/i),
-      {
-        target: { value: '2022-03-24' },
-      },
-    );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText('None'));
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-
-    expect(screen.getByText('Publish output for the whole hub?')).toBeVisible();
-
-    userEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'Cancel',
-      }),
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('closes the version modal when user clicks on cancel', async () => {
-    const getAuthorSuggestions = jest.fn();
-    const history = createMemoryHistory();
-    const shareOutput = jest.fn();
-    const addNotification = jest.fn();
-    getAuthorSuggestions.mockResolvedValue([
-      {
-        author: {
-          ...gp2Fixtures.createUserResponse(),
-          displayName: 'Chris Blue',
-        },
-        label: 'Chris Blue',
-        value: 'u2',
-      },
-      {
-        author: {
-          ...gp2Fixtures.createExternalUserResponse(),
-          displayName: 'Chris Reed',
-        },
-        label: 'Chris Reed (Non CRN)',
-        value: 'u1',
-      },
-    ]);
-    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
-
-    const publishDate = '2020-03-04';
-    const title = 'Output Title';
-    const link = 'https://example.com/output';
-    const { authors: outputAuthors } = gp2Fixtures.createOutputResponse();
-    outputAuthors[0]!.displayName = 'Tony Stark';
-    const output = {
-      ...defaultProps,
-      ...gp2Fixtures.createOutputResponse(),
-      publishDate,
-      title,
-      link,
-      authors: outputAuthors,
-      tags: [{ id: 'tag-1', name: 'Tag' }],
-      contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
-      documentType: 'Dataset' as gp2.OutputDocumentType,
-    };
-
-    render(
-      <OutputForm
-        {...defaultProps}
-        {...output}
-        shareOutput={shareOutput}
-        getAuthorSuggestions={getAuthorSuggestions}
-        createVersion={true}
-      />,
-      {
-        wrapper: ({ children }) => (
-          <NotificationContext.Provider
-            value={{
-              notifications: [],
-              addNotification,
-              removeNotification: jest.fn(),
-            }}
-          >
-            <Router history={history}>{children}</Router>
-          </NotificationContext.Provider>
-        ),
-      },
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      'output title',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /url/i }),
-      'https://example.com',
-    );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
-      'An interesting article',
-    );
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status?/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(
-      screen.getByLabelText(/public repository published date/i),
-      {
-        target: { value: '2022-03-24' },
-      },
-    );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-
-    userEvent.click(await screen.findByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-
-    expect(
-      screen.getByText(/Publish new version for the whole hub?/i),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('button', { name: /Publish new version/i }),
-    ).toBeVisible();
-
-    userEvent.click(
-      within(screen.getByRole('dialog')).getByRole('button', {
-        name: 'Cancel',
-      }),
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.queryByText('Publish new version for the whole hub?'),
-      ).not.toBeInTheDocument();
-    });
-  });
-
   describe('article', () => {
     it('renders type', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
@@ -1387,21 +906,16 @@ describe('OutputForm', () => {
     );
 
     test("is set to 'Yes' and make the gp2 supported disabled when type Blog is selected", () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      render(
+        <OutputForm {...defaultProps} type="Blog" documentType="Article" />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
 
       const gp2Supported = screen.getByRole('group', {
         name: /has this output been supported by gp2?/i,
       });
-      expect(
-        within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
-      ).toBeChecked();
-
-      const input = screen.getByRole('textbox', { name: /^type/i });
-      userEvent.click(input);
-      userEvent.click(screen.getByText('Blog'));
-      fireEvent.focusOut(input);
 
       expect(
         within(gp2Supported).getByRole('radio', { name: 'Yes' }),

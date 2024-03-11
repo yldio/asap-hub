@@ -14,6 +14,12 @@ const styles = css({
 
 export type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';
 
+export type GetWrappedOnSave<T> = (
+  onSaveFunction: () => Promise<T | void>,
+  addNotification: (error: string) => void,
+  onDisplayModal: (() => void) | null,
+) => () => Promise<T | void>;
+
 type FormProps<T> = {
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
@@ -21,11 +27,7 @@ type FormProps<T> = {
   children: (state: {
     isSaving: boolean;
     setRedirectOnSave: (url: string) => void;
-    getWrappedOnSave: (
-      onSaveFunction: () => Promise<T | void>,
-      addNotification: (error: string) => void,
-      onDisplayModal: (() => void) | null,
-    ) => () => Promise<T | void>;
+    getWrappedOnSave: GetWrappedOnSave<T>;
     onCancel: () => void;
   }) => ReactNode;
 };

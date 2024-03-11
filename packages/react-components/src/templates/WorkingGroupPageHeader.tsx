@@ -195,7 +195,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               .about({}).$
           }#${membersListElementId}`}
         />
-        {pointOfContact && !canShareResearchOutput && !complete && (
+        {pointOfContact && !complete && (
           <div css={pointOfContactStyles}>
             <div css={{ display: 'flex', flexGrow: 1 }}>
               <Link

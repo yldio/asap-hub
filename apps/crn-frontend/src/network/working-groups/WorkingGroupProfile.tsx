@@ -162,6 +162,9 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
             <ProfileSwitch
               About={() => (
                 <About
+                  showCollaborationCard={
+                    !canShareResearchOutput && !workingGroup.complete
+                  }
                   membersListElementId={membersListElementId}
                   workingGroup={workingGroup}
                 />

@@ -8,6 +8,7 @@ import { DeliverablesCard, WorkingGroupMembers, RichText } from '../organisms';
 import { perRem, smallDesktopScreen } from '../pixels';
 
 type WorkingGroupAboutProps = {
+  readonly showCollaborationCard: boolean;
   readonly membersListElementId: string;
 } & Pick<
   WorkingGroupResponse,
@@ -41,6 +42,7 @@ const getInTouchStyles = css({
 });
 
 const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
+  showCollaborationCard,
   membersListElementId,
   description,
   deliverables,
@@ -70,7 +72,7 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         <TagList tags={tags} />
       </Card>
     )}
-    {!complete && (
+    {showCollaborationCard && (
       <Card accent="green">
         <Headline3>
           <span css={{ color: charcoal.rgb }}>
@@ -97,21 +99,23 @@ const WorkingGroupAbout: React.FC<WorkingGroupAboutProps> = ({
         isComplete={complete}
       />
     </section>
-    <Card accent="green">
-      <div css={getInTouchStyles}>
-        <div css={{ display: 'flex', flexDirection: 'column' }}>
-          <Subtitle noMargin>Have additional questions?</Subtitle>
-          <div>The project manager is here to help.</div>
+    {!complete && (
+      <Card accent="green">
+        <div css={getInTouchStyles}>
+          <div css={{ display: 'flex', flexDirection: 'column' }}>
+            <Subtitle noMargin>Have additional questions?</Subtitle>
+            <div>The project manager is here to help.</div>
+          </div>
+          {pointOfContact && (
+            <CtaContactSection
+              href={createMailTo(pointOfContact.user.email)}
+              buttonText={'Contact PM'}
+              displayCopy
+            />
+          )}
         </div>
-        {pointOfContact && (
-          <CtaContactSection
-            href={createMailTo(pointOfContact.user.email)}
-            buttonText={'Contact PM'}
-            displayCopy
-          />
-        )}
-      </div>
-    </Card>
+      </Card>
+    )}
   </div>
 );
 

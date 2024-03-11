@@ -22,6 +22,7 @@ import {
 import { mailToSupport } from '../mail';
 import { LabeledTextField } from '../molecules';
 import { EditUserModal } from '../organisms';
+import { rem } from '../pixels';
 import { noop } from '../utils';
 
 const iconStyles = css({
@@ -30,6 +31,8 @@ const iconStyles = css({
   textAlign: 'center',
   alignItems: 'center',
 });
+
+const socialsHeadlineStyles = css({ padding: `${rem(34)} 0 ${rem(8)}` });
 
 const iconCSS = css({
   '& > svg > path:first-of-type': { fill: 'transparent' },
@@ -147,7 +150,9 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             labelIndicator={<GlobeIcon />}
             placeholder="https://example.com"
           />
-          <Headline4 styleAsHeading={3}>Social Networks</Headline4>
+          <div css={socialsHeadlineStyles}>
+            <Headline4 styleAsHeading={3}>Social Networks</Headline4>
+          </div>
           <LabeledTextField
             hint={
               <>

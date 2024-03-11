@@ -61,8 +61,8 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             title="Ready to publish your profile?"
             description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
             error="There was an error and we were unable to publish your profile"
-            cancelText="Back to Editing"
-            confirmText="Publish and Explore"
+            cancelText="Cancel"
+            confirmText="Publish Profile"
             onSave={() => patchUser({ onboarded: true })}
           />
         </Frame>

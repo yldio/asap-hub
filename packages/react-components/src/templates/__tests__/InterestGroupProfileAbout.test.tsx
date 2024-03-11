@@ -105,6 +105,29 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
 });
 
+it('does not render a call to action button, when a PM is defined but group is inactive', () => {
+  const { queryByText } = render(
+    <InterestGroupProfileAbout
+      {...props}
+      active={false}
+      contactEmails={[]}
+      leaders={[
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            teams: [],
+            email: 'test@test.com',
+          },
+          role: 'Project Manager',
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+});
+
 it('renders the Teams Tabbed card', () => {
   render(<InterestGroupProfileAbout {...props} active={true} />);
   expect(

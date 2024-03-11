@@ -5,6 +5,8 @@ import {
   getIconForDocumentType,
   NotFoundPage,
   SpeakerList,
+  useDateHasPassed,
+  considerEndedAfter,
 } from '@asap-hub/react-components';
 import { events, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
@@ -17,11 +19,16 @@ const Event: React.FC = () => {
   const refreshEvent = useQuietRefreshEventById(eventId);
   const backHref = useBackHref() ?? events({}).$;
 
+  const hasFinished = useDateHasPassed(
+    considerEndedAfter(event?.endDate || ''),
+  );
+
   if (event) {
     return (
       <Frame title={event.title}>
         <EventPage
           {...event}
+          hasFinished={hasFinished}
           tags={event.tags.map((tag) => tag.name)}
           backHref={backHref}
           onRefresh={refreshEvent}

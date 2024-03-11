@@ -5,9 +5,9 @@ import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { EventInfo, BackLink } from '../molecules';
-import { Card, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { EventInfo, BackLink, CtaCard } from '../molecules';
+import { Card, Link, Paragraph } from '../atoms';
+import { rem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
   EventMaterials,
@@ -17,13 +17,15 @@ import {
   RelatedResearchCard,
   RelatedTutorialsCard,
 } from '../organisms';
+import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
 
 const containerStyles = css({
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${rem(36)} ${contentSidePaddingWithNavigation(8)}`,
 });
 const cardsStyles = css({
   display: 'grid',
-  rowGap: `${36 / perRem}em`,
+  rowGap: rem(33),
+  marginBottom: rem(24),
 });
 
 type EventPageProps<
@@ -57,12 +59,14 @@ type EventPageProps<
     readonly getIconForDocumentType: (
       documentType: T[number]['documentType'],
     ) => EmotionJSX.Element;
+    readonly hasFinished?: boolean;
   };
 const EventPage = <
   T extends
     | EventResponse['relatedResearch']
     | gp2.OutputResponse['relatedOutputs'],
 >({
+  hasFinished,
   backHref,
   lastModifiedDate,
   calendar,
@@ -86,44 +90,69 @@ const EventPage = <
     ]}
   >
     {backHref && <BackLink href={backHref} />}
-    <div css={cardsStyles}>
-      <Card>
-        <EventInfo {...props} titleLimit={null} tags={[]} />
-        <Paragraph accent="lead">
-          <small>
-            Last updated:{' '}
-            {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-          </small>
-        </Paragraph>
-        {children}
-        {!hideMeetingLink && <JoinEvent {...props} />}
-        <EventAbout {...props} />
-      </Card>
-      <EventMaterials {...props} />
-      {eventConversation}
-      {relatedResearch && relatedResearch?.length > 0 && (
-        <RelatedResearchCard
-          title={titleOutputs}
-          description={descriptionOutput || 'Find all related research.'}
-          relatedResearch={relatedResearch}
-          getIconForDocumentType={getIconForDocumentType}
-          getSourceIcon={getSourceIcon}
-          tableTitles={tableTitles}
-        />
-      )}
-      {relatedTutorials && relatedTutorials.length > 0 && (
-        <RelatedTutorialsCard
-          relatedTutorials={relatedTutorials}
-          truncateFrom={3}
-        />
-      )}
-      {displayCalendar && (
-        <CalendarList
-          calendars={[calendar]}
-          title="Subscribe to this event's Calendar"
-        />
-      )}
-    </div>
+    <>
+      <div css={cardsStyles}>
+        <Card>
+          <EventInfo {...props} titleLimit={null} tags={[]} />
+          <Paragraph accent="lead">
+            <small>
+              Last updated:{' '}
+              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+            </small>
+          </Paragraph>
+          {children}
+          {!hideMeetingLink && <JoinEvent {...props} />}
+          <EventAbout {...props} />
+        </Card>
+        <EventMaterials {...props} />
+        {eventConversation}
+        {relatedResearch && relatedResearch?.length > 0 && (
+          <RelatedResearchCard
+            title={titleOutputs}
+            description={descriptionOutput || 'Find all related research.'}
+            relatedResearch={relatedResearch}
+            getIconForDocumentType={getIconForDocumentType}
+            getSourceIcon={getSourceIcon}
+            tableTitles={tableTitles}
+          />
+        )}
+        {relatedTutorials && relatedTutorials.length > 0 && (
+          <RelatedTutorialsCard
+            relatedTutorials={relatedTutorials}
+            truncateFrom={3}
+          />
+        )}
+        {displayCalendar && (
+          <CalendarList
+            calendars={[calendar]}
+            title="Subscribe to this event's Calendar"
+            hideSupportText
+          />
+        )}
+
+        {!hasFinished && (
+          <CtaCard
+            href={createMailTo(TECH_SUPPORT_EMAIL)}
+            buttonText="Contact tech support"
+            displayCopy
+          >
+            <strong>Having trouble accessing this event?</strong>
+            <br /> The tech support team is here to help.
+          </CtaCard>
+        )}
+      </div>
+      <Paragraph noMargin accent="lead">
+        Having issues? Set up your calendar manually with these instructions for{' '}
+        <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
+          Apple Calendar
+        </Link>{' '}
+        or{' '}
+        <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
+          Outlook
+        </Link>
+        .
+      </Paragraph>
+    </>
   </div>
 );
 

@@ -87,7 +87,7 @@ const TutorialDetailsPage: React.FC<TutorialDetailsPageProps> = ({
         {hasAdditionalInformation && (
           <TutorialAdditionalInformationCard {...props} />
         )}
-        <HelpSection />
+        <HelpSection hideTechSupportText />
       </div>
     </div>
   );

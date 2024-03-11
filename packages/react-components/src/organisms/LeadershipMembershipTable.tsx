@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { Card } from '../atoms';
 import { charcoal, neutral200, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
+import { borderRadius, paddingStyles } from '../card';
 
 const container = css({
   display: 'grid',
@@ -37,6 +38,7 @@ const rowStyles = css({
     borderBottom: 'none',
     marginBottom: 0,
     paddingBottom: `${15 / perRem}em`,
+    borderRadius: `${borderRadius / perRem}em`,
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',

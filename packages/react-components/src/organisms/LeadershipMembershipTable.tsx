@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { Card } from '../atoms';
 import { charcoal, neutral200, steel } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
-import { borderRadius, paddingStyles } from '../card';
+import { borderRadius } from '../card';
 
 const container = css({
   display: 'grid',

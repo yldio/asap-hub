@@ -29,6 +29,7 @@ import {
   contentfulPreviewAccessToken,
   contentfulSpaceId,
 } from './config';
+import AnalyticsController from './controllers/analytics.controller';
 import CalendarController from './controllers/calendar.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
@@ -82,6 +83,7 @@ import {
 } from './data-providers/types';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
+import { analyticsRouteFactory } from './routes/analytics.route';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
@@ -103,6 +105,7 @@ import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
 import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
+import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -134,7 +137,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-
+  const analyticsDataProvider =
+    libs.analyticsDataProvider ||
+    new AnalyticsContentfulDataProvider(contentfulGraphQLClient);
   const dashboardDataProvider =
     libs.dashboardDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
@@ -232,6 +237,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     new LabContentfulDataProvider(contentfulGraphQLClient);
 
   // Controllers
+  const analyticsController =
+    libs.analyticsController || new AnalyticsController(analyticsDataProvider);
   const calendarController =
     libs.calendarController || new CalendarController(calendarDataProvider);
   const dashboardController =
@@ -292,6 +299,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
   // Routes
+  const analyticsRoutes = analyticsRouteFactory(analyticsController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
@@ -358,6 +366,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Routes requiring onboarding below
    */
+  app.use(analyticsRoutes);
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
@@ -392,6 +401,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  analyticsDataProvider?: AnalyticsContentfulDataProvider;
+  analyticsController?: AnalyticsController;
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;

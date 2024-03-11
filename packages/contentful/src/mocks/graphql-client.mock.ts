@@ -65,15 +65,19 @@ export const getContentfulGraphqlClientMockServer = (
     DashboardPagesCollection: resultDto,
     EventsCollection: resultDto,
     ExternalAuthorsCollection: resultDto,
+    InterestGroupsCollection: resultDto,
+    InterestGroupLeadersCollection: resultDto,
     LabsCollection: resultDto,
     NewsCollection: resultDto,
     PagesCollection: resultDto,
+    ResearchOutputsCollection: resultDto,
     TeamsCollection: resultDto,
     TutorialsCollection: resultDto,
-    InterestGroupsCollection: resultDto,
+    TeamMembershipCollection: resultDto,
     UsersCollection: resultDto,
     WorkingGroupsCollection: resultDto,
-    ResearchOutputsCollection: resultDto,
+    WorkingGroupLeadersCollection: resultDto,
+    WorkingGroupMembersCollection: resultDto,
   };
   return getGraphqlClientMockServer(schemaLocation, baseMocks, inputMocks);
 };

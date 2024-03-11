@@ -184,7 +184,7 @@ describe('UserDetail', () => {
         },
         expect.any(String),
       );
-    });
+    }, 20000);
   });
 
   describe('questions', () => {

@@ -1,7 +1,8 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { ProjectDetailHeader } from '@asap-hub/gp2-components';
-import { boolean } from './knobs';
 import { ComponentProps } from 'react';
+
+import { boolean } from '../knobs';
 
 export default {
   title: 'GP2 / Organisms / Project / Detail Header',

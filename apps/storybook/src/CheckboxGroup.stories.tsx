@@ -1,6 +1,6 @@
-import { optionsKnob } from './knobs';
-
 import { CheckboxGroup } from '@asap-hub/react-components';
+
+import { optionsKnob } from './knobs';
 
 export default {
   title: 'Organisms / Checkbox Group',

@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { ProjectOverview } from '@asap-hub/gp2-components';
-import { number, text } from './knobs';
+import { number, text } from '../knobs';
 
 const { createProjectResponse } = gp2Fixtures;
 export default {

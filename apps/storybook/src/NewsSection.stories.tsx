@@ -1,5 +1,6 @@
 import { NewsSection } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+
 import { array, text } from './knobs';
 
 export default {

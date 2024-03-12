@@ -1,11 +1,12 @@
 import { ComponentProps } from 'react';
-import { text, number } from './knobs';
 import { UserProfileInterestGroups } from '@asap-hub/react-components';
 import {
   createInterestGroupResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { InterestGroupRole } from '@asap-hub/model';
+
+import { text, number } from './knobs';
 
 export default {
   title: 'Organisms / User Profile / Interest Groups',

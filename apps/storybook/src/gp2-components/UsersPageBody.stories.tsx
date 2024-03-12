@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { UsersPageBody } from '@asap-hub/gp2-components';
-import { boolean, number, text } from './knobs';
+import { boolean, number, text } from '../knobs';
 
 export default {
   title: 'GP2 / Organisms / User Directory / Page Body',

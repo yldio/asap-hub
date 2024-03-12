@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { Layout, authTestUtils } from '@asap-hub/react-components';
-import { number, optionsKnob } from './knobs';
 
+import { number, optionsKnob } from './knobs';
 import { NoPaddingDecorator } from './layout';
 import { toastGenerator } from './toast';
 

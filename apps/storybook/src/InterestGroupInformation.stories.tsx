@@ -1,4 +1,5 @@
 import { InterestGroupInformation } from '@asap-hub/react-components';
+
 import { text, array } from './knobs';
 
 export default {

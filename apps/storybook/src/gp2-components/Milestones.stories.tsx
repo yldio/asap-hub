@@ -1,5 +1,5 @@
 import { Milestones } from '@asap-hub/gp2-components';
-import { number } from './knobs';
+import { number } from '../knobs';
 
 export default {
   title: 'GP2 / Organisms / Milestones',

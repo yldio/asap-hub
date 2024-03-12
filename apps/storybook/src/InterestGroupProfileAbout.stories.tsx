@@ -1,5 +1,6 @@
 import { InterestGroupProfileAbout } from '@asap-hub/react-components';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
+
 import { boolean } from './knobs';
 
 export default {

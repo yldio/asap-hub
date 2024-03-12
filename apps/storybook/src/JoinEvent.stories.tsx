@@ -1,6 +1,7 @@
 import { JoinEvent } from '@asap-hub/react-components';
-import { date, text } from './knobs';
 import { subHours, addHours } from 'date-fns';
+
+import { date, text } from './knobs';
 
 export default {
   title: 'Organisms / Events / Join',

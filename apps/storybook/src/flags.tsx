@@ -1,8 +1,9 @@
 import { FC, ComponentType, Fragment } from 'react';
 import { DecoratorFn } from '@storybook/react';
-import { boolean } from './knobs';
 import { Flag } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
+
+import { boolean } from './knobs';
 
 const DisableFlag: FC<{ flag: Flag }> = ({ flag, children }) => {
   const { isEnabled, disable, reset, enable } = useFlags();

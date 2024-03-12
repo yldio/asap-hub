@@ -1,6 +1,6 @@
-import { select } from './knobs';
-
 import { text as componentText } from '@asap-hub/react-components';
+
+import { select } from './knobs';
 
 export const accentColor = () =>
   select<componentText.AccentColorName | undefined>(

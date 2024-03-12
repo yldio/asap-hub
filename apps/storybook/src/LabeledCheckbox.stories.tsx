@@ -1,6 +1,6 @@
-import { text, boolean } from './knobs';
-
 import { LabeledCheckbox } from '@asap-hub/react-components';
+
+import { text, boolean } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Checkbox',

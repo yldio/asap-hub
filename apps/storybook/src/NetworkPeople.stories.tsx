@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import { NetworkPeople } from '@asap-hub/react-components';
-import { number } from './knobs';
 import { TeamRole } from '@asap-hub/model';
+
+import { number } from './knobs';
 
 export default {
   title: 'Templates / Network / People',

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { EventTime } from '@asap-hub/react-components';
-import { date } from './knobs';
 
+import { date } from './knobs';
 import { CenterDecorator } from './layout';
 import { timezone } from './date';
 

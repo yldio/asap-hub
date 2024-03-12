@@ -1,6 +1,6 @@
-import { text, array, number } from './knobs';
-
 import { LabeledTextArea } from '@asap-hub/react-components';
+
+import { text, array, number } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Text Area',

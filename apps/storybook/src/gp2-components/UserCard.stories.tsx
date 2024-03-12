@@ -1,6 +1,6 @@
 import { Theme, UserCard } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import { array, number, select, text } from './knobs';
+import { array, number, select, text } from '../knobs';
 
 export default {
   title: 'GP2 / Organisms / User Directory / Card',

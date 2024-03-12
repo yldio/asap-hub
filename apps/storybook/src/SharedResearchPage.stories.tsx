@@ -1,7 +1,7 @@
 import { SharedResearchPage } from '@asap-hub/react-components';
-import { text } from './knobs';
-
 import { LayoutDecorator } from './layout';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / Shared Research / Page',

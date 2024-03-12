@@ -1,6 +1,7 @@
-import { array } from './knobs';
 import { QuestionsSection } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
+
+import { array } from './knobs';
 
 export default {
   title: 'Organisms / User Profile / Questions',

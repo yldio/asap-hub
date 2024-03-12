@@ -1,6 +1,7 @@
 import { AdditionalMaterials } from '@asap-hub/react-components';
-import { number, text } from './knobs';
 import { createEventResponse } from '@asap-hub/fixtures';
+
+import { number, text } from './knobs';
 
 export default {
   title: 'Organisms / Events / Additional Materials',

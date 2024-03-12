@@ -9,9 +9,9 @@ import {
   createDeliverables,
   createWorkingGroupLeaders,
 } from '@asap-hub/fixtures';
-import { boolean, select, number, text, array } from './knobs';
 import { network } from '@asap-hub/routing';
 
+import { boolean, select, number, text, array } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {

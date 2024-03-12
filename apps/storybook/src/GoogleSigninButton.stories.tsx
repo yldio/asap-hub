@@ -1,6 +1,6 @@
-import { boolean } from './knobs';
-
 import { GoogleSigninButton } from '@asap-hub/react-components';
+
+import { boolean } from './knobs';
 
 export default {
   title: 'Molecules / Auth / Google Signin Button',

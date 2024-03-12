@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
-import { text } from './knobs';
-
 import { ToolCard } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Team Profile / Tool Card',

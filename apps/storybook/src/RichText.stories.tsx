@@ -1,6 +1,6 @@
-import { boolean, text } from './knobs';
-
 import { RichText } from '@asap-hub/react-components';
+
+import { boolean, text } from './knobs';
 
 export default {
   title: 'Atoms / Rich Text',

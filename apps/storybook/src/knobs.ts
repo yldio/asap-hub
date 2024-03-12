@@ -4,3 +4,5 @@ export const text = (label, value) => value;
 export const number = (label, value) => value;
 export const boolean = (label, value) => value;
 export const select = (label, value) => value;
+export const array = (label, value) => value;
+export const date = (label, value) => value;

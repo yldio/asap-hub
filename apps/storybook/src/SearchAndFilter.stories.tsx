@@ -1,7 +1,7 @@
-import { text } from './knobs';
-
 import { SearchAndFilter } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Search and Filter',

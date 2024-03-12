@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { DiscoverPageBody } from '@asap-hub/react-components';
+
 import { text } from './knobs';
 
 export default {

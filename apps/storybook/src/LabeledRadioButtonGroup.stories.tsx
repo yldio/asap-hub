@@ -1,6 +1,6 @@
-import { text, select } from './knobs';
-
 import { LabeledRadioButtonGroup } from '@asap-hub/react-components';
+
+import { text, select } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Radio Button Group',

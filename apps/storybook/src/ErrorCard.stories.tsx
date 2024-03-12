@@ -1,6 +1,6 @@
-import { text, boolean } from './knobs';
-
 import { ErrorCard } from '@asap-hub/react-components';
+
+import { text, boolean } from './knobs';
 
 export default {
   title: 'Molecules / Error Card',

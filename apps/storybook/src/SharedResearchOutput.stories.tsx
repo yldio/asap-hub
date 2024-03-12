@@ -2,8 +2,6 @@ import { ComponentProps } from 'react';
 import { SharedResearchOutput } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
-import { array, boolean, date, number, select, text } from './knobs';
-
 import {
   createLabs,
   createListResearchOutputResponse,
@@ -16,6 +14,8 @@ import {
   ExternalAuthorResponse,
   ResearchOutputSharingStatus,
 } from '@asap-hub/model';
+
+import { array, boolean, date, number, select, text } from './knobs';
 
 export default {
   title: 'Templates / Shared Research / Details',

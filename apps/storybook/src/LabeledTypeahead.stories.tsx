@@ -1,4 +1,5 @@
 import { LabeledTypeahead } from '@asap-hub/react-components';
+
 import { boolean, number, text } from './knobs';
 
 export default {
@@ -31,6 +32,7 @@ export const Invalid = () => (
   />
 );
 
+// eslint-disable-next-line storybook/prefer-pascal-case
 export const loadOptionsMock =
   (options: string[]) =>
   (inputValue = ''): Promise<string[]> =>

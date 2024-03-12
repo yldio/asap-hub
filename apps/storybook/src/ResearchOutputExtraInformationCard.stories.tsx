@@ -1,8 +1,9 @@
 import { researchTagsResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputExtraInformationCard } from '@asap-hub/react-components';
-import { select } from './knobs';
 import { ComponentProps } from 'react';
+
+import { select } from './knobs';
 
 export default {
   title: 'Organisms / Team Profile / Team Create Output Extra Information Card',

@@ -1,6 +1,7 @@
 import { SharedResearchListCard } from '@asap-hub/react-components';
-import { text, number, select } from './knobs';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+
+import { text, number, select } from './knobs';
 
 export default {
   title: 'Organisms / Shared Research / List Card',

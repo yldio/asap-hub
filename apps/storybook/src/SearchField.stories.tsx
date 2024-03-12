@@ -1,6 +1,6 @@
-import { text } from './knobs';
-
 import { SearchField } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Molecules / Search Field',

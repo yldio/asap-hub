@@ -1,7 +1,7 @@
 import { NoOutputsPage } from '@asap-hub/react-components';
-import { text } from './knobs';
-
 import { LayoutDecorator } from './layout';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / No Outputs Page',

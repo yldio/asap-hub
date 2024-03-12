@@ -1,10 +1,10 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { text, select, boolean, number } from './knobs';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
+import { text, select, boolean, number } from './knobs';
 import { LayoutDecorator } from './layout';
 import { UserProfileDecorator } from './user-profile';
 

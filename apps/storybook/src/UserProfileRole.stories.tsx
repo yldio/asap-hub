@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
-import { select, text } from './knobs';
 import { UserProfileRole } from '@asap-hub/react-components';
 
+import { select, text } from './knobs';
 import { UserProfileDecorator } from './user-profile';
 
 export default {

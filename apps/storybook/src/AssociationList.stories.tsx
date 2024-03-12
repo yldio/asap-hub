@@ -4,6 +4,7 @@ import {
   createWorkingGroupListResponse,
 } from '@asap-hub/fixtures';
 import { AssociationList } from '@asap-hub/react-components';
+
 import { number } from './knobs';
 
 export default {

@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
+
 import { text, boolean } from './knobs';
 
 export default {

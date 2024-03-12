@@ -1,7 +1,8 @@
 import { css } from 'emotion';
 import { DecoratorFn } from '@storybook/react';
-import { select } from './knobs';
 import { ThemeVariant, themes } from '@asap-hub/react-components';
+
+import { select } from './knobs';
 
 const themeVariant = () =>
   select<ThemeVariant>(

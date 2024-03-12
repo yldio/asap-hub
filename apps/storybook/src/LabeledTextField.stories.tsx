@@ -1,6 +1,6 @@
-import { boolean, text } from './knobs';
-
 import { GlobeIcon, LabeledTextField } from '@asap-hub/react-components';
+
+import { boolean, text } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Text Field',

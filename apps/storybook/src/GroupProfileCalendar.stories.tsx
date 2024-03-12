@@ -1,5 +1,6 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 import { GroupProfileCalendar } from '@asap-hub/react-components';
+
 import { number } from './knobs';
 
 export default {

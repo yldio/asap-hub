@@ -1,6 +1,7 @@
 import { RemindersCard } from '@asap-hub/react-components';
-import { boolean, number } from './knobs';
 import { createListReminderResponse } from '@asap-hub/fixtures';
+
+import { boolean, number } from './knobs';
 
 export default {
   title: 'Organisms / Reminders Card',

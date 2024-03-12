@@ -1,7 +1,7 @@
 import { EventPage, getIconForDocumentType } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
-import { boolean, number } from './knobs';
 
+import { boolean, number } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {

@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { ComponentProps } from 'react';
 
 import { WorkingGroupDetailHeader } from '@asap-hub/gp2-components';
-import { boolean } from './knobs';
+import { boolean } from '../knobs';
 
 export default {
   title: 'GP2 / Organisms / Working Group / Detail Header',

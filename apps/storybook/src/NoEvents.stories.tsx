@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
-import { boolean, select } from './knobs';
 import { NoEvents } from '@asap-hub/react-components';
+
+import { boolean, select } from './knobs';
 
 export default {
   title: 'Organisms / No Events',

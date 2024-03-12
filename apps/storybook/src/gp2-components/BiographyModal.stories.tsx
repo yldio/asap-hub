@@ -1,7 +1,8 @@
 import { BiographyModal } from '@asap-hub/gp2-components';
-import { text } from './knobs';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
+
+import { text } from '../knobs';
 
 export default {
   title: 'GP2 / Molecules / Onboarding / Biography Modal',

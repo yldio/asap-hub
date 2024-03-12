@@ -1,7 +1,8 @@
 import { EventMaterials } from '@asap-hub/react-components';
-import { boolean, date, number, text } from './knobs';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { subDays } from 'date-fns';
+
+import { boolean, date, number, text } from './knobs';
 
 export default {
   title: 'Organisms / Events / Materials',

@@ -1,5 +1,6 @@
 import { createListInterestGroupResponse } from '@asap-hub/fixtures';
 import { UserInterestGroupCard } from '@asap-hub/react-components';
+
 import { boolean, number } from './knobs';
 
 export default {

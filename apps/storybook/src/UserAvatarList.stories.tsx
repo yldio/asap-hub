@@ -1,6 +1,7 @@
-import { number, text } from './knobs';
 import { UserAvatarList } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
+
+import { number, text } from './knobs';
 
 export default {
   title: 'Molecules / User Avatar List',

@@ -1,4 +1,3 @@
-import { text, boolean } from './knobs';
 import {
   Link,
   Paragraph,
@@ -7,6 +6,7 @@ import {
 } from '@asap-hub/react-components';
 import { Story } from '@storybook/react';
 
+import { text, boolean } from './knobs';
 import { ThemeDecorator } from './theme';
 
 export default {

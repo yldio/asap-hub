@@ -1,6 +1,6 @@
-import { text } from './knobs';
-
 import { UserProfilePlaceholderCard } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / User Profile Placeholder Card',

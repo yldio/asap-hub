@@ -1,10 +1,11 @@
 import { ComponentProps } from 'react';
-import { text } from './knobs';
 import { EventConversation } from '@asap-hub/react-components';
 import {
   createEventResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Events / Conversation',

@@ -1,6 +1,6 @@
 import { CalendarList } from '@asap-hub/react-components';
-import { text } from './knobs';
 
+import { text } from './knobs';
 import { googleLegacyCalendarColor } from './colors';
 
 export default {

@@ -1,6 +1,6 @@
-import { boolean, text } from './knobs';
-
 import { OrcidIcon, Button } from '@asap-hub/react-components';
+
+import { boolean, text } from './knobs';
 
 export default {
   title: 'Atoms / Button',

@@ -1,6 +1,7 @@
 import { StaticRouter } from 'react-router-dom';
-import { array, text } from './knobs';
 import { ExpertiseAndResourcesModal } from '@asap-hub/react-components';
+
+import { array, text } from './knobs';
 
 export default {
   title: 'Templates / User Profile / Expertise and Resources Modal',

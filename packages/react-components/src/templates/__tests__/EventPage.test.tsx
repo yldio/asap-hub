@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
@@ -10,6 +11,7 @@ import EventPage from '../EventPage';
 
 const props: ComponentProps<typeof EventPage> = {
   ...createEventResponse(),
+  hasFinished: false,
   tags: [],
   eventOwner: <div>ASAP Team</div>,
   eventConversation: <div>ASAP Team</div>,
@@ -168,4 +170,47 @@ it('renders related tutorials when there are items to display', () => {
 it('renders the children', () => {
   const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
   expect(queryByText('Children')).toBeVisible();
+});
+
+describe('footer', () => {
+  const originalNavigator = window.navigator;
+  Object.assign(window.navigator, {
+    clipboard: {
+      writeText: () => {},
+    },
+  });
+
+  beforeEach(() => {
+    jest.spyOn(window.navigator.clipboard, 'writeText');
+  });
+  afterEach(() => {
+    Object.assign(window.navigator, originalNavigator);
+  });
+
+  it('does not render the footer cta when event has finished', () => {
+    const { queryByText, queryByTitle } = render(
+      <EventPage {...props} hasFinished />,
+    );
+
+    expect(queryByText('Contact PM')).not.toBeInTheDocument();
+    expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
+  });
+
+  it('renders the footer cta when event has not finished', () => {
+    const { getByText } = render(<EventPage {...props} hasFinished={false} />);
+
+    expect(getByText('Contact tech support').parentElement).toHaveAttribute(
+      'href',
+      'mailto:techsupport@asap.science',
+    );
+  });
+
+  it('adds the tech support email to clipboard when user clicks on copy button', () => {
+    const { getByTitle } = render(<EventPage {...props} hasFinished={false} />);
+
+    userEvent.click(getByTitle(/copy/i));
+    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+      expect.stringMatching(/techsupport@asap.science/i),
+    );
+  });
 });

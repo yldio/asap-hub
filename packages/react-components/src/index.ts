@@ -264,7 +264,12 @@ export {
   WorkingGroupPageHeader,
 } from './templates';
 export * from './theme';
-export { noop, getIconForDocumentType, formatUserLocation } from './utils';
+export {
+  noop,
+  getIconForDocumentType,
+  formatUserLocation,
+  considerEndedAfter,
+} from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
 export type { ItemType } from './molecules';

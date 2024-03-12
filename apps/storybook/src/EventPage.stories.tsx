@@ -18,6 +18,7 @@ export const Normal = () => (
       numberOfExternalSpeakers: number('Number of external speakers', 0),
       isEventInThePast: boolean('Has the event passed', false),
     })}
+    hasFinished={false}
     tags={[]}
     backHref="#"
     hideMeetingLink={boolean('Hide Meeting Link', false)}

@@ -40,7 +40,7 @@ export const Normal = () => (
 );
 
 export const InfoBubble = {
-  render: (args) => (
+  render: (args: {href: string, hrefText: string}) => (
     <Accordion
       items={[
         {

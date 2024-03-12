@@ -23,7 +23,7 @@ export const Normal = () => {
     <Theme>
       <UserCard
         id="u42"
-        fullDisplayName={text('Display Name', 'Phillip Mars')}
+        displayName={text('Display Name', 'Phillip Mars')}
         degrees={gp2.userDegrees.map((d) => d)}
         firstName={text('First Name', 'Phillip')}
         lastName={text('Last Name', 'Mars')}

@@ -1,5 +1,5 @@
 import { FC, ComponentType, Fragment } from 'react';
-import { DecoratorFn } from '@storybook/react';
+import { Decorator } from '@storybook/react';
 import { Flag } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
 
@@ -22,7 +22,7 @@ const DisableFlag: FC<{ flag: Flag }> = ({ flag, children }) => {
   );
 };
 export const makeFlagDecorator =
-  (name: string, flag: Flag): DecoratorFn =>
+  (name: string, flag: Flag): Decorator =>
   (storyFn, context) => {
     const enabled = boolean(name, true);
     const Provider: ComponentType = enabled

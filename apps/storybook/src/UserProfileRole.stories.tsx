@@ -14,7 +14,7 @@ const props = (): ComponentProps<typeof UserProfileRole> => ({
   researchInterests: text('Research Interests', 'My research Interests'),
   responsibilities: text('Responsibilities', 'My responsibilities'),
   reachOut: text('Reach Out', 'You need help setting up your profile'),
-  role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
+  role: select<'Staff' | 'Grantee' | 'Guest'>('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
 });
 
 export const Normal = () => <UserProfileRole {...props()} />;

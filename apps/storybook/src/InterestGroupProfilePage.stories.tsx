@@ -32,7 +32,7 @@ export const Normal = () => {
     past: route.past({}).$,
   };
   return (
-    <StaticRouter key={activeTab} location={routes[activeTab]}>
+    <StaticRouter key={activeTab} location={routes[activeTab as 'about']}>
       <InterestGroupProfilePage
         id="42"
         name="My Group"

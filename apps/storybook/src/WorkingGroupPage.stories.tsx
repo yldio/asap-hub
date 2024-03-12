@@ -32,7 +32,6 @@ export const Normal = () => {
 
   const props: ComponentProps<typeof WorkingGroupPage> &
     ComponentProps<typeof WorkingGroupAbout> = {
-    showCollaborationCard: true,
     membersListElementId,
     id: 'id',
     pointOfContact: undefined,

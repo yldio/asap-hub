@@ -2,7 +2,7 @@ import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { StaticRouter } from 'react-router-dom';
 
-import { select, text } from './knobs';
+import { text } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {
@@ -11,11 +11,7 @@ export default {
 };
 
 export const Normal = () => {
-  const activeTab = select(
-    'Active Tab',
-    { Calendar: 'calendar', Upcoming: 'upcoming', Past: 'past' },
-    'calendar',
-  );
+  const activeTab = 'calendar';
   const routes = {
     calendar: events({}).calendar({}).$,
     upcoming: events({}).upcoming({}).$,

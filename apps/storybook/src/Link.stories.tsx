@@ -4,7 +4,7 @@ import {
   ThemeVariant,
   OrcidIcon,
 } from '@asap-hub/react-components';
-import { Story } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { text, boolean } from './knobs';
 import { ThemeDecorator } from './theme';
@@ -14,7 +14,7 @@ export default {
   decorators: [ThemeDecorator],
 };
 
-export const Normal: Story<{ themeVariant: ThemeVariant }> = (
+export const Normal: StoryFn<{ themeVariant: ThemeVariant }> = (
   _,
   { themeVariant },
 ) => (
@@ -28,7 +28,7 @@ export const Normal: Story<{ themeVariant: ThemeVariant }> = (
   </Paragraph>
 );
 
-export const ElipsedText: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
+export const ElipsedText: StoryFn<{ theme: ThemeVariant }> = (_, { theme }) => (
   <Paragraph>
     <Link
       ellipsed

@@ -1,18 +1,9 @@
 import { css } from 'emotion';
-import { DecoratorFn } from '@storybook/react';
-import { ThemeVariant, themes } from '@asap-hub/react-components';
+import { Decorator } from '@storybook/react';
+import { themes } from '@asap-hub/react-components';
 
-import { select } from './knobs';
-
-const themeVariant = () =>
-  select<ThemeVariant>(
-    'Theme Variant',
-    { Light: 'light', Dark: 'dark', Grey: 'grey' },
-    'light',
-  );
-export const ThemeDecorator: DecoratorFn = (storyFn, context) => {
-  const theme = themeVariant();
+export const ThemeDecorator: Decorator = (storyFn, context) => {
   return (
-    <div className={css(themes[theme])}>{storyFn({ ...context, theme })}</div>
+    <div className={css(themes['light'])}>{storyFn(context)}</div>
   );
 };

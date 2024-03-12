@@ -35,6 +35,7 @@ export const Normal = () => {
     membersListElementId,
     id: 'id',
     pointOfContact: undefined,
+    showCollaborationCard: true,
     title: text('Working Group name', 'Working group name'),
     description: text('Description', 'A description about the working group.'),
     deliverables: createDeliverables(number('Deliverables', 4)),

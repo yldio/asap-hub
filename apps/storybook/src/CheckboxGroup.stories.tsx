@@ -15,7 +15,6 @@ export const Normal = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    values={new Set(['LHR'])
-    }
+    values={new Set(['LHR'])}
   />
 );

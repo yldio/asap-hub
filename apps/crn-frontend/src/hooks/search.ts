@@ -1,11 +1,11 @@
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
-  const history = useHistory();
+  const history = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 

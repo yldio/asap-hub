@@ -1,13 +1,13 @@
 /* istanbul ignore file */
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { GlobalStyles } from '@asap-hub/react-components';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
 root.render(
   <StrictMode>
     <GlobalStyles />

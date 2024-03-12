@@ -13,7 +13,7 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';
@@ -120,67 +120,98 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           aboutHref="https://www.parkinsonsroadmap.org/"
         >
           <CheckOnboarded>
-            <Switch>
+            <Routes>
               <Route
-                exact
-                path={[
-                  dashboard.template,
-                  dashboard({}).dismissGettingStarted({}).$,
-                ]}
-              >
-                <Frame title="Dashboard">
-                  <Dashboard />
-                </Frame>
-              </Route>
-              <Route path={discover.template}>
-                <Frame title="Guides & Tutorials">
-                  <Discover />
-                </Frame>
-              </Route>
-              <Route path={about.template}>
-                <Frame title="About ASAP">
-                  <About />
-                </Frame>
-              </Route>
-              {canViewAnalytics && (
-                <Route path={analytics.template}>
-                  <Frame title="Analytics">
-                    <Analytics />
+                path={dashboard.template}
+                element={
+                  <Frame title="Dashboard">
+                    <Dashboard />
                   </Frame>
-                </Route>
-              )}
-              <Route path={news.template}>
-                <Frame title="News">
-                  <News />
-                </Frame>
-              </Route>
-              <Route path={network.template}>
-                <Frame title={null}>
-                  <Network />
-                </Frame>
-              </Route>
-              <Route path={sharedResearch.template}>
-                <Frame title="Shared Research">
-                  <SharedResearch />
-                </Frame>
-              </Route>
-              <Route path={events.template}>
-                <Frame title={null}>
-                  <Events />
-                </Frame>
-              </Route>
-              <Route path={tags.template}>
-                <Frame title="Tags">
-                  <Tags />
-                </Frame>
-              </Route>
+                }
+              />
+              <Route
+                path={dashboard({}).dismissGettingStarted({}).$}
+                element={
+                  <Frame title="Dashboard">
+                    <Dashboard />
+                  </Frame>
+                }
+              />
+              <Route
+                path={discover.template}
+                element={
+                  <Frame title="Guides & Tutorials">
+                    <Discover />
+                  </Frame>
+                }
+              />
 
-              <Route>
-                <Frame title="Not Found">
-                  <NotFoundPage />
-                </Frame>
-              </Route>
-            </Switch>
+              <Route
+                path={about.template}
+                element={
+                  <Frame title="About ASAP">
+                    <About />
+                  </Frame>
+                }
+              />
+              {canViewAnalytics && (
+                <Route
+                  path={analytics.template}
+                  element={
+                    <Frame title="Analytics">
+                      <Analytics />
+                    </Frame>
+                  }
+                />
+              )}
+              <Route
+                path={news.template}
+                element={
+                  <Frame title="News">
+                    <News />
+                  </Frame>
+                }
+              />
+              <Route
+                path={network.template}
+                element={
+                  <Frame title={null}>
+                    <Network />
+                  </Frame>
+                }
+              />
+              <Route
+                path={sharedResearch.template}
+                element={
+                  <Frame title="Shared Research">
+                    <SharedResearch />
+                  </Frame>
+                }
+              />
+              <Route
+                path={events.template}
+                element={
+                  <Frame title={null}>
+                    <Events />
+                  </Frame>
+                }
+              />
+              <Route
+                path={tags.template}
+                element={
+                  <Frame title="Tags">
+                    <Tags />
+                  </Frame>
+                }
+              />
+              <Route
+                element={
+                  <Frame title="Not Found">
+                    <NotFoundPage />
+                  </Frame>
+                }
+              />
+            </Routes>
           </CheckOnboarded>
         </Layout>
       )}

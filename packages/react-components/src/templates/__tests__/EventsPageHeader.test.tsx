@@ -1,6 +1,6 @@
 import { events, searchQueryParam } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import EventsPageHeader from '../EventsPageHeader';
 
 it('renders the heading', () => {

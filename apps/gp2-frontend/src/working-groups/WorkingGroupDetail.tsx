@@ -14,7 +14,7 @@ import { FC, lazy, useEffect } from 'react';
 import {
   Redirect,
   Route,
-  Switch,
+  Routes,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
@@ -106,7 +106,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
 
   if (workingGroup) {
     return (
-      <Switch>
+      <Routes>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
             <OutputFormPage>
@@ -129,7 +129,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
           upcomingTotal={upcomingEvents?.total || 0}
           pastTotal={pastEvents?.total || 0}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <WorkingGroupOverview {...workingGroup} />
@@ -197,9 +197,9 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             <Redirect to={overview} />
-          </Switch>
+          </Routes>
         </WorkingGroupDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

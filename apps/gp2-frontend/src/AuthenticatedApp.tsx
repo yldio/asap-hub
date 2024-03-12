@@ -8,7 +8,7 @@ import {
   useNotificationContext,
 } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useRouteMatch } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';
@@ -70,7 +70,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <OnboardedApp />
   ) : (
     <BasicLayout>
-      <Switch>
+      <Routes>
         <Route path={path}>
           <Onboarding />
         </Route>
@@ -79,7 +79,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             <NotFoundPage />
           </Frame>
         </Route>
-      </Switch>
+      </Routes>
     </BasicLayout>
   );
 };

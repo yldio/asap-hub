@@ -15,7 +15,7 @@ import { FC, lazy, useEffect } from 'react';
 import {
   Redirect,
   Route,
-  Switch,
+  Routes,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
@@ -109,7 +109,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
 
   if (project) {
     return (
-      <Switch>
+      <Routes>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
             <OutputFormPage>
@@ -132,7 +132,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
           pastTotal={pastEvents?.total || 0}
           {...project}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <ProjectOverview {...project} />
@@ -196,9 +196,9 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             <Redirect to={overview} />
-          </Switch>
+          </Routes>
         </ProjectDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

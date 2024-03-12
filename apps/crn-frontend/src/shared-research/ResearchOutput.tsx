@@ -10,7 +10,7 @@ import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
-import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useLocation, useRouteMatch } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
@@ -59,7 +59,7 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <Switch>
+        <Routes>
           <Route exact path={publishedNow ? publishedNowPath : path}>
             <Frame title={researchOutputData.title}>
               {publishedNow && <ScrollToTop />}
@@ -143,7 +143,7 @@ const ResearchOutput: React.FC = () => {
             </Route>
           )}
           <NotFoundPage />
-        </Switch>
+        </Routes>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

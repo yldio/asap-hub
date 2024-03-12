@@ -21,7 +21,7 @@ import {
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
@@ -104,7 +104,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   totalOutputs,
 }) => {
   const { isEnabled } = useFlags();
-  const history = useHistory();
+  const history = useNavigate();
   const latestNews = news.items[0];
   return (
     <>

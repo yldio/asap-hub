@@ -91,7 +91,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
 
   if (user) {
     return (
-      <Switch>
+      <Routes>
         <UserDetailPage
           editHref={
             isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
@@ -103,7 +103,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
           onImageSelect={isOwnProfile ? onImageSelect : undefined}
           {...user}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
@@ -183,9 +183,9 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             <Redirect to={overview} />
-          </Switch>
+          </Routes>
         </UserDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

@@ -85,7 +85,7 @@ const App: FC<Record<string, never>> = () => {
           <Router history={history}>
             <LastLocationProvider>
               <Frame title={null}>
-                <Switch>
+                <Routes>
                   <Route path={welcome.template}>
                     <UtilityBar>
                       <ToastStack>
@@ -127,7 +127,7 @@ const App: FC<Record<string, never>> = () => {
                       }
                     </CheckAuth>
                   </Route>
-                </Switch>
+                </Routes>
               </Frame>
             </LastLocationProvider>
           </Router>

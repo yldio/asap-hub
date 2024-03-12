@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -134,7 +134,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       <ResearchOutputPermissionsContext.Provider
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
-        <Switch>
+        <Routes>
           {canShareResearchOutput && (
             <Route path={path + createOutput.template}>
               <Frame title="Share Output">
@@ -187,7 +187,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               )}
             />
           </TeamProfilePage>
-        </Switch>
+        </Routes>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

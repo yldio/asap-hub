@@ -2,7 +2,7 @@ import { authTestUtils } from '@asap-hub/gp2-components';
 import { render, screen } from '@testing-library/react';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { getUser } from '../users/api';
 import { authorizationState } from '../auth/state';

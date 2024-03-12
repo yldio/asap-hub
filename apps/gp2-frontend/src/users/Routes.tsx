@@ -2,7 +2,7 @@ import { UsersPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadUserDirectory = () =>
@@ -23,7 +23,7 @@ const Routes: React.FC<Record<string, never>> = () => {
   const [currentTime] = useState(new Date());
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <UsersPage>
           <Frame title="Users">
@@ -42,7 +42,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         <UserDetail currentTime={currentTime} />
       </Route>
       <Route component={NotFoundPage} />
-    </Switch>
+    </Routes>
   );
 };
 

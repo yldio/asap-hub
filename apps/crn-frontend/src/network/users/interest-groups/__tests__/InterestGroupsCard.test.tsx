@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 

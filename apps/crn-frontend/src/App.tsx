@@ -2,7 +2,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Route, Router, Routes } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -88,7 +88,7 @@ const App: FC<Record<string, never>> = () => {
         <Router history={history}>
           <LastLocationProvider>
             <Frame title={null}>
-              <Switch>
+              <Routes>
                 <Route path={welcome.template}>
                   <UtilityBar>
                     <ToastStack>
@@ -101,14 +101,14 @@ const App: FC<Record<string, never>> = () => {
                     <Logout />
                   </Frame>
                 </Route>
-                <Route exact path={staticPages({}).terms.template}>
+                <Route path={staticPages({}).terms.template}>
                   <BasicLayout>
                     <Frame title={null}>
                       <Content pageId="terms-and-conditions" />
                     </Frame>
                   </BasicLayout>
                 </Route>
-                <Route exact path={staticPages({}).privacyPolicy.template}>
+                <Route path={staticPages({}).privacyPolicy.template}>
                   <BasicLayout>
                     <Frame title={null}>
                       <Content pageId="privacy-policy" />
@@ -130,7 +130,7 @@ const App: FC<Record<string, never>> = () => {
                     }
                   </CheckAuth>
                 </Route>
-              </Switch>
+              </Routes>
             </Frame>
           </LastLocationProvider>
         </Router>

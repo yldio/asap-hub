@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { PersonalInfoModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { loadOptionsMock } from './LabeledTypeahead.stories';
 
 export default {

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import {
@@ -88,7 +88,7 @@ const renderComponent = async (path: string, user = defaultUser) => {
         <WhenReady>
           <Suspense fallback="Loading...">
             <MemoryRouter initialEntries={[path]} initialIndex={1}>
-              <Switch>
+              <Routes>
                 <Route path="/prev">Previous Page</Route>
                 <Route
                   path={
@@ -98,7 +98,7 @@ const renderComponent = async (path: string, user = defaultUser) => {
                 >
                   <ResearchOutput />
                 </Route>
-              </Switch>
+              </Routes>
             </MemoryRouter>
           </Suspense>
         </WhenReady>

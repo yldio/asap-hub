@@ -2,7 +2,7 @@ import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useRouteMatch } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -27,7 +27,7 @@ const News: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <NewsPage
           searchQuery={searchQuery}
@@ -45,7 +45,7 @@ const News: FC<Record<string, never>> = () => {
           <NewsDetailsPage />
         </Frame>
       </Route>
-    </Switch>
+    </Routes>
   );
 };
 

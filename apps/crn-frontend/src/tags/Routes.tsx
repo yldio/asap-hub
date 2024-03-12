@@ -2,7 +2,7 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Routes, Route, useRouteMatch } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -33,7 +33,7 @@ const Routes: React.FC<Record<string, never>> = () => {
     urlEntities.length > 0 ? urlEntities : CRNTagSearchEntitiesListArray;
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <TagsPage
           tags={tags}
@@ -59,7 +59,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         </TagsPage>
       </Route>
       <Route component={NotFoundPage} />
-    </Switch>
+    </Routes>
   );
 };
 

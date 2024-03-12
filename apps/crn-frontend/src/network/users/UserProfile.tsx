@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
 import {
@@ -136,7 +136,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
           <UserProfilePage {...profilePageProps}>
             {
               <>
-                <Switch>
+                <Routes>
                   <Route path={path + tabRoutes.research.template}>
                     <Frame title="Research">
                       <Research user={user} />
@@ -184,7 +184,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     </Frame>
                   </Route>
                   <Redirect to={tabRoutes.research({}).$} />
-                </Switch>
+                </Routes>
                 {isOwnProfile && tabRoute && (
                   <Route path={path + tabRoute.template}>
                     <Editing user={user} backHref={tabRoute({}).$} />

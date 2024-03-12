@@ -1,7 +1,7 @@
 import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
@@ -27,7 +27,7 @@ const Events: FC<Record<string, never>> = () => {
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path + events({}).calendar.template}>
         <EventsPage>
           <Frame title="Subscribe to Calendars">
@@ -69,7 +69,7 @@ const Events: FC<Record<string, never>> = () => {
         </Frame>
       </Route>
       <Redirect to={events({}).upcoming({}).$} />
-    </Switch>
+    </Routes>
   );
 };
 

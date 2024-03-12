@@ -1,6 +1,6 @@
 import { createElement, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';

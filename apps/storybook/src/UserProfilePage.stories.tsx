@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';

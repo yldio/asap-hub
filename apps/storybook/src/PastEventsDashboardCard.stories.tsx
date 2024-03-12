@@ -1,7 +1,7 @@
 import { createEventResponse } from '@asap-hub/fixtures';
 import { EventResponse } from '@asap-hub/model';
 import { PastEventsDashboardCard } from '@asap-hub/react-components';
-import { date, number, select, text } from '@storybook/addon-knobs';
+import { date, number, select, text } from './knobs';
 
 export default {
   title: 'Organisms / Dashboard / Past Events',

@@ -1,6 +1,6 @@
 import { createEventResponse } from '@asap-hub/fixtures';
 import { SpeakerList } from '@asap-hub/react-components';
-import { boolean, number } from '@storybook/addon-knobs';
+import { boolean, number } from './knobs';
 
 export default {
   title: 'Organisms / Events / Speakers List',

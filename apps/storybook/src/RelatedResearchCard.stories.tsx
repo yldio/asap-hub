@@ -3,7 +3,7 @@ import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 
 export default {
   title: 'Organisms / Related Research Card',

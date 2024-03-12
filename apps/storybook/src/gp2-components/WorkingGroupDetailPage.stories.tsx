@@ -1,5 +1,5 @@
 import { Layout, WorkingGroupDetailPage } from '@asap-hub/gp2-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 import { ComponentProps } from 'react';
 import { NoPaddingDecorator } from '../layout';
 

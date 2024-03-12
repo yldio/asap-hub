@@ -1,7 +1,7 @@
 import { researchTagsResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputExtraInformationCard } from '@asap-hub/react-components';
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 import { ComponentProps } from 'react';
 
 export default {

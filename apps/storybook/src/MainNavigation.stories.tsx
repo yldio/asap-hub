@@ -1,5 +1,5 @@
 import { StaticRouter } from 'react-router-dom';
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 import { MainNavigation } from '@asap-hub/react-components';
 import {
   about,

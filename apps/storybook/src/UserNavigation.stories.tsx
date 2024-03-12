@@ -1,5 +1,5 @@
 import { StaticRouter } from 'react-router-dom';
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 import { UserNavigation } from '@asap-hub/react-components';
 
 import { NoPaddingDecorator } from './layout';

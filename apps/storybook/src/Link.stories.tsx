@@ -1,4 +1,4 @@
-import { text, boolean } from '@storybook/addon-knobs';
+import { text, boolean } from './knobs';
 import {
   Link,
   Paragraph,

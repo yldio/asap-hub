@@ -1,4 +1,4 @@
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 
 import { GoogleSigninButton } from '@asap-hub/react-components';
 

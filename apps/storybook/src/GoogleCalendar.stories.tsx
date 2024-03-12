@@ -1,5 +1,5 @@
 import { GoogleCalendar } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 import { googleLegacyCalendarColor } from './colors';
 
 export default {

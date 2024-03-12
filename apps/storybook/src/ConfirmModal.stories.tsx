@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { ConfirmModal } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Confirm Modal',

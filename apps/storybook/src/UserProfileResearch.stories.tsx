@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { UserProfileResearch, Card } from '@asap-hub/react-components';
-import { array, text, boolean, select } from '@storybook/addon-knobs';
+import { array, text, boolean, select } from './knobs';
 
 export default {
   title: 'Templates / User Profile / Research',

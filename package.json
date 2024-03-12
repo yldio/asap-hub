@@ -24,6 +24,7 @@
     "build": "yarn turbo build --filter='!@asap-hub/contentful-app-*'",
     "build:babel": "turbo build:babel",
     "build:frontend": "yarn turbo build --filter='!@asap-hub/contentful-app-*' --only",
+    "build:storybook": "yarn workspace @asap-hub/storybook build",
     "build:typecheck": "turbo build:typecheck:tsc",
     "build:typecheck:tsc": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "check:packages": "yarn install --immutable --immutable-cache",

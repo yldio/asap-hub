@@ -1,5 +1,5 @@
 import { RemindersCard } from '@asap-hub/react-components';
-import { boolean, number } from '@storybook/addon-knobs';
+import { boolean, number } from './knobs';
 import { createListReminderResponse } from '@asap-hub/fixtures';
 
 export default {

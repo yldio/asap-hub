@@ -1,6 +1,6 @@
 import { EventsCalendar } from '@asap-hub/react-components';
 import { createListCalendarResponse } from '@asap-hub/fixtures';
-import { boolean, number } from '@storybook/addon-knobs';
+import { boolean, number } from './knobs';
 
 export default {
   title: 'Templates / Events / Calendar',

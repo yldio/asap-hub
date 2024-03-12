@@ -1,6 +1,6 @@
 import { StaticRouter } from 'react-router-dom';
 import { TabLink } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 export default {
   title: 'Atoms / Navigation / Tab Link',

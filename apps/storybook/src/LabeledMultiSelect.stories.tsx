@@ -1,5 +1,5 @@
 import { LabeledMultiSelect, searchIcon } from '@asap-hub/react-components';
-import { number, text, boolean } from '@storybook/addon-knobs';
+import { number, text, boolean } from './knobs';
 import { ComponentPropsWithRef } from 'react';
 
 export default {

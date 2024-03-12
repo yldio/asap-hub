@@ -1,5 +1,5 @@
 import { SharedResearchListCard } from '@asap-hub/react-components';
-import { text, number, select } from '@storybook/addon-knobs';
+import { text, number, select } from './knobs';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 export default {

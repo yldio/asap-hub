@@ -1,5 +1,5 @@
 import { ContactInfoModal } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 import { StaticRouter } from 'react-router-dom';
 
 export default {

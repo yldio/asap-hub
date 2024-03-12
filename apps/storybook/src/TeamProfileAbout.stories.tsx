@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
-import { text, boolean } from '@storybook/addon-knobs';
+import { text, boolean } from './knobs';
 
 export default {
   title: 'Templates / Team Profile / About',

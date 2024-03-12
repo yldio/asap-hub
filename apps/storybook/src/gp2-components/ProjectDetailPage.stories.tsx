@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { ProjectDetailPage } from '@asap-hub/gp2-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 import { ComponentProps } from 'react';
 
 export default {

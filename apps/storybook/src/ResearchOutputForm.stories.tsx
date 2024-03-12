@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 

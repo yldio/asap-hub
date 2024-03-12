@@ -1,6 +1,6 @@
 import { FC, ComponentType, Fragment } from 'react';
 import { DecoratorFn } from '@storybook/react';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 import { Flag } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
 

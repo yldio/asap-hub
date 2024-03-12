@@ -1,5 +1,5 @@
 import { InterestGroupCard } from '@asap-hub/react-components';
-import { text, array, number, boolean } from '@storybook/addon-knobs';
+import { text, array, number, boolean } from './knobs';
 
 export default {
   title: 'Organisms / Network / Interest Group Card',

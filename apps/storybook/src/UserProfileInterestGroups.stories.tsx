@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { text, number } from '@storybook/addon-knobs';
+import { text, number } from './knobs';
 import { UserProfileInterestGroups } from '@asap-hub/react-components';
 import {
   createInterestGroupResponse,

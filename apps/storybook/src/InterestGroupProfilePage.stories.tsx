@@ -1,5 +1,5 @@
 import { InterestGroupProfilePage } from '@asap-hub/react-components';
-import { array, boolean, select, text } from '@storybook/addon-knobs';
+import { array, boolean, select, text } from './knobs';
 import { StaticRouter } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 

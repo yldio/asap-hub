@@ -1,6 +1,6 @@
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { ResearchOutputHeader } from '@asap-hub/react-components';
-import { boolean, select } from '@storybook/addon-knobs';
+import { boolean, select } from './knobs';
 
 export default {
   title: 'Organisms / Research Output Header',

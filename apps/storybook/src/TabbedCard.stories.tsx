@@ -1,5 +1,5 @@
 import { TabbedCard } from '@asap-hub/react-components';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 
 export default {
   title: 'Molecules / Tabbed Card',

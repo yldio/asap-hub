@@ -1,4 +1,4 @@
-import { array, text } from '@storybook/addon-knobs';
+import { array, text } from './knobs';
 import { ProfileExpertiseAndResources } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
 

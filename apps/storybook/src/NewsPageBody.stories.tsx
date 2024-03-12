@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 import { NewsPageBody } from '@asap-hub/react-components';
 import { createNewsResponse } from '@asap-hub/fixtures';
 

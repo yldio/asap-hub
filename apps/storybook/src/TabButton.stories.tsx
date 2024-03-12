@@ -1,5 +1,5 @@
 import { TabButton } from '@asap-hub/react-components';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, text } from './knobs';
 
 export default {
   title: 'Atoms / Navigation / Tab Button',

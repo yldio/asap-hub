@@ -1,5 +1,5 @@
 import { BiographyModal } from '@asap-hub/gp2-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 

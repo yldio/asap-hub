@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { NetworkWorkingGroups } from '@asap-hub/react-components';
-import { array, number } from '@storybook/addon-knobs';
+import { array, number } from './knobs';
 
 export default {
   title: 'Templates / Network / Working Groups',

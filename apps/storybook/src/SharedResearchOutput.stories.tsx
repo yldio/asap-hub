@@ -2,14 +2,7 @@ import { ComponentProps } from 'react';
 import { SharedResearchOutput } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
-import {
-  array,
-  boolean,
-  date,
-  number,
-  select,
-  text,
-} from '@storybook/addon-knobs';
+import { array, boolean, date, number, select, text } from './knobs';
 
 import {
   createLabs,

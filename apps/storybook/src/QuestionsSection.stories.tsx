@@ -1,4 +1,4 @@
-import { array } from '@storybook/addon-knobs';
+import { array } from './knobs';
 import { QuestionsSection } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
 

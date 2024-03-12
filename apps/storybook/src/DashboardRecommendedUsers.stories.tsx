@@ -1,6 +1,6 @@
 import { DashboardRecommendedUsers } from '@asap-hub/react-components';
 import { createListUserResponse } from '@asap-hub/fixtures';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 
 export default {
   title: 'Templates / Dashboard Recommended Users',

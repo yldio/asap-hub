@@ -1,4 +1,4 @@
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 
 import { TeamCard } from '@asap-hub/react-components';
 

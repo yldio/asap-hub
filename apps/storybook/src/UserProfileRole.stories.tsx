@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { select, text } from '@storybook/addon-knobs';
+import { select, text } from './knobs';
 import { UserProfileRole } from '@asap-hub/react-components';
 
 import { UserProfileDecorator } from './user-profile';

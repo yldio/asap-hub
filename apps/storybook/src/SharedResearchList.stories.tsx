@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 import { StaticRouter } from 'react-router-dom';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 

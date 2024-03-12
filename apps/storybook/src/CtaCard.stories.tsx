@@ -1,4 +1,4 @@
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 import { CtaCard } from '@asap-hub/react-components';
 

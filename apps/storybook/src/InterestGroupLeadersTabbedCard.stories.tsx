@@ -1,6 +1,6 @@
 import { InterestGroupLeadersTabbedCard } from '@asap-hub/react-components';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { number, boolean } from '@storybook/addon-knobs';
+import { number, boolean } from './knobs';
 import { InterestGroupRole } from '@asap-hub/model';
 
 export default {

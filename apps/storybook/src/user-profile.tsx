@@ -1,5 +1,5 @@
 import { DecoratorFn } from '@storybook/react';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from './knobs';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 export const UserProfileDecorator: DecoratorFn = (storyFn, context) => (

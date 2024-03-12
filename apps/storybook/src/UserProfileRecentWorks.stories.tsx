@@ -1,5 +1,5 @@
 import { UserProfileRecentWorks } from '@asap-hub/react-components';
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 import { UserProfileDecorator } from './user-profile';
 
 export default {

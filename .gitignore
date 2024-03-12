@@ -58,3 +58,5 @@ tramp
 
 # turborepo
 .turbo
+
+*storybook.log

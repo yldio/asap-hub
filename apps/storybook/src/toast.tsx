@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { ToastContext } from '@asap-hub/react-context';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 
 export const toastGenerator = () => {
   const numToasts = number('Number of toasts', 3, { min: 0 });

@@ -1,6 +1,6 @@
 import { NewsSection } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { array, text } from '@storybook/addon-knobs';
+import { array, text } from './knobs';
 
 export default {
   title: 'Organisms / Dashboard / News Section',

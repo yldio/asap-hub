@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { boolean, select } from '@storybook/addon-knobs';
+import { boolean, select } from './knobs';
 import { NoEvents } from '@asap-hub/react-components';
 
 export default {

@@ -1,5 +1,5 @@
 import { StaticRouter } from 'react-router-dom';
-import { array, text } from '@storybook/addon-knobs';
+import { array, text } from './knobs';
 import { ExpertiseAndResourcesModal } from '@asap-hub/react-components';
 
 export default {

@@ -1,4 +1,4 @@
-import { text, array, number } from '@storybook/addon-knobs';
+import { text, array, number } from './knobs';
 
 import { LabeledTextArea } from '@asap-hub/react-components';
 

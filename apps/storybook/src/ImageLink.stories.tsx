@@ -1,5 +1,5 @@
 import { ImageLink, Avatar, asapImage } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 export default {
   title: 'Molecules / ImageLink',

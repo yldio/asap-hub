@@ -1,6 +1,6 @@
 import { createListReminderResponse, gp2 } from '@asap-hub/fixtures';
 import { DashboardPageBody } from '@asap-hub/gp2-components';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 
 export default {
   title: 'GP2 / Templates / Dashboard / Dashboard Page Body',

@@ -1,5 +1,5 @@
 import { roleIcon, NavigationLink } from '@asap-hub/gp2-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 export default {
   title: 'GP2 / Molecules / Navigation Link',

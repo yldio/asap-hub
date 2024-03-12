@@ -1,5 +1,5 @@
 import { InterestGroupInformation } from '@asap-hub/react-components';
-import { text, array } from '@storybook/addon-knobs';
+import { text, array } from './knobs';
 
 export default {
   title: 'Organisms / Interest Group Profile / Information',

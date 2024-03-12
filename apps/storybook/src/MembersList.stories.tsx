@@ -1,4 +1,4 @@
-import { number, boolean, text } from '@storybook/addon-knobs';
+import { number, boolean, text } from './knobs';
 import { MembersList } from '@asap-hub/react-components';
 import { createListUserResponse } from '@asap-hub/fixtures';
 

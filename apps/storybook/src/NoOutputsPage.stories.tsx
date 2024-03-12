@@ -1,5 +1,5 @@
 import { NoOutputsPage } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 import { LayoutDecorator } from './layout';
 

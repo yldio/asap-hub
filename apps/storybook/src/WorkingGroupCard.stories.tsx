@@ -1,5 +1,5 @@
 import { WorkingGroupCard } from '@asap-hub/react-components';
-import { array, boolean, text } from '@storybook/addon-knobs';
+import { array, boolean, text } from './knobs';
 
 export default {
   title: 'Organisms / Network / Working Group Card',

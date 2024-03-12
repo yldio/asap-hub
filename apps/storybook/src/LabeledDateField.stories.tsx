@@ -1,4 +1,4 @@
-import { text, date } from '@storybook/addon-knobs';
+import { text, date } from './knobs';
 
 import { LabeledDateField } from '@asap-hub/react-components';
 

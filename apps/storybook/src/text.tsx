@@ -1,4 +1,4 @@
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 
 import { text as componentText } from '@asap-hub/react-components';
 

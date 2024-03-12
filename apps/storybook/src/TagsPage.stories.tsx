@@ -1,5 +1,5 @@
 import { TagsPage } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 import { loadOptionsMock } from './LabeledMultiSelect.stories';
 
 import { NoPaddingDecorator } from './layout';

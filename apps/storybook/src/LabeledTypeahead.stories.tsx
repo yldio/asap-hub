@@ -1,5 +1,5 @@
 import { LabeledTypeahead } from '@asap-hub/react-components';
-import { boolean, number, text } from '@storybook/addon-knobs';
+import { boolean, number, text } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Typeahead',

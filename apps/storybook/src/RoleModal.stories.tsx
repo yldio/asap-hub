@@ -1,6 +1,6 @@
 import { createLabs, createUserTeams } from '@asap-hub/fixtures';
 import { RoleModal } from '@asap-hub/react-components';
-import { number, select, text } from '@storybook/addon-knobs';
+import { number, select, text } from './knobs';
 import { StaticRouter } from 'react-router-dom';
 
 export default {

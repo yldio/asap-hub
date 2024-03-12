@@ -1,6 +1,6 @@
 import { TeamMembersTabbedCard } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { number, text, boolean } from '@storybook/addon-knobs';
+import { number, text, boolean } from './knobs';
 
 export default {
   title: 'Organisms / Team Members Tabbed Card',

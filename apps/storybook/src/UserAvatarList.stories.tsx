@@ -1,4 +1,4 @@
-import { number, text } from '@storybook/addon-knobs';
+import { number, text } from './knobs';
 import { UserAvatarList } from '@asap-hub/react-components';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 

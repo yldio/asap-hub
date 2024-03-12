@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 import { ToolCard } from '@asap-hub/react-components';
 

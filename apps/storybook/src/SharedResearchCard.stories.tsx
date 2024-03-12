@@ -5,7 +5,7 @@ import {
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { SharedResearchCard } from '@asap-hub/react-components';
-import { text, date, number, boolean } from '@storybook/addon-knobs';
+import { text, date, number, boolean } from './knobs';
 
 export default {
   title: 'Organisms / Shared Research / Card',

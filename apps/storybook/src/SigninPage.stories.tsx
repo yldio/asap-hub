@@ -1,4 +1,4 @@
-import { text } from '@storybook/addon-knobs';
+import { text } from './knobs';
 
 import { SigninPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';

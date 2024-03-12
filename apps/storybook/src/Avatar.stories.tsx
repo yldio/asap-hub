@@ -1,5 +1,5 @@
 import { Avatar } from '@asap-hub/react-components';
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean, text } from './knobs';
 
 export default {
   title: 'Atoms / Avatar',

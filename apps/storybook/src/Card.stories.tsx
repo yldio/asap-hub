@@ -1,5 +1,5 @@
 import { Card } from '@asap-hub/react-components';
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 
 export default {
   title: 'Atoms / Card',

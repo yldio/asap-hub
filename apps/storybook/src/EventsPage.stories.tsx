@@ -1,5 +1,5 @@
 import { EventsPage } from '@asap-hub/react-components';
-import { select, text } from '@storybook/addon-knobs';
+import { select, text } from './knobs';
 import { events } from '@asap-hub/routing';
 import { StaticRouter } from 'react-router-dom';
 

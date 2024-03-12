@@ -1,6 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { LabeledPasswordField } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Molecules / Auth / Labeled Password Field',

@@ -1,5 +1,6 @@
-import { boolean, text } from '@storybook/addon-knobs';
 import { noop, Toast } from '@asap-hub/react-components';
+
+import { boolean, text } from './knobs';
 import { NoPaddingDecorator } from './layout';
 
 export default {

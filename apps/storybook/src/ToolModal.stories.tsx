@@ -1,6 +1,7 @@
 import { ToolModal } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / Team Profile / Tool Modal',

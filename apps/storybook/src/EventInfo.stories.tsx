@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react';
 import { EventInfo } from '@asap-hub/react-components';
-import { text, boolean } from '@storybook/addon-knobs';
 import { createEventResponse } from '@asap-hub/fixtures';
 
+import { text, boolean } from './knobs';
 import { CenterDecorator } from './layout';
 
 export default {

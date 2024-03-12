@@ -6,8 +6,8 @@
     "node": "20.x"
   },
   "scripts": {
-    "start": "start-storybook --quiet --no-open -c config -p 3001",
-    "build": "build-storybook --quiet -c config -o build",
+    "start": "storybook dev -p 3001",
+    "build": "storybook build -o build",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -18,10 +18,12 @@
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
-    "@storybook/addon-actions": "6.5.16",
-    "@storybook/addon-knobs": "6.4.0",
-    "@storybook/addon-viewport": "6.5.16",
-    "@storybook/react": "6.5.16",
+    "@babel/preset-react": "7.23.3",
+    "@babel/preset-typescript": "7.23.3",
+    "@storybook/addon-actions": "^8.0.0",
+    "@storybook/addon-controls": "^8.0.0",
+    "@storybook/addon-viewport": "^8.0.0",
+    "@storybook/react": "^8.0.0",
     "core-js": "3.34.0",
     "date-fns": "2.30.0",
     "emotion": "10.0.27",
@@ -29,17 +31,28 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router-dom": "5.3.4",
-    "storybook-addon-designs": "6.3.1"
+    "storybook": "^8.0.0",
+    "storybook-addon-designs": "6.3.1",
+    "vite": "5.0.12"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "7.23.7",
-    "@storybook/builder-webpack5": "^6.5.13",
-    "@storybook/manager-webpack5": "^6.5.13",
+    "@chromatic-com/storybook": "^1.2.18",
+    "@storybook/addon-essentials": "^8.0.0",
+    "@storybook/addon-interactions": "^8.0.0",
+    "@storybook/addon-links": "^8.0.0",
+    "@storybook/addon-onboarding": "^8.0.0",
+    "@storybook/blocks": "^8.0.0",
+    "@storybook/builder-vite": "^8.0.0",
+    "@storybook/react-vite": "^8.0.0",
+    "@storybook/test": "^8.0.0",
     "@types/history": "4.7.11",
     "@types/react": "17.0.65",
     "@types/react-router-dom": "5.3.3",
     "babel-preset-react-app": "10.0.1",
+    "babel-preset-vite": "^1.1.0",
+    "eslint-plugin-storybook": "^0.8.0",
     "typescript": "4.9.5"
   }
 }

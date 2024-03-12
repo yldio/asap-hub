@@ -1,6 +1,6 @@
-import { text, select, boolean } from '@storybook/addon-knobs';
-
 import { LabeledDropdown } from '@asap-hub/react-components';
+
+import { text, select, boolean } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Dropdown',

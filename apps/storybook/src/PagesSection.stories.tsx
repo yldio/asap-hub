@@ -1,6 +1,7 @@
 import { PagesSection } from '@asap-hub/react-components';
 import { createPageResponse } from '@asap-hub/fixtures';
-import { number, text } from '@storybook/addon-knobs';
+
+import { number, text } from './knobs';
 
 export default {
   title: 'Organisms / Pages Section',

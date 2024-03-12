@@ -1,9 +1,10 @@
 import { TeamProfilePage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-import { number, select, text } from '@storybook/addon-knobs';
 import { formatISO, subDays } from 'date-fns';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
+
+import { number, select, text } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {

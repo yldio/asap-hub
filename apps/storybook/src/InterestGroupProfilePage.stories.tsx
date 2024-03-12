@@ -1,8 +1,8 @@
 import { InterestGroupProfilePage } from '@asap-hub/react-components';
-import { array, boolean, select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 
+import { array, boolean, select, text } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {
@@ -32,7 +32,7 @@ export const Normal = () => {
     past: route.past({}).$,
   };
   return (
-    <StaticRouter key={activeTab} location={routes[activeTab]}>
+    <StaticRouter key={activeTab} location={routes[activeTab as 'about']}>
       <InterestGroupProfilePage
         id="42"
         name="My Group"

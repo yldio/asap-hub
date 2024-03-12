@@ -1,5 +1,6 @@
 import { Pill } from '@asap-hub/react-components';
-import { boolean, select, text } from '@storybook/addon-knobs';
+
+import { boolean, select, text } from './knobs';
 
 export default {
   title: 'Atoms / Pill',

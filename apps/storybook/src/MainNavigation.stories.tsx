@@ -1,5 +1,4 @@
 import { StaticRouter } from 'react-router-dom';
-import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
 import {
   about,
@@ -9,6 +8,7 @@ import {
   sharedResearch,
 } from '@asap-hub/routing';
 
+import { select } from './knobs';
 import { NoPaddingDecorator } from './layout';
 
 export default {

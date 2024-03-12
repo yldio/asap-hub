@@ -1,6 +1,7 @@
 import { ContactInfoModal } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / User Profile / Contact Info Modal',

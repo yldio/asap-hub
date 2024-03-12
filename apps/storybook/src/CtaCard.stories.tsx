@@ -1,6 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { CtaCard } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Molecules / Cta Card',

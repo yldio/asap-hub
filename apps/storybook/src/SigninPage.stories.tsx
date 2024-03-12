@@ -1,7 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { SigninPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';
+import { text } from './knobs';
 
 export default {
   title: 'Templates / Auth / Signin Page',

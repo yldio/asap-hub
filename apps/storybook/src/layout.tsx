@@ -1,4 +1,4 @@
-import { DecoratorFn } from '@storybook/react';
+import { Decorator } from '@storybook/react';
 import { Layout, BasicLayout, MessageLayout } from '@asap-hub/react-components';
 
 const noPaddingStyles = `
@@ -6,7 +6,7 @@ const noPaddingStyles = `
     padding: 0 !important;
   }
 `;
-export const NoPaddingDecorator: DecoratorFn = (storyFn) => (
+export const NoPaddingDecorator: Decorator = (storyFn) => (
   <>
     <style>{noPaddingStyles}</style>
     {storyFn()}
@@ -20,16 +20,16 @@ const centerStyles = `
     align-content: center;
   }
 `;
-export const CenterDecorator: DecoratorFn = (storyFn) => (
+export const CenterDecorator: Decorator = (storyFn) => (
   <div>
     <style>{centerStyles}</style>
     {storyFn()}
   </div>
 );
 
-export const BasicLayoutDecorator: DecoratorFn = (storyFn, context) =>
+export const BasicLayoutDecorator: Decorator = (storyFn, context) =>
   NoPaddingDecorator(() => <BasicLayout>{storyFn()}</BasicLayout>, context);
-export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
+export const LayoutDecorator: Decorator = (storyFn, context) =>
   NoPaddingDecorator(
     () => (
       <Layout
@@ -54,7 +54,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
     ),
     context,
   );
-export const MessageLayoutDecorator: DecoratorFn = (storyFn, context) =>
+export const MessageLayoutDecorator: Decorator = (storyFn, context) =>
   NoPaddingDecorator(
     () => (
       <MessageLayout appOrigin={window.location.origin}>

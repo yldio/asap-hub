@@ -1,6 +1,6 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
 import { RelatedEventsCard } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { number } from './knobs';
 
 export default {
   title: 'Organisms / Related Events Card',

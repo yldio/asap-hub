@@ -6,7 +6,8 @@ import {
   createListResearchOutputResponse,
   createListUserResponse,
 } from '@asap-hub/fixtures';
-import { array, number, text } from '@storybook/addon-knobs';
+
+import { array, number, text } from './knobs';
 
 export default {
   title: 'Templates / Dashboard / Page Body',

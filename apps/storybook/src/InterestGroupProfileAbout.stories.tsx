@@ -1,6 +1,7 @@
 import { InterestGroupProfileAbout } from '@asap-hub/react-components';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
-import { boolean } from '@storybook/addon-knobs';
+
+import { boolean } from './knobs';
 
 export default {
   title: 'Templates / Interest Group Profile / About',

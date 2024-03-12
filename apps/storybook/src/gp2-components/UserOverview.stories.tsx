@@ -1,6 +1,6 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { UserOverview } from '@asap-hub/gp2-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean } from '../knobs';
 
 export default {
   title: 'GP2 / Templates / Users Directory / User Overview',

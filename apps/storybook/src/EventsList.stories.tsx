@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import { EventsList } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
-import { number } from '@storybook/addon-knobs';
+
+import { number } from './knobs';
 
 export default {
   title: 'Templates / Events / List',

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
-import { select, text } from '@storybook/addon-knobs';
 import { UserProfileRole } from '@asap-hub/react-components';
 
+import { select, text } from './knobs';
 import { UserProfileDecorator } from './user-profile';
 
 export default {
@@ -14,7 +14,11 @@ const props = (): ComponentProps<typeof UserProfileRole> => ({
   researchInterests: text('Research Interests', 'My research Interests'),
   responsibilities: text('Responsibilities', 'My responsibilities'),
   reachOut: text('Reach Out', 'You need help setting up your profile'),
-  role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
+  role: select<'Staff' | 'Grantee' | 'Guest'>(
+    'ASAP Hub Role',
+    ['Staff', 'Grantee', 'Guest'],
+    'Grantee',
+  ),
 });
 
 export const Normal = () => <UserProfileRole {...props()} />;

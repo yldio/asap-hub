@@ -1,5 +1,6 @@
 import { GoogleLegacyCalendarColor } from '@asap-hub/model';
-import { select } from '@storybook/addon-knobs';
+
+import { select } from './knobs';
 
 export const googleLegacyCalendarColor = (
   name: string,

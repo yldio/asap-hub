@@ -1,5 +1,5 @@
 import { PillList } from '@asap-hub/react-components';
-import { array } from '@storybook/addon-knobs';
+import { array } from './knobs';
 
 export default {
   title: 'Molecules / Pill List',

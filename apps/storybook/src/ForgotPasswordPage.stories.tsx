@@ -1,5 +1,6 @@
-import { text } from '@storybook/addon-knobs';
 import { ForgotPasswordPage } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 import { BasicLayoutDecorator } from './layout';
 
 export default {

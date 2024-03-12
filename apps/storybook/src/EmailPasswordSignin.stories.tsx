@@ -1,6 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { EmailPasswordSignin } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Auth / Email-Password signin',

@@ -1,5 +1,6 @@
 import { TagList } from '@asap-hub/react-components';
-import { array, boolean, number } from '@storybook/addon-knobs';
+
+import { array, boolean, number } from './knobs';
 
 export default {
   title: 'Molecules / Tag List',

@@ -1,8 +1,9 @@
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
+
+import { number } from './knobs';
 
 export default {
   title: 'Templates / Shared Research / List',

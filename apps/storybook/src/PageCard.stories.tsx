@@ -1,6 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { PageCard } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / Page Card',

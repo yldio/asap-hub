@@ -1,6 +1,7 @@
-import { text } from '@storybook/addon-knobs';
 import { UserProfileBiography } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
+
+import { text } from './knobs';
 
 export default {
   title: 'Organisms / User Profile / Biography',

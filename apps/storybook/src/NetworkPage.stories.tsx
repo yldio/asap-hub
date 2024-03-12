@@ -1,8 +1,8 @@
 import { StaticRouter } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
-import { text, select } from '@storybook/addon-knobs';
 import { network } from '@asap-hub/routing';
 
+import { text, select } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {

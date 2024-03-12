@@ -1,5 +1,3 @@
-import { optionsKnob } from '@storybook/addon-knobs';
-
 import { CheckboxGroup } from '@asap-hub/react-components';
 
 export default {
@@ -17,24 +15,6 @@ export const Normal = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    values={
-      new Set(
-        optionsKnob(
-          'Values',
-          {
-            Heathrow: 'LHR',
-            Gatwick: 'LGW',
-            Stansted: 'STN',
-            Luton: 'LTN',
-            City: 'LCY',
-            Southend: 'SEN',
-          },
-          ['LHR'],
-          {
-            display: 'inline-check',
-          },
-        ),
-      )
-    }
+    values={new Set(['LHR'])}
   />
 );

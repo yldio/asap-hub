@@ -1,6 +1,7 @@
 import { ProfileOutputs } from '@asap-hub/react-components';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
-import { boolean, number, text } from '@storybook/addon-knobs';
+
+import { boolean, number, text } from './knobs';
 
 export default {
   title: 'Templates / Profile Outputs',

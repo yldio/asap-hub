@@ -3,15 +3,6 @@ import { SharedResearchOutput } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 
 import {
-  array,
-  boolean,
-  date,
-  number,
-  select,
-  text,
-} from '@storybook/addon-knobs';
-
-import {
   createLabs,
   createListResearchOutputResponse,
   createListTeamResponse,
@@ -23,6 +14,8 @@ import {
   ExternalAuthorResponse,
   ResearchOutputSharingStatus,
 } from '@asap-hub/model';
+
+import { array, boolean, date, number, select, text } from './knobs';
 
 export default {
   title: 'Templates / Shared Research / Details',

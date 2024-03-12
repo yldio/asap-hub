@@ -1,6 +1,6 @@
 import { Info } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
 
+import { text } from './knobs';
 import { CenterDecorator } from './layout';
 
 export default {

@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { DiscoverPageBody } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / Discover / Page Body',

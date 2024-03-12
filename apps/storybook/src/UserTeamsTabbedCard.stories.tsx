@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import { teamRole } from '@asap-hub/model';
 import { UserTeamsTabbedCard } from '@asap-hub/react-components';
-import { boolean, number } from '@storybook/addon-knobs';
+
+import { boolean, number } from './knobs';
 
 export default {
   title: 'Organisms / User Teams Tabbed Card',

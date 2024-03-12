@@ -1,6 +1,6 @@
-import { text } from '@storybook/addon-knobs';
-
 import { SigninForm } from '@asap-hub/react-components';
+
+import { text } from './knobs';
 
 export default {
   title: 'Templates / Auth / Signin Form',

@@ -1,5 +1,4 @@
 import { Fragment } from 'react';
-import { text, boolean } from '@storybook/addon-knobs';
 
 import {
   Caption as CaptionText,
@@ -11,6 +10,8 @@ import {
   Headline6 as Headline6Text,
   Paragraph as ParagraphText,
 } from '@asap-hub/react-components';
+
+import { text, boolean } from './knobs';
 import { accentColor } from './text';
 import { ThemeDecorator } from './theme';
 

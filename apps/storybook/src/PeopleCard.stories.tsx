@@ -1,6 +1,6 @@
-import { text, date, number, select } from '@storybook/addon-knobs';
-
 import { PeopleCard } from '@asap-hub/react-components';
+
+import { text, date, number, select } from './knobs';
 
 export default {
   title: 'Organisms / Network / People Card',

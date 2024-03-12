@@ -1,7 +1,8 @@
 import { createLabs, createUserTeams } from '@asap-hub/fixtures';
 import { RoleModal } from '@asap-hub/react-components';
-import { number, select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
+
+import { number, select, text } from './knobs';
 
 export default {
   title: 'Templates / User Profile / Role Modal',

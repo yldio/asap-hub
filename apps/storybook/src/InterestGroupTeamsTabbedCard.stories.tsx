@@ -1,6 +1,7 @@
 import { InterestGroupTeamsTabbedCard } from '@asap-hub/react-components';
 import { createListTeamResponse } from '@asap-hub/fixtures';
-import { number, boolean } from '@storybook/addon-knobs';
+
+import { number, boolean } from './knobs';
 
 export default {
   title: 'Organisms / Interest Group Teams Tabbed Card',

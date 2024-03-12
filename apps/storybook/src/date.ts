@@ -1,4 +1,4 @@
-import { select } from '@storybook/addon-knobs';
+import { select } from './knobs';
 
 export const timezone = (name: string) =>
   select(

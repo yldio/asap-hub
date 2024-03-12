@@ -1,6 +1,6 @@
-import { number, text } from '@storybook/addon-knobs';
-
 import { TeamCard } from '@asap-hub/react-components';
+
+import { number, text } from './knobs';
 
 export default {
   title: 'Organisms / Network / Team Card',

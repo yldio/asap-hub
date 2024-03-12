@@ -1,6 +1,7 @@
 import { LabeledMultiSelect, searchIcon } from '@asap-hub/react-components';
-import { number, text, boolean } from '@storybook/addon-knobs';
 import { ComponentPropsWithRef } from 'react';
+
+import { number, text, boolean } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Multi Select',
@@ -59,6 +60,7 @@ export const Invalid = () => (
   />
 );
 
+// eslint-disable-next-line storybook/prefer-pascal-case
 export const loadOptionsMock = (suggestions: string[], delay = 2000) => {
   const options = suggestions.map((value) => ({ label: value, value }));
   return (

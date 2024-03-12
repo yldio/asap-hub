@@ -1,6 +1,6 @@
-import { text, date } from '@storybook/addon-knobs';
-
 import { LabeledDateField } from '@asap-hub/react-components';
+
+import { text, date } from './knobs';
 
 export default {
   title: 'Molecules / Labeled Date Field',

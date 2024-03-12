@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { NetworkInterestGroups } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+
+import { number } from './knobs';
 
 export default {
   title: 'Templates / Network / Interest Groups',

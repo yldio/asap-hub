@@ -1,6 +1,7 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
 import { DashboardUpcomingEvents } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+
+import { number } from './knobs';
 
 export default {
   title: 'Organisms / Dashboard / Upcoming Events',

@@ -1,8 +1,9 @@
-import { DecoratorFn } from '@storybook/react';
-import { boolean } from '@storybook/addon-knobs';
+import { Decorator } from '@storybook/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-export const UserProfileDecorator: DecoratorFn = (storyFn, context) => (
+import { boolean } from './knobs';
+
+export const UserProfileDecorator: Decorator = (storyFn, context) => (
   <UserProfileContext.Provider
     value={{
       isOwnProfile: boolean('Own Profile', false),

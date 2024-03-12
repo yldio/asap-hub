@@ -9,9 +9,9 @@ import {
   createDeliverables,
   createWorkingGroupLeaders,
 } from '@asap-hub/fixtures';
-import { boolean, select, number, text, array } from '@storybook/addon-knobs';
 import { network } from '@asap-hub/routing';
 
+import { boolean, select, number, text, array } from './knobs';
 import { LayoutDecorator } from './layout';
 
 export default {
@@ -32,10 +32,10 @@ export const Normal = () => {
 
   const props: ComponentProps<typeof WorkingGroupPage> &
     ComponentProps<typeof WorkingGroupAbout> = {
-    showCollaborationCard: true,
     membersListElementId,
     id: 'id',
     pointOfContact: undefined,
+    showCollaborationCard: true,
     title: text('Working Group name', 'Working group name'),
     description: text('Description', 'A description about the working group.'),
     deliverables: createDeliverables(number('Deliverables', 4)),

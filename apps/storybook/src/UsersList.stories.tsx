@@ -1,7 +1,8 @@
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { ExternalAuthorResponse } from '@asap-hub/model';
 import { UsersList } from '@asap-hub/react-components';
-import { date, number } from '@storybook/addon-knobs';
+
+import { date, number } from './knobs';
 
 export default {
   title: 'Molecules / Users / List',

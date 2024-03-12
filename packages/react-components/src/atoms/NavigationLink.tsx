@@ -71,7 +71,7 @@ const squareBorderStyles = css({
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
 };
-const NavigationLink: React.FC<NavigationLinkProps> = ({
+const NavigationLink: React.FC<React.PropsWithChildren<NavigationLinkProps>> = ({
   icon,
   children,
   ...props
@@ -89,7 +89,7 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps> = ({
+export const Navigation: React.FC<React.PropsWithChildren<NavigationProps>> = ({
   href,
   children,
   enabled = true,

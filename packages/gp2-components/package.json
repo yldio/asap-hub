@@ -47,7 +47,7 @@
     "@emotion/react": "11.11.1",
     "@testing-library/dom": "9.3.4",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "11.2.7",
+    "@testing-library/react": "14.2.1",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "12.8.3",
     "@types/asap-hub__assets": "workspace:*",
@@ -56,7 +56,6 @@
     "@types/jest": "29.5.12",
     "@types/react": "18.2.63",
     "@types/react-dom": "18.2.20",
-    "@types/react-router-dom": "5.3.3",
     "@types/react-router-hash-link": "2.4.9",
     "@types/react-test-renderer": "18.0.7",
     "@types/testing-library__jest-dom": "5.14.9",
@@ -72,7 +71,7 @@
     "playwright-core": "^1.40.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "5.3.4",
+    "react-router-dom": "6.22.2",
     "react-test-renderer": "17.0.2"
   }
 }

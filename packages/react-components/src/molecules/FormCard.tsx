@@ -21,7 +21,7 @@ const descriptionStyles = css({
   },
 });
 
-const FormCard: React.FC<FormCardProps> = ({
+const FormCard: React.FC<React.PropsWithChildren<FormCardProps>> = ({
   children,
   title,
   description,

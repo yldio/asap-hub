@@ -12,7 +12,7 @@ const mainStyles = css({
 type InterestGroupProfilePageProps = ComponentProps<
   typeof InterestGroupProfileHeader
 >;
-const InterestGroupProfilePage: React.FC<InterestGroupProfilePageProps> = ({
+const InterestGroupProfilePage: React.FC<React.PropsWithChildren<InterestGroupProfilePageProps>> = ({
   children,
   active,
   ...props

@@ -13,7 +13,7 @@ type EventsCalendarPageProps = {
   calendars: ReadonlyArray<BasicCalendarResponse>;
 };
 
-const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
+const EventsCalendarPage: React.FC<React.PropsWithChildren<EventsCalendarPageProps>> = ({
   calendars,
   children,
 }) => (

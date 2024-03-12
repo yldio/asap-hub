@@ -8,7 +8,7 @@ const mainStyles = css({
   padding: networkPageLayoutPaddingStyle,
 });
 
-const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
+const NetworkPage: React.FC<React.PropsWithChildren<ComponentProps<typeof NetworkPageHeader>>> = ({
   children,
 
   ...props

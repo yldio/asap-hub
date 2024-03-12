@@ -69,7 +69,7 @@ const imageBannerStyles = (image: string, position: string) =>
     backgroundPosition: position,
   });
 
-const PageBanner: React.FC<PageBannerProp> = ({
+const PageBanner: React.FC<React.PropsWithChildren<PageBannerProp>> = ({
   image,
   position = 'center',
   title,

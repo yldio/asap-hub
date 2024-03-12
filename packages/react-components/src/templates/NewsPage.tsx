@@ -13,7 +13,7 @@ const mainStyles = css({
 
 type NewsPageProps = ComponentProps<typeof NewsPageHeader>;
 
-const NewsPage: React.FC<NewsPageProps> = ({ children, ...props }) => (
+const NewsPage: React.FC<React.PropsWithChildren<NewsPageProps>> = ({ children, ...props }) => (
   <article>
     <NewsPageHeader {...props} />
     <main css={mainStyles}>{children}</main>

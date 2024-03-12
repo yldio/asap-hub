@@ -18,7 +18,7 @@ const iconStyles = css({
   display: 'inline-flex',
 });
 
-const IconWithLabel: React.FC<IconWithLabelProps> = ({
+const IconWithLabel: React.FC<React.PropsWithChildren<IconWithLabelProps>> = ({
   icon,
   children,
   noMargin = false,

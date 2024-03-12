@@ -11,7 +11,7 @@ const mainStyles = css({
 
 type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
 
-const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
+const EventsPage: React.FC<React.PropsWithChildren<EventsPageProps>> = ({ children, ...props }) => (
   <article>
     <EventsPageHeader {...props} />
     <main css={mainStyles}>{children}</main>

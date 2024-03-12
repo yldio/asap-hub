@@ -9,7 +9,7 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const TagsPage: React.FC<ComponentProps<typeof TagsPageHeader>> = ({
+const TagsPage: React.FC<React.PropsWithChildren<ComponentProps<typeof TagsPageHeader>>> = ({
   children,
   ...props
 }) => (

@@ -13,7 +13,7 @@ const contentStyles = css({
 
 type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
 
-const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
+const TeamProfilePage: React.FC<React.PropsWithChildren<TeamProfilePageProps>> = ({
   children,
   ...profile
 }) => (

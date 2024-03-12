@@ -23,7 +23,7 @@ const containerStyles = css({
   )} 0`,
 });
 
-const OnboardingPage: React.FC<OnboardingPageProps> = ({
+const OnboardingPage: React.FC<React.PropsWithChildren<OnboardingPageProps>> = ({
   children,
   steps,
   ...footerProps

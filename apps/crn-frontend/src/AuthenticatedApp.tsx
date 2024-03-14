@@ -76,6 +76,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
+  const canViewAnalytics = user?.role === 'Staff';
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -86,7 +87,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
         <Layout
           userOnboarded={user.onboarded}
           onboardable={onboardable}
-          canViewAnalytics={user.role === 'Staff'}
+          canViewAnalytics={canViewAnalytics}
           onboardModalHref={
             tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
@@ -142,7 +143,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <About />
                 </Frame>
               </Route>
-              {isEnabled('ANALYTICS') && (
+              {canViewAnalytics && (
                 <Route path={analytics.template}>
                   <Frame title="Analytics">
                     <Analytics />

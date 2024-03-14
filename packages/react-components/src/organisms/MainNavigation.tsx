@@ -48,7 +48,10 @@ export interface MainNavigationProps {
   readonly canViewAnalytics?: boolean;
 }
 
-const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded, canViewAnalytics = false }) => (
+const MainNavigation: React.FC<MainNavigationProps> = ({
+  userOnboarded,
+  canViewAnalytics = false,
+}) => (
   <nav>
     <ul css={listStyles}>
       <li>

@@ -24,9 +24,11 @@ it('renders the navigation items', () => {
 });
 
 it('renders the analytics menu item when allowed', () => {
-  const { getByTitle} = render(<MainNavigation userOnboarded={true} canViewAnalytics={true} />);
+  const { getByTitle } = render(
+    <MainNavigation userOnboarded={true} canViewAnalytics={true} />,
+  );
   expect(getByTitle(/analytics/i)).toBeInTheDocument();
-})
+});
 
 describe('a navigation item', () => {
   it('is highlighted when it links to the current page', () => {

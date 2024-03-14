@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';

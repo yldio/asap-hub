@@ -8,7 +8,6 @@ import {
   events,
   analytics,
 } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
 
 import {
   perRem,
@@ -46,9 +45,10 @@ const listStyles = css({
 
 export interface MainNavigationProps {
   readonly userOnboarded: boolean;
+  readonly canViewAnalytics?: boolean;
 }
 
-const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
+const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded, canViewAnalytics = false }) => (
   <nav>
     <ul css={listStyles}>
       <li>
@@ -105,7 +105,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
           About ASAP
         </NavigationLink>
       </li>
-      {isEnabled('ANALYTICS') && (
+      {canViewAnalytics && (
         <li>
           <NavigationLink
             href={analytics({}).$}

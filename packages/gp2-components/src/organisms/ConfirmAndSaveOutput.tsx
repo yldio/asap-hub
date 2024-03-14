@@ -1,14 +1,12 @@
 import { ReactNode, useState } from 'react';
-import { ConfirmModal as Modal, Link } from '@asap-hub/react-components';
-import {
-  INVITE_SUPPORT_EMAIL,
-  mailToSupport,
-} from '@asap-hub/react-components/src/mail';
+import { ConfirmModal as Modal, Link, mail } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/model';
 import { useNotificationContext } from '@asap-hub/react-context';
 
 import { EntityMappper } from '../templates/CreateOutputPage';
 import { GetWrappedOnSave } from './Form';
+
+const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
 
 const capitalizeFirstLetter = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -125,7 +123,7 @@ export const ConfirmAndSaveOutput = ({
               members listed on this output will be notified and all GP2 members
               will be able to access it. If you need to unpublish this output,
               please contact{' '}
-              {<Link href={mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}.
+              {<Link href={mail.mailToSupport()}>{INVITE_SUPPORT_EMAIL}</Link>}.
             </>
           }
         />

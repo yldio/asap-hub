@@ -16,7 +16,7 @@ export const setAlgoliaSettings = async ({
   indexName,
   appName,
 }: SetAlgoliaSettings): Promise<void> => {
-  const hasReverseTimestampReplica = appName !== 'analytics';
+  const hasReverseTimestampReplica = !appName.includes('analytics');
 
   const path = resolve(
     __dirname,

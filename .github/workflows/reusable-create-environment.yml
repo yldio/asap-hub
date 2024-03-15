@@ -141,13 +141,13 @@ jobs:
         id: index-exists
         shell: bash
         run: |
-          OUTPUT=$(algolia settings get $ALGOLIA_INDEX 2>&1) || true
+          OUTPUT=$(algolia settings get $ENTITY_ALGOLIA_INDEX 2>&1) || true
           if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
-            echo "index-exists=false" >> $GITHUB_OUTPUT
-            echo "Index does not exist"
+            echo "entity-index-exists=false" >> $GITHUB_OUTPUT
+            echo "Entity index does not exist"
           else
-            echo "index-exists=true" >> $GITHUB_OUTPUT
-            echo "Index exists"
+            echo "entity-index-exists=true" >> $GITHUB_OUTPUT
+            echo "Entity index exists"
           fi
           ANALYTICS_OUTPUT=$(algolia settings get $ANALYTICS_ALGOLIA_INDEX 2>&1) || true
           if [[ "$ANALYTICS_OUTPUT" == *"Index does not exist"*  ]]; then
@@ -160,20 +160,27 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ANALYTICS_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
-      - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
+      - name: Copy entity index from Dev
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.entity-index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
         shell: bash
         run: |
-          algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
-          algolia indices copy -y -w $ALGOLIA_INDEX_DEV-reverse-timestamp $ALGOLIA_INDEX-reverse-timestamp
-          algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
+          algolia indices copy -y -w $ENTITY_ALGOLIA_INDEX_DEV $ENTITY_ALGOLIA_INDEX
+          algolia indices copy -y -w $ENTITY_ALGOLIA_INDEX_DEV-reverse-timestamp $ENTITY_ALGOLIA_INDEX-reverse-timestamp
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          ENTITY_ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
+          ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+      - name: Copy analytics index from Dev
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.analytics-index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
+        shell: bash
+        run: |
+          algolia indices copy -y -w $ANALYTICS_ALGOLIA_INDEX_DEV $ANALYTICS_ALGOLIA_INDEX
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ANALYTICS_ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-analytics-algolia-index }}
           ANALYTICS_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 

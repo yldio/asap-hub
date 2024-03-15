@@ -17,6 +17,9 @@ outputs:
   active-campaign-account:
     description: 'Active Campaign Account'
     value: ${{ steps.vars.outputs.active-campaign-account}}
+  analytics-algolia-index:
+    description: 'Analytics Algolia Index'
+    value: ${{ steps.vars.outputs.analytics-algolia-index }}
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
@@ -305,10 +308,12 @@ runs:
           if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
             echo "setting up dedicated PR env"
             echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "analytics-algolia-index=asap-hub-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           else
             echo "setting up PR pointing to DEV env"
             echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
+            echo "analytics-algolia-index=asap-hub-analytics_dev" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
           fi
 

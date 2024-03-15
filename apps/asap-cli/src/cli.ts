@@ -261,9 +261,9 @@ yargs(hideBin(process.argv))
         })
         .option('appName', {
           alias: 'p',
-          description: 'Name of App - crn or gp2',
+          description: 'Name of App - crn, gp2 or analytics',
           type: 'string',
-          choices: ['crn', 'gp2'],
+          choices: ['crn', 'gp2', 'analytics'],
           demandOption: true,
         }),
     handler: async ({

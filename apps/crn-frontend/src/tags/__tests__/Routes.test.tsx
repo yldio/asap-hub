@@ -207,7 +207,7 @@ it('Will show algolia results', async () => {
     facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
   });
   const userResponse = createUserListItemResponse();
-  const algoliaResponse = createAlgoliaResponse([
+  const algoliaResponse = createAlgoliaResponse<'crn', 'user'>([
     {
       ...userResponse,
       fullDisplayName: 'Tom Cruise',

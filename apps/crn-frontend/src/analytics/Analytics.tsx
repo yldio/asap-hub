@@ -46,7 +46,12 @@ const About: FC<Record<string, never>> = () => {
     'workingGroup',
   );
   const { currentPage, pageSize } = usePaginationParams();
-  const { items, total } = useAnalyticsLeadership({ currentPage, pageSize });
+  const { items, total } = useAnalyticsLeadership({
+    currentPage,
+    pageSize,
+    searchQuery: '',
+    filters: new Set(),
+  });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (

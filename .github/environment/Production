@@ -1,4 +1,5 @@
 active-campaign-account=asapgp2
+analytics-algolia-index=asap-hub-analytics_prod
 contentful-environment=Production
 crn-algolia-api-key-name=crn-algolia-api-key-ci-prod
 crn-algolia-app-id-name=crn-algolia-app-id-prod

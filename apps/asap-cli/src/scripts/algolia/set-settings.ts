@@ -16,6 +16,8 @@ export const setAlgoliaSettings = async ({
   indexName,
   appName,
 }: SetAlgoliaSettings): Promise<void> => {
+  const hasReverseTimestampReplica = appName !== 'analytics';
+
   const path = resolve(
     __dirname,
     `../../../../../packages/algolia/schema/${appName}`,
@@ -33,15 +35,18 @@ export const setAlgoliaSettings = async ({
   await index
     .setSettings({
       ...indexSchema,
-      replicas: [replicaIndexName],
+      ...(hasReverseTimestampReplica ? { replicas: [replicaIndexName] } : {}),
     })
     .wait();
-  const replicaIndex = client.initIndex(replicaIndexName);
-  const replicaIndexSchemaRaw = await fs.readFile(
-    `${path}/algolia-reverse-timestamp-schema.json`,
-    'utf8',
-  );
 
-  const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
-  await replicaIndex.setSettings(replicaIndexSchema);
+  if (hasReverseTimestampReplica) {
+    const replicaIndex = client.initIndex(replicaIndexName);
+    const replicaIndexSchemaRaw = await fs.readFile(
+      `${path}/algolia-reverse-timestamp-schema.json`,
+      'utf8',
+    );
+
+    const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
+    await replicaIndex.setSettings(replicaIndexSchema);
+  }
 };

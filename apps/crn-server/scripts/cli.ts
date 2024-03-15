@@ -2,6 +2,8 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
+import { exportAnalyticsData } from './export-analytics';
+import type { Metric } from './export-analytics';
 import * as updateTags from './update-tags';
 
 // eslint-disable-next-line no-unused-expressions
@@ -44,6 +46,25 @@ yargs(hideBin(process.argv))
           | 'news',
         filename,
       ),
+  })
+  .command<{ metric: string; filename?: string }>({
+    command: 'export-analytics <metric>',
+    describe: 'export analytics data to JSON',
+    builder: (cli) =>
+      cli
+        .positional('metric', {
+          describe: 'choose a metric to export data',
+          type: 'string',
+          choices: ['team-leadership'],
+          demandOption: true,
+        })
+        .option('filename', {
+          alias: 'f',
+          type: 'string',
+          description: 'The output file name',
+        }),
+    handler: async ({ metric, filename }) =>
+      exportAnalyticsData(metric as Metric, filename),
   })
   .command<{ entity: string }>({
     command: 'tags <entity>',

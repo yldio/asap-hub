@@ -8,9 +8,8 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
 } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAnalyticsAlgolia } from '../hooks/algolia';
 import { getAnalyticsLeadership } from './api';
 
 const analyticsLeadershipIndexState = atomFamily<
@@ -66,15 +65,14 @@ export const analyticsLeadershipState = selectorFamily<
     },
 });
 
-export const useAnalyticsLeadership = (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
-) => {
-  const authorization = useRecoilValue(authorizationState);
+export const useAnalyticsLeadership = (options: GetListOptions) => {
+  const algoliaClient = useAnalyticsAlgolia();
+
   const [leadership, setLeadership] = useRecoilState(
     analyticsLeadershipState(options),
   );
   if (leadership === undefined) {
-    throw getAnalyticsLeadership(options, authorization)
+    throw getAnalyticsLeadership(algoliaClient.client, options)
       .then(setLeadership)
       .catch(setLeadership);
   }

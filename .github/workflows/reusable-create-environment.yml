@@ -101,6 +101,69 @@ jobs:
           max-contentful-envs: ${{ steps.setup.outputs.gp2-max-contentful-envs }}
           contentful-environment-id: ${{ inputs.gp2-contentful-env }}
 
+  analytics-algolia-index:
+    runs-on: ubuntu-latest
+    environment: Branch
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Algolia CLI
+        uses: algolia/setup-algolia-cli@master
+        with:
+          version: 1.2.1
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Setup Dev Environment
+        id: setup-dev
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Development
+      - name: Get Algolia Keys
+        id: algolia-keys
+        if: ${{ inputs.environment-name=='Branch' }}
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.crn-algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.crn-algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Test Index exists
+        if: ${{ inputs.environment-name=='Branch' }}
+        id: index-exists
+        shell: bash
+        run: |
+          OUTPUT=$(algolia settings get $ALGOLIA_INDEX 2>&1) || true
+          if [[ "$OUTPUT" == *"Index does not exist"*  ]]; then
+            echo "index-exists=false" >> $GITHUB_OUTPUT
+            echo "Index does not exist"
+          else
+            echo "index-exists=true" >> $GITHUB_OUTPUT
+            echo "Index exists"
+          fi
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+      - name: Copy index from Dev
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
+        shell: bash
+        run: |
+          algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.analytics-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+
   crn-algolia-index:
     runs-on: ubuntu-latest
     environment: Branch

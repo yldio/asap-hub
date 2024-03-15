@@ -1,31 +1,21 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { AlgoliaClient } from '@asap-hub/algolia';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
-import createListApiUrl from '../CreateListApiUrl';
 
 export const getAnalyticsLeadership = async (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
-  authorization: string,
+  algoliaClient: AlgoliaClient<'analytics'>,
+  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListAnalyticsTeamLeadershipResponse | undefined> => {
-  const { currentPage, pageSize } = options;
-  const resp = await fetch(
-    createListApiUrl('/analytics/team-leadership', {
-      currentPage,
-      pageSize,
-      filters: new Set(),
-      searchQuery: '',
-    }).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
+  const result = await algoliaClient.search(['team-leadership'], searchQuery, {
+    filters: undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
 
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch analytics team leadership list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };

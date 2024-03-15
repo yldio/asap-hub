@@ -15,8 +15,10 @@ import {
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
+  AnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
+import { TEAM_LEADERSHIP } from './analytics';
 import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
@@ -38,7 +40,8 @@ import {
 
 const CRN = 'crn';
 const GP2 = 'gp2';
-export type Apps = typeof CRN | typeof GP2;
+const ANALYTICS = 'analytics';
+export type Apps = typeof CRN | typeof GP2 | typeof ANALYTICS;
 
 export type EntityData =
   | ResearchOutputResponse
@@ -80,6 +83,9 @@ export type EntityResponses = {
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
     [EXTERNAL_USER_ENTITY_TYPE]: gp2Model.ExternalUserResponse;
+  };
+  [ANALYTICS]: {
+    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

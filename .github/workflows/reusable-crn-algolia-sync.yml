@@ -179,6 +179,19 @@ jobs:
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
+      - name: Import InterestGroups (INTEREST_GROUPS | ALL)
+        if: ${{ inputs.entity == 'interest-groups' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
+          app: 'crn'
+          entity-type: 'interest-group'
+          contentful-env: ${{ inputs.contentful-environment-id }}
+          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
       - name: Import Tutorials (TUTORIALS | ALL)
         if: ${{ inputs.entity == 'tutorials' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity

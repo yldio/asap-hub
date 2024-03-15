@@ -11,15 +11,17 @@ import {
   WorkingGroupResponse,
 } from '@asap-hub/model';
 
-export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
-export const USER_ENTITY_TYPE = 'user';
-export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
-export const LAB_ENTITY_TYPE = 'lab';
 export const EVENT_ENTITY_TYPE = 'event';
-export const TEAM_ENTITY_TYPE = 'team';
-export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
-export const TUTORIAL_ENTITY_TYPE = 'tutorial';
+export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
+export const INTEREST_GROUP_ENTITY_TYPE = 'interest-group';
+export const LAB_ENTITY_TYPE = 'lab';
 export const NEWS_ENTITY_TYPE = 'news';
+export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
+export const TEAM_ENTITY_TYPE = 'team';
+export const TUTORIAL_ENTITY_TYPE = 'tutorial';
+export const USER_ENTITY_TYPE = 'user';
+export const WORKING_GROUP_ENTITY_TYPE = 'working-group';
+
 export type Payload =
   | {
       data: EventResponse;

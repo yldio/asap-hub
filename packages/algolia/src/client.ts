@@ -7,6 +7,7 @@ import {
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
+  InterestGroupResponse,
   NewsResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
@@ -20,6 +21,7 @@ import { SearchIndex } from 'algoliasearch';
 import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
+  INTEREST_GROUP_ENTITY_TYPE,
   NEWS_ENTITY_TYPE as CRN_NEWS_ENTITY_TYPE,
   Payload,
   RESEARCH_OUTPUT_ENTITY_TYPE,
@@ -41,14 +43,15 @@ const GP2 = 'gp2';
 export type Apps = typeof CRN | typeof GP2;
 
 export type EntityData =
-  | ResearchOutputResponse
-  | UserResponse
-  | ExternalAuthorResponse
   | EventResponse
+  | ExternalAuthorResponse
+  | InterestGroupResponse
+  | NewsResponse
+  | ResearchOutputResponse
   | TeamListItemResponse
-  | WorkingGroupResponse
   | TutorialsResponse
-  | NewsResponse;
+  | UserResponse
+  | WorkingGroupResponse;
 
 export type EntityResponses = {
   [CRN]: {
@@ -66,6 +69,10 @@ export type EntityResponses = {
     [WORKING_GROUP_ENTITY_TYPE]: WithMeta<
       WorkingGroupResponse,
       typeof WORKING_GROUP_ENTITY_TYPE
+    >;
+    [INTEREST_GROUP_ENTITY_TYPE]: WithMeta<
+      InterestGroupResponse,
+      typeof INTEREST_GROUP_ENTITY_TYPE
     >;
     [TUTORIAL_ENTITY_TYPE]: WithMeta<
       TutorialsResponse,

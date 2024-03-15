@@ -1,4 +1,4 @@
-name: Sync Analytics Algolia
+name: Sync CRN Analytics Algolia
 on:
   workflow_dispatch:
     inputs:
@@ -31,7 +31,7 @@ on:
 
 jobs:
   algolia:
-    uses: ./.github/workflows/reusable-analytics-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-analytics-algolia-sync.yml
     with:
       environment-name: ${{ github.event.inputs.environment-name }}
       metric: ${{ github.event.inputs.metric }}

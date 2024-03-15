@@ -22,8 +22,8 @@ jobs:
         with:
           environment-name: Production
 
-  sync-analytics-algolia:
-    uses: ./.github/workflows/reusable-analytics-algolia-sync.yml
+  sync-crn-analytics-algolia:
+    uses: ./.github/workflows/reusable-crn-analytics-algolia-sync.yml
     with:
       contentful-environment-id: Production
       environment-name: Production

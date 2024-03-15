@@ -1,4 +1,4 @@
-name: DEV - Sync Analytics Algolia
+name: DEV - Sync CRN Analytics Algolia
 on:
   schedule:
     - cron: '0 6 * * *' # At 06:00 UTC, everyday.
@@ -22,8 +22,8 @@ jobs:
         with:
           environment-name: Development
 
-  sync-analytics-algolia:
-    uses: ./.github/workflows/reusable-analytics-algolia-sync.yml
+  sync-crn-analytics-algolia:
+    uses: ./.github/workflows/reusable-crn-analytics-algolia-sync.yml
     with:
       contentful-environment-id: Development
       environment-name: Development

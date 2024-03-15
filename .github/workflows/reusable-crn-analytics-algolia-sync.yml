@@ -1,4 +1,4 @@
-name: Reusable Analytics Algolia data sync
+name: Reusable CRN Analytics Algolia data sync
 
 on:
   workflow_call:
@@ -88,8 +88,8 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.analytics-algolia-index }}_${{ github.run_id }}_temp'
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-analytics-algolia-index }}_${{ github.run_id }}_temp'
           # Do not copy the records if all entities are being synced
           SCOPE: ${{ inputs.metric == 'all' && '-s settings,synonyms' || '' }}
       - name: Remove the metric data (ENTITY)
@@ -98,7 +98,7 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.analytics-algolia-index }}_${{ github.run_id }}_temp'
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-analytics-algolia-index }}_${{ github.run_id }}_temp'
           ENTITY_TYPE: ${{ (inputs.metric == 'team-leadership' && 'team-leadership') }}
       - name: Import team-leadership
         if: ${{ inputs.metric == 'team-leadership' || inputs.metric == 'all'}}
@@ -106,7 +106,7 @@ jobs:
         with:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.analytics-algolia-index }}_${{github.run_id}}_temp'
+          algolia-index: '${{ steps.setup.outputs.crn-analytics-algolia-index }}_${{github.run_id}}_temp'
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
@@ -117,5 +117,5 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.analytics-algolia-index }}_${{ github.run_id }}_temp'
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-analytics-algolia-index }}_${{ github.run_id }}_temp'

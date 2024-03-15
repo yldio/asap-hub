@@ -101,7 +101,7 @@ jobs:
           max-contentful-envs: ${{ steps.setup.outputs.gp2-max-contentful-envs }}
           contentful-environment-id: ${{ inputs.gp2-contentful-env }}
 
-  analytics-algolia-index:
+  crn-analytics-algolia-index:
     runs-on: ubuntu-latest
     environment: Branch
     container:
@@ -152,7 +152,7 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
       - name: Copy index from Dev
         if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
         shell: bash
@@ -161,8 +161,8 @@ jobs:
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.analytics-algolia-index }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+          ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-analytics-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 
   crn-algolia-index:
     runs-on: ubuntu-latest

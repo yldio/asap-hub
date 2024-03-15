@@ -172,7 +172,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
 
-  analytics-algolia-index:
+  crn-analytics-algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
     runs-on: ubuntu-latest
     container:
@@ -218,7 +218,7 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 
   crn-algolia-index:
     if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}

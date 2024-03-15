@@ -166,7 +166,7 @@ jobs:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
           sls-stage: ${{ steps.setup.outputs.sls-stage}}
 
-  analytics-algolia-settings:
+  crn-analytics-algolia-settings:
     needs: [crn-sls-deploy]
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -207,7 +207,7 @@ jobs:
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.analytics-algolia-index }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 
   crn-algolia-settings:
     needs: [crn-sls-deploy]

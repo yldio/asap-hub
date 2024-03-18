@@ -165,6 +165,13 @@ const transformRecords = (
     };
   }
 
+  if (type === 'interest-group' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
   if (type === 'tutorial' && 'tags' in record) {
     return {
       ...payload,

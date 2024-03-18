@@ -1,7 +1,7 @@
 import {
+  SearchForFacetValuesResponse,
   SearchOptions,
   SearchResponse,
-  SearchForFacetValuesResponse,
 } from '@algolia/client-search';
 import {
   EventResponse,
@@ -31,11 +31,11 @@ import {
   WORKING_GROUP_ENTITY_TYPE,
 } from './crn';
 import {
+  EXTERNAL_USER_ENTITY_TYPE,
   NEWS_ENTITY_TYPE,
   OUTPUT_ENTITY_TYPE,
   Payload as GP2Payload,
   PROJECT_ENTITY_TYPE,
-  EXTERNAL_USER_ENTITY_TYPE,
 } from './gp2';
 
 const CRN = 'crn';
@@ -239,11 +239,12 @@ export type CRNTagSearchEntities = Exclude<CRNEntities, 'external-author'>;
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;
 
 export const CRNTagSearchEntitiesListArray: CRNTagSearchEntitiesList = [
-  'research-output',
-  'user',
   'event',
+  'interest-group',
+  'news',
+  'research-output',
   'team',
   'tutorial',
+  'user',
   'working-group',
-  'news',
 ];

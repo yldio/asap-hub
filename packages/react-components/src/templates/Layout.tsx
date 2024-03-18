@@ -218,6 +218,7 @@ const Layout: FC<LayoutProps> = ({
   children,
   onboardable,
   onboardModalHref,
+  canViewAnalytics,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -278,7 +279,10 @@ const Layout: FC<LayoutProps> = ({
         <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
           <div css={[mainMenuStyles]}>
             <Suspense fallback={<LoadingMenu />}>
-              <MainNavigation userOnboarded={userNavProps.userOnboarded} />
+              <MainNavigation
+                userOnboarded={userNavProps.userOnboarded}
+                canViewAnalytics={canViewAnalytics}
+              />
             </Suspense>
           </div>
           <div css={[userMenuStyles, menuShown && userMenuShownStyles]}>

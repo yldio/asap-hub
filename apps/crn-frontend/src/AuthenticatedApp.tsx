@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
@@ -76,6 +75,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
 
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
+  const canViewAnalytics = user?.role === 'Staff';
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -86,6 +86,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
         <Layout
           userOnboarded={user.onboarded}
           onboardable={onboardable}
+          canViewAnalytics={canViewAnalytics}
           onboardModalHref={
             tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
@@ -141,7 +142,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <About />
                 </Frame>
               </Route>
-              {isEnabled('ANALYTICS') && (
+              {canViewAnalytics && (
                 <Route path={analytics.template}>
                   <Frame title="Analytics">
                     <Analytics />

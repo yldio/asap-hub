@@ -1,6 +1,7 @@
 import {
   EventResponse,
   ExternalAuthorResponse,
+  InterestGroupResponse,
   LabResponse,
   NewsResponse,
   ResearchOutputResponse,
@@ -32,8 +33,16 @@ export type Payload =
       type: typeof EXTERNAL_AUTHOR_ENTITY_TYPE;
     }
   | {
+      data: InterestGroupResponse;
+      type: typeof INTEREST_GROUP_ENTITY_TYPE;
+    }
+  | {
       data: LabResponse;
       type: typeof LAB_ENTITY_TYPE;
+    }
+  | {
+      data: NewsResponse;
+      type: typeof NEWS_ENTITY_TYPE;
     }
   | {
       data: ResearchOutputResponse;
@@ -44,18 +53,14 @@ export type Payload =
       type: typeof TEAM_ENTITY_TYPE;
     }
   | {
+      data: TutorialsResponse;
+      type: typeof TUTORIAL_ENTITY_TYPE;
+    }
+  | {
       data: UserListItemResponse;
       type: typeof USER_ENTITY_TYPE;
     }
   | {
       data: WorkingGroupResponse;
       type: typeof WORKING_GROUP_ENTITY_TYPE;
-    }
-  | {
-      data: TutorialsResponse;
-      type: typeof TUTORIAL_ENTITY_TYPE;
-    }
-  | {
-      data: NewsResponse;
-      type: typeof NEWS_ENTITY_TYPE;
     };

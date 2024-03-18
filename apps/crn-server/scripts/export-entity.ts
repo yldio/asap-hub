@@ -1,5 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse } from '@asap-hub/model';
+import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -168,7 +168,9 @@ const transformRecords = (
   if (type === 'interest-group' && 'tags' in record) {
     return {
       ...payload,
-      _tags: record.tags,
+      _tags: record.tags?.flatMap(
+        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
+      ),
     };
   }
 

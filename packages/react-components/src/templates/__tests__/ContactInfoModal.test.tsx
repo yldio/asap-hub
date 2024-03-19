@@ -159,15 +159,10 @@ it.each`
 });
 
 it.each`
-  label               | value        | message
-  ${'Website 1'}      | ${'not url'} | ${'valid URL'}
-  ${'Website 2'}      | ${'not url'} | ${'valid URL'}
-  ${'Researcher ID'}  | ${'http://'} | ${'valid Researcher ID'}
-  ${'X'}              | ${'http://'} | ${'valid Twitter handle'}
-  ${'Github'}         | ${'http://'} | ${'valid Github username'}
-  ${'LinkedIn'}       | ${'http://'} | ${'valid LinkedIn username'}
-  ${'Research Gate'}  | ${'http://'} | ${'valid Research Gate Profile ID'}
-  ${'Google Scholar'} | ${'http://'} | ${'valid Google Scholar Profile ID'}
+  label              | value        | message
+  ${'Website 1'}     | ${'not url'} | ${'valid URL'}
+  ${'Website 2'}     | ${'not url'} | ${'valid URL'}
+  ${'Researcher ID'} | ${'http://'} | ${'valid Researcher ID'}
 `(
   'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {

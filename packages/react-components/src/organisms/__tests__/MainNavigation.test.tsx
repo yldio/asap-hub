@@ -2,18 +2,10 @@ import { StaticRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-import { renderHook } from '@testing-library/react-hooks';
-import { useFlags } from '@asap-hub/react-context';
 
 import MainNavigation from '../MainNavigation';
 
 it('renders the navigation items', () => {
-  const {
-    result: { current },
-  } = renderHook(useFlags);
-
-  current.enable('ANALYTICS');
-
   const { getAllByRole } = render(<MainNavigation userOnboarded={true} />);
 
   expect(
@@ -28,8 +20,14 @@ it('renders the navigation items', () => {
     expect.stringMatching(/news/i),
     expect.stringMatching(/guides/i),
     expect.stringMatching(/about/i),
-    expect.stringMatching(/analytics/i),
   ]);
+});
+
+it('renders the analytics menu item when allowed', () => {
+  const { getByTitle } = render(
+    <MainNavigation userOnboarded={true} canViewAnalytics={true} />,
+  );
+  expect(getByTitle(/analytics/i)).toBeInTheDocument();
 });
 
 describe('a navigation item', () => {

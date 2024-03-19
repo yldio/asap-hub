@@ -187,7 +187,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             title="X"
             subtitle="(optional)"
             description="Type your X (formerly Twitter) profile URL."
-            getValidationMessage={() => 'Please enter a valid Twitter url'}
             onChange={setNewTwitter}
             value={newTwitter}
             enabled={!isSaving}

@@ -7,7 +7,7 @@ import formatDistance from 'date-fns/formatDistance';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { EventInfo, BackLink, CtaCard } from '../molecules';
 import { Card, Link, Paragraph } from '../atoms';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
   EventMaterials,
@@ -26,6 +26,12 @@ const cardsStyles = css({
   display: 'grid',
   rowGap: rem(33),
   marginBottom: rem(24),
+});
+const updatedParagraphStyles = css({
+  display: 'flex',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    justifyContent: 'end',
+  },
 });
 
 type EventPageProps<
@@ -94,7 +100,7 @@ const EventPage = <
       <div css={cardsStyles}>
         <Card>
           <EventInfo {...props} titleLimit={null} tags={[]} />
-          <Paragraph accent="lead">
+          <Paragraph accent="lead" styles={updatedParagraphStyles}>
             <small>
               Last updated:{' '}
               {formatDistance(new Date(), new Date(lastModifiedDate))} ago
@@ -104,8 +110,6 @@ const EventPage = <
           {!hideMeetingLink && <JoinEvent {...props} />}
           <EventAbout {...props} />
         </Card>
-        <EventMaterials {...props} />
-        {eventConversation}
         {relatedResearch && relatedResearch?.length > 0 && (
           <RelatedResearchCard
             title={titleOutputs}
@@ -122,6 +126,8 @@ const EventPage = <
             truncateFrom={3}
           />
         )}
+        <EventMaterials {...props} />
+        {eventConversation}
         {displayCalendar && (
           <CalendarList
             calendars={[calendar]}
@@ -141,17 +147,20 @@ const EventPage = <
           </CtaCard>
         )}
       </div>
-      <Paragraph noMargin accent="lead">
-        Having issues? Set up your calendar manually with these instructions for{' '}
-        <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
-          Apple Calendar
-        </Link>{' '}
-        or{' '}
-        <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
-          Outlook
-        </Link>
-        .
-      </Paragraph>
+      {!hasFinished && (
+        <Paragraph noMargin accent="lead">
+          Having issues? Set up your calendar manually with these instructions
+          for{' '}
+          <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
+            Apple Calendar
+          </Link>{' '}
+          or{' '}
+          <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
+            Outlook
+          </Link>
+          .
+        </Paragraph>
+      )}
     </>
   </div>
 );

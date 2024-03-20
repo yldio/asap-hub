@@ -24,7 +24,7 @@ const baseUrls = {
   twitter: 'https://twitter.com/',
   linkedIn: 'https://www.linkedin.com/in/',
   github: 'https://github.com/',
-  googleScholar: 'https://scholar.google.co.uk/citations?user=',
+  googleScholar: 'https://scholar.google.com/citations?user=',
   researchGate: 'https://www.researchgate.net/profile/',
 };
 

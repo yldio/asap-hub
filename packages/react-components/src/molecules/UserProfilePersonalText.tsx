@@ -9,6 +9,7 @@ import { locationIcon } from '../icons';
 import { perRem, lineHeight, rem, tabletScreen } from '../pixels';
 import { lead, tin } from '../colors';
 import { formatUserLocation, getUniqueCommaStringWithSuffix } from '../utils';
+import TagList from './TagList';
 
 const MAX_TEAMS = 3;
 const avatarSize = 24;
@@ -54,6 +55,7 @@ type UserProfilePersonalTextProps = Pick<
   | 'city'
   | 'teams'
   | 'labs'
+  | 'tags'
 > & { userActiveTeamsRoute?: string };
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
@@ -64,6 +66,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   teams,
   labs,
   userActiveTeamsRoute,
+  tags
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 
@@ -126,6 +129,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
               <span css={{ color: tin.rgb }}>Add your location</span>
             )}
           </span>
+          {tags && <TagList tags={tags.map(tag => tag.name)}/>}
         </Paragraph>
       )}
     </div>

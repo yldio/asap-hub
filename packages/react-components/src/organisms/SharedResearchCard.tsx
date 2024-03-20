@@ -3,7 +3,7 @@ import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Caption, StateTag } from '../atoms';
-import { AssociationList, LinkHeadline, UsersList } from '../molecules';
+import { AssociationList, LinkHeadline, TagList, UsersList } from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
 import { perRem, rem } from '../pixels';
@@ -38,6 +38,7 @@ type SharedResearchCardProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'isInReview'
+  | 'keywords'
 >;
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
@@ -55,6 +56,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   published,
   publishingEntity,
   isInReview,
+  keywords
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -109,6 +111,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         />
       )}
     </div>
+    <TagList max={3} tags={keywords} />
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>

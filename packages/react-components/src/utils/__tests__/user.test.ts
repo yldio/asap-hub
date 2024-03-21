@@ -1,4 +1,4 @@
-import { formatUserLocation } from '../user';
+import { formatUserLocation, formatUserSocial } from '../user';
 
 describe('formatUserLocation', () => {
   it.each`
@@ -15,6 +15,20 @@ describe('formatUserLocation', () => {
     'generates the location description "$text"',
     ({ text, city, stateOrProvince, country }) => {
       expect(formatUserLocation(city, stateOrProvince, country)).toEqual(text);
+    },
+  );
+});
+
+describe('formatUserSocial', () => {
+  it.each`
+    social                            | type               | result
+    ${'https://twitter.com/username'} | ${'twitter'}       | ${'username'}
+    ${'https://github.com/username'}  | ${'linkedIn'}      | ${'https://github.com/username'}
+    ${''}                             | ${'googleScholar'} | ${''}
+  `(
+    'generates the correct result for "$type" type',
+    ({ social, type, result }) => {
+      expect(formatUserSocial(social, type)).toEqual(result);
     },
   );
 });

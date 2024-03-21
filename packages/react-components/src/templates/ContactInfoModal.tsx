@@ -1,9 +1,5 @@
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-import {
-  urlExpression,
-  USER_SOCIAL_NOT_URL,
-  USER_SOCIAL_RESEARCHER_ID,
-} from '@asap-hub/validation';
+import { urlExpression, USER_SOCIAL_RESEARCHER_ID } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { FunctionComponent, useState } from 'react';
 
@@ -23,7 +19,7 @@ import { mailToSupport } from '../mail';
 import { LabeledTextField } from '../molecules';
 import { EditUserModal } from '../organisms';
 import { rem } from '../pixels';
-import { noop } from '../utils';
+import { formatUserSocial, noop } from '../utils';
 
 const iconStyles = css({
   width: 24,
@@ -93,12 +89,14 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
         onSave({
           contactEmail: newEmail || undefined,
           social: {
-            twitter: newTwitter || undefined,
+            twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
             researcherId: newResearcherId || undefined,
-            researchGate: newResearchGate || undefined,
-            github: newGithub || undefined,
-            googleScholar: newGoogleScholar || undefined,
-            linkedIn: newLinkedIn || undefined,
+            researchGate:
+              formatUserSocial(newResearchGate, 'researchGate') || undefined,
+            github: formatUserSocial(newGithub, 'github') || undefined,
+            googleScholar:
+              formatUserSocial(newGoogleScholar, 'googleScholar') || undefined,
+            linkedIn: formatUserSocial(newLinkedIn, 'linkedIn') || undefined,
             website1: newWebsite1 || undefined,
             website2: newWebsite2 || undefined,
           },
@@ -188,68 +186,52 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <LabeledTextField
             title="X"
             subtitle="(optional)"
-            description="Type your X (formerly Twitter) username."
-            pattern={USER_SOCIAL_NOT_URL.source}
-            getValidationMessage={() => 'Please enter a valid Twitter handle'}
+            description="Type your X (formerly Twitter) profile URL."
             onChange={setNewTwitter}
             value={newTwitter}
             enabled={!isSaving}
             labelIndicator={wrapIcon(XIcon)}
-            placeholder="Username"
+            placeholder="https://twitter.com/yourprofilename"
           />
           <LabeledTextField
             title="Github"
             subtitle="(optional)"
-            description="Type your Github username."
-            pattern={USER_SOCIAL_NOT_URL.source}
-            getValidationMessage={() => 'Please enter a valid Github username'}
+            description="Type your Github profile URL."
             onChange={setNewGithub}
             value={newGithub}
             enabled={!isSaving}
             labelIndicator={wrapIcon(GithubIcon, true)}
-            placeholder="Username"
+            placeholder="https://github.com/yourprofilename"
           />
           <LabeledTextField
             title="LinkedIn"
             subtitle="(optional)"
-            description="Type your LinkedIn username."
-            pattern={USER_SOCIAL_NOT_URL.source}
-            getValidationMessage={() =>
-              'Please enter a valid LinkedIn username'
-            }
+            description="Type your LinkedIn profile URL."
             onChange={setNewLinkedIn}
             value={newLinkedIn}
             enabled={!isSaving}
             labelIndicator={wrapIcon(LinkedInIcon, true)}
-            placeholder="Username"
+            placeholder="https://www.linkedin.com/in/yourprofilename"
           />
           <LabeledTextField
             title="Research Gate"
             subtitle="(optional)"
-            description="Type your Research Gate Profile ID."
-            pattern={USER_SOCIAL_NOT_URL.source}
-            getValidationMessage={() =>
-              'Please enter a valid Research Gate Profile ID'
-            }
+            description="Type your Research Gate profile URL."
             onChange={setNewResearchGate}
             value={newResearchGate}
             enabled={!isSaving}
             labelIndicator={wrapIcon(ResearchGateIcon, true)}
-            placeholder="Profile ID"
+            placeholder="https://www.researchgate.net/profile/profileID"
           />
           <LabeledTextField
             title="Google Scholar"
             subtitle="(optional)"
-            description="Type your Google Scholar Profile ID."
-            pattern={USER_SOCIAL_NOT_URL.source}
-            getValidationMessage={() =>
-              'Please enter a valid Google Scholar Profile ID'
-            }
+            description="Type your Google Scholar profile URL."
             onChange={setNewGoogleScholar}
             value={newGoogleScholar}
             enabled={!isSaving}
             labelIndicator={wrapIcon(GoogleScholarIcon, true)}
-            placeholder="Profile ID"
+            placeholder="https://scholar.google.com/citations?user=profileID"
           />
         </div>
       )}

@@ -166,7 +166,7 @@ describe('Interest group data provider', () => {
                   OR: [
                     { name_contains: 'test' },
                     { description_contains: 'test' },
-                    { tags_contains_all: ['test'] },
+                    { researchTags: { name_contains: 'test' } },
                   ],
                 },
               ],
@@ -186,14 +186,14 @@ describe('Interest group data provider', () => {
                   OR: [
                     { name_contains: 'test' },
                     { description_contains: 'test' },
-                    { tags_contains_all: ['test'] },
+                    { researchTags: { name_contains: 'test' } },
                   ],
                 },
                 {
                   OR: [
                     { name_contains: 'search' },
                     { description_contains: 'search' },
-                    { tags_contains_all: ['search'] },
+                    { researchTags: { name_contains: 'search' } },
                   ],
                 },
               ],
@@ -237,7 +237,7 @@ describe('Interest group data provider', () => {
                   OR: [
                     { name_contains: 'test' },
                     { description_contains: 'test' },
-                    { tags_contains_all: ['test'] },
+                    { researchTags: { name_contains: 'test' } },
                   ],
                 },
                 { active: false },

@@ -1,5 +1,6 @@
 import {
   EventResponse,
+  InterestGroupResponse,
   NewsResponse,
   ResearchOutputResponse,
   TagSearchResponse,
@@ -14,6 +15,7 @@ import { charcoal } from '../colors';
 import { tagsIcon } from '../icons';
 import {
   EventCard,
+  InterestGroupCard,
   NewsCard,
   PeopleCard,
   ResultList,
@@ -68,6 +70,20 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 
   if (type === 'working-group') {
     return <WorkingGroupCard {...(data as WorkingGroupResponse)} />;
+  }
+
+  if (type === 'interest-group') {
+    return (
+      <InterestGroupCard
+        numberOfTeams={
+          (data as InterestGroupResponse).teams.filter(
+            ({ inactiveSince }) => !inactiveSince,
+          ).length
+        }
+        googleDrive={(data as InterestGroupResponse).tools.googleDrive}
+        {...(data as InterestGroupResponse)}
+      />
+    );
   }
 
   if (type === 'tutorial') {

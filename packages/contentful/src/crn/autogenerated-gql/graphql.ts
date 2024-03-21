@@ -851,9 +851,21 @@ export type DiscoverAboutUsLinks = {
 };
 
 export type DiscoverAboutUsResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<DiscoverAboutUsResourcesBlock>;
+  hyperlink: Array<DiscoverAboutUsResourcesHyperlink>;
+  inline: Array<DiscoverAboutUsResourcesInline>;
+};
+
+export type DiscoverAboutUsResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type DiscoverAboutUsResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type DiscoverAboutUsResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type DiscoverCollection = {
@@ -1737,9 +1749,21 @@ export type EventsNotesLinks = {
 };
 
 export type EventsNotesResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsNotesResourcesBlock>;
+  hyperlink: Array<EventsNotesResourcesHyperlink>;
+  inline: Array<EventsNotesResourcesInline>;
+};
+
+export type EventsNotesResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsNotesResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsNotesResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export enum EventsOrder {
@@ -1814,9 +1838,21 @@ export type EventsPresentationLinks = {
 };
 
 export type EventsPresentationResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsPresentationResourcesBlock>;
+  hyperlink: Array<EventsPresentationResourcesHyperlink>;
+  inline: Array<EventsPresentationResourcesInline>;
+};
+
+export type EventsPresentationResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsPresentationResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsPresentationResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type EventsResearchTagsCollection = {
@@ -1882,9 +1918,21 @@ export type EventsVideoRecordingLinks = {
 };
 
 export type EventsVideoRecordingResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsVideoRecordingResourcesBlock>;
+  hyperlink: Array<EventsVideoRecordingResourcesHyperlink>;
+  inline: Array<EventsVideoRecordingResourcesInline>;
+};
+
+export type EventsVideoRecordingResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsVideoRecordingResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsVideoRecordingResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
@@ -3725,9 +3773,21 @@ export type NewsTextLinks = {
 };
 
 export type NewsTextResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<NewsTextResourcesBlock>;
+  hyperlink: Array<NewsTextResourcesHyperlink>;
+  inline: Array<NewsTextResourcesInline>;
+};
+
+export type NewsTextResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type NewsTextResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type NewsTextResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages) */
@@ -3903,9 +3963,21 @@ export type PagesTextLinks = {
 };
 
 export type PagesTextResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<PagesTextResourcesBlock>;
+  hyperlink: Array<PagesTextResourcesHyperlink>;
+  inline: Array<PagesTextResourcesInline>;
+};
+
+export type PagesTextResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type PagesTextResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type PagesTextResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type Query = {
@@ -4993,9 +5065,21 @@ export type ResearchOutputsDescriptionLinks = {
 };
 
 export type ResearchOutputsDescriptionResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<ResearchOutputsDescriptionResourcesBlock>;
+  hyperlink: Array<ResearchOutputsDescriptionResourcesHyperlink>;
+  inline: Array<ResearchOutputsDescriptionResourcesInline>;
+};
+
+export type ResearchOutputsDescriptionResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type ResearchOutputsDescriptionResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type ResearchOutputsDescriptionResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type ResearchOutputsEnvironmentsCollection = {
@@ -6062,7 +6146,6 @@ export type ResourceLink = {
 
 export type ResourceSys = {
   linkType: Scalars['String'];
-  type: Scalars['String'];
   urn: Scalars['String'];
 };
 
@@ -7220,9 +7303,21 @@ export type TutorialsTextLinks = {
 };
 
 export type TutorialsTextResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<TutorialsTextResourcesBlock>;
+  hyperlink: Array<TutorialsTextResourcesHyperlink>;
+  inline: Array<TutorialsTextResourcesInline>;
+};
+
+export type TutorialsTextResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type TutorialsTextResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type TutorialsTextResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -8709,9 +8804,21 @@ export type WorkingGroupsDescriptionLinks = {
 };
 
 export type WorkingGroupsDescriptionResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<WorkingGroupsDescriptionResourcesBlock>;
+  hyperlink: Array<WorkingGroupsDescriptionResourcesHyperlink>;
+  inline: Array<WorkingGroupsDescriptionResourcesInline>;
+};
+
+export type WorkingGroupsDescriptionResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type WorkingGroupsDescriptionResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type WorkingGroupsDescriptionResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type WorkingGroupsFilter = {

@@ -129,7 +129,11 @@ export class InterestGroupContentfulDataProvider
               OR: [
                 { name_contains: word },
                 { description_contains: word },
-                { tags_contains_all: [word] },
+                {
+                  researchTags: {
+                    name_contains: word,
+                  },
+                },
               ],
             },
           ]),

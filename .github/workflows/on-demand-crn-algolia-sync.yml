@@ -8,14 +8,15 @@ on:
         description: Choose which entity to sync
         default: all
         options:
-          - users
-          - research-outputs
-          - external-authors
           - events
-          - teams
-          - working-groups
-          - tutorials
+          - external-authors
+          - interest-groups
           - news
+          - research-outputs
+          - teams
+          - tutorials
+          - users
+          - working-groups
           - all
       environment-name:
         required: true

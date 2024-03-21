@@ -152,13 +152,14 @@ describe('filters', () => {
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
         [
-          'research-output',
-          'user',
           'event',
+          'interest-group',
+          'news',
+          'research-output',
           'team',
           'tutorial',
+          'user',
           'working-group',
-          'news',
         ],
         expect.anything(),
         expect.anything(),

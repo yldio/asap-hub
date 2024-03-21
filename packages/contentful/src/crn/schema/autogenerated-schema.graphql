@@ -554,9 +554,21 @@ type DiscoverAboutUsLinks {
 }
 
 type DiscoverAboutUsResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [DiscoverAboutUsResourcesBlock!]!
+  hyperlink: [DiscoverAboutUsResourcesHyperlink!]!
+  inline: [DiscoverAboutUsResourcesInline!]!
+}
+
+type DiscoverAboutUsResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type DiscoverAboutUsResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type DiscoverAboutUsResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 type DiscoverCollection {
@@ -1199,9 +1211,21 @@ type EventsNotesLinks {
 }
 
 type EventsNotesResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsNotesResourcesBlock!]!
+  hyperlink: [EventsNotesResourcesHyperlink!]!
+  inline: [EventsNotesResourcesInline!]!
+}
+
+type EventsNotesResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsNotesResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsNotesResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 enum EventsOrder {
@@ -1276,9 +1300,21 @@ type EventsPresentationLinks {
 }
 
 type EventsPresentationResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsPresentationResourcesBlock!]!
+  hyperlink: [EventsPresentationResourcesHyperlink!]!
+  inline: [EventsPresentationResourcesInline!]!
+}
+
+type EventsPresentationResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsPresentationResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsPresentationResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 type EventsResearchTagsCollection {
@@ -1344,9 +1380,21 @@ type EventsVideoRecordingLinks {
 }
 
 type EventsVideoRecordingResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsVideoRecordingResourcesBlock!]!
+  hyperlink: [EventsVideoRecordingResourcesHyperlink!]!
+  inline: [EventsVideoRecordingResourcesInline!]!
+}
+
+type EventsVideoRecordingResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsVideoRecordingResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsVideoRecordingResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors)"""
@@ -2671,9 +2719,21 @@ type NewsTextLinks {
 }
 
 type NewsTextResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [NewsTextResourcesBlock!]!
+  hyperlink: [NewsTextResourcesHyperlink!]!
+  inline: [NewsTextResourcesInline!]!
+}
+
+type NewsTextResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type NewsTextResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type NewsTextResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages)"""
@@ -2797,9 +2857,21 @@ type PagesTextLinks {
 }
 
 type PagesTextResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [PagesTextResourcesBlock!]!
+  hyperlink: [PagesTextResourcesHyperlink!]!
+  inline: [PagesTextResourcesInline!]!
+}
+
+type PagesTextResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type PagesTextResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type PagesTextResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
@@ -3103,9 +3175,21 @@ type ResearchOutputsDescriptionLinks {
 }
 
 type ResearchOutputsDescriptionResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [ResearchOutputsDescriptionResourcesBlock!]!
+  hyperlink: [ResearchOutputsDescriptionResourcesHyperlink!]!
+  inline: [ResearchOutputsDescriptionResourcesInline!]!
+}
+
+type ResearchOutputsDescriptionResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type ResearchOutputsDescriptionResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type ResearchOutputsDescriptionResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 type ResearchOutputsEnvironmentsCollection {
@@ -4022,13 +4106,12 @@ enum ResearchTagsOrder {
   sys_publishedVersion_DESC
 }
 
-type ResourceLink {
+interface ResourceLink {
   sys: ResourceSys!
 }
 
 type ResourceSys {
   linkType: String!
-  type: String!
   urn: String!
 }
 
@@ -4878,9 +4961,21 @@ type TutorialsTextLinks {
 }
 
 type TutorialsTextResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [TutorialsTextResourcesBlock!]!
+  hyperlink: [TutorialsTextResourcesHyperlink!]!
+  inline: [TutorialsTextResourcesInline!]!
+}
+
+type TutorialsTextResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type TutorialsTextResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type TutorialsTextResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
@@ -5831,9 +5926,21 @@ type WorkingGroupsDescriptionLinks {
 }
 
 type WorkingGroupsDescriptionResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [WorkingGroupsDescriptionResourcesBlock!]!
+  hyperlink: [WorkingGroupsDescriptionResourcesHyperlink!]!
+  inline: [WorkingGroupsDescriptionResourcesInline!]!
+}
+
+type WorkingGroupsDescriptionResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type WorkingGroupsDescriptionResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type WorkingGroupsDescriptionResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 input WorkingGroupsFilter {

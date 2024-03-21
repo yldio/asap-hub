@@ -15,14 +15,15 @@ yargs(hideBin(process.argv))
           describe: 'specific an entity to import',
           type: 'string',
           choices: [
-            'user',
-            'research-output',
-            'external-author',
             'event',
-            'team',
-            'working-group',
-            'tutorial',
+            'external-author',
+            'interest-group',
             'news',
+            'research-output',
+            'team',
+            'tutorial',
+            'user',
+            'working-group',
           ],
           demandOption: true,
         })
@@ -34,14 +35,15 @@ yargs(hideBin(process.argv))
     handler: async ({ entity, filename }) =>
       exportEntity(
         entity as
-          | 'user'
-          | 'research-output'
-          | 'external-author'
           | 'event'
+          | 'external-author'
+          | 'interest-group'
+          | 'news'
+          | 'research-output'
           | 'team'
-          | 'working-group'
           | 'tutorial'
-          | 'news',
+          | 'user'
+          | 'working-group',
         filename,
       ),
   })

@@ -1,5 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse } from '@asap-hub/model';
+import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -9,6 +9,7 @@ import Teams from '../src/controllers/team.controller';
 import Tutorials from '../src/controllers/tutorial.controller';
 import Users from '../src/controllers/user.controller';
 import WorkingGroups from '../src/controllers/working-group.controller';
+import InterestGroups from '../src/controllers/interest-group.controller';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import { getNewsDataProvider } from '../src/dependencies/news.dependencies';
@@ -23,6 +24,7 @@ import {
   getResearchTagsDataProvider,
 } from '../src/dependencies/users.dependencies';
 import { getWorkingGroupDataProvider } from '../src/dependencies/working-groups.dependencies';
+import { getInterestGroupDataProvider } from '../src/dependencies/interest-groups.dependencies';
 
 type EntityResponsesCRN = EntityResponses['crn'];
 export const PAGE_SIZE = 10;
@@ -83,6 +85,7 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   const workingGroupDataProvider = getWorkingGroupDataProvider();
   const tutorialDataProvider = getTutorialDataProvider();
   const newsDataProvider = getNewsDataProvider();
+  const interestGroupDataProvider = getInterestGroupDataProvider();
 
   const controllerMap = {
     user: new Users(
@@ -99,6 +102,10 @@ const getController = (entity: keyof EntityResponsesCRN) => {
     event: new Events(eventDataProvider),
     team: new Teams(teamDataProvider),
     'working-group': new WorkingGroups(workingGroupDataProvider),
+    'interest-group': new InterestGroups(
+      interestGroupDataProvider,
+      userDataProvider,
+    ),
     tutorial: new Tutorials(tutorialDataProvider),
     news: new News(newsDataProvider),
   };
@@ -155,6 +162,15 @@ const transformRecords = (
     return {
       ...payload,
       _tags: record.tags,
+    };
+  }
+
+  if (type === 'interest-group' && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags?.flatMap(
+        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
+      ),
     };
   }
 

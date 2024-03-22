@@ -1,5 +1,16 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
+import {
+  EventResponse,
+  InterestGroupResponse,
+  ListResponse,
+  NewsResponse,
+  ResearchOutputResponse,
+  ResearchTagDataObject,
+  TeamListItemResponse,
+  TutorialsResponse,
+  UserResponse,
+  WorkingGroupResponse,
+} from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -113,10 +124,23 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   return controllerMap[entity];
 };
 
+const getTagNames = (
+  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[],
+): string[] =>
+  tags
+    ? tags.flatMap(
+        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
+      )
+    : [];
+
 const transformRecords = (
   record: EntityData,
   type: keyof EntityResponsesCRN,
-) => {
+): EntityData & {
+  objectID: string;
+  __meta: { type: string };
+  _tags: string[];
+} => {
   const payload = {
     ...record,
     objectID: record.id,
@@ -126,67 +150,96 @@ const transformRecords = (
   };
 
   if (type === 'research-output' && 'subtype' in record) {
-    const subtype = record.subtype;
+    const researchOutputRecord = record as Extract<
+      EntityData,
+      ResearchOutputResponse
+    >;
+
+    const subtype = researchOutputRecord.subtype;
 
     return {
       ...payload,
       _tags: [
-        ...record.methods,
-        ...record.organisms,
-        ...record.environments,
+        ...researchOutputRecord.methods,
+        ...researchOutputRecord.organisms,
+        ...researchOutputRecord.environments,
         ...(subtype ? [subtype] : []),
-        ...record.keywords,
+        ...researchOutputRecord.keywords,
       ],
     };
   }
 
-  if (type === 'user' && 'expertiseAndResourceTags' in record) {
-    return payload;
-  }
+  if (type === 'user') {
+    const userRecord = record as Extract<EntityData, UserResponse>;
 
-  if (type === 'event' && 'tags' in record) {
     return {
       ...payload,
-      _tags: record.tags,
+      _tags: getTagNames(userRecord.tags),
     };
   }
 
-  if (type === 'team' && 'expertiseAndResourceTags' in record) {
+  if (type === 'event') {
+    const eventRecord = record as Extract<EntityData, EventResponse>;
+
     return {
       ...payload,
-      _tags: record.expertiseAndResourceTags,
+      _tags: getTagNames(eventRecord.tags),
     };
   }
 
-  if (type === 'working-group' && 'tags' in record) {
+  if (type === 'team') {
+    const teamRecord = record as Extract<EntityData, TeamListItemResponse>;
+
     return {
       ...payload,
-      _tags: record.tags,
+      _tags: getTagNames(teamRecord.tags),
     };
   }
 
-  if (type === 'interest-group' && 'tags' in record) {
+  if (type === 'working-group') {
+    const workingGroupRecord = record as Extract<
+      EntityData,
+      WorkingGroupResponse
+    >;
+
     return {
       ...payload,
-      _tags: record.tags?.flatMap(
-        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
-      ),
+      _tags: workingGroupRecord.tags,
     };
   }
 
-  if (type === 'tutorial' && 'tags' in record) {
+  if (type === 'interest-group') {
+    const interestGroupRecord = record as Extract<
+      EntityData,
+      InterestGroupResponse
+    >;
+
     return {
       ...payload,
-      _tags: record.tags,
+      _tags: getTagNames(interestGroupRecord.tags),
     };
   }
 
-  if (type === 'news' && 'tags' in record) {
+  if (type === 'tutorial') {
+    const tutorialRecord = record as Extract<EntityData, TutorialsResponse>;
+
     return {
       ...payload,
-      _tags: record.tags,
+      _tags: tutorialRecord.tags,
     };
   }
 
-  return payload;
+  if (type === 'news') {
+    const newsRecord = record as Extract<EntityData, NewsResponse>;
+
+    return {
+      ...payload,
+      _tags: newsRecord.tags,
+    };
+  }
+
+  return {
+    ...payload,
+    _tags: [],
+  };
 };

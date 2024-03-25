@@ -1,16 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import {
-  EventResponse,
-  InterestGroupResponse,
-  ListResponse,
-  NewsResponse,
-  ResearchOutputResponse,
-  ResearchTagDataObject,
-  TeamListItemResponse,
-  TutorialsResponse,
-  UserResponse,
-  WorkingGroupResponse,
-} from '@asap-hub/model';
+import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';

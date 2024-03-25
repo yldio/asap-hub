@@ -66,7 +66,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   teams,
   labs,
   userActiveTeamsRoute,
-  tags
+  tags,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 
@@ -129,7 +129,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
               <span css={{ color: tin.rgb }}>Add your location</span>
             )}
           </span>
-          {tags && <TagList tags={tags.map(tag => tag.name)}/>}
+          {tags && <TagList tags={tags.map((tag) => tag.name)} />}
         </Paragraph>
       )}
     </div>

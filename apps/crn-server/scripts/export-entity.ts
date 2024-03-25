@@ -150,91 +150,70 @@ const transformRecords = (
   };
 
   if (type === 'research-output' && 'subtype' in record) {
-    const researchOutputRecord = record as Extract<
-      EntityData,
-      ResearchOutputResponse
-    >;
-
-    const subtype = researchOutputRecord.subtype;
+    const subtype = record.subtype;
 
     return {
       ...payload,
       _tags: [
-        ...researchOutputRecord.methods,
-        ...researchOutputRecord.organisms,
-        ...researchOutputRecord.environments,
+        ...record.methods,
+        ...record.organisms,
+        ...record.environments,
         ...(subtype ? [subtype] : []),
-        ...researchOutputRecord.keywords,
+        ...record.keywords,
       ],
     };
   }
 
-  if (type === 'user') {
-    const userRecord = record as Extract<EntityData, UserResponse>;
-
+  if (type === 'user' && 'onboarded' in record) {
     return {
       ...payload,
-      _tags: getTagNames(userRecord.tags),
+      _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'event') {
-    const eventRecord = record as Extract<EntityData, EventResponse>;
-
+  if (type === 'event' && 'speakers' in record) {
     return {
       ...payload,
-      _tags: getTagNames(eventRecord.tags),
+      _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'team') {
-    const teamRecord = record as Extract<EntityData, TeamListItemResponse>;
-
+  if (type === 'team' && 'projectTitle' in record) {
     return {
       ...payload,
-      _tags: getTagNames(teamRecord.tags),
+      _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'working-group') {
-    const workingGroupRecord = record as Extract<
-      EntityData,
-      WorkingGroupResponse
-    >;
-
+  if (type === 'working-group' && 'deliverables' in record) {
     return {
       ...payload,
-      _tags: workingGroupRecord.tags,
+      _tags: record.tags,
     };
   }
 
-  if (type === 'interest-group') {
-    const interestGroupRecord = record as Extract<
-      EntityData,
-      InterestGroupResponse
-    >;
-
+  if (type === 'interest-group' && 'tools' in record) {
     return {
       ...payload,
-      _tags: getTagNames(interestGroupRecord.tags),
+      _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'tutorial') {
-    const tutorialRecord = record as Extract<EntityData, TutorialsResponse>;
-
+  if (
+    type === 'tutorial' &&
+    'usedInPublication' in record &&
+    'shortText' in record
+  ) {
     return {
       ...payload,
-      _tags: tutorialRecord.tags,
+      _tags: record.tags,
     };
   }
 
-  if (type === 'news') {
-    const newsRecord = record as Extract<EntityData, NewsResponse>;
-
+  if (type === 'news' && 'frequency' in record) {
     return {
       ...payload,
-      _tags: newsRecord.tags,
+      _tags: record.tags,
     };
   }
 

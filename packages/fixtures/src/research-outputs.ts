@@ -44,7 +44,6 @@ const researchOutputResponse: Omit<
       endDate: '2020-12-10T20:36:54Z',
     },
   ],
-  tags: [],
   relatedResearch: [],
   sharingStatus: 'Public',
   contactEmails: [],

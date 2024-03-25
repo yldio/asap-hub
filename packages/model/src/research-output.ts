@@ -208,7 +208,6 @@ export type ResearchOutputCoreObject = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
-  tags: string[];
 };
 
 export type ResearchOutputVersionCoreObject = Pick<

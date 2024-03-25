@@ -138,7 +138,8 @@ const transformRecords = (
     },
   };
 
-  if (type === 'research-output' && 'subtype' in record) {
+  // type 'research-output'
+  if ('subtype' in record) {
     const subtype = record.subtype;
 
     return {
@@ -153,53 +154,56 @@ const transformRecords = (
     };
   }
 
-  if (type === 'user' && 'onboarded' in record) {
+  // type 'user'
+  if ('onboarded' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'event' && 'speakers' in record) {
+  // type 'event'
+  if ('speakers' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'team' && 'projectTitle' in record) {
+  // type 'team'
+  if ('projectTitle' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'working-group' && 'deliverables' in record) {
+  // type 'working-group'
+  if ('deliverables' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (type === 'interest-group' && 'tools' in record) {
+  // type 'interest-group'
+  if ('tools' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (
-    type === 'tutorial' &&
-    'usedInPublication' in record &&
-    'shortText' in record
-  ) {
+  // type 'tutorial'
+  if ('usedInPublication' in record && 'shortText' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (type === 'news' && 'frequency' in record) {
+  // type 'news'
+  if ('frequency' in record) {
     return {
       ...payload,
       _tags: record.tags,

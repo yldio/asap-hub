@@ -176,7 +176,7 @@ const renderPage = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <Route path={path}>
                 <WorkingGroupOutput
                   workingGroupId={workingGroupId}

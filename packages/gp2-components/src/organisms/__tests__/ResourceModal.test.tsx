@@ -61,7 +61,7 @@ describe('ResourceModal', () => {
       const getUserConfirmation = jest.fn((_message, cb) => cb(true));
       const history = createMemoryHistory({ getUserConfirmation });
       render(
-        <Router history={history}>
+        <Router navigator={history}>
           <ResourceModal {...defaultProps} {...props} />
         </Router>,
       );

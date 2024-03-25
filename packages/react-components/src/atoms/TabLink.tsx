@@ -36,7 +36,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
     return (
       <NavLink
         to={href}
-        activeClassName={({ isActive }) => (isActive ? activeClassName : '')}
+        className={({ isActive }) => (isActive ? activeClassName : "")}
         css={(theme) => [
           styles,
           theme.components?.TabLink?.styles,

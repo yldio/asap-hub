@@ -1,6 +1,6 @@
 import { useFlags } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
 
 import { EventsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
@@ -20,7 +20,7 @@ const Events: FC<Record<string, never>> = () => {
     loadEventDirectory().then(loadEvent);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const [currentTime] = useState(new Date());
   const { isEnabled } = useFlags();
 

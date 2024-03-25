@@ -1,4 +1,4 @@
-import React, { Suspense, ComponentProps } from 'react';
+import React, { Suspense, ComponentProps, ReactNode } from 'react';
 import { Titled } from 'react-titled';
 import {
   Loading,
@@ -21,7 +21,11 @@ type FrameBoundaryProps = {
   fallback?: ComponentProps<typeof Suspense>['fallback'];
 };
 
-const Frame = ({ fallback, children, title }: React.PropsWithChildren<FrameProps>) => (
+const Frame = ({
+  fallback,
+  children,
+  title,
+}: React.PropsWithChildren<FrameProps>) => (
   <Titled
     title={(parentTitle) =>
       title ? (parentTitle ? `${title} | ${parentTitle}` : title) : parentTitle
@@ -45,7 +49,7 @@ const DefaultFrame: React.FC<React.PropsWithChildren<FrameBoundaryProps>> = ({
 );
 
 export const SearchFrame: React.FC<
-React.PropsWithChildren<Omit<FrameBoundaryProps, 'boundaryProps'>>
+  React.PropsWithChildren<Omit<FrameBoundaryProps, 'boundaryProps'>>
 > = ({ children, title, fallback = <Loading /> }) => (
   <ErrorBoundary
     title={'Something went wrong'}

@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { useRouteMatch, Route } from 'react-router-dom';
+import { useMatch, Route } from 'react-router-dom';
 import {
   NotFoundPage,
   TeamProfileWorkspace,
@@ -16,7 +16,7 @@ interface WorkspaceProps {
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);

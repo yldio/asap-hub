@@ -10,7 +10,7 @@ import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
-import { Route, Routes, useLocation, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
@@ -23,7 +23,7 @@ const ResearchOutput: React.FC = () => {
     sharedResearch({}).researchOutput,
   );
 
-  const publishedNowPath = useRouteMatch({
+  const publishedNowPath = useMatch({
     path: sharedResearch({})
       .researchOutput({ researchOutputId })
       .researchOutputPublished({ researchOutputId }).$,
@@ -32,7 +32,7 @@ const ResearchOutput: React.FC = () => {
 
   const publishedNow = !!publishedNowPath;
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const urlSearchParams = new URLSearchParams(useLocation().search);
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;

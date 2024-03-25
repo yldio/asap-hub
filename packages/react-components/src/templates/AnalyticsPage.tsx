@@ -10,7 +10,9 @@ const mainStyles = css({
 
 type AnalyticsPageProps = ComponentProps<typeof AnalyticsPageHeader>;
 
-const AnalyticsPage: React.FC<React.PropsWithChildren<AnalyticsPageProps>> = ({ children }) => (
+const AnalyticsPage: React.FC<React.PropsWithChildren<AnalyticsPageProps>> = ({
+  children,
+}) => (
   <article>
     <AnalyticsPageHeader />
     <main css={mainStyles}>{children}</main>

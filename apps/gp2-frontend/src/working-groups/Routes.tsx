@@ -1,7 +1,7 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadWorkingGroupList = () =>
@@ -20,7 +20,7 @@ const Routes: React.FC<Record<string, never>> = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWorkingGroupList().then(loadWorkingGroupDetail);
   }, []);
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   const [currentTime] = useState(new Date());
   return (

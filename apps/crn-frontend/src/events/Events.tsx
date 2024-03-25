@@ -1,7 +1,7 @@
 import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
@@ -21,7 +21,7 @@ const Events: FC<Record<string, never>> = () => {
     loadCalendars().then(loadEventList);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();

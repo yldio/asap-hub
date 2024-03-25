@@ -3,7 +3,7 @@ import { UserResponse } from '@asap-hub/model';
 import { BiographyModal, UserProfileAbout } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, useMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 
@@ -13,7 +13,7 @@ type AboutProps = {
 const About: React.FC<AboutProps> = ({ user }) => {
   const { id } = useCurrentUserCRN() ?? {};
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);

@@ -17,7 +17,7 @@ import {
   Route,
   Routes,
   useParams,
-  useRouteMatch,
+  useMatch,
 } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -65,7 +65,7 @@ const DuplicateOutput: FC = () => {
 };
 
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   useEffect(() => {

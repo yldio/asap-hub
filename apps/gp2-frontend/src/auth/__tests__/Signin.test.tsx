@@ -130,7 +130,7 @@ describe('after a failed flow', () => {
       ],
     });
     result = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Signin />
       </Router>,
     );

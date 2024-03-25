@@ -74,7 +74,7 @@ afterEach(() => {
 });
 
 it('renders a button to signin', async () => {
-  const { getByRole } = render(<Signin />, { wrapper: StaticRouter });
+  const { getByRole } = render(<Signin />);
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);
 });
 
@@ -132,7 +132,7 @@ describe('after a failed flow', () => {
         ],
       });
       result = render(
-        <Router history={history}>
+        <Router navigator={history} location=''>
           <Signin />
         </Router>,
       );
@@ -166,7 +166,7 @@ describe('after a failed flow', () => {
         ],
       });
       result = render(
-        <Router history={history}>
+        <Router navigator={history} location=''>
           <Signin />
         </Router>,
       );

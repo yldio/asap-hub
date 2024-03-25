@@ -9,9 +9,6 @@ import {
   Route,
   Router,
 } from 'react-router-dom';
-// import {
-//   StaticRouter,
-// } from 'react-router-dom/server';
 import { Button } from '../../atoms';
 import Form from '../Form';
 

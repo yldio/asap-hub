@@ -3,7 +3,6 @@ import {
   RenderResult,
   waitForElementToBeRemoved,
   fireEvent,
-  screen,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -93,7 +92,6 @@ describe('when clicking the reset button', () => {
 
     it('links back to signin', () => {
       const { getByText } = result;
-      screen.debug(undefined, 50000);
       expect(getByText(/back/i).closest('a')).toHaveAttribute('href', '/');
     });
   });

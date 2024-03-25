@@ -9,8 +9,8 @@ import {
   MemoryRouter,
   Route,
   Router,
-  StaticRouter,
 } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { Button } from '@asap-hub/react-components';
 import Form from '../Form';
 

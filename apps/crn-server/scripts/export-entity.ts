@@ -1,16 +1,5 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import {
-  EventDataObject,
-  InterestGroupDataObject,
-  ListResponse,
-  NewsDataObject,
-  ResearchOutputResponse,
-  ResearchTagDataObject,
-  TeamListItemResponse,
-  TutorialsDataObject,
-  UserResponse,
-  WorkingGroupResponse,
-} from '@asap-hub/model';
+import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -133,32 +122,6 @@ const getTagNames = (
       )
     : [];
 
-const isResearchOutput = (
-  record: EntityData,
-): record is ResearchOutputResponse => 'subtype' in record;
-
-const isUser = (record: EntityData): record is UserResponse =>
-  'onboarded' in record;
-
-const isEvent = (record: EntityData): record is EventDataObject =>
-  'speakers' in record;
-
-const isTeam = (record: EntityData): record is TeamListItemResponse =>
-  'projectTitle' in record;
-
-const isWorkingGroup = (record: EntityData): record is WorkingGroupResponse =>
-  'deliverables' in record;
-
-const isInterestGroup = (
-  record: EntityData,
-): record is InterestGroupDataObject => 'tools' in record;
-
-const isTutorial = (record: EntityData): record is TutorialsDataObject =>
-  'usedInPublication' in record && 'shortText' in record;
-
-const isNews = (record: EntityData): record is NewsDataObject =>
-  'frequency' in record;
-
 const transformRecords = (
   record: EntityData,
   type: keyof EntityResponsesCRN,
@@ -175,7 +138,7 @@ const transformRecords = (
     },
   };
 
-  if (isResearchOutput(record)) {
+  if (type === 'research-output' && 'subtype' in record) {
     const subtype = record.subtype;
 
     return {
@@ -190,49 +153,53 @@ const transformRecords = (
     };
   }
 
-  if (isUser(record)) {
+  if (type === 'user' && 'onboarded' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (isEvent(record)) {
+  if (type === 'event' && 'speakers' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (isTeam(record)) {
+  if (type === 'team' && 'projectTitle' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (isWorkingGroup(record)) {
+  if (type === 'working-group' && 'deliverables' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (isInterestGroup(record)) {
+  if (type === 'interest-group' && 'tools' in record) {
     return {
       ...payload,
       _tags: getTagNames(record.tags),
     };
   }
 
-  if (isTutorial(record)) {
+  if (
+    type === 'tutorial' &&
+    'usedInPublication' in record &&
+    'shortText' in record
+  ) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (isNews(record)) {
+  if (type === 'news' && 'frequency' in record) {
     return {
       ...payload,
       _tags: record.tags,

@@ -63,7 +63,7 @@ const OutputList: React.FC<OutputListProps> = ({
       exportResults={exportOutputs}
     >
       {items.map((output) => (
-        <OutputCard key={output.id} {...output} />
+        <OutputCard key={output.id} {...output} showTags />
       ))}
     </ResultList>
   ) : (

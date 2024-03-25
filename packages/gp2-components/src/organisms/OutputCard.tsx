@@ -75,6 +75,7 @@ type OutputCardProps = Pick<
   | 'tags'
 > & {
   detailedView?: boolean;
+  showTags?: boolean;
 };
 
 const OutputCard: React.FC<OutputCardProps> = ({
@@ -92,6 +93,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
   link,
   mainEntity,
   detailedView = false,
+  showTags = false,
   tags,
 }) => (
   <Card padding={false}>
@@ -153,7 +155,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
           />
         )}
       </div>
-      {tags.length > 0 && (
+      {showTags && tags.length > 0 && (
         <div css={tagListContainerStyles}>
           <TagList tags={tags.map((tag) => tag.name)} />
         </div>

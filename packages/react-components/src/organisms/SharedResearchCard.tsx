@@ -44,7 +44,9 @@ type SharedResearchCardProps = Pick<
   | 'workingGroups'
   | 'isInReview'
   | 'keywords'
->;
+> & {
+  showTags?: boolean;
+};
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   id: researchOutputId,
@@ -62,6 +64,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   publishingEntity,
   isInReview,
   keywords,
+  showTags = false,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -116,7 +119,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         />
       )}
     </div>
-    <TagList max={3} tags={keywords} />
+    {showTags && keywords.length > 0 && <TagList max={3} tags={keywords} />}
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>

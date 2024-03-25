@@ -21,11 +21,13 @@ type SharedResearchListProps = Omit<
   >;
   readonly listViewHref: string;
   readonly cardViewHref: string;
+  showTags?: boolean;
 } & Pick<ComponentProps<typeof AlgoliaHit>, 'algoliaQueryId'>;
 
 const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
   algoliaQueryId,
+  showTags = false,
   ...cardListProps
 }) => (
   <ResultList icon={<LibraryIcon color={charcoal.rgb} />} {...cardListProps}>
@@ -42,7 +44,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
           algoliaQueryId={algoliaQueryId}
           objectId={output.id}
         >
-          <SharedResearchCard {...output} />
+          <SharedResearchCard {...output} showTags={showTags} />
         </AlgoliaHit>
       ))
     )}

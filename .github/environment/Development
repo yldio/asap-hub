@@ -1,3 +1,4 @@
+crn-analytics-algolia-index=crn-analytics_dev
 contentful-environment=Development
 crn-algolia-api-key-name=crn-algolia-api-key-ci-dev
 crn-algolia-app-id-name=crn-algolia-app-id-dev

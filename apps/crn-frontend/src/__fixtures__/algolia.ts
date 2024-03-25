@@ -1,4 +1,5 @@
 import {
+  Apps,
   ClientSearchResponse,
   EntityResponses,
   RESEARCH_OUTPUT_ENTITY_TYPE,
@@ -6,11 +7,12 @@ import {
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 export const createAlgoliaResponse = <
-  EntityType extends keyof EntityResponses['crn'],
+  App extends Apps,
+  EntityType extends keyof EntityResponses[App],
 >(
-  hits: ClientSearchResponse<'crn', EntityType>['hits'],
-  overrides: Partial<ClientSearchResponse<'crn', EntityType>> = {},
-): ClientSearchResponse<'crn', EntityType> => ({
+  hits: ClientSearchResponse<App, EntityType>['hits'],
+  overrides: Partial<ClientSearchResponse<App, EntityType>> = {},
+): ClientSearchResponse<App, EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -41,7 +43,7 @@ export const createResearchOutputListAlgoliaResponse = (
   items: number,
   responseOverride?: Partial<SearchResponse>,
 ): SearchResponse =>
-  createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+  createAlgoliaResponse<'crn', typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputAlgoliaRecord(itemIndex),
     ),

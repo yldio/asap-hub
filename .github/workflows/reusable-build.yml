@@ -223,6 +223,7 @@ jobs:
           VITE_APP_RELEASE: ${{ steps.setup.outputs.app-release }}
           VITE_APP_CRN_ALGOLIA_APP_ID: ${{ steps.crn-algolia-keys.outputs.algolia-app-id }}
           VITE_APP_CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          VITE_APP_CRN_ANALYTICS_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
           VITE_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
           VITE_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
           VITE_APP_CRN_AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}

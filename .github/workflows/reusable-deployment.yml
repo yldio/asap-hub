@@ -204,10 +204,12 @@ jobs:
       - name: Synchronize Schema
         run: |
           yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -p crn
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX -p crn-analytics
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          ALGOLIA_ANALYTICS_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 
   gp2-algolia-settings:
     needs: [gp2-sls-deploy]

@@ -305,7 +305,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
-          createAlgoliaResponse(
+          createAlgoliaResponse<'crn', 'research-output'>(
             [
               {
                 ...createResearchOutputResponse(),
@@ -334,7 +334,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as Stringifier,
       (parameters) =>
         Promise.resolve(
-          createAlgoliaResponse(
+          createAlgoliaResponse<'crn', 'research-output'>(
             [
               {
                 ...createResearchOutputResponse(),
@@ -377,7 +377,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
-          createAlgoliaResponse<'research-output'>(
+          createAlgoliaResponse<'crn', 'research-output'>(
             [
               {
                 ...createResearchOutputResponse(),

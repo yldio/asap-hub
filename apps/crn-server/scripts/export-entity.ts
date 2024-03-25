@@ -113,10 +113,23 @@ const getController = (entity: keyof EntityResponsesCRN) => {
   return controllerMap[entity];
 };
 
+const getTagNames = (
+  tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[],
+): string[] =>
+  tags
+    ? tags.flatMap(
+        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
+      )
+    : [];
+
 const transformRecords = (
   record: EntityData,
   type: keyof EntityResponsesCRN,
-) => {
+): EntityData & {
+  objectID: string;
+  __meta: { type: string };
+  _tags: string[];
+} => {
   const payload = {
     ...record,
     objectID: record.id,
@@ -125,7 +138,8 @@ const transformRecords = (
     },
   };
 
-  if (type === 'research-output' && 'subtype' in record) {
+  // type 'research-output'
+  if ('subtype' in record) {
     const subtype = record.subtype;
 
     return {
@@ -140,53 +154,64 @@ const transformRecords = (
     };
   }
 
-  if (type === 'user' && 'expertiseAndResourceTags' in record) {
-    return payload;
+  // type 'user'
+  if ('onboarded' in record) {
+    return {
+      ...payload,
+      _tags: getTagNames(record.tags),
+    };
   }
 
-  if (type === 'event' && 'tags' in record) {
+  // type 'event'
+  if ('speakers' in record) {
+    return {
+      ...payload,
+      _tags: getTagNames(record.tags),
+    };
+  }
+
+  // type 'team'
+  if ('projectTitle' in record) {
+    return {
+      ...payload,
+      _tags: getTagNames(record.tags),
+    };
+  }
+
+  // type 'working-group'
+  if ('deliverables' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (type === 'team' && 'expertiseAndResourceTags' in record) {
+  // type 'interest-group'
+  if ('tools' in record) {
     return {
       ...payload,
-      _tags: record.expertiseAndResourceTags,
+      _tags: getTagNames(record.tags),
     };
   }
 
-  if (type === 'working-group' && 'tags' in record) {
-    return {
-      ...payload,
-      _tags: record.tags,
-    };
-  }
-
-  if (type === 'interest-group' && 'tags' in record) {
-    return {
-      ...payload,
-      _tags: record.tags?.flatMap(
-        (tag) => (tag as Pick<ResearchTagDataObject, 'id' | 'name'>).name,
-      ),
-    };
-  }
-
-  if (type === 'tutorial' && 'tags' in record) {
+  // type 'tutorial'
+  if ('usedInPublication' in record && 'shortText' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  if (type === 'news' && 'tags' in record) {
+  // type 'news'
+  if ('frequency' in record) {
     return {
       ...payload,
       _tags: record.tags,
     };
   }
 
-  return payload;
+  return {
+    ...payload,
+    _tags: [],
+  };
 };

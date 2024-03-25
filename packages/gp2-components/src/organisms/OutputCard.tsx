@@ -8,6 +8,7 @@ import {
   SharedResearchMetadata,
   UsersList,
   lead,
+  TagList,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -52,6 +53,10 @@ const timestampStyles = css({
   },
 });
 
+const tagListContainerStyles = css({
+  marginBottom: rem(24),
+});
+
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
   | 'id'
@@ -67,6 +72,7 @@ type OutputCardProps = Pick<
   | 'type'
   | 'subtype'
   | 'mainEntity'
+  | 'tags'
 > & {
   detailedView?: boolean;
 };
@@ -86,6 +92,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
   link,
   mainEntity,
   detailedView = false,
+  tags,
 }) => (
   <Card padding={false}>
     <div css={detailedView ? detailedViewContainerStyles : cardContainerStyles}>
@@ -146,6 +153,11 @@ const OutputCard: React.FC<OutputCardProps> = ({
           />
         )}
       </div>
+      {tags.length > 0 && (
+        <div css={tagListContainerStyles}>
+          <TagList tags={tags.map((tag) => tag.name)} />
+        </div>
+      )}
       <div css={timestampStyles}>
         <span>Date added: {formatDate(new Date(addedDate || created))}</span>
         {detailedView && (

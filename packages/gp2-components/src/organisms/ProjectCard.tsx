@@ -5,6 +5,7 @@ import {
   lead,
   LinkHeadline,
   pixels,
+  TagList,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -18,7 +19,7 @@ const { rem } = pixels;
 type ProjectCardProps = ComponentProps<typeof ProjectSummaryHeader> &
   Pick<
     gp2Model.ProjectResponse,
-    'title' | 'startDate' | 'endDate' | 'members' | 'id'
+    'title' | 'startDate' | 'endDate' | 'members' | 'id' | 'tags'
   >;
 
 const rowStyles = css({
@@ -44,6 +45,10 @@ export const cardStyles: Record<
   },
 };
 
+const tagContainerStyles = css({
+  padding: `${rem(24)} 0`,
+});
+
 const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   status,
@@ -54,6 +59,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   projectProposalUrl,
   traineeProject,
   opportunitiesAvailable,
+  tags,
 }) => (
   <Card stroke strokeColor={cardStyles[status].color} strokeSize={9}>
     <ProjectSummaryHeader
@@ -72,6 +78,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     >
       {title}
     </LinkHeadline>
+    {tags.length > 0 && (
+      <div css={tagContainerStyles}>
+        <TagList tags={tags.map((tag) => tag.name)} />
+      </div>
+    )}
     <div
       css={[
         rowStyles,

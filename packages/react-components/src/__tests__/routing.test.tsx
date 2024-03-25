@@ -43,7 +43,7 @@ describe('usePushFromPathname', () => {
   it('pushes a history entry if currently on given page', () => {
     const history = createMemoryHistory({ initialEntries: ['/current'] });
     const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-      <Router navigator={history}>{children}</Router>
+      <Router navigator={history} location='/current'>{children}</Router>
     );
     const {
       result: { current },

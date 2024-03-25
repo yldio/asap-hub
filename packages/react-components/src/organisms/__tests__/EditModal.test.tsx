@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
-import { Router, MemoryRouter, StaticRouter } from 'react-router-dom';
+import { Router, MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createMemoryHistory } from 'history';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

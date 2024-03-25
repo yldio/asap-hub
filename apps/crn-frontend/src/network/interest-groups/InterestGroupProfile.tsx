@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import {
@@ -30,7 +30,7 @@ type InterestGroupProfileProps = {
 const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   currentTime,
 }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).interestGroups({}).interestGroup;
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
 

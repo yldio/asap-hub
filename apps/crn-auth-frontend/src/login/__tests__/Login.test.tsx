@@ -45,10 +45,10 @@ it('renders the form in signup mode', () => {
   expect(getByText(/continue$/i, { selector: 'button *' })).toBeVisible();
 });
 
-it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
+it.each(['Google', 'ORCID'])('initiates a SSO with %s', async (provider) => {
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
 
-  userEvent.click(
+  await userEvent.click(
     getByText(new RegExp(provider, 'i'), { selector: 'button > *' }),
   );
   expect(authorizeWithSso).toHaveBeenCalledTimes(1);
@@ -62,9 +62,9 @@ it('initiates a signin with email and password', async () => {
   const { getByText, getByLabelText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
     expect.objectContaining({
       search: expect.stringContaining('response_type=code'),
@@ -85,9 +85,9 @@ it('initiates a signup with email and password', async () => {
   const { getByText, getByLabelText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
-  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
     expect.objectContaining({
       search: expect.stringContaining(
@@ -110,14 +110,14 @@ it('shows an Auth0 email error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
   (error as unknown as WebAuthError).code = 'invalid_signup';
   (error as unknown as WebAuthError).errorDescription = 'Invalid signup.';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/failed/i)).toHaveLength(1);
   expect(getByLabelText(/e-?mail/i)).toBeInvalid();
 });
@@ -131,7 +131,7 @@ it('shows an Auth0 password error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
   (error as unknown as WebAuthError).code = 'invalid_password';
@@ -139,7 +139,7 @@ it('shows an Auth0 password error', async () => {
     'Your password is too weak';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/weak/i)).toHaveLength(1);
   expect(getByLabelText(/password/i)).toBeInvalid();
 });
@@ -154,12 +154,12 @@ it('shows a generic authentication error on both fields', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/unknown.+FetchError/i)).toHaveLength(2);
   expect(getByLabelText(/e-?mail/i)).toBeInvalid();
   expect(getByLabelText(/password/i)).toBeInvalid();
@@ -175,12 +175,12 @@ it('hides the authentication error message again when changing the credentials',
   const { getByText, getByLabelText, queryByText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  userEvent.type(getByLabelText(/password/i), 'PW');
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
 
   userEvent.clear(getByLabelText(/e-?mail/i));

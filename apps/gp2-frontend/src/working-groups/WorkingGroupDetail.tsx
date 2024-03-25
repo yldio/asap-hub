@@ -16,7 +16,7 @@ import {
   Route,
   Routes,
   useParams,
-  useRouteMatch,
+  useMatch,
 } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -62,7 +62,7 @@ const DuplicateOutput: FC = () => {
 };
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   useEffect(() => {

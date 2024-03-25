@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
 import { Router, Route } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import { LastLocationProvider } from 'react-router-dom-last-location';
 
 import { useBackHref } from '../routing';
 
@@ -11,8 +11,8 @@ describe('useBackHref', () => {
     history = createBrowserHistory();
   });
 
-  const wrapper: React.FC = ({ children }) => (
-    <Router history={history}>
+  const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
+    <Router location={history.location} navigator={history}>
       <LastLocationProvider>{children}</LastLocationProvider>
     </Router>
   );

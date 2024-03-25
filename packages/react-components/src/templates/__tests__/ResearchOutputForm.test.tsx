@@ -346,7 +346,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -915,7 +915,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <Router navigator={history}>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}

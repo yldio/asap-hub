@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Redirect, Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
 import {
@@ -44,7 +44,7 @@ type UserProfileProps = {
 
 const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const route = network({}).users({}).user;
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { userId } = useRouteParams(route);
 
   const tabRoutes = route({ userId });

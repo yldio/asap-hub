@@ -12,11 +12,9 @@ const mainStyles = css({
 type InterestGroupProfilePageProps = ComponentProps<
   typeof InterestGroupProfileHeader
 >;
-const InterestGroupProfilePage: React.FC<React.PropsWithChildren<InterestGroupProfilePageProps>> = ({
-  children,
-  active,
-  ...props
-}) => (
+const InterestGroupProfilePage: React.FC<
+  React.PropsWithChildren<InterestGroupProfilePageProps>
+> = ({ children, active, ...props }) => (
   <article>
     {!active && (
       <Toast accent="warning">

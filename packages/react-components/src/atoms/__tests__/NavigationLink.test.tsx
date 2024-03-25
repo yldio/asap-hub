@@ -2,7 +2,8 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
@@ -81,7 +82,7 @@ describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const history = createMemoryHistory({ initialEntries: ['/'] });
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
@@ -103,7 +104,7 @@ describe('with a router', () => {
   it('default route is not always highlighted as selected', () => {
     const history = createMemoryHistory({ initialEntries: ['/location'] });
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <NavigationLink href="/" icon={<svg />}>
           Default
         </NavigationLink>

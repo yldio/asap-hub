@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, useMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
@@ -23,7 +23,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
 
   const { id } = useCurrentUserCRN() ?? {};
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);

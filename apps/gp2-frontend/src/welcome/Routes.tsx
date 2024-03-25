@@ -1,4 +1,4 @@
-import { Routes, Route, useRouteMatch } from 'react-router-dom';
+import { Routes, Route, useMatch } from 'react-router-dom';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/routing';
 
@@ -6,7 +6,7 @@ import Welcome from './Welcome';
 import Frame from '../Frame';
 
 const Routes: React.FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   return (
     <Routes>

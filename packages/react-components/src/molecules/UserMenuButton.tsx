@@ -31,7 +31,9 @@ type UserMenuButtonProps = {
     ? 'avatarUrl'
     : K]: AvatarProps[K];
 };
-const UserMenuButton: React.FC<React.PropsWithChildren<UserMenuButtonProps>> = ({
+const UserMenuButton: React.FC<
+  React.PropsWithChildren<UserMenuButtonProps>
+> = ({
   onClick = noop,
   open = false,
   displayName = 'Unknown User',

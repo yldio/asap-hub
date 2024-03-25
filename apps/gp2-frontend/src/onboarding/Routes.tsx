@@ -1,7 +1,7 @@
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 import Frame from '../Frame';
 import Onboarding from './Onboarding';
 
@@ -39,7 +39,7 @@ const Routes: React.FC<Record<string, never>> = () => {
       .then(loadAdditionalDetails)
       .then(loadPreview);
   }, []);
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   return (
     <Routes>

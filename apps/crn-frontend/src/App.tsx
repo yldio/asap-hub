@@ -3,7 +3,7 @@ import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Router, Routes } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import { LastLocationProvider } from 'react-router-dom-last-location';
 
 import { Frame } from '@asap-hub/frontend-utils';
 import {
@@ -86,7 +86,7 @@ const App: FC<Record<string, never>> = () => {
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
         <SentryAuth0 />
-        <Router history={history}>
+        <Router location={history.location} navigator={history}>
           <LastLocationProvider>
             <Frame title={null}>
               <Routes>

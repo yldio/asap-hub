@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import ConfirmModal from '../ConfirmModal';
 

@@ -39,7 +39,7 @@ it('renders a form with given children', () => {
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <Router history={history}>
+    <Router navigator={history}>
       <Form {...props}>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -51,7 +51,7 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <Router history={history}>
+    <Router navigator={history}>
       <Form {...props} dirty>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -65,7 +65,7 @@ it('prompts when trying to leave after making edits', () => {
 describe('on cancel', () => {
   it('prompts after making edits', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -85,7 +85,7 @@ describe('on cancel', () => {
   });
   it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -106,7 +106,7 @@ describe('on cancel', () => {
 
   it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Route path="/form">
           <Form {...props} dirty>
             {({ onCancel }) => (
@@ -240,7 +240,7 @@ describe('when saving', () => {
             removeNotification: jest.fn(),
           }}
         >
-          <Router history={history}>
+          <Router navigator={history}>
             <Form {...props} dirty>
               {({ getWrappedOnSave, isSaving }) => (
                 <>
@@ -324,7 +324,7 @@ describe('when saving', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>
+            <Router navigator={history}>
               <Form {...props}>
                 {({ getWrappedOnSave, isSaving }) => (
                   <>
@@ -408,7 +408,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router history={history}>
+        <Router navigator={history}>
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>
@@ -453,7 +453,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router history={history}>
+        <Router navigator={history}>
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>

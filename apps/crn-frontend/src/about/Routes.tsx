@@ -1,7 +1,7 @@
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AboutPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 
 const loadAbout = () => import(/* webpackChunkName: "about" */ './About');
 
@@ -13,7 +13,7 @@ const About: FC<Record<string, never>> = () => {
     loadAbout();
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   return (
     <Routes>

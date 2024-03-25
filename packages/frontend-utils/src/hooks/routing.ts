@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLastLocation } from 'react-router-last-location';
+import { useLastLocation } from 'react-router-dom-last-location';
 
 export const useBackHref = (): string | null => {
   const [lastLocationWhenEntering] = useState(useLastLocation());

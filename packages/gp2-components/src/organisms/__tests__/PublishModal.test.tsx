@@ -20,7 +20,7 @@ describe('PublishModal', () => {
     const history = createMemoryHistory({ getUserConfirmation });
     const onSave = jest.fn();
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <PublishModal {...defaultProps} onSave={onSave} />
       </Router>,
     );

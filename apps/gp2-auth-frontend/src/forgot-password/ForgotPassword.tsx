@@ -6,7 +6,7 @@ import {
 import {
   useNavigate,
   Routes,
-  useRouteMatch,
+  useMatch,
   Route,
   Redirect,
 } from 'react-router-dom';
@@ -23,7 +23,7 @@ interface ForgotPasswordProps {
 }
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
   const history = useNavigate();
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   const [error, setError] = useState<WebAuthError | Error>();
 

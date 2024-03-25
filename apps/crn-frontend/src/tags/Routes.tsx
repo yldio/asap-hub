@@ -2,7 +2,7 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Routes, Route, useRouteMatch } from 'react-router-dom';
+import { Routes, Route, useMatch } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -22,7 +22,7 @@ const options: { label: string; value: CRNTagSearchEntities }[] = [
 ];
 
 const Routes: React.FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { client } = useAlgolia();
   const { tags, setTags, filters, toggleFilter } = useSearch();
 

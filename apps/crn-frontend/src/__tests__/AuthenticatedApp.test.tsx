@@ -1,6 +1,6 @@
 import { FC, Suspense } from 'react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
 

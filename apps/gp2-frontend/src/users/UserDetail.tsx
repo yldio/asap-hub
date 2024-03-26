@@ -14,7 +14,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -91,7 +91,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
 
   if (user) {
     return (
-      <Switch>
+      <Routes>
         <UserDetailPage
           editHref={
             isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
@@ -103,7 +103,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
           onImageSelect={isOwnProfile ? onImageSelect : undefined}
           {...user}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
@@ -182,10 +182,10 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                 />
               </Frame>
             </Route>
-            <Redirect to={overview} />
-          </Switch>
+            <Route path="*" element={<Navigate to={overview} />} />
+          </Routes>
         </UserDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

@@ -2,7 +2,7 @@ import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Prompt, useHistory } from 'react-router-dom';
+import { Prompt, useLocation, useNavigate } from 'react-router-dom';
 import { usePushFromHere } from '../routing';
 
 const styles = css({
@@ -40,7 +40,7 @@ const Form = <T extends void | Record<string, unknown>>({
   const toast = useContext(
     toastType === 'inner' ? InnerToastContext : ToastContext,
   );
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const pushFromHere = usePushFromHere();
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
@@ -92,7 +92,8 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    history.location.key ? history.goBack() : history.push('/');
+    const location = useLocation();
+    location.key ? navigate(-1) : navigate('/');
   };
 
   return (

@@ -1,14 +1,14 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
 
   const { pathname, search, hash } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const history = useHistory();
+  const history = useNavigate();
 
   const getAuthFailureCode = (
     error: boolean,

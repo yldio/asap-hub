@@ -2,7 +2,7 @@ import { OutputsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 import Frame from '../Frame';
 import OutputDetail from './OutputDetail';
 
@@ -12,7 +12,7 @@ const loadOutputDirectory = () =>
 const OutputDirectory = lazy(loadOutputDirectory);
 
 const Outputs: FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -20,7 +20,7 @@ const Outputs: FC<Record<string, never>> = () => {
   }, []);
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <Frame title="Outputs">
           <OutputsPage>
@@ -34,7 +34,7 @@ const Outputs: FC<Record<string, never>> = () => {
         <OutputDetail />
       </Route>
       <Route component={NotFoundPage} />
-    </Switch>
+    </Routes>
   );
 };
 

@@ -1,6 +1,6 @@
 import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { text } from './knobs';
 import { LayoutDecorator } from './layout';

@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -24,7 +24,9 @@ mockConsoleError();
 
 const userId = 'u42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
+  children,
+}) => (
   <RecoilRoot
     initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
   >
@@ -75,7 +77,7 @@ it('is rendered when there are groups', async () => {
 
 it('throws if the user does not exist', async () => {
   mockGetUserInterestGroups.mockResolvedValue(undefined);
-  const errorWrapper: FC = ({ children }) =>
+  const errorWrapper: FC<React.PropsWithChildren<unknown>> = ({ children }) =>
     createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(
     <InterestGroupsCard user={{ ...createUserResponse(), id: userId }} />,

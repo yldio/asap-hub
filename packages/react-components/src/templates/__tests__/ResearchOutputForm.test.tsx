@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import {
@@ -345,7 +346,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -914,7 +915,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <Router navigator={history}>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}

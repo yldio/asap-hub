@@ -2,7 +2,8 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {

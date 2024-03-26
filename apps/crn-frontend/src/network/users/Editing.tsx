@@ -1,4 +1,4 @@
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, useMatch } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -18,7 +18,7 @@ interface EditingProps {
 }
 
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);

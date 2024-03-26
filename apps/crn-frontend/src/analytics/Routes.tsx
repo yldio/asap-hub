@@ -1,7 +1,7 @@
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 
 const loadAnalytics = () =>
   import(/* webpackChunkName: "analytics" */ './Analytics');
@@ -14,10 +14,10 @@ const About: FC<Record<string, never>> = () => {
     loadAnalytics();
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <AnalyticsPage>
           <Frame title="Analytics">
@@ -25,7 +25,7 @@ const About: FC<Record<string, never>> = () => {
           </Frame>
         </AnalyticsPage>
       </Route>
-    </Switch>
+    </Routes>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { HashRouter, Routes, Route, Redirect } from 'react-router-dom';
 
 import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import { getHubUrlFromRedirect } from '@asap-hub/auth-frontend-utils';
@@ -14,7 +14,7 @@ const App: React.FC<Record<string, never>> = () => {
     <HashRouter>
       <Theme>
         <BasicLayout logoHref={hubUrl}>
-          <Switch>
+          <Routes>
             <Route path="/login">
               <Login email={email} setEmail={setEmail} />
             </Route>
@@ -22,7 +22,7 @@ const App: React.FC<Record<string, never>> = () => {
               <ForgotPassword email={email} setEmail={setEmail} />
             </Route>
             <Redirect to="/login" />
-          </Switch>
+          </Routes>
         </BasicLayout>
       </Theme>
     </HashRouter>

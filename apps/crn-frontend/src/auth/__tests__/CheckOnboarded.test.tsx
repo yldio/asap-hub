@@ -60,7 +60,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>text</CheckOnboarded>
             </Router>
           </WhenReady>
@@ -75,7 +75,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>
                 <Route path={ownProfilePath}>profile page</Route>
                 <Route path={teamPage}>team page</Route>
@@ -104,7 +104,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>
                 <Route path={ownProfilePath}>profile</Route>
               </CheckOnboarded>
@@ -124,7 +124,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>
                 <Route path={foreignProfilePath}>foreign profile</Route>
                 <Route path={network({}).users({}).user({ userId: user.id }).$}>
@@ -146,7 +146,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>
                 <Route path={anotherPagePath}>another page</Route>
                 <Route path={network({}).users({}).user({ userId: user.id }).$}>
@@ -170,7 +170,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <CheckOnboarded>
                 <Route path={teamPage}>team page</Route>
                 <Route path={ownProfilePath}>profile page</Route>

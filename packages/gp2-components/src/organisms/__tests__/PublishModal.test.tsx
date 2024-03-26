@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import PublishModal from '../PublishModal';
 
 describe('PublishModal', () => {
@@ -20,7 +21,7 @@ describe('PublishModal', () => {
     const history = createMemoryHistory({ getUserConfirmation });
     const onSave = jest.fn();
     render(
-      <Router history={history}>
+      <Router navigator={history}>
         <PublishModal {...defaultProps} onSave={onSave} />
       </Router>,
     );

@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { JWK, JWT } from 'jose';
 import { useEffect } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import nock from 'nock';
 
@@ -129,7 +130,7 @@ describe('after a failed flow', () => {
       ],
     });
     result = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Signin />
       </Router>,
     );

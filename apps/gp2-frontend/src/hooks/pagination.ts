@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const PAGE_SIZE = 10;
 
 export const usePaginationParams = () => {
-  const history = useHistory();
+  const history = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const pageSize = PAGE_SIZE;
@@ -24,7 +24,7 @@ export const usePaginationParams = () => {
 };
 
 export const usePagination = (numberOfItems: number, pageSize: number) => {
-  const history = useHistory();
+  const history = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
 
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;

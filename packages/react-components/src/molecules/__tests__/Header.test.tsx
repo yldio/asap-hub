@@ -13,8 +13,8 @@ it('renders an ASAP logo', () => {
 it('links back to the home page', () => {
   const { getByTitle, container } = render(
     <MemoryRouter initialEntries={['/page']}>
-      <Route exact path="/page" component={Header} />
-      <Route exact path="/" render={() => 'home'} />
+      <Route path="/page" element={<Header/>} />
+      <Route path="/" render={() => 'home'} />
     </MemoryRouter>,
   );
 

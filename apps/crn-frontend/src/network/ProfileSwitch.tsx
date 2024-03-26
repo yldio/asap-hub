@@ -1,5 +1,5 @@
 import { ComponentProps, FC, lazy, ReactElement } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Redirect } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
@@ -43,7 +43,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   DraftOutputs,
 }) => (
   <Frame title={displayName}>
-    <Switch>
+    <Routes>
       <Route path={paths.about}>
         <Frame title="About">{<About />}</Frame>
       </Route>
@@ -98,7 +98,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
         </Frame>
       </Route>
       <Redirect to={paths.about} />
-    </Switch>
+    </Routes>
   </Frame>
 );
 

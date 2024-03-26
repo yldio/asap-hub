@@ -25,7 +25,9 @@ const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
+  children,
+}) => (
   <RecoilRoot>
     <Suspense fallback="loading">
       <Auth0Provider user={{}}>

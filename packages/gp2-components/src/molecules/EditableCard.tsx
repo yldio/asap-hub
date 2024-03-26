@@ -43,7 +43,7 @@ const addIconStyles = css({
   'svg > path': { fill: 'white' },
 });
 
-const EditableCard: React.FC<EditableCardProps> = ({
+const EditableCard: React.FC<React.PropsWithChildren<EditableCardProps>> = ({
   title,
   editHref,
   subtitle,

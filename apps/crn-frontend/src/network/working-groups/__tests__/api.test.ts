@@ -64,7 +64,7 @@ describe('getWorkingGroups', () => {
     const workingGroupResponse = createWorkingGroupResponse();
 
     search.mockResolvedValue(
-      createAlgoliaResponse<'working-group'>([
+      createAlgoliaResponse<'crn', 'working-group'>([
         {
           ...workingGroupResponse,
           objectID: workingGroupResponse.id,

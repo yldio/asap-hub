@@ -22,11 +22,15 @@ describe('pollContentfulGql', () => {
       .fn()
       .mockResolvedValueOnce(userDataWithPublishedVersion1)
       .mockResolvedValueOnce(userDataWithPublishedVersion1)
+      .mockResolvedValueOnce(userDataWithPublishedVersion1)
+      .mockResolvedValueOnce(userDataWithPublishedVersion1)
+      .mockResolvedValueOnce(userDataWithPublishedVersion1)
+      .mockResolvedValueOnce(userDataWithPublishedVersion1)
       .mockResolvedValueOnce(userDataWithPublishedVersion2);
 
     await pollContentfulGql(2, fetchData, 'users');
-    expect(fetchData).toHaveBeenCalledTimes(3);
-  });
+    expect(fetchData).toHaveBeenCalledTimes(7);
+  }, 120_000);
 
   test('throws if polling query does not return a value', async () => {
     const fetchData = jest.fn().mockResolvedValueOnce({
@@ -55,12 +59,18 @@ describe('pollContentfulDeliveryApi', () => {
       .fn()
       .mockResolvedValueOnce(entryDataWithPublishedCounter1)
       .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
+      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
       .mockResolvedValueOnce(entryDataWithPublishedCounter2);
 
     const response = await pollContentfulDeliveryApi(fetchEntry, 2);
-    expect(fetchEntry).toHaveBeenCalledTimes(3);
+    expect(fetchEntry).toHaveBeenCalledTimes(9);
     expect(response).toEqual(entryDataWithPublishedCounter2);
-  });
+  }, 120_000);
 
   test('throws if polling query does not return a value', async () => {
     const fetchEntry = jest.fn().mockResolvedValueOnce(null);

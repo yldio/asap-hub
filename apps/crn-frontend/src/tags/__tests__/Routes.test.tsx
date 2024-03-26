@@ -152,13 +152,14 @@ describe('filters', () => {
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
         [
-          'research-output',
-          'user',
           'event',
+          'interest-group',
+          'news',
+          'research-output',
           'team',
           'tutorial',
+          'user',
           'working-group',
-          'news',
         ],
         expect.anything(),
         expect.anything(),
@@ -207,7 +208,7 @@ it('Will show algolia results', async () => {
     facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
   });
   const userResponse = createUserListItemResponse();
-  const algoliaResponse = createAlgoliaResponse([
+  const algoliaResponse = createAlgoliaResponse<'crn', 'user'>([
     {
       ...userResponse,
       fullDisplayName: 'Tom Cruise',

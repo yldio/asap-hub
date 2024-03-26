@@ -6,6 +6,7 @@ import {
   createWorkingGroupResponse,
   createTutorialsResponse,
   createNewsResponse,
+  createInterestGroupResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
@@ -34,7 +35,7 @@ it('renders a list of cards', () => {
   render(
     <TagsPageBody
       {...props}
-      numberOfItems={4}
+      numberOfItems={8}
       results={[
         {
           ...createResearchOutputResponse(),
@@ -72,6 +73,11 @@ it('renders a list of cards', () => {
           __meta: { type: 'news' },
           title: 'News Title',
         },
+        {
+          ...createInterestGroupResponse(),
+          __meta: { type: 'interest-group' },
+          name: 'Sci 1: GWAS functional validation',
+        },
       ]}
     />,
   );
@@ -91,4 +97,8 @@ it('renders a list of cards', () => {
   expect(screen.getByText(/Tutorial 1/i)).toBeInTheDocument();
 
   expect(screen.getByText(/News Title/i)).toBeInTheDocument();
+
+  expect(
+    screen.getByText(/Sci 1: GWAS functional validation/i),
+  ).toBeInTheDocument();
 });

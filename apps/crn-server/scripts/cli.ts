@@ -2,6 +2,8 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
+import { exportAnalyticsData } from './export-analytics';
+import type { Metric } from './export-analytics';
 import * as updateTags from './update-tags';
 
 // eslint-disable-next-line no-unused-expressions
@@ -15,14 +17,15 @@ yargs(hideBin(process.argv))
           describe: 'specific an entity to import',
           type: 'string',
           choices: [
-            'user',
-            'research-output',
-            'external-author',
             'event',
-            'team',
-            'working-group',
-            'tutorial',
+            'external-author',
+            'interest-group',
             'news',
+            'research-output',
+            'team',
+            'tutorial',
+            'user',
+            'working-group',
           ],
           demandOption: true,
         })
@@ -34,16 +37,36 @@ yargs(hideBin(process.argv))
     handler: async ({ entity, filename }) =>
       exportEntity(
         entity as
-          | 'user'
-          | 'research-output'
-          | 'external-author'
           | 'event'
+          | 'external-author'
+          | 'interest-group'
+          | 'news'
+          | 'research-output'
           | 'team'
-          | 'working-group'
           | 'tutorial'
-          | 'news',
+          | 'user'
+          | 'working-group',
         filename,
       ),
+  })
+  .command<{ metric: string; filename?: string }>({
+    command: 'export-analytics <metric>',
+    describe: 'export analytics data to JSON',
+    builder: (cli) =>
+      cli
+        .positional('metric', {
+          describe: 'choose a metric to export data',
+          type: 'string',
+          choices: ['team-leadership'],
+          demandOption: true,
+        })
+        .option('filename', {
+          alias: 'f',
+          type: 'string',
+          description: 'The output file name',
+        }),
+    handler: async ({ metric, filename }) =>
+      exportAnalyticsData(metric as Metric, filename),
   })
   .command<{ entity: string }>({
     command: 'tags <entity>',

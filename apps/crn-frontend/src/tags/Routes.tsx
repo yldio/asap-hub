@@ -12,7 +12,7 @@ import { useSearch } from '../hooks';
 
 const options: { label: string; value: CRNTagSearchEntities }[] = [
   { label: 'Calendar & Events', value: 'event' },
-  // { label: 'Interest Groups', value:  },
+  { label: 'Interest Groups', value: 'interest-group' },
   { label: 'News', value: 'news' },
   { label: 'People', value: 'user' },
   { label: 'Shared Research', value: 'research-output' },

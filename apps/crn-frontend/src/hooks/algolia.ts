@@ -1,39 +1,66 @@
-import { algoliaSearchClientFactory, AlgoliaClient } from '@asap-hub/algolia';
+import {
+  algoliaSearchClientFactory,
+  AlgoliaClient,
+  Apps,
+} from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
-import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
+import {
+  ALGOLIA_APP_ID,
+  ALGOLIA_INDEX,
+  ANALYTICS_ALGOLIA_INDEX,
+} from '../config';
 
-export type AlgoliaHook = {
-  client: AlgoliaClient<'crn'>;
+export type AlgoliaHook<App extends Apps> = {
+  client: AlgoliaClient<App>;
+};
+
+const initAlgolia = <App extends Apps>(
+  user: User | null,
+  indexName: string,
+): AlgoliaHook<App> => {
+  if (!user) {
+    throw new Error('Algolia unavailable while not logged in');
+  }
+
+  const client = algoliaSearchClientFactory<App>({
+    algoliaAppId: ALGOLIA_APP_ID,
+    algoliaIndex: indexName,
+    algoliaApiKey: user.algoliaApiKey,
+    clickAnalytics: true,
+    userToken: user.id,
+  });
+  window.dataLayer?.push({
+    algoliaUserToken: user.id,
+  });
+
+  return {
+    client,
+  };
 };
 
 export const useAlgolia = () => {
-  const initAlgolia = (user: User | null): AlgoliaHook => {
-    if (!user) {
-      throw new Error('Algolia unavailable while not logged in');
-    }
-
-    const client = algoliaSearchClientFactory<'crn'>({
-      algoliaAppId: ALGOLIA_APP_ID,
-      algoliaIndex: ALGOLIA_INDEX,
-      algoliaApiKey: user.algoliaApiKey,
-      clickAnalytics: true,
-      userToken: user.id,
-    });
-    window.dataLayer?.push({
-      algoliaUserToken: user.id,
-    });
-
-    return {
-      client,
-    };
-  };
   const user = useCurrentUserCRN();
-  const [algolia, setAlgolia] = useState(initAlgolia(user));
+  const [algolia, setAlgolia] = useState(
+    initAlgolia<'crn'>(user, ALGOLIA_INDEX),
+  );
 
   useEffect(() => {
-    setAlgolia(initAlgolia(user));
+    setAlgolia(initAlgolia<'crn'>(user, ALGOLIA_INDEX));
+  }, [user]);
+
+  return algolia;
+};
+
+export const useAnalyticsAlgolia = () => {
+  const user = useCurrentUserCRN();
+  const [algolia, setAlgolia] = useState(
+    initAlgolia<'analytics'>(user, ANALYTICS_ALGOLIA_INDEX),
+  );
+
+  useEffect(() => {
+    setAlgolia(initAlgolia<'analytics'>(user, ANALYTICS_ALGOLIA_INDEX));
   }, [user]);
 
   return algolia;

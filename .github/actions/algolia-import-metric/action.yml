@@ -1,0 +1,51 @@
+name: 'Import metric'
+description: 'Export analytics data from Contentful and into Algolia index'
+inputs:
+  algolia-api-key:
+    description: 'Algolia api key name'
+    required: true
+  algolia-app-id:
+    description: 'Algolia app id name'
+    required: true
+  algolia-index:
+    description: 'Algolia index name'
+    required: true
+  contentful-space-id:
+    description: 'Contentful Space ID'
+    required: true
+  contentful-env:
+    description: 'Contentful environment'
+    required: true
+  contentful-access-token:
+    description: 'Contentful access token'
+    required: true
+  contentful-management-token:
+    description: 'Contentful management token'
+    required: true
+  metric:
+    description: 'Metric'
+    required: true
+outputs:
+  algolia-app-id:
+    description: 'Algolia App ID'
+    value: '${{ steps.keys.outputs.algolia-app-id }}'
+  algolia-api-key:
+    description: 'Algolia API Key'
+    value: '${{ steps.keys.outputs.algolia-api-key }}'
+runs:
+  using: 'composite'
+  steps:
+    - name: Import Metric
+      shell: bash
+      run: |
+        yarn export:analytics $METRIC -f $METRIC.json
+        jq -c '.[]' $METRIC.json | algolia objects import $ALGOLIA_INDEX -F -
+      env:
+        ALGOLIA_APPLICATION_ID: ${{ inputs.algolia-app-id }}
+        ALGOLIA_ADMIN_API_KEY: ${{ inputs.algolia-api-key }}
+        ALGOLIA_INDEX: ${{ inputs.algolia-index }}
+        CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}
+        CONTENTFUL_ENV_ID: ${{  inputs.contentful-env }}
+        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  inputs.contentful-management-token }}
+        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+        METRIC: ${{ inputs.metric }}

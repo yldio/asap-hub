@@ -58,7 +58,7 @@ describe('getUsers', () => {
     const userResponse = createUserListItemResponse();
 
     search.mockResolvedValue(
-      createAlgoliaResponse<'user'>([
+      createAlgoliaResponse<'crn', 'user'>([
         {
           ...userResponse,
           objectID: userResponse.id,
@@ -193,7 +193,7 @@ describe('getUsersAndExternalAuthors', () => {
 
   beforeEach(() => {
     const userResponse = createUserResponse();
-    const algoliaUsersResponse = createAlgoliaResponse([
+    const algoliaUsersResponse = createAlgoliaResponse<'crn', 'user'>([
       {
         ...userResponse,
         objectID: userResponse.id,
@@ -207,7 +207,10 @@ describe('getUsersAndExternalAuthors', () => {
       displayName: '1234 external author',
     };
 
-    const alogliaExternalAuthorsResponse = createAlgoliaResponse([
+    const alogliaExternalAuthorsResponse = createAlgoliaResponse<
+      'crn',
+      'external-author'
+    >([
       {
         ...externalAuthorResponse,
         objectID: externalAuthorResponse.id,

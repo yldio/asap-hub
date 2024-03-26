@@ -149,10 +149,7 @@ const RelatedResearchCard = <
         {relatedResearch
           .slice(0, showMore ? undefined : truncateFrom)
           .map(({ id, documentType, title: outputTitle, type, ...output }) => (
-            <div
-              key={id}
-              css={'entity' in output ? [rowStyles, rowDivider] : [rowStyles]}
-            >
+            <div key={id} css={[rowStyles, rowDivider]}>
               <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
               <p css={paragraphStyle}>
                 {getIconForDocumentType(documentType)} {documentType}{' '}

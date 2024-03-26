@@ -56,7 +56,7 @@ describe('getEvents', () => {
   });
 
   it('makes request for events before a date', async () => {
-    const res = createAlgoliaResponse<'event'>([]);
+    const res = createAlgoliaResponse<'crn', 'event'>([]);
     search.mockResolvedValueOnce(res);
 
     await getEvents(
@@ -77,7 +77,7 @@ describe('getEvents', () => {
   });
 
   it('makes request for events before a date filtering cancelled ones', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(
       algoliaSearchClient,
@@ -99,7 +99,7 @@ describe('getEvents', () => {
     );
   });
   it('makes for events after a date', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(
       algoliaSearchClient,
@@ -118,7 +118,7 @@ describe('getEvents', () => {
   });
 
   it('calls for upcoming events with a certain speaker user id', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
@@ -138,7 +138,7 @@ describe('getEvents', () => {
   });
 
   it('calls for past events with a certain speaker user id', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00Z'), { past: true }),
@@ -158,7 +158,7 @@ describe('getEvents', () => {
   });
 
   it('calls for upcoming events with a certain speaker team id', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
@@ -181,7 +181,7 @@ describe('getEvents', () => {
     const events = createListEventResponse(1);
 
     search.mockResolvedValueOnce(
-      createAlgoliaResponse<'event'>(
+      createAlgoliaResponse<'crn', 'event'>(
         events.items.map((event) => ({
           ...event,
           objectID: event.id,
@@ -210,7 +210,7 @@ describe('getEvents', () => {
   });
 
   it('calls for upcoming events with a certain interest group id', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
@@ -230,7 +230,7 @@ describe('getEvents', () => {
   });
 
   it('calls for upcoming events with a certain working group id', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    search.mockResolvedValueOnce(createAlgoliaResponse<'crn', 'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),

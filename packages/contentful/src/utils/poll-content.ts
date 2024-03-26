@@ -65,7 +65,12 @@ const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
         }
       }
     },
-    { minTimeout: 200, maxRetryTime: 8_000 },
+    {
+      minTimeout: 200,
+      maxRetryTime: 60_000,
+      factor: 2,
+      randomize: false,
+    },
   );
 
 export const pollContentfulDeliveryApi = async <

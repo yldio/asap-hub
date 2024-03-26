@@ -18,7 +18,7 @@ describe('addTagsFunction', () => {
     });
   });
 
-  test('add empty _tags when tags and expertiseAndResourceTags fields are not present', () => {
+  test('add empty _tags when tags field is not present', () => {
     // This should not happen, it was necessary to add
     // so Typescript does not moan about checking if tags
     // exist

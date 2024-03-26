@@ -23,7 +23,6 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   createdDate: '2020-09-25T09:42:51.000Z',
   email: 'tony@stark.com',
   expertiseAndResourceDescription: 'some expertiseAndResourceTags',
-  expertiseAndResourceTags: [],
   firstName: 'Tony',
   id: 'userId',
   institution: 'Stark Industries',
@@ -76,13 +75,6 @@ export const getUserResponse = (): UserResponse => ({
   dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   tags: [
     { id: '1', name: 'expertise 1' },
     { id: '2', name: 'expertise 2' },
@@ -159,13 +151,6 @@ export const getUserListItemDataObject = (): UserListItemDataObject => ({
     { id: '4', name: 'expertise 4' },
     { id: '5', name: 'expertise 5' },
   ],
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   firstName: 'Tom',
   id: 'user-id-1',
   institution: 'some institution',
@@ -218,7 +203,6 @@ export const fetchExpectation: ListUserResponse = {
       onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       _tags: [],
-      expertiseAndResourceTags: [],
       displayName: 'Arnold Schwatzneger',
       fullDisplayName: 'Arnold Schwatzneger',
       email: 'arnold@gmail.com',
@@ -284,13 +268,6 @@ export const getUserDataObject = (): UserDataObject => ({
   orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
   orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   tags: [
     { id: '1', name: 'expertise 1' },
     { id: '2', name: 'expertise 2' },
@@ -418,13 +395,6 @@ export const getContentfulGraphqlUser = (
     },
   ],
   questions: ['Question 1', 'Question 2'],
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   researchTagsCollection: {
     items: [
       { sys: { id: '1' }, name: 'expertise 1' },
@@ -513,13 +483,6 @@ export const getContentfulGraphqlUserListItem = (
   dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   researchTagsCollection: {
     items: [
       { sys: { id: '1' }, name: 'expertise 1' },

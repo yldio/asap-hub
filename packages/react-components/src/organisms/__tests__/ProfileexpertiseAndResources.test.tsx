@@ -5,7 +5,7 @@ import ProfileExpertiseAndResources from '../ProfileExpertiseAndResources';
 
 const mapTags = (tags: string[]) => tags.map((tag) => ({ name: tag, id: tag }));
 
-it('renders expertiseAndResourceTags and expertise', () => {
+it('renders tags and expertise', () => {
   const { getByText, getAllByRole } = render(
     <ProfileExpertiseAndResources tags={mapTags(['a', 'b', 'c'])} />,
   );
@@ -17,7 +17,7 @@ it('renders expertiseAndResourceTags and expertise', () => {
   ).toEqual(['Expertise and Resources', 'Tags']);
 });
 
-it('renders expertiseAndResourceTags and expertises with description', () => {
+it('renders tags and expertises with description', () => {
   const { getByText, getAllByRole } = render(
     <ProfileExpertiseAndResources
       expertiseAndResourceDescription={'description'}
@@ -83,7 +83,7 @@ it('renders tags placeholder component when description, no tags and own profile
   expect(getByText(/add tags/i)).toBeVisible();
 });
 
-it('is not rendered when not own profile and without expertiseAndResourceTags', () => {
+it('is not rendered when not own profile and without tags', () => {
   const { container } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <ProfileExpertiseAndResources

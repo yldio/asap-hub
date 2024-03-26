@@ -461,7 +461,7 @@ describe('/users/ route', () => {
         },
       );
 
-      test.each(['expertiseAndResourceTags', 'questions'])(
+      test.each(['tagIds', 'questions'])(
         'Should be able to provide an array of strings for the %s parameter ',
         async (parameter) => {
           const response = await supertest(appWithMockedAuth)
@@ -472,7 +472,7 @@ describe('/users/ route', () => {
         },
       );
 
-      test.each(['expertiseAndResourceTags', 'questions'])(
+      test.each(['tagIds', 'questions'])(
         'Should not accept a string for the %s parameter ',
         async (parameter) => {
           const response = await supertest(appWithMockedAuth)

@@ -23,11 +23,6 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
     country: { type: 'string', nullable: true },
     stateOrProvince: { type: 'string', nullable: true },
     city: { type: 'string', nullable: true },
-    expertiseAndResourceTags: {
-      type: 'array',
-      items: { type: 'string' },
-      nullable: true,
-    },
     tagIds: {
       type: 'array',
       items: {

@@ -37,13 +37,6 @@ export const getUserResponse = (): UserResponse => ({
   social: {
     orcid: '363-98-9330',
   },
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
-  ],
   questions: ['Question 1', 'Question 2'],
   avatarUrl: `https://test.com/api/assets/asap-dev/contentful-asset-id`,
   role: 'Grantee',

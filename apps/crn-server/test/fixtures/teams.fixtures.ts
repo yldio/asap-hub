@@ -7,7 +7,6 @@ import {
 } from '@asap-hub/contentful';
 import {
   ListTeamResponse,
-  TeamCreateDataObject,
   TeamDataObject,
   TeamEvent,
   TeamListItemDataObject,
@@ -266,24 +265,6 @@ export const getTeamEvent = (
   WebhookDetail<ContentfulWebhookPayload<'teams'>>
 > =>
   createEventBridgeEventMock(getTeamContentfulWebhookDetail(id), eventType, id);
-
-export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
-  applicationNumber: 'ASAP-000420',
-  displayName: 'Team A',
-  inactiveSince: undefined,
-  projectSummary: 'project-summary',
-  projectTitle:
-    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  expertiseAndResourceTags: ['Animal resources'],
-  tools: [
-    {
-      name: 'Team Scherzer Slack Channel',
-      description: 'Connect with the team on the private slack channel',
-      url: 'https://scherzerlab.slack.com/archives/C019B8W86NQ',
-    },
-  ],
-  researchOutputIds: [],
-});
 
 export const getTeamPublishContentfulWebhookPayload =
   (): ContentfulWebhookPublishPayload<'teams'> => ({

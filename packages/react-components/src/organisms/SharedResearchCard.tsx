@@ -3,7 +3,12 @@ import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Caption, StateTag } from '../atoms';
-import { AssociationList, LinkHeadline, UsersList } from '../molecules';
+import {
+  AssociationList,
+  LinkHeadline,
+  TagList,
+  UsersList,
+} from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
 import { perRem, rem } from '../pixels';
@@ -22,6 +27,10 @@ const titleStyles = css({
   marginBottom: `${12 / perRem}em`,
 });
 
+const tagContainerStyles = css({
+  marginTop: `${24 / perRem}em`,
+});
+
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
   | 'publishingEntity'
@@ -38,7 +47,10 @@ type SharedResearchCardProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'isInReview'
->;
+  | 'keywords'
+> & {
+  showTags?: boolean;
+};
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   id: researchOutputId,
@@ -55,6 +67,8 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   published,
   publishingEntity,
   isInReview,
+  keywords,
+  showTags = true,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -109,6 +123,11 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         />
       )}
     </div>
+    {showTags && keywords.length > 0 && (
+      <div css={tagContainerStyles}>
+        <TagList max={3} tags={keywords} />
+      </div>
+    )}
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>

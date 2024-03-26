@@ -7,6 +7,7 @@ import {
   Paragraph,
   pixels,
   Subtitle,
+  TagList,
   utils,
 } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
@@ -20,7 +21,7 @@ const { getCounterString } = utils;
 
 type WorkingGroupCardProps = Pick<
   gp2Model.WorkingGroupResponse,
-  'id' | 'title' | 'members' | 'shortDescription' | 'leadingMembers'
+  'id' | 'title' | 'members' | 'shortDescription' | 'leadingMembers' | 'tags'
 >;
 const containerStyles = css({
   display: 'flex',
@@ -49,12 +50,17 @@ const textStyles = css({
   color: lead.rgb,
 });
 
+const tagListContainerStyles = css({
+  padding: `${rem(8)} 0`,
+});
+
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   id,
   title,
   members,
   shortDescription,
   leadingMembers,
+  tags,
 }) => {
   const workingGroupHref = workingGroups({}).workingGroup({
     workingGroupId: id,
@@ -81,6 +87,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         <Subtitle noMargin accent="lead">
           {shortDescription}
         </Subtitle>
+        {tags.length > 0 && (
+          <div css={tagListContainerStyles}>
+            <TagList max={3} tags={tags.map((tag) => tag.name)} />
+          </div>
+        )}
         {leadingMembers === undefined || (
           <Paragraph noMargin accent="lead">
             {leadingMembers}

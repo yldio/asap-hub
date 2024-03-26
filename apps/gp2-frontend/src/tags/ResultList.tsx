@@ -44,6 +44,7 @@ const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
             return (
               <OutputCard
                 key={result.id}
+                showTags
                 {...(result as gp2Model.OutputResponse)}
               />
             );

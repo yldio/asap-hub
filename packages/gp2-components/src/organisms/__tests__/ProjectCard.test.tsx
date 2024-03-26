@@ -12,6 +12,7 @@ describe('ProjectCard', () => {
     members: [],
     traineeProject: false,
     opportunitiesAvailable: false,
+    tags: [],
   };
   it('renders the status', () => {
     render(<ProjectCard {...defaultProps} />);

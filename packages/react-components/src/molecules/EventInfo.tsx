@@ -26,7 +26,7 @@ const imageContainerStyle = css({
 });
 
 const listItemStyles = css({
-  padding: `${rem(7.5)} 0`,
+  paddingTop: rem(24),
   color: neutral900.rgb,
   whiteSpace: 'break-spaces',
   overflow: 'hidden',

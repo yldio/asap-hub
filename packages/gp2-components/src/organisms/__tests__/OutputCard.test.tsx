@@ -283,4 +283,23 @@ describe('OutputCard', () => {
       ).toHaveAttribute('href', '/projects/project-id');
     });
   });
+
+  describe('tags', () => {
+    it('displays tags when they are present and showTags is enabled', () => {
+      render(
+        <OutputCard
+          {...defaultProps}
+          tags={[{ id: '1', name: 'TestTag' }]}
+          showTags
+        />,
+      );
+      expect(screen.getByText('TestTag')).toBeVisible();
+    });
+    it('displays no tags when showTags is disabled', () => {
+      render(
+        <OutputCard {...defaultProps} tags={[{ id: '1', name: 'TestTag' }]} />,
+      );
+      expect(screen.queryByText('TestTag')).not.toBeInTheDocument();
+    });
+  });
 });

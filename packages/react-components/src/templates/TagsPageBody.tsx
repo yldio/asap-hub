@@ -57,7 +57,9 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
   const { type } = data.__meta;
 
   if (type === 'research-output') {
-    return <SharedResearchCard {...(data as ResearchOutputResponse)} />;
+    return (
+      <SharedResearchCard showTags {...(data as ResearchOutputResponse)} />
+    );
   }
 
   if (type === 'user') {

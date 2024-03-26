@@ -49,4 +49,13 @@ describe('WorkingGroupCard', () => {
       screen.getByText(/This is a list of leading members/i),
     ).toBeInTheDocument();
   });
+  it('renders the tags', () => {
+    render(
+      <WorkingGroupCard
+        {...defaultProps}
+        tags={[{ id: '1', name: 'TestTag' }]}
+      />,
+    );
+    expect(screen.getByText(/TestTag/i)).toBeInTheDocument();
+  });
 });

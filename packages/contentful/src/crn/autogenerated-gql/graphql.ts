@@ -10328,9 +10328,9 @@ export type FetchAnalyticsTeamLeadershipQuery = {
           Pick<Teams, 'displayName' | 'inactiveSince'> & {
             sys: Pick<Sys, 'id'>;
             linkedFrom?: Maybe<{
-              interestGroupsCollection?: Maybe<
-                Pick<InterestGroupsCollection, 'total'>
-              >;
+              interestGroupsCollection?: Maybe<{
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }>;
               teamMembershipCollection?: Maybe<{
                 items: Array<
                   Maybe<{
@@ -22434,7 +22434,28 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                 selections: [
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'total' },
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },

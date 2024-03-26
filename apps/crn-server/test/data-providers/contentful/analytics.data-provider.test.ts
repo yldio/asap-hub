@@ -548,7 +548,8 @@ describe('Analytics Data Provider', () => {
       describe('Interest Group Member Count', () => {
         test('Should return 0 for interestGroupMemberCount when the client returns interestGroupsCollection items as an empty array', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 0;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -560,7 +561,19 @@ describe('Analytics Data Provider', () => {
 
         test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 interest groups associated with a team', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 2;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+              },
+            ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -574,7 +587,19 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 2;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+              },
+            ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -590,7 +615,8 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 0;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -604,7 +630,19 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 2;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+              },
+            ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -618,7 +656,19 @@ describe('Analytics Data Provider', () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             null;
-          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.total = 2;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+              },
+            ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );

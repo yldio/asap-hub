@@ -157,7 +157,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
       </div>
       {showTags && tags.length > 0 && (
         <div css={tagListContainerStyles}>
-          <TagList tags={tags.map((tag) => tag.name)} />
+          <TagList max={3} tags={tags.map((tag) => tag.name)} />
         </div>
       )}
       <div css={timestampStyles}>

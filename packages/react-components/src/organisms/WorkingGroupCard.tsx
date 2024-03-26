@@ -41,7 +41,7 @@ const shortTextStyle = css({
   marginBottom: `${24 / perRem}em`,
 });
 
-const tagsContainer = css({
+const tagsContainerStyles = css({
   marginBottom: `${12 / perRem}em`,
 });
 
@@ -86,28 +86,30 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         </div>
       )}
     </div>
-    <div>
-      {externalLink && (
+    {externalLink && (
+      <div>
         <Link href={externalLink} buttonStyle small noMargin>
           {googleDriveIcon} Access Drive
         </Link>
-      )}
-    </div>
-    <div css={shortTextStyle}>
-      <Anchor
-        href={
-          network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
-        }
-      >
-        <Ellipsis numberOfLines={2}>
-          <Paragraph accent="lead" noMargin>
-            {shortText}
-          </Paragraph>
-        </Ellipsis>
-      </Anchor>
-    </div>
+      </div>
+    )}
+    {shortText && (
+      <div css={shortTextStyle}>
+        <Anchor
+          href={
+            network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
+          }
+        >
+          <Ellipsis numberOfLines={2}>
+            <Paragraph accent="lead" noMargin>
+              {shortText}
+            </Paragraph>
+          </Ellipsis>
+        </Anchor>
+      </div>
+    )}
     {!!tags.length && (
-      <div css={tagsContainer}>
+      <div css={tagsContainerStyles}>
         <TagList max={3} tags={tags} />
       </div>
     )}

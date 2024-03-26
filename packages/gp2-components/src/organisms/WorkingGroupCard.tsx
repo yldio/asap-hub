@@ -25,7 +25,7 @@ type WorkingGroupCardProps = Pick<
 >;
 const containerStyles = css({
   display: 'flex',
-  gap: rem(24),
+  gap: rem(16),
   margin: rem(24),
   flexGrow: 1,
   flexWrap: 'wrap',
@@ -48,6 +48,10 @@ const bottomBorderStyles = css({
 const textStyles = css({
   maxWidth: rem(610),
   color: lead.rgb,
+});
+
+const tagListContainerStyles = css({
+  padding: `${rem(8)} 0`,
 });
 
 const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
@@ -83,7 +87,11 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
         <Subtitle noMargin accent="lead">
           {shortDescription}
         </Subtitle>
-        {tags.length > 0 && <TagList tags={tags.map((tag) => tag.name)} />}
+        {tags.length > 0 && (
+          <div css={tagListContainerStyles}>
+            <TagList max={3} tags={tags.map((tag) => tag.name)} />
+          </div>
+        )}
         {leadingMembers === undefined || (
           <Paragraph noMargin accent="lead">
             {leadingMembers}

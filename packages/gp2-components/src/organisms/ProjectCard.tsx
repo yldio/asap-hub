@@ -80,7 +80,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
     </LinkHeadline>
     {tags.length > 0 && (
       <div css={tagContainerStyles}>
-        <TagList tags={tags.map((tag) => tag.name)} />
+        <TagList max={3} tags={tags.map((tag) => tag.name)} />
       </div>
     )}
     <div

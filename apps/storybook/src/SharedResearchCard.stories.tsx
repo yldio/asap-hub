@@ -14,6 +14,7 @@ export default {
 
 export const Normal = () => (
   <SharedResearchCard
+    keywords={[]}
     id="r42"
     link={text('Link', 'https://hub.asap.science')}
     title={text(

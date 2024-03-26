@@ -27,6 +27,10 @@ const titleStyles = css({
   marginBottom: `${12 / perRem}em`,
 });
 
+const tagContainerStyles = css({
+  marginTop: `${24 / perRem}em`,
+});
+
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
   | 'publishingEntity'
@@ -64,7 +68,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   publishingEntity,
   isInReview,
   keywords,
-  showTags = false,
+  showTags = true,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -119,7 +123,11 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         />
       )}
     </div>
-    {showTags && keywords.length > 0 && <TagList max={3} tags={keywords} />}
+    {showTags && keywords.length > 0 && (
+      <div css={tagContainerStyles}>
+        <TagList max={3} tags={keywords} />
+      </div>
+    )}
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>

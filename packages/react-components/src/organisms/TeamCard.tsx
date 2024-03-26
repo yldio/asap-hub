@@ -9,13 +9,15 @@ import { TeamIcon, LabIcon, inactiveBadgeIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
 import { getCounterString } from '../utils';
 
-const teamMemberMetaStyles = css({
-  color: lead.rgb,
-  display: 'flex',
-  alignItems: 'center',
-  margin: `${24 / perRem}em 0 ${12 / perRem}em 0`,
-  gap: `${24 / perRem}em`,
-});
+const teamMemberMetaStyles = (tags = false) =>
+  css({
+    color: lead.rgb,
+    display: 'flex',
+    alignItems: 'center',
+    padding: `${(tags ? 12 : 24) / perRem}em 0 ${12 / perRem}em 0`,
+    gap: `${24 / perRem}em`,
+  });
+
 const titleStyle = css({
   display: 'flex',
   flexFlow: 'column-reverse',
@@ -29,9 +31,11 @@ const titleStyle = css({
     marginBottom: `${4 / perRem}em`,
   },
 });
-const tagsContainer = css({
-  margin: `${24 / perRem}em 0 ${12 / perRem}em 0`,
+
+const tagsContainerStyles = css({
+  paddingTop: `${24 / perRem}em`,
 });
+
 const iconStyles = css({
   display: 'inline-grid',
   verticalAlign: 'middle',
@@ -66,12 +70,12 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
       </Paragraph>
     </Anchor>
     {!!tags.length && (
-      <div css={tagsContainer}>
+      <div css={tagsContainerStyles}>
         <TagList max={3} tags={tags.map(({ name }) => name)} />
       </div>
     )}
 
-    <div css={teamMemberMetaStyles}>
+    <div css={teamMemberMetaStyles(!!tags)}>
       <div>
         <span css={iconStyles}>
           <TeamIcon />{' '}

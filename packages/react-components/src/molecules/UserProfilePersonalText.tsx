@@ -4,7 +4,7 @@ import { UserListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Link, Paragraph, Ellipsis, Avatar, Anchor } from '../atoms';
+import { Link, Ellipsis, Avatar, Anchor } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight, rem, tabletScreen } from '../pixels';
 import { lead, tin } from '../colors';
@@ -15,10 +15,10 @@ const MAX_TEAMS = 3;
 const avatarSize = 24;
 
 const locationStyles = css({
-  padding: `${6 / perRem}em 0`,
-
+  padding: `${6 / perRem}em 0 ${24 / perRem}em`,
   display: 'flex',
   alignItems: 'center',
+  color: lead.rgb,
 });
 
 const iconStyles = css({
@@ -118,20 +118,18 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           ))}
       </div>
       {(country || stateOrProvince || city || isOwnProfile) && (
-        <Paragraph accent="lead">
-          <span css={locationStyles}>
-            <span css={iconStyles}>{locationIcon}</span>
-            {country || stateOrProvince || city ? (
-              <Ellipsis>
-                {formatUserLocation(city, stateOrProvince, country)}
-              </Ellipsis>
-            ) : (
-              <span css={{ color: tin.rgb }}>Add your location</span>
-            )}
-          </span>
-          {tags && <TagList tags={tags.map((tag) => tag.name)} />}
-        </Paragraph>
+        <span css={locationStyles}>
+          <span css={iconStyles}>{locationIcon}</span>
+          {country || stateOrProvince || city ? (
+            <Ellipsis>
+              {formatUserLocation(city, stateOrProvince, country)}
+            </Ellipsis>
+          ) : (
+            <span css={{ color: tin.rgb }}>Add your location</span>
+          )}
+        </span>
       )}
+      {tags && <TagList max={3} tags={tags.map((tag) => tag.name)} />}
     </div>
   );
 };

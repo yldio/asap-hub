@@ -21,6 +21,7 @@ const listStyles = css({
 });
 
 const normalListItemStyles = css({
+  marginBottom: `${12 / perRem}em`,
   ':not(:nth-last-of-type(1))': {
     paddingRight: `${12 / perRem}em`,
   },

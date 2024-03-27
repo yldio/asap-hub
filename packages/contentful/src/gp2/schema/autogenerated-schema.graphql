@@ -1133,9 +1133,21 @@ type EventsNotesLinks {
 }
 
 type EventsNotesResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsNotesResourcesBlock!]!
+  hyperlink: [EventsNotesResourcesHyperlink!]!
+  inline: [EventsNotesResourcesInline!]!
+}
+
+type EventsNotesResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsNotesResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsNotesResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 enum EventsOrder {
@@ -1210,9 +1222,21 @@ type EventsPresentationLinks {
 }
 
 type EventsPresentationResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsPresentationResourcesBlock!]!
+  hyperlink: [EventsPresentationResourcesHyperlink!]!
+  inline: [EventsPresentationResourcesInline!]!
+}
+
+type EventsPresentationResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsPresentationResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsPresentationResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 type EventsSpeakersCollection {
@@ -1278,9 +1302,21 @@ type EventsVideoRecordingLinks {
 }
 
 type EventsVideoRecordingResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [EventsVideoRecordingResourcesBlock!]!
+  hyperlink: [EventsVideoRecordingResourcesHyperlink!]!
+  inline: [EventsVideoRecordingResourcesInline!]!
+}
+
+type EventsVideoRecordingResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsVideoRecordingResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type EventsVideoRecordingResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
@@ -1983,6 +2019,7 @@ type News implements Entry {
   publishDate(locale: String): DateTime
   shortText(locale: String): String
   sys: Sys!
+  tagsCollection(limit: Int = 100, locale: String, order: [NewsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): NewsTagsCollection
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
   type(locale: String): String
@@ -2030,6 +2067,8 @@ input NewsFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tags: cfTagsNestedFilter
+  tagsCollection_exists: Boolean
   thumbnail_exists: Boolean
   title: String
   title_contains: String
@@ -2068,6 +2107,26 @@ enum NewsOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+}
+
+type NewsTagsCollection {
+  items: [Tags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum NewsTagsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion)"""
@@ -2786,9 +2845,21 @@ type PagesTextLinks {
 }
 
 type PagesTextResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [PagesTextResourcesBlock!]!
+  hyperlink: [PagesTextResourcesHyperlink!]!
+  inline: [PagesTextResourcesInline!]!
+}
+
+type PagesTextResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type PagesTextResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type PagesTextResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
@@ -3245,13 +3316,12 @@ type Query {
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
 }
 
-type ResourceLink {
+interface ResourceLink {
   sys: ResourceSys!
 }
 
 type ResourceSys {
   linkType: String!
-  type: String!
   urn: String!
 }
 
@@ -3467,6 +3537,7 @@ input TagsFilter {
 type TagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  newsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
   outputsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
   projectsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
   usersCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
@@ -3520,6 +3591,25 @@ enum TagsLinkingCollectionsEventsCollectionOrder {
   videoRecordingPermanentlyUnavailable_DESC
   videoRecordingUpdatedAt_ASC
   videoRecordingUpdatedAt_DESC
+}
+
+enum TagsLinkingCollectionsNewsCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 enum TagsLinkingCollectionsOutputsCollectionOrder {
@@ -4473,9 +4563,21 @@ type WorkingGroupsDescriptionLinks {
 }
 
 type WorkingGroupsDescriptionResources {
-  block: [ResourceLink!]!
-  hyperlink: [ResourceLink!]!
-  inline: [ResourceLink!]!
+  block: [WorkingGroupsDescriptionResourcesBlock!]!
+  hyperlink: [WorkingGroupsDescriptionResourcesHyperlink!]!
+  inline: [WorkingGroupsDescriptionResourcesInline!]!
+}
+
+type WorkingGroupsDescriptionResourcesBlock implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type WorkingGroupsDescriptionResourcesHyperlink implements ResourceLink {
+  sys: ResourceSys!
+}
+
+type WorkingGroupsDescriptionResourcesInline implements ResourceLink {
+  sys: ResourceSys!
 }
 
 input WorkingGroupsFilter {

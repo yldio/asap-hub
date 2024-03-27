@@ -11,6 +11,7 @@ describe('NewsItem', () => {
     link: 'https://www.google.com',
     id: '1',
     type: 'news' as const,
+    tags: [],
   };
 
   it('renders correctly', () => {

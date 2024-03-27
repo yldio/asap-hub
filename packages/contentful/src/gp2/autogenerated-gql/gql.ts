@@ -49,7 +49,7 @@ const documents = {
     types.FetchExternalUsersDocument,
   '\n  query FetchExternalUserById($id: String!) {\n    externalUsers(id: $id) {\n      ...ExternalUsersContentData\n    }\n  }\n  \n':
     types.FetchExternalUserByIdDocument,
-  '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n':
+  '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    tagsCollection(limit: 20) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n':
     types.NewsContentDataFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
     types.FetchNewsByIdDocument,
@@ -245,8 +245,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n',
-): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n'];
+  source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    tagsCollection(limit: 20) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n',
+): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    thumbnail {\n      url\n    }\n    tagsCollection(limit: 20) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n    link\n    linkText\n    publishDate\n    type\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

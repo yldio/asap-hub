@@ -737,7 +737,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupMemberCount).toBe(0);
         });
 
-        test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 interest groups associated with a team', async () => {
+        test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 active interest groups associated with a team', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
@@ -745,11 +745,13 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -761,7 +763,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupMemberCount).toBe(2);
         });
 
-        test('Should return interestGroupMemberCount of 3 when the client returns a total of 2 interest groups associated with a team and one leader of another interest group', async () => {
+        test('Should return interestGroupMemberCount of 1 when the client returns a total of 2 interest groups associated with a team one of which is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
@@ -769,11 +771,39 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: false,
+              },
+            ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupMemberCount).toBe(1);
+        });
+
+        test('Should return interestGroupMemberCount of 3 when the client returns a total of 2 active interest groups associated with a team and one leader of another active interest group', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+                active: true,
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
@@ -782,6 +812,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-3',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -793,7 +824,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupMemberCount).toBe(3);
         });
 
-        test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 interest groups associated with a team and one leader of the same interest group', async () => {
+        test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 active interest groups associated with a team and one leader of a different inactive interest group', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
@@ -801,11 +832,48 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
+              },
+            ];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-3',
+                },
+                active: false,
+              },
+            ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupMemberCount).toBe(2);
+        });
+
+        test('Should return interestGroupMemberCount of 2 when the client returns a total of 2 active interest groups associated with a team and one leader of the same interest group', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+                active: true,
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
@@ -814,6 +882,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -887,7 +956,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(0);
         });
 
-        test('Should return interestGroupPreviousMemberCount of 2 when the client returns a total of 2 interest groups associated with a team and the team is inactive', async () => {
+        test('Should return interestGroupPreviousMemberCount of 2 when the client returns a total of 2 active interest groups associated with a team and the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
@@ -897,11 +966,13 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -913,7 +984,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(2);
         });
 
-        test('Should return interestGroupPreviousMemberCount of 3 when the client returns a total of 2 interest groups associated with the team and one leader of another interest group and the team is inactive', async () => {
+        test('Should return interestGroupPreviousMemberCount of 3 when the client returns a total of 2 active interest groups associated with the team and one leader of another interest group and the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
@@ -923,11 +994,13 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
@@ -936,6 +1009,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-3',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -947,7 +1021,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(3);
         });
 
-        test('Should return interestGroupPreviousMemberCount of 2 when the client returns a total of 2 interest groups associated with the team and one leader of the same interest group and the team is inactive', async () => {
+        test('Should return interestGroupPreviousMemberCount of 2 when the client returns a total of 2 activ interest groups associated with the team and one leader of the same interest group and the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
@@ -957,11 +1031,13 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
@@ -970,6 +1046,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -981,7 +1058,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(2);
         });
 
-        test('Should return interestGroupMemberCount of 0 when the client returns a total of 2 interest groups associated with a team but the team is active', async () => {
+        test('Should return interestGroupPreviousMemberCount of 0 when the client returns a total of 2 active interest groups associated with a team and the team is active', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             null;
@@ -991,11 +1068,13 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-1',
                 },
+                active: true,
               },
               {
                 sys: {
                   id: 'interest-group-2',
                 },
+                active: true,
               },
             ];
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -1005,6 +1084,71 @@ describe('Analytics Data Provider', () => {
           const result = await analyticsDataProvider.fetchTeamLeadership({});
 
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(0);
+        });
+
+        test('Should return interestGroupPreviousMemberCount of 1 when the client returns a total of 2 interest groups 1 of which is inactive and the team is active', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
+            null;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+                active: true,
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+                active: false,
+              },
+            ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(1);
+        });
+
+        test('Should return interestGroupPreviousMemberCount of 2 when the client returns a total of 2 interest groups 1 of which is inactive and one leader of a different, inactive interest group and the team is active', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
+            null;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-1',
+                },
+                active: true,
+              },
+              {
+                sys: {
+                  id: 'interest-group-2',
+                },
+                active: false,
+              },
+            ];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-3',
+                },
+                active: false,
+              },
+            ];
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(2);
         });
       });
     });

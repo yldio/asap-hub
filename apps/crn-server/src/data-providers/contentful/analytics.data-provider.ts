@@ -36,7 +36,6 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (item) =>
                   item?.linkedFrom?.usersCollection?.items
-                    // .filter(filterOutAlumni)
                     .flatMap(flattenInterestGroupLeaders)
                     .filter(
                       (item) =>
@@ -51,20 +50,23 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                     (item) =>
                       item?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
                         .flatMap(flattenInterestGroupLeaders)
+                        .filter(
+                          (item) =>
+                            item.interestGroupActive &&
+                            item.userIsAlumni === false,
+                        )
                         .map((item) => item.interestGroupId),
                   ) || []),
-                  ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
-                    (interestGroup) => interestGroup?.sys.id,
-                  ) || []),
+                  ...(team.linkedFrom?.interestGroupsCollection?.items
+                    .filter((interestGroup) => !!interestGroup?.active)
+                    .flatMap((interestGroup) => interestGroup?.sys.id) || []),
                 ])) ||
               0,
             interestGroupPreviousLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (item) =>
                   item?.linkedFrom?.usersCollection?.items
-                    // .filter(filterAlumni)
                     .flatMap(flattenInterestGroupLeaders)
                     .filter(
                       (item) => !item.interestGroupActive || item.userIsAlumni,
@@ -72,21 +74,26 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                     .map((item) => item.interestGroupId),
               ) || [],
             ),
-            interestGroupPreviousMemberCount:
-              (team.inactiveSince &&
-                getUniqueIdCount([
-                  ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (item) =>
-                      item?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
-                        .flatMap(flattenInterestGroupLeaders)
-                        .map((item) => item.interestGroupId),
-                  ) || []),
-                  ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
-                    (interestGroup) => interestGroup?.sys.id,
-                  ) || []),
-                ])) ||
-              0,
+            interestGroupPreviousMemberCount: getUniqueIdCount([
+              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                (item) =>
+                  item?.linkedFrom?.usersCollection?.items
+                    .flatMap(flattenInterestGroupLeaders)
+                    .filter(
+                      (item) =>
+                        team.inactiveSince ||
+                        item.userIsAlumni ||
+                        !item.interestGroupActive,
+                    )
+                    .map((item) => item.interestGroupId),
+              ) || []),
+              ...(team.linkedFrom?.interestGroupsCollection?.items
+                .filter(
+                  (interestGroup) =>
+                    team.inactiveSince || !interestGroup?.active,
+                )
+                .flatMap((interestGroup) => interestGroup?.sys.id) || []),
+            ]),
             workingGroupLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (item) =>

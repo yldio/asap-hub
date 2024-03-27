@@ -176,7 +176,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
         });
 
-        test('Should return interestGroupLeadershipRoleCount of 2 when two users are leaders of two different interest groups', async () => {
+        test('Should return interestGroupLeadershipRoleCount of 2 when two users are leaders of two different active interest groups', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
@@ -184,6 +184,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -200,6 +201,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -219,7 +221,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(2);
         });
 
-        test('Should return interestGroupLeadershipRoleCount of 2 when two users are leaders of 3 interest groups two of which are unique', async () => {
+        test('Should return interestGroupLeadershipRoleCount of 1 when two users are leaders of two different interest groups but one interest group is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
             [
@@ -227,6 +229,52 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
+              },
+            ];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
+            {
+              alumniSinceDate: null,
+              linkedFrom: {
+                interestGroupLeadersCollection: {
+                  items: [
+                    {
+                      linkedFrom: {
+                        interestGroupsCollection: {
+                          items: [
+                            {
+                              sys: {
+                                id: 'interest-group-id-2',
+                              },
+                              active: false,
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(1);
+        });
+
+        test('Should return interestGroupLeadershipRoleCount of 2 when 2 users are leaders of 3 interest groups 2 of which are unique', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-id-1',
+                },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -243,6 +291,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-1',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -256,6 +305,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -286,6 +336,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -302,6 +353,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -326,6 +378,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-3',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -363,7 +416,7 @@ describe('Analytics Data Provider', () => {
           ).toBe(0);
         });
 
-        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when two alumni users are leaders of two different interest groups', async () => {
+        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when two alumni users are leaders of 2 different active interest groups', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
 
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
@@ -374,6 +427,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -390,6 +444,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -411,7 +466,7 @@ describe('Analytics Data Provider', () => {
           ).toBe(2);
         });
 
-        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when 3 users are leaders of 3 different interest groups but only two are alumni', async () => {
+        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when 3 users are leaders of 3 different active interest groups but 2 are alumni', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
 
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
@@ -422,6 +477,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -438,6 +494,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -462,6 +519,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-3',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -484,7 +542,7 @@ describe('Analytics Data Provider', () => {
           ).toBe(2);
         });
 
-        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when two users are leaders of 3 interest groups two of which are unique', async () => {
+        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when 2 users are leaders of 3 active interest groups 2 of which are unique', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
             pastDate;
@@ -494,6 +552,7 @@ describe('Analytics Data Provider', () => {
                 sys: {
                   id: 'interest-group-id-1',
                 },
+                active: true,
               },
             ];
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
@@ -510,6 +569,7 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-1',
                               },
+                              active: true,
                             },
                           ],
                         },
@@ -523,6 +583,107 @@ describe('Analytics Data Provider', () => {
                               sys: {
                                 id: 'interest-group-id-2',
                               },
+                              active: true,
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(
+            result.items[0]!.interestGroupPreviousLeadershipRoleCount,
+          ).toBe(2);
+        });
+
+        test('Should return interestGroupPreviousLeadershipRoleCount of 1 when 2 active users are leaders of 2 different interest groups one of which is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
+            null;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-id-1',
+                },
+                active: true,
+              },
+            ];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
+            {
+              alumniSinceDate: null,
+              linkedFrom: {
+                interestGroupLeadersCollection: {
+                  items: [
+                    {
+                      linkedFrom: {
+                        interestGroupsCollection: {
+                          items: [
+                            {
+                              sys: {
+                                id: 'interest-group-id-2',
+                              },
+                              active: false,
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(
+            result.items[0]!.interestGroupPreviousLeadershipRoleCount,
+          ).toBe(1);
+        });
+
+        test('Should return interestGroupPreviousLeadershipRoleCount of 2 when 1 active user is a leader of an inactive interest group nd 1 is an alumni and a leader of a different active interest group', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
+            null;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection!.items =
+            [
+              {
+                sys: {
+                  id: 'interest-group-id-1',
+                },
+                active: false,
+              },
+            ];
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items.push(
+            {
+              alumniSinceDate: pastDate,
+              linkedFrom: {
+                interestGroupLeadersCollection: {
+                  items: [
+                    {
+                      linkedFrom: {
+                        interestGroupsCollection: {
+                          items: [
+                            {
+                              sys: {
+                                id: 'interest-group-id-2',
+                              },
+                              active: true,
                             },
                           ],
                         },

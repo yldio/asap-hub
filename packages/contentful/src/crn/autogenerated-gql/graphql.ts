@@ -10253,7 +10253,11 @@ export type FetchAnalyticsTeamLeadershipQuery = {
             sys: Pick<Sys, 'id'>;
             linkedFrom?: Maybe<{
               interestGroupsCollection?: Maybe<{
-                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                items: Array<
+                  Maybe<
+                    Pick<InterestGroups, 'active'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
               }>;
               teamMembershipCollection?: Maybe<{
                 items: Array<
@@ -10270,7 +10274,11 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       linkedFrom?: Maybe<{
                                         interestGroupsCollection?: Maybe<{
                                           items: Array<
-                                            Maybe<{ sys: Pick<Sys, 'id'> }>
+                                            Maybe<
+                                              Pick<InterestGroups, 'active'> & {
+                                                sys: Pick<Sys, 'id'>;
+                                              }
+                                            >
                                           >;
                                         }>;
                                       }>;
@@ -22364,6 +22372,13 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                             ],
                                           },
                                         },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'active',
+                                          },
+                                        },
                                       ],
                                     },
                                   },
@@ -22564,6 +22579,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                                                             },
                                                                                                                           ],
                                                                                                                       },
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'active',
+                                                                                                                    },
                                                                                                                   },
                                                                                                                 ],
                                                                                                             },

@@ -56,6 +56,7 @@ export const getAnalyticsTeamLeadershipQuery =
                   sys: {
                     id: 'interest-group-1',
                   },
+                  active: true,
                 },
               ],
             },
@@ -78,6 +79,7 @@ export const getAnalyticsTeamLeadershipQuery =
                                           sys: {
                                             id: 'interest-group-1',
                                           },
+                                          active: true,
                                         },
                                       ],
                                     },

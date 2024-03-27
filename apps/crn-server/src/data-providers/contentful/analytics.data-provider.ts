@@ -3,6 +3,8 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   GraphQLClient,
+  InterestGroups,
+  Sys,
 } from '@asap-hub/contentful';
 import {
   FetchPaginationOptions,
@@ -34,8 +36,13 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (item) =>
                   item?.linkedFrom?.usersCollection?.items
-                    .filter(filterOutAlumni)
-                    .flatMap(flattenInterestGroupLeaders),
+                    // .filter(filterOutAlumni)
+                    .flatMap(flattenInterestGroupLeaders)
+                    .filter(
+                      (item) =>
+                        item.interestGroupActive && item.userIsAlumni === false,
+                    )
+                    .map((item) => item.interestGroupId),
               ) || [],
             ),
             interestGroupMemberCount:
@@ -45,7 +52,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                     (item) =>
                       item?.linkedFrom?.usersCollection?.items
                         .filter(filterOutAlumni)
-                        .flatMap(flattenInterestGroupLeaders),
+                        .flatMap(flattenInterestGroupLeaders)
+                        .map((item) => item.interestGroupId),
                   ) || []),
                   ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
                     (interestGroup) => interestGroup?.sys.id,
@@ -56,8 +64,12 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (item) =>
                   item?.linkedFrom?.usersCollection?.items
-                    .filter(filterAlumni)
-                    .flatMap(flattenInterestGroupLeaders),
+                    // .filter(filterAlumni)
+                    .flatMap(flattenInterestGroupLeaders)
+                    .filter(
+                      (item) => !item.interestGroupActive || item.userIsAlumni,
+                    )
+                    .map((item) => item.interestGroupId),
               ) || [],
             ),
             interestGroupPreviousMemberCount:
@@ -67,7 +79,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                     (item) =>
                       item?.linkedFrom?.usersCollection?.items
                         .filter(filterOutAlumni)
-                        .flatMap(flattenInterestGroupLeaders),
+                        .flatMap(flattenInterestGroupLeaders)
+                        .map((item) => item.interestGroupId),
                   ) || []),
                   ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
                     (interestGroup) => interestGroup?.sys.id,
@@ -143,12 +156,28 @@ const flattenWorkingGroupLeaders = (user: User): (string | undefined)[] =>
         (item) => item?.sys.id,
       ),
   ) || [];
-const flattenInterestGroupLeaders = (user: User): (string | undefined)[] =>
+const flattenInterestGroupLeaders = (
+  user: User,
+): Array<{
+  interestGroupId: string;
+  userIsAlumni: boolean;
+  interestGroupActive: boolean;
+}> =>
   user?.linkedFrom?.interestGroupLeadersCollection?.items.flatMap(
     (interestGroupLeader) =>
-      interestGroupLeader?.linkedFrom?.interestGroupsCollection?.items.map(
-        (item) => item?.sys.id,
-      ),
+      interestGroupLeader?.linkedFrom?.interestGroupsCollection?.items
+        .filter(
+          (
+            item,
+          ): item is Pick<InterestGroups, 'active'> & {
+            sys: Pick<Sys, 'id'>;
+          } => !!item,
+        )
+        .map((item) => ({
+          interestGroupId: item.sys.id,
+          userIsAlumni: user.alumniSinceDate !== null,
+          interestGroupActive: !!item.active,
+        })) || [],
   ) || [];
 const flattenWorkingGroupMember = (user: User): (string | undefined)[] =>
   user?.linkedFrom?.workingGroupMembersCollection?.items.flatMap(

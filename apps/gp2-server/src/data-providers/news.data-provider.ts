@@ -62,4 +62,7 @@ export const parseGraphQlNews = (item: NewsItem): gp2Model.NewsDataObject => ({
   linkText: item.linkText ?? undefined,
   created: item.publishDate,
   type: item.type as gp2Model.NewsType,
+  tags:
+    item.tagsCollection?.items.map((tag) => tag?.name || '').filter(Boolean) ||
+    [],
 });

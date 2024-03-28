@@ -7,17 +7,17 @@ import { EventTime, ImageLink, LinkHeadline, TagList } from '.';
 import { Headline3 } from '..';
 import { neutral900 } from '../colors';
 import { eventPlaceholderIcon } from '../icons';
-import { largeDesktopScreen, perRem, rem } from '../pixels';
+import { largeDesktopScreen, rem } from '../pixels';
 
 const TITLE_LIMIT = 55;
 
 const imageContainerStyle = css({
   flexShrink: 0,
-  borderRadius: `${6 / perRem}em`,
-  height: `${102 / perRem}em`,
-  marginRight: `${24 / perRem}em`,
-  marginTop: `${12 / perRem}em`,
-  width: `${102 / perRem}em`,
+  borderRadius: rem(8),
+
+  height: rem(96),
+  width: rem(96),
+
   overflow: 'hidden',
 
   [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
@@ -25,14 +25,16 @@ const imageContainerStyle = css({
   },
 });
 
-const listItemStyles = css({
-  paddingTop: rem(24),
-  color: neutral900.rgb,
-  whiteSpace: 'break-spaces',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  fontSize: rem(17),
+const contentStyles = css({
   display: 'flex',
+  flexDirection: 'column',
+  gap: rem(16),
+});
+
+const tagContainerStyles = css({
+  marginTop: rem(8),
+  color: neutral900.rgb,
+  fontSize: rem(17),
 });
 
 const imageStyle = css({
@@ -44,10 +46,8 @@ const imageStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
-});
 
-const widthStyles = css({
-  display: 'grid',
+  gap: rem(24),
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
@@ -89,29 +89,27 @@ const EventInfo: React.FC<EventInfoProps> = ({
           <>{imageComponent}</>
         )}
       </div>
-      <div>
+      <div css={contentStyles}>
         {link ? (
-          <LinkHeadline level={3} styleAsHeading={4} href={link}>
+          <LinkHeadline level={3} styleAsHeading={4} href={link} noMargin>
             {title.substring(0, titleLimit ?? undefined)}
             {titleLimit && title.length > titleLimit ? '…' : undefined}
           </LinkHeadline>
         ) : (
-          <Headline3 styleAsHeading={4}>
+          <Headline3 styleAsHeading={4} noMargin>
             {title.substring(0, titleLimit ?? undefined)}
             {titleLimit && title.length > titleLimit ? '…' : undefined}
           </Headline3>
         )}
         <EventTime {...props} />
-        <div css={widthStyles}>
-          {eventOwner}
-          {eventTeams}
-          {eventSpeakers}
-          {tags.length > 0 && (
-            <div css={listItemStyles}>
-              <TagList tags={tags} />
-            </div>
-          )}
-        </div>
+        {eventOwner}
+        {eventTeams}
+        {eventSpeakers}
+        {tags.length > 0 && (
+          <div css={tagContainerStyles}>
+            <TagList tags={tags} />
+          </div>
+        )}
       </div>
     </div>
   );

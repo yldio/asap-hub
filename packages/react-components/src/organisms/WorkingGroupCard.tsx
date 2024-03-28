@@ -1,49 +1,10 @@
-import { css } from '@emotion/react';
 import { WorkingGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import {
-  Card,
-  Paragraph,
-  Anchor,
-  Caption,
-  Ellipsis,
-  StateTag,
-  Link,
-} from '../atoms';
-import { googleDriveIcon, successIcon } from '../icons';
-import { LinkHeadline, TagList } from '../molecules';
-import { perRem, mobileScreen } from '../pixels';
+import { Caption, StateTag } from '../atoms';
+import { successIcon } from '../icons';
 import { formatDate } from '../date';
-
-const wrapperStyle = css({
-  display: 'flex',
-  flexFlow: 'column',
-  paddingTop: `${33 / perRem}em`,
-  paddingBottom: `${33 / perRem}em`,
-  overflow: 'hidden',
-});
-
-const titleStyle = css({
-  display: 'flex',
-  marginBottom: `${16 / perRem}em`,
-  gap: `${12 / perRem}em`,
-  flexFlow: 'column',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    flexFlow: 'row',
-    gap: `${16 / perRem}em`,
-    marginBottom: `${12 / perRem}em`,
-  },
-});
-
-const shortTextStyle = css({
-  marginTop: `${16 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
-});
-
-const tagsContainerStyles = css({
-  marginBottom: `${12 / perRem}em`,
-});
+import EntityCard from './EntityCard';
 
 type WorkingGroupCardProps = Pick<
   WorkingGroupResponse,
@@ -64,58 +25,30 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   lastModifiedDate,
   complete,
   tags,
-}) => (
-  <Card
-    overrideStyles={wrapperStyle}
-    accent={complete ? 'neutral200' : 'default'}
-  >
-    <div css={titleStyle}>
-      <LinkHeadline
-        href={
-          network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
-        }
-        level={2}
-        styleAsHeading={4}
-        noMargin
-      >
-        {title}
-      </LinkHeadline>
-      {complete && (
-        <div>
-          <StateTag accent="green" icon={successIcon} label="Complete" />
-        </div>
-      )}
-    </div>
-    {externalLink && (
-      <div>
-        <Link href={externalLink} buttonStyle small noMargin>
-          {googleDriveIcon} Access Drive
-        </Link>
-      </div>
-    )}
-    {shortText && (
-      <div css={shortTextStyle}>
-        <Anchor
-          href={
-            network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$
-          }
-        >
-          <Ellipsis numberOfLines={2}>
-            <Paragraph accent="lead" noMargin>
-              {shortText}
-            </Paragraph>
-          </Ellipsis>
-        </Anchor>
-      </div>
-    )}
-    {!!tags.length && (
-      <div css={tagsContainerStyles}>
-        <TagList max={3} tags={tags} />
-      </div>
-    )}
+}) => {
+  const href = network({})
+    .workingGroups({})
+    .workingGroup({ workingGroupId: id }).$;
+
+  const footer = (
     <Caption noMargin>{`Last updated: ${formatDate(
       new Date(lastModifiedDate),
     )}`}</Caption>
-  </Card>
-);
+  );
+  return (
+    <EntityCard
+      active={!complete}
+      footer={footer}
+      googleDrive={externalLink}
+      href={href}
+      inactiveBadge={
+        <StateTag accent="green" icon={successIcon} label="Complete" />
+      }
+      tags={tags}
+      text={shortText}
+      title={title}
+    />
+  );
+};
+
 export default WorkingGroupCard;

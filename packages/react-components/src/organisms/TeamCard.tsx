@@ -66,7 +66,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
       inactiveBadge={<StateTag icon={inactiveBadgeIcon} label="Inactive" />}
       tags={tags.map(({ name }) => name)}
       text={projectTitle}
-      title={displayName}
+      title={`Team ${displayName}`}
     />
   );
 };

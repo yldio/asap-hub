@@ -48,7 +48,7 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
       googleDrive={googleDrive}
       href={href}
       inactiveBadge={<StateTag icon={inactiveBadgeIcon} label="Inactive" />}
-      tags={tags.map(({ name }) => name)}
+      tags={tags.map((tag) => tag.name)}
       text={description}
       title={name}
     />

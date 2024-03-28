@@ -46,6 +46,10 @@ const avatarStyles = css({
   },
 });
 
+const tagsContainerStyles = css({
+  paddingBottom: `${12 / perRem}em`,
+});
+
 type UserProfilePersonalTextProps = Pick<
   UserListItemResponse,
   | 'institution'
@@ -129,7 +133,11 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           )}
         </span>
       )}
-      {tags && <TagList max={3} tags={tags.map((tag) => tag.name)} />}
+      {tags?.length ? (
+        <div css={tagsContainerStyles}>
+          <TagList max={3} tags={tags.map((tag) => tag.name)} />
+        </div>
+      ) : null}
     </div>
   );
 };

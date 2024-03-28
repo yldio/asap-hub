@@ -3,7 +3,7 @@ import { EventResponse } from '@asap-hub/model';
 
 import { formatDateToTimezone } from '../date';
 import { lead } from '../colors';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { calendarIcon, clockIcon } from '../icons';
 
 import { Info } from '.';
@@ -11,6 +11,7 @@ import { Info } from '.';
 const listStyles = css({
   display: 'flex',
   flexDirection: 'column',
+  gap: rem(16),
   margin: 0,
   padding: 0,
 });
@@ -20,18 +21,16 @@ const listItemStyles = css({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  marginTop: `${7.5 / perRem}em`,
-  marginBottom: `${7.5 / perRem}em`,
 });
 
 const iconStyles = css({
-  paddingRight: `${9 / perRem}em`,
+  paddingRight: rem(8),
   lineHeight: 0,
   height: 'fit-content',
 });
 
 const tzStyles = css({
-  paddingLeft: `${9 / perRem}em`,
+  paddingLeft: rem(8),
 });
 
 type EventTimeProps = Pick<

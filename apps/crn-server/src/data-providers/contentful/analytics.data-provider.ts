@@ -40,7 +40,17 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             ),
             interestGroupMemberCount:
               (!team.inactiveSince &&
-                team.linkedFrom?.interestGroupsCollection?.total) ||
+                getUniqueIdCount([
+                  ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                    (item) =>
+                      item?.linkedFrom?.usersCollection?.items
+                        .filter(filterOutAlumni)
+                        .flatMap(flattenInterestGroupLeaders),
+                  ) || []),
+                  ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
+                    (interestGroup) => interestGroup?.sys.id,
+                  ) || []),
+                ])) ||
               0,
             interestGroupPreviousLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
@@ -52,7 +62,17 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             ),
             interestGroupPreviousMemberCount:
               (team.inactiveSince &&
-                team.linkedFrom?.interestGroupsCollection?.total) ||
+                getUniqueIdCount([
+                  ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                    (item) =>
+                      item?.linkedFrom?.usersCollection?.items
+                        .filter(filterOutAlumni)
+                        .flatMap(flattenInterestGroupLeaders),
+                  ) || []),
+                  ...(team.linkedFrom?.interestGroupsCollection?.items.flatMap(
+                    (interestGroup) => interestGroup?.sys.id,
+                  ) || []),
+                ])) ||
               0,
             workingGroupLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(

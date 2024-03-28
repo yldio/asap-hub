@@ -36,7 +36,6 @@ export const usersContentQueryFragment = gql`
     orcidLastSyncDate
     orcidWorks
     questions
-    expertiseAndResourceTags
     expertiseAndResourceDescription
     github
     googleScholar
@@ -178,7 +177,6 @@ export const userListItemContentQueryFragment = gql`
     createdDate
     degree
     email
-    expertiseAndResourceTags
     firstName
     sys {
       id

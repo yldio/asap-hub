@@ -246,18 +246,6 @@ describe('User data provider', () => {
       expect(result!.labs[0]!.name).toEqual('My lab');
     });
 
-    test('should remove empty values from expertise tags and questions', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: getContentfulGraphqlUser({
-          questions: [null, '', 'Why?'],
-          expertiseAndResourceTags: ['Research', null, ''],
-        }),
-      });
-      const result = await userDataProvider.fetchById('123');
-      expect(result!.questions).toEqual(['Why?']);
-      expect(result!.expertiseAndResourceTags).toEqual(['Research']);
-    });
-
     test('should tag alumni users', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
@@ -414,30 +402,6 @@ describe('User data provider', () => {
       expect(result).toEqual({
         total: 0,
         items: [],
-      });
-    });
-
-    test('should return an empty _tags if there is no expertiseAndResourceTags', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        usersCollection: {
-          total: 1,
-          items: [
-            getContentfulGraphqlUserListItem({
-              expertiseAndResourceTags: null,
-            }),
-          ],
-        },
-      });
-      const result = await userDataProvider.fetch({});
-      expect(result).toEqual({
-        total: 1,
-        items: [
-          {
-            ...getUserListItemDataObject(),
-            _tags: [],
-            expertiseAndResourceTags: [],
-          },
-        ],
       });
     });
 

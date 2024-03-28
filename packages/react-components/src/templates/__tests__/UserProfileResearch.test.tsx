@@ -43,7 +43,7 @@ it('renders the role on ASAP when labs, teams responsabilites or researchInteres
   expect(queryByText(/role/i)).toBeInTheDocument();
 });
 
-it('renders the expertiseAndResourceTags list', () => {
+it('renders the tags list', () => {
   const { getByText } = render(
     <UserProfileResearch
       {...commonProps}
@@ -74,7 +74,7 @@ it('renders an edit button for the role on the teams', () => {
   expect(getByLabelText(/edit.+role/i)).toHaveAttribute('href', '/edit-role');
 });
 
-it('renders an edit button for the expertiseAndResourceTags list', () => {
+it('renders an edit button for the tags list', () => {
   const { getByLabelText } = render(
     <UserProfileResearch
       {...commonProps}

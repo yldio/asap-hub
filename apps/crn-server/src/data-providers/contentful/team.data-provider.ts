@@ -1,6 +1,5 @@
 import {
   LabResponse,
-  TeamCreateDataObject,
   TeamDataObject,
   TeamTool,
   TeamUpdateDataObject,
@@ -59,6 +58,9 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
+  async create(): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 
   async fetch(options: FetchTeamsOptions): Promise<ListTeamDataObject> {
     const { take = 8, skip = 0, search, filter } = options;
@@ -150,41 +152,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     await patchAndPublish(team, {
       tools: [...previousToolsLinks, ...newToolsLinks],
     });
-  }
-
-  async create(input: TeamCreateDataObject): Promise<string> {
-    const environment = await this.getRestClient();
-
-    const { tools, ...plainInput } = input;
-    let toolsInput = {};
-
-    if (tools) {
-      const cleanTools = getCleanTools(tools);
-      const publishedTools = await createAndPublishTools(
-        environment,
-        cleanTools,
-      );
-      toolsInput = {
-        tools: {
-          'en-US': publishedTools.map((tool) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: tool.sys.id,
-            },
-          })),
-        },
-      };
-    }
-
-    const newEntry = await environment.createEntry('teams', {
-      fields: {
-        ...addLocaleToFields(plainInput),
-        ...toolsInput,
-      },
-    });
-
-    return newEntry.sys.id;
   }
 }
 

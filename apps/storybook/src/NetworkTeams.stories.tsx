@@ -13,12 +13,11 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
   const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
   return {
     teams: Array.from({ length: numberOfItems }, (_, i) => ({
-      tags: [],
+      tags: [{ id: '1', name: 'Neurological Diseases' }],
       id: `t${i}`,
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-      expertiseAndResourceTags: ['Neurological Diseases'],
       labCount: number('Lab count', 15),
       memberCount: 2,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

@@ -4,7 +4,6 @@ import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
 import { exportAnalyticsData } from './export-analytics';
 import type { Metric } from './export-analytics';
-import * as updateTags from './update-tags';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
@@ -67,26 +66,6 @@ yargs(hideBin(process.argv))
         }),
     handler: async ({ metric, filename }) =>
       exportAnalyticsData(metric as Metric, filename),
-  })
-  .command<{ entity: string }>({
-    command: 'tags <entity>',
-    describe: 'update tags for an entity',
-    builder: (cli) =>
-      cli.positional('entity', {
-        describe: 'specify an entity to update tags for',
-        type: 'string',
-        choices: ['user', 'event', 'team', 'group'],
-        demandOption: true,
-      }),
-    handler: async ({ entity }: { entity: string }) => {
-      switch (entity) {
-        case 'user':
-          await updateTags.updateUsersTags();
-          break;
-        default:
-          console.error('no matching entity');
-      }
-    },
   })
   .demandCommand(1)
   .help('h')

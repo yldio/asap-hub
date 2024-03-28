@@ -45,7 +45,7 @@ const props = {
     name: `${i}`,
   })),
   _tags: [],
-  expertiseAndResourceTags: [],
+  tags: [],
 };
 
 export const Normal = () => <PeopleCard {...props} />;

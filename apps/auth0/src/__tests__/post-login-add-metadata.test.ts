@@ -200,7 +200,7 @@ describe('For a CRN login', () => {
         role: 'Lead PI (Core Leadership)',
       },
     ],
-    expertiseAndResourceTags: [],
+    tags: [],
     questions: [],
     workingGroups: [],
     interestGroups: [],

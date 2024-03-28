@@ -178,11 +178,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
       .split(' ')
       .reduce(
         (
-          acc: ({ title_contains: string } | { tags_contains_all: string[] })[],
+          acc: (
+            | { title_contains: string }
+            | { researchTags: { name_contains: string } }
+          )[],
           word,
         ) => {
           acc.push({ title_contains: word });
-          acc.push({ tags_contains_all: [word] });
+          acc.push({ researchTags: { name_contains: word } });
           return acc;
         },
         [],

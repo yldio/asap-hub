@@ -141,7 +141,20 @@ export class ContentfulFixture implements Fixture {
   }
 
   private async prepareTeam(props: TeamCreateDataObject) {
-    return props;
+    const environment = await this.getEnvironment();
+    return {
+      ...props,
+      labs: [],
+      researchTags: await Promise.all(
+        (props.tags || []).map(async (tag) => {
+          const researchTag = await environment.createEntry('researchTags', {
+            fields: addLocaleToFields({ name: tag }),
+          });
+          await researchTag.publish();
+          return getLinkEntity(researchTag.sys.id);
+        }),
+      ),
+    };
   }
 
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {

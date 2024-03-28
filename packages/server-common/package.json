@@ -37,7 +37,7 @@
     "async": "^3.2.4",
     "aws-lambda": "1.0.7",
     "csv-parse": "4.16.3",
-    "express": "4.18.2",
+    "express": "4.19.2",
     "google-auth-library": "9.4.1",
     "got": "11.8.6",
     "jsonwebtoken": "9.0.0",

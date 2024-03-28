@@ -546,7 +546,7 @@ describe('Analytics Data Provider', () => {
       });
 
       describe('Interest Group Member Count', () => {
-        test('Should return 0 for interestGroupMemberCount when the client returns interestGroupsCollection and interestGroupLeadersCollection items as null', async () => {
+        test('Should return 0 for interestGroupMemberCount when the client returns interestGroupsCollection and interestGroupLeadersCollection items as empty arrays', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items =
             [];
@@ -561,7 +561,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupMemberCount).toBe(0);
         });
 
-        test('Should return 0 for interestGroupMemberCount when the client returns teamMembershipCollection and interestGroupLeadersCollection items as empty arrays', async () => {
+        test('Should return 0 for interestGroupMemberCount when the client returns teamMembershipCollection and interestGroupLeadersCollection items as null', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection =
             null;
@@ -692,7 +692,7 @@ describe('Analytics Data Provider', () => {
       });
 
       describe('Interest Group Previous Member Count', () => {
-        test('Should return 0 for interestGroupPreviousMemberCount when the client returns interestGroupsCollection nd interestGroupLeadersCollection items as empty arrays and the team is inactive', async () => {
+        test('Should return 0 for interestGroupPreviousMemberCount when the client returns interestGroupsCollection and interestGroupLeadersCollection items as empty arrays and the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;
@@ -709,7 +709,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupPreviousMemberCount).toBe(0);
         });
 
-        test('Should return 0 for interestGroupPreviousMemberCount when the client returns interestGroupsCollection nd interestGroupLeadersCollection items as null and the team is inactive', async () => {
+        test('Should return 0 for interestGroupPreviousMemberCount when the client returns interestGroupsCollection and interestGroupLeadersCollection items as null and the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
             pastDate;

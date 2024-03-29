@@ -131,3 +131,29 @@ it('shows placeholder text on your own profile', () => {
   expect(queryByTitle(/location/i)).toBeInTheDocument();
   expect(queryByText(/your position/i)).toBeInTheDocument();
 });
+
+it('renders tags when present', async () => {
+  const { queryByText, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfilePersonalText
+        {...props}
+        tags={[
+          { id: '1', name: 'Tag 1' },
+          { id: '2', name: 'Tag 2' },
+        ]}
+      />
+    </UserProfileContext.Provider>,
+  );
+
+  expect(queryByText('Tag 1')).toBeInTheDocument();
+  expect(queryByText('Tag 2')).toBeInTheDocument();
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfilePersonalText {...props} tags={[]} />
+    </UserProfileContext.Provider>,
+  );
+
+  expect(queryByText('Tag 1')).not.toBeInTheDocument();
+  expect(queryByText('Tag 2')).not.toBeInTheDocument();
+});

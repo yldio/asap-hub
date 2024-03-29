@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { tags as tagsRoute } from '@asap-hub/routing';
 
-import { perRem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { Tag } from '../atoms';
 
 const listStyles = css({
@@ -13,6 +13,7 @@ const listStyles = css({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
+  rowGap: rem(12),
   alignItems: 'center',
 
   '> .overflow': {
@@ -21,19 +22,17 @@ const listStyles = css({
 });
 
 const normalListItemStyles = css({
-  marginBottom: `${12 / perRem}em`,
   ':not(:nth-last-of-type(1))': {
-    paddingRight: `${12 / perRem}em`,
+    paddingRight: rem(12),
   },
 });
 
 const centerListStyles = css({
   justifyContent: 'center',
-  gap: `${15 / perRem}em`,
+  gap: rem(15),
 });
 
 const centredItemStyles = css({
-  marginBottom: 0,
   ':not(:nth-last-of-type(1))': {
     paddingRight: 0,
   },
@@ -63,10 +62,6 @@ const overflowContentStyles = css({
   '::after': {
     content: '"+" counter(tags)',
   },
-});
-
-const overflowStyles = css({
-  marginBottom: `${12 / perRem}em`,
 });
 
 const SAFARI_MAX_SAFE_INTEGER = 2 ** 31 - 2;
@@ -107,7 +102,7 @@ const TagList: React.FC<TagListProps> = ({
           </Tag>
         </li>
       ))}
-      <li key="overflow" className="overflow" css={overflowStyles}>
+      <li key="overflow" className="overflow">
         <Tag enabled={enabled}>
           <span css={overflowContentStyles}></span>
         </Tag>

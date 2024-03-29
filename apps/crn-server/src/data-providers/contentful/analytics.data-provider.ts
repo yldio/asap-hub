@@ -34,8 +34,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             displayName: team.displayName || '',
             interestGroupLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .flatMap(flattenInterestGroupLeaders)
                     .filter(
                       (item) =>
@@ -48,8 +48,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (!team.inactiveSince &&
                 getUniqueIdCount([
                   ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (item) =>
-                      item?.linkedFrom?.usersCollection?.items
+                    (teamMembershipItem) =>
+                      teamMembershipItem?.linkedFrom?.usersCollection?.items
                         .flatMap(flattenInterestGroupLeaders)
                         .filter(
                           (item) =>
@@ -65,8 +65,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               0,
             interestGroupPreviousLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .flatMap(flattenInterestGroupLeaders)
                     .filter(
                       (item) => !item.interestGroupActive || item.userIsAlumni,
@@ -76,8 +76,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             ),
             interestGroupPreviousMemberCount: getUniqueIdCount([
               ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .flatMap(flattenInterestGroupLeaders)
                     .filter(
                       (item) =>
@@ -96,32 +96,32 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             ]),
             workingGroupLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterOutAlumni)
                     .flatMap(flattenWorkingGroupLeaders),
               ) || [],
             ),
             workingGroupMemberCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterOutAlumni)
                     .flatMap(flattenWorkingGroupMember),
               ) || [],
             ),
             workingGroupPreviousLeadershipRoleCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupLeaders),
               ) || [],
             ),
             workingGroupPreviousMemberCount: getUniqueIdCount(
               team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (item) =>
-                  item?.linkedFrom?.usersCollection?.items
+                (teamMembershipItem) =>
+                  teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupMember),
               ) || [],

@@ -18,6 +18,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
               sys {
                 id
               }
+              active
             }
           }
           teamMembershipCollection(limit: 20) {
@@ -35,6 +36,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                                 sys {
                                   id
                                 }
+                                active
                               }
                             }
                           }

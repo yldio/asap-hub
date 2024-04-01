@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import AnalyticsPageBody from '../AnalyticsPageBody';
+import AnalyticsLeadershipPageBody from '../AnalyticsLeadershipPageBody';
 
 const pageControlProps = {
   numberOfPages: 1,
@@ -10,7 +10,7 @@ const pageControlProps = {
 };
 it('renders the selected metric', () => {
   render(
-    <AnalyticsPageBody
+    <AnalyticsLeadershipPageBody
       metric={'interestGroup'}
       data={[]}
       setMetric={() => {}}

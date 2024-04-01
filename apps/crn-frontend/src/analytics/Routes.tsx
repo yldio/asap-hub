@@ -1,30 +1,43 @@
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
+import { analytics } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
-const loadAnalytics = () =>
-  import(/* webpackChunkName: "analytics" */ './Analytics');
+const loadProductivity = () =>
+  import(/* webpackChunkName: "productivity" */ './productivity/Productivity');
 
-const AnalyticsBody = lazy(loadAnalytics);
+const loadLeadership = () =>
+  import(/* webpackChunkName: "leadership" */ './leadership/Leadership');
+
+const LeadershipBody = lazy(loadLeadership);
+const ProductivityBody = lazy(loadProductivity);
 
 const About: FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadAnalytics();
+    loadLeadership().then(loadLeadership);
   }, []);
 
   const { path } = useRouteMatch();
 
   return (
     <Switch>
-      <Route exact path={path}>
+      <Route path={path + analytics({}).productivity.template}>
         <AnalyticsPage>
-          <Frame title="Analytics">
-            <AnalyticsBody />
+          <Frame title="Resource & Data Sharing">
+            <ProductivityBody />
           </Frame>
         </AnalyticsPage>
       </Route>
+      <Route path={path + analytics({}).leadership.template}>
+        <AnalyticsPage>
+          <Frame title="Leadership & Membership">
+            <LeadershipBody />
+          </Frame>
+        </AnalyticsPage>
+      </Route>
+      <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
     </Switch>
   );
 };

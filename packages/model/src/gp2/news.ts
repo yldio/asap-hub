@@ -13,6 +13,7 @@ export type NewsDataObject = {
   link?: string;
   linkText?: string;
   type: NewsType;
+  tags: string[];
 };
 export type ListNewsDataObject = ListResponse<NewsDataObject>;
 

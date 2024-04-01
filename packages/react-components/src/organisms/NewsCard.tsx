@@ -2,8 +2,8 @@ import { css } from '@emotion/react';
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
 import { news, discover } from '@asap-hub/routing';
 
-import { Card, Paragraph, Headline4 } from '../atoms';
-import { perRem, smallDesktopScreen } from '../pixels';
+import { Card, Headline4, Ellipsis } from '../atoms';
+import { rem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import { newsPlaceholder, trainingPlaceholderIcon } from '../icons';
 import { ExternalLink, LinkHeadline, ImageLink } from '../molecules';
@@ -18,13 +18,11 @@ const imageStyle = css({
 
 const imageContainerStyle = css({
   flexShrink: 0,
-  borderRadius: `${6 / perRem}em`,
-  height: `${184 / perRem}em`,
-  marginTop: `${9 / perRem}em`,
-  marginBottom: `${3 / perRem}em`,
+  borderRadius: rem(8),
+  marginRight: rem(24),
 
-  marginRight: `${24 / perRem}em`,
-  width: `${184 / perRem}em`,
+  height: rem(192),
+  width: rem(192),
   overflow: 'hidden',
 
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
@@ -35,28 +33,35 @@ const imageContainerStyle = css({
 const headerStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
+  alignItems: 'baseline',
+});
+
+const titleStyles = css({
+  paddingRight: rem(15),
 });
 
 const cardStyle = css({
   display: 'flex',
   flexDirection: 'row',
-  marginBottom: `${6 / perRem}em`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const containerStyle = css({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  gap: rem(24),
+});
+
+const shortTextStyles = css({
+  flex: 1,
+  color: lead.rgb,
 });
 
 const footerStyles = css({
   ...captionStyles,
   color: lead.rgb,
   justifySelf: 'flex-end',
-});
-
-const tagListStyle = css({
-  margin: `${12 / perRem}em 0`,
 });
 
 const placeholders: Record<NewsType, JSX.Element> = {
@@ -83,11 +88,11 @@ const NewsCard: React.FC<
       ? discover({}).tutorials({}).tutorial({ tutorialId: id }).$
       : news({}).article({ articleId: id }).$;
   const titleComponent = text ? (
-    <LinkHeadline href={href} level={4}>
+    <LinkHeadline href={href} level={4} noMargin>
       {title}
     </LinkHeadline>
   ) : (
-    <Headline4>{title}</Headline4>
+    <Headline4 noMargin>{title}</Headline4>
   );
   const newsLink = text && href;
 
@@ -106,7 +111,7 @@ const NewsCard: React.FC<
   );
 
   return (
-    <Card>
+    <Card padding={false}>
       <div css={cardStyle}>
         <div css={imageContainerStyle}>
           {newsLink ? (
@@ -117,19 +122,13 @@ const NewsCard: React.FC<
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
-            <div css={{ paddingRight: `${15 / perRem}em` }}>
-              {titleComponent}
-            </div>
+            <div css={titleStyles}>{titleComponent}</div>
             {link ? <ExternalLink label={linkText} href={link} /> : null}
           </div>
-          <div css={{ flex: 1 }}>
-            <Paragraph accent="lead">{shortText}</Paragraph>
+          <div css={shortTextStyles}>
+            <Ellipsis numberOfLines={3}>{shortText}</Ellipsis>
           </div>
-          {!!tags.length && (
-            <div css={tagListStyle}>
-              <TagList max={3} tags={tags} />
-            </div>
-          )}
+          {!!tags.length && <TagList max={3} tags={tags} />}
           <span css={footerStyles}>
             Posted: {formatDate(new Date(created))} by ASAP
           </span>

@@ -1676,9 +1676,21 @@ export type EventsNotesLinks = {
 };
 
 export type EventsNotesResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsNotesResourcesBlock>;
+  hyperlink: Array<EventsNotesResourcesHyperlink>;
+  inline: Array<EventsNotesResourcesInline>;
+};
+
+export type EventsNotesResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsNotesResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsNotesResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export enum EventsOrder {
@@ -1753,9 +1765,21 @@ export type EventsPresentationLinks = {
 };
 
 export type EventsPresentationResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsPresentationResourcesBlock>;
+  hyperlink: Array<EventsPresentationResourcesHyperlink>;
+  inline: Array<EventsPresentationResourcesInline>;
+};
+
+export type EventsPresentationResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsPresentationResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsPresentationResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type EventsSpeakersCollection = {
@@ -1821,9 +1845,21 @@ export type EventsVideoRecordingLinks = {
 };
 
 export type EventsVideoRecordingResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<EventsVideoRecordingResourcesBlock>;
+  hyperlink: Array<EventsVideoRecordingResourcesHyperlink>;
+  inline: Array<EventsVideoRecordingResourcesInline>;
+};
+
+export type EventsVideoRecordingResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsVideoRecordingResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type EventsVideoRecordingResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
@@ -2777,6 +2813,7 @@ export type News = Entry & {
   publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
+  tagsCollection?: Maybe<NewsTagsCollection>;
   thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -2805,6 +2842,16 @@ export type NewsPublishDateArgs = {
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<NewsTagsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TagsFilter>;
 };
 
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
@@ -2865,6 +2912,8 @@ export type NewsFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  tags?: InputMaybe<CfTagsNestedFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -2910,6 +2959,26 @@ export enum NewsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+}
+
+export type NewsTagsCollection = {
+  items: Array<Maybe<Tags>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum NewsTagsCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
@@ -3900,9 +3969,21 @@ export type PagesTextLinks = {
 };
 
 export type PagesTextResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<PagesTextResourcesBlock>;
+  hyperlink: Array<PagesTextResourcesHyperlink>;
+  inline: Array<PagesTextResourcesInline>;
+};
+
+export type PagesTextResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type PagesTextResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type PagesTextResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
@@ -4956,7 +5037,6 @@ export type ResourceLink = {
 
 export type ResourceSys = {
   linkType: Scalars['String'];
-  type: Scalars['String'];
   urn: Scalars['String'];
 };
 
@@ -5234,6 +5314,7 @@ export type TagsFilter = {
 export type TagsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  newsCollection?: Maybe<NewsCollection>;
   outputsCollection?: Maybe<OutputsCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
   usersCollection?: Maybe<UsersCollection>;
@@ -5252,6 +5333,16 @@ export type TagsLinkingCollectionsEventsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<TagsLinkingCollectionsEventsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TagsLinkingCollectionsNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TagsLinkingCollectionsNewsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -5344,6 +5435,25 @@ export enum TagsLinkingCollectionsEventsCollectionOrder {
   VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
   VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
   VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum TagsLinkingCollectionsNewsCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
 }
 
 export enum TagsLinkingCollectionsOutputsCollectionOrder {
@@ -6746,9 +6856,21 @@ export type WorkingGroupsDescriptionLinks = {
 };
 
 export type WorkingGroupsDescriptionResources = {
-  block: Array<ResourceLink>;
-  hyperlink: Array<ResourceLink>;
-  inline: Array<ResourceLink>;
+  block: Array<WorkingGroupsDescriptionResourcesBlock>;
+  hyperlink: Array<WorkingGroupsDescriptionResourcesHyperlink>;
+  inline: Array<WorkingGroupsDescriptionResourcesInline>;
+};
+
+export type WorkingGroupsDescriptionResourcesBlock = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type WorkingGroupsDescriptionResourcesHyperlink = ResourceLink & {
+  sys: ResourceSys;
+};
+
+export type WorkingGroupsDescriptionResourcesInline = ResourceLink & {
+  sys: ResourceSys;
 };
 
 export type WorkingGroupsFilter = {
@@ -10137,6 +10259,11 @@ export type NewsContentDataFragment = Pick<
 > & {
   sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
+  tagsCollection?: Maybe<
+    Pick<NewsTagsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Tags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+    }
+  >;
 };
 
 export type FetchNewsByIdQueryVariables = Exact<{
@@ -10151,6 +10278,11 @@ export type FetchNewsByIdQuery = {
     > & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
+      tagsCollection?: Maybe<
+        Pick<NewsTagsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Tags, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+        }
+      >;
     }
   >;
 };
@@ -10173,6 +10305,13 @@ export type FetchNewsQuery = {
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
             thumbnail?: Maybe<Pick<Asset, 'url'>>;
+            tagsCollection?: Maybe<
+              Pick<NewsTagsCollection, 'total'> & {
+                items: Array<
+                  Maybe<Pick<Tags, 'name'> & { sys: Pick<Sys, 'id'> }>
+                >;
+              }
+            >;
           }
         >
       >;
@@ -14692,6 +14831,46 @@ export const NewsContentDataFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
               ],
             },
           },

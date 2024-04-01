@@ -10,6 +10,7 @@ import {
 } from '@asap-hub/model';
 import { EventBridgeEvent, SQSEvent, SQSRecord } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
+import { getContentfulTagsCollectionGraphqlResponse } from './tag.fixtures';
 
 export const getContentfulGraphqlNews = (): NonNullable<
   NonNullable<gp2Contentful.FetchNewsQuery['newsCollection']>['items'][number]
@@ -27,6 +28,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
   },
   publishDate: '2021-12-28T00:00:00.000Z',
   type: 'news',
+  tagsCollection: { ...getContentfulTagsCollectionGraphqlResponse() },
 });
 
 export const getContentfulNewsGraphqlResponse =
@@ -46,6 +48,7 @@ export const getNewsDataObject = (): gp2Model.NewsDataObject => ({
   link: 'http://example.com/a-link',
   linkText: 'some link text',
   type: 'news',
+  tags: ['tag-1'],
 });
 
 export const getListNewsDataObject = (): gp2Model.ListNewsDataObject => ({

@@ -29,6 +29,7 @@ const titleStyles = css({
 
 const tagContainerStyles = css({
   marginTop: `${24 / perRem}em`,
+  marginBottom: `${12 / perRem}em`,
 });
 
 type SharedResearchCardProps = Pick<

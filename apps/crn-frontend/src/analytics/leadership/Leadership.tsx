@@ -1,9 +1,10 @@
 import { FC } from 'react';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
-import { useAnalyticsLeadership } from './state';
-import { usePagination, usePaginationParams } from '../../hooks';
 import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
+
+import { useAnalyticsLeadership } from './state';
+import { usePagination, usePaginationParams } from '../../hooks';
 
 type MetricResponse = {
   id: string;

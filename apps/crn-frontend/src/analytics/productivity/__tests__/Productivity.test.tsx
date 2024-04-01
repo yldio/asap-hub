@@ -6,10 +6,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-
-import Productivity from '../Productivity';
 import { analytics } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';
+
+import Productivity from '../Productivity';
 
 const renderPage = async (
   path = analytics({}).productivity({ metric: 'user' }).$,

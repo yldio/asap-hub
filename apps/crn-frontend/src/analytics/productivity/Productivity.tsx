@@ -3,8 +3,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { UserProductivityMetric } from '@asap-hub/react-components/src/organisms/UserProductivityTable';
 import { TeamProductivityMetric } from '@asap-hub/react-components/src/organisms/TeamProductivityTable';
-import { usePagination, usePaginationParams } from '../../hooks';
 import { analytics } from '@asap-hub/routing';
+
+import { usePagination, usePaginationParams } from '../../hooks';
 
 const Productivity: FC<Record<string, never>> = () => {
   const history = useHistory();

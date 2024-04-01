@@ -32,21 +32,24 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
           .map((team) => ({
             id: team.sys.id,
             displayName: team.displayName || '',
-            interestGroupLeadershipRoleCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .flatMap(flattenInterestGroupLeaders)
-                    .filter(
-                      (item) =>
-                        item.interestGroupActive && item.userIsAlumni === false,
-                    )
-                    .map((item) => item.interestGroupId),
-              ) || [],
-            ),
-            interestGroupMemberCount:
-              (!team.inactiveSince &&
-                getUniqueIdCount([
+            interestGroupLeadershipRoleCount: team.inactiveSince
+              ? 0
+              : getUniqueIdCount(
+                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                    (teamMembershipItem) =>
+                      teamMembershipItem?.linkedFrom?.usersCollection?.items
+                        .flatMap(flattenInterestGroupLeaders)
+                        .filter(
+                          (item) =>
+                            item.interestGroupActive &&
+                            item.userIsAlumni === false,
+                        )
+                        .map((item) => item.interestGroupId),
+                  ) || [],
+                ),
+            interestGroupMemberCount: team.inactiveSince
+              ? 0
+              : getUniqueIdCount([
                   ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                     (teamMembershipItem) =>
                       teamMembershipItem?.linkedFrom?.usersCollection?.items
@@ -61,10 +64,9 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   ...(team.linkedFrom?.interestGroupsCollection?.items
                     .filter((interestGroup) => !!interestGroup?.active)
                     .flatMap((interestGroup) => interestGroup?.sys.id) || []),
-                ])) ||
-              0,
-            interestGroupPreviousLeadershipRoleCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                ]),
+            interestGroupPreviousLeadershipRoleCount: getUniqueIdCount([
+              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
                   teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .flatMap(flattenInterestGroupLeaders)
@@ -72,8 +74,21 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                       (item) => !item.interestGroupActive || item.userIsAlumni,
                     )
                     .map((item) => item.interestGroupId),
-              ) || [],
-            ),
+              ) || []),
+              ...((team.inactiveSince &&
+                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                  (teamMembershipItem) =>
+                    teamMembershipItem?.linkedFrom?.usersCollection?.items
+                      .flatMap(flattenInterestGroupLeaders)
+                      .filter(
+                        (item) =>
+                          item.interestGroupActive &&
+                          item.userIsAlumni === false,
+                      )
+                      .map((item) => item.interestGroupId),
+                )) ||
+                []),
+            ]),
             interestGroupPreviousMemberCount: getUniqueIdCount([
               ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
@@ -94,38 +109,58 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 )
                 .flatMap((interestGroup) => interestGroup?.sys.id) || []),
             ]),
-            workingGroupLeadershipRoleCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterOutAlumni)
-                    .flatMap(flattenWorkingGroupLeaders),
-              ) || [],
-            ),
-            workingGroupMemberCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterOutAlumni)
-                    .flatMap(flattenWorkingGroupMember),
-              ) || [],
-            ),
-            workingGroupPreviousLeadershipRoleCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+            workingGroupLeadershipRoleCount: team.inactiveSince
+              ? 0
+              : getUniqueIdCount(
+                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                    (teamMembershipItem) =>
+                      teamMembershipItem?.linkedFrom?.usersCollection?.items
+                        .filter(filterOutAlumni)
+                        .flatMap(flattenWorkingGroupLeaders),
+                  ) || [],
+                ),
+            workingGroupMemberCount: team.inactiveSince
+              ? 0
+              : getUniqueIdCount(
+                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                    (teamMembershipItem) =>
+                      teamMembershipItem?.linkedFrom?.usersCollection?.items
+                        .filter(filterOutAlumni)
+                        .flatMap(flattenWorkingGroupMember),
+                  ) || [],
+                ),
+            workingGroupPreviousLeadershipRoleCount: getUniqueIdCount([
+              ...((team.inactiveSince &&
+                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                  (teamMembershipItem) =>
+                    teamMembershipItem?.linkedFrom?.usersCollection?.items
+                      .filter(filterOutAlumni)
+                      .flatMap(flattenWorkingGroupLeaders),
+                )) ||
+                []),
+              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
                   teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupLeaders),
-              ) || [],
-            ),
-            workingGroupPreviousMemberCount: getUniqueIdCount(
-              team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+              ) || []),
+            ]),
+            workingGroupPreviousMemberCount: getUniqueIdCount([
+              ...((team.inactiveSince &&
+                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+                  (teamMembershipItem) =>
+                    teamMembershipItem?.linkedFrom?.usersCollection?.items
+                      .filter(filterOutAlumni)
+                      .flatMap(flattenWorkingGroupMember),
+                )) ||
+                []),
+              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
                   teamMembershipItem?.linkedFrom?.usersCollection?.items
                     .filter(filterAlumni)
                     .flatMap(flattenWorkingGroupMember),
-              ) || [],
-            ),
+              ) || []),
+            ]),
           })) || [],
     };
   }

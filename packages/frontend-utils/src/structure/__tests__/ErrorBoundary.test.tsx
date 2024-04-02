@@ -1,6 +1,5 @@
-import { Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
-import { render } from '@testing-library/react';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { act, render } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import ErrorBoundary from '../ErrorBoundary';
@@ -39,20 +38,32 @@ describe('error boundary', () => {
   });
 
   it('resets on navigation', async () => {
-    const history = createMemoryHistory({ initialEntries: ['/throw'] });
+    const routes = [
+      {
+        path: '/home',
+        element: 'at home',
+      },
+      {
+        path: '/throw',
+        element: <Throw />,
+      },
+    ];
+
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/throw'],
+    });
+
     const { container } = render(
-      <Router navigator={history}>
-        <ErrorBoundary disableSentryReporting={true}>
-          <Route path="/home">at home</Route>
-          <Route path="/throw">
-            <Throw />
-          </Route>
-        </ErrorBoundary>
-      </Router>,
+      <ErrorBoundary disableSentryReporting={true}>
+        <RouterProvider router={router} />
+      </ErrorBoundary>,
     );
     expect(container).toHaveTextContent('oops');
 
-    history.push('/home');
+    act(() => {
+      router.navigate('/home');
+    });
+
     expect(container).not.toHaveTextContent('oops');
     expect(container).toHaveTextContent('at home');
   });

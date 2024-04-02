@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -10,15 +10,17 @@ it('renders an ASAP logo', () => {
   expect(getByTitle('ASAP Logo')).toBeInTheDocument();
 });
 
-it('links back to the home page', () => {
+it('links back to the home page', async () => {
   const { getByTitle, container } = render(
     <MemoryRouter initialEntries={['/page']}>
-      <Route path="/page" element={<Header/>} />
-      <Route path="/" render={() => 'home'} />
+      <Routes>
+        <Route path="/page" element={<Header />} />
+        <Route path="/" element={'home'} />
+      </Routes>
     </MemoryRouter>,
   );
 
-  userEvent.click(getByTitle('ASAP Logo'));
+  await userEvent.click(getByTitle('ASAP Logo'));
   expect(container).toHaveTextContent('home');
 });
 

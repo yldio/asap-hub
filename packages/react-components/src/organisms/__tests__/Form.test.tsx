@@ -3,12 +3,7 @@ import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Router,
-} from 'react-router-dom';
+import { Link, MemoryRouter, Route, Router } from 'react-router-dom';
 import { Button } from '../../atoms';
 import Form from '../Form';
 

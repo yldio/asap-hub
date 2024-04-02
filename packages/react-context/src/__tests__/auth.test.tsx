@@ -81,8 +81,10 @@ describe('useCurrentUser', () => {
           aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
         }),
       }),
-    ).toThrow(Error(
-      `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`,)
+    ).toThrow(
+      Error(
+        `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`,
+      ),
     );
   });
 
@@ -95,9 +97,7 @@ describe('useCurrentUser', () => {
           [`${window.location.origin}/user`]: 'testuser',
         }),
       }),
-    ).toThrow(Error(
-      `Invalid user claim - expected object, got testuser`),
-    );
+    ).toThrow(Error(`Invalid user claim - expected object, got testuser`));
   });
 
   it('returns the user claim', async () => {
@@ -138,8 +138,10 @@ describe('useCurrentUserGP2', () => {
           aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
         }),
       }),
-    ).toThrow(Error(
-      `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`),
+    ).toThrow(
+      Error(
+        `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`,
+      ),
     );
   });
 
@@ -152,9 +154,7 @@ describe('useCurrentUserGP2', () => {
           [`${window.location.origin}/user`]: 'testuser',
         }),
       }),
-    ).toThrow(Error(
-      `Invalid user claim - expected object, got testuser`)
-    );
+    ).toThrow(Error(`Invalid user claim - expected object, got testuser`));
   });
 
   it('returns the user claim', async () => {

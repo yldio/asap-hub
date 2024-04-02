@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -11,7 +11,7 @@ it('renders the text in an anchor', () => {
 
 describe.each`
   contextDescription    | wrapper
-  ${'with a router'}    | ${StaticRouter}
+  ${'with a router'}    | ${MemoryRouter}
   ${'without a router'} | ${undefined}
 `('$contextDescription', ({ wrapper }) => {
   describe.each`
@@ -74,7 +74,7 @@ describe('for an external link', () => {
 
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${StaticRouter}
+  ${'with a router'}    | ${MemoryRouter}
   ${'without a router'} | ${undefined}
 `('for an internal link $description to /', ({ wrapper }) => {
   it('does not set the anchor target', () => {
@@ -99,7 +99,7 @@ describe('for an internal link with a router', () => {
       >
         text
       </Anchor>,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
     const anchor = getByRole('link') as HTMLAnchorElement;
     expect(fireEvent.click(anchor)).toBe(false);
@@ -111,12 +111,12 @@ describe('for an internal link with a router', () => {
         <Anchor href={`#fragment`}>text</Anchor>
         <main id="fragment">text</main>
       </>,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
     const main = getByRole('main');
     const spyScrollIntoView = jest.spyOn(main, 'scrollIntoView');
 
-    userEvent.click(getByRole('link'));
+    await userEvent.click(getByRole('link'));
     await waitFor(() =>
       expect(spyScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' }),
     );

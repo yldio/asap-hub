@@ -82,7 +82,7 @@ describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const history = createMemoryHistory({ initialEntries: ['/'] });
     render(
-      <Router navigator={history}>
+      <Router navigator={history} location={history.location}>
         <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
@@ -104,7 +104,7 @@ describe('with a router', () => {
   it('default route is not always highlighted as selected', () => {
     const history = createMemoryHistory({ initialEntries: ['/location'] });
     render(
-      <Router navigator={history}>
+      <Router navigator={history} location={history.location}>
         <NavigationLink href="/" icon={<svg />}>
           Default
         </NavigationLink>

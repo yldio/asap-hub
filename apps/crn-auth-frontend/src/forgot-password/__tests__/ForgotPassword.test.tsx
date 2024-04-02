@@ -47,9 +47,12 @@ it('has a button to go back in browser history', async () => {
       initialEntries={['/prev', '/forgot-password']}
       initialIndex={1}
     >
-    <Routes>
-      <Route path="prev" element={'Previous Page'} />
-      <Route path="forgot-password/*" element={<ForgotPassword email="" setEmail={() => {}} />} />
+      <Routes>
+        <Route path="prev" element={'Previous Page'} />
+        <Route
+          path="forgot-password/*"
+          element={<ForgotPassword email="" setEmail={() => {}} />}
+        />
       </Routes>
     </MemoryRouter>,
   );

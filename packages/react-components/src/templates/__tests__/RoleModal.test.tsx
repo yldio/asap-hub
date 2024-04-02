@@ -3,7 +3,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -14,7 +13,7 @@ const props: ComponentProps<typeof RoleModal> = {
 
 it('renders the title', () => {
   const { getByText } = render(<RoleModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   expect(getByText('Role', { selector: 'h3' })).toBeVisible();
 });
@@ -34,7 +33,7 @@ it('renders teams and lan names into inputs', async () => {
         { displayName: 'Team 2', id: 'team-2', role: 'Collaborating PI' },
       ]}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(getByLabelText(/main.+interests/i)).toHaveValue('');
   expect(getByLabelText(/responsibilities/i)).toHaveValue('');
@@ -50,7 +49,7 @@ it('renders teams and lan names into inputs', async () => {
 describe('User Role', () => {
   it('indicates which fields are required or optional', () => {
     const { getByText } = render(<RoleModal {...props} />, {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     });
     expect(getByText(/research interests/i).nextSibling).toHaveTextContent(
       'required',
@@ -73,8 +72,8 @@ describe('User Role', () => {
       { wrapper: MemoryRouter },
     );
 
-    userEvent.type(getByDisplayValue('interests'), ' 1');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByDisplayValue('interests'), ' 1');
+    await userEvent.click(getByText('Save'));
     expect(mockSaveFn).toHaveBeenCalledWith({
       reachOut: '',
       researchInterests: 'interests 1',
@@ -94,11 +93,11 @@ describe('User Role', () => {
         responsibilities="responsibilities"
         onSave={() => Promise.resolve()}
       />,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
 
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     const form = saveButton.closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
@@ -111,7 +110,7 @@ describe('User Role', () => {
     const { getByLabelText, findByText } = render(
       <RoleModal {...props} researchInterests="" />,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
     fireEvent.focusOut(getByLabelText(/main.+interests/i));
@@ -125,7 +124,7 @@ describe('User Role', () => {
     const { getByLabelText, findByText } = render(
       <RoleModal {...props} responsibilities="abc" researchInterests="123" />,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
     fireEvent.change(getByLabelText(/responsibilities/i), {
@@ -151,9 +150,9 @@ describe('Staff Role', () => {
       { wrapper: MemoryRouter },
     );
 
-    userEvent.type(getByLabelText(/responsibilities/i), 'xample');
-    userEvent.type(getByLabelText(/reach out/i), '23');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByLabelText(/responsibilities/i), 'xample');
+    await userEvent.type(getByLabelText(/reach out/i), '23');
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -174,10 +173,10 @@ describe('Staff Role', () => {
         reachOut="reachOut"
         onSave={() => Promise.resolve()}
       />,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
 
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
 
     const form = getByText(/save/i).closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);

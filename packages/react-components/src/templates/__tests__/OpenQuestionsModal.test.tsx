@@ -2,7 +2,6 @@ import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import OpenQuestionsModal from '../OpenQuestionsModal';
@@ -13,14 +12,14 @@ const props: ComponentProps<typeof OpenQuestionsModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(<OpenQuestionsModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   expect(getByText('Open Questions', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders which fields are mandatory/optional', () => {
   const { getByText } = render(<OpenQuestionsModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
 
   [
@@ -38,7 +37,7 @@ it('renders default values into text inputs', () => {
 
   const { container } = render(
     <OpenQuestionsModal {...props} questions={questions} />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   container.querySelectorAll('textbox').forEach((elem, idx) => {
@@ -109,7 +108,7 @@ it('disables the form elements while submitting', async () => {
       onSave={handleSave}
       questions={['a', 'b']}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.click(getByText(/save/i));

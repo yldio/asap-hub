@@ -22,9 +22,7 @@ const Dashboard: FC<Record<string, never>> = () => {
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }
-  const displayModal = useMatch(
-    dashboardRoute({}).dismissGettingStarted({}).$,
-  );
+  const displayModal = useMatch(dashboardRoute({}).dismissGettingStarted({}).$);
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();

@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -6,7 +6,7 @@ import BiographyModal from '../BiographyModal';
 
 it('renders a form to edit the biography', () => {
   const { getByRole } = render(<BiographyModal backHref="#" />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   expect(getByRole('heading')).toHaveTextContent(/bio/i);
 });
@@ -14,7 +14,7 @@ it('renders a form to edit the biography', () => {
 it('renders a text field containing the biography, marked as mandatory', () => {
   const { getByDisplayValue, container } = render(
     <BiographyModal backHref="#" biography="My Bio" />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(container.querySelector('label')?.textContent).toContain('required');
   expect(getByDisplayValue('My Bio')).toBeEnabled();
@@ -24,7 +24,7 @@ it('fires onSave when submitting', async () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.type(getByDisplayValue('My Bio'), ' 2');
@@ -39,7 +39,7 @@ it('does not fire onSave when the bio is missing', () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.clear(getByDisplayValue('My Bio'));
@@ -55,7 +55,7 @@ it('disables the form elements while submitting', async () => {
     });
   const { getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.click(getByText(/save/i));

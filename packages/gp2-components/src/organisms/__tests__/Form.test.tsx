@@ -4,12 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { ValidationErrorResponse } from '@asap-hub/model';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Router,
-} from 'react-router-dom';
+import { Link, MemoryRouter, Route, Router } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { Button } from '@asap-hub/react-components';
 import Form from '../Form';

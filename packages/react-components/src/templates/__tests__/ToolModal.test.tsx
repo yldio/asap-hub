@@ -2,7 +2,6 @@ import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 
 import ToolModal from '../ToolModal';
 
@@ -15,14 +14,14 @@ const props: ComponentProps<typeof ToolModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
 
   [
@@ -42,7 +41,7 @@ it('renders default values into inputs', () => {
       description="LinkDescription"
       url="http://example.com"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -56,7 +55,7 @@ it('renders default values into inputs', () => {
 
 it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   const inputUrl = getByLabelText(/Add URL/i);
 
@@ -67,7 +66,7 @@ it('allows url with https protocol', () => {
 });
 it('allows url with http protocol', () => {
   const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
 
   const inputUrl = getByLabelText(/Add URL/i);
@@ -85,7 +84,7 @@ it('allows url with http protocol', () => {
 
 it('does not allow any other uri scheme', () => {
   const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   const inputUrl = getByLabelText(/Add URL/i);
   fireEvent.change(inputUrl, {
@@ -131,7 +130,7 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(<ToolModal {...props} onSave={handleSave} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
 
   userEvent.click(getByText(/save/i));

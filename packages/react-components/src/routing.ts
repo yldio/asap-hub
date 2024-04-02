@@ -20,9 +20,7 @@ export const useHasRouter = (): boolean => {
   }
 };
 
-export const usePushFromPathname = (
-  pathname: string,
-) => {
+export const usePushFromPathname = (pathname: string) => {
   const navigate = useNavigate();
   const location = useLocation();
   return (path: string) => {

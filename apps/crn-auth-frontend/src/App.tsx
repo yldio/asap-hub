@@ -21,7 +21,7 @@ const App: React.FC<Record<string, never>> = () => {
             path="forgot-password/*"
             element={<ForgotPassword email={email} setEmail={setEmail} />}
           />
-          <Route path='*' element={<Navigate to='/login' />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BasicLayout>
     </HashRouter>

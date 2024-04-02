@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { Router } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import {
@@ -57,17 +57,17 @@ jest.setTimeout(60000);
 
 it('sets authors to required', () => {
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm {...defaultProps} authorsRequired={false} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('textbox', { name: 'Authors (optional)' }),
   ).toBeVisible();
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm {...defaultProps} authorsRequired={true} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('textbox', { name: 'Authors (required)' }),
@@ -96,9 +96,9 @@ describe('createIdentifierField', () => {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /What are you sharing/i }),
@@ -108,12 +108,12 @@ it('renders the form', async () => {
 
 it('renders the edit form button when research output data is present', async () => {
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         researchOutputData={createResearchOutputResponse()}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
@@ -135,14 +135,14 @@ it('pre populates the form with provided backend response', async () => {
     ],
   };
   await render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         documentType={'Dataset'}
         typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
         researchOutputData={researchOutputData}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   expect(screen.getByText(researchOutputData.descriptionMD)).toBeVisible();
@@ -166,14 +166,14 @@ it('pre populates the form with markdown value of usageNotes if it is defined', 
     usageNotesMD: 'markdown',
   };
   await render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         documentType={'Dataset'}
         typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
         researchOutputData={researchOutputData}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   expect(screen.queryByText('rich text')).not.toBeInTheDocument();
@@ -182,14 +182,14 @@ it('pre populates the form with markdown value of usageNotes if it is defined', 
 
 it('displays keywords suggestions', async () => {
   await render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         tagSuggestions={['2D Cultures', 'Adenosine', 'Adrenal']}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
-  userEvent.click(
+  await userEvent.click(
     screen.getByText(/Start typing\.\.\. \(E\.g\. Cell Biology\)/i),
   );
   expect(screen.getByText('2D Cultures')).toBeVisible();
@@ -199,12 +199,12 @@ it('displays keywords suggestions', async () => {
 
 it('displays selected teams', async () => {
   await render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         selectedTeams={[{ label: 'Team 1', value: 'abc123' }]}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(screen.getByText('Team 1')).toBeVisible();
 });
@@ -212,14 +212,14 @@ it('displays selected teams', async () => {
 it('displays error message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         getAuthorSuggestions={getAuthorSuggestions}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
@@ -228,14 +228,14 @@ it('displays error message when no author is found', async () => {
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         getLabSuggestions={getLabSuggestions}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
@@ -243,26 +243,28 @@ it('displays error message when no lab is found', async () => {
 it('displays error message when no related research is found', async () => {
   const getRelatedResearchSuggestions = jest.fn().mockResolvedValue([]);
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         getRelatedResearchSuggestions={getRelatedResearchSuggestions}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
-  userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+  await userEvent.click(
+    screen.getByRole('textbox', { name: /Related Outputs/i }),
+  );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
 });
 
 it('displays current team within the form', async () => {
   render(
-    <StaticRouter>
+    <MemoryRouter>
       <ResearchOutputForm
         {...defaultProps}
         selectedTeams={[{ label: 'example team', value: 'id' }]}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(screen.getByText('example team')).toBeVisible();
 });
@@ -346,7 +348,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <Router navigator={history}>
+      <Router navigator={history} location={history.location}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -400,8 +402,10 @@ describe('on submit', () => {
   };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -410,7 +414,7 @@ describe('on submit', () => {
 
   const saveForm = async () => {
     const button = screen.getByRole('button', { name: /save/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
     });
@@ -438,11 +442,13 @@ describe('on submit', () => {
   it('will show you confirmation dialog and allow you to cancel it', async () => {
     await setupForm();
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(
       screen.getByRole('button', { name: 'Publish Output' }),
     ).toBeVisible();
-    userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+    await userEvent.click(
+      screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+    );
     expect(screen.queryByRole('button', { name: 'Publish Output' })).toBeNull();
     expect(saveFn).not.toHaveBeenCalled();
   });
@@ -454,8 +460,8 @@ describe('on submit', () => {
     ]);
     await setupForm();
 
-    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-    userEvent.click(screen.getByText('One Lab'));
+    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByText('One Lab'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -470,8 +476,10 @@ describe('on submit', () => {
     ]);
     await setupForm();
 
-    userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
-    userEvent.click(screen.getByText('First Related Research'));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /Related Outputs/i }),
+    );
+    await userEvent.click(screen.getByText('First Related Research'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -498,14 +506,14 @@ describe('on submit', () => {
     await setupForm();
 
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText(/Chris Reed/i));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Chris Blue'));
-    userEvent.click(authors);
-    userEvent.type(authors, 'Alex White');
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText(/Chris Reed/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Chris Blue'));
+    await userEvent.click(authors);
+    await userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-    userEvent.click(screen.getAllByText('Alex White')[1]!);
+    await userEvent.click(screen.getAllByText('Alex White')[1]!);
 
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
@@ -522,7 +530,7 @@ describe('on submit', () => {
 
   it('can submit access instructions', async () => {
     await setupForm();
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /usage notes/i }),
       'Access Instructions',
     );
@@ -547,8 +555,10 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
-    userEvent.click(screen.getByText('ELISA'));
+    await userEvent.click(
+      await screen.findByRole('textbox', { name: /methods/i }),
+    );
+    await userEvent.click(screen.getByText('ELISA'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -575,8 +585,10 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    userEvent.click(await screen.findByRole('textbox', { name: /organisms/i }));
-    userEvent.click(screen.getByText('Rat'));
+    await userEvent.click(
+      await screen.findByRole('textbox', { name: /organisms/i }),
+    );
+    await userEvent.click(screen.getByText('Rat'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -604,10 +616,10 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('textbox', { name: /environments/i }),
     );
-    userEvent.click(screen.getByText('In Vitro'));
+    await userEvent.click(screen.getByText('In Vitro'));
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
@@ -633,8 +645,8 @@ describe('on submit', () => {
     });
 
     const methods = await screen.findByRole('textbox', { name: /methods/i });
-    userEvent.click(methods);
-    userEvent.click(screen.getByText('ELISA'));
+    await userEvent.click(methods);
+    await userEvent.click(screen.getByText('ELISA'));
 
     expect(screen.getByText(/ELISA/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -667,8 +679,8 @@ describe('on submit', () => {
     const organisms = await screen.findByRole('textbox', {
       name: /organisms/i,
     });
-    userEvent.click(organisms);
-    userEvent.click(screen.getByText('Rat'));
+    await userEvent.click(organisms);
+    await userEvent.click(screen.getByText('Rat'));
 
     expect(screen.getByText(/rat/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -701,8 +713,8 @@ describe('on submit', () => {
     const environments = await screen.findByRole('textbox', {
       name: /environments/i,
     });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
+    await userEvent.click(environments);
+    await userEvent.click(screen.getByText('In Vitro'));
 
     expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -734,8 +746,8 @@ describe('on submit', () => {
     const subtype = screen.getByRole('textbox', {
       name: /subtype/i,
     });
-    userEvent.click(subtype);
-    userEvent.click(screen.getByText('Metabolite'));
+    await userEvent.click(subtype);
+    await userEvent.click(screen.getByText('Metabolite'));
 
     expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
@@ -754,7 +766,7 @@ describe('on submit', () => {
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status/i,
     });
-    userEvent.click(
+    await userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     fireEvent.change(screen.getByLabelText(/date published/i), {
@@ -800,7 +812,7 @@ describe('on submit', () => {
       const funded = screen.getByRole('group', {
         name: selector,
       });
-      userEvent.click(within(funded).getByText(value));
+      await userEvent.click(within(funded).getByText(value));
 
       await submitForm();
       expect(saveFn).toHaveBeenLastCalledWith({
@@ -840,7 +852,7 @@ describe('on submit', () => {
 
   const saveDraft = async () => {
     const button = screen.getByRole('button', { name: /Save Draft/i });
-    userEvent.click(button);
+    await userEvent.click(button);
 
     expect(
       await screen.findByRole('button', { name: /Save Draft/i }),
@@ -915,7 +927,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router navigator={history}>
+        <Router navigator={history} location={history.location}>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}
@@ -1017,7 +1029,9 @@ describe('form buttons', () => {
         published: false,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Save Draft/i }),
+      );
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and save/i)).toBeVisible();
     });
@@ -1029,7 +1043,7 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and publish/i)).toBeVisible();
     });
@@ -1041,9 +1055,11 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
 
@@ -1059,9 +1075,9 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
@@ -1081,16 +1097,16 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
         expect(screen.queryByText(/Keep the same description/i)).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
   });
@@ -1103,7 +1119,7 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
@@ -1119,11 +1135,13 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();
@@ -1139,11 +1157,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -1164,11 +1182,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -1177,7 +1195,7 @@ describe('form buttons', () => {
         ).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();

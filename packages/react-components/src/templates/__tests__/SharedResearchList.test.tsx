@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 
 import SharedResearchList from '../SharedResearchList';
 
@@ -19,7 +19,7 @@ it('renders multiple shared outputs cards in card view', () => {
   const { queryAllByRole, getByRole } = render(
     <SharedResearchList {...props} isListView={false} />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   expect(getByRole('button').closest('span')).toHaveTextContent(/card/i);
@@ -32,7 +32,7 @@ it('renders multiple research outputs in list view', () => {
   const { queryAllByRole, getByRole } = render(
     <SharedResearchList {...props} isListView />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
 

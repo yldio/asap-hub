@@ -1,12 +1,12 @@
 import { render, fireEvent } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TabLink from '../TabLink';
 
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${StaticRouter}
+  ${'with a router'}    | ${MemoryRouter}
   ${'without a router'} | ${undefined}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
@@ -43,9 +43,9 @@ describe.each`
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <StaticRouter>
+      <MemoryRouter>
         <TabLink href="/">Text</TabLink>
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     expect(fireEvent.click(getByRole('link'))).toBe(false);
   });

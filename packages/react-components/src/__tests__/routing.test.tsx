@@ -43,7 +43,9 @@ describe('usePushFromPathname', () => {
   it('pushes a history entry if currently on given page', () => {
     const history = createMemoryHistory({ initialEntries: ['/current'] });
     const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-      <Router navigator={history} location='/current'>{children}</Router>
+      <Router navigator={history} location="/current">
+        {children}
+      </Router>
     );
     const {
       result: { current },
@@ -58,7 +60,9 @@ describe('usePushFromPathname', () => {
   it('does not push a history entry if currently on a different page', () => {
     const history = createMemoryHistory({ initialEntries: ['/current'] });
     const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-      <Router navigator={history}>{children}</Router>
+      <Router navigator={history} location={history.location}>
+        {children}
+      </Router>
     );
     const {
       result: { current },
@@ -75,7 +79,9 @@ describe('usePushFromHere', () => {
   it('pushes a history entry if still on the same page', () => {
     const history = createMemoryHistory({ initialEntries: ['/current'] });
     const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-      <Router navigator={history}>{children}</Router>
+      <Router navigator={history} location={history.location}>
+        {children}
+      </Router>
     );
     const {
       result: { current },
@@ -90,7 +96,9 @@ describe('usePushFromHere', () => {
   it('does not push a history entry if no longer on the same page', () => {
     const history = createMemoryHistory({ initialEntries: ['/current'] });
     const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
-      <Router navigator={history}>{children}</Router>
+      <Router navigator={history} location={history.location}>
+        {children}
+      </Router>
     );
     const {
       result: { current },

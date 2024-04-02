@@ -21,7 +21,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import {

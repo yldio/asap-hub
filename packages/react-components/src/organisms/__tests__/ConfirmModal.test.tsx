@@ -2,7 +2,6 @@ import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 
 import ConfirmModal from '../ConfirmModal';
 
@@ -14,7 +13,7 @@ it('renders the title', () => {
   const { getByText } = render(
     <ConfirmModal {...props} title="Ready to publish your profile?" />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   expect(
@@ -26,7 +25,7 @@ it('renders the description when it is a string', () => {
   const { getByText } = render(
     <ConfirmModal {...props} description="test description" />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   expect(getByText('test description', { selector: 'p' })).toBeVisible();
@@ -36,7 +35,7 @@ it('renders the description when it is a react node', () => {
   const { getByText } = render(
     <ConfirmModal {...props} description={<span>test description</span>} />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   expect(getByText('test description', { selector: 'span' })).toBeVisible();
@@ -55,7 +54,7 @@ it('triggers the save function', async () => {
     },
   );
   const publish = getByText(/Publish and Explore/i);
-  userEvent.click(publish);
+  await userEvent.click(publish);
 
   expect(jestFn).toHaveBeenCalled();
 
@@ -76,7 +75,7 @@ it('triggers the cancel function', async () => {
     },
   );
   const cancel = getByText(/Cancel/i);
-  userEvent.click(cancel);
+  await userEvent.click(cancel);
 
   expect(jestFn).toHaveBeenCalled();
 });
@@ -94,11 +93,11 @@ it('disables publish & back while submitting', async () => {
       cancelText="back"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   const publish = getByText(/Publish and Explore/i);
 
-  userEvent.click(publish);
+  await userEvent.click(publish);
   expect(publish.closest('button')).toBeDisabled();
   expect(getByText(/back/i).closest('a')).not.toHaveAttribute('href');
 
@@ -119,11 +118,11 @@ it('displays error message when save fails', async () => {
       error="There has been an error publishing"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   const publish = getByText(/Publish and Explore/i);
-  userEvent.click(publish);
+  await userEvent.click(publish);
   act(rejectSubmit);
 
   await waitFor(() => {

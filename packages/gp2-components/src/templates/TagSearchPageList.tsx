@@ -46,7 +46,9 @@ const styles = css({
   alignItems: 'end',
 });
 
-const TagSearchPageList: React.FC<React.PropsWithChildren<TagSearchPageListProps>> = ({
+const TagSearchPageList: React.FC<
+  React.PropsWithChildren<TagSearchPageListProps>
+> = ({
   children,
   filters,
   onChangeFilter,

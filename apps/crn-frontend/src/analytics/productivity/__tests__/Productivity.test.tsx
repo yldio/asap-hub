@@ -12,7 +12,7 @@ import { RecoilRoot } from 'recoil';
 import Productivity from '../Productivity';
 
 const renderPage = async (
-  path = analytics({}).productivity({ metric: 'user' }).$,
+  path = analytics({}).productivity({}).metric({ metric: 'user' }).$,
 ) => {
   const result = render(
     <RecoilRoot>

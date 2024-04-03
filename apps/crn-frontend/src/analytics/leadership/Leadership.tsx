@@ -48,7 +48,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const history = useHistory();
   const { metric } = useParams<{ metric: 'workingGroup' | 'interestGroup' }>();
   const setMetric = (newMetric: 'workingGroup' | 'interestGroup') =>
-    history.push(analytics({}).leadership({ metric: newMetric }).$);
+    history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
 
   const { currentPage, pageSize } = usePaginationParams();
 

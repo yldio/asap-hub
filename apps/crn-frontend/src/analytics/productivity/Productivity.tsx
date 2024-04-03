@@ -1,17 +1,17 @@
-import { FC } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { UserProductivityMetric } from '@asap-hub/react-components/src/organisms/UserProductivityTable';
 import { TeamProductivityMetric } from '@asap-hub/react-components/src/organisms/TeamProductivityTable';
 import { analytics } from '@asap-hub/routing';
-
+import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../../hooks';
 
-const Productivity: FC<Record<string, never>> = () => {
+const Productivity = () => {
   const history = useHistory();
   const { metric } = useParams<{ metric: 'user' | 'team' }>();
   const setMetric = (newMetric: 'user' | 'team') =>
-    history.push(analytics({}).productivity({ metric: newMetric }).$);
+    history.push(
+      analytics({}).productivity({}).metric({ metric: newMetric }).$,
+    );
 
   const { currentPage, pageSize } = usePaginationParams();
 
@@ -19,7 +19,8 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '1',
       name: 'User A',
-      teams: ['Team A'],
+      alumni: false,
+      teams: [{ name: 'Team A', active: true }],
       roles: ['Role A'],
       asapOutput: 1,
       asapPublicOutput: 2,
@@ -28,7 +29,8 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '2',
       name: 'User B',
-      teams: ['Team A'],
+      alumni: true,
+      teams: [{ name: 'Team B', active: false }],
       roles: ['Role B'],
       asapOutput: 1,
       asapPublicOutput: 2,
@@ -37,7 +39,8 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '3',
       name: 'User C',
-      teams: ['Team A', 'Team B'],
+      alumni: false,
+      teams: [{ name: 'Team A', active: true }, { name: 'Team C', active: false }],
       roles: ['Role A', 'Role B'],
       asapOutput: 1,
       asapPublicOutput: 2,
@@ -46,6 +49,7 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '4',
       name: 'User D',
+      alumni: false,
       teams: [],
       roles: [],
       asapOutput: 1,
@@ -57,6 +61,7 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '1',
       name: 'Team A',
+      active: true,
       articles: 1,
       bioinformatics: 2,
       datasets: 3,
@@ -66,6 +71,7 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '2',
       name: 'Team B',
+      active: true,
       articles: 3,
       bioinformatics: 2,
       datasets: 2,
@@ -75,6 +81,7 @@ const Productivity: FC<Record<string, never>> = () => {
     {
       id: '3',
       name: 'Team C',
+      active: false,
       articles: 2,
       bioinformatics: 2,
       datasets: 2,

@@ -6,7 +6,7 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
-import { LeadershipIcon } from '../icons';
+import { LeadershipIcon, ProductivityIcon } from '../icons';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,
@@ -29,15 +29,12 @@ const AnalyticsPageHeader: React.FC = () => (
       </div>
       <TabNav>
         <TabLink
-          href={analytics({}).productivity({ metric: 'user' }).$}
-          Icon={LeadershipIcon}
+          href={analytics({}).productivity({}).$}
+          Icon={ProductivityIcon}
         >
           Resource & Data Sharing
         </TabLink>
-        <TabLink
-          href={analytics({}).leadership({ metric: 'workingGroup' }).$}
-          Icon={LeadershipIcon}
-        >
+        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
           Leadership & Membership
         </TabLink>
       </TabNav>

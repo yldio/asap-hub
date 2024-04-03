@@ -24,18 +24,48 @@ const About: FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route path={path + analytics({}).productivity.template}>
-        <AnalyticsPage>
-          <Frame title="Resource & Data Sharing">
-            <ProductivityBody />
-          </Frame>
-        </AnalyticsPage>
+        <Switch>
+          <Route
+            exact
+            path={
+              path +
+              analytics({}).productivity.template +
+              analytics({}).productivity({}).metric.template
+            }
+          >
+            <AnalyticsPage>
+              <Frame title="Resource & Data Sharing">
+                <ProductivityBody />
+              </Frame>
+            </AnalyticsPage>
+          </Route>
+          <Redirect
+            to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+          />
+        </Switch>
       </Route>
       <Route path={path + analytics({}).leadership.template}>
-        <AnalyticsPage>
-          <Frame title="Leadership & Membership">
-            <LeadershipBody />
-          </Frame>
-        </AnalyticsPage>
+        <Switch>
+          <Route
+            exact
+            path={
+              path +
+              analytics({}).leadership.template +
+              analytics({}).leadership({}).metric.template
+            }
+          >
+            <AnalyticsPage>
+              <Frame title="Leadership & Membership">
+                <LeadershipBody />
+              </Frame>
+            </AnalyticsPage>
+          </Route>
+          <Redirect
+            to={
+              analytics({}).leadership({}).metric({ metric: 'workingGroup' }).$
+            }
+          />
+        </Switch>
       </Route>
       <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
     </Switch>

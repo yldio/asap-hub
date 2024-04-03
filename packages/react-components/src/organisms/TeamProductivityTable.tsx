@@ -1,32 +1,33 @@
 import { css } from '@emotion/react';
 import { Card } from '../atoms';
 import { charcoal, neutral200, steel } from '../colors';
-import { perRem, tabletScreen } from '../pixels';
+import { perRem, rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
+import { inactiveBadgeIcon } from '../icons';
 
 const container = css({
   display: 'grid',
-  paddingTop: `${32 / perRem}em`,
+  paddingTop: rem(32),
 });
 
 const gridTitleStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'inherit',
-    paddingBottom: `${16 / perRem}em`,
+    paddingBottom: rem(16),
   },
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
-  paddingBottom: `${16 / perRem}em`,
+  paddingTop: rem(32),
+  paddingBottom: rem(16),
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
 const rowStyles = css({
   display: 'grid',
-  padding: `${20 / perRem}em ${24 / perRem}em 0`,
+  padding: `${rem(20)} ${rem(24)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
@@ -37,13 +38,13 @@ const rowStyles = css({
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
-    paddingBottom: `${15 / perRem}em`,
-    borderRadius: `${borderRadius / perRem}em`,
+    paddingBottom: rem(15),
+    borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    columnGap: `${15 / perRem}em`,
-    paddingTop: `${0 / perRem}em`,
+    columnGap: rem(15),
+    paddingTop: 0,
     paddingBottom: 0,
     borderBottom: `1px solid ${steel.rgb}`,
   },
@@ -51,9 +52,15 @@ const rowStyles = css({
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
+const iconStyles = css({
+  display: 'flex',
+  gap: rem(3),
+});
+
 export type TeamProductivityMetric = {
   id: string;
   name: string;
+  active: boolean;
   articles: number;
   bioinformatics: number;
   datasets: number;
@@ -80,7 +87,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
       {data.map((row) => (
         <div key={row.id} css={[rowStyles]}>
           <span css={[titleStyles, rowTitleStyles]}>Team</span>
-          <p>{row.name}</p>
+          <p css={iconStyles}>{row.name} {!row.active && inactiveBadgeIcon}</p>
           <span css={[titleStyles, rowTitleStyles]}>Articles</span>
           <p>{row.articles}</p>
           <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
@@ -94,7 +101,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
         </div>
       ))}
     </div>
-  </Card>
+  </Card >
 );
 
 export default TeamProductivityTable;

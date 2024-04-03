@@ -2,32 +2,52 @@ import { render } from '@testing-library/react';
 import UserProductivityTable from '../UserProductivityTable';
 
 describe('UserProductivityTable', () => {
+  const user = {
+    id: '1',
+    name: 'Test User',
+    alumni: false,
+    teams: [{ name: 'Team A', active: true }],
+    roles: ['Role A'],
+    asapOutput: 1,
+    asapPublicOutput: 2,
+    ratio: 1,
+  };
+
   it('renders data', () => {
-    const data = [
-      {
-        id: '1',
-        name: 'Test User',
-        teams: ['Team A'],
-        roles: ['Role A'],
-        asapOutput: 1,
-        asapPublicOutput: 2,
-        ratio: 1,
-      },
-    ];
+    const data = [user];
     const { getByText } = render(<UserProductivityTable data={data} />);
     expect(getByText('Test User')).toBeInTheDocument();
+  });
+
+
+
+  it('displays alumni badge', () => {
+    const data = [
+      {
+        ...user,
+        alumni: true,
+      },
+    ];
+    const { getByTitle } = render(<UserProductivityTable data={data} />);
+    expect(getByTitle('Alumni Badge')).toBeInTheDocument();
+  });
+
+  it('displays inactive badge', () => {
+    const data = [
+      {
+        ...user,
+        teams: [{ name: 'Team A', active: false }],
+      },
+    ];
+    const { getByTitle } = render(<UserProductivityTable data={data} />);
+    expect(getByTitle('Inactive')).toBeInTheDocument();
   });
 
   it('handles multiple teams', () => {
     const data = [
       {
-        id: '1',
-        name: 'Test User',
-        teams: ['Team A', 'Team B'],
-        roles: ['Role A'],
-        asapOutput: 1,
-        asapPublicOutput: 2,
-        ratio: 1,
+        ...user,
+        teams: [{ name: 'Team A', active: true }, { name: 'Team B', active: true }],
       },
     ];
     const { getByText } = render(<UserProductivityTable data={data} />);
@@ -37,13 +57,8 @@ describe('UserProductivityTable', () => {
   it('handles multiple roles', () => {
     const data = [
       {
-        id: '1',
-        name: 'Test User',
-        teams: ['Team A'],
+        ...user,
         roles: ['Role A', 'Role B'],
-        asapOutput: 1,
-        asapPublicOutput: 2,
-        ratio: 1,
       },
     ];
     const { getByText } = render(<UserProductivityTable data={data} />);

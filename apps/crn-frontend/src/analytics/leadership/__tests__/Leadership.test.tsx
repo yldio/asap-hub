@@ -8,11 +8,11 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { analytics } from '@asap-hub/routing';
 
 import Leadership from '../Leadership';
 import { getAnalyticsLeadership } from '../api';
 import { analyticsLeadershipState } from '../state';
-import { analytics } from '@asap-hub/routing';
 
 jest.mock('../api');
 

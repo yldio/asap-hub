@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Card } from '../atoms';
 import { charcoal, neutral200, steel } from '../colors';
-import { perRem, rem, tabletScreen } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
 import { inactiveBadgeIcon } from '../icons';
 

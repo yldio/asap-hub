@@ -65,4 +65,26 @@ describe('UserProductivityTable', () => {
     const { getByText } = render(<UserProductivityTable data={data} />);
     expect(getByText('Multiple roles')).toBeInTheDocument();
   });
+
+  it('display no team', () => {
+    const data = [
+      {
+        ...user,
+        teams: [],
+      },
+    ];
+    const { getByText } = render(<UserProductivityTable data={data} />);
+    expect(getByText('No team')).toBeInTheDocument();
+  });
+
+  it('display no role', () => {
+    const data = [
+      {
+        ...user,
+        roles: [],
+      },
+    ];
+    const { getByText } = render(<UserProductivityTable data={data} />);
+    expect(getByText('No role')).toBeInTheDocument();
+  });
 });

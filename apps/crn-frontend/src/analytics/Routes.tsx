@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -23,27 +24,29 @@ const About: FC<Record<string, never>> = () => {
 
   return (
     <Switch>
-      <Route path={path + analytics({}).productivity.template}>
-        <Switch>
-          <Route
-            exact
-            path={
-              path +
-              analytics({}).productivity.template +
-              analytics({}).productivity({}).metric.template
-            }
-          >
-            <AnalyticsPage>
-              <Frame title="Resource & Data Sharing">
-                <ProductivityBody />
-              </Frame>
-            </AnalyticsPage>
-          </Route>
-          <Redirect
-            to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
-          />
-        </Switch>
-      </Route>
+      {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
+        <Route path={path + analytics({}).productivity.template}>
+          <Switch>
+            <Route
+              exact
+              path={
+                path +
+                analytics({}).productivity.template +
+                analytics({}).productivity({}).metric.template
+              }
+            >
+              <AnalyticsPage>
+                <Frame title="Resource & Data Sharing">
+                  <ProductivityBody />
+                </Frame>
+              </AnalyticsPage>
+            </Route>
+            <Redirect
+              to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+            />
+          </Switch>
+        </Route>
+      )}
       <Route path={path + analytics({}).leadership.template}>
         <Switch>
           <Route
@@ -67,7 +70,11 @@ const About: FC<Record<string, never>> = () => {
           />
         </Switch>
       </Route>
-      <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
+      {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') ? (
+        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
+      ) : (
+        <Redirect to={analytics({}).leadership({ metric: 'workingGroup' }).$} />
+      )}
     </Switch>
   );
 };

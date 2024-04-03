@@ -5,6 +5,7 @@ import {
   GraphQLClient,
   InterestGroups,
   Sys,
+  WorkingGroups,
 } from '@asap-hub/contentful';
 import {
   FetchPaginationOptions,
@@ -115,8 +116,13 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                     (teamMembershipItem) =>
                       teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
-                        .flatMap(flattenWorkingGroupLeaders),
+                        // .filter(filterOutAlumni)
+                        .flatMap(flattenWorkingGroupLeaders)
+                        .filter(
+                          (item) =>
+                            !item.userIsAlumni && !item.workingGroupComplete,
+                        )
+                        .map((item) => item.workingGroupId),
                   ) || [],
                 ),
             workingGroupMemberCount: team.inactiveSince
@@ -125,8 +131,13 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                   team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                     (teamMembershipItem) =>
                       teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
-                        .flatMap(flattenWorkingGroupMember),
+                        // .filter(filterOutAlumni)
+                        .flatMap(flattenWorkingGroupMember)
+                        .filter(
+                          (item) =>
+                            !item.userIsAlumni && !item.workingGroupComplete,
+                        )
+                        .map((item) => item.workingGroupId),
                   ) || [],
                 ),
             workingGroupPreviousLeadershipRoleCount: getUniqueIdCount([
@@ -134,15 +145,24 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                   (teamMembershipItem) =>
                     teamMembershipItem?.linkedFrom?.usersCollection?.items
-                      .filter(filterOutAlumni)
-                      .flatMap(flattenWorkingGroupLeaders),
+                      // .filter(filterOutAlumni)
+                      .flatMap(flattenWorkingGroupMember)
+                      .filter(
+                        (item) =>
+                          !item.userIsAlumni && !item.workingGroupComplete,
+                      )
+                      .map((item) => item.workingGroupId),
                 )) ||
                 []),
               ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
                   teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterAlumni)
-                    .flatMap(flattenWorkingGroupLeaders),
+                    // .filter(filterAlumni)
+                    .flatMap(flattenWorkingGroupLeaders)
+                    .filter(
+                      (item) => item.userIsAlumni || item.workingGroupComplete,
+                    )
+                    .map((item) => item.workingGroupId),
               ) || []),
             ]),
             workingGroupPreviousMemberCount: getUniqueIdCount([
@@ -150,15 +170,22 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                   (teamMembershipItem) =>
                     teamMembershipItem?.linkedFrom?.usersCollection?.items
-                      .filter(filterOutAlumni)
-                      .flatMap(flattenWorkingGroupMember),
+                      .flatMap(flattenWorkingGroupMember)
+                      .filter(
+                        (item) =>
+                          !item.userIsAlumni && !item.workingGroupComplete,
+                      )
+                      .map((item) => item.workingGroupId),
                 )) ||
                 []),
               ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
                 (teamMembershipItem) =>
                   teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterAlumni)
-                    .flatMap(flattenWorkingGroupMember),
+                    .flatMap(flattenWorkingGroupMember)
+                    .filter(
+                      (item) => item.userIsAlumni || item.workingGroupComplete,
+                    )
+                    .map((item) => item.workingGroupId),
               ) || []),
             ]),
           })) || [],
@@ -187,16 +214,28 @@ type User = NonNullable<
   >['usersCollection']
 >['items'][number];
 
-// removes alumnis, assumes any date in the future also make them an alumni
-const filterOutAlumni = (user: User) => user?.alumniSinceDate === null;
-const filterAlumni = (user: User) => user?.alumniSinceDate !== null;
-
-const flattenWorkingGroupLeaders = (user: User): (string | undefined)[] =>
+const flattenWorkingGroupLeaders = (
+  user: User,
+): Array<{
+  workingGroupId: string;
+  userIsAlumni: boolean;
+  workingGroupComplete: boolean;
+}> =>
   user?.linkedFrom?.workingGroupLeadersCollection?.items.flatMap(
     (workingGroupLeader) =>
-      workingGroupLeader?.linkedFrom?.workingGroupsCollection?.items.map(
-        (item) => item?.sys.id,
-      ),
+      workingGroupLeader?.linkedFrom?.workingGroupsCollection?.items
+        .filter(
+          (
+            item,
+          ): item is Pick<WorkingGroups, 'complete'> & {
+            sys: Pick<Sys, 'id'>;
+          } => !!item,
+        )
+        .map((item) => ({
+          workingGroupId: item.sys.id,
+          userIsAlumni: user.alumniSinceDate !== null,
+          workingGroupComplete: !!item.complete,
+        })) || [],
   ) || [];
 const flattenInterestGroupLeaders = (
   user: User,
@@ -221,12 +260,28 @@ const flattenInterestGroupLeaders = (
           interestGroupActive: !!item.active,
         })) || [],
   ) || [];
-const flattenWorkingGroupMember = (user: User): (string | undefined)[] =>
+const flattenWorkingGroupMember = (
+  user: User,
+): Array<{
+  workingGroupId: string;
+  userIsAlumni: boolean;
+  workingGroupComplete: boolean;
+}> =>
   user?.linkedFrom?.workingGroupMembersCollection?.items.flatMap(
     (workingGroupMember) =>
-      workingGroupMember?.linkedFrom?.workingGroupsCollection?.items.map(
-        (item) => item?.sys.id,
-      ),
+      workingGroupMember?.linkedFrom?.workingGroupsCollection?.items
+        .filter(
+          (
+            item,
+          ): item is Pick<WorkingGroups, 'complete'> & {
+            sys: Pick<Sys, 'id'>;
+          } => !!item,
+        )
+        .map((item) => ({
+          workingGroupId: item.sys.id,
+          userIsAlumni: user.alumniSinceDate !== null,
+          workingGroupComplete: !!item.complete,
+        })) || [],
   ) || [];
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;

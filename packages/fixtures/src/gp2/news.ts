@@ -8,6 +8,7 @@ export const mockedNews: gp2.NewsResponse = {
   shortText: 'this is another news item',
   title: 'Another news',
   type: 'news',
+  tags: [],
 };
 
 export const createNewsResponse = (
@@ -32,6 +33,8 @@ export const newsResponseTemplate = ({
   shortText: `${key} short text`,
   type: 'news',
   created: new Date().toISOString(),
+  tags: [],
+  thumbnail: 'https://image.com',
 });
 
 export const createListNewsResponse = (

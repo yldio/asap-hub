@@ -1,3 +1,4 @@
+import { ClientSearchResponse } from '@asap-hub/algolia';
 import {
   render,
   screen,
@@ -91,14 +92,34 @@ describe('ResultList', () => {
     expect(screen.getByRole('link', { name: 'Output 1' })).toBeInTheDocument();
   });
 
-  it('does not render unsupported types', async () => {
+  it('renders news', async () => {
     mockGetTagSearchResults.mockResolvedValue(
       createNewsListAlgoliaResponse(1, 1),
     );
+    await renderList({}, 'test');
+    expect(screen.getByText('News Item')).toBeInTheDocument();
+  });
+
+  it('does not render unsupported types', async () => {
+    const response = createAlgoliaResponse<'external-user'>([
+      {
+        __meta: { type: 'external-user' },
+        displayName: 'John Doe',
+        id: 'external-1',
+        objectID: '1',
+      },
+    ]);
+
+    mockGetTagSearchResults.mockResolvedValue(
+      response as unknown as ClientSearchResponse<
+        'gp2',
+        'output' | 'event' | 'user' | 'news' | 'project'
+      >,
+    );
+
     await renderList({ filters: new Set() }, 'test');
-    expect(
-      screen.queryByRole('link', { name: 'News 1' }),
-    ).not.toBeInTheDocument();
+
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
   it('renders empty state', async () => {

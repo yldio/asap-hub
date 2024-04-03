@@ -12,6 +12,15 @@ export const newsContentQueryFragment = gql`
     thumbnail {
       url
     }
+    tagsCollection(limit: 20) {
+      total
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
     link
     linkText
     publishDate

@@ -1,5 +1,5 @@
-import { NewsItem, EmptyState, noNewsIcon } from '@asap-hub/gp2-components';
-import { ResultList } from '@asap-hub/react-components';
+import { EmptyState, noNewsIcon } from '@asap-hub/gp2-components';
+import { NewsCard, ResultList } from '@asap-hub/react-components';
 import { useNews } from './state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 
@@ -26,7 +26,7 @@ const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
       renderPageHref={renderPageHref}
     >
       {items.map((news) => (
-        <NewsItem key={news.id} {...news} />
+        <NewsCard {...news} key={news.id} type="News" />
       ))}
     </ResultList>
   ) : (

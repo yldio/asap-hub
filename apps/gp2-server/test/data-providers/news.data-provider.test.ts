@@ -108,6 +108,18 @@ describe('News data provider', () => {
       );
     });
 
+    describe('tags', () => {
+      test('should return empty list when tagsCollection is null', async () => {
+        const newsResponse = getContentfulNewsGraphqlResponse();
+        newsResponse.newsCollection!.items[0]!.tagsCollection = null;
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(newsResponse);
+        const result = await newsDataProvider.fetch();
+
+        expect(result.items[0]!.tags).toEqual([]);
+      });
+    });
+
     describe('Search', () => {
       test('Should query data properly when passing search param', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(

@@ -46,7 +46,9 @@ const renderPage = async (path: string) => {
 
 describe('Analytics page', () => {
   it('renders the Analytics Page successfully', async () => {
-    await renderPage(analytics({}).productivity({}).metric({ metric: 'user' }).$);
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
     expect(
       await screen.findByText(/Analytics/i, {
         selector: 'h1',
@@ -59,7 +61,9 @@ describe('Leadership & Membership', () => {
   it('renders the Analytics Page successfully', async () => {
     mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });
 
-    await renderPage(analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$);
+    await renderPage(
+      analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$,
+    );
     expect(
       await screen.findByText(/Analytics/i, {
         selector: 'h1',
@@ -71,7 +75,9 @@ describe('Leadership & Membership', () => {
     mockGetAnalyticsLeadership.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );
-    await renderPage(analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$);
+    await renderPage(
+      analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$,
+    );
 
     await waitFor(() => {
       expect(mockGetAnalyticsLeadership).toHaveBeenCalled();

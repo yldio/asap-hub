@@ -40,7 +40,10 @@ const Productivity = () => {
       id: '3',
       name: 'User C',
       alumni: false,
-      teams: [{ name: 'Team A', active: true }, { name: 'Team C', active: false }],
+      teams: [
+        { name: 'Team A', active: true },
+        { name: 'Team C', active: false },
+      ],
       roles: ['Role A', 'Role B'],
       asapOutput: 1,
       asapPublicOutput: 2,

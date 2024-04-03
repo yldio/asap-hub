@@ -87,7 +87,9 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
       {data.map((row) => (
         <div key={row.id} css={[rowStyles]}>
           <span css={[titleStyles, rowTitleStyles]}>Team</span>
-          <p css={iconStyles}>{row.name} {!row.active && inactiveBadgeIcon}</p>
+          <p css={iconStyles}>
+            {row.name} {!row.active && inactiveBadgeIcon}
+          </p>
           <span css={[titleStyles, rowTitleStyles]}>Articles</span>
           <p>{row.articles}</p>
           <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
@@ -101,7 +103,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
         </div>
       ))}
     </div>
-  </Card >
+  </Card>
 );
 
 export default TeamProductivityTable;

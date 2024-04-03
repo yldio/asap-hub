@@ -76,36 +76,39 @@ type Team = {
   active: boolean;
 };
 
-const displayTeams =
-  (items: { name: string; active: boolean }[]) => {
-    if (items.length === 0) {
-      return `No team`;
-    }
-    if (items.length === 1) {
-      return items[0]?.active ? items[0].name : <span css={iconStyles}>{items[0]?.name} {inactiveBadgeIcon}</span>;
-    }
-    return (
-      <>
-        Multiple teams <span css={counterStyle}>{items.length}</span>
-      </>
+const displayTeams = (items: { name: string; active: boolean }[]) => {
+  if (items.length === 0) {
+    return `No team`;
+  }
+  if (items.length === 1) {
+    return items[0]?.active ? (
+      items[0].name
+    ) : (
+      <span css={iconStyles}>
+        {items[0]?.name} {inactiveBadgeIcon}
+      </span>
     );
-  };
+  }
+  return (
+    <>
+      Multiple teams <span css={counterStyle}>{items.length}</span>
+    </>
+  );
+};
 
-const displayRoles =
-  (items: string[]) => {
-    if (items.length === 0) {
-      return `No role`;
-    }
-    if (items.length === 1) {
-      return items[0];
-    }
-    return (
-      <>
-        Multiple roles <span css={counterStyle}>{items.length}</span>
-      </>
-    );
-  };
-
+const displayRoles = (items: string[]) => {
+  if (items.length === 0) {
+    return `No role`;
+  }
+  if (items.length === 1) {
+    return items[0];
+  }
+  return (
+    <>
+      Multiple roles <span css={counterStyle}>{items.length}</span>
+    </>
+  );
+};
 
 export type UserProductivityMetric = {
   id: string;
@@ -137,7 +140,9 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
       {data.map((row) => (
         <div key={row.id} css={[rowStyles]}>
           <span css={[titleStyles, rowTitleStyles]}>User</span>
-          <p css={iconStyles}>{row.name} {row.alumni && alumniBadgeIcon}</p>
+          <p css={iconStyles}>
+            {row.name} {row.alumni && alumniBadgeIcon}
+          </p>
           <span css={[titleStyles, rowTitleStyles]}>Team</span>
           <p>{displayTeams(row.teams)}</p>
           <span css={[titleStyles, rowTitleStyles]}>Role</span>

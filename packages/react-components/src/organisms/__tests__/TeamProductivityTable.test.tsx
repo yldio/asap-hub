@@ -14,9 +14,7 @@ describe('TeamProductivityTable', () => {
   };
 
   it('renders data', () => {
-    const data = [
-      team
-    ];
+    const data = [team];
     const { getByText } = render(<TeamProductivityTable data={data} />);
     expect(getByText('Test Team')).toBeInTheDocument();
   });
@@ -26,7 +24,7 @@ describe('TeamProductivityTable', () => {
       {
         ...team,
         active: false,
-      }
+      },
     ];
     const { getByTitle } = render(<TeamProductivityTable data={data} />);
     expect(getByTitle('Inactive')).toBeInTheDocument();

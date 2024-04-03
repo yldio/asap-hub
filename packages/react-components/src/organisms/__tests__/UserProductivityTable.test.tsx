@@ -19,8 +19,6 @@ describe('UserProductivityTable', () => {
     expect(getByText('Test User')).toBeInTheDocument();
   });
 
-
-
   it('displays alumni badge', () => {
     const data = [
       {
@@ -47,7 +45,10 @@ describe('UserProductivityTable', () => {
     const data = [
       {
         ...user,
-        teams: [{ name: 'Team A', active: true }, { name: 'Team B', active: true }],
+        teams: [
+          { name: 'Team A', active: true },
+          { name: 'Team B', active: true },
+        ],
       },
     ];
     const { getByText } = render(<UserProductivityTable data={data} />);

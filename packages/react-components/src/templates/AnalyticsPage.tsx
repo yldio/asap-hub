@@ -11,15 +11,13 @@ const mainStyles = css({
 });
 
 const pageMobileStyles = css({
-  position: 'relative',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'none',
   },
 });
 const pageDesktopStyles = css({
-  display: 'none',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'inherit',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
   },
 });
 

@@ -51,7 +51,7 @@ describe('Analytics page', () => {
       await screen.findByText(/Analytics/i, {
         selector: 'h1',
       }),
-    ).toBeInTheDocument();
+    ).toBeVisible();
   });
 
   it('renders error message when the response is not a 2XX', async () => {
@@ -60,6 +60,6 @@ describe('Analytics page', () => {
     await renderPage();
 
     expect(mockGetMemberships).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeInTheDocument();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

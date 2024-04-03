@@ -5,7 +5,7 @@ import { rem } from '../pixels';
 import { deskTopIcon } from '../icons';
 
 const containerStyles = css({
-  padding: `35% ${rem(24)} 0`,
+  padding: `30vh ${rem(24)} 0`,
   textAlign: 'center',
 });
 

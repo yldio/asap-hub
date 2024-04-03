@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { Card } from '../atoms';
-import { charcoal, neutral200, steel } from '../colors';
+import { charcoal, lead, neutral200, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
 import { alumniBadgeIcon, inactiveBadgeIcon } from '../icons';
@@ -53,11 +53,13 @@ const rowStyles = css({
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 const counterStyle = css({
   display: 'inline-flex',
+  color: lead.rgb,
   marginLeft: rem(9),
   textAlign: 'center',
   minWidth: rem(24),
   border: `1px solid ${steel.rgb}`,
   borderRadius: '100%',
+  fontSize: '14px',
   fontWeight: 'bold',
 
   justifyContent: 'center',

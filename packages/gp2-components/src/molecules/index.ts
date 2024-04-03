@@ -11,7 +11,6 @@ export { default as ExpandableText } from './ExpandableText';
 export { default as HeaderLogo } from './HeaderLogo';
 export { default as IconWithLabel } from './IconWithLabel';
 export { default as NavigationLink } from './NavigationLink';
-export { default as NewsItem } from './NewsItem';
 export { default as SocialIcons } from './SocialIcons';
 export { default as StatusPill } from './StatusPill';
 export { default as UserCardInfo } from './UserCardInfo';

@@ -21,7 +21,6 @@ const emptyUser: UserResponse = {
   jobTitle: undefined,
   city: undefined,
   country: undefined,
-  expertiseAndResourceTags: [],
   teams: [],
   questions: [],
 };
@@ -180,7 +179,6 @@ describe('useOnboarding', () => {
         jobTitle: 'PG',
         city: 'California',
         country: 'USA',
-        expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
         responsibilities: '3pt Shooter',
       };
       mockGetUser.mockResolvedValue(user);

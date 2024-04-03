@@ -11,14 +11,15 @@ export const getUserResponse = (
   dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
-  expertiseAndResourceTags: [
-    'expertise 1',
-    'expertise 2',
-    'expertise 3',
-    'expertise 4',
-    'expertise 5',
+  tags: [
+    { id: '1', name: 'expertise 1' },
+    { id: '2', name: 'expertise 2' },
+    { id: '3', name: 'expertise 3' },
+    { id: '4', name: 'expertise 4' },
+    { id: '5', name: 'expertise 5' },
   ],
   displayName: 'Tom Hardy',
+  fullDisplayName: 'Tom Hardy',
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -71,5 +72,10 @@ export const getUserResponse = (
 
 export const getListUserResponse = (): ListUserResponse => ({
   total: 1,
-  items: [getUserResponse()],
+  items: [
+    {
+      ...getUserResponse(),
+      _tags: [],
+    },
+  ],
 });

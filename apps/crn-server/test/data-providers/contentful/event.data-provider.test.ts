@@ -322,13 +322,17 @@ describe('Events Contentful Data Provider', () => {
                   title_contains: 'parkinson',
                 },
                 {
-                  tags_contains_all: ['parkinson'],
+                  researchTags: {
+                    name_contains: 'parkinson',
+                  },
                 },
                 {
                   title_contains: 'disease',
                 },
                 {
-                  tags_contains_all: ['disease'],
+                  researchTags: {
+                    name_contains: 'disease',
+                  },
                 },
               ],
               hidden_not: true,

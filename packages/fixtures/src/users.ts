@@ -28,7 +28,6 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   teams: [],
   labs: [],
   _tags: [],
-  expertiseAndResourceTags: [],
 };
 
 type FixtureOptions = {
@@ -54,7 +53,6 @@ export const createUserResponse = (
   lastModifiedDate: '2020-09-07T17:36:54Z',
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],
-  expertiseAndResourceTags: [],
   questions: [],
   social: {
     github: '',

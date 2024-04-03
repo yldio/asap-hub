@@ -84,7 +84,6 @@ export interface UserDataObject extends Invitee {
   degree?: UserDegree;
   dismissedGettingStarted?: boolean;
   expertiseAndResourceDescription?: string;
-  expertiseAndResourceTags: string[];
   id: string;
   inactiveSinceDate?: string;
   labs: LabResponse[];
@@ -126,7 +125,6 @@ export type UserListItemDataObject = Pick<
   | 'degree'
   | 'dismissedGettingStarted'
   | 'email'
-  | 'expertiseAndResourceTags'
   | 'firstName'
   | 'id'
   | 'institution'
@@ -169,7 +167,6 @@ export type UserCreateDataObject = {
   dismissedGettingStarted?: boolean;
   email: string;
   expertiseAndResourceDescription?: string;
-  expertiseAndResourceTags?: string[];
   firstName: string;
   institution?: string;
   jobTitle?: string;
@@ -269,7 +266,6 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     displayName,
     fullDisplayName,
     email,
-    expertiseAndResourceTags,
     tags,
     firstName,
     id,
@@ -297,7 +293,6 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     displayName,
     fullDisplayName,
     email,
-    expertiseAndResourceTags,
     tags,
     firstName,
     id,

@@ -12,7 +12,7 @@ const baseMemberProps = {
   lastModifiedDate: '',
   createdDate: '',
   teams: [],
-  expertiseAndResourceTags: [],
+  _tags: [],
   email: '',
   labs: [],
   questions: [],

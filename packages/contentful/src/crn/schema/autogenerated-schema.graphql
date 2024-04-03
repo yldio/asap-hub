@@ -935,7 +935,6 @@ type Events implements Entry {
   startDateTimeZone(locale: String): String
   status(locale: String): String
   sys: Sys!
-  tags(locale: String): [String]
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
   videoRecording(locale: String): EventsVideoRecording
@@ -1077,10 +1076,6 @@ input EventsFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  tags_contains_all: [String]
-  tags_contains_none: [String]
-  tags_contains_some: [String]
-  tags_exists: Boolean
   thumbnail_exists: Boolean
   title: String
   title_contains: String
@@ -2131,7 +2126,6 @@ type InterestGroups implements Entry {
   researchTagsCollection(limit: Int = 100, locale: String, order: [InterestGroupsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): InterestGroupsResearchTagsCollection
   slack(locale: String): String
   sys: Sys!
-  tags(locale: String): [String]
   teamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): InterestGroupsTeamsCollection
   thumbnail(locale: String, preview: Boolean): Asset
 }
@@ -2194,10 +2188,6 @@ input InterestGroupsFilter {
   slack_not_contains: String
   slack_not_in: [String]
   sys: SysFilter
-  tags_contains_all: [String]
-  tags_contains_none: [String]
-  tags_contains_some: [String]
-  tags_exists: Boolean
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean
   thumbnail_exists: Boolean
@@ -4301,7 +4291,6 @@ type Teams implements Entry {
   applicationNumber(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   displayName(locale: String): String
-  expertiseAndResourceTags(locale: String): [String]
   inactiveSince(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): TeamsLinkingCollections
   projectSummary(locale: String): String
@@ -4337,10 +4326,6 @@ input TeamsFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
-  expertiseAndResourceTags_contains_all: [String]
-  expertiseAndResourceTags_contains_none: [String]
-  expertiseAndResourceTags_contains_some: [String]
-  expertiseAndResourceTags_exists: Boolean
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -4997,7 +4982,6 @@ type Users implements Entry {
   dismissedGettingStarted(locale: String): Boolean
   email(locale: String): String
   expertiseAndResourceDescription(locale: String): String
-  expertiseAndResourceTags(locale: String): [String]
   firstName(locale: String): String
   github(locale: String): String
   googleScholar(locale: String): String
@@ -5147,10 +5131,6 @@ input UsersFilter {
   expertiseAndResourceDescription_not: String
   expertiseAndResourceDescription_not_contains: String
   expertiseAndResourceDescription_not_in: [String]
-  expertiseAndResourceTags_contains_all: [String]
-  expertiseAndResourceTags_contains_none: [String]
-  expertiseAndResourceTags_contains_some: [String]
-  expertiseAndResourceTags_exists: Boolean
   firstName: String
   firstName_contains: String
   firstName_exists: Boolean
@@ -6307,10 +6287,6 @@ input cfEventsNestedFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  tags_contains_all: [String]
-  tags_contains_none: [String]
-  tags_contains_some: [String]
-  tags_exists: Boolean
   thumbnail_exists: Boolean
   title: String
   title_contains: String
@@ -6855,10 +6831,6 @@ input cfTeamsNestedFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
-  expertiseAndResourceTags_contains_all: [String]
-  expertiseAndResourceTags_contains_none: [String]
-  expertiseAndResourceTags_contains_some: [String]
-  expertiseAndResourceTags_exists: Boolean
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -7089,10 +7061,6 @@ input cfUsersNestedFilter {
   expertiseAndResourceDescription_not: String
   expertiseAndResourceDescription_not_contains: String
   expertiseAndResourceDescription_not_in: [String]
-  expertiseAndResourceTags_contains_all: [String]
-  expertiseAndResourceTags_contains_none: [String]
-  expertiseAndResourceTags_contains_some: [String]
-  expertiseAndResourceTags_exists: Boolean
   firstName: String
   firstName_contains: String
   firstName_exists: Boolean

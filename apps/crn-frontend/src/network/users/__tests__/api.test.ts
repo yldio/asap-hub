@@ -198,7 +198,7 @@ describe('getUsersAndExternalAuthors', () => {
         ...userResponse,
         objectID: userResponse.id,
         __meta: { type: 'user' },
-        _tags: userResponse.expertiseAndResourceTags,
+        _tags: userResponse.tags?.map(({ name }) => name) || [],
       },
     ]);
 

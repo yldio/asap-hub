@@ -14,7 +14,12 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
         inactiveSince
         linkedFrom {
           interestGroupsCollection(limit: 10) {
-            total
+            items {
+              sys {
+                id
+              }
+              active
+            }
           }
           teamMembershipCollection(limit: 20) {
             items {
@@ -31,6 +36,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                                 sys {
                                   id
                                 }
+                                active
                               }
                             }
                           }

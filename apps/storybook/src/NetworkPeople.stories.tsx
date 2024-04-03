@@ -38,7 +38,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
       onboarded: true,
       role: 'Grantee' as const,
       _tags: [],
-      expertiseAndResourceTags: [],
+      tags: [],
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

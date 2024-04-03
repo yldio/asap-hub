@@ -5,7 +5,6 @@ import { rem } from '../pixels';
 import AssociationList from './AssociationList';
 
 const listItemStyles = css({
-  padding: `${rem(7.5)} 0`,
   color: neutral900.rgb,
   whiteSpace: 'break-spaces',
   overflow: 'hidden',

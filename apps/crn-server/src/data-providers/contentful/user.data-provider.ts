@@ -280,9 +280,6 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
       [],
     );
 
-  const expertiseAndResourceTags = normaliseArray(
-    item.expertiseAndResourceTags,
-  );
   const questions = normaliseArray(item.questions);
   const connections = normaliseArray(item.connections);
 
@@ -358,7 +355,6 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     expertiseAndResourceDescription:
       item.expertiseAndResourceDescription ?? undefined,
     dismissedGettingStarted: item.dismissedGettingStarted ?? false,
-    expertiseAndResourceTags,
     avatarUrl: item.avatar?.url ?? undefined,
     questions,
     role,
@@ -405,11 +401,8 @@ export const parseContentfulGraphQlUserListItem = (
     [],
   );
 
-  const expertiseAndResourceTags = item.expertiseAndResourceTags?.length
-    ? item.expertiseAndResourceTags.filter((tag): tag is string => tag !== null)
-    : [];
+  const tags = parseResearchTags(item.researchTagsCollection?.items || []);
   return {
-    _tags: expertiseAndResourceTags,
     alumniSinceDate: item.alumniSinceDate,
     avatarUrl: item.avatar?.url ?? undefined,
     city: item.city ?? undefined,
@@ -419,7 +412,6 @@ export const parseContentfulGraphQlUserListItem = (
     degree: item.degree && isUserDegree(item.degree) ? item.degree : undefined,
     dismissedGettingStarted: item.dismissedGettingStarted ?? false,
     email: item.email ?? '',
-    expertiseAndResourceTags,
     firstName: userFirstName,
     id: item.sys.id,
     institution: item.institution ?? undefined,
@@ -436,7 +428,8 @@ export const parseContentfulGraphQlUserListItem = (
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     teams: userTeams,
-    tags: parseResearchTags(item.researchTagsCollection?.items || []),
+    tags,
+    _tags: tags.map((tag) => tag.name),
   };
 };
 const generateFetchQueryFilter = ({

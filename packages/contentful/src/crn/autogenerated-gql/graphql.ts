@@ -1275,7 +1275,6 @@ export type Events = Entry & {
   startDateTimeZone?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   sys: Sys;
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
   videoRecording?: Maybe<EventsVideoRecording>;
@@ -1412,11 +1411,6 @@ export type EventsStartDateTimeZoneArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type EventsStatusArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
-export type EventsTagsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -1584,10 +1578,6 @@ export type EventsFilter = {
   status_not_contains?: InputMaybe<Scalars['String']>;
   status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_exists?: InputMaybe<Scalars['Boolean']>;
   thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -2947,7 +2937,6 @@ export type InterestGroups = Entry & {
   researchTagsCollection?: Maybe<InterestGroupsResearchTagsCollection>;
   slack?: Maybe<Scalars['String']>;
   sys: Sys;
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   teamsCollection?: Maybe<InterestGroupsTeamsCollection>;
   thumbnail?: Maybe<Asset>;
 };
@@ -3013,11 +3002,6 @@ export type InterestGroupsResearchTagsCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsSlackArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
-export type InterestGroupsTagsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3095,10 +3079,6 @@ export type InterestGroupsFilter = {
   slack_not_contains?: InputMaybe<Scalars['String']>;
   slack_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_exists?: InputMaybe<Scalars['Boolean']>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6374,7 +6354,6 @@ export type Teams = Entry & {
   applicationNumber?: Maybe<Scalars['String']>;
   contentfulMetadata: ContentfulMetadata;
   displayName?: Maybe<Scalars['String']>;
-  expertiseAndResourceTags?: Maybe<Array<Maybe<Scalars['String']>>>;
   inactiveSince?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<TeamsLinkingCollections>;
   projectSummary?: Maybe<Scalars['String']>;
@@ -6392,11 +6371,6 @@ export type TeamsApplicationNumberArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsDisplayNameArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsExpertiseAndResourceTagsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -6472,16 +6446,6 @@ export type TeamsFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  expertiseAndResourceTags_contains_all?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7339,7 +7303,6 @@ export type Users = Entry & {
   dismissedGettingStarted?: Maybe<Scalars['Boolean']>;
   email?: Maybe<Scalars['String']>;
   expertiseAndResourceDescription?: Maybe<Scalars['String']>;
-  expertiseAndResourceTags?: Maybe<Array<Maybe<Scalars['String']>>>;
   firstName?: Maybe<Scalars['String']>;
   github?: Maybe<Scalars['String']>;
   googleScholar?: Maybe<Scalars['String']>;
@@ -7451,11 +7414,6 @@ export type UsersEmailArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersExpertiseAndResourceDescriptionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersExpertiseAndResourceTagsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -7748,16 +7706,6 @@ export type UsersFilter = {
   expertiseAndResourceDescription_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
-  expertiseAndResourceTags_contains_all?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
   firstName?: InputMaybe<Scalars['String']>;
   firstName_contains?: InputMaybe<Scalars['String']>;
   firstName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9210,10 +9158,6 @@ export type CfEventsNestedFilter = {
   status_not_contains?: InputMaybe<Scalars['String']>;
   status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_exists?: InputMaybe<Scalars['Boolean']>;
   thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -9764,16 +9708,6 @@ export type CfTeamsNestedFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  expertiseAndResourceTags_contains_all?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10012,16 +9946,6 @@ export type CfUsersNestedFilter = {
   expertiseAndResourceDescription_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
-  expertiseAndResourceTags_contains_all?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
   firstName?: InputMaybe<Scalars['String']>;
   firstName_contains?: InputMaybe<Scalars['String']>;
   firstName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10328,9 +10252,13 @@ export type FetchAnalyticsTeamLeadershipQuery = {
           Pick<Teams, 'displayName' | 'inactiveSince'> & {
             sys: Pick<Sys, 'id'>;
             linkedFrom?: Maybe<{
-              interestGroupsCollection?: Maybe<
-                Pick<InterestGroupsCollection, 'total'>
-              >;
+              interestGroupsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<InterestGroups, 'active'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
               teamMembershipCollection?: Maybe<{
                 items: Array<
                   Maybe<{
@@ -10346,7 +10274,11 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       linkedFrom?: Maybe<{
                                         interestGroupsCollection?: Maybe<{
                                           items: Array<
-                                            Maybe<{ sys: Pick<Sys, 'id'> }>
+                                            Maybe<
+                                              Pick<InterestGroups, 'active'> & {
+                                                sys: Pick<Sys, 'id'>;
+                                              }
+                                            >
                                           >;
                                         }>;
                                       }>;
@@ -16105,7 +16037,6 @@ export type UsersContentFragment = Pick<
   | 'orcidLastSyncDate'
   | 'orcidWorks'
   | 'questions'
-  | 'expertiseAndResourceTags'
   | 'expertiseAndResourceDescription'
   | 'github'
   | 'googleScholar'
@@ -16251,7 +16182,6 @@ export type FetchUserByIdQuery = {
       | 'orcidLastSyncDate'
       | 'orcidWorks'
       | 'questions'
-      | 'expertiseAndResourceTags'
       | 'expertiseAndResourceDescription'
       | 'github'
       | 'googleScholar'
@@ -16376,7 +16306,6 @@ export type UserListItemContentFragment = Pick<
   | 'createdDate'
   | 'degree'
   | 'email'
-  | 'expertiseAndResourceTags'
   | 'firstName'
   | 'institution'
   | 'jobTitle'
@@ -16427,7 +16356,6 @@ export type FetchUsersQuery = {
             | 'createdDate'
             | 'degree'
             | 'email'
-            | 'expertiseAndResourceTags'
             | 'firstName'
             | 'institution'
             | 'jobTitle'
@@ -16492,7 +16420,6 @@ export type FetchUsersByTeamIdQuery = {
                     | 'createdDate'
                     | 'degree'
                     | 'email'
-                    | 'expertiseAndResourceTags'
                     | 'firstName'
                     | 'institution'
                     | 'jobTitle'
@@ -16563,7 +16490,6 @@ export type FetchUsersByLabIdQuery = {
                 | 'createdDate'
                 | 'degree'
                 | 'email'
-                | 'expertiseAndResourceTags'
                 | 'firstName'
                 | 'institution'
                 | 'jobTitle'
@@ -20890,10 +20816,6 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'questions' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'expertiseAndResourceTags' },
-          },
-          {
-            kind: 'Field',
             name: { kind: 'Name', value: 'expertiseAndResourceDescription' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'github' } },
@@ -21545,10 +21467,6 @@ export const UserListItemContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'degree' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'expertiseAndResourceTags' },
-          },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           {
             kind: 'Field',
@@ -22434,7 +22352,35 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                 selections: [
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'total' },
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'active',
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },
@@ -22633,6 +22579,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                                                             },
                                                                                                                           ],
                                                                                                                       },
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'active',
+                                                                                                                    },
                                                                                                                   },
                                                                                                                 ],
                                                                                                             },

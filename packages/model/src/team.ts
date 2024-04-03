@@ -60,7 +60,7 @@ export type TeamCreateDataObject = {
   applicationNumber: string;
   displayName: string;
   inactiveSince?: string;
-  expertiseAndResourceTags: string[];
+  tags: string[];
   researchOutputIds?: string[];
   projectSummary?: string;
   projectTitle: string;

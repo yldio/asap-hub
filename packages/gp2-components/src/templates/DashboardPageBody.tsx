@@ -16,6 +16,7 @@ import {
   RemindersCard,
   PastEventsDashboardCard,
   RecentSharedOutputs,
+  NewsCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
@@ -24,7 +25,6 @@ import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
-import { NewsItem } from '../molecules';
 import InfoCard from '../molecules/InfoCard';
 import { DashboardUserCard } from '../organisms';
 import { getIconForDocumentType } from '../utils';
@@ -289,7 +289,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             Here is the latest GP2 news.
           </Paragraph>
           <div css={[contentCardsStyles, columnContainer, { gap: rem(32) }]}>
-            <NewsItem {...latestNews} />
+            <NewsCard {...latestNews} key={latestNews.id} type="News" />
             <Link buttonStyle noMargin href={gp2Routes.newsList({}).$}>
               View All
             </Link>

@@ -12,9 +12,8 @@ export const Normal = () => (
   <DashboardRecommendedUsers
     recommendedUsers={createListUserResponse(3).items.map((user) => ({
       ...user,
-      expertiseAndResourceTags: Array.from(
-        new Array(number('Number of tags', 8)),
-        (x, i) => text('Tags text', 'Long tag name goes here'),
+      _tags: Array.from(new Array(number('Number of tags', 8)), (x, i) =>
+        text('Tags text', 'Long tag name goes here'),
       ),
     }))}
   />

@@ -2,44 +2,30 @@ import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { Card, Anchor, Paragraph, StateTag } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
+import { StateTag } from '../atoms';
+import { mobileScreen, rem } from '../pixels';
 import { lead } from '../colors';
 import { TeamIcon, LabIcon, inactiveBadgeIcon } from '../icons';
-import { LinkHeadline, TagList } from '../molecules';
 import { getCounterString } from '../utils';
+import { EntityCard } from '.';
 
-const teamMemberMetaStyles = (tags = false) =>
-  css({
-    color: lead.rgb,
-    display: 'flex',
-    alignItems: 'center',
-    padding: `${(tags ? 12 : 24) / perRem}em 0 ${12 / perRem}em 0`,
-    gap: `${24 / perRem}em`,
-  });
+const footerStyles = css({
+  color: lead.rgb,
 
-const titleStyle = css({
   display: 'flex',
-  flexFlow: 'column-reverse',
-  gap: `${4 / perRem}em`,
-  alignItems: 'flex-start',
+  flexDirection: 'column',
+  gap: rem(16),
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    flexFlow: 'row',
-    gap: `${16 / perRem}em`,
-    alignItems: 'center',
-    marginBottom: `${4 / perRem}em`,
+    flexDirection: 'row',
+    gap: rem(32),
   },
-});
-
-const tagsContainerStyles = css({
-  paddingTop: `${24 / perRem}em`,
 });
 
 const iconStyles = css({
   display: 'inline-grid',
   verticalAlign: 'middle',
-  paddingRight: `${15 / perRem}em`,
+  paddingRight: rem(8),
 });
 
 const TeamCard: React.FC<TeamListItemResponse> = ({
@@ -50,32 +36,11 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
   tags,
   memberCount,
   labCount,
-}) => (
-  <Card accent={inactiveSince ? 'neutral200' : 'default'}>
-    <div css={titleStyle}>
-      <LinkHeadline
-        level={2}
-        styleAsHeading={4}
-        href={network({}).teams({}).team({ teamId: id }).$}
-      >
-        Team {displayName}
-      </LinkHeadline>
-      {!!inactiveSince && (
-        <StateTag icon={inactiveBadgeIcon} label="Inactive" />
-      )}
-    </div>
-    <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
-      <Paragraph noMargin accent="lead">
-        {projectTitle}
-      </Paragraph>
-    </Anchor>
-    {!!tags.length && (
-      <div css={tagsContainerStyles}>
-        <TagList max={3} tags={tags.map(({ name }) => name)} />
-      </div>
-    )}
+}) => {
+  const href = network({}).teams({}).team({ teamId: id }).$;
 
-    <div css={teamMemberMetaStyles(!!tags)}>
+  const footer = (
+    <div css={footerStyles}>
       <div>
         <span css={iconStyles}>
           <TeamIcon />{' '}
@@ -91,7 +56,19 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
         </div>
       )}
     </div>
-  </Card>
-);
+  );
+
+  return (
+    <EntityCard
+      active={!inactiveSince}
+      footer={footer}
+      href={href}
+      inactiveBadge={<StateTag icon={inactiveBadgeIcon} label="Inactive" />}
+      tags={tags.map(({ name }) => name)}
+      text={projectTitle}
+      title={`Team ${displayName}`}
+    />
+  );
+};
 
 export default TeamCard;

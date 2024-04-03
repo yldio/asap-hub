@@ -9,7 +9,6 @@ import {
   getContentfulGraphqlTeamMembers,
   getContentfulGraphqlTeamMemberLabs,
   getContentfulTeamsGraphqlResponse,
-  getTeamCreateDataObject,
   getTeamDataObject,
   getTeamListItemDataObject,
   getContentfulGraphqlTeamById,
@@ -42,6 +41,14 @@ describe('Teams data provider', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
+  });
+
+  describe('Create method', () => {
+    test('should throw an error', async () => {
+      await expect(teamDataProvider.create()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
   });
 
   describe('Fetch method', () => {
@@ -1411,84 +1418,6 @@ describe('Teams data provider', () => {
         },
       ]);
       expect(teamMockUpdated.publish).toHaveBeenCalled();
-    });
-  });
-
-  describe('Create method', () => {
-    test('Should create a team with tools', async () => {
-      const toolMock = getEntry({
-        sys: {
-          id: 'tool-1',
-        },
-      });
-      environmentMock.createEntry.mockResolvedValue(toolMock);
-      toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
-
-      const teamDataObject = getTeamCreateDataObject();
-      await teamDataProviderMock.create(teamDataObject);
-
-      const tool = teamDataObject.tools![0];
-      const createEntryFn = environmentMock.createEntry;
-      expect(createEntryFn).toHaveBeenCalledTimes(2);
-      expect(createEntryFn).toHaveBeenNthCalledWith(1, 'externalTools', {
-        fields: {
-          description: { 'en-US': tool?.description },
-          name: { 'en-US': tool?.name },
-          url: { 'en-US': tool?.url },
-        },
-      });
-      expect(createEntryFn).toHaveBeenNthCalledWith(2, 'teams', {
-        fields: {
-          applicationNumber: { 'en-US': teamDataObject.applicationNumber },
-          displayName: { 'en-US': teamDataObject.displayName },
-          expertiseAndResourceTags: {
-            'en-US': teamDataObject.expertiseAndResourceTags,
-          },
-          inactiveSince: { 'en-US': teamDataObject.inactiveSince },
-          projectSummary: { 'en-US': teamDataObject.projectSummary },
-          projectTitle: {
-            'en-US': teamDataObject.projectTitle,
-          },
-          researchOutputIds: { 'en-US': teamDataObject.researchOutputIds },
-          tools: {
-            'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'entry-id',
-                },
-              },
-            ],
-          },
-        },
-      });
-    });
-
-    test('Should create a team without tools', async () => {
-      const teamMock = getEntry({});
-      environmentMock.createEntry.mockResolvedValue(teamMock);
-
-      const { tools: _tools, ...teamDataObject } = getTeamCreateDataObject();
-      await teamDataProviderMock.create(teamDataObject);
-
-      const createEntryFn = environmentMock.createEntry;
-      expect(createEntryFn).toHaveBeenCalledTimes(1);
-      expect(createEntryFn).toHaveBeenCalledWith('teams', {
-        fields: {
-          applicationNumber: { 'en-US': teamDataObject.applicationNumber },
-          displayName: { 'en-US': teamDataObject.displayName },
-          expertiseAndResourceTags: {
-            'en-US': teamDataObject.expertiseAndResourceTags,
-          },
-          inactiveSince: { 'en-US': teamDataObject.inactiveSince },
-          projectSummary: { 'en-US': teamDataObject.projectSummary },
-          projectTitle: {
-            'en-US': teamDataObject.projectTitle,
-          },
-          researchOutputIds: { 'en-US': teamDataObject.researchOutputIds },
-        },
-      });
     });
   });
 });

@@ -51,7 +51,14 @@ export const getAnalyticsTeamLeadershipQuery =
           displayName: 'Team A',
           linkedFrom: {
             interestGroupsCollection: {
-              total: 1,
+              items: [
+                {
+                  sys: {
+                    id: 'interest-group-1',
+                  },
+                  active: true,
+                },
+              ],
             },
             teamMembershipCollection: {
               items: [
@@ -72,6 +79,7 @@ export const getAnalyticsTeamLeadershipQuery =
                                           sys: {
                                             id: 'interest-group-1',
                                           },
+                                          active: true,
                                         },
                                       ],
                                     },

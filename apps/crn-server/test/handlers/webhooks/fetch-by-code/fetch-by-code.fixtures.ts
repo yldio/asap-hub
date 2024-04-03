@@ -11,7 +11,7 @@ export const fetchUserResponse = {
             firstName: 'First',
             lastName: 'Last',
             email: 'panog@ep.bv',
-            expertiseAndResourceTags: [],
+            tags: [],
             lastModifiedDate: '2020-09-02T10:34:13.259Z',
             orcid: '0000-0001-9884-1913',
             orcidWorks: [],

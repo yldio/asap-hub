@@ -35,6 +35,7 @@ const outputFilters: ReadonlyArray<Option<gp2Model.EntityType> | Title> = [
   { value: 'event', label: 'Events' },
   { value: 'user', label: 'People' },
   { value: 'project', label: 'Projects' },
+  { value: 'news', label: 'News' },
 ];
 
 const styles = css({

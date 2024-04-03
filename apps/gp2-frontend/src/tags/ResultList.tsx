@@ -8,6 +8,7 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   EventCard,
+  NewsCard,
   ResultList as ResultListComponent,
 } from '@asap-hub/react-components';
 import { eventMapper } from '../events/EventsList';
@@ -66,6 +67,10 @@ const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
             const data = result as gp2Model.UserResponse;
             const tagData = data.tags.map((tag) => tag.name);
             return <UserCard key={result.id} {...data} tags={tagData} />;
+          }
+          case 'news': {
+            const data = result as gp2Model.NewsResponse;
+            return <NewsCard {...data} key={data.id} type="News" />;
           }
           default:
             return '';

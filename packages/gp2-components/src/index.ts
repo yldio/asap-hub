@@ -13,7 +13,6 @@ export {
   HeaderLogo,
   IconWithLabel,
   NavigationLink,
-  NewsItem,
   StatusPill,
   UserCardInfo,
   UserMenu,

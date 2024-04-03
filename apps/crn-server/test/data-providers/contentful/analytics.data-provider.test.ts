@@ -1247,7 +1247,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(1);
         });
 
-        test('Should return workingGroupLeadershipRoleCount of 0 when 1 user is a leader of a working group but the team is inactive', async () => {
+        test('Should return workingGroupLeadershipRoleCount of 0 when 1 user is a leader of a working group but the working group is complete', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.linkedFrom!.workingGroupsCollection!.items[0]!.complete =
             true;
@@ -2079,7 +2079,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(1);
         });
 
-        test('Should return workingGroupPreviousMemberCount of 1 when the member of a working groupis not an alumni but the working group is complete', async () => {
+        test('Should return workingGroupPreviousMemberCount of 1 when the member of a working groups not an alumni but the working group is complete', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupMembersCollection!.items[0]!.linkedFrom!.workingGroupsCollection!.items[0]!.complete =
             true;

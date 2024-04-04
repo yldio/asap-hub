@@ -1,10 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import AnalyticsPage from '../AnalyticsPage';
 
 it('renders the header', () => {
   const { getByRole } = render(<AnalyticsPage />);
-  screen.debug(undefined, 5000000);
   expect(getByRole('heading', { level: 1 })).toHaveTextContent('Analytics');
 });
 

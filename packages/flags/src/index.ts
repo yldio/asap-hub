@@ -9,7 +9,7 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   DISPLAY_EVENTS: false,
-  //  DISPLAY_ANALYTICS_PRODUCTIVITY: false,
+  DISPLAY_ANALYTICS_PRODUCTIVITY: false,
 };
 
 const envDefaults: Record<string, boolean> = {

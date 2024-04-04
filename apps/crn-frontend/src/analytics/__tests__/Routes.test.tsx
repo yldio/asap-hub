@@ -9,11 +9,11 @@ import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { analytics } from '@asap-hub/routing';
+import { disable, enable } from '@asap-hub/flags';
 
 import Analytics from '../Routes';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { disable, enable } from '@asap-hub/flags';
 
 jest.mock('../leadership/api');
 mockConsoleError();

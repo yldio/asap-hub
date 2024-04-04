@@ -1,8 +1,10 @@
 import { useHistory, useParams } from 'react-router-dom';
-import { UserProductivityMetric } from '@asap-hub/react-components/src/organisms/UserProductivityTable';
-import { TeamProductivityMetric } from '@asap-hub/react-components/src/organisms/TeamProductivityTable';
 import { analytics } from '@asap-hub/routing';
-import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
+import {
+  AnalyticsProductivityPageBody,
+  TeamProductivityMetric,
+  UserProductivityMetric,
+} from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../../hooks';
 
 const Productivity = () => {

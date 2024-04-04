@@ -2,7 +2,7 @@ import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
+import { lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 
 const loadProductivity = () =>
@@ -14,7 +14,7 @@ const loadLeadership = () =>
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 
-const About: FC<Record<string, never>> = () => {
+const Routes = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadLeadership);
@@ -81,4 +81,4 @@ const About: FC<Record<string, never>> = () => {
   );
 };
 
-export default About;
+export default Routes;

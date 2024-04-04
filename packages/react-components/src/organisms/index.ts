@@ -57,6 +57,8 @@ export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as TeamProductivityTable } from './TeamProductivityTable';
 export { default as UserProductivityTable } from './UserProductivityTable';
+export type { TeamProductivityMetric } from './TeamProductivityTable';
+export type { UserProductivityMetric } from './UserProductivityTable';
 export {
   default as SharedOutputDropdown,
   SharedOutputDropdownBase,

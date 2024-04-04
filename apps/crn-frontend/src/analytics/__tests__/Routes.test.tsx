@@ -13,6 +13,7 @@ import { analytics } from '@asap-hub/routing';
 import Analytics from '../Routes';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { disable, enable } from '@asap-hub/flags';
 
 jest.mock('../leadership/api');
 mockConsoleError();
@@ -52,6 +53,30 @@ describe('Analytics page', () => {
     expect(
       await screen.findByText(/Analytics/i, {
         selector: 'h1',
+      }),
+    ).toBeVisible();
+  });
+
+  it('redirects to user productivity page when flag is true', async () => {
+    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+
+    await renderPage(analytics({}).$);
+
+    expect(
+      await screen.findByText(/User Productivity/i, {
+        selector: 'h3',
+      }),
+    ).toBeVisible();
+  });
+
+  it('redirects to working group page when productivity flag is false', async () => {
+    disable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+    mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });
+    await renderPage(analytics({}).$);
+
+    expect(
+      await screen.findByText(/Working Group Leadership & Membership/i, {
+        selector: 'h3',
       }),
     ).toBeVisible();
   });

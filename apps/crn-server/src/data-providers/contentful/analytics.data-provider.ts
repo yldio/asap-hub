@@ -156,7 +156,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 : getUniqueIdCount(currentWorkingGroupIdsFromTeamLeaders),
               workingGroupPreviousLeadershipRoleCount: getUniqueIdCount([
                 ...((team.inactiveSince &&
-                  currentWorkingGroupIdsFromTeamMembers) ||
+                  currentWorkingGroupIdsFromTeamLeaders) ||
                   []),
                 ...previousWorkingGroupIdsFromTeamLeaders,
               ]),

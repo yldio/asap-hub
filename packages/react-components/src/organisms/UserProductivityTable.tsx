@@ -42,7 +42,7 @@ const rowStyles = css({
     borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1.5fr 0.5fr',
     columnGap: rem(15),
     paddingTop: 0,
     paddingBottom: 0,
@@ -93,7 +93,7 @@ const displayTeams = (items: { name: string; active: boolean }[]) => {
   }
   return (
     <>
-      Multiple teams <span css={counterStyle}>{items.length}</span>
+      Multiple teams<span css={counterStyle}>{items.length}</span>
     </>
   );
 };
@@ -107,7 +107,7 @@ const displayRoles = (items: string[]) => {
   }
   return (
     <>
-      Multiple roles <span css={counterStyle}>{items.length}</span>
+      Multiple roles<span css={counterStyle}>{items.length}</span>
     </>
   );
 };

@@ -57,6 +57,18 @@ describe('Analytics page', () => {
   });
 });
 
+describe('Productivity', () => {
+  it('renders the productivity tab', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+  });
+});
 describe('Leadership & Membership', () => {
   it('renders the Analytics Page successfully', async () => {
     mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });

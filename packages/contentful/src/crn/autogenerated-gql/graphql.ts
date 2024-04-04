@@ -10291,7 +10291,12 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       linkedFrom?: Maybe<{
                                         workingGroupsCollection?: Maybe<{
                                           items: Array<
-                                            Maybe<{ sys: Pick<Sys, 'id'> }>
+                                            Maybe<
+                                              Pick<
+                                                WorkingGroups,
+                                                'complete'
+                                              > & { sys: Pick<Sys, 'id'> }
+                                            >
                                           >;
                                         }>;
                                       }>;
@@ -10304,7 +10309,12 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       linkedFrom?: Maybe<{
                                         workingGroupsCollection?: Maybe<{
                                           items: Array<
-                                            Maybe<{ sys: Pick<Sys, 'id'> }>
+                                            Maybe<
+                                              Pick<
+                                                WorkingGroups,
+                                                'complete'
+                                              > & { sys: Pick<Sys, 'id'> }
+                                            >
                                           >;
                                         }>;
                                       }>;
@@ -22718,6 +22728,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                                                           ],
                                                                                                                       },
                                                                                                                   },
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'complete',
+                                                                                                                    },
+                                                                                                                  },
                                                                                                                 ],
                                                                                                             },
                                                                                                         },
@@ -22847,6 +22865,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                                                             },
                                                                                                                           ],
                                                                                                                       },
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    kind: 'Field',
+                                                                                                                    name: {
+                                                                                                                      kind: 'Name',
+                                                                                                                      value:
+                                                                                                                        'complete',
+                                                                                                                    },
                                                                                                                   },
                                                                                                                 ],
                                                                                                             },

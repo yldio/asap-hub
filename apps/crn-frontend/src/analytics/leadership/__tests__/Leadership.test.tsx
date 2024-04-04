@@ -55,7 +55,7 @@ const data: ListAnalyticsTeamLeadershipResponse = {
 };
 
 const renderPage = async (
-  path = analytics({}).leadership({}).metric({ metric: 'workingGroup' }).$,
+  path = analytics({}).leadership({}).metric({ metric: 'working-group' }).$,
 ) => {
   const result = render(
     <RecoilRoot

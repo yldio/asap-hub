@@ -65,7 +65,7 @@ const About: FC<Record<string, never>> = () => {
           </Route>
           <Redirect
             to={
-              analytics({}).leadership({}).metric({ metric: 'workingGroup' }).$
+              analytics({}).leadership({}).metric({ metric: 'working-group' }).$
             }
           />
         </Switch>
@@ -73,7 +73,9 @@ const About: FC<Record<string, never>> = () => {
       {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') ? (
         <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
       ) : (
-        <Redirect to={analytics({}).leadership({ metric: 'workingGroup' }).$} />
+        <Redirect
+          to={analytics({}).leadership({ metric: 'working-group' }).$}
+        />
       )}
     </Switch>
   );

@@ -5,7 +5,7 @@ import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { LeadershipMembershipTable } from '../organisms';
 import { perRem } from '../pixels';
 
-type MetricOption = 'workingGroup' | 'interestGroup';
+type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
   id: string;
   name: string;
@@ -16,8 +16,8 @@ type MetricData = {
 };
 
 const metricOptions: Record<MetricOption, string> = {
-  workingGroup: 'Working Group Leadership & Membership',
-  interestGroup: 'Interest Group Leadership & Membership',
+  'working-group': 'Working Group Leadership & Membership',
+  'interest-group': 'Interest Group Leadership & Membership',
 };
 
 const metricOptionList = Object.keys(metricOptions).map((value) => ({

@@ -11,7 +11,7 @@ const pageControlProps = {
 it('renders the selected metric', () => {
   render(
     <AnalyticsLeadershipPageBody
-      metric={'interestGroup'}
+      metric={'interest-group'}
       data={[]}
       setMetric={() => {}}
       {...pageControlProps}

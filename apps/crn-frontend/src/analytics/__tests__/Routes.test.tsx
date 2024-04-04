@@ -99,7 +99,7 @@ describe('Leadership & Membership', () => {
     mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });
 
     await renderPage(
-      analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$,
+      analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
     );
     expect(
       await screen.findByText(/Analytics/i, {
@@ -113,7 +113,7 @@ describe('Leadership & Membership', () => {
       new Error('Failed to fetch'),
     );
     await renderPage(
-      analytics({}).leadership({}).metric({ metric: 'interestGroup' }).$,
+      analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
     );
 
     await waitFor(() => {

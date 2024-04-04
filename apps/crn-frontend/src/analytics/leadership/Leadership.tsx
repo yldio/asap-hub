@@ -22,9 +22,9 @@ type MetricResponse = {
 
 const getDataForMetric = (
   data: MetricResponse[],
-  metric: 'workingGroup' | 'interestGroup',
+  metric: 'working-group' | 'interest-group',
 ) => {
-  if (metric === 'workingGroup') {
+  if (metric === 'working-group') {
     return data.map((row) => ({
       id: row.id,
       name: row.displayName,
@@ -46,8 +46,10 @@ const getDataForMetric = (
 
 const Leadership: FC<Record<string, never>> = () => {
   const history = useHistory();
-  const { metric } = useParams<{ metric: 'workingGroup' | 'interestGroup' }>();
-  const setMetric = (newMetric: 'workingGroup' | 'interestGroup') =>
+  const { metric } = useParams<{
+    metric: 'working-group' | 'interest-group';
+  }>();
+  const setMetric = (newMetric: 'working-group' | 'interest-group') =>
     history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
 
   const { currentPage, pageSize } = usePaginationParams();

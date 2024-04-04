@@ -9,11 +9,11 @@ describe('AnalyticsLeadershipPageBody', () => {
     renderPageHref: () => '',
     setMetric: () => {},
     data: [],
-    metric: 'interestGroup',
+    metric: 'interest-group',
   };
   it('renders interest group tab', () => {
     const { getAllByText } = render(
-      <AnalyticsLeadershipPageBody {...props} metric="interestGroup" />,
+      <AnalyticsLeadershipPageBody {...props} metric="interest-group" />,
     );
 
     expect(getAllByText('Interest Group Leadership & Membership').length).toBe(
@@ -23,7 +23,7 @@ describe('AnalyticsLeadershipPageBody', () => {
 
   it('renders working group tab', () => {
     const { getAllByText } = render(
-      <AnalyticsLeadershipPageBody {...props} metric="workingGroup" />,
+      <AnalyticsLeadershipPageBody {...props} metric="working-group" />,
     );
 
     expect(getAllByText('Working Group Leadership & Membership').length).toBe(

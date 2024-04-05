@@ -42,7 +42,7 @@ const rowStyles = css({
     borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1.5fr 0.5fr',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1.1fr 0.5fr',
     columnGap: rem(15),
     paddingTop: 0,
     paddingBottom: 0,

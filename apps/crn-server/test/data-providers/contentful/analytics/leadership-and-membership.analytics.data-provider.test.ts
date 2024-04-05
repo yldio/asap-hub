@@ -7,13 +7,13 @@ import {
   ListAnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
-import { AnalyticsContentfulDataProvider } from '../../../src/data-providers/contentful/analytics.data-provider';
+import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import {
   getAnalyticsTeamLeadershipQuery,
   getListAnalyticsTeamLeadershipDataObject,
-} from '../../fixtures/analytics.fixtures';
-import { getContentfulGraphql } from '../../fixtures/teams.fixtures';
-import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+} from '../../../fixtures/analytics.fixtures';
+import { getContentfulGraphql } from '../../../fixtures/teams.fixtures';
+import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
 
 describe('Analytics Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -29,7 +29,7 @@ describe('Analytics Data Provider', () => {
     contentfulGraphqlClientMockServer,
   );
 
-  describe('FetchTeamLeaderShip method', () => {
+  describe('FetchTeamLeadership method', () => {
     const pastDate = DateTime.now().minus({ days: 1 }).toISODate();
 
     test('Should fetch the list of analytics team leadership from Contentful GraphQl', async () => {

@@ -2,4 +2,6 @@ import { AnalyticsDataProvider } from '../../src/data-providers/types/analytics.
 
 export const analyticsDataProviderMock = {
   fetchTeamLeadership: jest.fn(),
+  fetchTeamProductivity: jest.fn(),
+  fetchUserProductivity: jest.fn(),
 } as unknown as jest.Mocked<AnalyticsDataProvider>;

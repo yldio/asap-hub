@@ -9,7 +9,7 @@ import {
   chevronCircleDownIcon,
   chevronCircleUpIcon,
   alumniBadgeIcon,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
 } from '../icons';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
@@ -199,7 +199,9 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                   <>
                     {speaker.team.displayName}
                     {speaker.team.inactiveSince && (
-                      <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                      <span css={inactiveBadgeStyles}>
+                        <InactiveBadgeIcon />
+                      </span>
                     )}
                   </>
                 </Link>

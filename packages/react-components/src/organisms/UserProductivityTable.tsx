@@ -3,7 +3,7 @@ import { Card } from '../atoms';
 import { charcoal, lead, neutral200, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
-import { alumniBadgeIcon, inactiveBadgeIcon } from '../icons';
+import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
 
 const container = css({
   display: 'grid',
@@ -87,7 +87,7 @@ const displayTeams = (items: { name: string; active: boolean }[]) => {
       items[0].name
     ) : (
       <span css={iconStyles}>
-        {items[0]?.name} {inactiveBadgeIcon}
+        {items[0]?.name} <InactiveBadgeIcon />
       </span>
     );
   }

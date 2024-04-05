@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import {
   LabIcon,
   TeamIcon,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
   WorkingGroupsIcon,
 } from '../icons';
 import { Avatar, Link } from '../atoms';
@@ -134,7 +134,9 @@ const AssociationList: FC<AssociationListProps> = ({
                   {type} {displayName}
                 </Link>
                 {inactiveSince && (
-                  <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                  <span css={inactiveBadgeStyles}>
+                    <InactiveBadgeIcon />
+                  </span>
                 )}
               </>
             )}

@@ -3,7 +3,7 @@ import { Card } from '../atoms';
 import { charcoal, neutral200, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
-import { inactiveBadgeIcon } from '../icons';
+import { InactiveBadgeIcon } from '../icons';
 
 const container = css({
   display: 'grid',
@@ -88,7 +88,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
         <div key={row.id} css={[rowStyles]}>
           <span css={[titleStyles, rowTitleStyles]}>Team</span>
           <p css={iconStyles}>
-            {row.name} {!row.active && inactiveBadgeIcon}
+            {row.name} {!row.active && <InactiveBadgeIcon />}
           </p>
           <span css={[titleStyles, rowTitleStyles]}>Articles</span>
           <p>{row.articles}</p>

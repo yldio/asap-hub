@@ -27,6 +27,6 @@ describe('TeamProductivityTable', () => {
       },
     ];
     const { getByTitle } = render(<TeamProductivityTable data={data} />);
-    expect(getByTitle('Inactive')).toBeInTheDocument();
+    expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
 });

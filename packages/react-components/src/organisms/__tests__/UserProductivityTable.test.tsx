@@ -27,7 +27,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByTitle } = render(<UserProductivityTable data={data} />);
-    expect(getByTitle('Alumni Badge')).toBeInTheDocument();
+    expect(getByTitle('Alumni Member')).toBeInTheDocument();
   });
 
   it('displays inactive badge', () => {
@@ -38,7 +38,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByTitle } = render(<UserProductivityTable data={data} />);
-    expect(getByTitle('Inactive')).toBeInTheDocument();
+    expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
 
   it('handles multiple teams', () => {

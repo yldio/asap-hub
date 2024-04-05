@@ -90,5 +90,5 @@ it('displays inactive badge when a team is inactive', () => {
     />,
   );
 
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  expect(screen.getByTitle('Inactive Team')).toBeInTheDocument();
 });

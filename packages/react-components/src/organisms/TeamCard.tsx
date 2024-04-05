@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { lead } from '../colors';
-import { TeamIcon, LabIcon, inactiveBadgeIcon } from '../icons';
+import { TeamIcon, LabIcon, InactiveBadgeIcon } from '../icons';
 import { getCounterString } from '../utils';
 import { EntityCard } from '.';
 
@@ -63,7 +63,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
       active={!inactiveSince}
       footer={footer}
       href={href}
-      inactiveBadge={<StateTag icon={inactiveBadgeIcon} label="Inactive" />}
+      inactiveBadge={<StateTag icon={<InactiveBadgeIcon />} label="Inactive" />}
       tags={tags.map(({ name }) => name)}
       text={projectTitle}
       title={`Team ${displayName}`}

@@ -30,7 +30,7 @@ it('renders the state tag for a inactive group', () => {
     <InterestGroupCard {...props} active={false} />,
   );
   expect(getByText('Inactive', { selector: 'span' })).toBeVisible();
-  expect(getByTitle('Inactive')).toBeInTheDocument();
+  expect(getByTitle('Inactive Interest Group')).toBeInTheDocument();
   rerender(<InterestGroupCard {...props} active={true} />);
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });

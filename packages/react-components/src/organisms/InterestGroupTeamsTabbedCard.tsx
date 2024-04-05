@@ -3,7 +3,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { Link, Paragraph } from '../atoms';
-import { inactiveBadgeIcon, TeamIcon } from '../icons';
+import { InactiveBadgeIcon, TeamIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -90,7 +90,9 @@ const GroupTeamsTabbedCard: React.FC<InterestGroupTeamsTabbedCardProps> = ({
                 {displayName}
               </Link>
               {inactiveSince && (
-                <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+                <span css={inactiveBadgeStyles}>
+                  <InactiveBadgeIcon />
+                </span>
               )}
             </li>
           ))}

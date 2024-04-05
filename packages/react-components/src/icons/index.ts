@@ -51,7 +51,7 @@ export { default as gp2Logo } from './gp2-logo';
 export { default as grantDocument } from './grantDocument';
 export { default as InterestGroupsIcon } from './interest-groups';
 export { default as hidePasswordIcon } from './hide-password';
-export { default as inactiveBadgeIcon } from './inactive-badge';
+export { default as InactiveBadgeIcon } from './inactive-badge';
 export { default as infoCircleIcon } from './info-circle';
 export { default as infoCircleYellowIcon } from './info-circle-yellow';
 export { default as informationIcon } from './information';

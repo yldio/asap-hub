@@ -10287,38 +10287,48 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                 }>;
                                 workingGroupMembersCollection?: Maybe<{
                                   items: Array<
-                                    Maybe<{
-                                      linkedFrom?: Maybe<{
-                                        workingGroupsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<
-                                              Pick<
-                                                WorkingGroups,
-                                                'complete'
-                                              > & { sys: Pick<Sys, 'id'> }
-                                            >
-                                          >;
+                                    Maybe<
+                                      Pick<
+                                        WorkingGroupMembers,
+                                        'inactiveSinceDate'
+                                      > & {
+                                        linkedFrom?: Maybe<{
+                                          workingGroupsCollection?: Maybe<{
+                                            items: Array<
+                                              Maybe<
+                                                Pick<
+                                                  WorkingGroups,
+                                                  'complete'
+                                                > & { sys: Pick<Sys, 'id'> }
+                                              >
+                                            >;
+                                          }>;
                                         }>;
-                                      }>;
-                                    }>
+                                      }
+                                    >
                                   >;
                                 }>;
                                 workingGroupLeadersCollection?: Maybe<{
                                   items: Array<
-                                    Maybe<{
-                                      linkedFrom?: Maybe<{
-                                        workingGroupsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<
-                                              Pick<
-                                                WorkingGroups,
-                                                'complete'
-                                              > & { sys: Pick<Sys, 'id'> }
-                                            >
-                                          >;
+                                    Maybe<
+                                      Pick<
+                                        WorkingGroupLeaders,
+                                        'inactiveSinceDate'
+                                      > & {
+                                        linkedFrom?: Maybe<{
+                                          workingGroupsCollection?: Maybe<{
+                                            items: Array<
+                                              Maybe<
+                                                Pick<
+                                                  WorkingGroups,
+                                                  'complete'
+                                                > & { sys: Pick<Sys, 'id'> }
+                                              >
+                                            >;
+                                          }>;
                                         }>;
-                                      }>;
-                                    }>
+                                      }
+                                    >
                                   >;
                                 }>;
                               }>;
@@ -22739,6 +22749,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                       name: {
                                                                                         kind: 'Name',
                                                                                         value:
+                                                                                          'inactiveSinceDate',
+                                                                                      },
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
                                                                                           'linkedFrom',
                                                                                       },
                                                                                       selectionSet:
@@ -22872,6 +22890,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                 kind: 'SelectionSet',
                                                                                 selections:
                                                                                   [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'inactiveSinceDate',
+                                                                                      },
+                                                                                    },
                                                                                     {
                                                                                       kind: 'Field',
                                                                                       name: {

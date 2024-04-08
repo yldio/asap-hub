@@ -25,8 +25,13 @@ export const indexNewsHandler =
         const news = await newsController.fetchById(id);
         log.debug(`Fetched news ${news.id}`);
 
+        const data = {
+          ...news,
+          _tags: news.tags,
+        };
+
         await algoliaClient.save({
-          data: news,
+          data,
           type: 'news',
         });
 

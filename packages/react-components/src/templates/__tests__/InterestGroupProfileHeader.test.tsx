@@ -30,7 +30,7 @@ it('renders the tag for inactive groups', () => {
     <InterestGroupProfileHeader {...props} name="My Group" active={false} />,
   );
   expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  expect(screen.getByTitle('Inactive Interest Group')).toBeInTheDocument();
 });
 
 it('renders group google drive link if present', () => {

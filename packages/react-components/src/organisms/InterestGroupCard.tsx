@@ -3,7 +3,7 @@ import { InterestGroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Paragraph, StateTag } from '../atoms';
-import { inactiveBadgeIcon, TeamIcon } from '../icons';
+import { InactiveBadgeIcon, TeamIcon } from '../icons';
 import { rem } from '../pixels';
 import EntityCard from './EntityCard';
 
@@ -47,7 +47,12 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
       footer={footer}
       googleDrive={googleDrive}
       href={href}
-      inactiveBadge={<StateTag icon={inactiveBadgeIcon} label="Inactive" />}
+      inactiveBadge={
+        <StateTag
+          icon={<InactiveBadgeIcon entityName="Interest Group" />}
+          label="Inactive"
+        />
+      }
       tags={tags.map((tag) => tag.name)}
       text={description}
       title={name}

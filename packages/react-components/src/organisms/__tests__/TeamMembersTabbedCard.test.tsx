@@ -48,7 +48,7 @@ it('renders the members tabbed card', () => {
     expect(screen.getByText(member.role)).toBeInTheDocument();
   });
 
-  expect(screen.getAllByTitle(/Alumni Badge/i)).toHaveLength(1);
+  expect(screen.getAllByTitle(/Alumni Member/i)).toHaveLength(1);
   expect(screen.getByText(`${labName} Lab`)).toBeInTheDocument();
 });
 

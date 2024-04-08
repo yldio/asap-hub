@@ -186,14 +186,21 @@ export {
   UserTeamsTabbedCard,
   WorkingGroupCard,
   WorkingGroupMembers,
+  UserProductivityTable,
+  TeamProductivityTable,
   WorkingGroupsTabbedCard,
+} from './organisms';
+export type {
+  UserProductivityMetric,
+  TeamProductivityMetric,
 } from './organisms';
 export {
   AboutPage,
   AboutPageBody,
   AboutPageHeader,
   AnalyticsPage,
-  AnalyticsPageBody,
+  AnalyticsProductivityPageBody,
+  AnalyticsLeadershipPageBody,
   AnalyticsPageHeader,
   BasicLayout,
   BiographyModal,

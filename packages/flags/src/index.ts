@@ -1,13 +1,15 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'VERSION_RESEARCH_OUTPUT'
-  | 'DISPLAY_EVENTS';
+  | 'DISPLAY_EVENTS'
+  | 'DISPLAY_ANALYTICS_PRODUCTIVITY';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   DISPLAY_EVENTS: false,
+  DISPLAY_ANALYTICS_PRODUCTIVITY: false,
 };
 
 const envDefaults: Record<string, boolean> = {

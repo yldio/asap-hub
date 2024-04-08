@@ -3,7 +3,7 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { Fragment } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
-import { inactiveBadgeIcon } from '../icons';
+import { InactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { perRem, rem, tabletScreen } from '../pixels';
 import { splitListBy } from '../utils';
@@ -148,7 +148,7 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
                         <Link href={teamHref(id)}>Team {displayName}</Link>
                         {teamInactiveSince && (
                           <span css={inactiveBadgeStyles}>
-                            {inactiveBadgeIcon}
+                            <InactiveBadgeIcon />
                           </span>
                         )}
                       </div>

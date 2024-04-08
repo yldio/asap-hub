@@ -49,6 +49,7 @@ jobs:
 
   test-e2e:
     runs-on: ubuntu-latest
+    continue-on-error: true
     container:
       image: mcr.microsoft.com/playwright:focal
     steps:

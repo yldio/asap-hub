@@ -47,7 +47,7 @@ describe('Teams', () => {
         ]}
       />,
     );
-    expect(getByTitle('Inactive')).toBeInTheDocument();
+    expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
 
   it('display type in plural if there is more than one', () => {

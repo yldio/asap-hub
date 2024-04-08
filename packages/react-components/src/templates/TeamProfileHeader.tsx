@@ -10,7 +10,7 @@ import {
   bioinformatics,
   crnReportIcon,
   dataset,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
   LabIcon,
   labResource,
   plusIcon,
@@ -74,7 +74,7 @@ const createSectionStyles = css({
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
-      "contact members create" 
+      "contact members create"
       "lab lab lab"/ auto auto 1fr
     `,
   },
@@ -156,7 +156,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
     <header css={containerStyles}>
       <div css={titleStyle}>
         <Display styleAsHeading={2}>Team {displayName}</Display>
-        {!isActive && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
+        {!isActive && (
+          <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
+        )}
       </div>
 
       <section

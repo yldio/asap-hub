@@ -1,7 +1,13 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchAnalyticsTeamLeadershipQueryVariables,
+  FetchTeamProductivityQuery,
+  FetchTeamProductivityQueryVariables,
+  FetchUserProductivityQuery,
+  FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
+  FETCH_TEAM_PRODUCTIVITY,
+  FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
   Sys,
@@ -10,7 +16,16 @@ import {
 import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListTeamProductivityDataObject,
+  ListUserProductivityDataObject,
+  TeamProductivityDataObject,
+  TeamProductivityDocumentType,
+  teamProductivityDocumentTypes,
+  TeamRole,
+  UserProductivityDataObject,
+  UserProductivityTeam,
 } from '@asap-hub/model';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -174,6 +189,36 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
           }) || [],
     };
   }
+
+  async fetchUserProductivity(
+    options: FetchPaginationOptions,
+  ): Promise<ListUserProductivityDataObject> {
+    const { take = 10, skip = 0 } = options;
+    const { usersCollection } = await this.contentfulClient.request<
+      FetchUserProductivityQuery,
+      FetchUserProductivityQueryVariables
+    >(FETCH_USER_PRODUCTIVITY, { limit: take, skip });
+
+    return {
+      total: usersCollection?.total || 0,
+      items: getUserProductivityItems(usersCollection),
+    };
+  }
+
+  async fetchTeamProductivity(
+    options: FetchPaginationOptions,
+  ): Promise<ListTeamProductivityDataObject> {
+    const { take = 10, skip = 0 } = options;
+    const { teamsCollection } = await this.contentfulClient.request<
+      FetchTeamProductivityQuery,
+      FetchTeamProductivityQueryVariables
+    >(FETCH_TEAM_PRODUCTIVITY, { limit: take, skip });
+
+    return {
+      total: teamsCollection?.total || 0,
+      items: getTeamProductivityItems(teamsCollection),
+    };
+  }
 }
 
 type Team = NonNullable<
@@ -272,3 +317,143 @@ const flattenWorkingGroupMember = (
   ) || [];
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
+
+const getUserProductivityItems = (
+  usersCollection: FetchUserProductivityQuery['usersCollection'],
+): UserProductivityDataObject[] =>
+  cleanArray(usersCollection?.items).map((user) => {
+    const teams =
+      user.teamsCollection?.items
+        .map((teamItem) => {
+          if (teamItem?.role && teamItem?.team?.displayName) {
+            return {
+              team: teamItem.team.displayName,
+              role: teamItem.role as TeamRole,
+              isTeamInactive: !!teamItem.team.inactiveSince,
+              isUserInactiveOnTeam: !!teamItem.inactiveSinceDate,
+            };
+          }
+
+          return null;
+        })
+        .filter(
+          (
+            userProductivityItem: UserProductivityTeam | null,
+          ): userProductivityItem is UserProductivityTeam =>
+            userProductivityItem !== null,
+        ) || [];
+
+    const userOutputsCount =
+      user.linkedFrom?.researchOutputsCollection?.items.reduce(
+        (outputsCount, outputItem) => {
+          const isAuthor = outputItem?.authorsCollection?.items.some(
+            (author) =>
+              author?.__typename === 'Users' && author.sys.id === user.sys.id,
+          );
+
+          if (isAuthor && isPublishedInLastMonth(outputItem?.sys.publishedAt)) {
+            if (outputItem?.sharingStatus === 'Public') {
+              return {
+                outputs: outputsCount.outputs + 1,
+                publicOutputs: outputsCount.publicOutputs + 1,
+              };
+            }
+
+            return {
+              ...outputsCount,
+              outputs: outputsCount.outputs + 1,
+            };
+          }
+
+          return outputsCount;
+        },
+        {
+          outputs: 0,
+          publicOutputs: 0,
+        },
+      ) || {
+        outputs: 0,
+        publicOutputs: 0,
+      };
+
+    return {
+      id: user.sys.id,
+      name: parseUserDisplayName(
+        user.firstName ?? '',
+        user.lastName ?? '',
+        undefined,
+        user.nickname ?? '',
+      ),
+      isAlumni: !!user.alumniSinceDate,
+      teams,
+      asapOutput: userOutputsCount.outputs,
+      asapPublicOutput: userOutputsCount.publicOutputs,
+      ratio:
+        userOutputsCount.outputs > 0
+          ? (userOutputsCount.publicOutputs / userOutputsCount.outputs).toFixed(
+              2,
+            )
+          : '0.00',
+    };
+  });
+
+const getTeamProductivityItems = (
+  teamsCollection: FetchTeamProductivityQuery['teamsCollection'],
+): TeamProductivityDataObject[] =>
+  cleanArray(teamsCollection?.items).map((teamItem) => {
+    const initialDocumentTypesCount = {
+      Article: 0,
+      Bioinformatics: 0,
+      Dataset: 0,
+      'Lab Resource': 0,
+      Protocol: 0,
+    };
+
+    const documentTypesCount =
+      teamItem.linkedFrom?.researchOutputsCollection?.items.reduce(
+        (count, researchOutput) => {
+          const isTeamProductivityDocumentType = (
+            documentType: string,
+          ): documentType is TeamProductivityDocumentType =>
+            teamProductivityDocumentTypes.includes(
+              documentType as TeamProductivityDocumentType,
+            );
+
+          if (
+            isPublishedInLastMonth(researchOutput?.sys.publishedAt) &&
+            researchOutput?.documentType &&
+            isTeamProductivityDocumentType(researchOutput.documentType)
+          ) {
+            return {
+              ...count,
+              [researchOutput.documentType]:
+                count[researchOutput.documentType] + 1,
+            };
+          }
+          return count;
+        },
+        initialDocumentTypesCount,
+      ) || initialDocumentTypesCount;
+
+    return {
+      id: teamItem.sys.id,
+      name: teamItem.displayName || '',
+      isInactive: !!teamItem.inactiveSince,
+      Article: documentTypesCount.Article,
+      Bioinformatics: documentTypesCount.Bioinformatics,
+      Dataset: documentTypesCount.Dataset,
+      'Lab Resource': documentTypesCount['Lab Resource'],
+      Protocol: documentTypesCount.Protocol,
+    };
+  });
+
+const isPublishedInLastMonth = (outputPublishedDate: string) => {
+  const currentDate = new Date();
+  const lastMonthDate = new Date();
+  lastMonthDate.setMonth(currentDate.getMonth() - 1);
+
+  return outputPublishedDate
+    ? new Date(outputPublishedDate) >= lastMonthDate &&
+        new Date(outputPublishedDate) <= currentDate
+    : false;
+};

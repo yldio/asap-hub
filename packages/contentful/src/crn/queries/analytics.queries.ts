@@ -81,3 +81,75 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
     }
   }
 `;
+
+export const FETCH_USER_PRODUCTIVITY = gql`
+  query FetchUserProductivity($limit: Int, $skip: Int) {
+    usersCollection(order: firstName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        firstName
+        lastName
+        nickname
+        alumniSinceDate
+        teamsCollection(limit: 3) {
+          items {
+            team {
+              displayName
+              inactiveSince
+            }
+            role
+            inactiveSinceDate
+          }
+        }
+        linkedFrom {
+          researchOutputsCollection(limit: 20) {
+            items {
+              sys {
+                publishedAt
+              }
+              sharingStatus
+              authorsCollection(limit: 10) {
+                items {
+                  __typename
+                  ... on Users {
+                    sys {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_TEAM_PRODUCTIVITY = gql`
+  query FetchTeamProductivity($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          researchOutputsCollection(limit: 100) {
+            items {
+              sys {
+                publishedAt
+              }
+              documentType
+            }
+          }
+        }
+      }
+    }
+  }
+`;

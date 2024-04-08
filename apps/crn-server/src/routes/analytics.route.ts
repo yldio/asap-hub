@@ -1,6 +1,10 @@
-import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import {
+  ListAnalyticsTeamLeadershipResponse,
+  ListTeamProductivityResponse,
+  ListUserProductivityResponse,
+} from '@asap-hub/model';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
-import { Router, Response } from 'express';
+import { Response, Router } from 'express';
 import AnalyticsController from '../controllers/analytics.controller';
 
 export const analyticsRouteFactory = (
@@ -15,6 +19,30 @@ export const analyticsRouteFactory = (
       const query = validateFetchPaginationOptions(parameters);
 
       const result = await analyticsController.fetchTeamLeadership(query);
+
+      res.json(result);
+    },
+  );
+
+  analyticsRoutes.get(
+    '/productivity/user',
+    async (req, res: Response<ListUserProductivityResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchPaginationOptions(parameters);
+
+      const result = await analyticsController.fetchUserProductivity(query);
+
+      res.json(result);
+    },
+  );
+
+  analyticsRoutes.get(
+    '/productivity/team',
+    async (req, res: Response<ListTeamProductivityResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchPaginationOptions(parameters);
+
+      const result = await analyticsController.fetchTeamProductivity(query);
 
       res.json(result);
     },

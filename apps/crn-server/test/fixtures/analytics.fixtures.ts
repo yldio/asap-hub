@@ -1,9 +1,21 @@
-import { FetchAnalyticsTeamLeadershipQuery } from '@asap-hub/contentful';
+import {
+  FetchAnalyticsTeamLeadershipQuery,
+  FetchTeamProductivityQuery,
+  FetchUserProductivityQuery,
+} from '@asap-hub/contentful';
 import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
+  ListTeamProductivityDataObject,
+  ListTeamProductivityResponse,
+  ListUserProductivityDataObject,
+  ListUserProductivityResponse,
+  TeamProductivityDataObject,
+  TeamProductivityResponse,
+  UserProductivityDataObject,
+  UserProductivityResponse,
 } from '@asap-hub/model';
 import { getTeamDataObject } from './teams.fixtures';
 
@@ -134,3 +146,257 @@ export const getAnalyticsTeamLeadershipQuery =
       ],
     },
   });
+
+export const getUserProductivityDataObject =
+  (): UserProductivityDataObject => ({
+    id: 'user-1',
+    name: 'Jane (Jenny) Doe',
+    isAlumni: false,
+    teams: [
+      {
+        isTeamInactive: false,
+        isUserInactiveOnTeam: false,
+        role: 'Co-PI (Core Leadership)',
+        team: 'Team Alessi',
+      },
+      {
+        isTeamInactive: false,
+        isUserInactiveOnTeam: false,
+        role: 'Collaborating PI',
+        team: 'Team De Camilli',
+      },
+    ],
+    asapOutput: 3,
+    asapPublicOutput: 1,
+    ratio: '0.33',
+  });
+
+export const getResearchOutputUserProductivity = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchUserProductivityQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'] => [
+  {
+    sys: {
+      publishedAt: '2023-09-08T03:00:00.000Z',
+    },
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      publishedAt: '2023-09-07T03:00:00.000Z',
+    },
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-2',
+          },
+        },
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-3',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      publishedAt: '2023-09-06T03:00:00.000Z',
+    },
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      publishedAt: '2023-09-05T03:00:00.000Z',
+    },
+    sharingStatus: 'Public',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      publishedAt: '2023-07-05T03:00:00.000Z',
+    },
+    sharingStatus: 'Public',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+];
+
+export const getTeamProductivityDataObject =
+  (): TeamProductivityDataObject => ({
+    id: 'team-id-0',
+    name: 'Team A',
+    isInactive: false,
+    Article: 1,
+    Bioinformatics: 1,
+    Dataset: 0,
+    'Lab Resource': 0,
+    Protocol: 0,
+  });
+
+export const getResearchOutputTeamProductivity = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchTeamProductivityQuery['teamsCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'] => [
+  {
+    sys: {
+      publishedAt: '2023-09-05T03:00:00.000Z',
+    },
+    documentType: 'Article',
+  },
+  {
+    sys: {
+      publishedAt: '2023-09-03T03:00:00.000Z',
+    },
+    documentType: 'Bioinformatics',
+  },
+  {
+    sys: {
+      publishedAt: '2023-09-01T03:00:00.000Z',
+    },
+    documentType: 'Grant Document',
+  },
+  {
+    sys: {
+      publishedAt: null,
+    },
+    documentType: 'Protocol',
+  },
+];
+
+export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
+  usersCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Jane',
+        lastName: 'Doe',
+        nickname: 'Jenny',
+        alumniSinceDate: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: getResearchOutputUserProductivity(),
+          },
+        },
+        teamsCollection: {
+          items: [
+            {
+              role: 'Co-PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                displayName: 'Team Alessi',
+                inactiveSince: null,
+              },
+            },
+            {
+              role: 'Collaborating PI',
+              inactiveSinceDate: null,
+              team: {
+                displayName: 'Team De Camilli',
+                inactiveSince: null,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+
+export const getTeamProductivityQuery = (): FetchTeamProductivityQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-id-0',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: getResearchOutputTeamProductivity(),
+          },
+        },
+      },
+    ],
+  },
+});
+
+export const getListUserProductivityDataObject =
+  (): ListUserProductivityDataObject => ({
+    total: 1,
+    items: [getUserProductivityDataObject()],
+  });
+
+export const getListTeamProductivityDataObject =
+  (): ListTeamProductivityDataObject => ({
+    total: 1,
+    items: [getTeamProductivityDataObject()],
+  });
+
+export const getUserProductivityResponse = (): UserProductivityResponse =>
+  getUserProductivityDataObject();
+
+export const getListUserProductivityResponse =
+  (): ListUserProductivityResponse => getListUserProductivityDataObject();
+
+export const getTeamProductivityResponse = (): TeamProductivityResponse =>
+  getTeamProductivityDataObject();
+
+export const getListTeamProductivityResponse =
+  (): ListTeamProductivityResponse => getListTeamProductivityDataObject();

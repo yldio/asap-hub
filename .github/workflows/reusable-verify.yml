@@ -64,10 +64,18 @@ jobs:
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Install Playwright
+      - name: Install Playwright dependencies
+        if: ${{ inputs.environment-name=='Branch' }}
+        run: |
+          yarn workspace @asap-hub/e2e-tests run playwright install-deps
+      - name: Install Playwright browsers
         if: ${{ inputs.environment-name=='Branch' }}
         run: |
           yarn workspace @asap-hub/e2e-tests run playwright install
+      - name: LS the dir
+        if: ${{ inputs.environment-name=='Branch' }}
+        run: |
+          yarn workspace @asap-hub/e2e-tests exec ls
       - name: Test CRN
         if: ${{ inputs.environment-name=='Branch' }}
         run: |

@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     container:
-      image: mcr.microsoft.com/playwright:focal
+      image: mcr.microsoft.com/playwright:jammy
     steps:
       - name: Checkout
         uses: actions/checkout@v3

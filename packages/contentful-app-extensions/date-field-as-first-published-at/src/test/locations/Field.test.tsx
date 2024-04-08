@@ -39,8 +39,6 @@ describe('Field component', () => {
       },
     }));
     render(<Field />);
-    await waitFor(() => {
-      expect(screen.getByText('2024-01-01T08:08:00.000Z')).toBeInTheDocument();
-    });
+    expect(screen.getByText('2024-01-01T08:08:00.000Z')).toBeInTheDocument();
   });
 });

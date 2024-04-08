@@ -11,6 +11,10 @@ const Field = () => {
     if (!sdk.entry.getSys().firstPublishedAt) {
       setValue(new Date().toISOString());
     }
+
+    if (sdk.entry.getSys().firstPublishedAt && !value) {
+      setValue(sdk.entry.getSys().firstPublishedAt);
+    }
   }, []);
 
   return <Text>{value}</Text>;

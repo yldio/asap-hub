@@ -11,9 +11,6 @@ jest.mock('@contentful/react-apps-toolkit', () => ({
 }));
 
 beforeEach(() => {
-  (useFieldValue as jest.Mock).mockImplementation(() => {
-    return useState('2024-01-01T08:08:00.000Z');
-  });
   jest.useFakeTimers();
 });
 
@@ -28,6 +25,9 @@ describe('Field component', () => {
         getSys: () => ({}),
       },
     }));
+    (useFieldValue as jest.Mock).mockImplementation(() => {
+      return useState('2024-01-01T08:08:00.000Z');
+    });
     render(<Field />);
     expect(screen.getByText(new Date().toISOString())).toBeInTheDocument();
   });
@@ -38,7 +38,23 @@ describe('Field component', () => {
         getSys: () => ({ firstPublishedAt: '2024-03-01T08:08:00.000Z' }),
       },
     }));
+    (useFieldValue as jest.Mock).mockImplementation(() => {
+      return useState('2024-01-01T08:08:00.000Z');
+    });
     render(<Field />);
     expect(screen.getByText('2024-01-01T08:08:00.000Z')).toBeInTheDocument();
+  });
+
+  it('updates with firstPublishedAt if entry published but field not set', async () => {
+    (useSDK as jest.Mock).mockImplementation(() => ({
+      entry: {
+        getSys: () => ({ firstPublishedAt: '2024-03-01T08:08:00.000Z' }),
+      },
+    }));
+    (useFieldValue as jest.Mock).mockImplementation(() => {
+      return useState(undefined);
+    });
+    render(<Field />);
+    expect(screen.getByText('2024-03-01T08:08:00.000Z')).toBeInTheDocument();
   });
 });

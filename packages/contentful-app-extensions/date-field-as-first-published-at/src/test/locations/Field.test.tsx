@@ -1,36 +1,46 @@
 import '@testing-library/jest-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import Field from '../../locations/Field';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { useSDK } from '@contentful/react-apps-toolkit';
+import { useSDK, useFieldValue } from '@contentful/react-apps-toolkit';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
+  useFieldValue: jest.fn(),
 }));
 
+beforeEach(() => {
+  (useFieldValue as jest.Mock).mockImplementation(() => {
+    return useState('2024-01-01T08:08:00.000Z');
+  });
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+});
+
 describe('Field component', () => {
-  it('renders the value when its available', () => {
+  it('updates to current timestamp if entry has not been published', async () => {
     (useSDK as jest.Mock).mockImplementation(() => ({
-      field: {
-        getValue: jest.fn(() => '2023-04-12T16:05:00.000Z'),
+      entry: {
+        getSys: () => ({}),
       },
     }));
     render(<Field />);
-
-    expect(screen.getByText('2023-04-12T16:05:00.000Z')).toBeInTheDocument();
+    expect(screen.getByText(new Date().toISOString())).toBeInTheDocument();
   });
 
-  it('renders the value from the system firstPublishedAt when it is not available', () => {
+  it('does not update to current timestamp if entry has been published', async () => {
     (useSDK as jest.Mock).mockImplementation(() => ({
-      field: {
-        getValue: jest.fn(),
-      },
       entry: {
-        getSys: () => ({ firstPublishedAt: '2020-10-11T16:05:00.000Z' }),
+        getSys: () => ({ firstPublishedAt: '2024-03-01T08:08:00.000Z' }),
       },
     }));
     render(<Field />);
-    expect(screen.getByText('2020-10-11T16:05:00.000Z')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('2024-01-01T08:08:00.000Z')).toBeInTheDocument();
+    });
   });
 });

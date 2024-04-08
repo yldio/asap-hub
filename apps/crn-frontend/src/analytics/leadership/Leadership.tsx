@@ -1,7 +1,10 @@
-import { FC, useState } from 'react';
-import { AnalyticsPageBody } from '@asap-hub/react-components';
+import { FC } from 'react';
+import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
+import { useHistory, useParams } from 'react-router-dom';
+import { analytics } from '@asap-hub/routing';
+
 import { useAnalyticsLeadership } from './state';
-import { usePagination, usePaginationParams } from '../hooks';
+import { usePagination, usePaginationParams } from '../../hooks';
 
 type MetricResponse = {
   id: string;
@@ -19,9 +22,9 @@ type MetricResponse = {
 
 const getDataForMetric = (
   data: MetricResponse[],
-  metric: 'workingGroup' | 'interestGroup',
+  metric: 'working-group' | 'interest-group',
 ) => {
-  if (metric === 'workingGroup') {
+  if (metric === 'working-group') {
     return data.map((row) => ({
       id: row.id,
       name: row.displayName,
@@ -41,21 +44,27 @@ const getDataForMetric = (
   }));
 };
 
-const About: FC<Record<string, never>> = () => {
-  const [metric, setMetric] = useState<'workingGroup' | 'interestGroup'>(
-    'workingGroup',
-  );
+const Leadership: FC<Record<string, never>> = () => {
+  const history = useHistory();
+  const { metric } = useParams<{
+    metric: 'working-group' | 'interest-group';
+  }>();
+  const setMetric = (newMetric: 'working-group' | 'interest-group') =>
+    history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+
   const { currentPage, pageSize } = usePaginationParams();
+
   const { items, total } = useAnalyticsLeadership({
     currentPage,
     pageSize,
     searchQuery: '',
     filters: new Set(),
   });
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (
-    <AnalyticsPageBody
+    <AnalyticsLeadershipPageBody
       metric={metric}
       setMetric={setMetric}
       data={getDataForMetric(items, metric)}
@@ -66,4 +75,4 @@ const About: FC<Record<string, never>> = () => {
   );
 };
 
-export default About;
+export default Leadership;

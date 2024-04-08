@@ -24,7 +24,7 @@ describe('News index handler', () => {
     await indexHandler(publishedEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: newsResponse,
+      data: { ...newsResponse, _tags: newsResponse.tags },
       type: 'news',
     });
   });

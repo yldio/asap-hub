@@ -66,7 +66,7 @@ describe('alumni badge', () => {
         ]}
       />,
     );
-    expect(getByText('Alumni Badge')).toBeInTheDocument();
+    expect(getByText('Alumni Member')).toBeInTheDocument();
   });
   it('does not show alumni badge if user is not alumni', () => {
     const { queryByText } = render(
@@ -79,7 +79,7 @@ describe('alumni badge', () => {
         ]}
       />,
     );
-    expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
+    expect(queryByText('Alumni Member')).not.toBeInTheDocument();
   });
   it('does not show alumni badge for external authors', () => {
     const { queryByText } = render(
@@ -93,7 +93,7 @@ describe('alumni badge', () => {
         ]}
       />,
     );
-    expect(queryByText('Alumni Badge')).not.toBeInTheDocument();
+    expect(queryByText('Alumni Member')).not.toBeInTheDocument();
   });
 });
 

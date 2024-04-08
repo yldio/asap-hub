@@ -1,11 +1,13 @@
 /* istanbul ignore file */
 
 import { FC } from 'react';
+import IconProps from './props';
 
-interface LeadershipIconProps {
+interface LeadershipIconProps extends IconProps {
   readonly color?: string;
   readonly size?: number;
 }
+
 const Leadership: FC<LeadershipIconProps> = ({
   color = '#4D646B',
   size = 24,

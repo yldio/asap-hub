@@ -115,7 +115,7 @@ it('renders alumni badge when there is an alumni member', async () => {
     />,
   );
 
-  expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+  expect(queryByTitle('Alumni Member')).toBeInTheDocument();
 
   rerender(
     <MembersList
@@ -129,7 +129,7 @@ it('renders alumni badge when there is an alumni member', async () => {
     />,
   );
 
-  expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+  expect(queryByTitle('Alumni Member')).not.toBeInTheDocument();
 });
 
 it('overrides user link based on based on the overrideUserRoute prop fn', () => {

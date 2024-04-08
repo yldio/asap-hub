@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import { ReactNode } from 'react';
+import { ComponentType, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
-import { rem } from '../pixels';
+import { perRem, rem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
+import IconProps from '../icons/props';
 
 const activeClassName = 'active-link';
 const styles = css({
@@ -27,11 +28,37 @@ const activeStyles = ({ colors: { primary500 = fern } = {} }: Theme) =>
     fontWeight: 'bold',
   });
 
+const iconStyles = css({
+  display: 'inline-grid',
+  verticalAlign: 'middle',
+  paddingRight: `${6 / perRem}em`,
+});
+
 interface TabLinkProps {
   readonly href: string;
+  readonly Icon?: ComponentType<IconProps>;
   readonly children: ReactNode;
 }
-const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
+const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
+  const active =
+    new URL(href, window.location.href).pathname === window.location.pathname;
+
+  const inner = (
+    <p
+      css={({ components }) => [
+        layoutStyles,
+        components?.TabLink?.layoutStyles,
+      ]}
+    >
+      {Icon && (
+        <span css={iconStyles}>
+          <Icon color={active ? charcoal.rgb : lead.rgb} />
+        </span>
+      )}
+      {children}
+    </p>
+  );
+
   if (useHasRouter()) {
     return (
       <NavLink
@@ -43,20 +70,11 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
           { [`&.${activeClassName}`]: activeStyles(theme) },
         ]}
       >
-        <p
-          css={({ components }) => [
-            layoutStyles,
-            components?.TabLink?.layoutStyles,
-          ]}
-        >
-          {children}
-        </p>
+        {inner}
       </NavLink>
     );
   }
 
-  const active =
-    new URL(href, window.location.href).pathname === window.location.pathname;
   return (
     <a
       href={href}
@@ -66,14 +84,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
         active && activeStyles(theme),
       ]}
     >
-      <p
-        css={({ components }) => [
-          layoutStyles,
-          components?.TabLink?.layoutStyles,
-        ]}
-      >
-        {children}
-      </p>
+      {inner}
     </a>
   );
 };

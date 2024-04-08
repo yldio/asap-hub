@@ -1,3 +1,9 @@
-import { route } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
-export default route('/analytics', {}, {});
+const metric = route('/:metric', { metric: stringParser }, {});
+
+const leadership = route('/leadership', {}, { metric });
+
+const productivity = route('/productivity', {}, { metric });
+
+export default route('/analytics', {}, { leadership, productivity });

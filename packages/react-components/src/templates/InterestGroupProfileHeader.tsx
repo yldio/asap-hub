@@ -13,7 +13,7 @@ import {
 import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
 import {
   googleDriveIcon,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
   systemCalendarIcon,
   TeamIcon,
 } from '../icons';
@@ -113,7 +113,12 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
       <div css={visualHeaderStyles}>
         <div css={titleStyle}>
           <Display styleAsHeading={2}>{name}</Display>
-          {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
+          {!active && (
+            <StateTag
+              icon={<InactiveBadgeIcon entityName="Interest Group" />}
+              label="Inactive"
+            />
+          )}
         </div>
         {active && contactEmails.length !== 0 && (
           <div css={contactStyles}>

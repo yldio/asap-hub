@@ -33,7 +33,7 @@ it('renders the state tag for a inactive group', () => {
     <TeamCard {...teamCardProps} inactiveSince="2022-09-30T09:00:00Z" />,
   );
   expect(getByText('Inactive', { selector: 'span' })).toBeVisible();
-  expect(getByTitle('Inactive')).toBeInTheDocument();
+  expect(getByTitle('Inactive Team')).toBeInTheDocument();
   rerender(<TeamCard {...teamCardProps} inactiveSince={undefined} />);
   expect(queryByText('Inactive')).not.toBeInTheDocument();
 });

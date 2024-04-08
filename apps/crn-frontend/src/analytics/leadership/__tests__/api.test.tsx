@@ -3,9 +3,9 @@ import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { AnalyticsTeamLeadershipResponse } from '@asap-hub/model';
 import { getAnalyticsLeadership } from '../api';
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
-jest.mock('../../config');
+jest.mock('../../../config');
 
 afterEach(() => {
   nock.cleanAll();

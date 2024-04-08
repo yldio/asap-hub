@@ -51,10 +51,13 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     container:
-      image: mcr.microsoft.com/playwright:jammy
+      image: mcr.microsoft.com/playwright:v1.43.0-jammy
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -64,10 +67,10 @@ jobs:
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Install Playwright
+      - name: Install Playwright with dependencies
         if: ${{ inputs.environment-name=='Branch' }}
         run: |
-          yarn workspace @asap-hub/e2e-tests run playwright install
+          yarn workspace @asap-hub/e2e-tests run playwright install --with-deps
       - name: Test CRN
         if: ${{ inputs.environment-name=='Branch' }}
         run: |

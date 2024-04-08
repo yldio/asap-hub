@@ -77,7 +77,7 @@ describe('When rendering the speaker list', () => {
       };
 
       render(<SpeakerList {...event} />);
-      expect(screen.getByTitle('Alumni Badge')).toBeInTheDocument();
+      expect(screen.getByTitle('Alumni Member')).toBeInTheDocument();
     });
 
     it('Renders an announced user and checks the grid labels and role', async () => {
@@ -196,7 +196,7 @@ describe('When rendering the speaker list', () => {
         />,
       );
 
-      expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+      expect(screen.getByTitle('Inactive Team')).toBeInTheDocument();
     });
   });
 });

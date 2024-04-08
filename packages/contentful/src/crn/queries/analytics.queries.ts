@@ -50,6 +50,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                                 sys {
                                   id
                                 }
+                                complete
                               }
                             }
                           }
@@ -63,6 +64,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                                 sys {
                                   id
                                 }
+                                complete
                               }
                             }
                           }

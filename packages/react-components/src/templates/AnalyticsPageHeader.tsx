@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
-
+import { isEnabled } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
-import { charcoal, paper, steel } from '../colors';
+import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
-import { LeadershipIcon } from '../icons';
+import { LeadershipIcon, ProductivityIcon } from '../icons';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,
@@ -16,12 +16,6 @@ const visualHeaderStyles = css({
 
 const textStyles = css({
   maxWidth: `${610 / perRem}em`,
-});
-
-const iconStyles = css({
-  display: 'inline-grid',
-  verticalAlign: 'middle',
-  paddingRight: `${6 / perRem}em`,
 });
 
 const AnalyticsPageHeader: React.FC = () => (
@@ -34,10 +28,15 @@ const AnalyticsPageHeader: React.FC = () => (
         </Paragraph>
       </div>
       <TabNav>
-        <TabLink href={analytics({}).$}>
-          <span css={iconStyles}>
-            <LeadershipIcon color={charcoal.rgb} />
-          </span>
+        {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
+          <TabLink
+            href={analytics({}).productivity({}).$}
+            Icon={ProductivityIcon}
+          >
+            Resource & Data Sharing
+          </TabLink>
+        )}
+        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
           Leadership & Membership
         </TabLink>
       </TabNav>

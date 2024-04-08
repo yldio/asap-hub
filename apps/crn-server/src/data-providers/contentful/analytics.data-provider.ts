@@ -5,6 +5,7 @@ import {
   GraphQLClient,
   InterestGroups,
   Sys,
+  WorkingGroups,
 } from '@asap-hub/contentful';
 import {
   FetchPaginationOptions,
@@ -24,144 +25,153 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
       FetchAnalyticsTeamLeadershipQueryVariables
     >(FETCH_ANALYTICS_TEAM_LEADERSHIP, { limit: take, skip });
 
+    const getCurrentInterestGroupIdsFromTeamLeaders = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenInterestGroupLeaders)
+            .filter(
+              (item) => item.interestGroupActive && item.userIsAlumni === false,
+            )
+            .map((item) => item.interestGroupId) || [],
+      ) || [];
+
+    const getCurrentInterestGroupIdsFromInterestGroupCollection = (
+      team: Team,
+    ): string[] =>
+      team.linkedFrom?.interestGroupsCollection?.items
+        .filter(
+          (interestGroup): interestGroup is InterestGroup =>
+            (interestGroup && !!interestGroup.active) || false,
+        )
+        .flatMap((interestGroup) => interestGroup.sys.id) || [];
+
+    const getPreviousInterestGroupIdsFromTeamLeaders = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenInterestGroupLeaders)
+            .filter(
+              (item) =>
+                team.inactiveSince ||
+                item.userIsAlumni ||
+                !item.interestGroupActive,
+            )
+            .map((item) => item.interestGroupId) || [],
+      ) || [];
+
+    const getPreviousInterestGroupIdsFromInterestGroupCollection = (
+      team: Team,
+    ): string[] =>
+      team.linkedFrom?.interestGroupsCollection?.items
+        .filter(
+          (interestGroup): interestGroup is InterestGroup =>
+            !!(interestGroup && (team.inactiveSince || !interestGroup?.active)),
+        )
+        .flatMap((interestGroup) => interestGroup.sys.id) || [];
+
+    const getCurrentWorkingGroupIdsFromTeamMembers = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenWorkingGroupMember)
+            .filter((item) => !item.userIsAlumni && !item.workingGroupComplete)
+            .map((item) => item.workingGroupId) || [],
+      ) || [];
+
+    const getCurrentWorkingGroupIdsFromTeamLeaders = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenWorkingGroupLeaders)
+            .filter((item) => !item.userIsAlumni && !item.workingGroupComplete)
+            .map((item) => item.workingGroupId) || [],
+      ) || [];
+
+    const getPreviousWorkingGroupIdsFromTeamLeaders = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenWorkingGroupLeaders)
+            .filter((item) => item.userIsAlumni || item.workingGroupComplete)
+            .map((item) => item.workingGroupId) || [],
+      ) || [];
+
+    const getPreviousWorkingGroupIdsFromTeamMembers = (team: Team): string[] =>
+      team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+        (teamMembershipItem) =>
+          teamMembershipItem?.linkedFrom?.usersCollection?.items
+            .flatMap(flattenWorkingGroupMember)
+            .filter((item) => item.userIsAlumni || item.workingGroupComplete)
+            .map((item) => item.workingGroupId) || [],
+      ) || [];
+
     return {
       total: teamsCollection?.total || 0,
       items:
         teamsCollection?.items
           .filter((team): team is Team => team !== null)
-          .map((team) => ({
-            id: team.sys.id,
-            displayName: team.displayName || '',
-            interestGroupLeadershipRoleCount: team.inactiveSince
-              ? 0
-              : getUniqueIdCount(
-                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (teamMembershipItem) =>
-                      teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .flatMap(flattenInterestGroupLeaders)
-                        .filter(
-                          (item) =>
-                            item.interestGroupActive &&
-                            item.userIsAlumni === false,
-                        )
-                        .map((item) => item.interestGroupId),
-                  ) || [],
-                ),
-            interestGroupMemberCount: team.inactiveSince
-              ? 0
-              : getUniqueIdCount([
-                  ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (teamMembershipItem) =>
-                      teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .flatMap(flattenInterestGroupLeaders)
-                        .filter(
-                          (item) =>
-                            item.interestGroupActive &&
-                            item.userIsAlumni === false,
-                        )
-                        .map((item) => item.interestGroupId),
-                  ) || []),
-                  ...(team.linkedFrom?.interestGroupsCollection?.items
-                    .filter((interestGroup) => !!interestGroup?.active)
-                    .flatMap((interestGroup) => interestGroup?.sys.id) || []),
-                ]),
-            interestGroupPreviousLeadershipRoleCount: getUniqueIdCount([
-              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .flatMap(flattenInterestGroupLeaders)
-                    .filter(
-                      (item) => !item.interestGroupActive || item.userIsAlumni,
-                    )
-                    .map((item) => item.interestGroupId),
-              ) || []),
-              ...((team.inactiveSince &&
-                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                  (teamMembershipItem) =>
-                    teamMembershipItem?.linkedFrom?.usersCollection?.items
-                      .flatMap(flattenInterestGroupLeaders)
-                      .filter(
-                        (item) =>
-                          item.interestGroupActive &&
-                          item.userIsAlumni === false,
-                      )
-                      .map((item) => item.interestGroupId),
-                )) ||
-                []),
-            ]),
-            interestGroupPreviousMemberCount: getUniqueIdCount([
-              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .flatMap(flattenInterestGroupLeaders)
-                    .filter(
-                      (item) =>
-                        team.inactiveSince ||
-                        item.userIsAlumni ||
-                        !item.interestGroupActive,
-                    )
-                    .map((item) => item.interestGroupId),
-              ) || []),
-              ...(team.linkedFrom?.interestGroupsCollection?.items
-                .filter(
-                  (interestGroup) =>
-                    team.inactiveSince || !interestGroup?.active,
-                )
-                .flatMap((interestGroup) => interestGroup?.sys.id) || []),
-            ]),
-            workingGroupLeadershipRoleCount: team.inactiveSince
-              ? 0
-              : getUniqueIdCount(
-                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (teamMembershipItem) =>
-                      teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
-                        .flatMap(flattenWorkingGroupLeaders),
-                  ) || [],
-                ),
-            workingGroupMemberCount: team.inactiveSince
-              ? 0
-              : getUniqueIdCount(
-                  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                    (teamMembershipItem) =>
-                      teamMembershipItem?.linkedFrom?.usersCollection?.items
-                        .filter(filterOutAlumni)
-                        .flatMap(flattenWorkingGroupMember),
-                  ) || [],
-                ),
-            workingGroupPreviousLeadershipRoleCount: getUniqueIdCount([
-              ...((team.inactiveSince &&
-                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                  (teamMembershipItem) =>
-                    teamMembershipItem?.linkedFrom?.usersCollection?.items
-                      .filter(filterOutAlumni)
-                      .flatMap(flattenWorkingGroupLeaders),
-                )) ||
-                []),
-              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterAlumni)
-                    .flatMap(flattenWorkingGroupLeaders),
-              ) || []),
-            ]),
-            workingGroupPreviousMemberCount: getUniqueIdCount([
-              ...((team.inactiveSince &&
-                team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                  (teamMembershipItem) =>
-                    teamMembershipItem?.linkedFrom?.usersCollection?.items
-                      .filter(filterOutAlumni)
-                      .flatMap(flattenWorkingGroupMember),
-                )) ||
-                []),
-              ...(team.linkedFrom?.teamMembershipCollection?.items.flatMap(
-                (teamMembershipItem) =>
-                  teamMembershipItem?.linkedFrom?.usersCollection?.items
-                    .filter(filterAlumni)
-                    .flatMap(flattenWorkingGroupMember),
-              ) || []),
-            ]),
-          })) || [],
+          .map((team) => {
+            const currentInterestGroupIdsFromTeamLeaders =
+              getCurrentInterestGroupIdsFromTeamLeaders(team);
+            const previousInterestGroupIdsFromTeamLeaders =
+              getPreviousInterestGroupIdsFromTeamLeaders(team);
+            const currentInterestGroupIdsFromInterestGroupCollection =
+              getCurrentInterestGroupIdsFromInterestGroupCollection(team);
+            const previousInterestGroupIdsFromInterestGroupCollection =
+              getPreviousInterestGroupIdsFromInterestGroupCollection(team);
+            const currentWorkingGroupIdsFromTeamLeaders =
+              getCurrentWorkingGroupIdsFromTeamLeaders(team);
+            const currentWorkingGroupIdsFromTeamMembers =
+              getCurrentWorkingGroupIdsFromTeamMembers(team);
+            const previousWorkingGroupIdsFromTeamLeaders =
+              getPreviousWorkingGroupIdsFromTeamLeaders(team);
+            const previousWorkingGroupIdsFromTeamMembers =
+              getPreviousWorkingGroupIdsFromTeamMembers(team);
+
+            return {
+              id: team.sys.id,
+              displayName: team.displayName || '',
+              interestGroupLeadershipRoleCount: team.inactiveSince
+                ? 0
+                : getUniqueIdCount(currentInterestGroupIdsFromTeamLeaders),
+              interestGroupPreviousLeadershipRoleCount: getUniqueIdCount([
+                ...previousInterestGroupIdsFromTeamLeaders,
+                ...((team.inactiveSince &&
+                  currentInterestGroupIdsFromTeamLeaders) ||
+                  []),
+              ]),
+              interestGroupMemberCount: team.inactiveSince
+                ? 0
+                : getUniqueIdCount([
+                    ...currentInterestGroupIdsFromTeamLeaders,
+                    ...currentInterestGroupIdsFromInterestGroupCollection,
+                  ]),
+              interestGroupPreviousMemberCount: getUniqueIdCount([
+                ...previousInterestGroupIdsFromTeamLeaders,
+                ...previousInterestGroupIdsFromInterestGroupCollection,
+              ]),
+              workingGroupLeadershipRoleCount: team.inactiveSince
+                ? 0
+                : getUniqueIdCount(currentWorkingGroupIdsFromTeamLeaders),
+              workingGroupPreviousLeadershipRoleCount: getUniqueIdCount([
+                ...((team.inactiveSince &&
+                  currentWorkingGroupIdsFromTeamLeaders) ||
+                  []),
+                ...previousWorkingGroupIdsFromTeamLeaders,
+              ]),
+              workingGroupMemberCount: team.inactiveSince
+                ? 0
+                : getUniqueIdCount(currentWorkingGroupIdsFromTeamMembers),
+
+              workingGroupPreviousMemberCount: getUniqueIdCount([
+                ...((team.inactiveSince &&
+                  currentWorkingGroupIdsFromTeamMembers) ||
+                  []),
+                ...previousWorkingGroupIdsFromTeamMembers,
+              ]),
+            };
+          }) || [],
     };
   }
 }
@@ -171,6 +181,10 @@ type Team = NonNullable<
     FetchAnalyticsTeamLeadershipQuery['teamsCollection']
   >['items'][number]
 >;
+
+type InterestGroup = Pick<InterestGroups, 'active'> & {
+  sys: Pick<Sys, 'id'>;
+};
 type User = NonNullable<
   NonNullable<
     NonNullable<
@@ -187,16 +201,28 @@ type User = NonNullable<
   >['usersCollection']
 >['items'][number];
 
-// removes alumnis, assumes any date in the future also make them an alumni
-const filterOutAlumni = (user: User) => user?.alumniSinceDate === null;
-const filterAlumni = (user: User) => user?.alumniSinceDate !== null;
-
-const flattenWorkingGroupLeaders = (user: User): (string | undefined)[] =>
+const flattenWorkingGroupLeaders = (
+  user: User,
+): Array<{
+  workingGroupId: string;
+  userIsAlumni: boolean;
+  workingGroupComplete: boolean;
+}> =>
   user?.linkedFrom?.workingGroupLeadersCollection?.items.flatMap(
     (workingGroupLeader) =>
-      workingGroupLeader?.linkedFrom?.workingGroupsCollection?.items.map(
-        (item) => item?.sys.id,
-      ),
+      workingGroupLeader?.linkedFrom?.workingGroupsCollection?.items
+        .filter(
+          (
+            item,
+          ): item is Pick<WorkingGroups, 'complete'> & {
+            sys: Pick<Sys, 'id'>;
+          } => !!item,
+        )
+        .map((item) => ({
+          workingGroupId: item.sys.id,
+          userIsAlumni: user.alumniSinceDate !== null,
+          workingGroupComplete: !!item.complete,
+        })) || [],
   ) || [];
 const flattenInterestGroupLeaders = (
   user: User,
@@ -221,12 +247,28 @@ const flattenInterestGroupLeaders = (
           interestGroupActive: !!item.active,
         })) || [],
   ) || [];
-const flattenWorkingGroupMember = (user: User): (string | undefined)[] =>
+const flattenWorkingGroupMember = (
+  user: User,
+): Array<{
+  workingGroupId: string;
+  userIsAlumni: boolean;
+  workingGroupComplete: boolean;
+}> =>
   user?.linkedFrom?.workingGroupMembersCollection?.items.flatMap(
     (workingGroupMember) =>
-      workingGroupMember?.linkedFrom?.workingGroupsCollection?.items.map(
-        (item) => item?.sys.id,
-      ),
+      workingGroupMember?.linkedFrom?.workingGroupsCollection?.items
+        .filter(
+          (
+            item,
+          ): item is Pick<WorkingGroups, 'complete'> & {
+            sys: Pick<Sys, 'id'>;
+          } => !!item,
+        )
+        .map((item) => ({
+          workingGroupId: item.sys.id,
+          userIsAlumni: user.alumniSinceDate !== null,
+          workingGroupComplete: !!item.complete,
+        })) || [],
   ) || [];
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;

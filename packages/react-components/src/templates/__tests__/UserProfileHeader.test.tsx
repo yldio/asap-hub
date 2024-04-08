@@ -140,7 +140,7 @@ describe('alumni', () => {
       </UserProfileContext.Provider>,
     );
     expect(queryByText('Alumni')).toBeInTheDocument();
-    expect(queryByTitle('Alumni Badge')).toBeInTheDocument();
+    expect(queryByTitle('Alumni Member')).toBeInTheDocument();
 
     rerender(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
@@ -148,7 +148,7 @@ describe('alumni', () => {
       </UserProfileContext.Provider>,
     );
     expect(queryByText('Alumni')).not.toBeInTheDocument();
-    expect(queryByTitle('Alumni Badge')).not.toBeInTheDocument();
+    expect(queryByTitle('Alumni Member')).not.toBeInTheDocument();
   });
 
   it('shows the proper alumni toast message when user is alumni', () => {

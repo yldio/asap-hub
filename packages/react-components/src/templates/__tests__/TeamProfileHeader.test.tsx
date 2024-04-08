@@ -35,7 +35,7 @@ it('renders the tag for inactive teams', () => {
     />,
   );
   expect(screen.getByText('Inactive', { selector: 'span' })).toBeVisible();
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  expect(screen.getByTitle('Inactive Team')).toBeInTheDocument();
 });
 
 it('does not render the tag for active teams', () => {

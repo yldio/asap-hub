@@ -52,5 +52,5 @@ it('displays inactive badge when a group is inactive', () => {
     />,
   );
 
-  expect(screen.getByTitle('Inactive')).toBeInTheDocument();
+  expect(screen.getByTitle('Inactive Interest Group')).toBeInTheDocument();
 });

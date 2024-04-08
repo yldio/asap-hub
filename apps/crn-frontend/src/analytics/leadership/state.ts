@@ -9,7 +9,7 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { useAnalyticsAlgolia } from '../hooks/algolia';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAnalyticsLeadership } from './api';
 
 const analyticsLeadershipIndexState = atomFamily<

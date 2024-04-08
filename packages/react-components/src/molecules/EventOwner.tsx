@@ -6,7 +6,7 @@ import { Link } from '../atoms';
 import { neutral900 } from '../colors';
 import {
   InterestGroupsIcon,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
   WorkingGroupsIcon,
 } from '../icons';
 import { rem } from '../pixels';
@@ -51,7 +51,9 @@ const EventOwner: React.FC<
         </span>
         {interestGroup.name}
         {!interestGroup.active && (
-          <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
+          <span css={inactiveBadgeStyles}>
+            <InactiveBadgeIcon entityName="Interest Group" />
+          </span>
         )}
       </Link>
     ) : workingGroup ? (

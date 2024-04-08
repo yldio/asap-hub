@@ -10,7 +10,7 @@ import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
-import { charcoal, lead, paper, steel } from '../colors';
+import { paper, steel } from '../colors';
 import {
   networkPageLayoutPaddingStyle,
   defaultPageLayoutPaddingStyle,
@@ -31,13 +31,9 @@ const visualHeaderStyles = css({
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
+
 const textStyles = css({
   maxWidth: `${610 / perRem}em`,
-});
-const iconStyles = css({
-  display: 'inline-grid',
-  verticalAlign: 'middle',
-  paddingRight: `${6 / perRem}em`,
 });
 
 const controlsStyles = css({
@@ -139,38 +135,30 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </Paragraph>
       </div>
       <TabNav>
-        <TabLink href={network({}).users({}).$ + queryParamString(searchQuery)}>
-          <span css={iconStyles}>
-            <UserIcon color={page === 'users' ? charcoal.rgb : lead.rgb} />
-          </span>
+        <TabLink
+          href={network({}).users({}).$ + queryParamString(searchQuery)}
+          Icon={UserIcon}
+        >
           People
         </TabLink>
-        <TabLink href={network({}).teams({}).$ + queryParamString(searchQuery)}>
-          <span css={iconStyles}>
-            <TeamIcon color={page === 'teams' ? charcoal.rgb : lead.rgb} />
-          </span>
+        <TabLink
+          href={network({}).teams({}).$ + queryParamString(searchQuery)}
+          Icon={TeamIcon}
+        >
           Teams
         </TabLink>
         <TabLink
           href={
             network({}).interestGroups({}).$ + queryParamString(searchQuery)
           }
+          Icon={InterestGroupsIcon}
         >
-          <span css={iconStyles}>
-            <InterestGroupsIcon
-              color={page === 'interest-groups' ? charcoal.rgb : lead.rgb}
-            />
-          </span>
           Interest Groups
         </TabLink>
         <TabLink
           href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
+          Icon={WorkingGroupsIcon}
         >
-          <span css={iconStyles}>
-            <WorkingGroupsIcon
-              color={page === 'working-groups' ? charcoal.rgb : lead.rgb}
-            />
-          </span>
           Working Groups
         </TabLink>
       </TabNav>

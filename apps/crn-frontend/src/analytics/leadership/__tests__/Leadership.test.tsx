@@ -6,10 +6,11 @@ import {
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { analytics } from '@asap-hub/routing';
 
-import Analytics from '../Analytics';
+import Leadership from '../Leadership';
 import { getAnalyticsLeadership } from '../api';
 import { analyticsLeadershipState } from '../state';
 
@@ -53,7 +54,9 @@ const data: ListAnalyticsTeamLeadershipResponse = {
   ],
 };
 
-const renderPage = async () => {
+const renderPage = async (
+  path = analytics({}).leadership({}).metric({ metric: 'working-group' }).$,
+) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -68,8 +71,10 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/analytics']}>
-              <Analytics />
+            <MemoryRouter initialEntries={[path]}>
+              <Route path="/analytics/leadership/:metric">
+                <Leadership />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

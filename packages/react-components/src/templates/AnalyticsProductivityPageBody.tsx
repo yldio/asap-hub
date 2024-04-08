@@ -2,22 +2,16 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
-import { LeadershipMembershipTable } from '../organisms';
+import { TeamProductivityTable, UserProductivityTable } from '../organisms';
+import { TeamProductivityMetric } from '../organisms/TeamProductivityTable';
+import { UserProductivityMetric } from '../organisms/UserProductivityTable';
 import { perRem } from '../pixels';
 
-type MetricOption = 'workingGroup' | 'interestGroup';
-type MetricData = {
-  id: string;
-  name: string;
-  leadershipRoleCount: number;
-  previousLeadershipRoleCount: number;
-  memberCount: number;
-  previousMemberCount: number;
-};
+type MetricOption = 'user' | 'team';
 
 const metricOptions: Record<MetricOption, string> = {
-  workingGroup: 'Working Group Leadership & Membership',
-  interestGroup: 'Interest Group Leadership & Membership',
+  user: 'User Productivity',
+  team: 'Team Productivity',
 };
 
 const metricOptionList = Object.keys(metricOptions).map((value) => ({
@@ -30,7 +24,8 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
-  data: MetricData[];
+  userData: UserProductivityMetric[];
+  teamData: TeamProductivityMetric[];
 };
 
 const metricDropdownStyles = css({
@@ -47,12 +42,9 @@ const pageControlsStyles = css({
   paddingBottom: `${36 / perRem}em`,
 });
 
-const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
-  metric,
-  setMetric,
-  data,
-  ...pageControlProps
-}) => (
+const AnalyticsProductivityPageBody: React.FC<
+  LeadershipAndMembershipAnalyticsProps
+> = ({ metric, setMetric, userData, teamData, ...pageControlProps }) => (
   <article>
     <div css={metricDropdownStyles}>
       <Subtitle>Metric</Subtitle>
@@ -66,15 +58,18 @@ const AnalyticsPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>
       <Paragraph>
-        Teams that are currently or have been previously in a leadership or a
-        membership role within a Working Group.
+        Overview of ASAP outputs shared on the CRN Hub by {metric}.
       </Paragraph>
     </div>
-    <LeadershipMembershipTable data={data} />
+    {metric === 'user' ? (
+      <UserProductivityTable data={userData} />
+    ) : (
+      <TeamProductivityTable data={teamData} />
+    )}
     <section css={pageControlsStyles}>
       <PageControls {...pageControlProps} />
     </section>
   </article>
 );
 
-export default AnalyticsPageBody;
+export default AnalyticsProductivityPageBody;

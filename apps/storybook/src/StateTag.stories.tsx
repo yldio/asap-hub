@@ -1,6 +1,6 @@
 import {
   alumniBadgeIcon,
-  inactiveBadgeIcon,
+  InactiveBadgeIcon,
   StateTag,
 } from '@asap-hub/react-components';
 
@@ -11,5 +11,5 @@ export default {
 export const Alumni = () => <StateTag icon={alumniBadgeIcon} label="Alumni" />;
 
 export const Inactive = () => (
-  <StateTag icon={inactiveBadgeIcon} label="Inactive" />
+  <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
 );

@@ -105,7 +105,7 @@ describe('Productivity', () => {
     ).toBeVisible();
   });
 
-  it('renders error message when the response is not a 2XX', async () => {
+  it('renders error message when the team response is not a 2XX', async () => {
     mockGetTeamProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
@@ -118,6 +118,18 @@ describe('Productivity', () => {
 
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
+});
+
+it('renders error message when user team response is not a 2XX', async () => {
+  mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+  await renderPage(analytics({}).productivity({}).metric({ metric: 'user' }).$);
+
+  await waitFor(() => {
+    expect(mockGetUserProductivity).toHaveBeenCalled();
+  });
+
+  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
 });
 
 describe('Leadership & Membership', () => {

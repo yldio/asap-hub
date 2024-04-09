@@ -44,6 +44,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                       }
                       workingGroupMembersCollection(limit: 3) {
                         items {
+                          inactiveSinceDate
                           linkedFrom {
                             workingGroupsCollection(limit: 1) {
                               items {
@@ -58,6 +59,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                       }
                       workingGroupLeadersCollection(limit: 3) {
                         items {
+                          inactiveSinceDate
                           linkedFrom {
                             workingGroupsCollection(limit: 1) {
                               items {

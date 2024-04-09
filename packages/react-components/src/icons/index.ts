@@ -25,6 +25,7 @@ export { default as crossInCircleIcon } from './cross-in-circle';
 export { default as crossSmallIcon } from './cross-small';
 export { default as dashboardIcon } from './dashboard';
 export { default as dataset } from './dataset';
+export { default as deskTopIcon } from './desktop';
 export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';

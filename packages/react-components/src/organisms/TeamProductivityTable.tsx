@@ -1,9 +1,13 @@
+import { TeamProductivityResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
+import { PageControls } from '..';
+
 import { Card } from '../atoms';
-import { charcoal, neutral200, steel } from '../colors';
-import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
+import { charcoal, neutral200, steel } from '../colors';
 import { InactiveBadgeIcon } from '../icons';
+import { rem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
@@ -57,53 +61,55 @@ const iconStyles = css({
   gap: rem(3),
 });
 
-export type TeamProductivityMetric = {
-  id: string;
-  name: string;
-  active: boolean;
-  articles: number;
-  bioinformatics: number;
-  datasets: number;
-  labResources: number;
-  protocols: number;
+const pageControlsStyles = css({
+  justifySelf: 'center',
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
+});
+
+type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {
+  data: TeamProductivityResponse[];
 };
-interface TeamProductivityTableProps {
-  data: TeamProductivityMetric[];
-}
 
 const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
   data,
+  ...pageControlProps
 }) => (
-  <Card padding={false}>
-    <div css={container}>
-      <div css={[rowStyles, gridTitleStyles]}>
-        <span css={titleStyles}>Team</span>
-        <span css={titleStyles}>Articles</span>
-        <span css={titleStyles}>Bioinformatics</span>
-        <span css={titleStyles}>Datasets</span>
-        <span css={titleStyles}>Lab Resources</span>
-        <span css={titleStyles}>Protocols</span>
-      </div>
-      {data.map((row) => (
-        <div key={row.id} css={[rowStyles]}>
-          <span css={[titleStyles, rowTitleStyles]}>Team</span>
-          <p css={iconStyles}>
-            {row.name} {!row.active && <InactiveBadgeIcon />}
-          </p>
-          <span css={[titleStyles, rowTitleStyles]}>Articles</span>
-          <p>{row.articles}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
-          <p>{row.bioinformatics}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Datasets</span>
-          <p>{row.datasets}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
-          <p>{row.labResources}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Protocols</span>
-          <p>{row.protocols}</p>
+  <>
+    <Card padding={false}>
+      <div css={container}>
+        <div css={[rowStyles, gridTitleStyles]}>
+          <span css={titleStyles}>Team</span>
+          <span css={titleStyles}>Articles</span>
+          <span css={titleStyles}>Bioinformatics</span>
+          <span css={titleStyles}>Datasets</span>
+          <span css={titleStyles}>Lab Resources</span>
+          <span css={titleStyles}>Protocols</span>
         </div>
-      ))}
-    </div>
-  </Card>
+        {data.map((row) => (
+          <div key={row.id} css={[rowStyles]}>
+            <span css={[titleStyles, rowTitleStyles]}>Team</span>
+            <p css={iconStyles}>
+              {row.name} {row.isInactive && <InactiveBadgeIcon />}
+            </p>
+            <span css={[titleStyles, rowTitleStyles]}>Articles</span>
+            <p>{row.Article}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
+            <p>{row.Bioinformatics}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Datasets</span>
+            <p>{row.Dataset}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
+            <p>{row['Lab Resource']}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Protocols</span>
+            <p>{row.Protocol}</p>
+          </div>
+        ))}
+      </div>
+    </Card>
+    <section css={pageControlsStyles}>
+      <PageControls {...pageControlProps} />
+    </section>
+  </>
 );
 
 export default TeamProductivityTable;

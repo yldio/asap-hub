@@ -1,21 +1,23 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { disable, enable } from '@asap-hub/flags';
+import { analytics } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { Suspense } from 'react';
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { analytics } from '@asap-hub/routing';
-import { disable, enable } from '@asap-hub/flags';
 
-import Analytics from '../Routes';
-import { getAnalyticsLeadership } from '../leadership/api';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getAnalyticsLeadership } from '../leadership/api';
+import { getTeamProductivity, getUserProductivity } from '../productivity/api';
+import Analytics from '../Routes';
 
 jest.mock('../leadership/api');
+jest.mock('../productivity/api');
 mockConsoleError();
 afterEach(() => {
   jest.clearAllMocks();
@@ -23,6 +25,14 @@ afterEach(() => {
 
 const mockGetAnalyticsLeadership =
   getAnalyticsLeadership as jest.MockedFunction<typeof getAnalyticsLeadership>;
+
+const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
+  typeof getTeamProductivity
+>;
+
+const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
+  typeof getUserProductivity
+>;
 
 const renderPage = async (path: string) => {
   const { container } = render(
@@ -59,6 +69,7 @@ describe('Analytics page', () => {
 
   it('redirects to user productivity page when flag is true', async () => {
     enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+    mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
 
     await renderPage(analytics({}).$);
 
@@ -93,7 +104,22 @@ describe('Productivity', () => {
       }),
     ).toBeVisible();
   });
+
+  it('renders error message when the response is not a 2XX', async () => {
+    mockGetTeamProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetTeamProductivity).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
 });
+
 describe('Leadership & Membership', () => {
   it('renders the Analytics Page successfully', async () => {
     mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });

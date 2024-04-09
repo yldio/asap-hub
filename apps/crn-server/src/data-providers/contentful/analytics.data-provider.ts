@@ -49,7 +49,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 item.interestGroupActive &&
                 item.userIsAlumni === false &&
-                item.interestGroupLeadershipIsActive,
+                item.interestGroupLeadershipIsActive &&
+                teamMembershipItem.inactiveSinceDate === null,
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -74,7 +75,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 team.inactiveSince ||
                 item.userIsAlumni ||
                 !item.interestGroupActive ||
-                !item.interestGroupLeadershipIsActive,
+                !item.interestGroupLeadershipIsActive ||
+                teamMembershipItem.inactiveSinceDate !== null,
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -98,7 +100,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 !item.userIsAlumni &&
                 !item.workingGroupComplete &&
-                item.workingGroupMembershipIsActive,
+                item.workingGroupMembershipIsActive &&
+                teamMembershipItem.inactiveSinceDate === null,
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];
@@ -112,7 +115,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 !item.userIsAlumni &&
                 !item.workingGroupComplete &&
-                item.workingGroupLeadershipIsActive,
+                item.workingGroupLeadershipIsActive &&
+                teamMembershipItem.inactiveSinceDate === null,
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];
@@ -126,7 +130,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 item.userIsAlumni ||
                 item.workingGroupComplete ||
-                !item.workingGroupLeadershipIsActive,
+                !item.workingGroupLeadershipIsActive ||
+                teamMembershipItem.inactiveSinceDate !== null,
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];
@@ -140,7 +145,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 item.userIsAlumni ||
                 item.workingGroupComplete ||
-                !item.workingGroupMembershipIsActive,
+                !item.workingGroupMembershipIsActive ||
+                teamMembershipItem.inactiveSinceDate !== null,
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];

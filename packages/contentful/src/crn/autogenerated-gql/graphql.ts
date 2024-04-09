@@ -10261,89 +10261,91 @@ export type FetchAnalyticsTeamLeadershipQuery = {
               }>;
               teamMembershipCollection?: Maybe<{
                 items: Array<
-                  Maybe<{
-                    linkedFrom?: Maybe<{
-                      usersCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            Pick<Users, 'alumniSinceDate'> & {
-                              linkedFrom?: Maybe<{
-                                interestGroupLeadersCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<
-                                        InterestGroupLeaders,
-                                        'inactiveSinceDate'
-                                      > & {
-                                        linkedFrom?: Maybe<{
-                                          interestGroupsCollection?: Maybe<{
-                                            items: Array<
-                                              Maybe<
-                                                Pick<
-                                                  InterestGroups,
-                                                  'active'
-                                                > & { sys: Pick<Sys, 'id'> }
-                                              >
-                                            >;
+                  Maybe<
+                    Pick<TeamMembership, 'inactiveSinceDate'> & {
+                      linkedFrom?: Maybe<{
+                        usersCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<Users, 'alumniSinceDate'> & {
+                                linkedFrom?: Maybe<{
+                                  interestGroupLeadersCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<
+                                          InterestGroupLeaders,
+                                          'inactiveSinceDate'
+                                        > & {
+                                          linkedFrom?: Maybe<{
+                                            interestGroupsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<
+                                                  Pick<
+                                                    InterestGroups,
+                                                    'active'
+                                                  > & { sys: Pick<Sys, 'id'> }
+                                                >
+                                              >;
+                                            }>;
                                           }>;
-                                        }>;
-                                      }
-                                    >
-                                  >;
-                                }>;
-                                workingGroupMembersCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<
-                                        WorkingGroupMembers,
-                                        'inactiveSinceDate'
-                                      > & {
-                                        linkedFrom?: Maybe<{
-                                          workingGroupsCollection?: Maybe<{
-                                            items: Array<
-                                              Maybe<
-                                                Pick<
-                                                  WorkingGroups,
-                                                  'complete'
-                                                > & { sys: Pick<Sys, 'id'> }
-                                              >
-                                            >;
+                                        }
+                                      >
+                                    >;
+                                  }>;
+                                  workingGroupMembersCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<
+                                          WorkingGroupMembers,
+                                          'inactiveSinceDate'
+                                        > & {
+                                          linkedFrom?: Maybe<{
+                                            workingGroupsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<
+                                                  Pick<
+                                                    WorkingGroups,
+                                                    'complete'
+                                                  > & { sys: Pick<Sys, 'id'> }
+                                                >
+                                              >;
+                                            }>;
                                           }>;
-                                        }>;
-                                      }
-                                    >
-                                  >;
-                                }>;
-                                workingGroupLeadersCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<
-                                        WorkingGroupLeaders,
-                                        'inactiveSinceDate'
-                                      > & {
-                                        linkedFrom?: Maybe<{
-                                          workingGroupsCollection?: Maybe<{
-                                            items: Array<
-                                              Maybe<
-                                                Pick<
-                                                  WorkingGroups,
-                                                  'complete'
-                                                > & { sys: Pick<Sys, 'id'> }
-                                              >
-                                            >;
+                                        }
+                                      >
+                                    >;
+                                  }>;
+                                  workingGroupLeadersCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<
+                                          WorkingGroupLeaders,
+                                          'inactiveSinceDate'
+                                        > & {
+                                          linkedFrom?: Maybe<{
+                                            workingGroupsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<
+                                                  Pick<
+                                                    WorkingGroups,
+                                                    'complete'
+                                                  > & { sys: Pick<Sys, 'id'> }
+                                                >
+                                              >;
+                                            }>;
                                           }>;
-                                        }>;
-                                      }
-                                    >
-                                  >;
+                                        }
+                                      >
+                                    >;
+                                  }>;
                                 }>;
-                              }>;
-                            }
-                          >
-                        >;
+                              }
+                            >
+                          >;
+                        }>;
                       }>;
-                    }>;
-                  }>
+                    }
+                  >
                 >;
               }>;
             }>;
@@ -22515,6 +22517,13 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {

@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text } from '@contentful/f36-components';
-import { EntrySys, FieldExtensionSDK } from '@contentful/app-sdk';
-import { useSDK } from '@contentful/react-apps-toolkit';
+import { EntrySys, FieldAppSDK } from '@contentful/app-sdk';
+import { useFieldValue, useSDK } from '@contentful/react-apps-toolkit';
 
 const Field = () => {
-  const sdk = useSDK<FieldExtensionSDK>();
+  const sdk = useSDK<FieldAppSDK>();
+  const [value, setValue] = useFieldValue();
 
-  const [field] = useState(sdk.field.getValue());
+  useEffect(() => {
+    if (!sdk.entry.getSys().firstPublishedAt) {
+      setValue(new Date().toISOString());
+    }
 
-  return <Text>{field ?? sdk.entry.getSys().firstPublishedAt}</Text>;
+    if (sdk.entry.getSys().firstPublishedAt && !value) {
+      setValue(sdk.entry.getSys().firstPublishedAt);
+    }
+  }, []);
+
+  return <Text>{value}</Text>;
 };
 
 export default Field;

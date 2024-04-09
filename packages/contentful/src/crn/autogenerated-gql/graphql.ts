@@ -10270,19 +10270,25 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                               linkedFrom?: Maybe<{
                                 interestGroupLeadersCollection?: Maybe<{
                                   items: Array<
-                                    Maybe<{
-                                      linkedFrom?: Maybe<{
-                                        interestGroupsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<
-                                              Pick<InterestGroups, 'active'> & {
-                                                sys: Pick<Sys, 'id'>;
-                                              }
-                                            >
-                                          >;
+                                    Maybe<
+                                      Pick<
+                                        InterestGroupLeaders,
+                                        'inactiveSinceDate'
+                                      > & {
+                                        linkedFrom?: Maybe<{
+                                          interestGroupsCollection?: Maybe<{
+                                            items: Array<
+                                              Maybe<
+                                                Pick<
+                                                  InterestGroups,
+                                                  'active'
+                                                > & { sys: Pick<Sys, 'id'> }
+                                              >
+                                            >;
+                                          }>;
                                         }>;
-                                      }>;
-                                    }>
+                                      }
+                                    >
                                   >;
                                 }>;
                                 workingGroupMembersCollection?: Maybe<{
@@ -22606,6 +22612,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                 kind: 'SelectionSet',
                                                                                 selections:
                                                                                   [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'inactiveSinceDate',
+                                                                                      },
+                                                                                    },
                                                                                     {
                                                                                       kind: 'Field',
                                                                                       name: {

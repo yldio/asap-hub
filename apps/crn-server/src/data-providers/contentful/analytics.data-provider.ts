@@ -46,7 +46,10 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
           teamMembershipItem?.linkedFrom?.usersCollection?.items
             .flatMap(flattenInterestGroupLeaders)
             .filter(
-              (item) => item.interestGroupActive && item.userIsAlumni === false,
+              (item) =>
+                item.interestGroupActive &&
+                item.userIsAlumni === false &&
+                item.interestGroupLeadershipIsActive,
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -70,7 +73,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               (item) =>
                 team.inactiveSince ||
                 item.userIsAlumni ||
-                !item.interestGroupActive,
+                !item.interestGroupActive ||
+                !item.interestGroupLeadershipIsActive,
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -324,6 +328,7 @@ const flattenInterestGroupLeaders = (
   interestGroupId: string;
   userIsAlumni: boolean;
   interestGroupActive: boolean;
+  interestGroupLeadershipIsActive: boolean;
 }> =>
   user?.linkedFrom?.interestGroupLeadersCollection?.items.flatMap(
     (interestGroupLeader) =>
@@ -339,6 +344,8 @@ const flattenInterestGroupLeaders = (
           interestGroupId: item.sys.id,
           userIsAlumni: user.alumniSinceDate !== null,
           interestGroupActive: !!item.active,
+          interestGroupLeadershipIsActive:
+            !interestGroupLeader.inactiveSinceDate,
         })) || [],
   ) || [];
 

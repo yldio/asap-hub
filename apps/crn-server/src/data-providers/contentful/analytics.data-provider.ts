@@ -50,7 +50,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 item.interestGroupActive &&
                 item.userIsAlumni === false &&
                 item.interestGroupLeadershipIsActive &&
-                teamMembershipItem.inactiveSinceDate === null,
+                teamMembershipItem.inactiveSinceDate === null &&
+                item.role !== 'Project Manager',
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -72,11 +73,12 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             .flatMap(flattenInterestGroupLeaders)
             .filter(
               (item) =>
-                team.inactiveSince ||
-                item.userIsAlumni ||
-                !item.interestGroupActive ||
-                !item.interestGroupLeadershipIsActive ||
-                teamMembershipItem.inactiveSinceDate !== null,
+                item.role !== 'Project Manager' &&
+                (team.inactiveSince ||
+                  item.userIsAlumni ||
+                  !item.interestGroupActive ||
+                  !item.interestGroupLeadershipIsActive ||
+                  teamMembershipItem.inactiveSinceDate !== null),
             )
             .map((item) => item.interestGroupId) || [],
       ) || [];
@@ -116,7 +118,8 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 !item.userIsAlumni &&
                 !item.workingGroupComplete &&
                 item.workingGroupLeadershipIsActive &&
-                teamMembershipItem.inactiveSinceDate === null,
+                teamMembershipItem.inactiveSinceDate === null &&
+                item.role !== 'Project Manager',
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];
@@ -128,10 +131,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             .flatMap(flattenWorkingGroupLeaders)
             .filter(
               (item) =>
-                item.userIsAlumni ||
-                item.workingGroupComplete ||
-                !item.workingGroupLeadershipIsActive ||
-                teamMembershipItem.inactiveSinceDate !== null,
+                item.role !== 'Project Manager' &&
+                (item.userIsAlumni ||
+                  item.workingGroupComplete ||
+                  !item.workingGroupLeadershipIsActive ||
+                  teamMembershipItem.inactiveSinceDate !== null),
             )
             .map((item) => item.workingGroupId) || [],
       ) || [];
@@ -283,6 +287,7 @@ const flattenWorkingGroupLeaders = (
   userIsAlumni: boolean;
   workingGroupComplete: boolean;
   workingGroupLeadershipIsActive: boolean;
+  role: string | null;
 }> =>
   user?.linkedFrom?.workingGroupLeadersCollection?.items.flatMap(
     (workingGroupLeader) =>
@@ -299,6 +304,7 @@ const flattenWorkingGroupLeaders = (
           userIsAlumni: user.alumniSinceDate !== null,
           workingGroupComplete: !!item.complete,
           workingGroupLeadershipIsActive: !workingGroupLeader.inactiveSinceDate,
+          role: workingGroupLeader.role || null,
         })) || [],
   ) || [];
 
@@ -335,6 +341,7 @@ const flattenInterestGroupLeaders = (
   userIsAlumni: boolean;
   interestGroupActive: boolean;
   interestGroupLeadershipIsActive: boolean;
+  role: string | null;
 }> =>
   user?.linkedFrom?.interestGroupLeadersCollection?.items.flatMap(
     (interestGroupLeader) =>
@@ -352,6 +359,7 @@ const flattenInterestGroupLeaders = (
           interestGroupActive: !!item.active,
           interestGroupLeadershipIsActive:
             !interestGroupLeader.inactiveSinceDate,
+          role: interestGroupLeader.role || null,
         })) || [],
   ) || [];
 

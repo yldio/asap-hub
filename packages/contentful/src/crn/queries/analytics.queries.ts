@@ -32,6 +32,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                       interestGroupLeadersCollection(limit: 3) {
                         items {
                           inactiveSinceDate
+                          role
                           linkedFrom {
                             interestGroupsCollection(limit: 1) {
                               items {
@@ -62,6 +63,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                       workingGroupLeadersCollection(limit: 3) {
                         items {
                           inactiveSinceDate
+                          role
                           linkedFrom {
                             workingGroupsCollection(limit: 1) {
                               items {

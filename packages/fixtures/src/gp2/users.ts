@@ -62,7 +62,7 @@ export const mockedUser: gp2.UserResponse = {
     googleScholar: 'https://wwww.scholar.google.com',
     orcid: '0000-0001-5993-0331',
     researchGate: 'https://www.researchid.com/rid/',
-    researcherId: 'E-4548-2018',
+    researcherId: 'https://researcherid.com/rid/E-4548-2018',
     blog: 'https://www.blogger.com',
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',

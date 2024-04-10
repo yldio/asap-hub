@@ -8,13 +8,15 @@ export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
+  PERSISTENT_EXAMPLE: false,
   DISPLAY_EVENTS: false,
   DISPLAY_ANALYTICS_PRODUCTIVITY: false,
 };
 
 const envDefaults: Record<string, boolean> = {
+  local: true,
   test: true,
-  development: true,
+  development: false,
   production: false,
 };
 
@@ -29,6 +31,7 @@ export const isEnabled = (flag: Flag): boolean =>
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
+  console.log(flags, currentEnvironment);
   if (flags) {
     overrides = Object.entries(flags).reduce<
       Record<string, boolean | undefined>

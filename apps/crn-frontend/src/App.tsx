@@ -72,12 +72,16 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides } = useFlags();
+  const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
 
   useEffect(() => {
+    console.log('before', isEnabled('PERSISTENT_EXAMPLE'));
+    setEnvironment(ENVIRONMENT);
+    console.log('after-env-set', isEnabled('PERSISTENT_EXAMPLE'));
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setCurrentOverrides();
+    console.log('after-all', isEnabled('PERSISTENT_EXAMPLE'));
   }, [setCurrentOverrides]);
 
   return (

@@ -1654,7 +1654,7 @@ describe('Analytics Data Provider', () => {
           );
         });
 
-        test('Should return workingGroupPreviousLeadershipRoleCount of 1 when 1 user is a leader of a working group and the team membership is inactive but the leadership role is Project Manager', async () => {
+        test('Should return workingGroupPreviousLeadershipRoleCount of 0 when 1 user is a leader of a working group and the team membership is inactive but the leadership role is Project Manager', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.inactiveSinceDate =
             pastDate;

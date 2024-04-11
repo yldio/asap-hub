@@ -9,7 +9,6 @@ export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  PERSISTENT_EXAMPLE: false,
   DISPLAY_ANALYTICS_PRODUCTIVITY: false,
 };
 

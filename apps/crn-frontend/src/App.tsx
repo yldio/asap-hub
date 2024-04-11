@@ -76,7 +76,7 @@ const App: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log('before', isEnabled('PERSISTENT_EXAMPLE'));
+    console.log(ENVIRONMENT, 'before', isEnabled('PERSISTENT_EXAMPLE'));
     setEnvironment(ENVIRONMENT);
     // eslint-disable-next-line no-console
     console.log('after-env-set', isEnabled('PERSISTENT_EXAMPLE'));

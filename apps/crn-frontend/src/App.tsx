@@ -72,13 +72,14 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides } = useFlags();
+  const { setCurrentOverrides, setEnvironment } = useFlags();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
+    setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-  }, [setCurrentOverrides]);
+  }, [setCurrentOverrides, setEnvironment]);
 
   return (
     <Frame title="ASAP Hub">

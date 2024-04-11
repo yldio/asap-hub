@@ -156,8 +156,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
             },
             {},
           ),
-
-          orcid: newOrcid,
+          ...(newOrcid ? { orcid: newOrcid } : {}),
         });
       }}
       backHref={backHref}

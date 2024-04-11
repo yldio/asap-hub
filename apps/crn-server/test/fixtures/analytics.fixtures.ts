@@ -75,6 +75,7 @@ export const getAnalyticsTeamLeadershipQuery =
             teamMembershipCollection: {
               items: [
                 {
+                  inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
                       items: [

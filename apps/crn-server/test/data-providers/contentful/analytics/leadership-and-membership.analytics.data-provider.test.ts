@@ -189,10 +189,49 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
         });
 
+        test('Should return 0 for interestGroupLeadershipRoleCount when the leadership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
+        });
+
+        test('Should return 0 for interestGroupLeadershipRoleCount when the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
+        });
+
         test('Should return 0 for interestGroupLeadershipRoleCount when interestGroupsCollection is null', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.linkedFrom!.interestGroupsCollection =
             null;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.interestGroupLeadershipRoleCount).toBe(0);
+        });
+
+        test('Should return 0 for interestGroupLeadershipRoleCount when the leadership role is Project Manager', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.role =
+            'Project Manager';
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
           );
@@ -445,6 +484,53 @@ describe('Analytics Data Provider', () => {
         test('Should return 1 for interestGroupPreviousLeadershipRoleCount when team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(
+            result.items[0]!.interestGroupPreviousLeadershipRoleCount,
+          ).toBe(1);
+        });
+
+        test('Should return 1 for interestGroupPreviousLeadershipRoleCount when the leadership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(
+            result.items[0]!.interestGroupPreviousLeadershipRoleCount,
+          ).toBe(1);
+        });
+
+        test('Should return 0 for interestGroupPreviousLeadershipRoleCount when the leadership is inactive but role is Project Manager', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.interestGroupLeadersCollection!.items[0]!.role =
+            'Project Manager';
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(
+            result.items[0]!.interestGroupPreviousLeadershipRoleCount,
+          ).toBe(0);
+        });
+
+        test('Should return 1 for interestGroupPreviousLeadershipRoleCount when the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
             pastDate;
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,
@@ -1299,6 +1385,32 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(0);
         });
 
+        test('Should return workingGroupLeadershipRoleCount of 0 when 1 user is a leader of a working group but the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(0);
+        });
+
+        test('Should return workingGroupLeadershipRoleCount of 0 when 1 user is a leader of a working group but the leadership role is Project Manager', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.role =
+            'Project Manager';
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupLeadershipRoleCount).toBe(0);
+        });
+
         test('Should return workingGroupLeadershipRoleCount of 0 when 1 user is a leader of a working group but the leadership is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.inactiveSinceDate =
@@ -1524,6 +1636,38 @@ describe('Analytics Data Provider', () => {
 
           expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
             1,
+          );
+        });
+
+        test('Should return workingGroupPreviousLeadershipRoleCount of 1 when 1 user is a leader of a working group and the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
+            1,
+          );
+        });
+
+        test('Should return workingGroupPreviousLeadershipRoleCount of 0 when 1 user is a leader of a working group and the team membership is inactive but the leadership role is Project Manager', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupLeadersCollection!.items[0]!.role =
+            'Project Manager';
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupPreviousLeadershipRoleCount).toBe(
+            0,
           );
         });
 
@@ -1938,6 +2082,19 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupMemberCount).toBe(0);
         });
 
+        test('Should return workingGroupMemberCount of 0 when 1 user is a member of a working group but the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupMemberCount).toBe(0);
+        });
+
         test('Should return workingGroupMemberCount of 0 when 1 user is a member of a working group but the membership is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupMembersCollection!.items[0]!.inactiveSinceDate =
@@ -2176,6 +2333,19 @@ describe('Analytics Data Provider', () => {
         test('Should return workingGroupPreviousMemberCount of 1 when the member of a working group is not alumni but the team is inactive', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.inactiveSince =
+            pastDate;
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            contentfulGraphQLResponse,
+          );
+
+          const result = await analyticsDataProvider.fetchTeamLeadership({});
+
+          expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(1);
+        });
+
+        test('Should return workingGroupPreviousMemberCount of 1 when 1 user is a member of a working group and the team membership is inactive', async () => {
+          const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
+          contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.inactiveSinceDate =
             pastDate;
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             contentfulGraphQLResponse,

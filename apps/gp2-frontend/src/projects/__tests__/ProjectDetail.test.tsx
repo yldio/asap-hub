@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -414,6 +415,7 @@ describe('ProjectDetail', () => {
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {
+      enable('DISPLAY_EVENTS');
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
@@ -424,6 +426,7 @@ describe('ProjectDetail', () => {
 
   describe('the past events tab', () => {
     it('can be switched to', async () => {
+      enable('DISPLAY_EVENTS');
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
@@ -432,6 +435,7 @@ describe('ProjectDetail', () => {
     });
   });
   it('displays the correct count', async () => {
+    enable('DISPLAY_EVENTS');
     const project = gp2Fixtures.createProjectResponse();
     mockGetProject.mockResolvedValueOnce(project);
     mockGetEvents

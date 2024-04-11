@@ -14,6 +14,7 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshInterestGroupState } from '../state';
 import { getInterestGroup } from '../api';
 import { getEvents } from '../../../events/api';
+import { enable } from '@asap-hub/flags';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
@@ -153,6 +154,7 @@ describe('the calendar tab', () => {
 
 describe('the upcoming events tab', () => {
   it('can be switched to', async () => {
+    enable('DISPLAY_EVENTS');
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
@@ -168,6 +170,7 @@ describe('the upcoming events tab', () => {
 
 describe('the past events tab', () => {
   it('can be switched to', async () => {
+    enable('DISPLAY_EVENTS');
     const { findByText } = await renderGroupProfile();
     userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();

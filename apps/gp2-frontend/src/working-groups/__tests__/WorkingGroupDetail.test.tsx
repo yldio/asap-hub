@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -403,6 +404,7 @@ describe('WorkingGroupDetail', () => {
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {
+      enable('DISPLAY_EVENTS');
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id });
@@ -413,6 +415,7 @@ describe('WorkingGroupDetail', () => {
 
   describe('the past events tab', () => {
     it('can be switched to', async () => {
+      enable('DISPLAY_EVENTS');
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id });
@@ -421,6 +424,7 @@ describe('WorkingGroupDetail', () => {
     });
   });
   it('displays the correct count', async () => {
+    enable('DISPLAY_EVENTS');
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetEvents

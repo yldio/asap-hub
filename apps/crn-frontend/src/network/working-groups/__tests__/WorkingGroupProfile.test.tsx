@@ -34,6 +34,7 @@ import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput } from '../../teams/api';
+import { enable } from '@asap-hub/flags';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
@@ -433,6 +434,7 @@ describe('the calendar tab', () => {
 
 describe('the upcoming events tab', () => {
   it('can be switched to', async () => {
+    enable('DISPLAY_EVENTS');
     await renderWorkingGroupProfile();
     userEvent.click(
       await screen.findByText(/upcoming/i, { selector: 'nav a *' }),
@@ -457,6 +459,7 @@ describe('the upcoming events tab', () => {
 
 describe('the past events tab', () => {
   it('can be switched to', async () => {
+    enable('DISPLAY_EVENTS');
     await renderWorkingGroupProfile();
     userEvent.click(await screen.findByText(/past/i, { selector: 'nav a *' }));
     expect(await screen.findByText(/results/i)).toBeVisible();
@@ -464,6 +467,7 @@ describe('the past events tab', () => {
 });
 
 describe('the event tabs', () => {
+  enable('DISPLAY_EVENTS');
   it('renders number of upcoming events from algolia', async () => {
     mockGetWorkingGroupEventsFromAlgolia.mockResolvedValue(response);
     await renderWorkingGroupProfile();

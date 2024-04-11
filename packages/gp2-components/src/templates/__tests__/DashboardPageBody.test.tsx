@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
@@ -250,6 +251,7 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 upcoming event items', () => {
+      enable('DISPLAY_EVENTS');
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(
@@ -392,6 +394,7 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 past event items', () => {
+      enable('DISPLAY_EVENTS');
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(

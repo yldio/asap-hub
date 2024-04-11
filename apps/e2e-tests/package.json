@@ -5,9 +5,10 @@
     "node": "20.x"
   },
   "devDependencies": {
-    "@playwright/test": "^1.30.0"
+    "@playwright/test": "^1.40.0"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.23.8"
+    "@babel/runtime-corejs3": "7.23.8",
+    "playwright": "^1.40.0"
   }
 }

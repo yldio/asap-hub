@@ -2,10 +2,10 @@
   "name": "@asap-hub/e2e-tests",
   "private": true,
   "engines": {
-    "node": "20.x"
+    "node": "18.x"
   },
   "devDependencies": {
-    "@playwright/test": "^1.30.0"
+    "@playwright/test": "^1.40.0"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.23.8"

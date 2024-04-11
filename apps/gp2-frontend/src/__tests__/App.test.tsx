@@ -59,9 +59,9 @@ it('loads overrides for feature flags', async () => {
     </authTestUtils.UserAuth0Provider>,
   );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  current.setCurrentOverrides({ ASAP_PERSISTENT_EXAMPLE: false });
+  current.setCurrentOverrides({ ASAP_PERSISTENT_TEST_EXAMPLE: false });
 
-  document.cookie = 'ASAP_PERSISTENT_EXAMPLE=true';
-  expect(current.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  document.cookie = 'ASAP_PERSISTENT_TEST_EXAMPLE=true';
+  expect(current.isEnabled('PERSISTENT_TEST_EXAMPLE')).toBe(true);
   document.cookie = originalCookie;
 });

@@ -17,6 +17,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { enable } from '@asap-hub/flags';
 import {
   ResearchOutputWorkingGroupResponse,
   WorkingGroupResponse,
@@ -34,7 +35,6 @@ import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput } from '../../teams/api';
-import { enable } from '@asap-hub/flags';
 
 jest.mock('../api');
 jest.mock('../../../events/api');

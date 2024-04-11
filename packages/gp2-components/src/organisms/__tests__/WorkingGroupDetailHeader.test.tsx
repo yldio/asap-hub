@@ -1,3 +1,4 @@
+import { enable } from '@asap-hub/flags';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import WorkingGroupDetailHeader from '../WorkingGroupDetailHeader';
@@ -61,12 +62,14 @@ describe('WorkingGroupDetailHeader', () => {
     ).toBeVisible();
   });
   it('renders upcoming events tab with the count', () => {
+    enable('DISPLAY_EVENTS');
     render(<WorkingGroupDetailHeader {...defaultProps} upcomingTotal={42} />);
     expect(
       screen.getByRole('link', { name: /upcoming events \(42\)/i }),
     ).toBeVisible();
   });
   it('renders past events tab with the count', () => {
+    enable('DISPLAY_EVENTS');
     render(<WorkingGroupDetailHeader {...defaultProps} pastTotal={42} />);
     expect(
       screen.getByRole('link', { name: /past events \(42\)/i }),

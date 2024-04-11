@@ -1,5 +1,6 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
+  | 'PERSISTENT_TEST_EXAMPLE'
   | 'VERSION_RESEARCH_OUTPUT'
   | 'DISPLAY_EVENTS'
   | 'DISPLAY_ANALYTICS_PRODUCTIVITY';
@@ -9,7 +10,6 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   PERSISTENT_EXAMPLE: false,
-  DISPLAY_EVENTS: false,
   DISPLAY_ANALYTICS_PRODUCTIVITY: false,
 };
 

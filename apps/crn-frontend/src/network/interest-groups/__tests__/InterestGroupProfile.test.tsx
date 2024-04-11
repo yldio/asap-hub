@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { enable } from '@asap-hub/flags';
 import {
   createInterestGroupResponse,
   createListEventResponse,
@@ -14,7 +15,6 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshInterestGroupState } from '../state';
 import { getInterestGroup } from '../api';
 import { getEvents } from '../../../events/api';
-import { enable } from '@asap-hub/flags';
 
 jest.mock('../api');
 jest.mock('../../../events/api');

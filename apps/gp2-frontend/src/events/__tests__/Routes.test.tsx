@@ -1,5 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { useFlags } from '@asap-hub/react-context';
 import {
   render,
@@ -83,6 +84,7 @@ describe('Routes', () => {
   });
 
   it('renders the empty state for the upcoming and the past events', async () => {
+    enable('DISPLAY_EVENTS');
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(0));
     await renderRoutes();
 

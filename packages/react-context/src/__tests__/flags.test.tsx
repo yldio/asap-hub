@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { render, fireEvent } from '@testing-library/react';
-import { isEnabled, disable } from '@asap-hub/flags';
+import { isEnabled, enable, disable } from '@asap-hub/flags';
 
 import { useFlags, LiveFlagsProvider } from '../flags';
 
@@ -32,12 +32,12 @@ describe('useFlags', () => {
   });
 
   it('provides the reset flags method', () => {
-    disable('PERSISTENT_EXAMPLE');
+    enable('PERSISTENT_EXAMPLE');
     const {
       result: { current },
     } = renderHook(useFlags);
     current.reset();
-    expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+    expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
   });
 
   it('overrides the feature flag if the cookie matches a valid feature flag', () => {
@@ -96,6 +96,7 @@ describe('LiveFlagsProvider', () => {
   };
 
   it('updates a component on disable', () => {
+    enable('PERSISTENT_EXAMPLE');
     const { getByText } = render(<TestComponent />, {
       wrapper: LiveFlagsProvider,
     });
@@ -118,14 +119,14 @@ describe('LiveFlagsProvider', () => {
   });
 
   it('updates a component on reset', () => {
-    disable('PERSISTENT_EXAMPLE');
+    enable('PERSISTENT_EXAMPLE');
     const { getByText } = render(<TestComponent />, {
       wrapper: LiveFlagsProvider,
     });
-    expect(getByText('enabled: false')).toBeVisible();
+    expect(getByText('enabled: true')).toBeVisible();
 
     fireEvent.click(getByText('reset'));
-    expect(getByText('enabled: true')).toBeVisible();
+    expect(getByText('enabled: false')).toBeVisible();
   });
 
   it('provides the same callback every time so that it can be used as an effect dependency', () => {

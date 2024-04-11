@@ -12,16 +12,16 @@ beforeEach(() => {
   setEnvironment('unknown');
 });
 
-it('defaults to development (in which we default flags to true) for when an environment is not set', () => {
+it('defaults to development (in which we default flags to false) for when an environment is not set', () => {
   setEnvironment(undefined);
-  expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+  expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
 
 it('disables flags in unknown environments', () => {
   setEnvironment('unknown');
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
 });
-it.each(['test', 'development'])('enables flags in %s', (nodeEnv) => {
+it.each(['test'])('enables flags in %s', (nodeEnv) => {
   setEnvironment(nodeEnv);
   expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
 });

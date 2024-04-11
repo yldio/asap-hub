@@ -31,7 +31,6 @@ export const isEnabled = (flag: Flag): boolean =>
 export const getOverrides = (): Flags => overrides;
 
 export const setCurrentOverrides = (flags?: Record<string, boolean>): void => {
-  console.log(flags, currentEnvironment);
   if (flags) {
     overrides = Object.entries(flags).reduce<
       Record<string, boolean | undefined>

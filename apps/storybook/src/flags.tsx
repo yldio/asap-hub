@@ -15,6 +15,7 @@ const DisableFlag: FC<{ flag: Flag }> = ({ flag, children }) => {
         enable,
         isEnabled: (f) => (f === flag ? false : isEnabled(f)),
         setCurrentOverrides: () => {},
+        setEnvironment: () => {},
       }}
     >
       {children}

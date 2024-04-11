@@ -75,14 +75,17 @@ const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
 
   useEffect(() => {
+    // eslint-disable-next-line no-console
     console.log('before', isEnabled('PERSISTENT_EXAMPLE'));
     setEnvironment(ENVIRONMENT);
+    // eslint-disable-next-line no-console
     console.log('after-env-set', isEnabled('PERSISTENT_EXAMPLE'));
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
     setCurrentOverrides();
+    // eslint-disable-next-line no-console
     console.log('after-all', isEnabled('PERSISTENT_EXAMPLE'));
-  }, [setCurrentOverrides]);
+  }, [setCurrentOverrides, isEnabled, setEnvironment]);
 
   return (
     <Frame title="ASAP Hub">

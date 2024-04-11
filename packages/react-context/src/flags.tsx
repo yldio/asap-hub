@@ -45,7 +45,7 @@ export const FlagsContext = createContext<Flags>({
   disable,
   reset,
   enable,
-  setEnvironment: setEnvironment,
+  setEnvironment,
   setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 

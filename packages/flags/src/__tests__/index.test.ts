@@ -14,7 +14,7 @@ beforeEach(() => {
 
 it('defaults to development (in which we default flags to false) for when an environment is not set', () => {
   setEnvironment(undefined);
-  expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
+  expect(isEnabled('PERSISTENT_TEST_EXAMPLE')).toBe(false);
 });
 
 it('disables flags in unknown environments', () => {

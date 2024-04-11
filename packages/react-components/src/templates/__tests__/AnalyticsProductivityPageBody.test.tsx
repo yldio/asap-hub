@@ -4,27 +4,27 @@ import { AnalyticsProductivityPageBody } from '..';
 
 describe('AnalyticsProductivityPageBody', () => {
   const props: ComponentProps<typeof AnalyticsProductivityPageBody> = {
-    numberOfPages: 1,
-    currentPageIndex: 0,
-    renderPageHref: () => '',
     setMetric: () => null,
-    userData: [],
-    teamData: [],
     metric: 'user',
+    children: <span>table</span>,
   };
   it('renders user tab', () => {
-    const { getAllByText } = render(
+    const { container } = render(
       <AnalyticsProductivityPageBody {...props} metric="user" />,
     );
 
-    expect(getAllByText('User Productivity').length).toBe(2);
+    expect(container).toHaveTextContent(
+      'Overview of ASAP outputs shared on the CRN Hub by user',
+    );
   });
 
   it('renders team tab', () => {
-    const { getAllByText } = render(
+    const { container } = render(
       <AnalyticsProductivityPageBody {...props} metric="team" />,
     );
 
-    expect(getAllByText('Team Productivity').length).toBe(2);
+    expect(container).toHaveTextContent(
+      'Overview of ASAP outputs shared on the CRN Hub by team',
+    );
   });
 });

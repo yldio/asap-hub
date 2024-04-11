@@ -1,9 +1,13 @@
+import { UserProductivityResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
+import { PageControls } from '..';
+
 import { Card } from '../atoms';
-import { charcoal, lead, neutral200, steel } from '../colors';
-import { rem, tabletScreen } from '../pixels';
 import { borderRadius } from '../card';
+import { charcoal, lead, neutral200, steel } from '../colors';
 import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
+import { rem, tabletScreen } from '../pixels';
 
 const container = css({
   display: 'grid',
@@ -73,21 +77,22 @@ const iconStyles = css({
   gap: rem(3),
 });
 
-type Team = {
-  name: string;
-  active: boolean;
-};
+const pageControlsStyles = css({
+  justifySelf: 'center',
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
+});
 
-const displayTeams = (items: { name: string; active: boolean }[]) => {
+const displayTeams = (items: UserProductivityResponse['teams']) => {
   if (items.length === 0) {
     return `No team`;
   }
   if (items.length === 1) {
-    return items[0]?.active ? (
-      items[0].name
+    return items[0] && !items[0].isTeamInactive ? (
+      items[0].team
     ) : (
       <span css={iconStyles}>
-        {items[0]?.name} <InactiveBadgeIcon />
+        {items[0]?.team} <InactiveBadgeIcon />
       </span>
     );
   }
@@ -98,12 +103,12 @@ const displayTeams = (items: { name: string; active: boolean }[]) => {
   );
 };
 
-const displayRoles = (items: string[]) => {
+const displayRoles = (items: UserProductivityResponse['teams']) => {
   if (items.length === 0) {
     return `No role`;
   }
   if (items.length === 1) {
-    return items[0];
+    return items[0]?.role ? items[0].role : 'No role';
   }
   return (
     <>
@@ -112,53 +117,49 @@ const displayRoles = (items: string[]) => {
   );
 };
 
-export type UserProductivityMetric = {
-  id: string;
-  alumni: boolean;
-  name: string;
-  teams: Team[];
-  roles: string[];
-  asapOutput: number;
-  asapPublicOutput: number;
-  ratio: number;
+type UserProductivityTableProps = ComponentProps<typeof PageControls> & {
+  data: UserProductivityResponse[];
 };
-interface UserProductivityTableProps {
-  data: UserProductivityMetric[];
-}
 
 const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
   data,
+  ...pageControlProps
 }) => (
-  <Card padding={false}>
-    <div css={container}>
-      <div css={[rowStyles, gridTitleStyles]}>
-        <span css={titleStyles}>User</span>
-        <span css={titleStyles}>Team</span>
-        <span css={titleStyles}>Role</span>
-        <span css={titleStyles}>ASAP Output</span>
-        <span css={titleStyles}>ASAP Public Output</span>
-        <span css={titleStyles}>Ratio</span>
-      </div>
-      {data.map((row) => (
-        <div key={row.id} css={[rowStyles]}>
-          <span css={[titleStyles, rowTitleStyles]}>User</span>
-          <p css={iconStyles}>
-            {row.name} {row.alumni && alumniBadgeIcon}
-          </p>
-          <span css={[titleStyles, rowTitleStyles]}>Team</span>
-          <p>{displayTeams(row.teams)}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Role</span>
-          <p>{displayRoles(row.roles)}</p>
-          <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
-          <p>{row.asapOutput}</p>
-          <span css={[titleStyles, rowTitleStyles]}>ASAP Public Output</span>
-          <p>{row.asapPublicOutput}</p>
-          <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
-          <p>{row.ratio}</p>
+  <>
+    <Card padding={false}>
+      <div css={container}>
+        <div css={[rowStyles, gridTitleStyles]}>
+          <span css={titleStyles}>User</span>
+          <span css={titleStyles}>Team</span>
+          <span css={titleStyles}>Role</span>
+          <span css={titleStyles}>ASAP Output</span>
+          <span css={titleStyles}>ASAP Public Output</span>
+          <span css={titleStyles}>Ratio</span>
         </div>
-      ))}
-    </div>
-  </Card>
+        {data.map((row) => (
+          <div key={row.id} css={[rowStyles]}>
+            <span css={[titleStyles, rowTitleStyles]}>User</span>
+            <p css={iconStyles}>
+              {row.name} {row.isAlumni && alumniBadgeIcon}
+            </p>
+            <span css={[titleStyles, rowTitleStyles]}>Team</span>
+            <p>{displayTeams(row.teams)}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Role</span>
+            <p>{displayRoles(row.teams)}</p>
+            <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
+            <p>{row.asapOutput}</p>
+            <span css={[titleStyles, rowTitleStyles]}>ASAP Public Output</span>
+            <p>{row.asapPublicOutput}</p>
+            <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
+            <p>{row.ratio}</p>
+          </div>
+        ))}
+      </div>
+    </Card>
+    <section css={pageControlsStyles}>
+      <PageControls {...pageControlProps} />
+    </section>
+  </>
 );
 
 export default UserProductivityTable;

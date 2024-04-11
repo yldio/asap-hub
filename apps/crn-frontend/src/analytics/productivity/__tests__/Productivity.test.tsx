@@ -1,15 +1,29 @@
-import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { analytics } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';
 
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getTeamProductivity, getUserProductivity } from '../api';
 import Productivity from '../Productivity';
+
+jest.mock('../api');
+mockConsoleError();
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
+  typeof getTeamProductivity
+>;
+
+const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
+  typeof getUserProductivity
+>;
 
 const renderPage = async (
   path = analytics({}).productivity({}).metric({ metric: 'user' }).$,
@@ -27,7 +41,6 @@ const renderPage = async (
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-      ,
     </RecoilRoot>,
   );
 
@@ -37,6 +50,11 @@ const renderPage = async (
 
   return result;
 };
+
+beforeEach(() => {
+  mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+  mockGetTeamProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+});
 
 it('renders with user data', async () => {
   await renderPage();

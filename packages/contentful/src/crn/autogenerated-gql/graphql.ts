@@ -10274,7 +10274,7 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       Maybe<
                                         Pick<
                                           InterestGroupLeaders,
-                                          'inactiveSinceDate'
+                                          'inactiveSinceDate' | 'role'
                                         > & {
                                           linkedFrom?: Maybe<{
                                             interestGroupsCollection?: Maybe<{
@@ -10320,7 +10320,7 @@ export type FetchAnalyticsTeamLeadershipQuery = {
                                       Maybe<
                                         Pick<
                                           WorkingGroupLeaders,
-                                          'inactiveSinceDate'
+                                          'inactiveSinceDate' | 'role'
                                         > & {
                                           linkedFrom?: Maybe<{
                                             workingGroupsCollection?: Maybe<{
@@ -22634,6 +22634,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                       name: {
                                                                                         kind: 'Name',
                                                                                         value:
+                                                                                          'role',
+                                                                                      },
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
                                                                                           'linkedFrom',
                                                                                       },
                                                                                       selectionSet:
@@ -22919,6 +22927,14 @@ export const FetchAnalyticsTeamLeadershipDocument = {
                                                                                         kind: 'Name',
                                                                                         value:
                                                                                           'inactiveSinceDate',
+                                                                                      },
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'role',
                                                                                       },
                                                                                     },
                                                                                     {

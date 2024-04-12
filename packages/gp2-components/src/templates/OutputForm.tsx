@@ -18,7 +18,6 @@ import {
   ResearchOutputRelatedEventsCard,
   ajvErrors,
   OutputVersions,
-  externalLinkIcon,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
@@ -90,14 +89,6 @@ const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
   gap: rem(32),
-});
-
-const externalLinkIconStyles = css({
-  display: 'inline-flex',
-  verticalAlign: 'bottom',
-  svg: {
-    stroke: 'currentcolor',
-  },
 });
 
 type OutputFormProps = {
@@ -514,22 +505,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     <LabeledTextArea
                       title="Short Description"
                       subtitle="(required)"
-                      tip={
-                        <>
-                          Add a short description based on what you wrote on the
-                          description field above. This content will show on the{' '}
-                          <Link
-                            href="http://gp2.org/catalogue"
-                            label="ASAP website catalogue page"
-                          >
-                            ASAP website catalogue page
-                            <span css={externalLinkIconStyles}>
-                              {externalLinkIcon}
-                            </span>
-                          </Link>
-                          if you set the sharing status to public.
-                        </>
-                      }
+                      tip="Add a short description based on what you wrote on the
+                          description field above."
                       onChange={setShortDescription}
                       getValidationMessage={() =>
                         'Please enter a short description'

@@ -1,11 +1,11 @@
-module.exports.description = 'Add short text field';
+module.exports.description = 'Add short description field';
 
 module.exports.up = (migration) => {
   const outputs = migration.editContentType('outputs');
 
   outputs
-    .createField('shortText')
-    .name('Short Text')
+    .createField('shortDescription')
+    .name('Short Description')
     .type('Text')
     .localized(false)
     .required(false)
@@ -20,11 +20,11 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  outputs.changeFieldControl('shortText', 'builtin', 'singleLine', {});
-  outputs.moveField('shortText').afterField('description');
+  outputs.changeFieldControl('shortDescription', 'builtin', 'singleLine', {});
+  outputs.moveField('shortDescription').afterField('description');
 };
 
 module.exports.down = (migration) => {
   const outputs = migration.editContentType('outputs');
-  outputs.deleteField('shortText');
+  outputs.deleteField('shortDescription');
 };

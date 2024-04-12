@@ -32,6 +32,7 @@ export const createOutputResponse = (itemIndex = 0): gp2.OutputResponse => ({
   id: `ro${itemIndex}`,
   title: `${outputResponse.title} ${itemIndex + 1}`,
   description: 'An interesting article',
+  shortDescription: 'An article',
   gp2Supported: 'Yes',
   sharingStatus: 'GP2 Only',
 });

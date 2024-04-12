@@ -21,6 +21,7 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   outputs.changeFieldControl('shortText', 'builtin', 'singleLine', {});
+  outputs.moveField('shortText').afterField('description');
 };
 
 module.exports.down = (migration) => {

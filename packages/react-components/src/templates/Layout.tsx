@@ -137,6 +137,7 @@ export const menuStyles = css({
     gridRow: `main-menu/-1`,
     gridColumn: 'main-menu/-2',
     visibility: 'hidden',
+    display: 'none',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
     boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
@@ -147,6 +148,7 @@ const menuMenuShownStyles = css({
     visibility: 'visible',
     transform: 'translateX(0)',
     transition: `transform 250ms ease`,
+    display: 'flex',
   },
 });
 

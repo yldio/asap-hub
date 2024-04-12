@@ -111,6 +111,45 @@ describe('KeyInformationModal', () => {
     expect(screen.getByText(/Please add your city/i)).toBeVisible();
   });
 
+  it('does not call onSave with orcid when orcid is not provided', async () => {
+    const onSave = jest.fn();
+    renderKeyInformation({
+      onSave,
+      social: {
+        ...defaultProps.social,
+        orcid: undefined,
+      },
+    });
+    const saveButton = getSaveButton();
+    userEvent.click(saveButton);
+    const {
+      firstName,
+      lastName,
+      degrees,
+      positions,
+      country,
+      stateOrProvince,
+      city,
+      region,
+      social,
+    } = defaultProps;
+    const { orcid, ...socialWithoutOrcid } = social!;
+    expect(onSave).toHaveBeenCalledWith({
+      firstName,
+      middleName: '',
+      lastName,
+      nickname: '',
+      degrees,
+      positions,
+      country,
+      stateOrProvince,
+      city,
+      region,
+      social: socialWithoutOrcid,
+    });
+    await waitFor(() => expect(saveButton).toBeEnabled());
+  }, 60000);
+
   it('calls onSave with the updated fields', async () => {
     const firstName = 'Gonçalo';
     const middleName = 'Matias';

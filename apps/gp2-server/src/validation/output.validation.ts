@@ -100,6 +100,10 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         type: 'string',
         nullable: true,
       },
+      shortDescription: {
+        type: 'string',
+        nullable: true,
+      },
       gp2Supported: { type: 'string', nullable: true },
       sharingStatus: { type: 'string' },
       publishDate: { type: 'string', format: 'date-time', nullable: true },

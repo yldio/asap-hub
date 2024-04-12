@@ -109,6 +109,7 @@ export type OutputCoreObject = {
   type?: OutputType;
   subtype?: OutputSubtype;
   description?: string;
+  shortDescription?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
   tags: TagDataObject[];
@@ -200,6 +201,7 @@ export type OutputPostRequest = {
   type?: OutputType;
   subtype?: OutputSubtype;
   description?: string;
+  shortDescription?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
   workingGroupIds?: string[];

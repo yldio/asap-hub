@@ -18,6 +18,7 @@ import {
   ResearchOutputRelatedEventsCard,
   ajvErrors,
   OutputVersions,
+  externalLinkIcon,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
@@ -91,6 +92,14 @@ const containerStyles = css({
   gap: rem(32),
 });
 
+const externalLinkIconStyles = css({
+  display: 'inline-flex',
+  verticalAlign: 'bottom',
+  svg: {
+    stroke: 'currentcolor',
+  },
+});
+
 type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
@@ -130,6 +139,7 @@ type OutputFormProps = {
     | 'type'
     | 'subtype'
     | 'description'
+    | 'shortDescription'
     | 'gp2Supported'
     | 'sharingStatus'
     | 'publishDate'
@@ -192,6 +202,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   type,
   subtype,
   description,
+  shortDescription,
   gp2Supported,
   sharingStatus,
   publishDate,
@@ -228,6 +239,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
     subtype || '',
   );
   const [newDescription, setDescription] = useState(description || '');
+  const [newShortDescription, setShortDescription] = useState(
+    shortDescription || '',
+  );
   const [newGp2Supported, setGp2Supported] = useState<gp2Model.DecisionOption>(
     isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported || "Don't Know",
   );
@@ -301,6 +315,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     type: newType || undefined,
     subtype: newSubtype || undefined,
     description: newDescription || undefined,
+    shortDescription: newShortDescription || undefined,
     gp2Supported: DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(documentType)
       ? undefined
       : newGp2Supported,
@@ -495,6 +510,34 @@ const OutputForm: React.FC<OutputFormProps> = ({
         `}
                         ></Markdown>
                       }
+                    />
+                    <LabeledTextArea
+                      title="Short Description"
+                      subtitle="(required)"
+                      tip={
+                        <>
+                          Add a short description based on what you wrote on the
+                          description field above. This content will show on the{' '}
+                          <Link
+                            href="http://gp2.org/catalogue"
+                            label="ASAP website catalogue page"
+                          >
+                            ASAP website catalogue page
+                            <span css={externalLinkIconStyles}>
+                              {externalLinkIcon}
+                            </span>
+                          </Link>
+                          if you set the sharing status to public.
+                        </>
+                      }
+                      onChange={setShortDescription}
+                      getValidationMessage={() =>
+                        'Please enter a short description'
+                      }
+                      required
+                      enabled={!isSaving}
+                      value={newShortDescription}
+                      maxLength={250}
                     />
                     {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(
                       documentType,

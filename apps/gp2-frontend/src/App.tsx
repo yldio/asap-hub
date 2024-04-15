@@ -68,13 +68,14 @@ const Content = lazy(loadContent);
 const Welcome = lazy(loadWelcome);
 
 const App: FC<Record<string, never>> = () => {
-  const { setCurrentOverrides } = useFlags();
+  const { setCurrentOverrides, setEnvironment } = useFlags();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadAuthenticatedApp().then(loadContent).then(loadWelcome);
+    setEnvironment(ENVIRONMENT);
     setCurrentOverrides();
-  }, [setCurrentOverrides]);
+  }, [setCurrentOverrides, setEnvironment]);
 
   return (
     <Frame title="GP2 Hub">

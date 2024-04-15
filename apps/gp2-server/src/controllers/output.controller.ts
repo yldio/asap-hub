@@ -67,6 +67,7 @@ export default class OutputController {
       title: data.title,
       type: data.type,
       description: data.description,
+      shortDescription: data.shortDescription,
       sharingStatus: data.sharingStatus,
       gp2Supported: data.gp2Supported,
       tagIds: data.tagIds,

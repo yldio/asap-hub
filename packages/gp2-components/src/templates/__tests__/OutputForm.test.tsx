@@ -38,7 +38,12 @@ describe('OutputForm', () => {
     });
     expect(screen.getByRole('textbox', { name: /title/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /url/i })).toBeVisible();
-    expect(screen.getByRole('textbox', { name: /description/i })).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: /^description/i }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: /^short description/i }),
+    ).toBeVisible();
     expect(
       screen.getByRole('group', {
         name: /has this output been supported by gp2?/i,
@@ -110,6 +115,7 @@ describe('OutputForm', () => {
           {...defaultProps}
           {...entity}
           description="An interesting article"
+          shortDescription="An article"
           gp2Supported="Yes"
           sharingStatus="GP2 Only"
           tags={[{ id: '27' }]}
@@ -220,6 +226,7 @@ describe('OutputForm', () => {
           link: 'https://example.com',
           documentType: 'Code/Software',
           description: 'An interesting article',
+          shortDescription: 'An article',
           gp2Supported: 'Yes',
           sharingStatus: 'GP2 Only',
           authors: [
@@ -666,8 +673,12 @@ describe('OutputForm', () => {
       'https://example.com',
     );
     userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
+      screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /^short description/i }),
+      'An article',
     );
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status?/i,
@@ -703,6 +714,7 @@ describe('OutputForm', () => {
         link: 'https://example.com',
         documentType: 'Procedural Form',
         description: 'An interesting article',
+        shortDescription: 'An article',
         sharingStatus: 'Public',
         publishDate: new Date('2022-03-24').toISOString(),
         authors: [
@@ -794,8 +806,12 @@ describe('OutputForm', () => {
         'https://example.com',
       );
       userEvent.type(
-        screen.getByRole('textbox', { name: /description/i }),
+        screen.getByRole('textbox', { name: /^description/i }),
         'Research description',
+      );
+      userEvent.type(
+        screen.getByRole('textbox', { name: /^short description/i }),
+        'Research short description',
       );
       userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText('Research'));
@@ -822,6 +838,7 @@ describe('OutputForm', () => {
           type: 'Research',
           subtype: 'Published',
           description: 'Research description',
+          shortDescription: 'Research short description',
           gp2Supported: "Don't Know",
           sharingStatus: 'GP2 Only',
           authors: [{ userId: 'u2' }],

@@ -133,8 +133,12 @@ describe('Create Projects Output', () => {
     userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
     userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
     userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
+      screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /^short description/i }),
+      'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
@@ -154,6 +158,7 @@ describe('Create Projects Output', () => {
           title,
           link,
           description: 'An interesting article',
+          shortDescription: 'An article',
           sharingStatus: 'GP2 Only',
           documentType: 'Procedural Form',
           projectIds: [],
@@ -197,8 +202,12 @@ describe('Create Projects Output', () => {
     userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
     userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
     userEvent.type(
-      screen.getByRole('textbox', { name: /description/i }),
+      screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
+    );
+    userEvent.type(
+      screen.getByRole('textbox', { name: /^short description/i }),
+      'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);

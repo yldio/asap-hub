@@ -103,6 +103,7 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
       shortDescription: {
         type: 'string',
         nullable: true,
+        maxLength: 250,
       },
       gp2Supported: { type: 'string', nullable: true },
       sharingStatus: { type: 'string' },

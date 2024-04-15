@@ -1,7 +1,10 @@
 import { css } from '@emotion/react';
+import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import AnalyticsControls from '../molecules/AnalyticsControls';
 import { perRem } from '../pixels';
+import { ComponentProps } from 'react';
 
 type MetricOption = 'user' | 'team';
 
@@ -15,7 +18,10 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
   label: metricOptions[value as MetricOption],
 }));
 
-type LeadershipAndMembershipAnalyticsProps = {
+type LeadershipAndMembershipAnalyticsProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'timeRange'
+> & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   children: React.ReactNode;
@@ -29,9 +35,14 @@ const tableHeaderStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
+const controlsStyles = css({
+  display: 'flex',
+  flexDirection: 'row-reverse',
+});
+
 const AnalyticsProductivityPageBody: React.FC<
   LeadershipAndMembershipAnalyticsProps
-> = ({ metric, setMetric, children }) => (
+> = ({ metric, setMetric, timeRange, children }) => (
   <article>
     <div css={metricDropdownStyles}>
       <Subtitle>Metric</Subtitle>
@@ -40,6 +51,12 @@ const AnalyticsProductivityPageBody: React.FC<
         value={metric}
         onChange={setMetric}
         required
+      />
+    </div>
+    <div css={controlsStyles}>
+      <AnalyticsControls
+        timeRange={timeRange}
+        href={analytics({}).productivity({}).metric({ metric }).$}
       />
     </div>
     <div css={tableHeaderStyles}>

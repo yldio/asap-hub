@@ -1,5 +1,6 @@
 export { default as Accordion } from './Accordion';
 export { default as AgreeToTerms } from './AgreeToTerms';
+export { default as AnalyticsControls } from './AnalyticsControls';
 export { default as AssociationList } from './AssociationList';
 export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';
@@ -58,3 +59,4 @@ export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as WorkingGroupsList } from './WorkingGroupsList';
 export type { ItemType } from './DropdownButton';
+export type { TimeRangeOption } from './AnalyticsControls';

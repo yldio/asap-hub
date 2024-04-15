@@ -1,4 +1,3 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
@@ -13,11 +12,15 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../auth/state';
-import { getTeamProductivity, getUserProductivity } from './api';
+import {
+  getTeamProductivity,
+  getUserProductivity,
+  ProductivityListOptions,
+} from './api';
 
 const analyticsUserProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  ProductivityListOptions
 >({
   key: 'analyticsUserProductivityIndex',
   default: undefined,
@@ -33,7 +36,7 @@ export const analyticsUserProductivityListState = atomFamily<
 
 export const analyticsUserProductivityState = selectorFamily<
   ListUserProductivityResponse | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  ProductivityListOptions
 >({
   key: 'userProductivity',
   get:
@@ -77,7 +80,7 @@ export const analyticsUserProductivityState = selectorFamily<
 });
 
 export const useAnalyticsUserProductivity = (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: ProductivityListOptions,
 ) => {
   const authorization = useRecoilValue(authorizationState);
   const [userProductivity, setUserProductivity] = useRecoilState(
@@ -96,7 +99,7 @@ export const useAnalyticsUserProductivity = (
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  ProductivityListOptions
 >({
   key: 'analyticsTeamProductivityIndex',
   default: undefined,
@@ -112,7 +115,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 
 export const analyticsTeamProductivityState = selectorFamily<
   ListTeamProductivityResponse | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  ProductivityListOptions
 >({
   key: 'teamProductivity',
   get:
@@ -156,7 +159,7 @@ export const analyticsTeamProductivityState = selectorFamily<
 });
 
 export const useAnalyticsTeamProductivity = (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: ProductivityListOptions,
 ) => {
   const authorization = useRecoilValue(authorizationState);
   const [teamProductivity, setTeamProductivity] = useRecoilState(

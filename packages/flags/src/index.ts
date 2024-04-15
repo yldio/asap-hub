@@ -13,6 +13,7 @@ let overrides: Flags = {
 };
 
 const envDefaults: Record<string, boolean> = {
+  local: true,
   test: true,
   development: true,
   production: false,

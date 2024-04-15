@@ -7,11 +7,17 @@ import {
   reset,
   getOverrides,
   setCurrentOverrides,
+  setEnvironment,
 } from '@asap-hub/flags';
 
 type Flags = Pick<
   typeof import('@asap-hub/flags'),
-  'isEnabled' | 'reset' | 'disable' | 'setCurrentOverrides' | 'enable'
+  | 'isEnabled'
+  | 'reset'
+  | 'disable'
+  | 'setCurrentOverrides'
+  | 'setEnvironment'
+  | 'enable'
 >;
 
 const parseCookie = (cookies: string) =>
@@ -39,6 +45,7 @@ export const FlagsContext = createContext<Flags>({
   disable,
   reset,
   enable,
+  setEnvironment,
   setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 
@@ -59,6 +66,7 @@ export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
       reset();
       setOverrides(getOverrides());
     }, []),
+    setEnvironment,
     setCurrentOverrides,
   };
 

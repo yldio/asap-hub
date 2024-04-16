@@ -130,6 +130,7 @@ type OutputFormProps = {
     | 'type'
     | 'subtype'
     | 'description'
+    | 'shortDescription'
     | 'gp2Supported'
     | 'sharingStatus'
     | 'publishDate'
@@ -192,6 +193,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   type,
   subtype,
   description,
+  shortDescription,
   gp2Supported,
   sharingStatus,
   publishDate,
@@ -228,6 +230,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
     subtype || '',
   );
   const [newDescription, setDescription] = useState(description || '');
+  const [newShortDescription, setShortDescription] = useState(
+    shortDescription || '',
+  );
   const [newGp2Supported, setGp2Supported] = useState<gp2Model.DecisionOption>(
     isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported || "Don't Know",
   );
@@ -301,6 +306,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     type: newType || undefined,
     subtype: newSubtype || undefined,
     description: newDescription || undefined,
+    shortDescription: newShortDescription || undefined,
     gp2Supported: DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(documentType)
       ? undefined
       : newGp2Supported,
@@ -495,6 +501,20 @@ const OutputForm: React.FC<OutputFormProps> = ({
         `}
                         ></Markdown>
                       }
+                    />
+                    <LabeledTextArea
+                      title="Short Description"
+                      subtitle="(required)"
+                      tip="Add a short description based on what you wrote on the
+                          description field above."
+                      onChange={setShortDescription}
+                      getValidationMessage={() =>
+                        'Please enter a short description'
+                      }
+                      required
+                      enabled={!isSaving}
+                      value={newShortDescription}
+                      maxLength={250}
                     />
                     {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(
                       documentType,

@@ -212,6 +212,32 @@ describe('/outputs/ route', () => {
         },
       );
 
+      test('Should return a validation error when shortDescription has more than 251 characters', async () => {
+        const response = await supertest(app)
+          .post('/outputs/')
+          .send({
+            ...output,
+            shortDescription: 'A'.repeat(251),
+          });
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({
+          data: [
+            {
+              instancePath: '/shortDescription',
+              keyword: 'maxLength',
+              message: 'must NOT have more than 250 characters',
+              params: {
+                limit: 250,
+              },
+              schemaPath: '#/properties/shortDescription/maxLength',
+            },
+          ],
+          error: 'Bad Request',
+          message: 'Validation error',
+          statusCode: 400,
+        });
+      });
+
       test('Should not return a validation error when gp2Supported is missing', async () => {
         const { app: adminApp } = getApp({ role: 'Administrator' });
         const response = await supertest(adminApp)

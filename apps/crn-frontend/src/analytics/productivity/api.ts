@@ -19,7 +19,6 @@ export const getUserProductivity = async (
   authorization: string,
 ): Promise<ListUserProductivityResponse | undefined> => {
   const { currentPage, pageSize, timeRange } = options;
-  console.log(options);
   const resp = await fetch(
     createListApiUrl('/analytics/productivity/user', {
       currentPage,

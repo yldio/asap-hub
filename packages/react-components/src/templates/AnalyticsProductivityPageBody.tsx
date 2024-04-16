@@ -1,10 +1,10 @@
+import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import AnalyticsControls from '../molecules/AnalyticsControls';
 import { perRem } from '../pixels';
-import { ComponentProps } from 'react';
 
 type MetricOption = 'user' | 'team';
 

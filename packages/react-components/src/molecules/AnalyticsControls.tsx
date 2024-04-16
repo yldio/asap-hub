@@ -61,7 +61,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
     >
       {Object.keys(timeRangeOptions).map((key) => ({
         item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-        href: href + `?range=${key}`,
+        href: `${href}?range=${key}`,
       }))}
     </DropdownButton>
   </span>

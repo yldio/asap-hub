@@ -1,5 +1,9 @@
-import { ListResponse } from './common';
+import { FetchPaginationOptions, ListResponse } from './common';
 import { TeamResponse, TeamRole } from './team';
+
+export type FetchAnalyticsOptions = FetchPaginationOptions & {
+  filter?: string;
+};
 
 export type AnalyticsTeamLeadershipDataObject = Pick<
   TeamResponse,
@@ -61,6 +65,18 @@ export type TeamProductivityDataObject = {
   Dataset: number;
   'Lab Resource': number;
   Protocol: number;
+};
+
+export type TimeRangeOption =
+  | '30d'
+  | '90d'
+  | 'current-year'
+  | 'last-year'
+  | 'all';
+
+export type TimeRangeFilter = {
+  gt: string;
+  lt: string;
 };
 
 export type ListUserProductivityDataObject =

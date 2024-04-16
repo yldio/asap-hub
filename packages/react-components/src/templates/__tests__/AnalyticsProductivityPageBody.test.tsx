@@ -6,6 +6,7 @@ describe('AnalyticsProductivityPageBody', () => {
   const props: ComponentProps<typeof AnalyticsProductivityPageBody> = {
     setMetric: () => null,
     metric: 'user',
+    timeRange: '30d',
     children: <span>table</span>,
   };
   it('renders user tab', () => {

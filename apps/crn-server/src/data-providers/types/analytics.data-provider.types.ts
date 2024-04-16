@@ -1,4 +1,5 @@
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListTeamProductivityDataObject,
@@ -10,9 +11,9 @@ export type AnalyticsDataProvider = {
     options: FetchPaginationOptions,
   ) => Promise<ListAnalyticsTeamLeadershipDataObject>;
   fetchUserProductivity: (
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ) => Promise<ListUserProductivityDataObject>;
   fetchTeamProductivity: (
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ) => Promise<ListTeamProductivityDataObject>;
 };

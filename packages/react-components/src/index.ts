@@ -275,6 +275,6 @@ export {
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
-export type { ItemType, TimeRangeOption } from './molecules';
+export type { ItemType } from './molecules';
 export type { Association } from './organisms';
 export type { ResearchOutputOption } from './utils';

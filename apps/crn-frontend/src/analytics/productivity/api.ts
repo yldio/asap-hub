@@ -2,8 +2,8 @@ import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
+  TimeRangeOption,
 } from '@asap-hub/model';
-import { TimeRangeOption } from '@asap-hub/react-components';
 
 import createListApiUrl from '../../CreateListApiUrl';
 

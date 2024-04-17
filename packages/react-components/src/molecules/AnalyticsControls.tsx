@@ -1,4 +1,6 @@
 import { css } from '@emotion/react';
+import { TimeRangeOption } from '@asap-hub/model';
+
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
 import { rem, tabletScreen } from '../pixels';
@@ -22,13 +24,6 @@ const containerStyles = css({
     width: '100%',
   },
 });
-
-export type TimeRangeOption =
-  | '30d'
-  | '90d'
-  | 'current-year'
-  | 'last-year'
-  | 'all';
 
 const timeRangeOptions: Record<TimeRangeOption, string> = {
   '30d': 'Last 30 days',

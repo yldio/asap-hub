@@ -59,4 +59,3 @@ export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as WorkingGroupsList } from './WorkingGroupsList';
 export type { ItemType } from './DropdownButton';
-export type { TimeRangeOption } from './AnalyticsControls';

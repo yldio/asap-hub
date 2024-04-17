@@ -417,8 +417,8 @@ type AnalyticOutput = Maybe<
   }
 >;
 export const getFilterOutputByRange =
-  (rangeKey?: string) => (item: AnalyticOutput) => {
-    const filters = getRangeFilterParams(rangeKey as TimeRangeOption);
+  (rangeKey?: TimeRangeOption) => (item: AnalyticOutput) => {
+    const filters = getRangeFilterParams(rangeKey);
     if (item && filters) {
       return (
         item.sys.publishedAt &&
@@ -431,7 +431,7 @@ export const getFilterOutputByRange =
 
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
-  rangeKey?: string,
+  rangeKey?: TimeRangeOption,
 ): UserProductivityDataObject[] =>
   cleanArray(usersCollection?.items).map((user) => {
     const teams =
@@ -512,7 +512,7 @@ const getUserProductivityItems = (
 
 const getTeamProductivityItems = (
   teamsCollection: FetchTeamProductivityQuery['teamsCollection'],
-  rangeKey?: string,
+  rangeKey?: TimeRangeOption,
 ): TeamProductivityDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     const initialDocumentTypesCount = {

@@ -1,5 +1,4 @@
-import { TimeRangeOption } from '@asap-hub/react-components';
-
+import { TimeRangeOption } from '@asap-hub/model';
 import { useLocation } from 'react-router-dom';
 
 export const useAnalytics = () => {

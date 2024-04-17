@@ -102,7 +102,7 @@ jobs:
       GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
-    needs: [setup, test, build-analysis, create-environment]
+    needs: [setup, build, create-environment]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch

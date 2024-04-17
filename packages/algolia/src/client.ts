@@ -85,11 +85,12 @@ export type EntityResponses = {
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;
+    [EXTERNAL_USER_ENTITY_TYPE]: gp2Model.ExternalUserResponse;
     [NEWS_ENTITY_TYPE]: gp2Model.NewsResponse;
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
-    [EXTERNAL_USER_ENTITY_TYPE]: gp2Model.ExternalUserResponse;
+    [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
   [ANALYTICS]: {
     [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;

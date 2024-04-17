@@ -20,6 +20,7 @@ yargs(hideBin(process.argv))
             'user',
             'news',
             'external-user',
+            'working-group',
           ],
           demandOption: true,
         })
@@ -36,7 +37,8 @@ yargs(hideBin(process.argv))
           | 'event'
           | 'user'
           | 'news'
-          | 'external-user',
+          | 'external-user'
+          | 'working-group',
         filename,
       ),
   })

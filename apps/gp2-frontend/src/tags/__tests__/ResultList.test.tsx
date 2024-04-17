@@ -16,6 +16,7 @@ import {
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
   createUserListAlgoliaResponse,
+  createWorkingGroupListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getTagSearchResults } from '../api';
 import ResultList, { ResultListProps } from '../ResultList';
@@ -98,6 +99,14 @@ describe('ResultList', () => {
     );
     await renderList({}, 'test');
     expect(screen.getByText('News Item')).toBeInTheDocument();
+  });
+
+  it('renders working groups', async () => {
+    mockGetTagSearchResults.mockResolvedValue(
+      createWorkingGroupListAlgoliaResponse(1, 1),
+    );
+    await renderList({}, 'test');
+    expect(screen.getByText(/Working Group/i)).toBeInTheDocument();
   });
 
   it('does not render unsupported types', async () => {

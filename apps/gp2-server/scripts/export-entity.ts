@@ -2,11 +2,12 @@ import { EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
+import ExternalUsers from '../src/controllers/external-user.controller';
 import News from '../src/controllers/news.controller';
 import Outputs from '../src/controllers/output.controller';
 import Projects from '../src/controllers/project.controller';
 import Users from '../src/controllers/user.controller';
-import ExternalUsers from '../src/controllers/external-user.controller';
+import WorkingGroups from '../src/controllers/working-group.controller';
 import { AssetContentfulDataProvider } from '../src/data-providers/asset.data-provider';
 import { EventContentfulDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalUserContentfulDataProvider } from '../src/data-providers/external-user.data-provider';
@@ -14,10 +15,22 @@ import { NewsContentfulDataProvider } from '../src/data-providers/news.data-prov
 import { OutputContentfulDataProvider } from '../src/data-providers/output.data-provider';
 import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
 import { UserContentfulDataProvider } from '../src/data-providers/user.data-provider';
+import { WorkingGroupContentfulDataProvider } from '../src/data-providers/working-group.data-provider';
 import {
   getContentfulGraphQLClientFactory,
   getContentfulRestClientFactory,
 } from '../src/dependencies/clients.dependency';
+
+const isWorkingGroupController = (
+  controller:
+    | Events
+    | ExternalUsers
+    | News
+    | Outputs
+    | Projects
+    | Users
+    | WorkingGroups,
+): controller is WorkingGroups => controller instanceof WorkingGroups;
 
 type EntityResponsesGP2 = EntityResponses['gp2'];
 export const exportEntity = async (
@@ -36,10 +49,14 @@ export const exportEntity = async (
 
   const take = 10;
   do {
-    records = await controller.fetch({
-      take,
-      skip: (page - 1) * take,
-    });
+    if (isWorkingGroupController(controller)) {
+      records = await controller.fetch();
+    } else {
+      records = await controller.fetch({
+        take,
+        skip: (page - 1) * take,
+      });
+    }
 
     total = records.total;
 
@@ -92,6 +109,11 @@ const getController = (entity: keyof EntityResponsesGP2) => {
   );
   const newsDataProvider = new NewsContentfulDataProvider(graphQLClient);
 
+  const workingGroupDataProvider = new WorkingGroupContentfulDataProvider(
+    graphQLClient,
+    getContentfulRestClientFactory,
+  );
+
   const controllerMap = {
     output: new Outputs(outputDataProvider, externalUserDataProvider),
     project: new Projects(projectDataProvider),
@@ -99,6 +121,7 @@ const getController = (entity: keyof EntityResponsesGP2) => {
     user: new Users(userDataProvider, assetDataProvider),
     news: new News(newsDataProvider),
     'external-user': new ExternalUsers(externalUserDataProvider),
+    'working-group': new WorkingGroups(workingGroupDataProvider),
   };
 
   return controllerMap[entity];

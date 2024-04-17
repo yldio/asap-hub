@@ -11,7 +11,9 @@ export type TagSearchOptions = Omit<
 };
 
 export const getItemTypes = (types: gp2.EntityType[]): gp2.EntityType[] =>
-  types.length === 0 ? ['event', 'news', 'output', 'project', 'user'] : types;
+  types.length === 0
+    ? ['event', 'news', 'output', 'project', 'user', 'working-group']
+    : types;
 
 export const getTagSearchResults = async (
   client: AlgoliaClient<'gp2'>,

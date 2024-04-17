@@ -4,6 +4,7 @@ import {
   OutputCard,
   ProjectCard,
   UserCard,
+  WorkingGroupCard,
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
@@ -71,6 +72,10 @@ const ResultList: React.FC<ResultListProps> = ({ filters = new Set() }) => {
           case 'news': {
             const data = result as gp2Model.NewsResponse;
             return <NewsCard {...data} key={data.id} type="News" />;
+          }
+          case 'working-group': {
+            const data = result as gp2Model.WorkingGroupResponse;
+            return <WorkingGroupCard key={data.id} {...data} />;
           }
           default:
             return '';

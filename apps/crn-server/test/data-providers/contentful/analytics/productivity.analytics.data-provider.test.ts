@@ -3,6 +3,7 @@ import {
   FETCH_USER_PRODUCTIVITY,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
+import { TimeRangeOption } from '@asap-hub/model';
 import {
   AnalyticsContentfulDataProvider,
   getFilterOutputByRange,
@@ -34,7 +35,12 @@ describe('filtering', () => {
     jest.useRealTimers();
   });
   describe('getFilterOutputByRange', () => {
-    it.each<{ key?: string; inRange: string; before: string; after: string }>([
+    it.each<{
+      key?: TimeRangeOption;
+      inRange: string;
+      before: string;
+      after: string;
+    }>([
       {
         inRange: '2023-09-05T03:00:00.000Z',
         before: '2023-08-05T03:00:00.000Z',

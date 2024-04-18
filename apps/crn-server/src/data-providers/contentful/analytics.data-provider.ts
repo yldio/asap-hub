@@ -211,13 +211,17 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               ]),
               workingGroupMemberCount: team.inactiveSince
                 ? 0
-                : getUniqueIdCount(currentWorkingGroupIdsFromTeamMembers),
+                : getUniqueIdCount([
+                    ...currentWorkingGroupIdsFromTeamLeaders,
+                    ...currentWorkingGroupIdsFromTeamMembers,
+                  ]),
 
               workingGroupPreviousMemberCount: getUniqueIdCount([
                 ...((team.inactiveSince &&
                   currentWorkingGroupIdsFromTeamMembers) ||
                   []),
                 ...previousWorkingGroupIdsFromTeamMembers,
+                ...previousWorkingGroupIdsFromTeamLeaders,
               ]),
             };
           }) || [],

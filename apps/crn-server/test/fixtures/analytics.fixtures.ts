@@ -85,6 +85,7 @@ export const getAnalyticsTeamLeadershipQuery =
                             interestGroupLeadersCollection: {
                               items: [
                                 {
+                                  role: 'Chair',
                                   linkedFrom: {
                                     interestGroupsCollection: {
                                       items: [
@@ -120,6 +121,7 @@ export const getAnalyticsTeamLeadershipQuery =
                             workingGroupLeadersCollection: {
                               items: [
                                 {
+                                  role: 'Chair',
                                   linkedFrom: {
                                     workingGroupsCollection: {
                                       items: [

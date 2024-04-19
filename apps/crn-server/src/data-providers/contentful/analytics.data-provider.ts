@@ -185,7 +185,10 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 ? 0
                 : getUniqueIdCount(currentInterestGroupIdsFromTeamLeaders),
               interestGroupPreviousLeadershipRoleCount: getUniqueIdCount([
-                ...previousInterestGroupIdsFromTeamLeaders,
+                ...removeDuplicates(
+                  previousInterestGroupIdsFromTeamLeaders,
+                  currentInterestGroupIdsFromTeamLeaders,
+                ),
                 ...((team.inactiveSince &&
                   currentInterestGroupIdsFromTeamLeaders) ||
                   []),
@@ -207,7 +210,10 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 ...((team.inactiveSince &&
                   currentWorkingGroupIdsFromTeamLeaders) ||
                   []),
-                ...previousWorkingGroupIdsFromTeamLeaders,
+                ...removeDuplicates(
+                  previousWorkingGroupIdsFromTeamLeaders,
+                  currentWorkingGroupIdsFromTeamLeaders,
+                ),
               ]),
               workingGroupMemberCount: team.inactiveSince
                 ? 0
@@ -220,8 +226,13 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
                 ...((team.inactiveSince &&
                   currentWorkingGroupIdsFromTeamMembers) ||
                   []),
-                ...previousWorkingGroupIdsFromTeamMembers,
-                ...previousWorkingGroupIdsFromTeamLeaders,
+                ...removeDuplicates(
+                  [
+                    ...previousWorkingGroupIdsFromTeamMembers,
+                    ...previousWorkingGroupIdsFromTeamLeaders,
+                  ],
+                  currentWorkingGroupIdsFromTeamMembers,
+                ),
               ]),
             };
           }) || [],
@@ -305,7 +316,7 @@ const flattenWorkingGroupLeaders = (
         )
         .map((item) => ({
           workingGroupId: item.sys.id,
-          userIsAlumni: user.alumniSinceDate !== null,
+          userIsAlumni: !!user.alumniSinceDate,
           workingGroupComplete: !!item.complete,
           workingGroupLeadershipIsActive: !workingGroupLeader.inactiveSinceDate,
           role: workingGroupLeader.role || null,
@@ -332,7 +343,7 @@ const flattenWorkingGroupMember = (
         )
         .map((item) => ({
           workingGroupId: item.sys.id,
-          userIsAlumni: user.alumniSinceDate !== null,
+          userIsAlumni: !!user.alumniSinceDate,
           workingGroupComplete: !!item.complete,
           workingGroupMembershipIsActive: !workingGroupMember.inactiveSinceDate,
         })) || [],
@@ -359,7 +370,7 @@ const flattenInterestGroupLeaders = (
         )
         .map((item) => ({
           interestGroupId: item.sys.id,
-          userIsAlumni: user.alumniSinceDate !== null,
+          userIsAlumni: !!user.alumniSinceDate,
           interestGroupActive: !!item.active,
           interestGroupLeadershipIsActive:
             !interestGroupLeader.inactiveSinceDate,
@@ -509,3 +520,8 @@ const isPublishedInLastMonth = (outputPublishedDate: string) => {
         new Date(outputPublishedDate) <= currentDate
     : false;
 };
+
+// remove string from one array that are present in another array and return a new array of strings
+const removeDuplicates = (arr1: string[], arr2: string[]): string[] => [
+  ...arr1.filter((elem) => !arr2.includes(elem)),
+];

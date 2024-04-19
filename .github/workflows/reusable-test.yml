@@ -155,8 +155,6 @@ jobs:
         run: git diff --name-only --diff-filter=d origin/master origin/${GITHUB_HEAD_REF} | xargs yarn jscpd
 
   integration-test:
-    # skip until fixed in ASAP-362
-    if: false
     concurrency: integration-test
     permissions:
       packages: read

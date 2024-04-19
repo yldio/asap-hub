@@ -1033,7 +1033,7 @@ describe('Events Contentful Data Provider', () => {
           status: {
             'en-US': 'Confirmed',
           },
-          tags: {
+          researchTags: {
             'en-US': [],
           },
           title: {

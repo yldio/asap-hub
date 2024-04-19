@@ -144,9 +144,8 @@ export class ContentfulFixture implements Fixture {
     const environment = await this.getEnvironment();
     return {
       ...props,
-      labs: [],
       researchTags: await Promise.all(
-        (props.tags || []).map(async (tag) => {
+        (props.researchTags || []).map(async (tag) => {
           const researchTag = await environment.createEntry('researchTags', {
             fields: addLocaleToFields({ name: tag }),
           });

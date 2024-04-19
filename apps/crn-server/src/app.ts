@@ -130,7 +130,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const featureFlagDependencySwitch = new FeatureFlagDependencySwitch();
   // Middleware
   const httpLogger = libs.httpLogger || getHttpLogger({ logger });
-  const errorHandler = errorHandlerFactory();
+  const errorHandler = errorHandlerFactory(logger);
 
   // Clients
   const decodeToken = decodeTokenFactory(auth0Audience);

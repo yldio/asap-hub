@@ -9,7 +9,7 @@ export const getTeamFixture = (
   return {
     displayName: chance.animal(),
     applicationNumber: chance.guid(),
-    tags: [],
+    researchTags: [],
     projectTitle: 'Project title',
     ...props,
   };

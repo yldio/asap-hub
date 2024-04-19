@@ -68,7 +68,7 @@
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
     "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
-    "test:integration": "yarn test --config=jest-integration.config.js -i",
+    "test:integration": "LOG_ENABLED=true LOG_LEVEL=error yarn test --config=jest-integration.config.js -i",
     "typecheck": "turbo typecheck",
     "update:browser-list": "yarn up -R caniuse-lite",
     "watch": "yarn watch:babel & yarn watch:typecheck",

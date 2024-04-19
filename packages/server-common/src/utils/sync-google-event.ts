@@ -92,7 +92,7 @@ export const syncEventFactory =
         const crnEventToCreate = {
           ...newEvent,
           hidden,
-          tags: [],
+          researchTags: [],
         };
 
         logger.info(

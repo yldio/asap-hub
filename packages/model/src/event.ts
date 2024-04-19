@@ -93,12 +93,12 @@ export type EventCreateDataObject = Pick<
   | 'endDate'
   | 'endDateTimeZone'
   | 'status'
-  | 'tags'
   | 'hideMeetingLink'
 > & {
   googleId: string;
   calendar: string;
   hidden: boolean;
+  researchTags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
 };
 
 export type EventUpdateDataObject = Partial<

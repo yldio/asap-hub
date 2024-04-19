@@ -21,6 +21,7 @@ export type EventCreateDataObject = CommonEventCreateDataObject & {
   videoRecording?: string | null;
   presentation?: string | null;
   lastUpdated: string;
+  researchTags: string[];
 };
 export type EventUpdateDataObject = Pick<
   CommonEventUpdateDataObject,
@@ -67,6 +68,7 @@ export type InterestGroupCreateDataObject = Omit<
   | 'contactEmails'
   | 'calendars'
   | 'tools'
+  | 'tags'
 > & {
   leaders: {
     user: string;
@@ -76,6 +78,7 @@ export type InterestGroupCreateDataObject = Omit<
   teams: { id: string }[];
   calendar: { id: string } | null;
   lastUpdated: string;
+  researchTags: string[];
 };
 export type WorkingGroupCreateDataObject = Omit<
   WorkingGroupDataObject,

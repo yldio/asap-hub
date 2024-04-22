@@ -29,7 +29,7 @@ describe('getTagSearchResults', () => {
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenCalledWith(
-      ['event', 'news', 'output', 'project', 'user'],
+      ['event', 'news', 'output', 'project', 'user', 'working-group'],
       '',
       expect.objectContaining({
         hitsPerPage: 10,

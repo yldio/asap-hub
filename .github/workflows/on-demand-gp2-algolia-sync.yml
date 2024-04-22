@@ -15,6 +15,7 @@ on:
           - users
           - news
           - external-users
+          - working-groups
       environment-name:
         required: true
         type: environment

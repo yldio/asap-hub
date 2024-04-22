@@ -113,6 +113,29 @@ export const createNewsListAlgoliaResponse = (
   return response;
 };
 
+type WorkingGroupSearchResponse = ClientSearchResponse<'gp2', 'working-group'>;
+export const createWorkingGroupAlgoliaRecord = (
+  item: gp2.WorkingGroupResponse,
+): WorkingGroupSearchResponse['hits'][number] => ({
+  ...item,
+  objectID: item.id,
+  __meta: { type: 'working-group' },
+});
+
+export const createWorkingGroupListAlgoliaResponse = (
+  items: number,
+  total: number,
+): WorkingGroupSearchResponse => {
+  const response = createAlgoliaResponse<'working-group'>(
+    gp2Fixtures
+      .createListWorkingGroupResponse(items)
+      .items.map((item) => createWorkingGroupAlgoliaRecord(item)),
+  );
+
+  response.nbHits = total;
+  return response;
+};
+
 type UserSearchResponse = ClientSearchResponse<'gp2', 'user'>;
 export const createUserAlgoliaRecord = (
   overrides?: Partial<gp2.UserResponse>,

@@ -140,22 +140,6 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
-  private async prepareTeam(props: TeamCreateDataObject) {
-    const environment = await this.getEnvironment();
-    return {
-      ...props,
-      researchTags: await Promise.all(
-        (props.researchTags || []).map(async (tag) => {
-          const researchTag = await environment.createEntry('researchTags', {
-            fields: addLocaleToFields({ name: tag }),
-          });
-          await researchTag.publish();
-          return getLinkEntity(researchTag.sys.id);
-        }),
-      ),
-    };
-  }
-
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {
     const environment = await this.getEnvironment();
     return {
@@ -294,9 +278,8 @@ export class ContentfulFixture implements Fixture {
 
   async createTeam(team: TeamCreateDataObject) {
     const environment = await this.getEnvironment();
-    const input = await this.prepareTeam(team);
     const result = await environment.createEntry('teams', {
-      fields: addLocaleToFields(input),
+      fields: addLocaleToFields(team),
     });
     await result.publish();
     return {

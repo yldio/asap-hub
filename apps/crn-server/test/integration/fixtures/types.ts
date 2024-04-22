@@ -77,7 +77,6 @@ export type InterestGroupCreateDataObject = Omit<
   teams: { id: string }[];
   calendar: { id: string } | null;
   lastUpdated: string;
-  researchTags: string[];
 };
 export type WorkingGroupCreateDataObject = Omit<
   WorkingGroupDataObject,

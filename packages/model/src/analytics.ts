@@ -8,11 +8,6 @@ export type TimeRangeOption =
   | 'last-year'
   | 'all';
 
-export type TimeRangeFilter = {
-  gt: string;
-  lt: string;
-};
-
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: TimeRangeOption;
 };

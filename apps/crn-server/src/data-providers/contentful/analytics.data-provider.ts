@@ -25,7 +25,6 @@ import {
   TeamProductivityDocumentType,
   teamProductivityDocumentTypes,
   TeamRole,
-  TimeRangeFilter,
   TimeRangeOption,
   UserProductivityDataObject,
   UserProductivityTeam,
@@ -372,27 +371,15 @@ const flattenInterestGroupLeaders = (
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
 
-const getRangeFilterParams = (
-  rangeKey?: TimeRangeOption,
-): TimeRangeFilter | null => {
+const getRangeFilterParams = (rangeKey?: TimeRangeOption): string | null => {
   const now = new Date();
-  const options: Record<TimeRangeOption, TimeRangeFilter | null> = {
-    '30d': {
-      gt: new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
-      lt: now.toISOString(),
-    },
-    '90d': {
-      gt: new Date(new Date().setDate(now.getDate() - 90)).toISOString(),
-      lt: now.toISOString(),
-    },
-    'current-year': {
-      gt: new Date(now.getFullYear(), 0, 1).toISOString(),
-      lt: now.toISOString(),
-    },
-    'last-year': {
-      gt: new Date(now.getFullYear() - 1, 0, 1).toISOString(),
-      lt: new Date(now.getFullYear() - 1, 11, 31).toISOString(),
-    },
+  const options: Record<TimeRangeOption, string | null> = {
+    '30d': new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
+    '90d': new Date(new Date().setDate(now.getDate() - 90)).toISOString(),
+    'current-year': new Date(now.getFullYear(), 0, 1).toISOString(),
+    'last-year': new Date(
+      new Date().setDate(now.getDate() - 365),
+    ).toISOString(),
     all: null,
   };
   if (rangeKey && rangeKey in options) {
@@ -418,13 +405,9 @@ type AnalyticOutput = Maybe<
 >;
 export const getFilterOutputByRange =
   (rangeKey?: TimeRangeOption) => (item: AnalyticOutput) => {
-    const filters = getRangeFilterParams(rangeKey);
-    if (item && filters) {
-      return (
-        item.sys.publishedAt &&
-        item.sys.publishedAt >= filters.gt &&
-        item.sys.publishedAt <= filters.lt
-      );
+    const filter = getRangeFilterParams(rangeKey);
+    if (item && filter) {
+      return item.sys.publishedAt && item.sys.publishedAt >= filter;
     }
     return true;
   };

@@ -38,50 +38,40 @@ describe('filtering', () => {
     it.each<{
       key?: TimeRangeOption;
       inRange: string;
-      before: string;
-      after: string;
+      out: string;
     }>([
       {
         inRange: '2023-09-05T03:00:00.000Z',
-        before: '2023-08-05T03:00:00.000Z',
-        after: '2023-09-11T03:00:00.000Z',
+        out: '2023-08-05T03:00:00.000Z',
       },
       {
         key: '30d',
         inRange: '2023-09-05T03:00:00.000Z',
-        before: '2023-08-05T03:00:00.000Z',
-        after: '2023-09-11T03:00:00.000Z',
+        out: '2023-08-05T03:00:00.000Z',
       },
       {
         key: '90d',
         inRange: '2023-08-05T03:00:00.000Z',
-        before: '2023-06-05T03:00:00.000Z',
-        after: '2023-09-11T03:00:00.000Z',
+        out: '2023-06-05T03:00:00.000Z',
       },
       {
         key: 'current-year',
         inRange: '2023-09-10T03:00:00.000Z',
-        before: '2022-12-31T03:00:00.000Z',
-        after: '2023-09-11T03:00:00.000Z',
+        out: '2022-12-31T03:00:00.000Z',
       },
       {
         key: 'last-year',
         inRange: '2022-09-10T03:00:00.000Z',
-        before: '2021-12-31T03:00:00.000Z',
-        after: '2023-01-01T03:00:00.000Z',
+        out: '2022-09-09T03:00:00.000Z',
       },
-    ])(
-      'filters outputs for time range $key',
-      ({ key, inRange, before, after }) => {
-        const items = [
-          { sys: { publishedAt: inRange } },
-          { sys: { publishedAt: before } },
-          { sys: { publishedAt: after } },
-        ];
+    ])('filters outputs for time range $key', ({ key, inRange, out }) => {
+      const items = [
+        { sys: { publishedAt: inRange } },
+        { sys: { publishedAt: out } },
+      ];
 
-        expect(items.filter(getFilterOutputByRange(key)).length).toBe(1);
-      },
-    );
+      expect(items.filter(getFilterOutputByRange(key)).length).toBe(1);
+    });
     it('does not filter when rangeKey is "all"', () => {
       const items = [
         { sys: { publishedAt: '1980-09-10T03:00:00.000Z' } },

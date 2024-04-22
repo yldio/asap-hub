@@ -2,20 +2,28 @@ import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
+  TimeRangeOption,
 } from '@asap-hub/model';
 
 import createListApiUrl from '../../CreateListApiUrl';
 
+export type ProductivityListOptions = Pick<
+  GetListOptions,
+  'currentPage' | 'pageSize'
+> & {
+  timeRange: TimeRangeOption;
+};
+
 export const getUserProductivity = async (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: ProductivityListOptions,
   authorization: string,
 ): Promise<ListUserProductivityResponse | undefined> => {
-  const { currentPage, pageSize } = options;
+  const { currentPage, pageSize, timeRange } = options;
   const resp = await fetch(
     createListApiUrl('/analytics/productivity/user', {
       currentPage,
       pageSize,
-      filters: new Set(),
+      filters: new Set([timeRange]),
       searchQuery: '',
     }).toString(),
     {
@@ -35,15 +43,15 @@ export const getUserProductivity = async (
 };
 
 export const getTeamProductivity = async (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: ProductivityListOptions,
   authorization: string,
 ): Promise<ListTeamProductivityResponse | undefined> => {
-  const { currentPage, pageSize } = options;
+  const { currentPage, pageSize, timeRange } = options;
   const resp = await fetch(
     createListApiUrl('/analytics/productivity/team', {
       currentPage,
       pageSize,
-      filters: new Set(),
+      filters: new Set([timeRange]),
       searchQuery: '',
     }).toString(),
     {

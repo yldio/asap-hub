@@ -1,4 +1,5 @@
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
   ListTeamProductivityResponse,
@@ -16,13 +17,13 @@ export default class AnalyticsController {
   }
 
   async fetchUserProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListUserProductivityResponse> {
     return this.analyticsDataProvider.fetchUserProductivity(options);
   }
 
   async fetchTeamProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListTeamProductivityResponse> {
     return this.analyticsDataProvider.fetchTeamProductivity(options);
   }

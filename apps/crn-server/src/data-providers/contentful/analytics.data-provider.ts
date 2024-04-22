@@ -10,10 +10,13 @@ import {
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
+  Maybe,
+  ResearchOutputs,
   Sys,
   WorkingGroups,
 } from '@asap-hub/contentful';
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListTeamProductivityDataObject,
@@ -22,6 +25,7 @@ import {
   TeamProductivityDocumentType,
   teamProductivityDocumentTypes,
   TeamRole,
+  TimeRangeOption,
   UserProductivityDataObject,
   UserProductivityTeam,
 } from '@asap-hub/model';
@@ -225,9 +229,10 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   }
 
   async fetchUserProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListUserProductivityDataObject> {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter: rangeKey } = options;
+
     const { usersCollection } = await this.contentfulClient.request<
       FetchUserProductivityQuery,
       FetchUserProductivityQueryVariables
@@ -235,14 +240,14 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: usersCollection?.total || 0,
-      items: getUserProductivityItems(usersCollection),
+      items: getUserProductivityItems(usersCollection, rangeKey),
     };
   }
 
   async fetchTeamProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListTeamProductivityDataObject> {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter: rangeKey } = options;
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamProductivityQuery,
       FetchTeamProductivityQueryVariables
@@ -250,7 +255,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getTeamProductivityItems(teamsCollection),
+      items: getTeamProductivityItems(teamsCollection, rangeKey),
     };
   }
 }
@@ -366,8 +371,50 @@ const flattenInterestGroupLeaders = (
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
 
+const getRangeFilterParams = (rangeKey?: TimeRangeOption): string | null => {
+  const now = new Date();
+  const options: Record<TimeRangeOption, string | null> = {
+    '30d': new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
+    '90d': new Date(new Date().setDate(now.getDate() - 90)).toISOString(),
+    'current-year': new Date(now.getFullYear(), 0, 1).toISOString(),
+    'last-year': new Date(
+      new Date().setDate(now.getDate() - 365),
+    ).toISOString(),
+    all: null,
+  };
+  if (rangeKey && rangeKey in options) {
+    return options[rangeKey];
+  }
+  return options['30d'];
+};
+
+type AnalyticOutput = Maybe<
+  Pick<ResearchOutputs, 'sharingStatus'> & {
+    sys: Pick<Sys, 'publishedAt'>;
+    authorsCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          | { __typename: 'ExternalAuthors' }
+          | ({ __typename: 'Users' } & {
+              sys: Pick<Sys, 'id'>;
+            })
+        >
+      >;
+    }>;
+  }
+>;
+export const getFilterOutputByRange =
+  (rangeKey?: TimeRangeOption) => (item: AnalyticOutput) => {
+    const filter = getRangeFilterParams(rangeKey);
+    if (item && filter) {
+      return item.sys.publishedAt && item.sys.publishedAt >= filter;
+    }
+    return true;
+  };
+
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
+  rangeKey?: TimeRangeOption,
 ): UserProductivityDataObject[] =>
   cleanArray(usersCollection?.items).map((user) => {
     const teams =
@@ -391,15 +438,16 @@ const getUserProductivityItems = (
             userProductivityItem !== null,
         ) || [];
 
-    const userOutputsCount =
-      user.linkedFrom?.researchOutputsCollection?.items.reduce(
+    const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
+      .filter(getFilterOutputByRange(rangeKey))
+      .reduce(
         (outputsCount, outputItem) => {
           const isAuthor = outputItem?.authorsCollection?.items.some(
             (author) =>
               author?.__typename === 'Users' && author.sys.id === user.sys.id,
           );
 
-          if (isAuthor && isPublishedInLastMonth(outputItem?.sys.publishedAt)) {
+          if (isAuthor) {
             if (outputItem?.sharingStatus === 'Public') {
               return {
                 outputs: outputsCount.outputs + 1,
@@ -420,9 +468,9 @@ const getUserProductivityItems = (
           publicOutputs: 0,
         },
       ) || {
-        outputs: 0,
-        publicOutputs: 0,
-      };
+      outputs: 0,
+      publicOutputs: 0,
+    };
 
     return {
       id: user.sys.id,
@@ -447,6 +495,7 @@ const getUserProductivityItems = (
 
 const getTeamProductivityItems = (
   teamsCollection: FetchTeamProductivityQuery['teamsCollection'],
+  rangeKey?: TimeRangeOption,
 ): TeamProductivityDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     const initialDocumentTypesCount = {
@@ -458,8 +507,9 @@ const getTeamProductivityItems = (
     };
 
     const documentTypesCount =
-      teamItem.linkedFrom?.researchOutputsCollection?.items.reduce(
-        (count, researchOutput) => {
+      teamItem.linkedFrom?.researchOutputsCollection?.items
+        .filter(getFilterOutputByRange(rangeKey))
+        .reduce((count, researchOutput) => {
           const isTeamProductivityDocumentType = (
             documentType: string,
           ): documentType is TeamProductivityDocumentType =>
@@ -468,7 +518,6 @@ const getTeamProductivityItems = (
             );
 
           if (
-            isPublishedInLastMonth(researchOutput?.sys.publishedAt) &&
             researchOutput?.documentType &&
             isTeamProductivityDocumentType(researchOutput.documentType)
           ) {
@@ -479,9 +528,7 @@ const getTeamProductivityItems = (
             };
           }
           return count;
-        },
-        initialDocumentTypesCount,
-      ) || initialDocumentTypesCount;
+        }, initialDocumentTypesCount) || initialDocumentTypesCount;
 
     return {
       id: teamItem.sys.id,
@@ -494,14 +541,3 @@ const getTeamProductivityItems = (
       Protocol: documentTypesCount.Protocol,
     };
   });
-
-const isPublishedInLastMonth = (outputPublishedDate: string) => {
-  const currentDate = new Date();
-  const lastMonthDate = new Date();
-  lastMonthDate.setMonth(currentDate.getMonth() - 1);
-
-  return outputPublishedDate
-    ? new Date(outputPublishedDate) >= lastMonthDate &&
-        new Date(outputPublishedDate) <= currentDate
-    : false;
-};

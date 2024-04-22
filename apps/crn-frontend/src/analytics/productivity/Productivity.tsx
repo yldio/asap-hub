@@ -1,6 +1,7 @@
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { useHistory, useParams } from 'react-router-dom';
+import { useAnalytics } from '../../hooks';
 
 import TeamProductivity from './TeamProductivity';
 import UserProductivity from './UserProductivity';
@@ -13,8 +14,14 @@ const Productivity = () => {
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
 
+  const { timeRange } = useAnalytics();
+
   return (
-    <AnalyticsProductivityPageBody metric={metric} setMetric={setMetric}>
+    <AnalyticsProductivityPageBody
+      metric={metric}
+      setMetric={setMetric}
+      timeRange={timeRange}
+    >
       {metric === 'user' ? <UserProductivity /> : <TeamProductivity />}
     </AnalyticsProductivityPageBody>
   );

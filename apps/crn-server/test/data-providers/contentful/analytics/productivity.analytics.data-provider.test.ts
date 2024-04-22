@@ -3,7 +3,11 @@ import {
   FETCH_USER_PRODUCTIVITY,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
-import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
+import { TimeRangeOption } from '@asap-hub/model';
+import {
+  AnalyticsContentfulDataProvider,
+  getFilterOutputByRange,
+} from '../../../../src/data-providers/contentful/analytics.data-provider';
 import {
   getResearchOutputTeamProductivity,
   getTeamProductivityDataObject,
@@ -19,6 +23,66 @@ const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 const analyticsDataProvider = new AnalyticsContentfulDataProvider(
   contentfulGraphqlClientMock,
 );
+
+describe('filtering', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+
+    jest.setSystemTime(new Date('2023-09-10T03:00:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+  describe('getFilterOutputByRange', () => {
+    it.each<{
+      key?: TimeRangeOption;
+      inRange: string;
+      out: string;
+    }>([
+      {
+        inRange: '2023-09-05T03:00:00.000Z',
+        out: '2023-08-05T03:00:00.000Z',
+      },
+      {
+        key: '30d',
+        inRange: '2023-09-05T03:00:00.000Z',
+        out: '2023-08-05T03:00:00.000Z',
+      },
+      {
+        key: '90d',
+        inRange: '2023-08-05T03:00:00.000Z',
+        out: '2023-06-05T03:00:00.000Z',
+      },
+      {
+        key: 'current-year',
+        inRange: '2023-09-10T03:00:00.000Z',
+        out: '2022-12-31T03:00:00.000Z',
+      },
+      {
+        key: 'last-year',
+        inRange: '2022-09-10T03:00:00.000Z',
+        out: '2022-09-09T03:00:00.000Z',
+      },
+    ])('filters outputs for time range $key', ({ key, inRange, out }) => {
+      const items = [
+        { sys: { publishedAt: inRange } },
+        { sys: { publishedAt: out } },
+      ];
+
+      expect(items.filter(getFilterOutputByRange(key)).length).toBe(1);
+    });
+    it('does not filter when rangeKey is "all"', () => {
+      const items = [
+        { sys: { publishedAt: '1980-09-10T03:00:00.000Z' } },
+        { sys: { publishedAt: '2022-09-10T03:00:00.000Z' } },
+        { sys: { publishedAt: '2040-09-10T03:00:00.000Z' } },
+      ];
+
+      expect(items.filter(getFilterOutputByRange('all')).length).toBe(3);
+    });
+  });
+});
 
 describe('fetchUserProductivity', () => {
   beforeAll(() => {

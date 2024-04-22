@@ -20,7 +20,6 @@ export const getEventFixture = (
     hideMeetingLink: false,
     calendar: chance.string(),
     googleId: chance.string(),
-    researchTags: [],
     ...props,
   };
 };

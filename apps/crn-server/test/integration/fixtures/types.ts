@@ -21,7 +21,6 @@ export type EventCreateDataObject = CommonEventCreateDataObject & {
   videoRecording?: string | null;
   presentation?: string | null;
   lastUpdated: string;
-  researchTags: string[];
 };
 export type EventUpdateDataObject = Pick<
   CommonEventUpdateDataObject,

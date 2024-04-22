@@ -98,7 +98,6 @@ export type EventCreateDataObject = Pick<
   googleId: string;
   calendar: string;
   hidden: boolean;
-  researchTags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
 };
 
 export type EventUpdateDataObject = Partial<

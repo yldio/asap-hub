@@ -38,7 +38,6 @@ describe('Sync calendar util hook', () => {
       endDateTimeZone: 'Europe/Lisbon',
       status: 'Confirmed',
       calendar: calendarId,
-      researchTags: [],
       hidden: false,
       hideMeetingLink: false,
     });
@@ -147,7 +146,6 @@ describe('Sync calendar util hook', () => {
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Cancelled',
         calendar: 'calendar-id',
-        researchTags: [],
         hidden: true,
         hideMeetingLink: false,
       });
@@ -351,7 +349,6 @@ describe('Sync calendar util hook', () => {
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Confirmed',
         calendar: calendarId,
-        researchTags: [],
         hidden: false,
         hideMeetingLink: false,
       });
@@ -426,7 +423,6 @@ describe('Sync calendar util hook', () => {
       endDateTimeZone: 'Europe/London',
       status: 'Confirmed',
       calendar: calendarId,
-      researchTags: [],
       hidden: false,
       hideMeetingLink: false,
     });
@@ -460,7 +456,6 @@ describe('Sync calendar util hook', () => {
       endDateTimeZone: 'America/New_York',
       status: 'Confirmed',
       calendar: calendarId,
-      researchTags: [],
       hidden: false,
       hideMeetingLink: false,
     });

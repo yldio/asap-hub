@@ -145,7 +145,7 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
         displayName
         inactiveSince
         linkedFrom {
-          researchOutputsCollection(limit: 100) {
+          researchOutputsCollection(limit: 1000) {
             items {
               addedDate
               createdDate

@@ -23471,7 +23471,7 @@ export const FetchTeamProductivityDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '100' },
+                                  value: { kind: 'IntValue', value: '1000' },
                                 },
                               ],
                               selectionSet: {

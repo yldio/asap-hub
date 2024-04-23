@@ -182,9 +182,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   >['researchOutputsCollection']
 >['items'] => [
   {
-    sys: {
-      publishedAt: '2023-09-08T03:00:00.000Z',
-    },
+    addedDate: '2023-09-08T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -198,9 +196,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-07T03:00:00.000Z',
-    },
+    addedDate: '2023-09-07T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -220,9 +216,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-06T03:00:00.000Z',
-    },
+    addedDate: '2023-09-06T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -236,9 +230,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-05T03:00:00.000Z',
-    },
+    addedDate: '2023-09-05T03:00:00.000Z',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -252,9 +244,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-07-05T03:00:00.000Z',
-    },
+    addedDate: '2023-07-05T03:00:00.000Z',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -291,27 +281,19 @@ export const getResearchOutputTeamProductivity = (): NonNullable<
   >['researchOutputsCollection']
 >['items'] => [
   {
-    sys: {
-      publishedAt: '2023-09-05T03:00:00.000Z',
-    },
+    addedDate: '2023-09-05T03:00:00.000Z',
     documentType: 'Article',
   },
   {
-    sys: {
-      publishedAt: '2023-09-03T03:00:00.000Z',
-    },
+    addedDate: '2023-09-03T03:00:00.000Z',
     documentType: 'Bioinformatics',
   },
   {
-    sys: {
-      publishedAt: '2023-09-01T03:00:00.000Z',
-    },
+    addedDate: '2023-09-01T03:00:00.000Z',
     documentType: 'Grant Document',
   },
   {
-    sys: {
-      publishedAt: null,
-    },
+    addedDate: null,
     documentType: 'Protocol',
   },
 ];

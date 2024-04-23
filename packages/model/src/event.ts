@@ -93,7 +93,6 @@ export type EventCreateDataObject = Pick<
   | 'endDate'
   | 'endDateTimeZone'
   | 'status'
-  | 'tags'
   | 'hideMeetingLink'
 > & {
   googleId: string;

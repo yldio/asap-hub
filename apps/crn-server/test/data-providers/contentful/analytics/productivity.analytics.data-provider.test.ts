@@ -65,21 +65,27 @@ describe('filtering', () => {
         out: '2022-09-09T03:00:00.000Z',
       },
     ])('filters outputs for time range $key', ({ key, inRange, out }) => {
-      const items = [
-        { sys: { publishedAt: inRange } },
-        { sys: { publishedAt: out } },
-      ];
+      const items = [{ addedDate: inRange }, { addedDate: out }];
 
       expect(items.filter(getFilterOutputByRange(key)).length).toBe(1);
     });
     it('does not filter when rangeKey is "all"', () => {
       const items = [
-        { sys: { publishedAt: '1980-09-10T03:00:00.000Z' } },
-        { sys: { publishedAt: '2022-09-10T03:00:00.000Z' } },
-        { sys: { publishedAt: '2040-09-10T03:00:00.000Z' } },
+        { addedDate: '1980-09-10T03:00:00.000Z' },
+        { addedDate: '2022-09-10T03:00:00.000Z' },
+        { addedDate: '2040-09-10T03:00:00.000Z' },
       ];
 
       expect(items.filter(getFilterOutputByRange('all')).length).toBe(3);
+    });
+    it('filter by createdDate when addedDate is null', () => {
+      const items = [
+        { addedDate: '2023-09-05T03:00:00.000Z' },
+        { addedDate: null, createdDate: '2023-09-01T03:00:00.000Z' },
+        { addedDate: '2023-09-09T03:00:00.000Z' },
+      ];
+
+      expect(items.filter(getFilterOutputByRange('30d')).length).toBe(3);
     });
   });
 });
@@ -99,9 +105,7 @@ describe('fetchUserProductivity', () => {
     getContentfulGraphqlClientMockServer({
       Users: () => getContentfulGraphqlUser(),
       ResearchOutputs: () => ({
-        sys: {
-          publishedAt: '2023-09-03T03:00:00.000Z',
-        },
+        addedDate: '2023-09-03T03:00:00.000Z',
         sharingStatus: 'Network Only',
         authorsCollection: {
           items: [

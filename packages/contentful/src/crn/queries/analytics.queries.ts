@@ -113,9 +113,8 @@ export const FETCH_USER_PRODUCTIVITY = gql`
         linkedFrom {
           researchOutputsCollection(limit: 20) {
             items {
-              sys {
-                publishedAt
-              }
+              addedDate
+              createdDate
               sharingStatus
               authorsCollection(limit: 10) {
                 items {
@@ -148,9 +147,8 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
         linkedFrom {
           researchOutputsCollection(limit: 100) {
             items {
-              sys {
-                publishedAt
-              }
+              addedDate
+              createdDate
               documentType
             }
           }

@@ -88,10 +88,50 @@ export const getListOutputDataObject =
 export const getOutputResponse = (): gp2Model.OutputResponse =>
   getOutputDataObject();
 
+export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
+  const {
+    id,
+    title,
+    tags,
+    type,
+    documentType,
+    publishDate,
+    workingGroups,
+    addedDate,
+    authors,
+  } = getOutputDataObject();
+
+  return {
+    id,
+    title,
+    tags,
+    type,
+    documentType,
+    publishDate,
+    workingGroups,
+    addedDate,
+    authors: (authors as gp2Model.UserAuthor[]).map(
+      ({ id, firstName, lastName, displayName, avatarUrl }) => ({
+        id,
+        firstName,
+        lastName,
+        displayName,
+        avatarUrl,
+      }),
+    ),
+  };
+};
+
 export const getListOutputResponse = (): gp2Model.ListOutputResponse => ({
   total: 1,
   items: [getOutputResponse()],
 });
+
+export const getListPublicOutputResponse =
+  (): gp2Model.ListPublicOutputResponse => ({
+    total: 1,
+    items: [getPublicOutputResponse()],
+  });
 
 export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
   const {

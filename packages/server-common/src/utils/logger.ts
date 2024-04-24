@@ -59,3 +59,6 @@ export const getHttpLogger = ({ logger }: { logger: Logger }) =>
       userId: (req as IncomingMessageWithUser).loggedInUser?.id,
     }),
   });
+
+export const getBasicHttpLogger = ({ logger }: { logger: Logger }) =>
+  pinoHttp({ logger });

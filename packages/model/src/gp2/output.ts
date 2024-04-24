@@ -185,7 +185,29 @@ export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
 
 export type OutputResponse = OutputBaseResponse;
 
+export type PublicOutputResponse = Pick<
+  OutputBaseResponse,
+  | 'title'
+  | 'tags'
+  | 'type'
+  | 'documentType'
+  | 'publishDate'
+  | 'workingGroups'
+  | 'addedDate'
+  | 'id'
+> & {
+  authors: Array<
+    | Pick<
+        UserAuthor,
+        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl'
+      >
+    | Pick<ExternalUserResponse, 'displayName'>
+  >;
+};
+
 export type ListOutputResponse = ListResponse<OutputResponse>;
+
+export type ListPublicOutputResponse = ListResponse<PublicOutputResponse>;
 
 export type AuthorPostRequest =
   | { userId: string }

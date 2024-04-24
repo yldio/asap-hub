@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import TeamCollaborationTable, {
+  CollaborationType,
   TeamCollaborationMetric,
 } from '../TeamCollaborationTable';
 
@@ -36,7 +37,9 @@ describe('TeamCollaborationTable', () => {
   };
 
   it('renders data', () => {
-    const data = [teamCollaboration];
+    const data = [
+      { ...teamCollaboration, type: 'within-team' as CollaborationType },
+    ];
     const { getByText } = render(
       <TeamCollaborationTable data={data} {...pageControlsProps} />,
     );

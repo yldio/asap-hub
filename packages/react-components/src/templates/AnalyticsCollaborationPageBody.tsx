@@ -26,37 +26,29 @@ const typeOptionList = Object.keys(typeOptions).map((value) => ({
 }));
 
 const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) => {
-  switch (metric) {
-    case 'user':
-      return type === 'within-team'
-        ? {
-            header: 'Co-Production Within Team by User',
-            description:
-              'Number of outputs where a user has co-authored an output with another user on the same team from a different lab',
-          }
-        : {
-            header: 'Co-Production Across Teams by User',
-            description:
-              'Number of outputs where a user has co-authored an output with another CRN user who is not from the same CRN team',
-          };
-    case 'team':
-      return type === 'within-team'
-        ? {
-            header: 'Co-Production Within Teams by Team',
-            description:
-              'Number of team outputs that are co-produced by different core labs within same team',
-          }
-        : {
-            header: 'Co-Production Across Teams by Team',
-            description:
-              'Number of outputs in which additional teams are listed as contributors to the output',
-          };
-    default:
-      return {
-        header: '',
-        description: '',
-      };
-  }
+  return metric === 'user'
+    ? type === 'within-team'
+      ? {
+          header: 'Co-Production Within Team by User',
+          description:
+            'Number of outputs where a user has co-authored an output with another user on the same team from a different lab',
+        }
+      : {
+          header: 'Co-Production Across Teams by User',
+          description:
+            'Number of outputs where a user has co-authored an output with another CRN user who is not from the same CRN team',
+        }
+    : type === 'within-team'
+      ? {
+          header: 'Co-Production Within Teams by Team',
+          description:
+            'Number of team outputs that are co-produced by different core labs within same team',
+        }
+      : {
+          header: 'Co-Production Across Teams by Team',
+          description:
+            'Number of outputs in which additional teams are listed as contributors to the output',
+        };
 };
 
 type CollaborationAnalyticsProps = {

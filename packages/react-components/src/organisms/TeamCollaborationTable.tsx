@@ -61,6 +61,8 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+export type CollaborationType = 'within-team' | 'across-teams';
+
 export type TeamCollaborationMetric = {
   id: string;
   name: string;
@@ -74,7 +76,7 @@ export type TeamCollaborationMetric = {
     TeamCollaborationMetric,
     'Collaboration Details' | 'type'
   >[];
-  type: 'within-team' | 'across-teams';
+  type: CollaborationType;
 };
 
 type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {

@@ -153,7 +153,9 @@ const displayOutputsCount = (items: UserCollaborationMetric['teams']) => {
     return `No values`;
   }
   if (items.length === 1) {
-    return items[0]?.outputsCoAuthored;
+    return items[0]?.outputsCoAuthored
+      ? items[0].outputsCoAuthored
+      : 'No values';
   }
   return (
     <>

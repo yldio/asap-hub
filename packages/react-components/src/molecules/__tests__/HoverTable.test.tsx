@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 
 import HoverTable from '../HoverTable';
 
-it('renders table on mouse enter and hides it on out', () => {
+it('renders table on mouse enter and hides it on mouse out', () => {
   const screen = render(
     <HoverTable header={<span>table header</span>}>
       [<span>table body</span>]

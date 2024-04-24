@@ -18,13 +18,12 @@ const rowStyles = css({
   ':last-child': {
     borderBottom: 'none',
     marginBottom: 0,
-    paddingBottom: rem(15),
     borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     columnGap: rem(15),
     paddingTop: 0,
-    paddingBottom: 0,
+    paddingBottom: rem(15),
     borderBottom: `1px solid ${steel.rgb}`,
   },
 });
@@ -39,26 +38,20 @@ const columnsStyles = (isWithinTeam: boolean) =>
     [`@media (min-width: ${tabletScreen.min}px)`]: {
       gridTemplateColumns: isWithinTeam
         ? '1fr 1fr 1fr 1fr 1fr 1fr'
-        : '0.2fr 1fr 1fr 1fr 1fr 1fr 1fr',
+        : '0.3fr 1fr 1fr 1fr 1fr 1fr 1fr',
     },
   });
 
 const collapsedRowStyles = css({
   display: 'grid',
-  margin: `${rem(20)} ${rem(24)} 0 ${rem(65)}`,
+  margin: `0 ${rem(24)} 0 ${rem(65)}`,
   borderBottom: `1px solid ${steel.rgb}`,
-  ':first-of-type': {
-    borderBottom: 'none',
-  },
   ':last-child': {
     borderBottom: 'none',
-    marginBottom: 0,
-    paddingBottom: rem(15),
-    borderRadius: rem(borderRadius),
   },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     paddingTop: 0,
-    paddingBottom: 0,
+    paddingBottom: rem(15),
     borderBottom: `1px solid ${steel.rgb}`,
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
     columnGap: rem(15),

@@ -4,7 +4,7 @@ import { PageControls, TeamCollaborationRow } from '..';
 
 import { Card } from '../atoms';
 import { borderRadius } from '../card';
-import { charcoal, neutral200, steel } from '../colors';
+import { charcoal, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
 
 const container = css({
@@ -17,7 +17,7 @@ const columnsStyles = (isWithinTeam: boolean) =>
     [`@media (min-width: ${tabletScreen.min}px)`]: {
       gridTemplateColumns: isWithinTeam
         ? '1fr 1fr 1fr 1fr 1fr 1fr'
-        : '0.2fr 1fr 1fr 1fr 1fr 1fr 1fr',
+        : '0.3fr 1fr 1fr 1fr 1fr 1fr 1fr',
     },
   });
 
@@ -35,9 +35,6 @@ const rowStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
   ':first-of-type': {
     borderBottom: 'none',
-  },
-  ':nth-of-type(2n+3)': {
-    background: neutral200.rgb,
   },
   ':last-child': {
     borderBottom: 'none',

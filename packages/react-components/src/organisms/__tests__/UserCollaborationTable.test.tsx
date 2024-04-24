@@ -105,7 +105,7 @@ describe('UserCollaborationTable', () => {
     expect(getByText('Multiple values')).toBeInTheDocument();
   });
 
-  it('display no team', () => {
+  it('displays no team', () => {
     const data: UserCollaborationMetric[] = [
       {
         ...user,
@@ -118,7 +118,7 @@ describe('UserCollaborationTable', () => {
     expect(getByText('No team')).toBeInTheDocument();
   });
 
-  it('display no role', () => {
+  it('displays no role', () => {
     const data: UserCollaborationMetric[] = [
       {
         ...user,

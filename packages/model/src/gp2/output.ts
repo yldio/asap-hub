@@ -252,6 +252,8 @@ export type FetchOutputFilter = FetchOutputSearchFilter & {
   projectId?: string;
   title?: string;
   workingGroupId?: string;
+  gp2Supported?: DecisionOption;
+  sharingStatus?: OutputSharingStatus;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

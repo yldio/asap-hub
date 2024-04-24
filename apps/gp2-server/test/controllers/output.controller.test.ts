@@ -55,7 +55,13 @@ describe('outputs controller', () => {
       });
 
       const fetchOptions: gp2Model.FetchOutputOptions = {
-        filter: { documentType: ['Article'], link: 'link', title: 'title' },
+        filter: {
+          documentType: ['Article'],
+          link: 'link',
+          title: 'title',
+          gp2Supported: 'Yes',
+          sharingStatus: 'Public',
+        },
         search: 'search',
         skip: 13,
         take: 7,
@@ -63,7 +69,9 @@ describe('outputs controller', () => {
       await outputs.fetch(fetchOptions);
 
       const expectedFetchOptions: gp2Model.FetchOutputOptions = fetchOptions;
-      expect(outputDataProviderMock.fetch).toBeCalledWith(expectedFetchOptions);
+      expect(outputDataProviderMock.fetch).toHaveBeenCalledWith(
+        expectedFetchOptions,
+      );
     });
 
     test('Should transform an array filter into a an documentType array fetch option', async () => {

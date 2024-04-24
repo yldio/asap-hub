@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import OutputController from '../../controllers/output.controller';
+import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 
 export const outputRouteFactory = (
   outputController: OutputController,
@@ -10,11 +11,14 @@ export const outputRouteFactory = (
   outputRoutes.get(
     '/outputs',
     async (req, res: Response<gp2Model.ListPublicOutputResponse>) => {
-      // const { query } = req;
+      const { query } = req;
 
-      // const options = validateOutputsParameters(query);
+      const options = validateFetchPaginationOptions(query);
 
-      const result = await outputController.fetch({});
+      const result = await outputController.fetch({
+        ...options,
+        filter: { sharingStatus: 'Public', gp2Supported: 'Yes' },
+      });
 
       res.json({
         total: result.total,

@@ -1,9 +1,13 @@
+import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
-import express, { Express, Router } from 'express';
+import express, { Express, RequestHandler, Router } from 'express';
+import 'express-async-errors';
 import {
+  errorHandlerFactory,
   getBasicHttpLogger,
   Logger,
   sentryTransactionIdMiddleware,
+  shouldHandleError,
 } from '@asap-hub/server-common';
 import OutputController from './controllers/output.controller';
 import {
@@ -24,7 +28,16 @@ export const publicAppFactory = (
 ): Express => {
   const app = express();
 
+  const errorHandler = errorHandlerFactory();
+  const sentryTransactionIdHandler =
+    dependencies.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
+
+  /* istanbul ignore next */
+  if (dependencies.sentryRequestHandler) {
+    app.use(dependencies.sentryRequestHandler());
+  }
   app.use(getBasicHttpLogger({ logger: dependencies.logger || pinoLogger }));
+  app.use(sentryTransactionIdHandler);
   app.use(sentryTransactionIdMiddleware);
   app.use(cors());
 
@@ -68,6 +81,14 @@ export const publicAppFactory = (
     });
   });
 
+  /* istanbul ignore next */
+  if (dependencies.sentryErrorHandler) {
+    app.use(dependencies.sentryErrorHandler({ shouldHandleError }));
+  }
+
+  app.use(errorHandler);
+  app.disable('x-powered-by');
+
   return app;
 };
 
@@ -76,4 +97,7 @@ type PublicAppDependencies = {
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
   externalUserDataProvider?: ExternalUserDataProvider;
+  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
+  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  sentryTransactionIdHandler?: RequestHandler;
 };

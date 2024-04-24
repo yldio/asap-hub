@@ -161,3 +161,18 @@ describe('Leadership & Membership', () => {
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });
+
+describe('Collaboration', () => {
+  it('renders the Collaboration tab', async () => {
+    await renderPage(
+      analytics({})
+        .collaboration({})
+        .collaborationPath({ metric: 'user', type: 'within-team' }).$,
+    );
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+  });
+});

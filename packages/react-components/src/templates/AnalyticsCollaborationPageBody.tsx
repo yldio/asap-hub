@@ -25,8 +25,8 @@ const typeOptionList = Object.keys(typeOptions).map((value) => ({
   label: typeOptions[value as TypeOption],
 }));
 
-const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) => {
-  return metric === 'user'
+const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
+  metric === 'user'
     ? type === 'within-team'
       ? {
           header: 'Co-Production Within Team by User',
@@ -49,7 +49,6 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) => {
           description:
             'Number of outputs in which additional teams are listed as contributors to the output',
         };
-};
 
 type CollaborationAnalyticsProps = {
   metric: MetricOption;

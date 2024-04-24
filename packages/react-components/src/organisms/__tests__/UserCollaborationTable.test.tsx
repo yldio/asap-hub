@@ -1,3 +1,4 @@
+import { TeamRole } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import UserCollaborationTable, {
   UserCollaborationMetric,
@@ -122,12 +123,25 @@ describe('UserCollaborationTable', () => {
     const data: UserCollaborationMetric[] = [
       {
         ...user,
-        teams: [{ ...userTeam, role: null }],
+        teams: [{ ...userTeam, role: null as unknown as TeamRole }],
       },
     ];
     const { getByText } = render(
       <UserCollaborationTable data={data} {...pageControlsProps} />,
     );
     expect(getByText('No role')).toBeInTheDocument();
+  });
+
+  it('displays no values', () => {
+    const data: UserCollaborationMetric[] = [
+      {
+        ...user,
+        teams: [],
+      },
+    ];
+    const { getByText } = render(
+      <UserCollaborationTable data={data} {...pageControlsProps} />,
+    );
+    expect(getByText('No values')).toBeInTheDocument();
   });
 });

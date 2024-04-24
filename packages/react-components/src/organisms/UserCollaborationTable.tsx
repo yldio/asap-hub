@@ -1,3 +1,4 @@
+import { TeamRole } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
@@ -80,7 +81,7 @@ const pageControlsStyles = css({
 
 type Team = {
   team: string;
-  role: string | null;
+  role: TeamRole;
   isTeamInactive: boolean;
   outputsCoAuthored: number;
 };
@@ -153,9 +154,8 @@ const displayOutputsCount = (items: UserCollaborationMetric['teams']) => {
     return `No values`;
   }
   if (items.length === 1) {
-    return items[0]?.outputsCoAuthored
-      ? items[0].outputsCoAuthored
-      : 'No values';
+    const team = items[0] as Team;
+    return team.outputsCoAuthored;
   }
   return (
     <>

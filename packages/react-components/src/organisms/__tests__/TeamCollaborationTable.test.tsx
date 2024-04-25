@@ -21,7 +21,7 @@ describe('TeamCollaborationTable', () => {
     Dataset: 3,
     'Lab Resource': 4,
     Protocol: 5,
-    'Collaboration Details': [
+    collaborationByTeam: [
       {
         id: '2',
         name: 'Other Team',

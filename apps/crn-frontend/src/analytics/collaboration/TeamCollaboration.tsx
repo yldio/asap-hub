@@ -15,8 +15,8 @@ const getDataForType = (
       id: row.id,
       name: row.name,
       isInactive: row.isInactive,
-      ...row.OutputsCoProducedWithin,
-      'Collaboration Details': [],
+      ...row.outputsCoProducedWithin,
+      collaborationByTeam: [],
       type: 'within-team',
     }));
   }
@@ -24,7 +24,8 @@ const getDataForType = (
     id: row.id,
     name: row.name,
     isInactive: row.isInactive,
-    ...row.OutputsCoProducedAcross,
+    ...row.outputsCoProducedAcross.byDocumentType,
+    collaborationByTeam: row.outputsCoProducedAcross.byTeam,
     type: 'across-teams',
   }));
 };
@@ -37,20 +38,22 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
       id: '1',
       name: 'Team A',
       isInactive: true,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 1,
         Bioinformatics: 1,
         Dataset: 0,
         'Lab Resource': 1,
         Protocol: 0,
       },
-      OutputsCoProducedAcross: {
-        Article: 1,
-        Bioinformatics: 2,
-        Dataset: 1,
-        'Lab Resource': 0,
-        Protocol: 2,
-        'Collaboration Details': [
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 1,
+          Bioinformatics: 2,
+          Dataset: 1,
+          'Lab Resource': 0,
+          Protocol: 2,
+        },
+        byTeam: [
           {
             id: '2',
             name: 'Team B',
@@ -68,20 +71,22 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
       id: '2',
       name: 'Team B',
       isInactive: false,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 1,
         Bioinformatics: 2,
         Dataset: 3,
         'Lab Resource': 4,
         Protocol: 5,
       },
-      OutputsCoProducedAcross: {
-        Article: 1,
-        Bioinformatics: 2,
-        Dataset: 2,
-        'Lab Resource': 1,
-        Protocol: 2,
-        'Collaboration Details': [
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 1,
+          Bioinformatics: 2,
+          Dataset: 2,
+          'Lab Resource': 1,
+          Protocol: 2,
+        },
+        byTeam: [
           {
             id: '1',
             name: 'Team A',
@@ -119,60 +124,66 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
       id: '3',
       name: 'Team C',
       isInactive: false,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 1,
         Bioinformatics: 0,
         Dataset: 3,
         'Lab Resource': 0,
         Protocol: 0,
       },
-      OutputsCoProducedAcross: {
-        Article: 0,
-        Bioinformatics: 0,
-        Dataset: 0,
-        'Lab Resource': 0,
-        Protocol: 0,
-        'Collaboration Details': [],
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 0,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+        byTeam: [],
       },
     },
     {
       id: '4',
       name: 'Team D',
       isInactive: false,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 0,
         Bioinformatics: 0,
         Dataset: 0,
         'Lab Resource': 0,
         Protocol: 0,
       },
-      OutputsCoProducedAcross: {
-        Article: 0,
-        Bioinformatics: 0,
-        Dataset: 0,
-        'Lab Resource': 0,
-        Protocol: 0,
-        'Collaboration Details': [],
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 0,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+        byTeam: [],
       },
     },
     {
       id: '5',
       name: 'Team E',
       isInactive: false,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 0,
         Bioinformatics: 0,
         Dataset: 0,
         'Lab Resource': 0,
         Protocol: 0,
       },
-      OutputsCoProducedAcross: {
-        Article: 0,
-        Bioinformatics: 0,
-        Dataset: 1,
-        'Lab Resource': 1,
-        Protocol: 0,
-        'Collaboration Details': [
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 0,
+          Bioinformatics: 0,
+          Dataset: 1,
+          'Lab Resource': 1,
+          Protocol: 0,
+        },
+        byTeam: [
           {
             id: '2',
             name: 'Team B',
@@ -200,20 +211,22 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
       id: '6',
       name: 'Team F',
       isInactive: false,
-      OutputsCoProducedWithin: {
+      outputsCoProducedWithin: {
         Article: 0,
         Bioinformatics: 0,
         Dataset: 0,
         'Lab Resource': 0,
         Protocol: 0,
       },
-      OutputsCoProducedAcross: {
-        Article: 0,
-        Bioinformatics: 0,
-        Dataset: 1,
-        'Lab Resource': 0,
-        Protocol: 0,
-        'Collaboration Details': [
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 0,
+          Bioinformatics: 0,
+          Dataset: 1,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+        byTeam: [
           {
             id: '2',
             name: 'Team B',

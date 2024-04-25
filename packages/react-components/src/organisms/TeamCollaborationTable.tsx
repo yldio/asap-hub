@@ -69,9 +69,9 @@ export type TeamCollaborationMetric = {
   Dataset: number;
   'Lab Resource': number;
   Protocol: number;
-  'Collaboration Details': Omit<
+  collaborationByTeam: Omit<
     TeamCollaborationMetric,
-    'Collaboration Details' | 'type'
+    'collaborationByTeam' | 'type'
   >[];
   type: CollaborationType;
 };

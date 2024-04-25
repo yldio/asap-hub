@@ -109,12 +109,8 @@ type TeamCollaborationWithinOutputData = {
   Protocol: number;
 };
 type TeamCollaborationAcrossOutputData = {
-  Article: number;
-  Bioinformatics: number;
-  Dataset: number;
-  'Lab Resource': number;
-  Protocol: number;
-  'Collaboration Details': Array<
+  byDocumentType: TeamCollaborationWithinOutputData;
+  byTeam: Array<
     {
       id: string;
       name: string;
@@ -127,8 +123,8 @@ export type TeamCollaborationDataObject = {
   id: string;
   name: string;
   isInactive: boolean;
-  OutputsCoProducedWithin: TeamCollaborationWithinOutputData;
-  OutputsCoProducedAcross: TeamCollaborationAcrossOutputData;
+  outputsCoProducedWithin: TeamCollaborationWithinOutputData;
+  outputsCoProducedAcross: TeamCollaborationAcrossOutputData;
 };
 
 export type TeamCollaborationResponse = TeamCollaborationDataObject;

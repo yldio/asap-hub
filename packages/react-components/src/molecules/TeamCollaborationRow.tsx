@@ -87,7 +87,7 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
   rowItem,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const canExpand = !!rowItem['Collaboration Details'].length;
+  const canExpand = !!rowItem.collaborationByTeam.length;
   const isWithinTeam = rowItem.type === 'within-team';
 
   return (
@@ -112,9 +112,9 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
         <p>{rowItem['Lab Resource']}</p>
         <p>{rowItem.Protocol}</p>
       </div>
-      {rowItem['Collaboration Details'].length > 0 &&
+      {rowItem.collaborationByTeam.length > 0 &&
         expanded &&
-        rowItem['Collaboration Details'].map((team) => (
+        rowItem.collaborationByTeam.map((team) => (
           <div key={team.id} css={[collapsedRowStyles]}>
             <p css={iconStyles}>
               {team.name} {team.isInactive && <InactiveBadgeIcon />}

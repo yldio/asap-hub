@@ -1,6 +1,6 @@
 import { IncomingMessage } from 'http';
 import pino, { type Logger as PinoLogger } from 'pino';
-import pinoHttp from 'pino-http';
+import pinoHttp, { Options as PinoHttpOptions } from 'pino-http';
 
 import { UserResponse } from '@asap-hub/model';
 import { lambdaRequestTracker, pinoLambdaDestination } from 'pino-lambda';
@@ -51,14 +51,21 @@ export const getPrettyLogger = ({ logEnabled, logLevel }: Options) =>
 
 export const withRequest = lambdaRequestTracker();
 
-export const getHttpLogger = ({ logger }: { logger: Logger }) =>
+export const getHttpLogger = ({
+  logger,
+  serializers,
+  customProps,
+}: {
+  logger: Logger;
+  serializers?: PinoHttpOptions['serializers'];
+  customProps?: PinoHttpOptions['customProps'];
+}) =>
   pinoHttp({
     logger,
-    serializers: redaction,
-    customProps: (req) => ({
-      userId: (req as IncomingMessageWithUser).loggedInUser?.id,
-    }),
+    serializers,
+    customProps,
   });
 
-export const getBasicHttpLogger = ({ logger }: { logger: Logger }) =>
-  pinoHttp({ logger });
+export const addUserIdProp: PinoHttpOptions['customProps'] = (req) => ({
+  userId: (req as IncomingMessageWithUser).loggedInUser?.id,
+});

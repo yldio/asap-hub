@@ -1,5 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import {
+  addUserIdProp,
   AuthHandler,
   authHandlerFactory,
   decodeTokenFactory,
@@ -8,6 +9,7 @@ import {
   Logger,
   MemoryCacheClient,
   permissionHandler,
+  redaction,
   sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
@@ -272,7 +274,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
-  app.use(getHttpLogger({ logger }));
+  app.use(
+    getHttpLogger({
+      logger,
+      customProps: addUserIdProp,
+      serializers: redaction,
+    }),
+  );
   app.use(sentryTransactionIdHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));

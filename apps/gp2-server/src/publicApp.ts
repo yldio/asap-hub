@@ -4,7 +4,7 @@ import express, { Express, RequestHandler, Router } from 'express';
 import 'express-async-errors';
 import {
   errorHandlerFactory,
-  getBasicHttpLogger,
+  getHttpLogger,
   Logger,
   sentryTransactionIdMiddleware,
   shouldHandleError,
@@ -36,7 +36,7 @@ export const publicAppFactory = (
   if (dependencies.sentryRequestHandler) {
     app.use(dependencies.sentryRequestHandler());
   }
-  app.use(getBasicHttpLogger({ logger: dependencies.logger || pinoLogger }));
+  app.use(getHttpLogger({ logger: dependencies.logger || pinoLogger }));
   app.use(sentryTransactionIdHandler);
   app.use(sentryTransactionIdMiddleware);
   app.use(cors());

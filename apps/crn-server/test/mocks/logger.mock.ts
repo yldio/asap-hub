@@ -1,4 +1,9 @@
-import { getHttpLogger, Logger } from '@asap-hub/server-common';
+import {
+  addUserIdProp,
+  getHttpLogger,
+  Logger,
+  redaction,
+} from '@asap-hub/server-common';
 
 export const loggerMock = {
   error: jest.fn(),
@@ -9,4 +14,8 @@ export const loggerMock = {
   levels: [],
 } as unknown as jest.Mocked<Logger>;
 
-export const httpLoggerMock = getHttpLogger({ logger: loggerMock });
+export const httpLoggerMock = getHttpLogger({
+  logger: loggerMock,
+  serializers: redaction,
+  customProps: addUserIdProp,
+});

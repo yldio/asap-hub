@@ -43,6 +43,32 @@ describe('/outputs/ route', () => {
       expect(response.body).toEqual(listPublicOutputResponse);
     });
 
+    test('Should return an output with an external user correctly', async () => {
+      const listOutputResponse = getListOutputResponse();
+      listOutputResponse.items[0]!.authors = [
+        {
+          id: 'external-user-id',
+          displayName: 'John Doe',
+        },
+      ];
+
+      outputControllerMock.fetch.mockResolvedValueOnce(listOutputResponse);
+
+      const response = await supertest(publicApp).get('/public/outputs');
+
+      expect(response.body).toMatchObject({
+        items: [
+          {
+            authors: [
+              {
+                displayName: 'John Doe',
+              },
+            ],
+          },
+        ],
+      });
+    });
+
     test('Should filter by the sharing-status and gp2-supported attributes by default', async () => {
       await supertest(publicApp).get('/public/outputs');
 

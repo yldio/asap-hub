@@ -1,7 +1,6 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
 import fs from 'fs/promises';
-import { resolve } from 'path';
+import { getIndexSchema } from './set-settings';
 
 export type SetAlgoliaAnalyticsSettings = {
   algoliaAppId: string;
@@ -14,18 +13,12 @@ export const setAlgoliaAnalyticsSettings = async ({
   algoliaCiApiKey,
   indexName,
 }: SetAlgoliaAnalyticsSettings): Promise<void> => {
-  const path = resolve(
-    __dirname,
-    `../../../../../packages/algolia/schema/crn-analytics`,
-  );
-  const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
-
-  const index = client.initIndex(indexName);
-  const indexSchemaRaw = await fs.readFile(
-    `${path}/algolia-schema.json`,
-    'utf8',
-  );
-  const indexSchema = JSON.parse(indexSchemaRaw);
+  const { path, client, index, indexSchema } = await getIndexSchema({
+    algoliaAppId,
+    algoliaCiApiKey,
+    indexName,
+    appName: 'crn-analytics',
+  });
 
   const replicas = [
     `${indexName}_team_desc`,

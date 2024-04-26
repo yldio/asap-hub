@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { Settings } from '@algolia/client-search';
+import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
 
@@ -10,12 +11,17 @@ export type SetAlgoliaSettings = {
   appName: string;
 };
 
-export const setAlgoliaSettings = async ({
+export const getIndexSchema = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
   appName,
-}: SetAlgoliaSettings): Promise<void> => {
+}: SetAlgoliaSettings): Promise<{
+  path: string;
+  client: SearchClient;
+  index: SearchIndex;
+  indexSchema: Settings;
+}> => {
   const path = resolve(
     __dirname,
     `../../../../../packages/algolia/schema/${appName}`,
@@ -28,6 +34,27 @@ export const setAlgoliaSettings = async ({
     'utf8',
   );
   const indexSchema = JSON.parse(indexSchemaRaw);
+
+  return {
+    path,
+    client,
+    index,
+    indexSchema,
+  };
+};
+
+export const setAlgoliaSettings = async ({
+  algoliaAppId,
+  algoliaCiApiKey,
+  indexName,
+  appName,
+}: SetAlgoliaSettings): Promise<void> => {
+  const { path, client, index, indexSchema } = await getIndexSchema({
+    algoliaAppId,
+    algoliaCiApiKey,
+    indexName,
+    appName,
+  });
 
   const replicaIndexName = `${indexName}-reverse-timestamp`;
   await index

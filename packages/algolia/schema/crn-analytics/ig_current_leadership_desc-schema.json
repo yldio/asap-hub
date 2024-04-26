@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "desc(interestGroupLeadershipRoleCount)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

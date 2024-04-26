@@ -17,8 +17,8 @@ import {
   setAlgoliaSettings,
 } from './scripts/algolia';
 
-const stringType = 'string' as 'string';
-const trueType = true as true;
+const stringType = 'string' as const;
+const trueType = true as const;
 
 const appIdOption = {
   alias: 'a',

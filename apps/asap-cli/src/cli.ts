@@ -13,6 +13,7 @@ import {
   getAlgoliaSettings,
   moveAlgoliaIndex,
   removeAlgoliaRecords,
+  setAlgoliaAnalyticsSettings,
   setAlgoliaSettings,
 } from './scripts/algolia';
 
@@ -282,6 +283,44 @@ yargs(hideBin(process.argv))
         algoliaCiApiKey: apikey,
         indexName: index,
         appName,
+      }),
+  })
+  .command({
+    command: 'algolia:set-analytics-settings',
+    describe: 'sets the settings for an Algolia analytics index',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('index', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index',
+          demandOption: true,
+        }),
+    handler: async ({
+      index,
+      appid,
+      apikey,
+    }: {
+      index: string;
+      appid: string;
+      apikey: string;
+    }) =>
+      setAlgoliaAnalyticsSettings({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexName: index,
       }),
   })
   .demandCommand(1)

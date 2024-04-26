@@ -17,124 +17,126 @@ import {
   setAlgoliaSettings,
 } from './scripts/algolia';
 
+const stringType = 'string' as 'string';
+const trueType = true as true;
+
+const appIdOption = {
+  alias: 'a',
+  type: stringType,
+  description: 'The App ID',
+  demandOption: trueType,
+};
+
+const apikeyOption = {
+  alias: 'k',
+  type: stringType,
+  description: 'The API key',
+  demandOption: trueType,
+};
+
+const indexOption = {
+  alias: 'n',
+  type: stringType,
+  description: 'Name of the index to remove',
+  demandOption: trueType,
+};
+
+const appNameOption = {
+  alias: 'p',
+  description: 'Name of App - crn or gp2',
+  type: stringType,
+  choices: ['crn', 'gp2'],
+  demandOption: trueType,
+};
+
+type BaseArguments = {
+  appid: string;
+  apikey: string;
+};
+
+interface DeleteIndexArguments extends BaseArguments {
+  index: string;
+}
+
+interface ClearIndexArguments extends BaseArguments {
+  index: string;
+}
+
+interface MoveIndexArguments extends BaseArguments {
+  indexfrom: string;
+  indexto: string;
+}
+
+interface RemoveRecordsArguments extends BaseArguments {
+  index: string;
+  entityType: string;
+}
+
+interface GetSettingsArguments extends BaseArguments {
+  index: string;
+  appName: string;
+}
+
+interface SetSettingsArguments extends BaseArguments {
+  index: string;
+  appName: string;
+}
+interface SetAnalyticsSettings extends BaseArguments {
+  index: string;
+}
+
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
 yargs(hideBin(process.argv))
-  .command({
+  .command<DeleteIndexArguments>({
     command: 'algolia:delete-index',
     describe: 'deletes the index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index to remove',
-          demandOption: true,
-        }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-    }) =>
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption),
+    handler: async ({ index, appid, apikey }) =>
       deleteAlgoliaIndex({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
       }),
   })
-  .command({
+  .command<ClearIndexArguments>({
     command: 'algolia:clear-index',
     describe: 'clears the index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index to remove',
-          demandOption: true,
-        }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-    }) =>
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption),
+    handler: async ({ index, appid, apikey }) =>
       clearAlgoliaIndex({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
       }),
   })
-  .command({
+  .command<MoveIndexArguments>({
     command: 'algolia:move-index',
     describe: 'move the index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
         .option('indexfrom', {
           alias: 'n',
-          type: 'string',
+          type: stringType,
           description: 'Name of the index to move from',
-          demandOption: true,
+          demandOption: trueType,
         })
         .option('indexto', {
           alias: 'i',
-          type: 'string',
+          type: stringType,
           description: 'Name of the index to move to',
-          demandOption: true,
+          demandOption: trueType,
         }),
-    handler: async ({
-      indexfrom,
-      indexto,
-      appid,
-      apikey,
-    }: {
-      indexfrom: string;
-      indexto: string;
-      appid: string;
-      apikey: string;
-    }) =>
+    handler: async ({ indexfrom, indexto, appid, apikey }) =>
       moveAlgoliaIndex({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
@@ -142,46 +144,21 @@ yargs(hideBin(process.argv))
         indexNameTo: indexto,
       }),
   })
-  .command({
+  .command<RemoveRecordsArguments>({
     command: 'algolia:remove-records',
     describe: 'removes all the records by the entity type',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index to remove',
-          demandOption: true,
-        })
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption)
         .option('entityType', {
           alias: 'e',
-          type: 'string',
+          type: stringType,
           description: 'Entity meta type',
-          demandOption: true,
+          demandOption: trueType,
         }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-      entityType,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-      entityType: string;
-    }) =>
+    handler: async ({ index, appid, apikey, entityType }) =>
       removeAlgoliaRecords({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
@@ -189,47 +166,16 @@ yargs(hideBin(process.argv))
         entityType,
       }),
   })
-  .command({
+  .command<GetSettingsArguments>({
     command: 'algolia:get-settings',
     describe: 'gets the settings for an Algolia index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index',
-          demandOption: true,
-        })
-        .option('appName', {
-          alias: 'p',
-          description: 'Name of App - crn or gp2',
-          type: 'string',
-          choices: ['crn', 'gp2'],
-          demandOption: true,
-        }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-      appName,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-      appName: string;
-    }) =>
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption)
+        .option('appName', appNameOption),
+    handler: async ({ index, appid, apikey, appName }) =>
       getAlgoliaSettings({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
@@ -237,47 +183,16 @@ yargs(hideBin(process.argv))
         appName,
       }),
   })
-  .command({
+  .command<SetSettingsArguments>({
     command: 'algolia:set-settings',
     describe: 'sets the settings for an Algolia index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index',
-          demandOption: true,
-        })
-        .option('appName', {
-          alias: 'p',
-          description: 'Name of App - crn, gp2 or crn-analytics',
-          type: 'string',
-          choices: ['crn', 'gp2', 'crn-analytics'],
-          demandOption: true,
-        }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-      appName,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-      appName: string;
-    }) =>
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption)
+        .option('appName', appNameOption),
+    handler: async ({ index, appid, apikey, appName }) =>
       setAlgoliaSettings({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
@@ -285,38 +200,15 @@ yargs(hideBin(process.argv))
         appName,
       }),
   })
-  .command({
+  .command<SetAnalyticsSettings>({
     command: 'algolia:set-analytics-settings',
     describe: 'sets the settings for an Algolia analytics index',
     builder: (cli) =>
       cli
-        .option('appid', {
-          alias: 'a',
-          type: 'string',
-          description: 'The App ID',
-          demandOption: true,
-        })
-        .option('apikey', {
-          alias: 'k',
-          type: 'string',
-          description: 'The API key',
-          demandOption: true,
-        })
-        .option('index', {
-          alias: 'n',
-          type: 'string',
-          description: 'Name of the index',
-          demandOption: true,
-        }),
-    handler: async ({
-      index,
-      appid,
-      apikey,
-    }: {
-      index: string;
-      appid: string;
-      apikey: string;
-    }) =>
+        .option('appid', appIdOption)
+        .option('apikey', apikeyOption)
+        .option('index', indexOption),
+    handler: async ({ index, appid, apikey }) =>
       setAlgoliaAnalyticsSettings({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,

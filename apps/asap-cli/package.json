@@ -19,6 +19,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@algolia/client-search": "4.22.1",
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/message-templates": "workspace:*",

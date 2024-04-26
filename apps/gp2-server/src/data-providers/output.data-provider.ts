@@ -433,6 +433,8 @@ export const parseContentfulGraphQLOutput = (
       .map(parseTag) ?? [];
   return {
     id: data.sys.id,
+    systemPublishedVersion: data.sys.publishedVersion ?? undefined,
+    shortDescription: data.shortDescription ?? '',
     created: data.sys.firstPublishedAt,
     link: data.link ?? undefined,
     documentType,

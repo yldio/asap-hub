@@ -43,6 +43,7 @@ export const outputsContentQueryFragment = gql`
     type
     subtype
     description
+    shortDescription
     gp2Supported
     sharingStatus
     link

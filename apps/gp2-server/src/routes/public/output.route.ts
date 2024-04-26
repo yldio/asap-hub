@@ -41,6 +41,8 @@ const mapOutputToPublicOutput = (
   publishDate: output.publishDate,
   type: output.type,
   workingGroups: output.workingGroups,
+  systemPublishedVersion: output.systemPublishedVersion,
+  shortDescription: output.shortDescription,
   authors: output.authors.map((author) => {
     if ('onboarded' in author) {
       return {

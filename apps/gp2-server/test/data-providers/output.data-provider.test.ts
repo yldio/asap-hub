@@ -65,7 +65,7 @@ describe('Outputs data provider', () => {
           {
             documentType: 'Dataset',
             entity: {
-              id: '42',
+              id: 'project-id',
               title: 'A Project',
               type: 'Projects',
             },
@@ -76,7 +76,7 @@ describe('Outputs data provider', () => {
           {
             documentType: 'Article',
             entity: {
-              id: '42',
+              id: 'project-id',
               title: 'A Project',
               type: 'Projects',
             },
@@ -604,7 +604,7 @@ describe('Outputs data provider', () => {
               {
                 documentType: 'Dataset',
                 entity: {
-                  id: '42',
+                  id: 'project-id',
                   title: 'A Project',
                   type: 'Projects',
                 },
@@ -615,7 +615,7 @@ describe('Outputs data provider', () => {
               {
                 documentType: 'Article',
                 entity: {
-                  id: '42',
+                  id: 'project-id',
                   title: 'A Project',
                   type: 'Projects',
                 },

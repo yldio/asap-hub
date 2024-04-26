@@ -316,7 +316,7 @@ describe('outputs controller', () => {
       expect(result).toEqual(getOutputResponse());
 
       const outputCreateDataObject = getOutputCreateDataObject();
-      expect(outputDataProviderMock.create).toBeCalledWith({
+      expect(outputDataProviderMock.create).toHaveBeenCalledWith({
         ...outputCreateDataObject,
         addedDate: mockDate.toISOString(),
       });

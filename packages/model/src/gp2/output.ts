@@ -145,6 +145,7 @@ export type OutputDataObject = OutputCoreObject & {
   authors: OutputAuthor[];
   created: string;
   id: string;
+  systemPublishedVersion?: number;
   lastUpdatedPartial: string;
   workingGroups?: OutputOwner[];
   projects?: OutputOwner[];
@@ -194,7 +195,9 @@ export type PublicOutputResponse = Pick<
   | 'publishDate'
   | 'workingGroups'
   | 'addedDate'
+  | 'shortDescription'
   | 'id'
+  | 'systemPublishedVersion'
 > & {
   authors: Array<
     | Pick<

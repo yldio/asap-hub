@@ -23,8 +23,6 @@ describe('/outputs/ route', () => {
 
       const response = await supertest(publicApp).get('/public/outputs');
 
-      console.log(response.body);
-
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         total: 0,

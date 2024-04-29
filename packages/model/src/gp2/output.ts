@@ -145,6 +145,7 @@ export type OutputDataObject = OutputCoreObject & {
   authors: OutputAuthor[];
   created: string;
   id: string;
+  systemPublishedVersion?: number;
   lastUpdatedPartial: string;
   workingGroups?: OutputOwner[];
   projects?: OutputOwner[];
@@ -185,7 +186,31 @@ export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
 
 export type OutputResponse = OutputBaseResponse;
 
+export type PublicOutputResponse = Pick<
+  OutputBaseResponse,
+  | 'title'
+  | 'tags'
+  | 'type'
+  | 'documentType'
+  | 'publishDate'
+  | 'workingGroups'
+  | 'addedDate'
+  | 'shortDescription'
+  | 'id'
+  | 'systemPublishedVersion'
+> & {
+  authors: Array<
+    | Pick<
+        UserAuthor,
+        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl'
+      >
+    | Pick<ExternalUserResponse, 'displayName'>
+  >;
+};
+
 export type ListOutputResponse = ListResponse<OutputResponse>;
+
+export type ListPublicOutputResponse = ListResponse<PublicOutputResponse>;
 
 export type AuthorPostRequest =
   | { userId: string }
@@ -230,6 +255,8 @@ export type FetchOutputFilter = FetchOutputSearchFilter & {
   projectId?: string;
   title?: string;
   workingGroupId?: string;
+  gp2Supported?: DecisionOption;
+  sharingStatus?: OutputSharingStatus;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

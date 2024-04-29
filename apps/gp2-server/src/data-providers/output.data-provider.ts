@@ -433,6 +433,8 @@ export const parseContentfulGraphQLOutput = (
       .map(parseTag) ?? [];
   return {
     id: data.sys.id,
+    systemPublishedVersion: data.sys.publishedVersion ?? undefined,
+    shortDescription: data.shortDescription ?? '',
     created: data.sys.firstPublishedAt,
     link: data.link ?? undefined,
     documentType,
@@ -470,10 +472,14 @@ const getFilterWhere = ({
   title,
   documentType,
   link,
+  gp2Supported,
+  sharingStatus,
 }: gp2Model.FetchOutputFilter) => [
   ...(title ? [{ title }] : []),
   ...(documentType ? [{ documentType_in: documentType }] : []),
   ...(link ? [{ link }] : []),
+  ...(gp2Supported ? [{ gp2Supported }] : []),
+  ...(sharingStatus ? [{ sharingStatus }] : []),
 ];
 const getSearchWhere = (search: string) => {
   type SearchFields = Pick<gp2Contentful.OutputsFilter, 'title_contains'>;

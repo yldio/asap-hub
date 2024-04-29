@@ -235,6 +235,21 @@ const serverlessConfig: AWS = {
     ],
   },
   functions: {
+    publicApiHandler: {
+      handler: 'src/handlers/public-api-handler.publicApiHandler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/public/{proxy+}',
+          },
+        },
+      ],
+      environment: {
+        APP_ORIGIN: appUrl,
+        SENTRY_DSN: sentryDsnApi,
+      },
+    },
     apiHandler: {
       handler: 'src/handlers/api-handler.apiHandler',
       events: [

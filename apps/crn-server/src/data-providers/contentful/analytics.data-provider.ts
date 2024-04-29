@@ -3,10 +3,13 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables,
+  FetchUserCoproductionQuery,
+  FetchUserCoproductionQueryVariables,
   FetchUserProductivityQuery,
   FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_TEAM_PRODUCTIVITY,
+  FETCH_USER_COPRODUCTION,
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
@@ -30,6 +33,7 @@ import {
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { getUserCoproductionItems} from '../../utils/analytics/collaboration';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -256,6 +260,17 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     return {
       total: teamsCollection?.total || 0,
       items: getTeamProductivityItems(teamsCollection, rangeKey),
+    };
+  }
+  async fetchUserCoproduction(options: FetchPaginationOptions) {
+    const { take = 10, skip = 0 } = options;
+    const { usersCollection } = await this.contentfulClient.request<
+      FetchUserCoproductionQuery,
+      FetchUserCoproductionQueryVariables
+    >(FETCH_USER_COPRODUCTION, { limit: take, skip });
+    return {
+      total: 0,
+      item: getUserCoproductionItems(usersCollection),
     };
   }
 }

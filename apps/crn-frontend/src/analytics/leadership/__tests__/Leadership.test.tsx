@@ -64,6 +64,7 @@ const renderPage = async (
           analyticsLeadershipState({
             currentPage: 0,
             pageSize: 10,
+            sort: 'team_asc',
           }),
         );
       }}

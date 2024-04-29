@@ -85,3 +85,46 @@ export type ListTeamProductivityDataObject =
 export type TeamProductivityResponse = TeamProductivityDataObject;
 export type ListTeamProductivityResponse =
   ListResponse<TeamProductivityResponse>;
+
+export type UserCollaborationTeam = {
+  team: string;
+  role: TeamRole;
+  isTeamInactive: boolean;
+  outputsCoAuthoredWithinTeam: number;
+  outputsCoAuthoredAcrossTeams: number;
+};
+export type UserCollaborationDataObject = {
+  id: string;
+  isAlumni: boolean;
+  name: string;
+  teams: UserCollaborationTeam[];
+};
+export type UserCollaborationResponse = UserCollaborationDataObject;
+
+type TeamCollaborationWithinOutputData = {
+  Article: number;
+  Bioinformatics: number;
+  Dataset: number;
+  'Lab Resource': number;
+  Protocol: number;
+};
+type TeamCollaborationAcrossOutputData = {
+  byDocumentType: TeamCollaborationWithinOutputData;
+  byTeam: Array<
+    {
+      id: string;
+      name: string;
+      isInactive: boolean;
+    } & TeamCollaborationWithinOutputData
+  >;
+};
+
+export type TeamCollaborationDataObject = {
+  id: string;
+  name: string;
+  isInactive: boolean;
+  outputsCoProducedWithin: TeamCollaborationWithinOutputData;
+  outputsCoProducedAcross: TeamCollaborationAcrossOutputData;
+};
+
+export type TeamCollaborationResponse = TeamCollaborationDataObject;

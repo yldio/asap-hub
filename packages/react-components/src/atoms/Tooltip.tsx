@@ -81,7 +81,13 @@ const Tooltip: React.FC<TooltipProps> = ({
         bottom && { bottom },
       ]}
     >
-      <span role="tooltip" css={bubbleStyles}>
+      <span
+        role="tooltip"
+        css={[
+          bubbleStyles,
+          maxContent && { width: 'max-content', maxWidth: 'fit-content' },
+        ]}
+      >
         {children}
       </span>
     </span>

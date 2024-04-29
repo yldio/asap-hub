@@ -55,8 +55,6 @@ export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
-export { default as TeamProductivityTable } from './TeamProductivityTable';
-export { default as UserProductivityTable } from './UserProductivityTable';
 export {
   default as SharedOutputDropdown,
   SharedOutputDropdownBase,
@@ -72,9 +70,11 @@ export { default as SharedResearchOutputButtons } from './SharedResearchOutputBu
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakerList } from './SpeakerList';
 export { default as TeamCard } from './TeamCard';
+export { default as TeamCollaborationTable } from './TeamCollaborationTable';
 export { default as TeamInterestGroupsTabbedCard } from './TeamInterestGroupsTabbedCard';
 export { default as TeamMembersSection } from './TeamMembersSection';
 export { default as TeamMembersTabbedCard } from './TeamMembersTabbedCard';
+export { default as TeamProductivityTable } from './TeamProductivityTable';
 export { default as TeamProfileOverview } from './TeamProfileOverview';
 export { default as Toast } from './Toast';
 export { default as ToastStack } from './ToastStack';
@@ -82,8 +82,10 @@ export { default as ToolCard } from './ToolCard';
 export { default as TutorialAdditionalInformationCard } from './TutorialAdditionalInformationCard';
 export { default as TutorialCard } from './TutorialCard';
 export { default as TutorialHeaderCard } from './TutorialHeaderCard';
+export { default as UserCollaborationTable } from './UserCollaborationTable';
 export { default as UserInterestGroupCard } from './UserInterestGroupCard';
 export { default as UserNavigation } from './UserNavigation';
+export { default as UserProductivityTable } from './UserProductivityTable';
 export { default as UserProfileBiography } from './UserProfileBiography';
 export { default as UserProfileInterestGroups } from './UserProfileInterestGroups';
 export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderCard';
@@ -95,3 +97,5 @@ export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';
 export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
 export type { Association } from './SharedOutputDropdown';
+export type { TeamCollaborationMetric } from './TeamCollaborationTable';
+export type { UserCollaborationMetric } from './UserCollaborationTable';

@@ -27,6 +27,17 @@ export const outputRouteFactory = (
     },
   );
 
+  outputRoutes.get(
+    '/outputs/:outputId',
+    async (req, res: Response<gp2Model.PublicOutputResponse>) => {
+      const { outputId } = req.params;
+
+      const output = await outputController.fetchById(outputId);
+
+      res.json(mapOutputToPublicOutput(output));
+    },
+  );
+
   return outputRoutes;
 };
 

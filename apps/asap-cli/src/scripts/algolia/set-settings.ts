@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { Settings } from '@algolia/client-search';
+import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
 
@@ -10,14 +11,17 @@ export type SetAlgoliaSettings = {
   appName: string;
 };
 
-export const setAlgoliaSettings = async ({
+export const getIndexSchema = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
   appName,
-}: SetAlgoliaSettings): Promise<void> => {
-  const hasReverseTimestampReplica = !appName.includes('analytics');
-
+}: SetAlgoliaSettings): Promise<{
+  path: string;
+  client: SearchClient;
+  index: SearchIndex;
+  indexSchema: Settings;
+}> => {
   const path = resolve(
     __dirname,
     `../../../../../packages/algolia/schema/${appName}`,
@@ -31,22 +35,41 @@ export const setAlgoliaSettings = async ({
   );
   const indexSchema = JSON.parse(indexSchemaRaw);
 
+  return {
+    path,
+    client,
+    index,
+    indexSchema,
+  };
+};
+
+export const setAlgoliaSettings = async ({
+  algoliaAppId,
+  algoliaCiApiKey,
+  indexName,
+  appName,
+}: SetAlgoliaSettings): Promise<void> => {
+  const { path, client, index, indexSchema } = await getIndexSchema({
+    algoliaAppId,
+    algoliaCiApiKey,
+    indexName,
+    appName,
+  });
+
   const replicaIndexName = `${indexName}-reverse-timestamp`;
   await index
     .setSettings({
       ...indexSchema,
-      ...(hasReverseTimestampReplica ? { replicas: [replicaIndexName] } : {}),
+      replicas: [replicaIndexName],
     })
     .wait();
 
-  if (hasReverseTimestampReplica) {
-    const replicaIndex = client.initIndex(replicaIndexName);
-    const replicaIndexSchemaRaw = await fs.readFile(
-      `${path}/algolia-reverse-timestamp-schema.json`,
-      'utf8',
-    );
+  const replicaIndex = client.initIndex(replicaIndexName);
+  const replicaIndexSchemaRaw = await fs.readFile(
+    `${path}/algolia-reverse-timestamp-schema.json`,
+    'utf8',
+  );
 
-    const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
-    await replicaIndex.setSettings(replicaIndexSchema);
-  }
+  const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
+  await replicaIndex.setSettings(replicaIndexSchema);
 };

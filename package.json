@@ -21,6 +21,7 @@
     "algolia:move-index": "yarn workspace @asap-hub/asap-cli algolia:move-index",
     "algolia:remove-records": "yarn workspace @asap-hub/asap-cli algolia:remove-records",
     "algolia:set-settings": "yarn workspace @asap-hub/asap-cli algolia:set-settings",
+    "algolia:set-analytics-settings": "yarn workspace @asap-hub/asap-cli algolia:set-analytics-settings",
     "build": "yarn turbo build --filter='!@asap-hub/contentful-app-*'",
     "build:babel": "turbo build:babel",
     "build:frontend": "yarn turbo build --filter='!@asap-hub/contentful-app-*' --only",

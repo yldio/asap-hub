@@ -275,6 +275,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
   dependencies:
+    "@algolia/client-search": 4.22.1
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/message-templates": "workspace:*"

@@ -291,7 +291,7 @@ export const parseUserToDataObject = (
     user.tagsCollection?.items
       .filter((tag): tag is TagItem => tag !== null)
       .map(parseTag) ?? [];
-
+  const outputs = parseOutputs(user.linkedFrom?.outputsCollection);
   const positions = parsePositions(user.positions);
   const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);
   const workingGroups = parseWorkingGroups(
@@ -339,6 +339,7 @@ export const parseUserToDataObject = (
       googleScholar: user.googleScholar ?? undefined,
       researchGate: user.researchGate ?? undefined,
     },
+    outputs,
     positions,
     projects,
     contributingCohorts,
@@ -416,6 +417,14 @@ const parseContributingCohorts = (contributingCohorts: ContributingCohorts) =>
     [],
   ) || [];
 
+type LinkedOutputs = NonNullable<
+  NonNullable<
+    NonNullable<
+      gp2Contentful.FetchUsersQuery['usersCollection']
+    >['items'][number]
+  >['linkedFrom']
+>['outputsCollection'];
+
 type LinkedProject = NonNullable<
   NonNullable<
     NonNullable<
@@ -465,6 +474,29 @@ export const parseMembers = <T extends string>(
     const groupMember = { role, userId: user.sys.id };
     return [...membersList, groupMember];
   }, []) || [];
+
+const parseOutputs = (
+  outputs: LinkedOutputs,
+): gp2Model.UserDataObject['outputs'] =>
+  (outputs &&
+    outputs.items
+      .filter(
+        (
+          output,
+        ): output is Pick<
+          gp2Contentful.Outputs,
+          'title' | 'shortDescription'
+        > & {
+          sys: Pick<gp2Contentful.Sys, 'id'>;
+        } => !!output,
+      )
+      .map((output) => ({
+        id: output.sys.id,
+        title: output.title || '',
+        shortDescription: output.shortDescription || '',
+      }))) ||
+  [];
+
 const parseProjects = (
   projects: LinkedProject,
 ): gp2Model.UserDataObject['projects'] =>

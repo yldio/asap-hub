@@ -134,6 +134,15 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
+      outputsCollection(limit: 8) {
+        items {
+          sys {
+            id
+          }
+          title
+          shortDescription
+        }
+      }
     }
   }
 `;

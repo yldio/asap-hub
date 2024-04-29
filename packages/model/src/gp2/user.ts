@@ -3,6 +3,7 @@ import { Connection, UserSocialLinks } from '../user';
 import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
+import { OutputResponse } from './output';
 
 export const userRoles = [
   'Administrator',
@@ -42,6 +43,11 @@ export const userRegions = [
   'North America',
   'South America',
 ] as const;
+
+export type UserOutput = Pick<
+  OutputResponse,
+  'id' | 'title' | 'shortDescription'
+>;
 
 export type UserRegion = (typeof userRegions)[number];
 
@@ -112,6 +118,7 @@ export type UserDataObject = {
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
+  outputs: UserOutput[];
   positions: UserPosition[];
   projects: UserProject[];
   questions: string[];

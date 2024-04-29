@@ -12474,6 +12474,13 @@ export type UsersContentDataFragment = Pick<
         >
       >;
     }>;
+    outputsCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          Pick<Outputs, 'title' | 'shortDescription'> & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }>;
   }>;
 };
 
@@ -12607,6 +12614,15 @@ export type FetchUserByIdQuery = {
                     >;
                   }>;
                 }>;
+              }
+            >
+          >;
+        }>;
+        outputsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<Outputs, 'title' | 'shortDescription'> & {
+                sys: Pick<Sys, 'id'>;
               }
             >
           >;
@@ -12754,6 +12770,15 @@ export type FetchUsersQuery = {
                           >;
                         }>;
                       }>;
+                    }
+                  >
+                >;
+              }>;
+              outputsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Outputs, 'title' | 'shortDescription'> & {
+                      sys: Pick<Sys, 'id'>;
                     }
                   >
                 >;
@@ -16532,6 +16557,52 @@ export const UsersContentDataFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '8' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shortDescription' },
                             },
                           ],
                         },

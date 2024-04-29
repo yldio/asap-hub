@@ -5,6 +5,7 @@ import {
 import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
+import { getContentfulGraphqlOutput } from './output.fixtures';
 
 export const getUserResponse = (
   overrides: Partial<gp2Model.UserResponse> = {},
@@ -35,6 +36,13 @@ export const getUserResponse = (
     },
   ],
   onboarded: true,
+  outputs: [
+    {
+      id: 'output-id',
+      title: 'output title',
+      shortDescription: 'output short description',
+    },
+  ],
   projects: [
     {
       id: 'test-project-id',
@@ -184,6 +192,13 @@ export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
     },
   ],
   onboarded: true,
+  outputs: [
+    {
+      id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      title: 'Test Proposal 1234',
+      shortDescription: 'A nice article',
+    },
+  ],
   projects: [
     {
       id: 'test-project-id',
@@ -426,6 +441,13 @@ export const getContentfulGraphqlUser = (
     ],
   },
   linkedFrom: {
+    outputsCollection: {
+      items: [
+        {
+          ...getContentfulGraphqlOutput(),
+        },
+      ],
+    },
     projectMembershipCollection: {
       items: [
         {

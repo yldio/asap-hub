@@ -109,13 +109,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
                 if (sortingDirection.team === 'asc') {
                   setSort('team_desc');
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     team: 'desc',
                   });
                 } else {
                   setSort('team_asc');
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     team: 'asc',
                   });
                 }
@@ -136,13 +136,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
                 if (sortingDirection.currentLeadership === 'asc') {
                   setSort(`${indexPrefix}_current_leadership_desc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     currentLeadership: 'desc',
                   });
                 } else {
                   setSort(`${indexPrefix}_current_leadership_asc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     currentLeadership: 'asc',
                   });
                 }
@@ -162,13 +162,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
                 if (sortingDirection.previousLeadership === 'asc') {
                   setSort(`${indexPrefix}_previous_leadership_desc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     previousLeadership: 'desc',
                   });
                 } else {
                   setSort(`${indexPrefix}_previous_leadership_asc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     previousLeadership: 'asc',
                   });
                 }
@@ -189,13 +189,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
                 if (sortingDirection.currentMembership === 'asc') {
                   setSort(`${indexPrefix}_current_membership_desc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     currentMembership: 'desc',
                   });
                 } else {
                   setSort(`${indexPrefix}_current_membership_asc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     currentMembership: 'asc',
                   });
                 }
@@ -215,13 +215,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
                 if (sortingDirection.previousMembership === 'asc') {
                   setSort(`${indexPrefix}_previous_membership_desc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     previousMembership: 'desc',
                   });
                 } else {
                   setSort(`${indexPrefix}_previous_membership_asc`);
                   setSortingDirection({
-                    ...sortingDirection,
+                    ...initialSortingDirection,
                     previousMembership: 'asc',
                   });
                 }

@@ -52,8 +52,8 @@ const renderPage = async (
 };
 
 beforeEach(() => {
-  mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
-  mockGetTeamProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+  mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+  mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
 });
 
 it('renders with user data', async () => {

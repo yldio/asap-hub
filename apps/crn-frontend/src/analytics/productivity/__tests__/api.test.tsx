@@ -1,10 +1,11 @@
+import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  ListTeamProductivityResponse,
-  ListUserProductivityResponse,
+  TeamProductivityResponse,
+  UserProductivityResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { API_BASE_URL } from '../../../config';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getTeamProductivity,
   getUserProductivity,
@@ -17,116 +18,114 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const options: ProductivityListOptions = {
-  pageSize: 10,
-  currentPage: 0,
+type Search = () => Promise<
+  ClientSearchResponse<'analytics', 'team-productivity' | 'user-productivity'>
+>;
+
+const search: jest.MockedFunction<Search> = jest.fn();
+
+const algoliaSearchClient = {
+  search,
+} as unknown as AlgoliaSearchClient<'analytics'>;
+
+const defaultOptions: ProductivityListOptions = {
+  pageSize: null,
+  currentPage: null,
   timeRange: '30d',
 };
 
-const userProductivityResponse: ListUserProductivityResponse = {
-  total: 1,
-  items: [
+const userProductivityResponse: UserProductivityResponse = {
+  id: '1',
+  name: 'Test User',
+  isAlumni: false,
+  teams: [
     {
-      id: '1',
-      name: 'Test User',
-      isAlumni: false,
-      teams: [
-        {
-          team: 'Team A',
-          isTeamInactive: false,
-          isUserInactiveOnTeam: false,
-          role: 'Collaborating PI',
-        },
-      ],
-      asapOutput: 1,
-      asapPublicOutput: 2,
-      ratio: '0.50',
+      team: 'Team A',
+      isTeamInactive: false,
+      isUserInactiveOnTeam: false,
+      role: 'Collaborating PI',
     },
   ],
+  asapOutput: 1,
+  asapPublicOutput: 2,
+  ratio: '0.50',
+};
+const teamProductivityResponse: TeamProductivityResponse = {
+  id: '1',
+  name: 'Test Team',
+  isInactive: false,
+  Article: 1,
+  Bioinformatics: 2,
+  Dataset: 3,
+  'Lab Resource': 4,
+  Protocol: 5,
 };
 
 describe('getUserProductivity', () => {
-  it('makes an authorized GET request for analytics user productivity section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getUserProductivity(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched user productivity', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, userProductivityResponse);
-    expect(await getUserProductivity(options, '')).toEqual(
-      userProductivityResponse,
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'user-productivity'>([
+        {
+          ...userProductivityResponse,
+          objectID: userProductivityResponse.id,
+          __meta: { type: 'user-productivity' },
+        },
+      ]),
     );
   });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(500);
-    await expect(
-      getUserProductivity(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics user productivity. Expected status 2xx. Received status 500."`,
+  it('returns successfully fetched user productivity', async () => {
+    const userProductivity = await getUserProductivity(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+    expect(userProductivity).toEqual(
+      expect.objectContaining({
+        items: [
+          {
+            ...userProductivityResponse,
+            objectID: userProductivityResponse.id,
+            __meta: { type: 'user-productivity' },
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 });
 
-const teamProductivityResponse: ListTeamProductivityResponse = {
-  total: 1,
-  items: [
-    {
-      id: '1',
-      name: 'Test Team',
-      isInactive: false,
-      Article: 1,
-      Bioinformatics: 2,
-      Dataset: 3,
-      'Lab Resource': 4,
-      Protocol: 5,
-    },
-  ],
-};
-
 describe('getTeamProductivity', () => {
-  it('makes an authorized GET request for analytics team productivity section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getTeamProductivity(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched team productivity', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, teamProductivityResponse);
-    expect(await getTeamProductivity(options, '')).toEqual(
-      teamProductivityResponse,
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'team-productivity'>([
+        {
+          ...teamProductivityResponse,
+          objectID: teamProductivityResponse.id,
+          __meta: { type: 'team-productivity' },
+        },
+      ]),
     );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(500);
-    await expect(
-      getTeamProductivity(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics team productivity. Expected status 2xx. Received status 500."`,
+  it('returns successfully fetched team productivity', async () => {
+    const teamProductivity = await getTeamProductivity(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+    expect(teamProductivity).toEqual(
+      expect.objectContaining({
+        items: [
+          {
+            ...teamProductivityResponse,
+            objectID: teamProductivityResponse.id,
+            __meta: { type: 'team-productivity' },
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 });

@@ -1,11 +1,10 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import { AlgoliaClient } from '@asap-hub/algolia';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
-
-import createListApiUrl from '../../CreateListApiUrl';
 
 export type ProductivityListOptions = Pick<
   GetListOptions,
@@ -15,57 +14,39 @@ export type ProductivityListOptions = Pick<
 };
 
 export const getUserProductivity = async (
+  algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
-  authorization: string,
 ): Promise<ListUserProductivityResponse | undefined> => {
   const { currentPage, pageSize, timeRange } = options;
-  const resp = await fetch(
-    createListApiUrl('/analytics/productivity/user', {
-      currentPage,
-      pageSize,
-      filters: new Set([timeRange]),
-      searchQuery: '',
-    }).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch analytics user productivity. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const result = await algoliaClient.search(['user-productivity'], '', {
+    filters: rangeFilter,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getTeamProductivity = async (
+  algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
-  authorization: string,
 ): Promise<ListTeamProductivityResponse | undefined> => {
   const { currentPage, pageSize, timeRange } = options;
-  const resp = await fetch(
-    createListApiUrl('/analytics/productivity/team', {
-      currentPage,
-      pageSize,
-      filters: new Set([timeRange]),
-      searchQuery: '',
-    }).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch analytics team productivity. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const result = await algoliaClient.search(['team-productivity'], '', {
+    filters: rangeFilter,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };

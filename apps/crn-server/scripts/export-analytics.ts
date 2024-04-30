@@ -21,8 +21,8 @@ export const exportAnalyticsData = async (
 
   await file.write('[\n');
   metric === 'team-leadership'
-    ? exportData(metric, file)
-    : exportDataForRange(metric, file);
+    ? await exportData(metric, file)
+    : await exportDataForRange(metric, file);
 
   await file.write(']');
 };

@@ -1,3 +1,4 @@
+import { initialSortingDirection } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Card } from '../atoms';

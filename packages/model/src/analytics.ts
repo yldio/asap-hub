@@ -1,12 +1,15 @@
 import { FetchPaginationOptions, ListResponse } from './common';
 import { TeamResponse, TeamRole } from './team';
 
-export type TimeRangeOption =
-  | '30d'
-  | '90d'
-  | 'current-year'
-  | 'last-year'
-  | 'all';
+export const timeRanges = [
+  '30d',
+  '90d',
+  'current-year',
+  'last-year',
+  'all',
+] as const;
+
+export type TimeRangeOption = (typeof timeRanges)[number];
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: TimeRangeOption;

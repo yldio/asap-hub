@@ -1,67 +1,103 @@
-import {
-  AnalyticsTeamLeadershipResponse,
-  ListAnalyticsTeamLeadershipResponse,
-} from '@asap-hub/model';
+import { AnalyticsData } from '@asap-hub/algolia';
+import { ListResponse, TimeRangeOption, timeRanges } from '@asap-hub/model';
 import { promises as fs } from 'fs';
+import { FileHandle } from 'fs/promises';
 
 import AnalyticsController from '../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependencies';
 
 export const PAGE_SIZE = 10;
 
-export type Metric = 'team-leadership';
+export type Metric =
+  | 'team-leadership'
+  | 'team-productivity'
+  | 'user-productivity';
 
 export const exportAnalyticsData = async (
   metric: Metric,
   filename?: string,
 ): Promise<void> => {
+  const file = await fs.open(filename || `${metric}.json`, 'w');
+
+  await file.write('[\n');
+  metric === 'team-leadership'
+    ? exportData(metric, file)
+    : exportDataForRange(metric, file);
+
+  await file.write(']');
+};
+
+const exportDataForRange = async (
+  metric: Metric,
+  file: FileHandle,
+): Promise<void> => {
+  timeRanges.forEach((range) => exportData(metric, file, range));
+};
+
+const exportData = async (
+  metric: Metric,
+  file: FileHandle,
+  range?: TimeRangeOption,
+): Promise<void> => {
   const analyticsController = new AnalyticsController(
     getAnalyticsDataProvider(),
   );
-  const file = await fs.open(filename || `${metric}.json`, 'w');
+
   let recordCount = 0;
-  let total: number;
-  let records: ListAnalyticsTeamLeadershipResponse;
+  let total = 0;
+  let records: ListResponse<AnalyticsData> | null = null;
   let page = 1;
-
-  await file.write('[\n');
-
   do {
-    records = await analyticsController.fetchTeamLeadership({
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
-    });
-
-    total = records.total;
-
-    if (page != 1) {
-      await file.write(',\n');
+    if (metric === 'team-leadership') {
+      records = await analyticsController.fetchTeamLeadership({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+      });
+    } else if (metric === 'team-productivity') {
+      records = await analyticsController.fetchTeamProductivity({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+        filter: range,
+      });
+    } else {
+      records = await analyticsController.fetchUserProductivity({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+        filter: range,
+      });
     }
 
-    await file.write(
-      JSON.stringify(
-        records.items.map((record) => transformRecords(record, metric)),
-        null,
-        2,
-      ).slice(1, -1),
-    );
+    if (records) {
+      total = records.total;
 
-    page++;
-    recordCount += records.items.length;
+      if (page != 1) {
+        await file.write(',\n');
+      }
+
+      await file.write(
+        JSON.stringify(
+          records.items.map((record) => transformRecords(record, metric)),
+          null,
+          2,
+        ).slice(1, -1),
+      );
+
+      page++;
+      recordCount += records.items.length;
+    }
   } while (total > recordCount);
-
-  await file.write(']');
-
   console.log(`Finished exporting ${recordCount} records`);
 };
 
 const transformRecords = (
-  record: AnalyticsTeamLeadershipResponse,
+  record: AnalyticsData,
   type: Metric,
+  range?: TimeRangeOption,
 ) => ({
   ...record,
   objectID: record.id,
   __meta: {
     type,
+    range,
   },
 });

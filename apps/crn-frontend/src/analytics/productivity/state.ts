@@ -9,9 +9,8 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
 } from 'recoil';
-import { authorizationState } from '../../auth/state';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
   getTeamProductivity,
   getUserProductivity,
@@ -82,12 +81,12 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAnalyticsAlgolia();
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
   );
   if (userProductivity === undefined) {
-    throw getUserProductivity(options, authorization)
+    throw getUserProductivity(algoliaClient.client, options)
       .then(setUserProductivity)
       .catch(setUserProductivity);
   }
@@ -161,12 +160,12 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAnalyticsAlgolia();
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),
   );
   if (teamProductivity === undefined) {
-    throw getTeamProductivity(options, authorization)
+    throw getTeamProductivity(algoliaClient.client, options)
       .then(setTeamProductivity)
       .catch(setTeamProductivity);
   }

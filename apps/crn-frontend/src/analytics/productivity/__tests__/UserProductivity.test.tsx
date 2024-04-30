@@ -1,4 +1,7 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
   ListUserProductivityResponse,
   UserProductivityResponse,
@@ -68,9 +71,11 @@ const renderPage = async () => {
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <UserProductivity />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <UserProductivity />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,

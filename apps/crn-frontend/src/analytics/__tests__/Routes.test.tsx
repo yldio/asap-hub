@@ -74,7 +74,7 @@ describe('Analytics page', () => {
 
   it('redirects to user productivity page when flag is true', async () => {
     enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
-    mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
     await renderPage(analytics({}).$);
 

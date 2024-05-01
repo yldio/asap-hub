@@ -24,7 +24,7 @@
     "exact",
     "custom"
   ],
-  "customRanking": ["asc(displayName), asc(name)"],
+  "customRanking": ["asc(displayName)", "asc(name)"],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",
   "queryType": "prefixLast",

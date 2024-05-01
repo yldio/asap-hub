@@ -33,10 +33,10 @@ const exportDataForRange = async (
 ): Promise<void> => {
   for (let i = 0; i < timeRanges.length; i += 1) {
     await exportData(metric, file, timeRanges[i]);
-    if (i != timeRanges.length - 1){
+    if (i != timeRanges.length - 1) {
       await file.write(',');
     }
-  };
+  }
 };
 
 const exportData = async (
@@ -81,7 +81,9 @@ const exportData = async (
 
       await file.write(
         JSON.stringify(
-          records.items.map((record) => transformRecords(record, metric, range)),
+          records.items.map((record) =>
+            transformRecords(record, metric, range),
+          ),
           null,
           2,
         ).slice(1, -1),

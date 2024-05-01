@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import UserController from '../../controllers/user.controller';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
+import UserController from '../../controllers/user.controller';
 
 export const userRouteFactory = (userController: UserController): Router => {
   const userRoutes = Router();
@@ -19,6 +19,17 @@ export const userRouteFactory = (userController: UserController): Router => {
         total: result.total,
         items: result.items.map(mapUserToPublicUser),
       });
+    },
+  );
+
+  userRoutes.get(
+    '/users/:userId',
+    async (req, res: Response<gp2Model.PublicUserResponse>) => {
+      const { userId } = req.params;
+
+      const output = await userController.fetchById(userId);
+
+      res.json(mapUserToPublicUser(output));
     },
   );
 

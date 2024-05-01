@@ -1,9 +1,12 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { FetchPaginationOptions } from '@asap-hub/model';
 import supertest from 'supertest';
 import { publicAppFactory } from '../../../src/publicApp';
 import {
   getListPublicUsersResponse,
   getListUsersResponse,
+  getPublicUserResponse,
+  getUserResponse,
 } from '../../fixtures/user.fixtures';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
@@ -118,6 +121,32 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(400);
       });
+    });
+  });
+
+  describe('GET /users/:userId', () => {
+    test('Should return 200 when the user exists', async () => {
+      const userResponse = getUserResponse();
+      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
+
+      const response = await supertest(publicApp).get(
+        `/public/users/${userResponse.id}`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getPublicUserResponse());
+    });
+
+    test('Should return 404 when the user does not exist', async () => {
+      userControllerMock.fetchById.mockRejectedValueOnce(
+        new NotFoundError(undefined, `user with id invalid-id not found`),
+      );
+
+      const response = await supertest(publicApp).get(
+        `/public/users/invalid-id`,
+      );
+
+      expect(response.status).toBe(404);
     });
   });
 });

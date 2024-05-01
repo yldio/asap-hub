@@ -69,8 +69,8 @@ describe('getUserProductivity', () => {
       createAlgoliaResponse<'analytics', 'user-productivity'>([
         {
           ...userProductivityResponse,
-          objectID: userProductivityResponse.id,
-          __meta: { type: 'user-productivity' },
+          objectID: `${userProductivityResponse.id}-user-productivity-30d`,
+          __meta: { type: 'user-productivity', range: '30d' },
         },
       ]),
     );
@@ -85,11 +85,33 @@ describe('getUserProductivity', () => {
         items: [
           {
             ...userProductivityResponse,
-            objectID: userProductivityResponse.id,
-            __meta: { type: 'user-productivity' },
+            objectID: `${userProductivityResponse.id}-user-productivity-30d`,
+            __meta: { type: 'user-productivity', range: '30d' },
           },
         ],
         total: 1,
+      }),
+    );
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns user productivity for $range', async ({ timeRange }) => {
+    await getUserProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['user-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
       }),
     );
   });
@@ -103,8 +125,8 @@ describe('getTeamProductivity', () => {
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
           ...teamProductivityResponse,
-          objectID: teamProductivityResponse.id,
-          __meta: { type: 'team-productivity' },
+          objectID: `${teamProductivityResponse.id}-team-productivity-30d`,
+          __meta: { type: 'team-productivity', range: '30d' },
         },
       ]),
     );
@@ -120,11 +142,33 @@ describe('getTeamProductivity', () => {
         items: [
           {
             ...teamProductivityResponse,
-            objectID: teamProductivityResponse.id,
-            __meta: { type: 'team-productivity' },
+            objectID: `${teamProductivityResponse.id}-team-productivity-30d`,
+            __meta: { type: 'team-productivity', range: '30d' },
           },
         ],
         total: 1,
+      }),
+    );
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns team productivity for $range', async ({ timeRange }) => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
       }),
     );
   });

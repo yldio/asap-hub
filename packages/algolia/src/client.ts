@@ -19,6 +19,7 @@ import {
   AnalyticsTeamLeadershipResponse,
   UserProductivityResponse,
   TeamProductivityResponse,
+  TimeRangeOption,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -117,6 +118,7 @@ export type DistributeToEntityRecords<
   objectID: string;
   __meta: {
     type: ResponsesKey;
+    range?: TimeRangeOption;
   };
 };
 export type ClientSearchResponse<

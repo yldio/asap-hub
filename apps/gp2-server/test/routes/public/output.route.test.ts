@@ -164,5 +164,42 @@ describe('/outputs/ route', () => {
         message: `output with id non-existing-output-id not found`,
       });
     });
+
+    test('Should return 404 when the output sharing-status is not Public', async () => {
+      const outputId = 'output-id';
+      const outputResponse = getOutputResponse();
+      outputResponse.sharingStatus = 'GP2 Only';
+
+      outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+      const response = await supertest(publicApp).get(
+        `/public/outputs/${outputId}`,
+      );
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        statusCode: 404,
+        error: 'Not Found',
+        message: `output with id output-id not found`,
+      });
+    });
+
+    test('Should return 404 when the output gp2-supported property is not equal to Yes', async () => {
+      const outputId = 'output-id';
+      const outputResponse = getOutputResponse();
+      outputResponse.gp2Supported = `Don't Know`;
+      outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+      const response = await supertest(publicApp).get(
+        `/public/outputs/${outputId}`,
+      );
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        statusCode: 404,
+        error: 'Not Found',
+        message: `output with id output-id not found`,
+      });
+    });
   });
 });

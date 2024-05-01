@@ -6,6 +6,7 @@ export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';
 export { default as CalendarLink } from './CalendarLink';
 export { default as Collapsible } from './Collapsible';
+export { default as TeamCollaborationRow } from './TeamCollaborationRow';
 export { default as CtaContactSection } from './CtaContactSection';
 export { default as CtaCard } from './CtaCard';
 export { default as DropdownButton } from './DropdownButton';

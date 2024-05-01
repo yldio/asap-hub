@@ -5,6 +5,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import {
+  addUserIdProp,
   AuthHandler,
   authHandlerFactory,
   decodeTokenFactory,
@@ -14,6 +15,7 @@ import {
   Logger,
   MemoryCacheClient,
   permissionHandler,
+  redaction,
   sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
@@ -129,8 +131,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   const logger = libs.logger || pinoLogger;
   const featureFlagDependencySwitch = new FeatureFlagDependencySwitch();
   // Middleware
-  const httpLogger = libs.httpLogger || getHttpLogger({ logger });
-  const errorHandler = errorHandlerFactory();
+  const httpLogger =
+    libs.httpLogger ||
+    getHttpLogger({
+      logger,
+      customProps: addUserIdProp,
+      serializers: redaction,
+    });
+  const errorHandler = errorHandlerFactory(logger);
 
   // Clients
   const decodeToken = decodeTokenFactory(auth0Audience);

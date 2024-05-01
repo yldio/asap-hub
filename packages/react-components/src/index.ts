@@ -95,6 +95,7 @@ export {
   TabbedCard,
   TabNav,
   TagList,
+  TeamCollaborationRow,
   ToastCard,
   UserAvatarList,
   UserMenuButton,
@@ -170,12 +171,14 @@ export {
   SpeakerList,
   SsoButtons,
   TeamCard,
+  TeamCollaborationTable,
   TeamInterestGroupsTabbedCard,
   TeamMembersSection,
   TeamMembersTabbedCard,
   Toast,
   ToastStack,
   ToolCard,
+  UserCollaborationTable,
   UserInterestGroupCard,
   UserNavigation,
   UserProfileBiography,
@@ -195,6 +198,7 @@ export {
   AboutPageBody,
   AboutPageHeader,
   AnalyticsPage,
+  AnalyticsCollaborationPageBody,
   AnalyticsProductivityPageBody,
   AnalyticsLeadershipPageBody,
   AnalyticsPageHeader,
@@ -276,5 +280,9 @@ export {
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
 export type { ItemType } from './molecules';
-export type { Association } from './organisms';
+export type {
+  Association,
+  UserCollaborationMetric,
+  TeamCollaborationMetric,
+} from './organisms';
 export type { ResearchOutputOption } from './utils';

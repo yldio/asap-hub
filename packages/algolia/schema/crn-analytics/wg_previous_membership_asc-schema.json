@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "asc(workingGroupPreviousMemberCount)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

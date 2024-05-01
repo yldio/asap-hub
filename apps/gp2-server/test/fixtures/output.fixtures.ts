@@ -12,13 +12,15 @@ import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+  systemPublishedVersion: 12,
   created: '2020-09-23T16:34:26.842Z',
   documentType: 'Article',
   type: 'Research',
   addedDate: '2021-05-21T13:18:31.000Z',
   title: 'Test Proposal 1234',
   link: 'http://a.link',
-  description: 'A nice article',
+  description: 'A very nice article',
+  shortDescription: 'A nice article',
   sharingStatus: 'GP2 Only',
   authors: [
     {
@@ -43,7 +45,7 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   subtype: 'Published',
   projects: [
     {
-      id: '42',
+      id: 'project-id',
       title: 'A Project',
     },
   ],
@@ -64,7 +66,7 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   tags: [{ id: 'tag-1', name: 'Cohort' }],
   contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
   mainEntity: {
-    id: '42',
+    id: 'project-id',
     title: 'A Project',
     type: 'Projects',
   },
@@ -75,6 +77,12 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       title: 'Version 1',
       documentType: 'Dataset',
       link: 'https://version1.com',
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'working-group-id',
+      title: 'A Working Group',
     },
   ],
 });
@@ -88,17 +96,61 @@ export const getListOutputDataObject =
 export const getOutputResponse = (): gp2Model.OutputResponse =>
   getOutputDataObject();
 
+export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
+  const {
+    id,
+    title,
+    tags,
+    type,
+    documentType,
+    publishDate,
+    workingGroups,
+    addedDate,
+    authors,
+    shortDescription,
+    systemPublishedVersion,
+  } = getOutputDataObject();
+
+  return {
+    id,
+    title,
+    tags,
+    type: type!,
+    documentType,
+    publishDate: publishDate!,
+    workingGroups: workingGroups!,
+    addedDate,
+    shortDescription: shortDescription!,
+    systemPublishedVersion: systemPublishedVersion!,
+    authors: (authors as gp2Model.UserAuthor[]).map(
+      ({ id, firstName, lastName, displayName, avatarUrl }) => ({
+        id,
+        firstName,
+        lastName,
+        displayName,
+        avatarUrl,
+      }),
+    ),
+  } satisfies Required<gp2Model.PublicOutputResponse>;
+};
+
 export const getListOutputResponse = (): gp2Model.ListOutputResponse => ({
   total: 1,
   items: [getOutputResponse()],
 });
 
+export const getListPublicOutputResponse =
+  (): gp2Model.ListPublicOutputResponse => ({
+    total: 1,
+    items: [getPublicOutputResponse()],
+  });
+
 export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
   const {
     id: _,
-    created: _created,
-    lastUpdatedPartial: _lastUpdatedPartial,
-    addedDate: _addedDate,
+    created,
+    lastUpdatedPartial,
+    addedDate,
     authors,
     workingGroups,
     projects,
@@ -108,6 +160,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     relatedOutputs,
     relatedEvents,
     versions,
+    systemPublishedVersion,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -149,6 +202,7 @@ export const getOutputCreateDataObject =
       relatedOutputs,
       relatedEvents,
       versions,
+      systemPublishedVersion,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -195,7 +249,8 @@ export const getContentfulGraphqlOutput = (): NonNullable<
   documentType: 'Article',
   type: 'Research',
   subtype: 'Published',
-  description: 'A nice article',
+  description: 'A very nice article',
+  shortDescription: 'A nice article',
   link: 'http://a.link',
   addedDate: '2021-05-21T13:18:31.000Z',
   publishDate: '2021-05-21T13:18:31.000Z',
@@ -206,9 +261,16 @@ export const getContentfulGraphqlOutput = (): NonNullable<
       {
         __typename: 'Projects',
         sys: {
-          id: '42',
+          id: 'project-id',
         },
         title: 'A Project',
+      },
+      {
+        __typename: 'WorkingGroups',
+        sys: {
+          id: 'working-group-id',
+        },
+        title: 'A Working Group',
       },
     ],
   },

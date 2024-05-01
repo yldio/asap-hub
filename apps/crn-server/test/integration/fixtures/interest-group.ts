@@ -13,7 +13,6 @@ export const getInterestGroupFixture = (
     teams: [],
     leaders: [],
     calendar: null,
-    tags: [],
     lastUpdated: '2021-01-01T00:00:00.000Z',
     ...props,
   };

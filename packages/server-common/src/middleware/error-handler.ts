@@ -4,9 +4,11 @@ import { isBoom } from '@hapi/boom';
 import * as Sentry from '@sentry/serverless';
 import { ErrorRequestHandler } from 'express';
 import { HTTPError } from 'got';
+import { Logger } from '../utils';
 
 export const errorHandlerFactory =
-  (): ErrorRequestHandler<unknown, ErrorResponse> => (err, req, res, next) => {
+  (logger?: Logger): ErrorRequestHandler<unknown, ErrorResponse> =>
+  (err, req, res, next) => {
     if (res.headersSent) {
       return next(err);
     }
@@ -50,6 +52,10 @@ export const errorHandlerFactory =
     }
 
     res.status(err.status || err.statusCode || 500);
+
+    if (logger) {
+      logger.error(err?.message);
+    }
 
     return res.json({
       error: 'Internal Server Error',

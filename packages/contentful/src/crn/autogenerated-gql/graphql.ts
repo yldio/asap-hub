@@ -10384,8 +10384,10 @@ export type FetchUserProductivityQuery = {
               researchOutputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<ResearchOutputs, 'sharingStatus'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
+                    Pick<
+                      ResearchOutputs,
+                      'addedDate' | 'createdDate' | 'sharingStatus'
+                    > & {
                       authorsCollection?: Maybe<{
                         items: Array<
                           Maybe<
@@ -10424,9 +10426,10 @@ export type FetchTeamProductivityQuery = {
               researchOutputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<ResearchOutputs, 'documentType'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
-                    }
+                    Pick<
+                      ResearchOutputs,
+                      'addedDate' | 'createdDate' | 'documentType'
+                    >
                   >
                 >;
               }>;
@@ -23315,18 +23318,16 @@ export const FetchUserProductivityDocument = {
                                       selections: [
                                         {
                                           kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'publishedAt',
-                                                },
-                                              },
-                                            ],
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'addedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'createdDate',
                                           },
                                         },
                                         {
@@ -23535,7 +23536,7 @@ export const FetchTeamProductivityDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '100' },
+                                  value: { kind: 'IntValue', value: '1000' },
                                 },
                               ],
                               selectionSet: {
@@ -23549,18 +23550,16 @@ export const FetchTeamProductivityDocument = {
                                       selections: [
                                         {
                                           kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'publishedAt',
-                                                },
-                                              },
-                                            ],
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'addedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'createdDate',
                                           },
                                         },
                                         {

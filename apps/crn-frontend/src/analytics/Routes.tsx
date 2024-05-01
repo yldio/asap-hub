@@ -11,13 +11,19 @@ const loadProductivity = () =>
 const loadLeadership = () =>
   import(/* webpackChunkName: "leadership" */ './leadership/Leadership');
 
+const loadCollaboration = () =>
+  import(
+    /* webpackChunkName: "collaboration" */ './collaboration/Collaboration'
+  );
+
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
+const CollaborationBody = lazy(loadCollaboration);
 
 const Routes = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadLeadership().then(loadLeadership);
+    loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
   const { path } = useRouteMatch();
@@ -43,6 +49,33 @@ const Routes = () => {
             </Route>
             <Redirect
               to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+            />
+          </Switch>
+        </Route>
+      )}
+      {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+        <Route path={path + analytics({}).collaboration.template}>
+          <Switch>
+            <Route
+              exact
+              path={
+                path +
+                analytics({}).collaboration.template +
+                analytics({}).collaboration({}).collaborationPath.template
+              }
+            >
+              <AnalyticsPage>
+                <Frame title="Collaboration">
+                  <CollaborationBody />
+                </Frame>
+              </AnalyticsPage>
+            </Route>
+            <Redirect
+              to={
+                analytics({})
+                  .collaboration({})
+                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
+              }
             />
           </Switch>
         </Route>

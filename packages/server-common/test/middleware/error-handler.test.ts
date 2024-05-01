@@ -13,7 +13,19 @@ class CustomError extends Error {
   status?: number;
 }
 
-describe('Error handling', () => {
+describe.each([
+  {
+    description: 'with logger',
+    errorHandler: errorHandlerFactory(loggerMock),
+    timesCalled: 2,
+  },
+  {
+    description: 'without logger',
+    errorHandler: errorHandlerFactory(),
+    timesCalled: 1,
+  },
+])('Error handling $description', ({ errorHandler, timesCalled }) => {
+  beforeEach(() => jest.clearAllMocks());
   const errorRoutes = Router();
 
   errorRoutes.get('/events/error-route', async () => {
@@ -43,7 +55,6 @@ describe('Error handling', () => {
   });
 
   const httpLogger = getHttpLogger({ logger: loggerMock });
-  const errorHandler = errorHandlerFactory();
 
   const app = express();
   app.use(httpLogger);
@@ -64,6 +75,7 @@ describe('Error handling', () => {
       statusCode: 500,
     });
     expect(loggerMock.error).toHaveBeenCalledWith(expect.any(Error));
+    expect(loggerMock.error).toHaveBeenCalledTimes(timesCalled);
   });
 
   test('Should log the error and return a custom error status code', async () => {

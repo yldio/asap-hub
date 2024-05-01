@@ -513,7 +513,6 @@ export const getEventCreateDataObject = (): EventCreateDataObject => ({
   endDateTimeZone: 'Europe/Lisbon',
   calendar: 'calendar-id',
   status: 'Confirmed' as EventStatus,
-  tags: [],
   hidden: false,
   hideMeetingLink: false,
 });

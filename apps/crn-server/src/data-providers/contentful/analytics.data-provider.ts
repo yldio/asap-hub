@@ -404,8 +404,7 @@ const getRangeFilterParams = (rangeKey?: TimeRangeOption): string | null => {
 };
 
 type AnalyticOutput = Maybe<
-  Pick<ResearchOutputs, 'sharingStatus'> & {
-    sys: Pick<Sys, 'publishedAt'>;
+  Pick<ResearchOutputs, 'sharingStatus' | 'addedDate' | 'createdDate'> & {
     authorsCollection?: Maybe<{
       items: Array<
         Maybe<
@@ -422,7 +421,9 @@ export const getFilterOutputByRange =
   (rangeKey?: TimeRangeOption) => (item: AnalyticOutput) => {
     const filter = getRangeFilterParams(rangeKey);
     if (item && filter) {
-      return item.sys.publishedAt && item.sys.publishedAt >= filter;
+      return item.addedDate
+        ? item.addedDate >= filter
+        : item.createdDate >= filter;
     }
     return true;
   };

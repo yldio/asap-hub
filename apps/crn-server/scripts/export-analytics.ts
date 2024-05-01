@@ -102,7 +102,7 @@ const transformRecords = (
   range?: TimeRangeOption,
 ) => ({
   ...record,
-  objectID: record.id,
+  objectID: `${type}-${record.id}`,
   __meta: {
     type,
     range,

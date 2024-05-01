@@ -1,6 +1,7 @@
 import {
   ListAnalyticsTeamLeadershipResponse,
   ListTeamProductivityResponse,
+  ListUserCollaborationResponse,
   ListUserProductivityResponse,
 } from '@asap-hub/model';
 import {
@@ -45,6 +46,17 @@ export const analyticsRouteFactory = (
       const query = validateFetchAnalyticsOptions(parameters);
 
       const result = await analyticsController.fetchTeamProductivity(query);
+
+      res.json(result);
+    },
+  );
+
+  analyticsRoutes.get(
+    '/collaboration/user',
+    async (req, res: Response<ListUserCollaborationResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchAnalyticsOptions(parameters);
+      const result = await analyticsController.fetchUserCollaboration(query);
 
       res.json(result);
     },

@@ -1,4 +1,5 @@
 import { FetchUserCoproductionQuery } from '@asap-hub/contentful';
+import { TeamRole, UserCollaborationDataObject } from '@asap-hub/model';
 import {
   cleanArray,
   parseUserDisplayName,
@@ -103,7 +104,7 @@ export const getCollaborationCounts = (
 
 export const getUserCoproductionItems = (
   userCollection: FetchUserCoproductionQuery['usersCollection'],
-) => {
+): UserCollaborationDataObject[] => {
   return cleanArray(userCollection?.items).map((user) => {
     const teams = cleanArray(user?.teamsCollection?.items).map((team) => {
       const analyticData =
@@ -132,11 +133,11 @@ export const getUserCoproductionItems = (
       );
 
       return {
-        name: team.team?.displayName ?? '',
-        role: team.role ?? '',
-        isInactive: !!team.inactiveSinceDate,
-        acrossTeamCount,
-        withinTeamCount,
+        team: team.team?.displayName ?? '',
+        role: team.role as TeamRole ?? undefined,
+        isTeamInactive: !!team.inactiveSinceDate,
+        outputsCoAuthoredAcrossTeams: acrossTeamCount,
+        outputsCoAuthoredWithinTeam: withinTeamCount,
       };
     });
 

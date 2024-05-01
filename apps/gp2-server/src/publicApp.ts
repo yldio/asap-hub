@@ -13,6 +13,7 @@ import OutputController from './controllers/output.controller';
 import {
   ExternalUserDataProvider,
   OutputDataProvider,
+  UserDataProvider,
 } from './data-providers/types';
 import pinoLogger from './utils/logger';
 import { OutputContentfulDataProvider } from './data-providers/output.data-provider';
@@ -22,6 +23,10 @@ import {
 } from './dependencies/clients.dependency';
 import { ExternalUserContentfulDataProvider } from './data-providers/external-user.data-provider';
 import { outputRouteFactory } from './routes/public/output.route';
+import UserController from './controllers/user.controller';
+import { userRouteFactory } from './routes/public/user.route';
+import { UserContentfulDataProvider } from './data-providers/user.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/asset.data-provider';
 
 export const publicAppFactory = (
   dependencies: PublicAppDependencies = {},
@@ -56,6 +61,18 @@ export const publicAppFactory = (
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
     );
+  const userDataProvider =
+    dependencies.userDataProvider ||
+    new UserContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  const assetDataProvider = new AssetContentfulDataProvider(
+    getContentfulRestClientFactory,
+  );
+  const userController =
+    dependencies.userController ||
+    new UserController(userDataProvider, assetDataProvider);
   const outputController =
     dependencies.outputController ||
     new OutputController(outputDataProvider, externalUserDataProvider);
@@ -68,9 +85,10 @@ export const publicAppFactory = (
   });
 
   const outputRoutes = outputRouteFactory(outputController);
+  const userRoutes = userRouteFactory(userController);
 
   // add routes
-  app.use('/public', [basicRoutes, outputRoutes]);
+  app.use('/public', [basicRoutes, outputRoutes, userRoutes]);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -96,6 +114,8 @@ type PublicAppDependencies = {
   logger?: Logger;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
+  userDataProvider?: UserDataProvider;
+  userController?: UserController;
   externalUserDataProvider?: ExternalUserDataProvider;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;

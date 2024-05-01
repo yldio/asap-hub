@@ -255,6 +255,8 @@ export const getContentfulGraphqlOutput = (): NonNullable<
   addedDate: '2021-05-21T13:18:31.000Z',
   publishDate: '2021-05-21T13:18:31.000Z',
   lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+  gp2Supported: 'Yes',
+  sharingStatus: 'Public',
   relatedEntitiesCollection: {
     total: 1,
     items: [

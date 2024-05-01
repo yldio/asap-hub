@@ -141,6 +141,8 @@ export const usersContentQueryFragment = gql`
           }
           title
           shortDescription
+          sharingStatus
+          gp2Supported
         }
       }
     }

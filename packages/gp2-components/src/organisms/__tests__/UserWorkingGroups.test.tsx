@@ -9,6 +9,7 @@ describe('UserWorkingGroups', () => {
       id: `id-${itemIndex}`,
       title: `a title ${itemIndex}`,
       members: [],
+      role: 'Co-lead',
     }));
   const id = 'user-id';
   const renderUserWorkingGroups = (workingGroups: WorkingGroup[]) =>

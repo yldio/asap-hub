@@ -27,6 +27,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   biography:
     'Anthony Edward "Tony" Stark was a billionaire industrialist, a founding member of the Avengers, and the former CEO of Stark Industries.',
   degrees: ['PhD'],
+  outputs: [],
   projects: [],
   projectIds: [],
   workingGroups: [],

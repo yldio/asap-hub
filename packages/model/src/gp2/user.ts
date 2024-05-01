@@ -4,6 +4,7 @@ import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 import { OutputResponse } from './output';
+import { WorkingGroupResponse } from '../working-group';
 
 export const userRoles = [
   'Administrator',
@@ -46,7 +47,7 @@ export const userRegions = [
 
 export type UserOutput = Pick<
   OutputResponse,
-  'id' | 'title' | 'shortDescription'
+  'id' | 'title' | 'shortDescription' | 'gp2Supported' | 'sharingStatus'
 >;
 
 export type UserRegion = (typeof userRegions)[number];
@@ -67,6 +68,7 @@ export type UserWorkingGroupMember = Pick<
 >;
 export type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
   members: UserWorkingGroupMember[];
+  role: UserWorkingGroupMember['role'];
 };
 
 type Telephone = { countryCode?: string; number?: string };
@@ -137,6 +139,7 @@ export type UserCreateDataObject = Omit<
   | 'createdDate'
   | 'lastModifiedDate'
   | 'avatarUrl'
+  | 'outputs'
   | 'projects'
   | 'workingGroups'
   | 'contributingCohorts'
@@ -190,7 +193,31 @@ export interface UserResponse
   workingGroupIds: string[];
   tagIds: string[];
 }
+
+export type PublicUserResponse = Pick<
+  UserResponse,
+  | 'id'
+  | 'avatarUrl'
+  | 'biography'
+  | 'city'
+  | 'country'
+  | 'degrees'
+  | 'displayName'
+  | 'firstName'
+  | 'lastName'
+  | 'middleName'
+  | 'outputs'
+> & {
+  publishDate: string;
+  workingGroups: Array<
+    Pick<WorkingGroupResponse, 'id' | 'title'> & {
+      role: UserWorkingGroupMember['role'];
+    }
+  >;
+};
 export type ListUserResponse = ListResponse<UserResponse>;
+export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
+
 export type UserMetadataResponse = Omit<UserResponse, 'fullDisplayName'> & {
   algoliaApiKey: string | null;
 };

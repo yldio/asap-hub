@@ -21,7 +21,8 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   link: 'http://a.link',
   description: 'A very nice article',
   shortDescription: 'A nice article',
-  sharingStatus: 'GP2 Only',
+  sharingStatus: 'Public',
+  gp2Supported: 'Yes',
   authors: [
     {
       id: 'user-id-1',

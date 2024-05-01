@@ -162,9 +162,9 @@ describe('userToCSV', () => {
     const userResponse: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       workingGroups: [
-        { id: '1', title: 'working group 1', members: [] },
-        { id: '2', title: 'working group 2', members: [] },
-        { id: '3', title: 'working group 3', members: [] },
+        { id: '1', title: 'working group 1', members: [], role: 'Co-lead' },
+        { id: '2', title: 'working group 2', members: [], role: 'Co-lead' },
+        { id: '3', title: 'working group 3', members: [], role: 'Co-lead' },
       ],
     };
     const { workingGroups } = userToCSV(userResponse);

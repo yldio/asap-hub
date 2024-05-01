@@ -107,7 +107,10 @@ describe.each([
       throw new ValidationError(new HTTPError({} as Response));
     });
     errorRoutes.get('/asap/notfound', async () => {
-      throw new NotFoundError(new HTTPError({} as Response));
+      throw new NotFoundError(
+        new HTTPError({} as Response),
+        'resource not found',
+      );
     });
 
     test('404 on Not Found Error', async () => {
@@ -118,7 +121,7 @@ describe.each([
       expect(response.status).toBe(404);
       expect(response.body).toEqual({
         error: 'Not Found',
-        message: 'Not Found',
+        message: 'resource not found',
         statusCode: 404,
       });
     });

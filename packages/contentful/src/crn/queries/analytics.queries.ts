@@ -193,9 +193,7 @@ export const FETCH_USER_COPRODUCTION = gql`
         linkedFrom {
           researchOutputsCollection(limit: 20) {
             items {
-              sys {
-                publishedAt
-              }
+              addedDate
               sharingStatus
               authorsCollection(limit: 10) {
                 items {

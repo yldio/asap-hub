@@ -10476,8 +10476,7 @@ export type FetchUserCoproductionQuery = {
               researchOutputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<ResearchOutputs, 'sharingStatus'> & {
-                      sys: Pick<Sys, 'publishedAt'>;
+                    Pick<ResearchOutputs, 'addedDate' | 'sharingStatus'> & {
                       authorsCollection?: Maybe<{
                         items: Array<
                           Maybe<
@@ -23825,18 +23824,9 @@ export const FetchUserCoproductionDocument = {
                                       selections: [
                                         {
                                           kind: 'Field',
-                                          name: { kind: 'Name', value: 'sys' },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'publishedAt',
-                                                },
-                                              },
-                                            ],
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'addedDate',
                                           },
                                         },
                                         {

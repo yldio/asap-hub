@@ -1,6 +1,7 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchTeamProductivityQuery,
+  FetchUserCoproductionQuery,
   FetchUserProductivityQuery,
 } from '@asap-hub/contentful';
 import {
@@ -383,3 +384,51 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
+
+export const getUserCoproductionQuery = (): FetchUserCoproductionQuery => ({
+  usersCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Jane',
+        lastName: 'Doe',
+        nickname: 'Jenny',
+        alumniSinceDate: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: getResearchOutputUserProductivity(),
+          },
+        },
+        teamsCollection: {
+          items: [
+            {
+              role: 'Co-PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team Alessi',
+                inactiveSince: null,
+              },
+            },
+            {
+              role: 'Collaborating PI',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team De Camilli',
+                inactiveSince: null,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});

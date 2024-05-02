@@ -54,6 +54,7 @@ if (stage === 'dev' || stage === 'production') {
 }
 
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnPublicApi = process.env.SENTRY_DSN_PUBLIC_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
@@ -247,7 +248,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         APP_ORIGIN: appUrl,
-        SENTRY_DSN: sentryDsnApi,
+        SENTRY_DSN: sentryDsnPublicApi,
       },
     },
     apiHandler: {

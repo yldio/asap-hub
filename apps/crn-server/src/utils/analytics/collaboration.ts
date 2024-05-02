@@ -50,12 +50,8 @@ export const findMatchingAuthors = ({
   authorList: Author[];
 }) => {
   let [differentTeamFlag, sameTeamDifferentLabFlag] = [false, false];
-  for (let i = 0; i < authorList.length; i++) {
-    const author = authorList[i];
-    if (author) {
-      if (author.id === referenceId) {
-        continue;
-      }
+  authorList.forEach((author) => {
+    if (author && author.id !== referenceId) {
       if (
         !differentTeamFlag &&
         checkDifferentTeams(referenceTeam, author.teams)
@@ -69,7 +65,7 @@ export const findMatchingAuthors = ({
         sameTeamDifferentLabFlag = true;
       }
     }
-  }
+  });
   return { differentTeamFlag, sameTeamDifferentLabFlag };
 };
 export const getCollaborationCounts = (
@@ -77,32 +73,29 @@ export const getCollaborationCounts = (
     differentTeamFlag: boolean;
     sameTeamDifferentLabFlag: boolean;
   }[],
-) => {
-  return data.reduce(
+) =>
+  data.reduce(
     (
       { acrossTeamCount, withinTeamCount },
       { differentTeamFlag, sameTeamDifferentLabFlag },
-    ) => {
-      return {
-        acrossTeamCount: differentTeamFlag
-          ? acrossTeamCount + 1
-          : acrossTeamCount,
-        withinTeamCount: sameTeamDifferentLabFlag
-          ? withinTeamCount + 1
-          : withinTeamCount,
-      };
-    },
+    ) => ({
+      acrossTeamCount: differentTeamFlag
+        ? acrossTeamCount + 1
+        : acrossTeamCount,
+      withinTeamCount: sameTeamDifferentLabFlag
+        ? withinTeamCount + 1
+        : withinTeamCount,
+    }),
     {
       acrossTeamCount: 0,
       withinTeamCount: 0,
     },
   );
-};
 
 export const getUserCoproductionItems = (
   userCollection: FetchUserCoproductionQuery['usersCollection'],
-): UserCollaborationDataObject[] => {
-  return cleanArray(userCollection?.items).map((user) => {
+): UserCollaborationDataObject[] =>
+  cleanArray(userCollection?.items).map((user) => {
     const teams = cleanArray(user?.teamsCollection?.items).map((team) => {
       const analyticData =
         user.linkedFrom?.researchOutputsCollection?.items.map((output) => {
@@ -150,4 +143,3 @@ export const getUserCoproductionItems = (
       teams,
     };
   });
-};

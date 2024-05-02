@@ -22,12 +22,12 @@ export const exportAnalyticsData = async (
   await file.write('[\n');
   metric === 'team-leadership'
     ? await exportData(metric, file)
-    : await exportDataForRange(metric, file);
+    : await exportDataForRanges(metric, file);
 
   await file.write(']');
 };
 
-const exportDataForRange = async (
+const exportDataForRanges = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {

@@ -270,7 +270,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     >(FETCH_USER_COPRODUCTION, { limit: take, skip });
     return {
       total: 0,
-      item: getUserCoproductionItems(usersCollection),
+      items: getUserCoproductionItems(usersCollection),
     };
   }
 }

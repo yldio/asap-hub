@@ -18,6 +18,9 @@ describe('coproduction', () => {
   afterAll(() => {
     jest.useRealTimers();
   });
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   // const contentfulGraphqlClientMockServer =
   //   getContentfulGraphqlClientMockServer({
@@ -43,8 +46,8 @@ describe('coproduction', () => {
   // );
 
   describe('Pagination', () => {
-    test('Should apply pagination parameters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+    test('Should apply pagination parameters and split query accordingly', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue(
         getUserCoproductionQuery(),
       );
 
@@ -53,29 +56,54 @@ describe('coproduction', () => {
         skip: 3,
       });
 
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_USER_COPRODUCTION,
-        expect.objectContaining({
-          limit: 13,
-          skip: 3,
-        }),
-      );
+      expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
+        [
+          FETCH_USER_COPRODUCTION,
+          expect.objectContaining({
+            limit: 5,
+            skip: 3,
+          }),
+        ],
+        [
+          FETCH_USER_COPRODUCTION,
+          expect.objectContaining({
+            limit: 5,
+            skip: 8,
+          }),
+        ],
+        [
+          FETCH_USER_COPRODUCTION,
+          expect.objectContaining({
+            limit: 5,
+            skip: 13,
+          }),
+        ],
+      ]);
     });
 
-    test('Should pass default pagination parameters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+    test('Should pass default pagination parameters and split query', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValue(
         getUserCoproductionQuery(),
       );
 
       await analyticsDataProvider.fetchUserCollaboration({});
 
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        FETCH_USER_COPRODUCTION,
-        expect.objectContaining({
-          limit: 10,
-          skip: 0,
-        }),
-      );
+      expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
+        [
+          FETCH_USER_COPRODUCTION,
+          expect.objectContaining({
+            limit: 5,
+            skip: 0,
+          }),
+        ],
+        [
+          FETCH_USER_COPRODUCTION,
+          expect.objectContaining({
+            limit: 5,
+            skip: 5,
+          }),
+        ],
+      ]);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { FetchUserCoproductionQuery } from '@asap-hub/contentful';
 import {
   Author,
   checkDifferentTeams,
@@ -5,6 +6,7 @@ import {
   EntityWithId,
   findMatchingAuthors,
   getCollaborationCounts,
+  getUserCoproductionItems,
 } from '../../../src/utils/analytics/collaboration';
 
 describe('checkDifferentTeams', () => {
@@ -177,5 +179,41 @@ describe('getCollaborationCounts', () => {
       acrossTeamCount: 1,
       withinTeamCount: 1,
     });
+  });
+});
+
+describe('getUserCoproductionItems ', () => {
+  it('skips external authors', () => {
+    const data: FetchUserCoproductionQuery['usersCollection'] = {
+      items: [
+        {
+          sys: { id: '1' },
+          firstName: 'John',
+          lastName: 'Foo',
+          teamsCollection: {
+            items: [{ team: { sys: { id: '1' } } }],
+          },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  authorsCollection: {
+                    items: [{ __typename: 'ExternalAuthors' }],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+      total: 0,
+    };
+
+    expect(getUserCoproductionItems(data)[0]?.teams[0]).toEqual(
+      expect.objectContaining({
+        outputsCoAuthoredAcrossTeams: 0,
+        outputsCoAuthoredWithinTeam: 0,
+      }),
+    );
   });
 });

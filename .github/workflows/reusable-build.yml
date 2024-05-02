@@ -323,6 +323,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.crn-hostname }}
           sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+          sentry-dsn-public-api: 'n-a'
           sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
           ses-region: ${{ steps.setup.outputs.crn-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
@@ -367,6 +368,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.gp2-hostname }}
           sentry-dsn-api: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
+          sentry-dsn-public-api: ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
           ses-region: ${{ steps.setup.outputs.gp2-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}

@@ -218,6 +218,9 @@ outputs:
   gp2-sentry-dsn-handlers:
     description: 'GP2 Sentry DSN Handlers'
     value: ${{ steps.vars.outputs.gp2-sentry-dsn-handlers }}
+  gp2-sentry-dsn-public-api:
+    description: 'GP2 Sentry DSN Public API'
+    value: ${{ steps.vars.outputs.gp2-sentry-dsn-public-api }}
   gp2-ses-region:
     description: 'GP2 SES Region'
     value: ${{ steps.vars.outputs.gp2-ses-region }}

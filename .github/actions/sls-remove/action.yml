@@ -101,6 +101,7 @@ runs:
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
         SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
+        SENTRY_DSN_PUBLIC_API: ${{ inputs.sentry-dsn-public-api }}
         SENTRY_DSN_HANDLERS: ${{ inputs.sentry-dsn-handlers }}
         SES_REGION: ${{ inputs.ses-region }}
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}

@@ -20,5 +20,4 @@ export type AnalyticsDataProvider = {
   fetchUserCollaboration: (
     options: FetchAnalyticsOptions,
   ) => Promise<ListUserCollaborationDataObject>;
-
 };

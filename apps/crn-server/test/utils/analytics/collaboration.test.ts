@@ -94,8 +94,8 @@ describe('findMatchingAuthors', () => {
     referenceId,
     referenceLabs,
     referenceTeam,
-    authorList
-  }
+    authorList,
+  };
 
   it('returns correct flags when there is no authors', () => {
     expect(findMatchingAuthors(defaultData)).toEqual({
@@ -112,11 +112,9 @@ describe('findMatchingAuthors', () => {
         {
           id: 'id',
           teams: [referenceTeam, { sys: { id: 'team-b' } }],
-          labs: [
-            referenceLab
-          ],
-        }
-      ]
+          labs: [referenceLab],
+        },
+      ],
     };
 
     expect(findMatchingAuthors(data)).toEqual({
@@ -133,11 +131,9 @@ describe('findMatchingAuthors', () => {
         {
           id: 'id',
           teams: [{ sys: { id: 'team-b' } }],
-          labs: [
-            referenceLab
-          ],
-        }
-      ]
+          labs: [referenceLab],
+        },
+      ],
     };
 
     expect(findMatchingAuthors(data)).toEqual({
@@ -154,11 +150,9 @@ describe('findMatchingAuthors', () => {
         {
           id: 'id',
           teams: [referenceTeam, { sys: { id: 'team-b' } }],
-          labs: [
-            { sys: { id: 'lab-b' } }
-          ],
-        }
-      ]
+          labs: [{ sys: { id: 'lab-b' } }],
+        },
+      ],
     };
 
     expect(findMatchingAuthors(data)).toEqual({
@@ -169,19 +163,19 @@ describe('findMatchingAuthors', () => {
 });
 
 describe('getCollaborationCounts', () => {
-  const flags = (differentTeamFlag: boolean, sameTeamDifferentLabFlag: boolean) => ({
-    differentTeamFlag, sameTeamDifferentLabFlag
+  const flags = (
+    differentTeamFlag: boolean,
+    sameTeamDifferentLabFlag: boolean,
+  ) => ({
+    differentTeamFlag,
+    sameTeamDifferentLabFlag,
   });
 
   it('sums each collaboration count properly', () => {
-    const data = [
-      flags(false, false),
-      flags(true, false),
-      flags(false, true),
-    ];
+    const data = [flags(false, false), flags(true, false), flags(false, true)];
     expect(getCollaborationCounts(data)).toEqual({
       acrossTeamCount: 1,
-      withinTeamCount: 1
+      withinTeamCount: 1,
     });
   });
 });

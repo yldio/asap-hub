@@ -170,7 +170,7 @@ export const FETCH_USER_COPRODUCTION = gql`
         lastName
         nickname
         alumniSinceDate
-        labsCollection(limit :3) {
+        labsCollection(limit: 3) {
           items {
             sys {
               id
@@ -204,7 +204,7 @@ export const FETCH_USER_COPRODUCTION = gql`
                     sys {
                       id
                     }
-                    labsCollection(limit :3) {
+                    labsCollection(limit: 3) {
                       items {
                         sys {
                           id

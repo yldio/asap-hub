@@ -1,9 +1,6 @@
 import { FetchUserCoproductionQuery } from '@asap-hub/contentful';
 import { TeamRole, UserCollaborationDataObject } from '@asap-hub/model';
-import {
-  cleanArray,
-  parseUserDisplayName,
-} from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 export type EntityWithId = {
   sys: {
@@ -134,7 +131,7 @@ export const getUserCoproductionItems = (
 
       return {
         team: team.team?.displayName ?? '',
-        role: team.role as TeamRole ?? undefined,
+        role: (team.role as TeamRole) ?? undefined,
         isTeamInactive: !!team.inactiveSinceDate,
         outputsCoAuthoredAcrossTeams: acrossTeamCount,
         outputsCoAuthoredWithinTeam: withinTeamCount,

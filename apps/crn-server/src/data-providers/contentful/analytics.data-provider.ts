@@ -37,7 +37,7 @@ import { getUserCoproductionItems } from '../../utils/analytics/collaboration';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
-  constructor(private contentfulClient: GraphQLClient) { }
+  constructor(private contentfulClient: GraphQLClient) {}
 
   async fetchTeamLeadership(
     options: FetchPaginationOptions,
@@ -201,9 +201,9 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
               interestGroupMemberCount: team.inactiveSince
                 ? 0
                 : getUniqueIdCount([
-                  ...currentInterestGroupIdsFromTeamLeaders,
-                  ...currentInterestGroupIdsFromInterestGroupCollection,
-                ]),
+                    ...currentInterestGroupIdsFromTeamLeaders,
+                    ...currentInterestGroupIdsFromInterestGroupCollection,
+                  ]),
               interestGroupPreviousMemberCount: getUniqueIdCount([
                 ...previousInterestGroupIdsFromTeamLeaders,
                 ...previousInterestGroupIdsFromInterestGroupCollection,
@@ -410,8 +410,8 @@ type AnalyticOutput = Maybe<
         Maybe<
           | { __typename: 'ExternalAuthors' }
           | ({ __typename: 'Users' } & {
-            sys: Pick<Sys, 'id'>;
-          })
+              sys: Pick<Sys, 'id'>;
+            })
         >
       >;
     }>;
@@ -503,8 +503,8 @@ const getUserProductivityItems = (
       ratio:
         userOutputsCount.outputs > 0
           ? (userOutputsCount.publicOutputs / userOutputsCount.outputs).toFixed(
-            2,
-          )
+              2,
+            )
           : '0.00',
     };
   });

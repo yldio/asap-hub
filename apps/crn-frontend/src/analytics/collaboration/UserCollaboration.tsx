@@ -45,8 +45,8 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,
     pageSize,
-    timeRange: '30d'
-  })
+    timeRange: '30d',
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

@@ -99,9 +99,11 @@ export type UserCollaborationDataObject = {
   name: string;
   teams: UserCollaborationTeam[];
 };
-export type ListUserCollaborationDataObject = ListResponse<UserCollaborationDataObject>;
+export type ListUserCollaborationDataObject =
+  ListResponse<UserCollaborationDataObject>;
 export type UserCollaborationResponse = UserCollaborationDataObject;
-export type ListUserCollaborationResponse = ListResponse<UserCollaborationDataObject>
+export type ListUserCollaborationResponse =
+  ListResponse<UserCollaborationDataObject>;
 
 type TeamCollaborationWithinOutputData = {
   Article: number;

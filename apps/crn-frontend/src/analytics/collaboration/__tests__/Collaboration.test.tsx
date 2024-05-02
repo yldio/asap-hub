@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,7 +7,19 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getUserCollaboration } from '../api';
 import Collaboration from '../Collaboration';
+
+jest.mock('../api');
+mockConsoleError();
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
+  typeof getUserCollaboration
+>;
 
 const renderPage = async (
   path = analytics({})
@@ -35,7 +48,9 @@ const renderPage = async (
 
   return result;
 };
-
+beforeEach(() => {
+  mockGetUserCollaboration.mockResolvedValueOnce({ items: [], total: 0 });
+});
 it('renders with user data', async () => {
   await renderPage();
 

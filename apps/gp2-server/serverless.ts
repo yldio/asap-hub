@@ -48,9 +48,11 @@ const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 
 if (stage === 'dev' || stage === 'production') {
-  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const sentryDsnApi = process.env.SENTRY_DSN_API!;

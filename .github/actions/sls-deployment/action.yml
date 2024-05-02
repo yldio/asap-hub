@@ -62,6 +62,9 @@ inputs:
   sentry-dsn-api:
     description: 'Sentry DSN for the API'
     required: true
+  sentry-dsn-public-api:
+    description: 'Sentry DSN for the Public API'
+    required: true
   sentry-dsn-handlers:
     description: 'Sentry DSN for handlers other than the API'
     required: true

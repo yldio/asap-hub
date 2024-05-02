@@ -138,6 +138,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Echo gp2-sentry-dsn-public
+        run: echo ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
       - name: Deploy sls for gp2
         id: deploy
         uses: ./.github/actions/sls-deployment

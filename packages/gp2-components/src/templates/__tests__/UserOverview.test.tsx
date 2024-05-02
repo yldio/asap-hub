@@ -114,6 +114,7 @@ describe('UserOverview', () => {
           id: '1',
           title: 'Working Group 1',
           members: [],
+          role: 'Co-lead',
         },
       ];
       render(<UserOverview {...defaultProps} workingGroups={workingGroups} />);

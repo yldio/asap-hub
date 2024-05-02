@@ -30,7 +30,7 @@ export const errorHandlerFactory =
       if (err instanceof NotFoundError) {
         return res.status(404).json({
           error: 'Not Found',
-          message: 'Not Found',
+          message: err.message,
           statusCode: 404,
         });
       }

@@ -269,6 +269,7 @@ describe('For a GP2 login', () => {
     country: 'Portugal',
     stateOrProvince: 'Estremadura',
     degrees: [],
+    outputs: [],
     positions: [],
     projects: [],
     projectIds: [],

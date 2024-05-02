@@ -54,9 +54,9 @@ describe('UserCardInfo', () => {
       <UserCardInfo
         {...defaultProps}
         workingGroups={[
-          { id: '3', title: 'Working Group 3', members: [] },
-          { id: '1', title: 'Working Group 1', members: [] },
-          { id: '2', title: 'Working Group 2', members: [] },
+          { id: '3', title: 'Working Group 3', members: [], role: 'Co-lead' },
+          { id: '1', title: 'Working Group 1', members: [], role: 'Co-lead' },
+          { id: '2', title: 'Working Group 2', members: [], role: 'Co-lead' },
         ]}
       />,
     );

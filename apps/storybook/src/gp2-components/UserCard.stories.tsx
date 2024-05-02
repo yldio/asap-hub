@@ -41,6 +41,7 @@ export const Normal = () => {
             id: index.toString(),
             title,
             members: [],
+            role: 'Co-lead',
           }))}
         projects={Array(number('Number of Projects', 1))
           .fill({

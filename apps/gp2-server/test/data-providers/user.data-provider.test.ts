@@ -277,6 +277,31 @@ describe('User data provider', () => {
       });
     });
 
+    describe('outputs', () => {
+      test('should remove outputs with null sharing-status', async () => {
+        const mockResponse = getContentfulGraphqlUser();
+        mockResponse.linkedFrom!.outputsCollection = {
+          items: [
+            {
+              sys: {
+                id: 'output-id',
+              },
+              gp2Supported: 'Yes',
+              shortDescription: 'Test output',
+              title: 'Test output',
+              sharingStatus: null,
+            },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.outputs).toEqual([]);
+      });
+    });
+
     describe('projects', () => {
       test('Should return empty array if no projects collection', async () => {
         const mockResponse = getContentfulGraphqlUser({ linkedFrom: {} });

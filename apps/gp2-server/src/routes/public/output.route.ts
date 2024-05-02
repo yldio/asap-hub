@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
+import { NotFoundError } from '@asap-hub/errors';
 import OutputController from '../../controllers/output.controller';
 
 export const outputRouteFactory = (
@@ -24,6 +25,24 @@ export const outputRouteFactory = (
         total: result.total,
         items: result.items.map(mapOutputToPublicOutput),
       });
+    },
+  );
+
+  outputRoutes.get(
+    '/outputs/:outputId',
+    async (req, res: Response<gp2Model.PublicOutputResponse>) => {
+      const { outputId } = req.params;
+
+      const output = await outputController.fetchById(outputId);
+
+      if (output.sharingStatus !== 'Public' || output.gp2Supported !== 'Yes') {
+        throw new NotFoundError(
+          undefined,
+          `output with id ${outputId} not found`,
+        );
+      }
+
+      res.json(mapOutputToPublicOutput(output));
     },
   );
 

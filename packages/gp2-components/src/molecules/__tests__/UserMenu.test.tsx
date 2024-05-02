@@ -129,11 +129,13 @@ describe('UserMenu', () => {
         id: '11',
         title: 'the first wg title',
         members: [],
+        role: 'Co-lead',
       },
       {
         id: '23',
         title: 'the second wg title',
         members: [],
+        role: 'Co-lead',
       },
     ];
     render(<UserMenu {...props} workingGroups={workingGroups} />);
@@ -152,6 +154,7 @@ describe('UserMenu', () => {
         id: '11',
         title: 'the first wg title',
         members: [],
+        role: 'Co-lead',
       },
     ];
     render(

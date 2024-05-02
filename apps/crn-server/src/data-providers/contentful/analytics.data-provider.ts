@@ -264,13 +264,27 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {
     const { take = 10, skip = 0 } = options;
-    const { usersCollection } = await this.contentfulClient.request<
-      FetchUserCoproductionQuery,
-      FetchUserCoproductionQueryVariables
-    >(FETCH_USER_COPRODUCTION, { limit: take, skip });
-    return {
+    let collection: FetchUserCoproductionQuery['usersCollection'] = {
       total: 0,
-      items: getUserCoproductionItems(usersCollection),
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { usersCollection } = await this.contentfulClient.request<
+        FetchUserCoproductionQuery,
+        FetchUserCoproductionQueryVariables
+      >(FETCH_USER_COPRODUCTION, { limit: 5, skip: skip + 5 * i });
+      if (usersCollection && usersCollection.items) {
+        collection = {
+          total: usersCollection.total,
+          items: [...collection.items, ...usersCollection.items],
+        };
+      }
+    }
+
+    return {
+      total: collection?.total || 0,
+      items: getUserCoproductionItems(collection),
     };
   }
 }

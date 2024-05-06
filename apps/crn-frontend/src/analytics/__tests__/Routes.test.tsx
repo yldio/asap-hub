@@ -14,10 +14,13 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { getTeamProductivity, getUserProductivity } from '../productivity/api';
+import { getUserCollaboration } from '../collaboration/api';
 import Analytics from '../Routes';
 
 jest.mock('../leadership/api');
 jest.mock('../productivity/api');
+jest.mock('../collaboration/api');
+
 mockConsoleError();
 afterEach(() => {
   jest.clearAllMocks();
@@ -33,7 +36,9 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
 const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
-
+const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
+  typeof getUserCollaboration
+>;
 const renderPage = async (path: string) => {
   const { container } = render(
     <RecoilRoot>
@@ -174,5 +179,22 @@ describe('Collaboration', () => {
         selector: 'h1',
       }),
     ).toBeVisible();
+  });
+
+  it('renders error message when the response is not a 2XX', async () => {
+    mockGetUserCollaboration.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
+    );
+    await renderPage(
+      analytics({})
+        .collaboration({})
+        .collaborationPath({ metric: 'user', type: 'within-team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetUserCollaboration).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

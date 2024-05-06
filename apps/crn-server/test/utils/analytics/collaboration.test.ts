@@ -354,4 +354,118 @@ describe('getUserCoProductionItems ', () => {
       );
     });
   });
+  describe('within teams', () => {
+    it('if authors are in the same team but do not share lab, this should count as 1', () => {
+      const data: FetchUserCoproductionQuery['usersCollection'] = {
+        items: [
+          {
+            sys: { id: 'user-A' },
+            firstName: 'User',
+            lastName: 'A',
+            teamsCollection: {
+              items: [{ team: { sys: { id: 'team-1' } } }],
+            },
+            labsCollection: {
+              items: [{ sys: { id: 'lab-1' } }],
+            },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    authorsCollection: {
+                      items: [
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-B' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                          labsCollection: {
+                            items: [{ sys: { id: 'lab-2' } }],
+                          },
+                        },
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-A' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                          labsCollection: {
+                            items: [{ sys: { id: 'lab-1' } }],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 0,
+      };
+
+      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+        expect.objectContaining({
+          outputsCoAuthoredAcrossTeams: 0,
+          outputsCoAuthoredWithinTeam: 1,
+        }),
+      );
+    });
+
+    it('if authors belong to the same team and share a lab this should not count', () => {
+      const data: FetchUserCoproductionQuery['usersCollection'] = {
+        items: [
+          {
+            sys: { id: 'user-A' },
+            firstName: 'User',
+            lastName: 'A',
+            teamsCollection: {
+              items: [{ team: { sys: { id: 'team-1' } } }],
+            },
+            labsCollection: {
+              items: [{ sys: { id: 'lab-1' } }],
+            },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    authorsCollection: {
+                      items: [
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-B' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                          labsCollection: {
+                            items: [{ sys: { id: 'lab-1' } }],
+                          },
+                        },
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-A' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 0,
+      };
+
+      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+        expect.objectContaining({
+          outputsCoAuthoredAcrossTeams: 0,
+          outputsCoAuthoredWithinTeam: 0,
+        }),
+      );
+    });
+  });
 });

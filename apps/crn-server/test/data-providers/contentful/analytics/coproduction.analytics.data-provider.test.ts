@@ -1,7 +1,6 @@
 import { FETCH_USER_COPRODUCTION } from '@asap-hub/contentful';
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import { getUserCoproductionQuery } from '../../../fixtures/analytics.fixtures';
-// import { getContentfulGraphqlUser } from "../../../fixtures/users.fixtures";
 import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
 const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 const analyticsDataProvider = new AnalyticsContentfulDataProvider(

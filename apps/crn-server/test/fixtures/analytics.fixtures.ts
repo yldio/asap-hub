@@ -185,83 +185,83 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     >['linkedFrom']
   >['researchOutputsCollection']
 >['items'] => [
-    {
-      addedDate: '2023-09-08T03:00:00.000Z',
-      sharingStatus: 'Network Only',
-      authorsCollection: {
-        items: [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-1',
-            },
+  {
+    addedDate: '2023-09-08T03:00:00.000Z',
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
           },
-        ],
-      },
+        },
+      ],
     },
-    {
-      addedDate: '2023-09-07T03:00:00.000Z',
-      sharingStatus: 'Network Only',
-      authorsCollection: {
-        items: [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-2',
-            },
+  },
+  {
+    addedDate: '2023-09-07T03:00:00.000Z',
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-2',
           },
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-3',
-            },
+        },
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-3',
           },
-        ],
-      },
+        },
+      ],
     },
-    {
-      addedDate: '2023-09-06T03:00:00.000Z',
-      sharingStatus: 'Network Only',
-      authorsCollection: {
-        items: [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-1',
-            },
+  },
+  {
+    addedDate: '2023-09-06T03:00:00.000Z',
+    sharingStatus: 'Network Only',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
           },
-        ],
-      },
+        },
+      ],
     },
-    {
-      addedDate: '2023-09-05T03:00:00.000Z',
-      sharingStatus: 'Public',
-      authorsCollection: {
-        items: [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-1',
-            },
+  },
+  {
+    addedDate: '2023-09-05T03:00:00.000Z',
+    sharingStatus: 'Public',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
           },
-        ],
-      },
+        },
+      ],
     },
-    {
-      addedDate: '2023-07-05T03:00:00.000Z',
-      sharingStatus: 'Public',
-      authorsCollection: {
-        items: [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'user-1',
-            },
+  },
+  {
+    addedDate: '2023-07-05T03:00:00.000Z',
+    sharingStatus: 'Public',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
           },
-        ],
-      },
+        },
+      ],
     },
-  ];
+  },
+];
 
 export const getTeamProductivityDataObject =
   (): TeamProductivityDataObject => ({
@@ -284,23 +284,23 @@ export const getResearchOutputTeamProductivity = (): NonNullable<
     >['linkedFrom']
   >['researchOutputsCollection']
 >['items'] => [
-    {
-      addedDate: '2023-09-05T03:00:00.000Z',
-      documentType: 'Article',
-    },
-    {
-      addedDate: '2023-09-03T03:00:00.000Z',
-      documentType: 'Bioinformatics',
-    },
-    {
-      addedDate: '2023-09-01T03:00:00.000Z',
-      documentType: 'Grant Document',
-    },
-    {
-      addedDate: null,
-      documentType: 'Protocol',
-    },
-  ];
+  {
+    addedDate: '2023-09-05T03:00:00.000Z',
+    documentType: 'Article',
+  },
+  {
+    addedDate: '2023-09-03T03:00:00.000Z',
+    documentType: 'Bioinformatics',
+  },
+  {
+    addedDate: '2023-09-01T03:00:00.000Z',
+    documentType: 'Grant Document',
+  },
+  {
+    addedDate: null,
+    documentType: 'Protocol',
+  },
+];
 
 export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
   usersCollection: {
@@ -436,12 +436,13 @@ export const getUserCoproductionQuery = (): FetchUserCoproductionQuery => ({
   },
 });
 
-export const getUserCoproductionDataObject = (): UserCollaborationDataObject => ({
-  id: 'user-1',
-  isAlumni: false,
-  name: 'User User',
-  teams: []
-});
+export const getUserCoproductionDataObject =
+  (): UserCollaborationDataObject => ({
+    id: 'user-1',
+    isAlumni: false,
+    name: 'User User',
+    teams: [],
+  });
 
 export const getUserCoproductionResponse = (): UserCollaborationResponse =>
   getUserCoproductionDataObject();
@@ -451,5 +452,3 @@ export const getListUserCoproductionResponse =
     total: 1,
     items: [getUserCoproductionResponse()],
   });
-
-

@@ -33,7 +33,7 @@ import {
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
-import { getUserCoproductionItems } from '../../utils/analytics/collaboration';
+import { getUserCoProductionItems } from '../../utils/analytics/collaboration';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -284,7 +284,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection?.total || 0,
-      items: getUserCoproductionItems(collection),
+      items: getUserCoProductionItems(collection),
     };
   }
 }

@@ -15,10 +15,12 @@ export type Author = {
 };
 
 export const checkDifferentTeams = (
-  referenceTeam: EntityWithId,
+  referenceTeams: EntityWithId[],
   testTeams: EntityWithId[],
 ): boolean =>
-  !testTeams.find((testTeam) => testTeam.sys.id === referenceTeam.sys.id);
+  referenceTeams.every((referenceTeam) =>
+    testTeams.every((testTeam) => testTeam.sys.id !== referenceTeam.sys.id),
+  );
 
 export const checkSameTeamDifferentLab = (
   referenceTeam: EntityWithId,
@@ -40,21 +42,24 @@ export const checkSameTeamDifferentLab = (
 
 export const findMatchingAuthors = ({
   referenceId,
+  referenceTeams,
   referenceTeam,
   referenceLabs,
   authorList,
 }: {
   referenceId: string;
   referenceTeam: EntityWithId;
+  referenceTeams: EntityWithId[];
   referenceLabs: EntityWithId[];
   authorList: Author[];
 }) => {
   let [differentTeamFlag, sameTeamDifferentLabFlag] = [false, false];
+  let isAuthor = false;
   authorList.forEach((author) => {
     if (author && author.id !== referenceId) {
       if (
         !differentTeamFlag &&
-        checkDifferentTeams(referenceTeam, author.teams)
+        checkDifferentTeams(referenceTeams, author.teams)
       ) {
         differentTeamFlag = true;
       }
@@ -64,10 +69,17 @@ export const findMatchingAuthors = ({
       ) {
         sameTeamDifferentLabFlag = true;
       }
+    } else if (author.id === referenceId) {
+      isAuthor = true;
     }
   });
-  return { differentTeamFlag, sameTeamDifferentLabFlag };
+  if (isAuthor) {
+    return { differentTeamFlag, sameTeamDifferentLabFlag };
+  }
+  // don't count output if not the author
+  return { differentTeamFlag: false, sameTeamDifferentLabFlag: false };
 };
+
 export const getCollaborationCounts = (
   data: {
     differentTeamFlag: boolean;
@@ -92,7 +104,7 @@ export const getCollaborationCounts = (
     },
   );
 
-export const getUserCoproductionItems = (
+export const getUserCoProductionItems = (
   userCollection: FetchUserCoproductionQuery['usersCollection'],
 ): UserCollaborationDataObject[] =>
   cleanArray(userCollection?.items).map((user) => {
@@ -114,6 +126,9 @@ export const getUserCoproductionItems = (
           return findMatchingAuthors({
             referenceId: user.sys.id,
             referenceTeam: team.team ? team.team : { sys: { id: '' } },
+            referenceTeams: cleanArray(user?.teamsCollection?.items).map(
+              (item) => item.team || { sys: { id: '' } },
+            ),
             referenceLabs: cleanArray(user.labsCollection?.items),
             authorList,
           });

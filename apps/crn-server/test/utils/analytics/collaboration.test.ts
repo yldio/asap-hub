@@ -6,26 +6,28 @@ import {
   EntityWithId,
   findMatchingAuthors,
   getCollaborationCounts,
-  getUserCoproductionItems,
+  getUserCoProductionItems,
 } from '../../../src/utils/analytics/collaboration';
 
 describe('checkDifferentTeams', () => {
-  const referenceTeam = {
-    sys: { id: 'referenceTeam' },
-  };
+  const referenceTeams = [
+    {
+      sys: { id: 'referenceTeam' },
+    },
+  ];
 
   it('returns true if no team is the same as the reference team', () => {
     const testTeams = [{ sys: { id: 'team-a' } }, { sys: { id: 'team-b' } }];
-    expect(checkDifferentTeams(referenceTeam, testTeams)).toBe(true);
+    expect(checkDifferentTeams(referenceTeams, testTeams)).toBe(true);
   });
 
   it('returns false if at least one team is the same as the reference team', () => {
     const testTeams = [
       { sys: { id: 'team-a' } },
       { sys: { id: 'team-b' } },
-      referenceTeam,
+      { sys: { id: 'referenceTeam' } },
     ];
-    expect(checkDifferentTeams(referenceTeam, testTeams)).toBe(false);
+    expect(checkDifferentTeams(referenceTeams, testTeams)).toBe(false);
   });
 });
 
@@ -89,13 +91,22 @@ describe('findMatchingAuthors', () => {
   const referenceId = 'reference-id';
   const referenceLabs: EntityWithId[] = [];
   const referenceTeam = { sys: { id: 'reference-team' } };
+  const referenceTeams = [referenceTeam];
   const referenceLab = { sys: { id: 'reference-lab' } };
-  const authorList: Author[] = [];
+
+  const referenceAuthor: Author = {
+    id: referenceId,
+    labs: [referenceLab],
+    teams: referenceTeams,
+  };
+
+  const authorList: Author[] = [referenceAuthor];
 
   const defaultData = {
     referenceId,
     referenceLabs,
     referenceTeam,
+    referenceTeams,
     authorList,
   };
 
@@ -111,6 +122,7 @@ describe('findMatchingAuthors', () => {
       ...defaultData,
       referenceLabs: [referenceLab],
       authorList: [
+        ...authorList,
         {
           id: 'id',
           teams: [referenceTeam, { sys: { id: 'team-b' } }],
@@ -130,6 +142,7 @@ describe('findMatchingAuthors', () => {
       ...defaultData,
       referenceLabs: [referenceLab],
       authorList: [
+        ...authorList,
         {
           id: 'id',
           teams: [{ sys: { id: 'team-b' } }],
@@ -149,6 +162,7 @@ describe('findMatchingAuthors', () => {
       ...defaultData,
       referenceLabs: [referenceLab],
       authorList: [
+        ...authorList,
         {
           id: 'id',
           teams: [referenceTeam, { sys: { id: 'team-b' } }],
@@ -160,6 +174,25 @@ describe('findMatchingAuthors', () => {
     expect(findMatchingAuthors(data)).toEqual({
       differentTeamFlag: false,
       sameTeamDifferentLabFlag: true,
+    });
+  });
+
+  it('returns both flag false if refence author is not an actual author', () => {
+    const data = {
+      ...defaultData,
+      referenceLabs: [referenceLab],
+      authorList: [
+        {
+          id: 'id',
+          teams: [referenceTeam, { sys: { id: 'team-b' } }],
+          labs: [{ sys: { id: 'lab-b' } }],
+        },
+      ],
+    };
+
+    expect(findMatchingAuthors(data)).toEqual({
+      differentTeamFlag: false,
+      sameTeamDifferentLabFlag: false,
     });
   });
 });
@@ -182,7 +215,7 @@ describe('getCollaborationCounts', () => {
   });
 });
 
-describe('getUserCoproductionItems ', () => {
+describe('getUserCoProductionItems ', () => {
   it('skips external authors', () => {
     const data: FetchUserCoproductionQuery['usersCollection'] = {
       items: [
@@ -209,11 +242,116 @@ describe('getUserCoproductionItems ', () => {
       total: 0,
     };
 
-    expect(getUserCoproductionItems(data)[0]?.teams[0]).toEqual(
+    expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
       expect.objectContaining({
         outputsCoAuthoredAcrossTeams: 0,
         outputsCoAuthoredWithinTeam: 0,
       }),
     );
+  });
+  describe('across teams', () => {
+    it('if authors do not share a single team, this should count as 1', () => {
+      const data: FetchUserCoproductionQuery['usersCollection'] = {
+        items: [
+          {
+            sys: { id: 'user-A' },
+            firstName: 'User',
+            lastName: 'A',
+            teamsCollection: {
+              items: [{ team: { sys: { id: 'team-1' } } }],
+            },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    authorsCollection: {
+                      items: [
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-B' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-2' } }],
+                          },
+                        },
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-A' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 0,
+      };
+
+      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+        expect.objectContaining({
+          outputsCoAuthoredAcrossTeams: 1,
+          outputsCoAuthoredWithinTeam: 0,
+        }),
+      );
+    });
+
+    it('if authors belong to the same team this should not count', () => {
+      const data: FetchUserCoproductionQuery['usersCollection'] = {
+        items: [
+          {
+            sys: { id: 'user-A' },
+            firstName: 'User',
+            lastName: 'A',
+            teamsCollection: {
+              items: [{ team: { sys: { id: 'team-1' } } }],
+            },
+            labsCollection: {
+              items: [{ sys: { id: 'lab-1' } }],
+            },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    authorsCollection: {
+                      items: [
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-B' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                          labsCollection: {
+                            items: [{ sys: { id: 'lab-1' } }],
+                          },
+                        },
+                        {
+                          __typename: 'Users',
+                          sys: { id: 'user-A' },
+                          teamsCollection: {
+                            items: [{ sys: { id: 'team-1' } }],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 0,
+      };
+
+      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+        expect.objectContaining({
+          outputsCoAuthoredAcrossTeams: 0,
+          outputsCoAuthoredWithinTeam: 0,
+        }),
+      );
+    });
   });
 });

@@ -23854,6 +23854,41 @@ export const FetchUserCoproductionDocument = {
                                                 value: '10',
                                               },
                                             },
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'where',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'sys',
+                                                    },
+                                                    value: {
+                                                      kind: 'ObjectValue',
+                                                      fields: [
+                                                        {
+                                                          kind: 'ObjectField',
+                                                          name: {
+                                                            kind: 'Name',
+                                                            value: 'id_exists',
+                                                          },
+                                                          value: {
+                                                            kind: 'BooleanValue',
+                                                            value: true,
+                                                          },
+                                                        },
+                                                      ],
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
                                           ],
                                           selectionSet: {
                                             kind: 'SelectionSet',

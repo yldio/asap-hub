@@ -175,7 +175,9 @@ describe('/analytics/ route', () => {
         total: 0,
         items: [],
       });
-      const response = await supertest(app).get('/analytics/collaboration/user');
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -188,7 +190,9 @@ describe('/analytics/ route', () => {
       analyticsControllerMock.fetchUserCollaboration.mockRejectedValueOnce(
         new Error('Test error'),
       );
-      const response = await supertest(app).get('/analytics/collaboration/user');
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
 
       expect(response.status).toBe(500);
     });
@@ -197,7 +201,9 @@ describe('/analytics/ route', () => {
       analyticsControllerMock.fetchUserCollaboration.mockResolvedValueOnce(
         getListUserCoproductionResponse(),
       );
-      const response = await supertest(app).get('/analytics/collaboration/user');
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(getListUserCoproductionResponse());

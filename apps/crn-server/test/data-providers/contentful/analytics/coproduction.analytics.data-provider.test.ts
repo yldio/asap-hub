@@ -22,29 +22,6 @@ describe('coproduction', () => {
     jest.resetAllMocks();
   });
 
-  // const contentfulGraphqlClientMockServer =
-  //   getContentfulGraphqlClientMockServer({
-  //     Users: () => getContentfulGraphqlUser(),
-  //     ResearchOutputs: () => ({
-  //       addedDate: '2023-09-03T03:00:00.000Z',
-  //       sharingStatus: 'Network Only',
-  //       authorsCollection: {
-  //         items: [
-  //           {
-  //             __typename: 'Users',
-  //             sys: {
-  //               id: 'user-id-1',
-  //             },
-  //           },
-  //         ],
-  //       },
-  //     }),
-  //   });
-
-  // const analyticsDataProviderMockGraphql = new AnalyticsContentfulDataProvider(
-  //   contentfulGraphqlClientMockServer,
-  // );
-
   describe('Pagination', () => {
     test('Should apply pagination parameters and split query accordingly', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue(

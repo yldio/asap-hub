@@ -48,12 +48,15 @@ const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 
 if (stage === 'dev' || stage === 'production') {
-  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnPublicApi = process.env.SENTRY_DSN_PUBLIC_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
@@ -247,7 +250,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         APP_ORIGIN: appUrl,
-        SENTRY_DSN: sentryDsnApi,
+        SENTRY_DSN: sentryDsnPublicApi,
       },
     },
     apiHandler: {

@@ -98,6 +98,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
   setSortingDirection,
 }) => {
   const indexPrefix = metric === 'working-group' ? 'wg' : 'ig';
+  const iconDescription =
+    metric === 'working-group' ? 'Working Group' : 'Interest Group';
+  const isTeamSortActive = sort.includes('team');
+  const isCurrentLeadershipSortActive = sort.includes('current_leadership');
+  const isPreviousLeadershipSortActive = sort.includes('previous_leadership');
+  const isCurrentMembershipSortActive = sort.includes('current_membership');
+  const isPreviousMembershipSortActive = sort.includes('previous_membership');
   return (
     <Card padding={false}>
       <div css={container}>
@@ -107,23 +114,21 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
             <button
               css={buttonStyles}
               onClick={() => {
-                if (sortingDirection.team === 'asc') {
-                  setSort('team_desc');
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    team: 'desc',
-                  });
-                } else {
-                  setSort('team_asc');
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    team: 'asc',
-                  });
-                }
+                const newDirection = isTeamSortActive
+                  ? sortingDirection.team === 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'asc';
+
+                setSort(`team_${newDirection}`);
+                setSortingDirection({
+                  ...initialSortingDirection,
+                  team: newDirection,
+                });
               }}
             >
               <AlphabeticalSortingIcon
-                active={sort.includes('team')}
+                active={isTeamSortActive}
                 ascending={sortingDirection.team === 'asc'}
               />
             </button>
@@ -134,24 +139,23 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
             <button
               css={buttonStyles}
               onClick={() => {
-                if (sortingDirection.currentLeadership === 'asc') {
-                  setSort(`${indexPrefix}_current_leadership_desc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    currentLeadership: 'desc',
-                  });
-                } else {
-                  setSort(`${indexPrefix}_current_leadership_asc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    currentLeadership: 'asc',
-                  });
-                }
+                const newDirection = isCurrentLeadershipSortActive
+                  ? sortingDirection.currentLeadership === 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'desc';
+
+                setSort(`${indexPrefix}_current_leadership_${newDirection}`);
+                setSortingDirection({
+                  ...initialSortingDirection,
+                  currentLeadership: newDirection,
+                });
               }}
             >
               <NumericalSortingIcon
-                active={sort.includes('current_leadership')}
+                active={isCurrentLeadershipSortActive}
                 ascending={sortingDirection.currentLeadership === 'asc'}
+                description={`${iconDescription} Current Leadership`}
               />
             </button>
           </span>
@@ -160,24 +164,23 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
             <button
               css={buttonStyles}
               onClick={() => {
-                if (sortingDirection.previousLeadership === 'asc') {
-                  setSort(`${indexPrefix}_previous_leadership_desc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    previousLeadership: 'desc',
-                  });
-                } else {
-                  setSort(`${indexPrefix}_previous_leadership_asc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    previousLeadership: 'asc',
-                  });
-                }
+                const newDirection = isPreviousLeadershipSortActive
+                  ? sortingDirection.previousLeadership === 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'desc';
+
+                setSort(`${indexPrefix}_previous_leadership_${newDirection}`);
+                setSortingDirection({
+                  ...initialSortingDirection,
+                  previousLeadership: newDirection,
+                });
               }}
             >
               <NumericalSortingIcon
-                active={sort.includes('previous_leadership')}
+                active={isPreviousLeadershipSortActive}
                 ascending={sortingDirection.previousLeadership === 'asc'}
+                description={`${iconDescription} Previous Leadership`}
               />
             </button>
           </span>
@@ -187,24 +190,23 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
             <button
               css={buttonStyles}
               onClick={() => {
-                if (sortingDirection.currentMembership === 'asc') {
-                  setSort(`${indexPrefix}_current_membership_desc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    currentMembership: 'desc',
-                  });
-                } else {
-                  setSort(`${indexPrefix}_current_membership_asc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    currentMembership: 'asc',
-                  });
-                }
+                const newDirection = isCurrentMembershipSortActive
+                  ? sortingDirection.currentMembership === 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'desc';
+
+                setSort(`${indexPrefix}_current_membership_${newDirection}`);
+                setSortingDirection({
+                  ...initialSortingDirection,
+                  currentMembership: newDirection,
+                });
               }}
             >
               <NumericalSortingIcon
-                active={sort.includes('current_membership')}
+                active={isCurrentMembershipSortActive}
                 ascending={sortingDirection.currentMembership === 'asc'}
+                description={`${iconDescription} Current Membership`}
               />
             </button>
           </span>
@@ -213,24 +215,23 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
             <button
               css={buttonStyles}
               onClick={() => {
-                if (sortingDirection.previousMembership === 'asc') {
-                  setSort(`${indexPrefix}_previous_membership_desc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    previousMembership: 'desc',
-                  });
-                } else {
-                  setSort(`${indexPrefix}_previous_membership_asc`);
-                  setSortingDirection({
-                    ...initialSortingDirection,
-                    previousMembership: 'asc',
-                  });
-                }
+                const newDirection = isPreviousMembershipSortActive
+                  ? sortingDirection.previousMembership === 'asc'
+                    ? 'desc'
+                    : 'asc'
+                  : 'desc';
+
+                setSort(`${indexPrefix}_previous_membership_${newDirection}`);
+                setSortingDirection({
+                  ...initialSortingDirection,
+                  previousMembership: newDirection,
+                });
               }}
             >
               <NumericalSortingIcon
-                active={sort.includes('previous_membership')}
+                active={isPreviousMembershipSortActive}
                 ascending={sortingDirection.previousMembership === 'asc'}
+                description={`${iconDescription} Previous Membership`}
               />
             </button>
           </span>

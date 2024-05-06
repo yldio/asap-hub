@@ -36,11 +36,11 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
   sort: SortLeadershipAndMembership;
-  setSort: (option: SortLeadershipAndMembership) => void;
+  setSort: React.Dispatch<React.SetStateAction<SortLeadershipAndMembership>>;
   sortingDirection: LeadershipAndMembershipSortingDirection;
-  setSortingDirection: (
-    option: LeadershipAndMembershipSortingDirection,
-  ) => void;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<LeadershipAndMembershipSortingDirection>
+  >;
 };
 
 const metricDropdownStyles = css({

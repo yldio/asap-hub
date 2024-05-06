@@ -195,10 +195,7 @@ export const FETCH_USER_COPRODUCTION = gql`
             items {
               addedDate
               sharingStatus
-              authorsCollection(
-                limit: 10
-                where: { sys: { id_exists: true } }
-              ) {
+              authorsCollection(limit: 10) {
                 items {
                   __typename
                   ... on Users {

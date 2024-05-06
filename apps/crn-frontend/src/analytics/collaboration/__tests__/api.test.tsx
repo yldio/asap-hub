@@ -1,13 +1,8 @@
-import {
-  ListUserCollaborationResponse,
-} from '@asap-hub/model';
+import { ListUserCollaborationResponse } from '@asap-hub/model';
 import nock from 'nock';
 
 import { API_BASE_URL } from '../../../config';
-import {
-  getUserCollaboration,
-  CollaborationListOptions,
-} from '../api';
+import { getUserCollaboration, CollaborationListOptions } from '../api';
 
 jest.mock('../../../config');
 
@@ -75,4 +70,3 @@ describe('getUserCollaboration', () => {
     );
   });
 });
-

@@ -35,9 +35,9 @@ const data: ListUserCollaborationResponse = {
           role: 'Key Personnel',
           isTeamInactive: false,
           outputsCoAuthoredWithinTeam: 1,
-          outputsCoAuthoredAcrossTeams: 2
-        }
-      ]
+          outputsCoAuthoredAcrossTeams: 2,
+        },
+      ],
     },
     {
       id: '2',
@@ -49,12 +49,11 @@ const data: ListUserCollaborationResponse = {
           role: 'Key Personnel',
           isTeamInactive: true,
           outputsCoAuthoredWithinTeam: 2,
-          outputsCoAuthoredAcrossTeams: 3
-        }
-      ]
-    }
-
-  ]
+          outputsCoAuthoredAcrossTeams: 3,
+        },
+      ],
+    },
+  ],
 };
 
 const renderPage = async (

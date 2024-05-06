@@ -8,6 +8,7 @@ import {
   getListAnalyticsTeamLeadershipResponse,
   getListTeamProductivityDataObject,
   getListTeamProductivityResponse,
+  getListUserCoproductionResponse,
   getListUserProductivityDataObject,
   getListUserProductivityResponse,
 } from '../fixtures/analytics.fixtures';
@@ -122,6 +123,41 @@ describe('Analytics controller', () => {
 
       expect(
         analyticsDataProviderMock.fetchTeamProductivity,
+      ).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('fetchUserCollaboration method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchUserCollaboration.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchUserCollaboration({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the collaboration data', async () => {
+      analyticsDataProviderMock.fetchUserCollaboration.mockResolvedValue(
+        getListUserCoproductionResponse(),
+      );
+
+      const result = await analyticsController.fetchUserCollaboration({});
+
+      expect(result).toEqual(getListUserCoproductionResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchUserCollaboration(options);
+
+      expect(
+        analyticsDataProviderMock.fetchUserCollaboration,
       ).toHaveBeenCalledWith(options);
     });
   });

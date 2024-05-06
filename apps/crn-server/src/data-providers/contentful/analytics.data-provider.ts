@@ -3,10 +3,13 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables,
+  FetchUserCoproductionQuery,
+  FetchUserCoproductionQueryVariables,
   FetchUserProductivityQuery,
   FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_TEAM_PRODUCTIVITY,
+  FETCH_USER_COPRODUCTION,
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
@@ -30,6 +33,7 @@ import {
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { getUserCoProductionItems } from '../../utils/analytics/collaboration';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -256,6 +260,31 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     return {
       total: teamsCollection?.total || 0,
       items: getTeamProductivityItems(teamsCollection, rangeKey),
+    };
+  }
+  async fetchUserCollaboration(options: FetchAnalyticsOptions) {
+    const { take = 10, skip = 0 } = options;
+    let collection: FetchUserCoproductionQuery['usersCollection'] = {
+      total: 0,
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { usersCollection } = await this.contentfulClient.request<
+        FetchUserCoproductionQuery,
+        FetchUserCoproductionQueryVariables
+      >(FETCH_USER_COPRODUCTION, { limit: 5, skip: skip + 5 * i });
+      if (usersCollection && usersCollection.items) {
+        collection = {
+          total: usersCollection.total,
+          items: [...collection.items, ...usersCollection.items],
+        };
+      }
+    }
+
+    return {
+      total: collection?.total || 0,
+      items: getUserCoProductionItems(collection),
     };
   }
 }

@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
   ListTeamProductivityResponse,
+  ListUserCollaborationResponse,
   ListUserProductivityResponse,
 } from '@asap-hub/model';
 import { AnalyticsDataProvider } from '../data-providers/types/analytics.data-provider.types';
@@ -26,5 +27,11 @@ export default class AnalyticsController {
     options: FetchAnalyticsOptions,
   ): Promise<ListTeamProductivityResponse> {
     return this.analyticsDataProvider.fetchTeamProductivity(options);
+  }
+
+  async fetchUserCollaboration(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListUserCollaborationResponse> {
+    return this.analyticsDataProvider.fetchUserCollaboration(options);
   }
 }

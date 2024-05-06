@@ -1,3 +1,5 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ListUserCollaborationResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,7 +8,53 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getUserCollaboration } from '../api';
 import Collaboration from '../Collaboration';
+
+jest.mock('../api');
+mockConsoleError();
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
+  typeof getUserCollaboration
+>;
+
+const data: ListUserCollaborationResponse = {
+  total: 2,
+  items: [
+    {
+      id: '1',
+      isAlumni: false,
+      name: 'User',
+      teams: [
+        {
+          team: 'Team A',
+          role: 'Key Personnel',
+          isTeamInactive: false,
+          outputsCoAuthoredWithinTeam: 1,
+          outputsCoAuthoredAcrossTeams: 2,
+        },
+      ],
+    },
+    {
+      id: '2',
+      isAlumni: false,
+      name: 'User',
+      teams: [
+        {
+          team: 'Team A',
+          role: 'Key Personnel',
+          isTeamInactive: true,
+          outputsCoAuthoredWithinTeam: 2,
+          outputsCoAuthoredAcrossTeams: 3,
+        },
+      ],
+    },
+  ],
+};
 
 const renderPage = async (
   path = analytics({})
@@ -35,7 +83,9 @@ const renderPage = async (
 
   return result;
 };
-
+beforeEach(() => {
+  mockGetUserCollaboration.mockResolvedValueOnce(data);
+});
 it('renders with user data', async () => {
   await renderPage();
 

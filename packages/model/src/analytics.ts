@@ -88,7 +88,7 @@ export type ListTeamProductivityResponse =
 
 export type UserCollaborationTeam = {
   team: string;
-  role: TeamRole;
+  role?: TeamRole;
   isTeamInactive: boolean;
   outputsCoAuthoredWithinTeam: number;
   outputsCoAuthoredAcrossTeams: number;
@@ -99,7 +99,11 @@ export type UserCollaborationDataObject = {
   name: string;
   teams: UserCollaborationTeam[];
 };
+export type ListUserCollaborationDataObject =
+  ListResponse<UserCollaborationDataObject>;
 export type UserCollaborationResponse = UserCollaborationDataObject;
+export type ListUserCollaborationResponse =
+  ListResponse<UserCollaborationDataObject>;
 
 type TeamCollaborationWithinOutputData = {
   Article: number;

@@ -157,3 +157,72 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
     }
   }
 `;
+
+export const FETCH_USER_COPRODUCTION = gql`
+  query FetchUserCoproduction($limit: Int, $skip: Int) {
+    usersCollection(order: firstName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        firstName
+        lastName
+        nickname
+        alumniSinceDate
+        labsCollection(limit: 3) {
+          items {
+            sys {
+              id
+            }
+          }
+        }
+        teamsCollection(limit: 3) {
+          items {
+            team {
+              sys {
+                id
+              }
+              displayName
+              inactiveSince
+            }
+            role
+            inactiveSinceDate
+          }
+        }
+        linkedFrom {
+          researchOutputsCollection(limit: 20) {
+            items {
+              addedDate
+              sharingStatus
+              authorsCollection(limit: 10) {
+                items {
+                  __typename
+                  ... on Users {
+                    sys {
+                      id
+                    }
+                    labsCollection(limit: 3) {
+                      items {
+                        sys {
+                          id
+                        }
+                      }
+                    }
+                    teamsCollection(limit: 3) {
+                      items {
+                        sys {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

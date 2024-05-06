@@ -1,6 +1,7 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchTeamProductivityQuery,
+  FetchUserCoproductionQuery,
   FetchUserProductivityQuery,
 } from '@asap-hub/contentful';
 import {
@@ -10,10 +11,13 @@ import {
   ListAnalyticsTeamLeadershipResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
+  ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
   TeamProductivityDataObject,
   TeamProductivityResponse,
+  UserCollaborationDataObject,
+  UserCollaborationResponse,
   UserProductivityDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
@@ -383,3 +387,68 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
+
+export const getUserCoproductionQuery = (): FetchUserCoproductionQuery => ({
+  usersCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Jane',
+        lastName: 'Doe',
+        nickname: 'Jenny',
+        alumniSinceDate: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: getResearchOutputUserProductivity(),
+          },
+        },
+        teamsCollection: {
+          items: [
+            {
+              role: 'Co-PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team Alessi',
+                inactiveSince: null,
+              },
+            },
+            {
+              role: 'Collaborating PI',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team De Camilli',
+                inactiveSince: null,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+
+export const getUserCoproductionDataObject =
+  (): UserCollaborationDataObject => ({
+    id: 'user-1',
+    isAlumni: false,
+    name: 'User User',
+    teams: [],
+  });
+
+export const getUserCoproductionResponse = (): UserCollaborationResponse =>
+  getUserCoproductionDataObject();
+
+export const getListUserCoproductionResponse =
+  (): ListUserCollaborationResponse => ({
+    total: 1,
+    items: [getUserCoproductionResponse()],
+  });

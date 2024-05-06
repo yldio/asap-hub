@@ -3,6 +3,7 @@ import {
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListTeamProductivityDataObject,
+  ListUserCollaborationDataObject,
   ListUserProductivityDataObject,
 } from '@asap-hub/model';
 
@@ -16,4 +17,7 @@ export type AnalyticsDataProvider = {
   fetchTeamProductivity: (
     options: FetchAnalyticsOptions,
   ) => Promise<ListTeamProductivityDataObject>;
+  fetchUserCollaboration: (
+    options: FetchAnalyticsOptions,
+  ) => Promise<ListUserCollaborationDataObject>;
 };

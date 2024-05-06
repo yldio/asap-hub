@@ -81,7 +81,7 @@ const pageControlsStyles = css({
 
 type Team = {
   team: string;
-  role: TeamRole;
+  role?: TeamRole;
   isTeamInactive: boolean;
   outputsCoAuthored: number;
 };

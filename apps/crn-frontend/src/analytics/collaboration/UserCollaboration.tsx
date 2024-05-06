@@ -4,6 +4,7 @@ import {
   UserCollaborationTable,
 } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useAnalyticsUserCollaboration } from './state';
 
 const getDataForType = (
   data: UserCollaborationResponse[],
@@ -41,76 +42,11 @@ export type CollaborationProps = {
 
 const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { currentPage, pageSize } = usePaginationParams();
-
-  const userItems: UserCollaborationResponse[] = [
-    {
-      id: '1',
-      name: 'User A',
-      isAlumni: false,
-      teams: [
-        {
-          team: 'Team A',
-          isTeamInactive: true,
-          role: 'Co-PI (Core Leadership)',
-          outputsCoAuthoredWithinTeam: 0,
-          outputsCoAuthoredAcrossTeams: 2,
-        },
-      ],
-    },
-    {
-      id: '2',
-      name: 'User B',
-      isAlumni: true,
-      teams: [
-        {
-          team: 'Team B',
-          isTeamInactive: false,
-          role: 'Co-PI (Core Leadership)',
-          outputsCoAuthoredWithinTeam: 0,
-          outputsCoAuthoredAcrossTeams: 2,
-        },
-      ],
-    },
-    {
-      id: '3',
-      name: 'User C',
-      isAlumni: false,
-      teams: [
-        {
-          team: 'Team A',
-          isTeamInactive: true,
-          role: 'Co-PI (Core Leadership)',
-          outputsCoAuthoredWithinTeam: 0,
-          outputsCoAuthoredAcrossTeams: 2,
-        },
-        {
-          team: 'Team C',
-          isTeamInactive: false,
-          role: 'Co-PI (Core Leadership)',
-          outputsCoAuthoredWithinTeam: 0,
-          outputsCoAuthoredAcrossTeams: 2,
-        },
-        {
-          team: 'Team D',
-          isTeamInactive: false,
-          role: 'Key Personnel',
-          outputsCoAuthoredWithinTeam: 5,
-          outputsCoAuthoredAcrossTeams: 0,
-        },
-      ],
-    },
-    {
-      id: '4',
-      name: 'User D',
-      isAlumni: false,
-      teams: [],
-    },
-  ];
-
-  const { items: data, total } = {
-    total: 4,
-    items: userItems,
-  };
+  const { items: data, total } = useAnalyticsUserCollaboration({
+    currentPage,
+    pageSize,
+    timeRange: '30d',
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

@@ -211,8 +211,10 @@ export const FETCH_USER_COPRODUCTION = gql`
                     }
                     teamsCollection(limit: 3) {
                       items {
-                        sys {
-                          id
+                        team {
+                          sys {
+                            id
+                          }
                         }
                       }
                     }

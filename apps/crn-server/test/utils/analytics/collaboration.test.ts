@@ -270,14 +270,14 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-B' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-2' } }],
+                            items: [{ team: { sys: { id: 'team-2' } } }],
                           },
                         },
                         {
                           __typename: 'Users',
                           sys: { id: 'user-A' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                         },
                       ],
@@ -322,7 +322,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-B' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                           labsCollection: {
                             items: [{ sys: { id: 'lab-1' } }],
@@ -332,7 +332,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-A' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                         },
                       ],
@@ -378,7 +378,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-B' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                           labsCollection: {
                             items: [{ sys: { id: 'lab-2' } }],
@@ -388,7 +388,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-A' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                           labsCollection: {
                             items: [{ sys: { id: 'lab-1' } }],
@@ -436,7 +436,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-B' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                           labsCollection: {
                             items: [{ sys: { id: 'lab-1' } }],
@@ -446,7 +446,7 @@ describe('getUserCoProductionItems ', () => {
                           __typename: 'Users',
                           sys: { id: 'user-A' },
                           teamsCollection: {
-                            items: [{ sys: { id: 'team-1' } }],
+                            items: [{ team: { sys: { id: 'team-1' } } }],
                           },
                         },
                       ],

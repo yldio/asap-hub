@@ -10441,12 +10441,12 @@ export type FetchTeamProductivityQuery = {
   >;
 };
 
-export type FetchUserCoproductionQueryVariables = Exact<{
+export type FetchUserCollaborationQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type FetchUserCoproductionQuery = {
+export type FetchUserCollaborationQuery = {
   usersCollection?: Maybe<
     Pick<UsersCollection, 'total'> & {
       items: Array<
@@ -23595,13 +23595,13 @@ export const FetchTeamProductivityDocument = {
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables
 >;
-export const FetchUserCoproductionDocument = {
+export const FetchUserCollaborationDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchUserCoproduction' },
+      name: { kind: 'Name', value: 'FetchUserCollaboration' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -24083,8 +24083,8 @@ export const FetchUserCoproductionDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchUserCoproductionQuery,
-  FetchUserCoproductionQueryVariables
+  FetchUserCollaborationQuery,
+  FetchUserCollaborationQueryVariables
 >;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',

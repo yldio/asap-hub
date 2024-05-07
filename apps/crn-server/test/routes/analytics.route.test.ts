@@ -7,7 +7,7 @@ import { appFactory } from '../../src/app';
 import {
   getListAnalyticsTeamLeadershipResponse,
   getListTeamProductivityResponse,
-  getListUserCoproductionResponse,
+  getListUserCollaborationResponse,
   getListUserProductivityResponse,
 } from '../fixtures/analytics.fixtures';
 import { analyticsControllerMock } from '../mocks/analytics.controller.mock';
@@ -199,14 +199,14 @@ describe('/analytics/ route', () => {
 
     test('Should return the response from the controller', async () => {
       analyticsControllerMock.fetchUserCollaboration.mockResolvedValueOnce(
-        getListUserCoproductionResponse(),
+        getListUserCollaborationResponse(),
       );
       const response = await supertest(app).get(
         '/analytics/collaboration/user',
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(getListUserCoproductionResponse());
+      expect(response.body).toEqual(getListUserCollaborationResponse());
     });
 
     test('Should call the controller with the correct parameters', async () => {

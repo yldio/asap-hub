@@ -158,8 +158,8 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
   }
 `;
 
-export const FETCH_USER_COPRODUCTION = gql`
-  query FetchUserCoproduction($limit: Int, $skip: Int) {
+export const FETCH_USER_COLLABORATION = gql`
+  query FetchUserCollaboration($limit: Int, $skip: Int) {
     usersCollection(order: firstName_ASC, limit: $limit, skip: $skip) {
       total
       items {

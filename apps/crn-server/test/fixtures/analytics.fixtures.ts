@@ -1,7 +1,7 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchTeamProductivityQuery,
-  FetchUserCoproductionQuery,
+  FetchUserCollaborationQuery,
   FetchUserProductivityQuery,
 } from '@asap-hub/contentful';
 import {
@@ -388,7 +388,7 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
 
-export const getUserCoproductionQuery = (): FetchUserCoproductionQuery => ({
+export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
   usersCollection: {
     total: 1,
     items: [
@@ -436,7 +436,7 @@ export const getUserCoproductionQuery = (): FetchUserCoproductionQuery => ({
   },
 });
 
-export const getUserCoproductionDataObject =
+export const getUserCollaborationDataObject =
   (): UserCollaborationDataObject => ({
     id: 'user-1',
     isAlumni: false,
@@ -444,11 +444,11 @@ export const getUserCoproductionDataObject =
     teams: [],
   });
 
-export const getUserCoproductionResponse = (): UserCollaborationResponse =>
-  getUserCoproductionDataObject();
+export const getUserCollaborationResponse = (): UserCollaborationResponse =>
+  getUserCollaborationDataObject();
 
-export const getListUserCoproductionResponse =
+export const getListUserCollaborationResponse =
   (): ListUserCollaborationResponse => ({
     total: 1,
-    items: [getUserCoproductionResponse()],
+    items: [getUserCollaborationResponse()],
   });

@@ -116,7 +116,9 @@ export const getUserCoProductionItems = (
               if (author.__typename === 'Users') {
                 return {
                   id: author.sys.id,
-                  teams: cleanArray(author.teamsCollection?.items).map((item) => item.team || { sys: { id: '' } }),
+                  teams: cleanArray(author.teamsCollection?.items).map(
+                    (item) => item.team || { sys: { id: '' } },
+                  ),
                   labs: cleanArray(author.labsCollection?.items),
                 };
               }

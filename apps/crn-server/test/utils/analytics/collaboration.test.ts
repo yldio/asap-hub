@@ -323,7 +323,6 @@ describe('getUserCoProductionItems ', () => {
                           sys: { id: 'user-B' },
                           teamsCollection: {
                             items: [{ team: { sys: { id: 'team-1' } } }],
-
                           },
                           labsCollection: {
                             items: [{ sys: { id: 'lab-1' } }],

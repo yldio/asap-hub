@@ -10487,7 +10487,11 @@ export type FetchUserCoproductionQuery = {
                                   items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
                                 }>;
                                 teamsCollection?: Maybe<{
-                                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                                  items: Array<
+                                    Maybe<{
+                                      team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                    }>
+                                  >;
                                 }>;
                               })
                           >
@@ -23854,41 +23858,6 @@ export const FetchUserCoproductionDocument = {
                                                 value: '10',
                                               },
                                             },
-                                            {
-                                              kind: 'Argument',
-                                              name: {
-                                                kind: 'Name',
-                                                value: 'where',
-                                              },
-                                              value: {
-                                                kind: 'ObjectValue',
-                                                fields: [
-                                                  {
-                                                    kind: 'ObjectField',
-                                                    name: {
-                                                      kind: 'Name',
-                                                      value: 'sys',
-                                                    },
-                                                    value: {
-                                                      kind: 'ObjectValue',
-                                                      fields: [
-                                                        {
-                                                          kind: 'ObjectField',
-                                                          name: {
-                                                            kind: 'Name',
-                                                            value: 'id_exists',
-                                                          },
-                                                          value: {
-                                                            kind: 'BooleanValue',
-                                                            value: true,
-                                                          },
-                                                        },
-                                                      ],
-                                                    },
-                                                  },
-                                                ],
-                                              },
-                                            },
                                           ],
                                           selectionSet: {
                                             kind: 'SelectionSet',
@@ -24046,7 +24015,7 @@ export const FetchUserCoproductionDocument = {
                                                                             name: {
                                                                               kind: 'Name',
                                                                               value:
-                                                                                'sys',
+                                                                                'team',
                                                                             },
                                                                             selectionSet:
                                                                               {
@@ -24058,8 +24027,23 @@ export const FetchUserCoproductionDocument = {
                                                                                       name: {
                                                                                         kind: 'Name',
                                                                                         value:
-                                                                                          'id',
+                                                                                          'sys',
                                                                                       },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'id',
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
                                                                                     },
                                                                                   ],
                                                                               },

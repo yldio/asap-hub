@@ -1,7 +1,7 @@
 import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  TeamProductivityResponse,
-  UserProductivityResponse,
+  TeamProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
@@ -34,8 +34,9 @@ const defaultOptions: ProductivityListOptions = {
   timeRange: '30d',
 };
 
-const userProductivityResponse: UserProductivityResponse = {
+const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
+  objectID: '1-user-productivity-30d',
   name: 'Test User',
   isAlumni: false,
   teams: [
@@ -50,8 +51,9 @@ const userProductivityResponse: UserProductivityResponse = {
   asapPublicOutput: 2,
   ratio: '0.50',
 };
-const teamProductivityResponse: TeamProductivityResponse = {
+const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   id: '1',
+  objectID: '1-team-productivity-30d',
   name: 'Test Team',
   isInactive: false,
   Article: 1,
@@ -85,7 +87,6 @@ describe('getUserProductivity', () => {
         items: [
           {
             ...userProductivityResponse,
-            objectID: `${userProductivityResponse.id}-user-productivity-30d`,
             __meta: { type: 'user-productivity', range: '30d' },
           },
         ],
@@ -125,7 +126,6 @@ describe('getTeamProductivity', () => {
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
           ...teamProductivityResponse,
-          objectID: `${teamProductivityResponse.id}-team-productivity-30d`,
           __meta: { type: 'team-productivity', range: '30d' },
         },
       ]),
@@ -142,7 +142,6 @@ describe('getTeamProductivity', () => {
         items: [
           {
             ...teamProductivityResponse,
-            objectID: `${teamProductivityResponse.id}-team-productivity-30d`,
             __meta: { type: 'team-productivity', range: '30d' },
           },
         ],

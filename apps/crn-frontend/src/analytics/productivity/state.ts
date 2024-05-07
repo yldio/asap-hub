@@ -1,8 +1,8 @@
 import {
-  ListTeamProductivityResponse,
-  ListUserProductivityResponse,
-  TeamProductivityResponse,
-  UserProductivityResponse,
+  ListTeamProductivityAlgoliaResponse,
+  ListUserProductivityAlgoliaResponse,
+  TeamProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -26,7 +26,7 @@ const analyticsUserProductivityIndexState = atomFamily<
 });
 
 export const analyticsUserProductivityListState = atomFamily<
-  UserProductivityResponse | undefined,
+  UserProductivityAlgoliaResponse | undefined,
   string
 >({
   key: 'analyticsUserProductivityList',
@@ -34,7 +34,7 @@ export const analyticsUserProductivityListState = atomFamily<
 });
 
 export const analyticsUserProductivityState = selectorFamily<
-  ListUserProductivityResponse | Error | undefined,
+  ListUserProductivityAlgoliaResponse | Error | undefined,
   ProductivityListOptions
 >({
   key: 'userProductivity',
@@ -43,7 +43,7 @@ export const analyticsUserProductivityState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsUserProductivityIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const users: UserProductivityResponse[] = [];
+      const users: UserProductivityAlgoliaResponse[] = [];
       for (const id of index.ids) {
         const user = get(analyticsUserProductivityListState(id));
         if (user === undefined) return undefined;
@@ -64,14 +64,14 @@ export const analyticsUserProductivityState = selectorFamily<
       } else {
         newUserProductivity?.items.forEach((userProductivity) =>
           set(
-            analyticsUserProductivityListState(userProductivity.id),
+            analyticsUserProductivityListState(userProductivity.objectID),
             userProductivity,
           ),
         );
         set(analyticsUserProductivityIndexState(options), {
           total: newUserProductivity.total,
           ids: newUserProductivity.items.map(
-            (userProductivity) => userProductivity.id,
+            (userProductivity) => userProductivity.objectID,
           ),
         });
       }
@@ -105,7 +105,7 @@ const analyticsTeamProductivityIndexState = atomFamily<
 });
 
 export const analyticsTeamProductivityListState = atomFamily<
-  TeamProductivityResponse | undefined,
+  TeamProductivityAlgoliaResponse | undefined,
   string
 >({
   key: 'analyticsTeamProductivityList',
@@ -113,7 +113,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 });
 
 export const analyticsTeamProductivityState = selectorFamily<
-  ListTeamProductivityResponse | Error | undefined,
+  ListTeamProductivityAlgoliaResponse | Error | undefined,
   ProductivityListOptions
 >({
   key: 'teamProductivity',
@@ -122,7 +122,7 @@ export const analyticsTeamProductivityState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsTeamProductivityIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: TeamProductivityResponse[] = [];
+      const teams: TeamProductivityAlgoliaResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsTeamProductivityListState(id));
         if (team === undefined) return undefined;
@@ -143,14 +143,14 @@ export const analyticsTeamProductivityState = selectorFamily<
       } else {
         newTeamProductivity?.items.forEach((teamProductivity) =>
           set(
-            analyticsTeamProductivityListState(teamProductivity.id),
+            analyticsTeamProductivityListState(teamProductivity.objectID),
             teamProductivity,
           ),
         );
         set(analyticsTeamProductivityIndexState(options), {
           total: newTeamProductivity.total,
           ids: newTeamProductivity.items.map(
-            (teamProductivity) => teamProductivity.id,
+            (teamProductivity) => teamProductivity.objectID,
           ),
         });
       }

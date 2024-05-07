@@ -1,3 +1,7 @@
+import {
+  LeadershipAndMembershipSortingDirection,
+  SortLeadershipAndMembership,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
@@ -31,6 +35,12 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
+  sort: SortLeadershipAndMembership;
+  setSort: React.Dispatch<React.SetStateAction<SortLeadershipAndMembership>>;
+  sortingDirection: LeadershipAndMembershipSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<LeadershipAndMembershipSortingDirection>
+  >;
 };
 
 const metricDropdownStyles = css({
@@ -48,6 +58,10 @@ const pageControlsStyles = css({
 });
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   metric,
   setMetric,
   data,
@@ -70,7 +84,14 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
-    <LeadershipMembershipTable data={data} />
+    <LeadershipMembershipTable
+      metric={metric}
+      data={data}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+    />
     <section css={pageControlsStyles}>
       <PageControls {...pageControlProps} />
     </section>

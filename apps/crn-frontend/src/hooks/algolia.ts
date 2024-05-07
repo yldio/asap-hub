@@ -1,16 +1,12 @@
 import {
-  algoliaSearchClientFactory,
   AlgoliaClient,
+  algoliaSearchClientFactory,
   Apps,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
-import {
-  ALGOLIA_APP_ID,
-  ALGOLIA_INDEX,
-  ANALYTICS_ALGOLIA_INDEX,
-} from '../config';
+import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook<App extends Apps> = {
   client: AlgoliaClient<App>;
@@ -53,15 +49,8 @@ export const useAlgolia = () => {
   return algolia;
 };
 
-export const useAnalyticsAlgolia = () => {
+export const useAnalyticsAlgolia = (index: string) => {
   const user = useCurrentUserCRN();
-  const [algolia, setAlgolia] = useState(
-    initAlgolia<'analytics'>(user, ANALYTICS_ALGOLIA_INDEX),
-  );
 
-  useEffect(() => {
-    setAlgolia(initAlgolia<'analytics'>(user, ANALYTICS_ALGOLIA_INDEX));
-  }, [user]);
-
-  return algolia;
+  return initAlgolia<'analytics'>(user, index);
 };

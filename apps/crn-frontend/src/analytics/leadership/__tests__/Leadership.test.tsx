@@ -1,18 +1,29 @@
-import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { analytics } from '@asap-hub/routing';
 
-import Leadership from '../Leadership';
 import { getAnalyticsLeadership } from '../api';
+import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 
 jest.mock('../api');
 
@@ -20,6 +31,10 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+const mockAlgoliaSearchClientFactory =
+  algoliaSearchClientFactory as jest.MockedFunction<
+    typeof algoliaSearchClientFactory
+  >;
 const mockGetMemberships = getAnalyticsLeadership as jest.MockedFunction<
   typeof getAnalyticsLeadership
 >;
@@ -64,6 +79,7 @@ const renderPage = async (
           analyticsLeadershipState({
             currentPage: 0,
             pageSize: 10,
+            sort: 'team_asc',
           }),
         );
       }}
@@ -109,4 +125,28 @@ it('renders with interest group data', async () => {
   userEvent.click(screen.getByText(label));
 
   expect(screen.getAllByText(label).length).toBe(2);
+});
+
+it('calls algolia client with the right index name', async () => {
+  mockGetMemberships.mockResolvedValue(data);
+
+  await renderPage();
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.not.stringContaining('_team_desc'),
+      }),
+    );
+  });
+
+  userEvent.click(screen.getByTitle('Active Alphabetical Ascending Sort Icon'));
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.stringContaining('_team_desc'),
+      }),
+    );
+  });
 });

@@ -1,10 +1,15 @@
-import { FC } from 'react';
+import {
+  LeadershipAndMembershipSortingDirection,
+  initialSortingDirection,
+  SortLeadershipAndMembership,
+} from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
-import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
+import { FC, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
-import { useAnalyticsLeadership } from './state';
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {
   id: string;
@@ -49,12 +54,20 @@ const Leadership: FC<Record<string, never>> = () => {
   const { metric } = useParams<{
     metric: 'working-group' | 'interest-group';
   }>();
-  const setMetric = (newMetric: 'working-group' | 'interest-group') =>
+  const setMetric = (newMetric: 'working-group' | 'interest-group') => {
     history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    setSort('team_asc');
+    setSortingDirection(initialSortingDirection);
+  };
+
+  const [sort, setSort] = useState<SortLeadershipAndMembership>('team_asc');
+  const [sortingDirection, setSortingDirection] =
+    useState<LeadershipAndMembershipSortingDirection>(initialSortingDirection);
 
   const { currentPage, pageSize } = usePaginationParams();
 
   const { items, total } = useAnalyticsLeadership({
+    sort,
     currentPage,
     pageSize,
     searchQuery: '',
@@ -67,6 +80,10 @@ const Leadership: FC<Record<string, never>> = () => {
     <AnalyticsLeadershipPageBody
       metric={metric}
       setMetric={setMetric}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
       data={getDataForMetric(items, metric)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}

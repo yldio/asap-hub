@@ -1,6 +1,50 @@
 import { FetchPaginationOptions, ListResponse } from './common';
 import { TeamResponse, TeamRole } from './team';
 
+export type SortLeadershipAndMembership =
+  | 'team_asc'
+  | 'team_desc'
+  | 'wg_current_leadership_asc'
+  | 'wg_current_leadership_desc'
+  | 'wg_previous_leadership_asc'
+  | 'wg_previous_leadership_desc'
+  | 'wg_current_membership_asc'
+  | 'wg_current_membership_desc'
+  | 'wg_previous_membership_asc'
+  | 'wg_previous_membership_desc'
+  | 'ig_current_leadership_asc'
+  | 'ig_current_leadership_desc'
+  | 'ig_previous_leadership_asc'
+  | 'ig_previous_leadership_desc'
+  | 'ig_current_membership_asc'
+  | 'ig_current_membership_desc'
+  | 'ig_previous_membership_asc'
+  | 'ig_previous_membership_desc';
+
+export type LeadershipAndMembershipFields =
+  | 'team'
+  | 'currentLeadership'
+  | 'previousLeadership'
+  | 'currentMembership'
+  | 'previousMembership';
+
+export type SortingDirection = 'asc' | 'desc';
+
+const ascending: SortingDirection = 'asc';
+const descending: SortingDirection = 'desc';
+
+export const initialSortingDirection = {
+  team: ascending,
+  currentLeadership: descending,
+  previousLeadership: descending,
+  currentMembership: descending,
+  previousMembership: descending,
+};
+
+export type LeadershipAndMembershipSortingDirection = {
+  [key in LeadershipAndMembershipFields]: SortingDirection;
+};
+
 export type TimeRangeOption =
   | '30d'
   | '90d'

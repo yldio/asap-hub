@@ -1,3 +1,4 @@
+import { initialSortingDirection } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 
 import AnalyticsLeadershipPageBody from '../AnalyticsLeadershipPageBody';
@@ -14,6 +15,10 @@ it('renders the selected metric', () => {
       metric={'interest-group'}
       data={[]}
       setMetric={() => {}}
+      sort="team_asc"
+      setSort={jest.fn()}
+      sortingDirection={initialSortingDirection}
+      setSortingDirection={jest.fn()}
       {...pageControlProps}
     />,
   );

@@ -152,9 +152,14 @@ describe('team productivity', () => {
     const label = 'Team Productivity';
 
     mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
+    const input = screen.getByRole('textbox', { hidden: false });
+    userEvent.click(input);
+    userEvent.click(screen.getByText(label));
 
     expect(screen.getAllByText(label).length).toBe(2);
   });

@@ -3,8 +3,8 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
-  ListUserProductivityResponse,
-  UserProductivityResponse,
+  ListUserProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -25,18 +25,19 @@ const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
 
-const userTeam: UserProductivityResponse['teams'][number] = {
+const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
   team: 'Team A',
   isTeamInactive: false,
   isUserInactiveOnTeam: false,
   role: 'Collaborating PI',
 };
 
-const data: ListUserProductivityResponse = {
+const data: ListUserProductivityAlgoliaResponse = {
   total: 2,
   items: [
     {
       id: '1',
+      objectID: '1-user-productivity-30d',
       name: 'Ted Mosby',
       isAlumni: false,
       teams: [userTeam],
@@ -46,6 +47,7 @@ const data: ListUserProductivityResponse = {
     },
     {
       id: '2',
+      objectID: '2-user-productivity-30d',
       name: 'Robin Scherbatsky',
       isAlumni: false,
       teams: [{ ...userTeam, role: 'Key Personnel' }],

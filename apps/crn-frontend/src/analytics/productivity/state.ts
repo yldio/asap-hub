@@ -10,6 +10,7 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
+import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
   getTeamProductivity,
@@ -81,7 +82,7 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia();
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
   );
@@ -160,7 +161,7 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia();
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),
   );

@@ -44,4 +44,6 @@ const mapWorkingGroupToPublicWorkingGroup = (
   title: workingGroup.title,
   primaryEmail: workingGroup.primaryEmail,
   secondaryEmail: workingGroup.secondaryEmail,
+  publishDate: workingGroup.publishDate,
+  systemPublishedVersion: workingGroup.systemPublishedVersion,
 });

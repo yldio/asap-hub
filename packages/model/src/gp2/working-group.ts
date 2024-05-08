@@ -24,6 +24,8 @@ export type WorkingGroupDataObject = {
   resources?: Resource[];
   calendar?: Calendar;
   tags: TagDataObject[];
+  publishDate: string;
+  systemPublishedVersion?: number;
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
@@ -39,6 +41,8 @@ export type PublicWorkingGroupResponse = Pick<
   | 'primaryEmail'
   | 'secondaryEmail'
   | 'members'
+  | 'publishDate'
+  | 'systemPublishedVersion'
 >;
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;

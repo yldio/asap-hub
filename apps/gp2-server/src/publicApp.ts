@@ -27,6 +27,9 @@ import UserController from './controllers/user.controller';
 import { userRouteFactory } from './routes/public/user.route';
 import { UserContentfulDataProvider } from './data-providers/user.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/asset.data-provider';
+import WorkingGroupController from './controllers/working-group.controller';
+import { workingGroupRouteFactory } from './routes/public/working-group.route';
+import { WorkingGroupContentfulDataProvider } from './data-providers/working-group.data-provider';
 
 export const publicAppFactory = (
   dependencies: PublicAppDependencies = {},
@@ -70,12 +73,20 @@ export const publicAppFactory = (
   const assetDataProvider = new AssetContentfulDataProvider(
     getContentfulRestClientFactory,
   );
+  const workingGroupDataProvider = new WorkingGroupContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
+
   const userController =
     dependencies.userController ||
     new UserController(userDataProvider, assetDataProvider);
   const outputController =
     dependencies.outputController ||
     new OutputController(outputDataProvider, externalUserDataProvider);
+  const workingGroupController =
+    dependencies.workingGroupController ||
+    new WorkingGroupController(workingGroupDataProvider);
 
   const basicRoutes = Router();
 
@@ -86,9 +97,15 @@ export const publicAppFactory = (
 
   const outputRoutes = outputRouteFactory(outputController);
   const userRoutes = userRouteFactory(userController);
+  const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
 
   // add routes
-  app.use('/public', [basicRoutes, outputRoutes, userRoutes]);
+  app.use('/public', [
+    basicRoutes,
+    outputRoutes,
+    userRoutes,
+    workingGroupRoutes,
+  ]);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -117,6 +134,7 @@ type PublicAppDependencies = {
   userDataProvider?: UserDataProvider;
   userController?: UserController;
   externalUserDataProvider?: ExternalUserDataProvider;
+  workingGroupController?: WorkingGroupController;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;

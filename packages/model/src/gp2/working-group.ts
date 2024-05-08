@@ -30,7 +30,20 @@ export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
 
 export type WorkingGroupResponse = WorkingGroupDataObject;
 
+export type PublicWorkingGroupResponse = Pick<
+  WorkingGroupResponse,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'shortDescription'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'members'
+>;
+
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
+export type ListPublicWorkingGroupResponse =
+  ListResponse<PublicWorkingGroupResponse>;
 
 export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>

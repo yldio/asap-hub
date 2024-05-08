@@ -94,6 +94,34 @@ export const getListWorkingGroupsResponse =
     items: [getWorkingGroupResponse()],
   });
 
+export const getPublicWorkingGroupResponse = () => {
+  const {
+    id,
+    description,
+    title,
+    shortDescription,
+    members,
+    primaryEmail,
+    secondaryEmail,
+  } = getWorkingGroupResponse();
+
+  return {
+    id,
+    description,
+    title,
+    shortDescription,
+    primaryEmail,
+    secondaryEmail,
+    members,
+  };
+};
+
+export const getListPublicWorkingGroupResponse =
+  (): gp2Model.ListPublicWorkingGroupResponse => ({
+    total: 1,
+    items: [getPublicWorkingGroupResponse()],
+  });
+
 export const getContentfulGraphqlWorkingGroupMembers = () => ({
   total: 1,
   items: [

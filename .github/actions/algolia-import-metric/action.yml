@@ -38,8 +38,15 @@ runs:
     - name: Import Metric
       shell: bash
       run: |
-        yarn export:analytics $METRIC -f $METRIC.json
-        jq -c '.[]' $METRIC.json | algolia objects import $ALGOLIA_INDEX -F -
+        metrics=(team-leadership team-productivity user-productivity)
+
+        if [[ "$METRIC" == "all" ]]; then
+          for metric in "${metrics[@]}"; do yarn export:analytics $metric -f $metric.json
+          jq -c '.[]' $metric.json | algolia objects import $ALGOLIA_INDEX -F -; done
+        else
+          yarn export:analytics $METRIC -f $METRIC.json
+          jq -c '.[]' $METRIC.json | algolia objects import $ALGOLIA_INDEX -F -
+        fi
       env:
         ALGOLIA_APPLICATION_ID: ${{ inputs.algolia-app-id }}
         ALGOLIA_ADMIN_API_KEY: ${{ inputs.algolia-api-key }}

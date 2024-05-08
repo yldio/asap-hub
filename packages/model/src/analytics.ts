@@ -45,12 +45,15 @@ export type LeadershipAndMembershipSortingDirection = {
   [key in LeadershipAndMembershipFields]: SortingDirection;
 };
 
-export type TimeRangeOption =
-  | '30d'
-  | '90d'
-  | 'current-year'
-  | 'last-year'
-  | 'all';
+export const timeRanges = [
+  '30d',
+  '90d',
+  'current-year',
+  'last-year',
+  'all',
+] as const;
+
+export type TimeRangeOption = (typeof timeRanges)[number];
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: TimeRangeOption;
@@ -121,14 +124,24 @@ export type TeamProductivityDataObject = {
 export type ListUserProductivityDataObject =
   ListResponse<UserProductivityDataObject>;
 export type UserProductivityResponse = UserProductivityDataObject;
+export type UserProductivityAlgoliaResponse = UserProductivityDataObject & {
+  objectID: string;
+};
 export type ListUserProductivityResponse =
   ListResponse<UserProductivityResponse>;
+export type ListUserProductivityAlgoliaResponse =
+  ListResponse<UserProductivityAlgoliaResponse>;
 
 export type ListTeamProductivityDataObject =
   ListResponse<TeamProductivityDataObject>;
 export type TeamProductivityResponse = TeamProductivityDataObject;
+export type TeamProductivityAlgoliaResponse = TeamProductivityDataObject & {
+  objectID: string;
+};
 export type ListTeamProductivityResponse =
   ListResponse<TeamProductivityResponse>;
+export type ListTeamProductivityAlgoliaResponse =
+  ListResponse<TeamProductivityAlgoliaResponse>;
 
 export type UserCollaborationTeam = {
   team: string;

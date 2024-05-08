@@ -74,7 +74,7 @@ describe('Analytics page', () => {
 
   it('redirects to user productivity page when flag is true', async () => {
     enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
-    mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
     await renderPage(analytics({}).$);
 
@@ -100,6 +100,7 @@ describe('Analytics page', () => {
 
 describe('Productivity', () => {
   it('renders the productivity tab', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
@@ -111,12 +112,12 @@ describe('Productivity', () => {
   });
 
   it('renders error message when the team response is not a 2XX', async () => {
+    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
     mockGetTeamProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
-
     await waitFor(() => {
       expect(mockGetTeamProductivity).toHaveBeenCalled();
     });
@@ -125,7 +126,8 @@ describe('Productivity', () => {
   });
 });
 
-it('renders error message when user team response is not a 2XX', async () => {
+it('renders error message when user response is not a 2XX', async () => {
+  enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
   mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
   await renderPage(analytics({}).productivity({}).metric({ metric: 'user' }).$);

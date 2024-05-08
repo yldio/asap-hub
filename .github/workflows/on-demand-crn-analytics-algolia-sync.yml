@@ -9,6 +9,8 @@ on:
         default: all
         options:
           - team-leadership
+          - team-productivity
+          - user-productivity
           - all
       environment-name:
         required: true

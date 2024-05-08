@@ -1,5 +1,8 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { ListTeamProductivityResponse } from '@asap-hub/model';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -19,11 +22,12 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
 
-const data: ListTeamProductivityResponse = {
+const data: ListTeamProductivityAlgoliaResponse = {
   total: 2,
   items: [
     {
       id: '1',
+      objectID: '1-team-productivity-30d',
       name: 'Team Alessi',
       isInactive: false,
       Article: 1,
@@ -34,6 +38,7 @@ const data: ListTeamProductivityResponse = {
     },
     {
       id: '2',
+      objectID: '1-user-productivity-30d',
       name: 'Team De Camilli',
       isInactive: false,
       Article: 0,
@@ -60,9 +65,11 @@ const renderPage = async () => {
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <TeamProductivity />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <TeamProductivity />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,

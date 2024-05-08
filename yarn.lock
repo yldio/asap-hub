@@ -402,7 +402,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -430,7 +430,7 @@ __metadata:
     "@contentful/rich-text-html-renderer": 16.3.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -457,7 +457,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -485,7 +485,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -513,7 +513,7 @@ __metadata:
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -540,7 +540,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -568,7 +568,7 @@ __metadata:
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -597,7 +597,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -626,7 +626,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -654,7 +654,7 @@ __metadata:
     "@contentful/rich-text-html-renderer": 16.3.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -682,7 +682,7 @@ __metadata:
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -711,7 +711,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -738,7 +738,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -765,7 +765,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -794,7 +794,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 2.0.3
+    "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.11
     "@types/node": 20.10.5
     "@types/react": 17.0.65
@@ -15925,10 +15925,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsconfig/create-react-app@npm:2.0.3":
-  version: 2.0.3
-  resolution: "@tsconfig/create-react-app@npm:2.0.3"
-  checksum: 49ab95248b839cca489f2dbb599350ec17102cac99b5dcc3604946cd3d99129fc1327f898cc98ed763e0fb0cd5f2f60f0365eed2d61a0c6ad016c438edcde502
+"@tsconfig/create-react-app@npm:2.0.4":
+  version: 2.0.4
+  resolution: "@tsconfig/create-react-app@npm:2.0.4"
+  checksum: eb608e519b42e50c34e6575ae24b9929f757eecec75f81d9dc00e5b3216456bae76ffcfe615f06f9cac8e325343ee3e7d1c7b41424e091ba00b9fb00c61aa3b2
   languageName: node
   linkType: hard
 

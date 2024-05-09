@@ -154,7 +154,7 @@
     "@jeysal/babel-plugin-ramda": "2.0.1",
     "@peculiar/webcrypto": "1.4.6",
     "@testing-library/jest-dom": "^5.16.5",
-    "@types/jest": "29.5.11",
+    "@types/jest": "29.5.12",
     "@types/react-test-renderer": "18.0.7",
     "@types/uuid": "8.3.4",
     "@types/webpack": "4.41.38",

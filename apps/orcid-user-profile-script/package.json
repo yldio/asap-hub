@@ -22,7 +22,7 @@
     "@babel/preset-env": "7.23.8",
     "@babel/preset-typescript": "7.23.3",
     "@babel/runtime-corejs3": "7.23.8",
-    "@types/jest": "29.5.11",
+    "@types/jest": "29.5.12",
     "@types/jsonwebtoken": "8.5.9"
   }
 }

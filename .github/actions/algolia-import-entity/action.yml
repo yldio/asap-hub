@@ -44,7 +44,7 @@ runs:
         crn_entities=(events external-authors interest-groups news research-outputs teams tutorials users working-groups)
         gp2_entities=(events external-users news outputs projects users working-groups)
 
-        ["${{ inputs.app }}" == "crn"] && entities=crn_entities || entities=gp2_entities
+        ["${{ inputs.app }}" == "crn"] && entities=("${crn_entities[@]}") || entities=("${gp2_entities[@]}")
 
         if [[ "$ENTITY" == "all" ]]; then
           for entity in "${entities[@]}"; do yarn export:entity:${{ inputs.app }} $entity -f $entity.json

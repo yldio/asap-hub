@@ -143,6 +143,8 @@ export const parseWorkingGroupToDataObject = (
     primaryEmail: workingGroup.primaryEmail ?? undefined,
     secondaryEmail: workingGroup.secondaryEmail ?? undefined,
     leadingMembers: workingGroup.leadingMembers ?? '',
+    publishDate: workingGroup.sys.publishedAt,
+    systemPublishedVersion: workingGroup.sys.publishedVersion || undefined,
     tags,
     members,
     milestones,

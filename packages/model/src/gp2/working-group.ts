@@ -24,13 +24,30 @@ export type WorkingGroupDataObject = {
   resources?: Resource[];
   calendar?: Calendar;
   tags: TagDataObject[];
+  publishDate: string;
+  systemPublishedVersion?: number;
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
 
 export type WorkingGroupResponse = WorkingGroupDataObject;
 
+export type PublicWorkingGroupResponse = Pick<
+  WorkingGroupResponse,
+  | 'id'
+  | 'title'
+  | 'description'
+  | 'shortDescription'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'members'
+  | 'publishDate'
+  | 'systemPublishedVersion'
+>;
+
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
+export type ListPublicWorkingGroupResponse =
+  ListResponse<PublicWorkingGroupResponse>;
 
 export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>

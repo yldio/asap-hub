@@ -41,8 +41,8 @@ runs:
     - name: Import Entity
       shell: bash
       run: |
-        crn_entities=(events external-authors interest-groups news research-outputs teams tutorials users working-groups)
-        gp2_entities=(events external-users news outputs projects users working-groups)
+        crn_entities=(event external-author interest-group news research-output team tutorial user working-group)
+        gp2_entities=(event external-user news output project user working-group)
 
         ["${{ inputs.app }}" == "crn"] && entities=("${crn_entities[@]}") || entities=("${gp2_entities[@]}")
 

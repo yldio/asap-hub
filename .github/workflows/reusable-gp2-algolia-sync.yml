@@ -113,7 +113,6 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          data-store: 'contentful'
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
         env:

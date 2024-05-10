@@ -80,6 +80,7 @@ const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
+  './serverless-plugins/serverless-api-gateway-throttling',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 
@@ -236,6 +237,10 @@ const serverlessConfig: AWS = {
         localDir: '../gp2-messages/build-templates/static',
       },
     ],
+    apiGatewayThrottling: {
+      maxRequestsPerSecond: 1000,
+      maxConcurrentRequests: 500,
+    },
   },
   functions: {
     publicApiHandler: {
@@ -245,6 +250,12 @@ const serverlessConfig: AWS = {
           httpApi: {
             method: 'GET',
             path: '/public/{proxy+}',
+            ...({
+              throttling: {
+                maxRequestsPerSecond: 2000,
+                maxConcurrentRequests: 1000,
+              },
+            } as any),
           },
         },
       ],

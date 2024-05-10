@@ -138,6 +138,7 @@
     "limiter": "^2.1.0",
     "node-dev": "6.7.0",
     "serverless": "3.38.0",
+    "serverless-api-gateway-throttling": "^2.0.3",
     "serverless-esbuild": "^1.50.1",
     "serverless-iam-roles-per-function": "2.0.2",
     "serverless-offline": "8.8.1",

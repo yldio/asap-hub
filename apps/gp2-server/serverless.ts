@@ -80,6 +80,7 @@ const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
 
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
+  './serverless-plugins/serverless-apigateway-route-settings',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 
@@ -236,6 +237,10 @@ const serverlessConfig: AWS = {
         localDir: '../gp2-messages/build-templates/static',
       },
     ],
+    routeSettings: {
+      burstLimit: 100,
+      rateLimit: 300,
+    },
   },
   functions: {
     publicApiHandler: {
@@ -245,6 +250,12 @@ const serverlessConfig: AWS = {
           httpApi: {
             method: 'GET',
             path: '/public/{proxy+}',
+            ...{
+              routeSettings: {
+                burstLimit: 10,
+                rateLimit: 30,
+              },
+            },
           },
         },
       ],
@@ -1482,6 +1493,15 @@ const serverlessConfig: AWS = {
         Properties: {
           QueueName:
             '${self:service}-${self:provider.stage}-google-calendar-event-queue-dlq',
+        },
+      },
+      PublicApiRoute: {
+        Type: 'AWS::ApiGatewayV2::Route',
+        Properties: {
+          ApiId: {
+            Ref: 'HttpApi',
+          },
+          RouteKey: 'GET /public/{proxy+}',
         },
       },
     },

@@ -101,7 +101,6 @@
     "nock": "13.4.0",
     "node-dev": "6.7.0",
     "serverless": "3.38.0",
-    "serverless-api-gateway-throttling": "^2.0.3",
     "serverless-esbuild": "^1.50.1",
     "serverless-s3-sync": "3.2.0",
     "serverless-webpack": "5.13.0",

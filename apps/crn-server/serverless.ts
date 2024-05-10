@@ -80,7 +80,6 @@ const service = 'asap-hub';
 export const plugins = [
   './serverless-plugins/serverless-esbuild',
   './serverless-plugins/serverless-iam-roles-per-function',
-  './serverless-plugins/serverless-api-gateway-throttling',
   ...(s3SyncEnabled ? ['./serverless-plugins/serverless-s3-sync'] : []),
 ];
 const offlinePlugins = [
@@ -287,10 +286,6 @@ const serverlessConfig: AWS = {
     },
     apiGateway5xxTopic:
       '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
-    apiGatewayThrottling: {
-      maxRequestsPerSecond: 1000,
-      maxConcurrentRequests: 500,
-    },
   },
   functions: {
     apiHandler: {

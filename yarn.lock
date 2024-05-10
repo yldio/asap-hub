@@ -1110,7 +1110,6 @@ __metadata:
     pump: 3.0.0
     react-router-dom: 5.3.4
     serverless: 3.38.0
-    serverless-api-gateway-throttling: ^2.0.3
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
@@ -1554,7 +1553,6 @@ __metadata:
     parse-data-url: 3.0.0
     react-router-dom: 5.3.4
     serverless: 3.38.0
-    serverless-api-gateway-throttling: ^2.0.3
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0
     serverless-s3-sync: 3.2.0
@@ -34343,13 +34341,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.isempty@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "lodash.isempty@npm:4.4.0"
-  checksum: a8118f23f7ed72a1dbd176bf27f297d1e71aa1926288449cb8f7cef99ba1bc7527eab52fe7899ab080fa1dc150aba6e4a6367bf49fa4e0b78da1ecc095f8d8c5
-  languageName: node
-  linkType: hard
-
 "lodash.isinteger@npm:^4.0.4":
   version: 4.0.4
   resolution: "lodash.isinteger@npm:4.0.4"
@@ -41831,16 +41822,6 @@ __metadata:
     parseurl: ~1.3.3
     send: 0.18.0
   checksum: af57fc13be40d90a12562e98c0b7855cf6e8bd4c107fe9a45c212bf023058d54a1871b1c89511c3958f70626fff47faeb795f5d83f8cf88514dbaeb2b724464d
-  languageName: node
-  linkType: hard
-
-"serverless-api-gateway-throttling@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "serverless-api-gateway-throttling@npm:2.0.3"
-  dependencies:
-    lodash.get: ^4.4.2
-    lodash.isempty: ^4.4.0
-  checksum: a5c793405306102779b7d036e4c92191c30734621750f9a24d1e93b85518941901617dcb49072305af979894e51d4552a879c22fdce76c463e7051631f06475d
   languageName: node
   linkType: hard
 

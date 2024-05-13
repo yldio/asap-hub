@@ -19,6 +19,7 @@ import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
 import { useTeamById } from './state';
+import TeamManuscript from './TeamManuscript';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -135,6 +136,13 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
         <Switch>
+          <Route
+            path={workspace({}).$ + workspace({}).createManuscript.template}
+          >
+            <Frame title="Create Manuscript">
+              <TeamManuscript />
+            </Frame>
+          </Route>
           {canShareResearchOutput && (
             <Route path={path + createOutput.template}>
               <Frame title="Share Output">

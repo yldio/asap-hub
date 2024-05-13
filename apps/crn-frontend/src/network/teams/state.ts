@@ -4,11 +4,15 @@ import {
   TeamPatchRequest,
   TeamResponse,
   TeamListItemResponse,
+  ManuscriptPostRequest,
+  ManuscriptResponse,
 } from '@asap-hub/model';
 import {
+  atom,
   atomFamily,
   DefaultValue,
   selectorFamily,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
@@ -16,7 +20,13 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import { getTeam, getTeams, patchTeam } from './api';
+import {
+  createManuscript,
+  getManuscript,
+  getTeam,
+  getTeams,
+  patchTeam,
+} from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -130,5 +140,55 @@ export const usePatchTeamById = (id: string) => {
   const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
   return async (patch: TeamPatchRequest) => {
     setPatchedTeam(await patchTeam(id, patch, authorization));
+  };
+};
+
+export const refreshManuscriptIndex = atom<number>({
+  key: 'refreshManuscriptIndex',
+  default: 0,
+});
+
+export const refreshManuscriptState = atomFamily<number, string>({
+  key: 'refreshManuscript',
+  default: 0,
+});
+
+const fetchManuscriptState = selectorFamily<
+  ManuscriptResponse | undefined,
+  string
+>({
+  key: 'fetchManuscript',
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshManuscriptState(id));
+      const authorization = get(authorizationState);
+      return getManuscript(id, authorization);
+    },
+});
+
+export const manuscriptState = atomFamily<
+  ManuscriptResponse | undefined,
+  string
+>({
+  key: 'researchOutput',
+  default: fetchManuscriptState,
+});
+
+export const useSetManuscriptItem = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
+  return useRecoilCallback(({ set }) => (manuscript: ManuscriptResponse) => {
+    setRefresh(refresh + 1);
+    set(manuscriptState(manuscript.id), manuscript);
+  });
+};
+
+export const usePostManuscript = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setManuscriptItem = useSetManuscriptItem();
+  return async (payload: ManuscriptPostRequest) => {
+    const manuscript = await createManuscript(payload, authorization);
+    setManuscriptItem(manuscript);
+    return manuscript;
   };
 };

@@ -5,6 +5,7 @@ export * from './discover.data-provider.types';
 export * from './guide.data-provider.types';
 export * from './interest-groups.data-provider.types';
 export * from './lab.data-provider.types';
+export * from './manuscript.data-provider.types';
 export * from './news.data-provider.types';
 export * from './pages.data-provider.types';
 export * from './reminders.data-provider.types';

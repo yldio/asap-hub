@@ -16,9 +16,10 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
 
-  expect(getByRole('heading').textContent).toEqual(
-    'Collaboration Tools (Team Only)',
-  );
+  expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+  expect(
+    getByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
+  ).toBeInTheDocument();
 });
 
 it('renders contact project manager when point of contact provided', () => {

@@ -2,11 +2,20 @@ import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
-import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
+import {
+  Card,
+  Display,
+  Link,
+  Caption,
+  Headline2,
+  Paragraph,
+  Button,
+} from '../atoms';
+import { perRem, mobileScreen, rem } from '../pixels';
 import { ToolCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
 import { formatDateAndTime } from '../date';
+import { plusIcon } from '../icons';
 
 const containerStyles = css({
   display: 'grid',
@@ -19,6 +28,36 @@ const newToolStyles = css({
     display: 'block',
   },
 });
+
+const complianceContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const complianceHeaderStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+});
+
+const manuscriptButtonStyles = css({
+  flexGrow: 0,
+  alignSelf: 'center',
+  gap: rem(8),
+});
+
+const manuscriptBigScreenButtonStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const manuscriptSmallScreenButtonStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
 const toolContainerStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -48,8 +87,48 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
     .team({ teamId: id })
     .workspace({})
     .tools({});
+
+  const manuscriptRoute = network({})
+    .teams({})
+    .team({ teamId: id })
+    .workspace({})
+    .createManuscript({}).$;
+
   return (
     <div css={containerStyles}>
+      <Card>
+        <div css={complianceContainerStyles}>
+          <div css={complianceHeaderStyles}>
+            <Display styleAsHeading={3}>Compliance</Display>
+            <div
+              css={css([
+                manuscriptButtonStyles,
+                manuscriptBigScreenButtonStyles,
+              ])}
+            >
+              <Link href={manuscriptRoute} primary noMargin small buttonStyle>
+                {plusIcon} Share Manuscript
+              </Link>
+            </div>
+          </div>
+          <Paragraph accent="lead">
+            Submit your manuscripts to receive a compliance report and find out
+            which areas need to be improved before publishing your article.
+          </Paragraph>
+          <Button
+            primary
+            noMargin
+            small
+            overrideStyles={css([
+              manuscriptButtonStyles,
+              manuscriptSmallScreenButtonStyles,
+            ])}
+          >
+            {plusIcon} Share Manuscript
+          </Button>
+        </div>
+      </Card>
+
       <Card>
         <Display styleAsHeading={3}>Collaboration Tools (Team Only)</Display>
         <Paragraph accent="lead">

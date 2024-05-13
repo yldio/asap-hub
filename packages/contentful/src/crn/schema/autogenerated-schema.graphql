@@ -2455,6 +2455,52 @@ enum LabsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
+type Manuscripts implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+}
+
+type ManuscriptsCollection {
+  items: [Manuscripts]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ManuscriptsFilter {
+  AND: [ManuscriptsFilter]
+  OR: [ManuscriptsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type ManuscriptsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ManuscriptsOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
 type Media implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -2902,6 +2948,8 @@ type Query {
   interestGroupsCollection(limit: Int = 100, locale: String, order: [InterestGroupsOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsFilter): InterestGroupsCollection
   labs(id: String!, locale: String, preview: Boolean): Labs
   labsCollection(limit: Int = 100, locale: String, order: [LabsOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): LabsCollection
+  manuscripts(id: String!, locale: String, preview: Boolean): Manuscripts
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptsOrder], preview: Boolean, skip: Int = 0, where: ManuscriptsFilter): ManuscriptsCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration

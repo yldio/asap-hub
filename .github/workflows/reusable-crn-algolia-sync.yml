@@ -97,7 +97,7 @@ jobs:
         uses: kanga333/variable-mapper@master
         id: get-entity-type
         with:
-          key: "${{inputs.entity}}"
+          key: '${{inputs.entity}}'
           map: |
             {
               "all": {

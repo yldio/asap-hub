@@ -1016,6 +1016,7 @@ const serverlessConfig: AWS = {
       },
       HttpApiStage: {
         Type: 'AWS::ApiGatewayV2::Stage',
+        DependsOn: ['HttpApiRouteGetPublicProxyVar'],
         Properties: {
           RouteSettings: {
             '/public/{proxy+}': {

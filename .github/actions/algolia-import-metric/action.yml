@@ -41,8 +41,8 @@ runs:
         metrics=(team-leadership team-productivity user-productivity)
 
         if [[ "$METRIC" == "all" ]]; then
-          for metric in "${metrics[@]}"; do yarn export:analytics $metric -f $metric.json
-          jq -c '.[]' $metric.json | algolia objects import $ALGOLIA_INDEX -F -; done
+          for iteratedMetric in "${metrics[@]}"; do yarn export:analytics $iteratedMetric -f $iteratedMetric.json
+          jq -c '.[]' $iteratedMetric.json | algolia objects import $ALGOLIA_INDEX -F -; done
         else
           yarn export:analytics $METRIC -f $METRIC.json
           jq -c '.[]' $METRIC.json | algolia objects import $ALGOLIA_INDEX -F -

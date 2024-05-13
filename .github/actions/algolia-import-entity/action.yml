@@ -47,8 +47,8 @@ runs:
         [ "${{ inputs.app }}" == "crn" ] && entities=("${crn_entities[@]}") || entities=("${gp2_entities[@]}")
 
         if [[ "$ENTITY" == "all" ]]; then
-          for entity in "${entities[@]}"; do yarn export:entity:${{ inputs.app }} $entity -f $entity.json
-          jq -c '.[]' $entity.json | algolia objects import $ALGOLIA_INDEX -F -; done
+          for iteratedEntity in "${entities[@]}"; do yarn export:entity:${{ inputs.app }} $iteratedEntity -f $iteratedEntity.json
+          jq -c '.[]' $iteratedEntity.json | algolia objects import $ALGOLIA_INDEX -F -; done
         else
           yarn export:entity:${{ inputs.app }} $ENTITY -f $ENTITY.json
           jq -c '.[]' $ENTITY.json | algolia objects import $ALGOLIA_INDEX -F -

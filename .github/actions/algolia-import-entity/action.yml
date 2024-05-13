@@ -41,8 +41,18 @@ runs:
     - name: Import Entity
       shell: bash
       run: |
-        yarn export:entity:${{ inputs.app }} $ENTITY -f $ENTITY.json
-        jq -c '.[]' $ENTITY.json | algolia objects import $ALGOLIA_INDEX -F -
+        crn_entities=(event external-author interest-group news research-output team tutorial user working-group)
+        gp2_entities=(event external-user news output project user working-group)
+
+        [ "${{ inputs.app }}" == "crn" ] && entities=("${crn_entities[@]}") || entities=("${gp2_entities[@]}")
+
+        if [[ "$ENTITY" == "all" ]]; then
+          for iteratedEntity in "${entities[@]}"; do yarn export:entity:${{ inputs.app }} $iteratedEntity -f $iteratedEntity.json
+          jq -c '.[]' $iteratedEntity.json | algolia objects import $ALGOLIA_INDEX -F -; done
+        else
+          yarn export:entity:${{ inputs.app }} $ENTITY -f $ENTITY.json
+          jq -c '.[]' $ENTITY.json | algolia objects import $ALGOLIA_INDEX -F -
+        fi
       env:
         ALGOLIA_APPLICATION_ID: ${{ inputs.algolia-app-id }}
         ALGOLIA_ADMIN_API_KEY: ${{ inputs.algolia-api-key }}

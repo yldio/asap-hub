@@ -100,120 +100,15 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-algolia-index }}_${{ github.run_id }}_temp'
-          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') || (inputs.entity == 'events' && 'event') }}
-      - name: Import Research Outputs (ROs | ALL)
-        if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
+          ENTITY_TYPE: ${{ (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') || (inputs.entity == 'events' && 'event') || (inputs.entity == 'interest-groups' && 'interest-group') || (inputs.entity == 'news' && 'news') || (inputs.entity == 'teams' && 'team') || (inputs.entity == 'tutorials' && 'tutorial') || (inputs.entity == 'working-groups' && 'working-group') }}
+      - name: Import Entities
         uses: ./.github/actions/algolia-import-entity
         with:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
           app: 'crn'
-          entity-type: 'research-output'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import Users (USERs | ALL)
-        if: ${{ inputs.entity == 'users' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'user'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import External Authors (EXTERNAL_AUTHORS | ALL)
-        if: ${{ inputs.entity == 'external-authors' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'external-author'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import Events (EVENTS | ALL)
-        if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'event'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import Teams (TEAMS | ALL)
-        if: ${{ inputs.entity == 'teams' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'team'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import WorkingGroups (WORKING_GROUPS | ALL)
-        if: ${{ inputs.entity == 'working-groups' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'working-group'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import InterestGroups (INTEREST_GROUPS | ALL)
-        if: ${{ inputs.entity == 'interest-groups' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'interest-group'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import Tutorials (TUTORIALS | ALL)
-        if: ${{ inputs.entity == 'tutorials' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'tutorial'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-      - name: Import News (NEWS | ALL)
-        if: ${{ inputs.entity == 'news' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_${{github.run_id}}_temp'
-          app: 'crn'
-          entity-type: 'news'
+          entity-type: ${{ (inputs.entity == 'all' && 'all') || (inputs.entity == 'users' && 'user') || (inputs.entity == 'research-outputs' && 'research-output') || (inputs.entity == 'external-authors' && 'external-author') || (inputs.entity == 'events' && 'event') || (inputs.entity == 'interest-groups' && 'interest-group') || (inputs.entity == 'news' && 'news') || (inputs.entity == 'teams' && 'team') || (inputs.entity == 'tutorials' && 'tutorial') || (inputs.entity == 'working-groups' && 'working-group') }}
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

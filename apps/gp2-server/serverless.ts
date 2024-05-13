@@ -1014,6 +1014,17 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+      HttpApiStage: {
+        Type: 'AWS::ApiGatewayV2::Stage',
+        Properties: {
+          RouteSettings: {
+            '/public/{proxy+}': {
+              ThrottlingBurstLimit: 30,
+              ThrottlingRateLimit: 100,
+            },
+          },
+        },
+      },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',

@@ -1019,7 +1019,7 @@ const serverlessConfig: AWS = {
         DependsOn: ['HttpApiRouteGetPublicProxyVar'],
         Properties: {
           RouteSettings: {
-            '/public/{proxy+}': {
+            'GET /public/{proxy+}': {
               ThrottlingBurstLimit: 30,
               ThrottlingRateLimit: 100,
             },

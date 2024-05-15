@@ -63,12 +63,12 @@ const searchContainerStyles = css({
   display: 'flex',
   gap: rem(18),
   alignItems: 'center',
-  paddingBottom: rem(33)
-})
+  paddingBottom: rem(33),
+});
 
 const searchStyles = css({
-  flexGrow: 1
-})
+  flexGrow: 1,
+});
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   sort,

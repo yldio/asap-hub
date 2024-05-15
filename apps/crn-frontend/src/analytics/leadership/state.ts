@@ -18,7 +18,7 @@ type Options = GetListOptions & { sort: SortLeadershipAndMembership };
 
 const analyticsLeadershipIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort'>
+  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
 >({
   key: 'analyticsLeadershipIndex',
   default: undefined,
@@ -39,34 +39,34 @@ export const analyticsLeadershipState = selectorFamily<
   key: 'teams',
   get:
     (options) =>
-    ({ get }) => {
-      const index = get(analyticsLeadershipIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: AnalyticsTeamLeadershipResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(analyticsLeadershipListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
+      ({ get }) => {
+        const index = get(analyticsLeadershipIndexState(options));
+        if (index === undefined || index instanceof Error) return index;
+        const teams: AnalyticsTeamLeadershipResponse[] = [];
+        for (const id of index.ids) {
+          const team = get(analyticsLeadershipListState(id));
+          if (team === undefined) return undefined;
+          teams.push(team);
+        }
+        return { total: index.total, items: teams };
+      },
   set:
     (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(analyticsLeadershipIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(analyticsLeadershipIndexState(options), newTeams);
-      } else {
-        newTeams?.items.forEach((team) =>
-          set(analyticsLeadershipListState(team.id), team),
-        );
-        set(analyticsLeadershipIndexState(options), {
-          total: newTeams.total,
-          ids: newTeams.items.map((team) => team.id),
-        });
-      }
-    },
+      ({ get, set, reset }, newTeams) => {
+        if (newTeams === undefined || newTeams instanceof DefaultValue) {
+          reset(analyticsLeadershipIndexState(options));
+        } else if (newTeams instanceof Error) {
+          set(analyticsLeadershipIndexState(options), newTeams);
+        } else {
+          newTeams?.items.forEach((team) =>
+            set(analyticsLeadershipListState(team.id), team),
+          );
+          set(analyticsLeadershipIndexState(options), {
+            total: newTeams.total,
+            ids: newTeams.items.map((team) => team.id),
+          });
+        }
+      },
 });
 
 export const useAnalyticsLeadership = (options: Options) => {

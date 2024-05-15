@@ -4,10 +4,10 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls } from '..';
+import { PageControls, SearchField } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { LeadershipMembershipTable } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -41,21 +41,34 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   setSortingDirection: React.Dispatch<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
+  searchQuery: string;
+  onChangeSearch: (newSearchQuery: string) => void;
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
 const pageControlsStyles = css({
   justifySelf: 'center',
-  paddingTop: `${36 / perRem}em`,
-  paddingBottom: `${36 / perRem}em`,
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
 });
+
+const searchContainerStyles = css({
+  display: 'flex',
+  gap: rem(18),
+  alignItems: 'center',
+  paddingBottom: rem(33)
+})
+
+const searchStyles = css({
+  flexGrow: 1
+})
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   sort,
@@ -65,6 +78,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   metric,
   setMetric,
   data,
+  searchQuery,
+  onChangeSearch,
   ...pageControlProps
 }) => (
   <article>
@@ -83,6 +98,16 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         Teams that are currently or have been previously in a leadership or a
         membership role within a Working Group.
       </Paragraph>
+    </div>
+    <div css={searchContainerStyles}>
+      <Subtitle>Teams:</Subtitle>
+      <span css={searchStyles}>
+        <SearchField
+          value={searchQuery}
+          placeholder="Enter team names..."
+          onChange={onChangeSearch}
+        />
+      </span>
     </div>
     <LeadershipMembershipTable
       metric={metric}

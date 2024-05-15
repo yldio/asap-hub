@@ -7,6 +7,7 @@ export * from './events.queries';
 export * from './external-authors.queries';
 export * from './interest-groups.queries';
 export * from './labs.queries';
+export * from './manuscript.queries';
 export * from './news.queries';
 export * from './pages.queries';
 export * from './reminders.queries';

@@ -39,6 +39,7 @@ import EventController from './controllers/event.controller';
 import GuideController from './controllers/guide.controller';
 import InterestGroupController from './controllers/interest-group.controller';
 import LabController from './controllers/lab.controller';
+import ManuscriptController from './controllers/manuscript.controller';
 import NewsController from './controllers/news.controller';
 import PageController from './controllers/page.controller';
 import ReminderController from './controllers/reminder.controller';
@@ -56,6 +57,7 @@ import { EventContentfulDataProvider } from './data-providers/contentful/event.d
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
 import { LabContentfulDataProvider } from './data-providers/contentful/lab.data-provider';
+import { ManuscriptContentfulDataProvider } from './data-providers/contentful/manuscript.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
@@ -74,6 +76,7 @@ import {
   GuideDataProvider,
   InterestGroupDataProvider,
   LabDataProvider,
+  ManuscriptDataProvider,
   NewsDataProvider,
   PageDataProvider,
   ReminderDataProvider,
@@ -93,6 +96,7 @@ import { eventRouteFactory } from './routes/event.route';
 import { guideRouteFactory } from './routes/guide.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
 import { labRouteFactory } from './routes/lab.route';
+import { manuscriptRouteFactory } from './routes/manuscript.route';
 import { newsRouteFactory } from './routes/news.route';
 import { pageRouteFactory } from './routes/page.route';
 import { reminderRouteFactory } from './routes/reminder.route';
@@ -244,6 +248,13 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.labDataProvider ||
     new LabContentfulDataProvider(contentfulGraphQLClient);
 
+  const manuscriptDataProvider =
+    libs.manuscriptDataProvider ||
+    new ManuscriptContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+
   // Controllers
   const analyticsController =
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
@@ -289,6 +300,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const labController =
     libs.labController || new LabController(labDataProvider);
+  const manuscriptController =
+    libs.manuscriptController ||
+    new ManuscriptController(manuscriptDataProvider);
   const workingGroupsController =
     libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
@@ -318,6 +332,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     eventController,
   );
   const labRoutes = labRouteFactory(labController);
+  const manuscriptRoutes = manuscriptRouteFactory(manuscriptController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
@@ -382,6 +397,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
   app.use(labRoutes);
+  app.use(manuscriptRoutes);
   app.use(newsRoutes);
   app.use(reminderRoutes);
   app.use(researchOutputRoutes);
@@ -418,6 +434,7 @@ export type Libs = {
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
   labController?: LabController;
+  manuscriptController?: ManuscriptController;
   newsController?: NewsController;
   pageController?: PageController;
   reminderController?: ReminderController;
@@ -435,6 +452,7 @@ export type Libs = {
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   interestGroupDataProvider?: InterestGroupDataProvider;
   labDataProvider?: LabDataProvider;
+  manuscriptDataProvider?: ManuscriptDataProvider;
   newsDataProvider?: NewsDataProvider;
   pageDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;

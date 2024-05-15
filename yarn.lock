@@ -956,6 +956,7 @@ __metadata:
     react-app-polyfill: 3.0.0
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
+    react-hook-form: ^7.51.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
     react-test-renderer: 17.0.2
@@ -1681,6 +1682,7 @@ __metadata:
     ramda: 0.27.1
     react: 17.0.2
     react-dom: 17.0.2
+    react-hook-form: ^7.51.4
     react-router-dom: 5.3.4
     react-router-hash-link: 2.4.3
     react-select: 4.3.1
@@ -39600,6 +39602,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 3ee2b32dfe479839548baf097d53ddab0b9a8df71cd51763edc9dd900eb85ac98e0255130a9152de9a424a038bae6e1782fca6fde0d89ae1f37c2ca802d94351
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.51.4":
+  version: 7.51.4
+  resolution: "react-hook-form@npm:7.51.4"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: b3587c23425025cc4ab9d4de71420aeb9b28809a9183691584ecbbf5bb3d85ab8c232afb01424efed11a761c9c726521a230d4e092c7ad6bb70a011a7ba0acf7
   languageName: node
   linkType: hard
 

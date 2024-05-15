@@ -91,7 +91,8 @@ const team = (() => {
 
   const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
-  const workspace = route('/workspace', {}, { tools });
+  const createManuscript = route('/create-manuscript', {}, {});
+  const workspace = route('/workspace', {}, { tools, createManuscript });
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },

@@ -34,6 +34,7 @@ export {
   LoadingContentBody,
   LoadingContentHeader,
 } from './LoadingLayout';
+export { default as ManuscriptForm } from './ManuscriptForm';
 export { default as NetworkInterestGroups } from './NetworkInterestGroups';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';

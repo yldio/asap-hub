@@ -28,6 +28,7 @@ export { default as InterestGroupTeamsTabbedCard } from './InterestGroupTeamsTab
 export { default as JoinEvent } from './JoinEvent';
 export { default as LeadershipMembershipTable } from './LeadershipMembershipTable';
 export { default as MainNavigation } from './MainNavigation';
+export { default as ManuscriptHeader } from './ManuscriptHeader';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';

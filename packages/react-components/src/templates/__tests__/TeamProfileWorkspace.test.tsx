@@ -1,13 +1,16 @@
-import { ComponentProps } from 'react';
+import { createTeamResponse } from '@asap-hub/fixtures';
+import { disable, enable } from '@asap-hub/flags';
 import {
-  render,
   getByText as getChildByText,
+  render,
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import { ComponentProps } from 'react';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
+
+beforeEach(jest.clearAllMocks);
 
 const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
@@ -16,9 +19,21 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
 
-  expect(getByRole('heading').textContent).toEqual(
-    'Collaboration Tools (Team Only)',
+  expect(
+    getByRole('heading', { name: 'Collaboration Tools (Team Only)' }),
+  ).toBeInTheDocument();
+});
+
+it('renders compliance section when feature flag is enabled', () => {
+  enable('DISPLAY_MANUSCRIPTS');
+  const { getByRole, queryByRole, rerender } = render(
+    <TeamProfileWorkspace {...team} tools={[]} />,
   );
+  expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+
+  disable('DISPLAY_MANUSCRIPTS');
+  rerender(<TeamProfileWorkspace {...team} tools={[]} />);
+  expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
 });
 
 it('renders contact project manager when point of contact provided', () => {

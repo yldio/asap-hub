@@ -3,7 +3,8 @@ export type Flag =
   | 'VERSION_RESEARCH_OUTPUT'
   | 'DISPLAY_EVENTS'
   | 'DISPLAY_ANALYTICS_PRODUCTIVITY'
-  | 'DISPLAY_ANALYTICS_COLLABORATION';
+  | 'DISPLAY_ANALYTICS_COLLABORATION'
+  | 'DISPLAY_MANUSCRIPTS';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
 let overrides: Flags = {
@@ -12,6 +13,7 @@ let overrides: Flags = {
   DISPLAY_EVENTS: false,
   DISPLAY_ANALYTICS_PRODUCTIVITY: false,
   DISPLAY_ANALYTICS_COLLABORATION: false,
+  DISPLAY_MANUSCRIPTS: false,
 };
 
 const envDefaults: Record<string, boolean> = {

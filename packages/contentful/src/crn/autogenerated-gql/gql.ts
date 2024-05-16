@@ -67,6 +67,10 @@ const documents = {
     types.FetchInterestGroupsByUserIdDocument,
   '\n  query FetchLabs($limit: Int, $skip: Int, $where: LabsFilter) {\n    labsCollection(limit: $limit, skip: $skip, where: $where, order: name_ASC) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n  }\n':
     types.FetchLabsDocument,
+  '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n  }\n':
+    types.ManuscriptsContentFragmentDoc,
+  '\n  query FetchManuscriptById($id: String!) {\n    manuscripts(id: $id) {\n      ...ManuscriptsContent\n    }\n  }\n  \n':
+    types.FetchManuscriptByIdDocument,
   '\n  fragment NewsContent on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    frequency\n    link\n    linkText\n    thumbnail {\n      url\n    }\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    tagsCollection(limit: 20) {\n      items {\n        name\n      }\n    }\n    publishDate\n  }\n':
     types.NewsContentFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContent\n    }\n  }\n  \n':
@@ -299,6 +303,18 @@ export function gql(
 export function gql(
   source: '\n  query FetchLabs($limit: Int, $skip: Int, $where: LabsFilter) {\n    labsCollection(limit: $limit, skip: $skip, where: $where, order: name_ASC) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchLabs($limit: Int, $skip: Int, $where: LabsFilter) {\n    labsCollection(limit: $limit, skip: $skip, where: $where, order: name_ASC) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n  }\n',
+): (typeof documents)['\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchManuscriptById($id: String!) {\n    manuscripts(id: $id) {\n      ...ManuscriptsContent\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchManuscriptById($id: String!) {\n    manuscripts(id: $id) {\n      ...ManuscriptsContent\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

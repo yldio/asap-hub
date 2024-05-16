@@ -42,6 +42,7 @@ interface LinkStyleButtonProps {
   readonly fullWidth?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
+  readonly preventDefault?: boolean;
   readonly submit?: boolean;
   readonly children?: React.ReactNode;
   readonly overrideStyles?: SerializedStyles;
@@ -54,6 +55,7 @@ const Button: React.FC<ButtonProps> = ({
   linkStyle = false,
   active = false,
   fullWidth = false,
+  preventDefault = true,
   noMargin,
   theme = defaultThemeVariant,
   submit = primary,
@@ -67,7 +69,9 @@ const Button: React.FC<ButtonProps> = ({
     disabled={!enabled}
     onClick={(event) => {
       onClick();
-      event.preventDefault();
+      if (preventDefault) {
+        event.preventDefault();
+      }
     }}
     css={({ colors }) => [
       linkStyle

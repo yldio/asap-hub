@@ -139,7 +139,11 @@ const Toast: React.FC<ToastProps> = ({
 }) => (
   <section css={[styles, accentStyles[accent]]}>
     {onClose && (
-      <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
+      <button
+        aria-label="Close"
+        onClick={onClose}
+        css={[buttonResetStyles, crossIconStyles]}
+      >
         {crossIcon}
       </button>
     )}

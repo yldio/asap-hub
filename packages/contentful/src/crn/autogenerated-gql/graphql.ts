@@ -3387,6 +3387,69 @@ export enum LabsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type Manuscripts = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ManuscriptsCollection = {
+  items: Array<Maybe<Manuscripts>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ManuscriptsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ManuscriptsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ManuscriptsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 /** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
 export type Media = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -3995,6 +4058,8 @@ export type Query = {
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   labs?: Maybe<Labs>;
   labsCollection?: Maybe<LabsCollection>;
+  manuscripts?: Maybe<Manuscripts>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
@@ -4280,6 +4345,21 @@ export type QueryLabsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<LabsFilter>;
+};
+
+export type QueryManuscriptsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryManuscriptsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ManuscriptsFilter>;
 };
 
 export type QueryMediaArgs = {
@@ -10677,6 +10757,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Labs' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Manuscripts' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                                   sys: Pick<Sys, 'id'>;
                                 })
@@ -10806,6 +10889,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Labs' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'Manuscripts' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
@@ -10951,6 +11037,7 @@ export type FetchDiscoverQuery = {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                           sys: Pick<Sys, 'id'>;
                         })
@@ -11097,6 +11184,7 @@ export type EventsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -11161,6 +11249,7 @@ export type EventsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -11225,6 +11314,7 @@ export type EventsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -11412,6 +11502,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -11486,6 +11577,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -11560,6 +11652,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -11780,6 +11873,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -11880,6 +11976,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -11980,6 +12079,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -12239,6 +12341,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -12356,6 +12461,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -12471,6 +12579,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Manuscripts' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Media' } & Pick<
@@ -12766,6 +12877,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -12883,6 +12997,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -12998,6 +13115,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Manuscripts' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Media' } & Pick<
@@ -13293,6 +13413,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -13410,6 +13533,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Manuscripts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -13525,6 +13651,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Manuscripts' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Media' } & Pick<
@@ -14199,6 +14328,18 @@ export type FetchLabsQuery = {
   >;
 };
 
+export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
+  sys: Pick<Sys, 'id'>;
+};
+
+export type FetchManuscriptByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchManuscriptByIdQuery = {
+  manuscripts?: Maybe<Pick<Manuscripts, 'title'> & { sys: Pick<Sys, 'id'> }>;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -14228,6 +14369,7 @@ export type NewsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -14313,6 +14455,7 @@ export type FetchNewsByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -14431,6 +14574,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -14526,6 +14672,7 @@ export type PageContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -14623,6 +14770,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -14909,6 +15059,7 @@ export type ResearchOutputsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -15128,6 +15279,7 @@ export type FetchResearchOutputByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -15379,6 +15531,9 @@ export type FetchResearchOutputsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -15767,6 +15922,7 @@ export type TutorialsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -15901,6 +16057,7 @@ export type FetchTutorialByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -16068,6 +16225,9 @@ export type FetchTutorialsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -16741,6 +16901,7 @@ export type WorkingGroupsContentFragment = Pick<
                 })
               | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -16904,6 +17065,7 @@ export type FetchWorkingGroupByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Manuscripts' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -17097,6 +17259,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Manuscripts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -18940,6 +19105,35 @@ export const InterestGroupsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<InterestGroupsContentFragment, unknown>;
+export const ManuscriptsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ManuscriptsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Manuscripts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ManuscriptsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -26383,6 +26577,61 @@ export const FetchLabsDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchLabsQuery, FetchLabsQueryVariables>;
+export const FetchManuscriptByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchManuscriptById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscripts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ManuscriptsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ManuscriptsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchManuscriptByIdQuery,
+  FetchManuscriptByIdQueryVariables
+>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [

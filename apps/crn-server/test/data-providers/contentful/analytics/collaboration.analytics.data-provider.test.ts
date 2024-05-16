@@ -1,13 +1,13 @@
-import { FETCH_USER_COPRODUCTION } from '@asap-hub/contentful';
+import { FETCH_USER_COLLABORATION } from '@asap-hub/contentful';
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
-import { getUserCoproductionQuery } from '../../../fixtures/analytics.fixtures';
+import { getUserCollaborationQuery } from '../../../fixtures/analytics.fixtures';
 import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
 const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 const analyticsDataProvider = new AnalyticsContentfulDataProvider(
   contentfulGraphqlClientMock,
 );
 
-describe('coproduction', () => {
+describe('collaboration', () => {
   beforeAll(() => {
     jest.useFakeTimers();
 
@@ -24,7 +24,7 @@ describe('coproduction', () => {
   describe('Pagination', () => {
     test('Should apply pagination parameters and split query accordingly', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue(
-        getUserCoproductionQuery(),
+        getUserCollaborationQuery(),
       );
 
       await analyticsDataProvider.fetchUserCollaboration({
@@ -34,21 +34,21 @@ describe('coproduction', () => {
 
       expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
         [
-          FETCH_USER_COPRODUCTION,
+          FETCH_USER_COLLABORATION,
           expect.objectContaining({
             limit: 5,
             skip: 3,
           }),
         ],
         [
-          FETCH_USER_COPRODUCTION,
+          FETCH_USER_COLLABORATION,
           expect.objectContaining({
             limit: 5,
             skip: 8,
           }),
         ],
         [
-          FETCH_USER_COPRODUCTION,
+          FETCH_USER_COLLABORATION,
           expect.objectContaining({
             limit: 5,
             skip: 13,
@@ -59,21 +59,21 @@ describe('coproduction', () => {
 
     test('Should pass default pagination parameters and split query', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue(
-        getUserCoproductionQuery(),
+        getUserCollaborationQuery(),
       );
 
       await analyticsDataProvider.fetchUserCollaboration({});
 
       expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
         [
-          FETCH_USER_COPRODUCTION,
+          FETCH_USER_COLLABORATION,
           expect.objectContaining({
             limit: 5,
             skip: 0,
           }),
         ],
         [
-          FETCH_USER_COPRODUCTION,
+          FETCH_USER_COLLABORATION,
           expect.objectContaining({
             limit: 5,
             skip: 5,

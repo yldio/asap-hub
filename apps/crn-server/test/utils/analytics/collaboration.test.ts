@@ -1,4 +1,4 @@
-import { FetchUserCoproductionQuery } from '@asap-hub/contentful';
+import { FetchUserCollaborationQuery } from '@asap-hub/contentful';
 import {
   Author,
   checkDifferentTeams,
@@ -6,7 +6,7 @@ import {
   EntityWithId,
   findMatchingAuthors,
   getCollaborationCounts,
-  getUserCoProductionItems,
+  getUserCollaborationItems,
 } from '../../../src/utils/analytics/collaboration';
 
 describe('checkDifferentTeams', () => {
@@ -215,9 +215,9 @@ describe('getCollaborationCounts', () => {
   });
 });
 
-describe('getUserCoProductionItems ', () => {
+describe('getUserCollaborationItems ', () => {
   it('skips external authors', () => {
-    const data: FetchUserCoproductionQuery['usersCollection'] = {
+    const data: FetchUserCollaborationQuery['usersCollection'] = {
       items: [
         {
           sys: { id: '1' },
@@ -242,7 +242,7 @@ describe('getUserCoProductionItems ', () => {
       total: 0,
     };
 
-    expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+    expect(getUserCollaborationItems(data)[0]?.teams[0]).toEqual(
       expect.objectContaining({
         outputsCoAuthoredAcrossTeams: 0,
         outputsCoAuthoredWithinTeam: 0,
@@ -251,7 +251,7 @@ describe('getUserCoProductionItems ', () => {
   });
   describe('across teams', () => {
     it('if authors do not share a single team, this should count as 1', () => {
-      const data: FetchUserCoproductionQuery['usersCollection'] = {
+      const data: FetchUserCollaborationQuery['usersCollection'] = {
         items: [
           {
             sys: { id: 'user-A' },
@@ -291,7 +291,7 @@ describe('getUserCoProductionItems ', () => {
         total: 0,
       };
 
-      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+      expect(getUserCollaborationItems(data)[0]?.teams[0]).toEqual(
         expect.objectContaining({
           outputsCoAuthoredAcrossTeams: 1,
           outputsCoAuthoredWithinTeam: 0,
@@ -300,7 +300,7 @@ describe('getUserCoProductionItems ', () => {
     });
 
     it('if authors belong to the same team this should not count', () => {
-      const data: FetchUserCoproductionQuery['usersCollection'] = {
+      const data: FetchUserCollaborationQuery['usersCollection'] = {
         items: [
           {
             sys: { id: 'user-A' },
@@ -346,7 +346,7 @@ describe('getUserCoProductionItems ', () => {
         total: 0,
       };
 
-      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+      expect(getUserCollaborationItems(data)[0]?.teams[0]).toEqual(
         expect.objectContaining({
           outputsCoAuthoredAcrossTeams: 0,
           outputsCoAuthoredWithinTeam: 0,
@@ -356,7 +356,7 @@ describe('getUserCoProductionItems ', () => {
   });
   describe('within teams', () => {
     it('if authors are in the same team but do not share lab, this should count as 1', () => {
-      const data: FetchUserCoproductionQuery['usersCollection'] = {
+      const data: FetchUserCollaborationQuery['usersCollection'] = {
         items: [
           {
             sys: { id: 'user-A' },
@@ -405,7 +405,7 @@ describe('getUserCoProductionItems ', () => {
         total: 0,
       };
 
-      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+      expect(getUserCollaborationItems(data)[0]?.teams[0]).toEqual(
         expect.objectContaining({
           outputsCoAuthoredAcrossTeams: 0,
           outputsCoAuthoredWithinTeam: 1,
@@ -414,7 +414,7 @@ describe('getUserCoProductionItems ', () => {
     });
 
     it('if authors belong to the same team and share a lab this should not count', () => {
-      const data: FetchUserCoproductionQuery['usersCollection'] = {
+      const data: FetchUserCollaborationQuery['usersCollection'] = {
         items: [
           {
             sys: { id: 'user-A' },
@@ -460,7 +460,7 @@ describe('getUserCoProductionItems ', () => {
         total: 0,
       };
 
-      expect(getUserCoProductionItems(data)[0]?.teams[0]).toEqual(
+      expect(getUserCollaborationItems(data)[0]?.teams[0]).toEqual(
         expect.objectContaining({
           outputsCoAuthoredAcrossTeams: 0,
           outputsCoAuthoredWithinTeam: 0,

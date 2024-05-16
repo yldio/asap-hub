@@ -8,7 +8,7 @@ import {
   getListAnalyticsTeamLeadershipResponse,
   getListTeamProductivityDataObject,
   getListTeamProductivityResponse,
-  getListUserCoproductionResponse,
+  getListUserCollaborationResponse,
   getListUserProductivityDataObject,
   getListUserProductivityResponse,
 } from '../fixtures/analytics.fixtures';
@@ -141,12 +141,12 @@ describe('Analytics controller', () => {
 
     test('Should return the collaboration data', async () => {
       analyticsDataProviderMock.fetchUserCollaboration.mockResolvedValue(
-        getListUserCoproductionResponse(),
+        getListUserCollaborationResponse(),
       );
 
       const result = await analyticsController.fetchUserCollaboration({});
 
-      expect(result).toEqual(getListUserCoproductionResponse());
+      expect(result).toEqual(getListUserCollaborationResponse());
     });
 
     test('Should call the data provider with the correct options', async () => {

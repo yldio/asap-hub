@@ -1,4 +1,4 @@
-import { FetchUserCoproductionQuery } from '@asap-hub/contentful';
+import { FetchUserCollaborationQuery } from '@asap-hub/contentful';
 import { TeamRole, UserCollaborationDataObject } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
@@ -104,8 +104,8 @@ export const getCollaborationCounts = (
     },
   );
 
-export const getUserCoProductionItems = (
-  userCollection: FetchUserCoproductionQuery['usersCollection'],
+export const getUserCollaborationItems = (
+  userCollection: FetchUserCollaborationQuery['usersCollection'],
 ): UserCollaborationDataObject[] =>
   cleanArray(userCollection?.items).map((user) => {
     const teams = cleanArray(user?.teamsCollection?.items).map((team) => {

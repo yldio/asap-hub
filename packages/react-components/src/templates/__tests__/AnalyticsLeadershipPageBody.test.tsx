@@ -8,7 +8,7 @@ describe('AnalyticsLeadershipPageBody', () => {
     numberOfPages: 1,
     currentPageIndex: 0,
     renderPageHref: () => '',
-    setMetric: () => { },
+    setMetric: () => {},
     data: [],
     metric: 'interest-group',
     sort: 'team_asc',
@@ -17,7 +17,6 @@ describe('AnalyticsLeadershipPageBody', () => {
     setSortingDirection: jest.fn(),
     searchQuery: '',
     onChangeSearch: jest.fn(),
-
   };
   it('renders interest group tab', () => {
     const { getAllByText } = render(

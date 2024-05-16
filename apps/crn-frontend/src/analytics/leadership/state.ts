@@ -34,7 +34,7 @@ export const analyticsLeadershipListState = atomFamily<
 
 export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort'>
+  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
 >({
   key: 'teams',
   get:

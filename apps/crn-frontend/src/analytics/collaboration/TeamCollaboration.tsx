@@ -37,7 +37,7 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,
     pageSize,
-    timeRange: '90d',
+    timeRange: '30d',
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

@@ -45,11 +45,13 @@ const buttonsInnerContainerStyles = css({
 type ManuscriptFormProps = {
   onSave: (output: ManuscriptPostRequest) => Promise<ManuscriptResponse | void>;
   onSuccess: () => void;
+  teamId: string;
 };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onSave,
   onSuccess,
+  teamId,
 }) => {
   const history = useHistory();
 
@@ -67,7 +69,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   } = methods;
 
   const onSubmit = async (data: ManuscriptPostRequest) => {
-    await onSave(data);
+    await onSave({ ...data, teamId });
 
     onSuccess();
   };

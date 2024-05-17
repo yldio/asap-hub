@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
+import { ManuscriptResponse } from './manuscript';
 import { ResearchTagDataObject } from './research-tag';
 
 export const teamRole = [
@@ -45,6 +46,8 @@ export interface TeamMember {
   inactiveSinceDate?: string;
 }
 
+export type TeamManuscript = Pick<ManuscriptResponse, 'id' | 'title'>;
+
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
   tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
@@ -52,6 +55,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   lastModifiedDate: string;
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
+  manuscripts: TeamManuscript[];
   labCount: number;
   inactiveSince?: string;
 };

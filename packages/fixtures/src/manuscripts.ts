@@ -5,4 +5,5 @@ export const createManuscriptResponse = (
 ): ManuscriptResponse => ({
   id: `manuscript_${itemIndex}`,
   title: `Manuscript ${itemIndex + 1}`,
+  teamId: 'team-1',
 });

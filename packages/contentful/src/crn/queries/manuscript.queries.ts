@@ -8,6 +8,13 @@ export const manuscriptContentQueryFragment = gql`
       id
     }
     title
+    teamsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+      }
+    }
   }
 `;
 

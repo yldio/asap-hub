@@ -96,6 +96,17 @@ describe('Manuscripts Contentful Data Provider', () => {
           title: {
             'en-US': 'Manuscript Title',
           },
+          teams: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
         },
       });
       expect(publish).toHaveBeenCalled();

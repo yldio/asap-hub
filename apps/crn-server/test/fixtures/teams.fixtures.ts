@@ -24,6 +24,7 @@ export const getContentfulGraphql = (teamById = false) => ({
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
+  ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
 });
 
 export const getContentfulGraphqlTeamById = (): NonNullable<
@@ -50,6 +51,7 @@ export const getContentfulGraphqlTeamById = (): NonNullable<
     },
   },
   linkedFrom: {
+    manuscriptsCollection: getContentfulGraphqlManuscripts(),
     teamMembershipCollection: {
       items: [
         {
@@ -135,6 +137,15 @@ export const getContentfulGraphqlTeamMemberLabs = () => ({
   ],
 });
 
+export const getContentfulGraphqlManuscripts = (): NonNullable<
+  NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
+>['manuscriptsCollection'] => ({
+  items: [
+    { sys: { id: '1' }, title: 'Manuscript 1' },
+    { sys: { id: '2' }, title: 'Manuscript 2' },
+  ],
+});
+
 export const getContentfulTeamsGraphqlResponse =
   (): ContentfulFetchTeamsQuery => ({
     teamsCollection: {
@@ -174,6 +185,10 @@ export const getTeamDataObject = (): TeamDataObject => ({
         { id: 'cd7be4903', name: 'Liverpool' },
       ],
     },
+  ],
+  manuscripts: [
+    { id: '1', title: 'Manuscript 1' },
+    { id: '2', title: 'Manuscript 2' },
   ],
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',

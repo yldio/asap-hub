@@ -12,9 +12,12 @@ beforeEach(() => {
   history = createMemoryHistory();
 });
 
+const teamId = '42';
+
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   onSuccess: jest.fn(),
+  teamId,
 };
 
 it('renders the form', async () => {
@@ -43,7 +46,7 @@ it('title is sent on form submission', async () => {
   );
   userEvent.click(screen.getByRole('button', { name: /Submit/i }));
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith({ title: 'manuscript title' });
+    expect(onSave).toHaveBeenCalledWith({ title: 'manuscript title', teamId });
   });
 });
 

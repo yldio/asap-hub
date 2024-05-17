@@ -3392,12 +3392,23 @@ export type Manuscripts = Entry & {
   contentfulMetadata: ContentfulMetadata;
   linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
   sys: Sys;
+  teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
   title?: Maybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptsTeamsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TeamsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -3417,6 +3428,8 @@ export type ManuscriptsFilter = {
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   sys?: InputMaybe<SysFilter>;
+  teams?: InputMaybe<CfTeamsNestedFilter>;
+  teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
   title_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3448,6 +3461,30 @@ export enum ManuscriptsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+}
+
+export type ManuscriptsTeamsCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ManuscriptsTeamsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 /** Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
@@ -6563,6 +6600,7 @@ export type TeamsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
@@ -6600,6 +6638,16 @@ export type TeamsLinkingCollectionsInterestGroupsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<TeamsLinkingCollectionsInterestGroupsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TeamsLinkingCollectionsManuscriptsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsManuscriptsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -6676,6 +6724,19 @@ export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -14330,6 +14391,7 @@ export type FetchLabsQuery = {
 
 export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
   sys: Pick<Sys, 'id'>;
+  teamsCollection?: Maybe<{ items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>> }>;
 };
 
 export type FetchManuscriptByIdQueryVariables = Exact<{
@@ -14337,7 +14399,14 @@ export type FetchManuscriptByIdQueryVariables = Exact<{
 }>;
 
 export type FetchManuscriptByIdQuery = {
-  manuscripts?: Maybe<Pick<Manuscripts, 'title'> & { sys: Pick<Sys, 'id'> }>;
+  manuscripts?: Maybe<
+    Pick<Manuscripts, 'title'> & {
+      sys: Pick<Sys, 'id'>;
+      teamsCollection?: Maybe<{
+        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+      }>;
+    }
+  >;
 };
 
 export type NewsContentFragment = Pick<
@@ -15794,6 +15863,11 @@ export type FetchTeamByIdQuery = {
         >;
       }>;
       linkedFrom?: Maybe<{
+        manuscriptsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<Manuscripts, 'title'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
         teamMembershipCollection?: Maybe<{
           items: Array<
             Maybe<
@@ -19129,6 +19203,44 @@ export const ManuscriptsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -28621,6 +28733,56 @@ export const FetchTeamByIdDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'EnumValue',
+                              value: 'sys_firstPublishedAt_DESC',
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: {

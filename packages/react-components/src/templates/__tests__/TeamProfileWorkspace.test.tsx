@@ -25,14 +25,23 @@ it('renders the team workspace page', () => {
 });
 
 it('renders compliance section when feature flag is enabled', () => {
+  const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+    ...team,
+    manuscripts: [
+      { id: '1', title: 'Nice manuscript' },
+      { id: '2', title: 'A Good Manuscript' },
+    ],
+  };
   enable('DISPLAY_MANUSCRIPTS');
-  const { getByRole, queryByRole, rerender } = render(
-    <TeamProfileWorkspace {...team} tools={[]} />,
+  const { container, getByRole, queryByRole, rerender } = render(
+    <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
   );
   expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+  expect(container).toHaveTextContent('Nice manuscript');
+  expect(container).toHaveTextContent('A Good Manuscript');
 
   disable('DISPLAY_MANUSCRIPTS');
-  rerender(<TeamProfileWorkspace {...team} tools={[]} />);
+  rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
   expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
 });
 

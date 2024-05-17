@@ -1,5 +1,5 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { UserResponse } from '@asap-hub/model';
+import { ManuscriptPostRequest, UserResponse } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
@@ -79,7 +79,7 @@ describe('/manuscripts/ route', () => {
   describe('POST /manuscripts/', () => {
     const manuscriptResponse = getManuscriptResponse();
 
-    test('Should return 403 when not allowed to create a manuscript', async () => {
+    test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
       const createManuscriptRequest = getManuscriptCreateDataObject();
 
       userMockFactory.mockReturnValueOnce({
@@ -95,8 +95,54 @@ describe('/manuscripts/ route', () => {
       expect(response.status).toEqual(403);
     });
 
+    test('Should return 403 when not allowed to create a manuscript because user does not belong to the team', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptCreateDataObject(),
+        teamId: 'team-3',
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [
+          {
+            role: 'Key Personnel',
+            displayName: 'Test 1',
+            id: 'test-1',
+          },
+          {
+            role: 'Collaborating PI',
+            displayName: 'Test 2',
+            id: 'test-2',
+          },
+        ],
+      });
+
+      const response = await supertest(app)
+        .post('/manuscripts')
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(403);
+    });
+
     test('Should return a 201 when is hit', async () => {
-      const createManuscriptRequest = getManuscriptCreateDataObject();
+      const teamId = 'team-1';
+
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptCreateDataObject(),
+        teamId,
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        teams: [
+          {
+            role: 'Key Personnel',
+            displayName: 'Test 1',
+            id: teamId,
+          },
+        ],
+      });
 
       manuscriptControllerMock.create.mockResolvedValueOnce(manuscriptResponse);
 

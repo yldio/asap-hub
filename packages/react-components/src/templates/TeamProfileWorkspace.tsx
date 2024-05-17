@@ -2,10 +2,19 @@ import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { colors } from '..';
 
-import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
+import {
+  Caption,
+  Card,
+  Display,
+  Headline2,
+  Link,
+  Paragraph,
+  Subtitle,
+} from '../atoms';
 import { formatDateAndTime } from '../date';
-import { plusIcon } from '../icons';
+import { plusIcon, plusRectIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { ToolCard } from '../organisms';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -39,6 +48,17 @@ const manuscriptButtonStyles = css({
   gap: rem(8),
 });
 
+const manuscriptContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(16),
+  marginTop: rem(12),
+  padding: `${rem(24)} ${rem(16)}`,
+  backgroundColor: colors.pearl.rgb,
+  border: `1px solid ${colors.steel.rgb}`,
+  borderRadius: '8px',
+});
+
 const toolContainerStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -49,7 +69,10 @@ const toolContainerStyles = css({
 });
 
 type TeamProfileWorkspaceProps = Readonly<
-  Pick<TeamResponse, 'id' | 'pointOfContact' | 'lastModifiedDate'>
+  Pick<
+    TeamResponse,
+    'id' | 'pointOfContact' | 'lastModifiedDate' | 'manuscripts'
+  >
 > & {
   readonly tools: ReadonlyArray<TeamTool>;
   readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
@@ -59,7 +82,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
   pointOfContact,
   lastModifiedDate,
-
+  manuscripts,
   tools,
   onDeleteTool,
 }) => {
@@ -89,11 +112,16 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               </div>
             </div>
             <Paragraph accent="lead">
-              Submit your manuscripts to receive a compliance report and find
-              out which areas need to be improved before publishing your
-              article.
+              This directory contains all manuscripts with their compliance
+              reports.
             </Paragraph>
           </div>
+          {manuscripts.map((manuscript) => (
+            <div key={manuscript.id} css={manuscriptContainerStyles}>
+              {plusRectIcon}
+              <Subtitle noMargin>{manuscript.title}</Subtitle>
+            </div>
+          ))}
         </Card>
       )}
 

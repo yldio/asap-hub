@@ -4,6 +4,7 @@ import {
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
   FETCH_MANUSCRIPT_BY_ID,
+  getLinkEntities,
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
@@ -44,8 +45,13 @@ export class ManuscriptContentfulDataProvider
   async create(input: ManuscriptCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
+    const { teamId, ...plainFields } = input;
+
     const manuscriptEntry = await environment.createEntry('manuscripts', {
-      fields: addLocaleToFields(input),
+      fields: addLocaleToFields({
+        ...plainFields,
+        teams: getLinkEntities([teamId]),
+      }),
     });
 
     await manuscriptEntry.publish();
@@ -59,4 +65,5 @@ const parseGraphQLManuscript = (
 ): ManuscriptDataObject => ({
   id: manuscripts.sys.id,
   title: manuscripts.title || '',
+  teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
 });

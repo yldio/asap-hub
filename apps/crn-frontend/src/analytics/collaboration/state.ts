@@ -1,5 +1,7 @@
 import {
+  ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
+  TeamCollaborationResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
 import {
@@ -10,7 +12,11 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../../auth/state';
-import { CollaborationListOptions, getUserCollaboration } from './api';
+import {
+  CollaborationListOptions,
+  getUserCollaboration,
+  getTeamCollaboration,
+} from './api';
 
 const analyticsUserCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -92,4 +98,86 @@ export const useAnalyticsUserCollaboration = (
     throw userCollaboration;
   }
   return userCollaboration;
+};
+
+const analyticsTeamCollaborationIndexState = atomFamily<
+  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  CollaborationListOptions
+>({
+  key: 'analyticsTeamCollaborationIndex',
+  default: undefined,
+});
+
+export const analyticsTeamCollaborationListState = atomFamily<
+  TeamCollaborationResponse | undefined,
+  string
+>({
+  key: 'analyticsTeamCollaborationList',
+  default: undefined,
+});
+
+export const analyticsTeamCollaborationState = selectorFamily<
+  ListTeamCollaborationResponse | Error | undefined,
+  CollaborationListOptions
+>({
+  key: 'teamCollaboration',
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(analyticsTeamCollaborationIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const teams: TeamCollaborationResponse[] = [];
+      for (const id of index.ids) {
+        const team = get(analyticsTeamCollaborationListState(id));
+        if (team === undefined) return undefined;
+        teams.push(team);
+      }
+      return { total: index.total, items: teams };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, newTeamCollaboration) => {
+      if (
+        newTeamCollaboration === undefined ||
+        newTeamCollaboration instanceof DefaultValue
+      ) {
+        reset(analyticsTeamCollaborationIndexState(options));
+      } else if (newTeamCollaboration instanceof Error) {
+        set(
+          analyticsTeamCollaborationIndexState(options),
+          newTeamCollaboration,
+        );
+      } else {
+        newTeamCollaboration?.items.forEach((teamCollaboration) =>
+          set(
+            analyticsTeamCollaborationListState(teamCollaboration.id),
+            teamCollaboration,
+          ),
+        );
+        set(analyticsTeamCollaborationIndexState(options), {
+          total: newTeamCollaboration.total,
+          ids: newTeamCollaboration.items.map(
+            (teamCollaboration) => teamCollaboration.id,
+          ),
+        });
+      }
+    },
+});
+
+export const useAnalyticsTeamCollaboration = (
+  options: CollaborationListOptions,
+) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [teamCollaboration, setTeamCollaboration] = useRecoilState(
+    analyticsTeamCollaborationState(options),
+  );
+  if (teamCollaboration === undefined) {
+    throw getTeamCollaboration(options, authorization)
+      .then(setTeamCollaboration)
+      .catch(setTeamCollaboration);
+  }
+  if (teamCollaboration instanceof Error) {
+    throw teamCollaboration;
+  }
+  return teamCollaboration;
 };

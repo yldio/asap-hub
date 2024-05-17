@@ -228,3 +228,39 @@ export const FETCH_USER_COLLABORATION = gql`
     }
   }
 `;
+
+export const FETCH_TEAM_COLLABORATION = gql`
+  query FetchTeamCollaboration($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          researchOutputsCollection(limit: 850) {
+            items {
+              addedDate
+              createdDate
+              documentType
+              labsCollection(limit: 2) {
+                total
+              }
+              teamsCollection(limit: 20) {
+                items {
+                  sys {
+                    id
+                  }
+                  displayName
+                  inactiveSince
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

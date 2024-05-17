@@ -9,11 +9,14 @@ import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
+  ListTeamCollaborationResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  TeamCollaborationDataObject,
+  TeamCollaborationResponse,
   TeamProductivityDataObject,
   TeamProductivityResponse,
   UserCollaborationDataObject,
@@ -437,6 +440,7 @@ export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
 });
 
 export const getUserCollaborationDataObject =
+export const getUserCollaborationDataObject =
   (): UserCollaborationDataObject => ({
     id: 'user-1',
     isAlumni: false,
@@ -444,11 +448,44 @@ export const getUserCollaborationDataObject =
     teams: [],
   });
 
+export const getTeamCollaborationDataObject =
+  (): TeamCollaborationDataObject => ({
+    id: 'team-1',
+    isInactive: false,
+    name: 'Test Team',
+    outputsCoProducedWithin: {
+      Article: 0,
+      Bioinformatics: 0,
+      Dataset: 0,
+      'Lab Resource': 0,
+      Protocol: 0,
+    },
+    outputsCoProducedAcross: {
+      byDocumentType: {
+        Article: 0,
+        Bioinformatics: 0,
+        Dataset: 0,
+        'Lab Resource': 0,
+        Protocol: 0,
+      },
+      byTeam: [],
+    },
+  });
+
 export const getUserCollaborationResponse = (): UserCollaborationResponse =>
   getUserCollaborationDataObject();
+
+export const getTeamCollaborationResponse = (): TeamCollaborationResponse =>
+  getTeamCollaborationDataObject();
 
 export const getListUserCollaborationResponse =
   (): ListUserCollaborationResponse => ({
     total: 1,
     items: [getUserCollaborationResponse()],
+  });
+
+export const getListTeamCollaborationResponse =
+  (): ListTeamCollaborationResponse => ({
+    total: 1,
+    items: [getTeamCollaborationResponse()],
   });

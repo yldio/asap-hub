@@ -48,7 +48,7 @@ const teamCollaborationResponse: ListTeamCollaborationResponse = {
   items: [
     {
       id: '1',
-      name: 'Test User',
+      name: 'Team 1',
       isInactive: false,
       outputsCoProducedWithin: {
         Article: 1,
@@ -67,8 +67,8 @@ const teamCollaborationResponse: ListTeamCollaborationResponse = {
         },
         byTeam: [
           {
-            id: '1',
-            name: 'Test Team',
+            id: '2',
+            name: 'Team 2',
             isInactive: false,
             Article: 1,
             Bioinformatics: 0,

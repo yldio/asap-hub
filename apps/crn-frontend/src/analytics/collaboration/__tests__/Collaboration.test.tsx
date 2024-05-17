@@ -1,5 +1,8 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { ListUserCollaborationResponse } from '@asap-hub/model';
+import {
+  ListTeamCollaborationResponse,
+  ListUserCollaborationResponse,
+} from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -8,7 +11,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getUserCollaboration } from '../api';
+import { getUserCollaboration, getTeamCollaboration } from '../api';
 import Collaboration from '../Collaboration';
 
 jest.mock('../api');
@@ -21,8 +24,11 @@ afterEach(() => {
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
+const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
+  typeof getTeamCollaboration
+>;
 
-const data: ListUserCollaborationResponse = {
+const userData: ListUserCollaborationResponse = {
   total: 2,
   items: [
     {
@@ -56,11 +62,49 @@ const data: ListUserCollaborationResponse = {
   ],
 };
 
-const renderPage = async (
-  path = analytics({})
+const teamData: ListTeamCollaborationResponse = {
+  total: 2,
+  items: [
+    {
+      id: '1',
+      isInactive: false,
+      name: 'Team 1',
+      outputsCoProducedWithin: {
+        Article: 1,
+        Bioinformatics: 0,
+        Dataset: 0,
+        'Lab Resource': 0,
+        Protocol: 1,
+      },
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 1,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 1,
+        },
+        byTeam: [
+          {
+            id: '2',
+            name: 'Team 2',
+            isInactive: false,
+            Article: 1,
+            Bioinformatics: 0,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 1,
+          },
+        ],
+      },
+    },
+  ],
+};
+
+const renderPage = async (metric: string = 'user') => {
+  const path = analytics({})
     .collaboration({})
-    .collaborationPath({ metric: 'user', type: 'within-team' }).$,
-) => {
+    .collaborationPath({ metric, type: 'within-team' }).$;
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -83,10 +127,9 @@ const renderPage = async (
 
   return result;
 };
-beforeEach(() => {
-  mockGetUserCollaboration.mockResolvedValueOnce(data);
-});
+
 it('renders with user data', async () => {
+  mockGetUserCollaboration.mockResolvedValueOnce(userData);
   await renderPage();
 
   expect(screen.getByText('User Co-Production')).toBeVisible();
@@ -109,11 +152,8 @@ it('renders with user data', async () => {
 });
 
 it('renders with team data', async () => {
-  await renderPage();
-  const input = screen.getAllByRole('textbox', { hidden: false });
-
-  userEvent.click(input[0]!);
-  userEvent.click(screen.getByText('Team Co-Production'));
+  mockGetTeamCollaboration.mockResolvedValueOnce(teamData);
+  await renderPage('team');
 
   expect(screen.getByText('Team Co-Production')).toBeVisible();
   expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
@@ -122,6 +162,8 @@ it('renders with team data', async () => {
   expect(
     screen.queryByText('Co-Production Across Teams by Team'),
   ).not.toBeInTheDocument();
+
+  const input = screen.getAllByRole('textbox', { hidden: false });
 
   userEvent.click(input[1]!);
   userEvent.click(screen.getByText('Across Teams'));

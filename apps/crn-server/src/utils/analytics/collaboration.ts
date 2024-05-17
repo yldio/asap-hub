@@ -195,8 +195,7 @@ const getTeamCollaborationAcrossData = (
           const teamData = acc.byTeam.find(
             (outputTeam) => outputTeam.id === teamId,
           ) as TeamCollaborationAcrossOutputData['byTeam'][number];
-          teamData[outputData.documentType] =
-            teamData[outputData.documentType] + 1;
+          teamData[outputData.documentType] += 1;
         } else {
           acc.byTeam.push({
             id: teamId,
@@ -295,8 +294,8 @@ export const getTeamCollaborationItems = (
       id: team.sys.id,
       name: team.displayName ?? '',
       isInactive: !!team.inactiveSince,
-      outputsCoProducedAcross: outputsCoProducedAcross,
-      outputsCoProducedWithin: outputsCoProducedWithin,
+      outputsCoProducedAcross,
+      outputsCoProducedWithin,
     };
   });
 

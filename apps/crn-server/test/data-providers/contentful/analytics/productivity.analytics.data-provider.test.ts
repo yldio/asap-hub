@@ -4,10 +4,8 @@ import {
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { TimeRangeOption } from '@asap-hub/model';
-import {
-  AnalyticsContentfulDataProvider,
-  getFilterOutputByRange,
-} from '../../../../src/data-providers/contentful/analytics.data-provider';
+import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
+import { getFilterOutputByRange } from '../../../../src/utils/analytics/common';
 import {
   getResearchOutputTeamProductivity,
   getTeamProductivityDataObject,

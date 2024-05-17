@@ -1,6 +1,19 @@
-import { FetchUserCollaborationQuery } from '@asap-hub/contentful';
-import { TeamRole, UserCollaborationDataObject } from '@asap-hub/model';
+import {
+  FetchTeamCollaborationQuery,
+  FetchUserCollaborationQuery,
+} from '@asap-hub/contentful';
+import {
+  TeamCollaborationAcrossOutputData,
+  TeamCollaborationDataObject,
+  TeamCollaborationWithinOutputData,
+  TeamOutputDocumentType,
+  teamOutputDocumentTypes,
+  TeamRole,
+  TimeRangeOption,
+  UserCollaborationDataObject,
+} from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { getFilterOutputByRange } from './common';
 
 export type EntityWithId = {
   sys: {
@@ -13,6 +26,11 @@ export type Author = {
   teams: EntityWithId[];
   labs: EntityWithId[];
 };
+
+export const isTeamOutputDocumentType = (
+  documentType: string,
+): documentType is TeamOutputDocumentType =>
+  teamOutputDocumentTypes.includes(documentType as TeamOutputDocumentType);
 
 export const checkDifferentTeams = (
   referenceTeams: EntityWithId[],
@@ -160,3 +178,138 @@ export const getUserCollaborationItems = (
       teams,
     };
   });
+
+const getTeamCollaborationAcrossData = (
+  outputs: {
+    hasMultipleTeams: boolean;
+    documentType: TeamOutputDocumentType;
+    teams: Team[];
+  }[],
+): TeamCollaborationAcrossOutputData => {
+  const seenCollaborationTeams: string[] = [];
+  return outputs.reduce(
+    (acc, outputData) => {
+      cleanArray(outputData.teams).forEach((team) => {
+        const teamId = team?.sys.id;
+        if (seenCollaborationTeams.includes(teamId)) {
+          const teamData = acc.byTeam.find(
+            (outputTeam) => outputTeam.id === teamId,
+          ) as TeamCollaborationAcrossOutputData['byTeam'][number];
+          teamData[outputData.documentType] =
+            teamData[outputData.documentType] + 1;
+        } else {
+          acc.byTeam.push({
+            id: teamId,
+            name: team.displayName ?? '',
+            isInactive: !!team.inactiveSince,
+            Article: 0,
+            Bioinformatics: 0,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 0,
+            [outputData.documentType]: 1,
+          });
+          seenCollaborationTeams.push(teamId);
+        }
+      });
+      return {
+        ...acc,
+        byDocumentType: {
+          ...acc.byDocumentType,
+          [outputData.documentType]:
+            acc.byDocumentType[outputData.documentType] + 1,
+        },
+      };
+    },
+    {
+      byDocumentType: {
+        Article: 0,
+        Bioinformatics: 0,
+        Dataset: 0,
+        'Lab Resource': 0,
+        Protocol: 0,
+      },
+      byTeam: [] as TeamCollaborationAcrossOutputData['byTeam'],
+    },
+  );
+};
+
+const getTeamCollaborationWithinData = (
+  outputs: {
+    documentType: TeamOutputDocumentType;
+  }[],
+): TeamCollaborationWithinOutputData =>
+  outputs.reduce(
+    (acc, outputData) => ({
+      ...acc,
+      [outputData.documentType]: acc[outputData.documentType] + 1,
+    }),
+    {
+      Article: 0,
+      Bioinformatics: 0,
+      Dataset: 0,
+      'Lab Resource': 0,
+      Protocol: 0,
+    },
+  );
+
+export const getTeamCollaborationItems = (
+  teamCollection: FetchTeamCollaborationQuery['teamsCollection'],
+  rangeKey?: TimeRangeOption,
+): TeamCollaborationDataObject[] =>
+  cleanArray(teamCollection?.items).map((team) => {
+    const outputsData = team.linkedFrom?.researchOutputsCollection?.items
+      .filter(getFilterOutputByRange(rangeKey))
+      .filter(
+        (output) =>
+          output?.documentType && isTeamOutputDocumentType(output.documentType),
+      )
+      .map((output) => {
+        const data = {
+          hasMultipleTeams: false,
+          hasMultipleLabs: false,
+          documentType: output?.documentType as TeamOutputDocumentType,
+          teams: [] as Team[],
+        };
+        const contributingTeams = cleanArray(output?.teamsCollection?.items);
+        if (contributingTeams.length > 1) {
+          data.hasMultipleTeams = true;
+          data.teams = contributingTeams.filter(
+            (currentTeam) => currentTeam.sys.id !== team.sys.id,
+          );
+        }
+        if ((output?.labsCollection?.total || 0) > 1) {
+          data.hasMultipleLabs = true;
+        }
+        return data;
+      });
+
+    const outputsCoProducedAcross = getTeamCollaborationAcrossData(
+      cleanArray(outputsData?.filter((output) => output.hasMultipleTeams)),
+    );
+    const outputsCoProducedWithin = getTeamCollaborationWithinData(
+      cleanArray(outputsData?.filter((output) => output.hasMultipleLabs)),
+    );
+
+    return {
+      id: team.sys.id,
+      name: team.displayName ?? '',
+      isInactive: !!team.inactiveSince,
+      outputsCoProducedAcross: outputsCoProducedAcross,
+      outputsCoProducedWithin: outputsCoProducedWithin,
+    };
+  });
+
+type Team = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<
+          NonNullable<
+            FetchTeamCollaborationQuery['teamsCollection']
+          >['items'][number]
+        >['linkedFrom']
+      >['researchOutputsCollection']
+    >['items'][number]
+  >['teamsCollection']
+>['items'][number];

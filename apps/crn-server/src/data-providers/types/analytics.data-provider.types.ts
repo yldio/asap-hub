@@ -2,6 +2,7 @@ import {
   FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserCollaborationDataObject,
   ListUserProductivityDataObject,
@@ -20,4 +21,7 @@ export type AnalyticsDataProvider = {
   fetchUserCollaboration: (
     options: FetchAnalyticsOptions,
   ) => Promise<ListUserCollaborationDataObject>;
+  fetchTeamCollaboration: (
+    options: FetchAnalyticsOptions,
+  ) => Promise<ListTeamCollaborationDataObject>;
 };

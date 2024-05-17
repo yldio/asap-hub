@@ -440,7 +440,6 @@ export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
 });
 
 export const getUserCollaborationDataObject =
-export const getUserCollaborationDataObject =
   (): UserCollaborationDataObject => ({
     id: 'user-1',
     isAlumni: false,

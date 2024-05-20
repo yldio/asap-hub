@@ -121,7 +121,7 @@ describe('tags selection', () => {
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
-  it('displays an error message when not enough tags have been selected on save', () => {
+  it('displays an error message when not enough tags have been selected on save', async () => {
     const handleSave = jest.fn();
     const { getByText, getByLabelText } = render(
       <ExpertiseAndResourcesModal
@@ -144,7 +144,7 @@ describe('tags selection', () => {
     expect(handleSave).not.toHaveBeenCalled();
   });
 
-  it('removes error message when enough tags are selected', () => {
+  it('removes error message when enough tags are selected', async () => {
     const handleSave = jest.fn();
     const { getByLabelText, getByText, queryByText } = render(
       <ExpertiseAndResourcesModal

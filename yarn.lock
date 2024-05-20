@@ -393,8 +393,8 @@ __metadata:
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -421,8 +421,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -448,8 +448,8 @@ __metadata:
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -476,8 +476,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/field-editor-date": ^1.6.2
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -504,8 +504,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -531,8 +531,8 @@ __metadata:
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -559,8 +559,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -588,8 +588,8 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -617,8 +617,8 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -645,8 +645,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -673,8 +673,8 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -702,8 +702,8 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -729,8 +729,8 @@ __metadata:
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -756,8 +756,8 @@ __metadata:
     "@contentful/f36-components": 4.56.2
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -785,8 +785,8 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/jest-dom": ^6.4.2
+    "@testing-library/react": 14.2.1
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -859,7 +859,6 @@ __metadata:
     "@testing-library/jest-dom": ^6.4.2
     "@testing-library/react": 14.2.1
     "@testing-library/user-event": 14.5.2
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/jsdom": 16.2.15
     "@types/react": 18.2.63
@@ -912,7 +911,6 @@ __metadata:
     "@testing-library/react": 14.2.1
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 14.5.2
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/jest-when": 3.5.2
     "@types/nock": 11.1.0
@@ -948,8 +946,8 @@ __metadata:
     react-dom: 18.2.0
     react-error-boundary: 3.1.4
     react-hook-form: ^7.51.4
-    react-router-dom: 5.3.4
-    react-router-last-location: 2.0.1
+    react-router-dom: 6.22.2
+    react-router-dom-last-location: 0.2.6
     react-test-renderer: 17.0.2
     recoil: 0.7.7
     stream: "npm:stream-browserify@3.0.0"
@@ -1222,7 +1220,6 @@ __metadata:
     "@sentry/react": 6.19.7
     "@testing-library/dom": 9.3.4
     "@testing-library/react": 14.2.1
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
     "@types/react": 18.2.63
@@ -1271,7 +1268,6 @@ __metadata:
     "@testing-library/jest-dom": ^6.4.2
     "@testing-library/react": 14.2.1
     "@testing-library/user-event": 14.5.2
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/jsdom": 16.2.15
     "@types/react": 18.2.63
@@ -1324,11 +1320,9 @@ __metadata:
     "@testing-library/user-event": 14.5.2
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
-    "@types/react": 17.0.65
-    "@types/react-dom": 17.0.20
-    "@types/react-router-dom": 5.3.3
+    "@types/react": 18.2.63
+    "@types/react-dom": 18.2.20
     "@types/react-router-hash-link": 2.4.9
     "@types/react-test-renderer": 18.0.7
     "@types/testing-library__jest-dom": 5.14.9
@@ -1388,7 +1382,6 @@ __metadata:
     "@testing-library/react": 14.2.1
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 14.5.2
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/nock": 11.1.0
     "@types/react": 18.2.63
@@ -1646,7 +1639,6 @@ __metadata:
     "@testing-library/user-event": 14.5.2
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
-    "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/ramda": 0.27.20
     "@types/react": 18.2.63
@@ -1668,10 +1660,10 @@ __metadata:
     history: 5.3.0
     ismounted: ^0.1.8
     ramda: 0.27.1
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-hook-form: ^7.51.4
-    react-router-dom: 5.3.4
+    react-router-dom: 6.22.2
     react-router-hash-link: 2.4.3
     react-select: 4.3.1
     react-sortable-hoc: 2.0.0
@@ -1717,7 +1709,7 @@ __metadata:
     "@testing-library/react": 14.2.1
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.12
-    "@types/react": 17.0.65
+    "@types/react": 18.2.63
     "@types/testing-library__jest-dom": 5.14.9
     core-js: 3.34.0
     react: 18.2.0
@@ -19621,7 +19613,7 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.6
-    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/jest-dom": ^6.4.2
     "@types/jest": 29.5.12
     "@types/react-test-renderer": 18.0.7
     "@types/uuid": 8.3.4
@@ -39636,6 +39628,18 @@ __metadata:
     react: ">=16.8"
     react-dom: ">=16.8"
   checksum: b4226d7f2640de5598bc0c02266301f43b55966481634b9225adeab0360ec1ff56f4cdebe20c7112470cb33c4f4e5b7ef81fc8a42c54126e52111b63c5bace74
+  languageName: node
+  linkType: hard
+
+"react-router-hash-link@npm:2.4.3":
+  version: 2.4.3
+  resolution: "react-router-hash-link@npm:2.4.3"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">=15"
+    react-router-dom: ">=4"
+  checksum: 7dad53ebbd726e8a1ab379f4e68bce3a6b406e55af3de8a9c128510a81ad4a681ce9a5e25c0efc3d3c283b276145729b6228d0173d1d0c6e04b9cc6fb10738d4
   languageName: node
   linkType: hard
 

@@ -308,11 +308,13 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
         FetchTeamCollaborationQuery,
         FetchTeamCollaborationQueryVariables
       >(FETCH_TEAM_COLLABORATION, { limit: 5, skip: skip + 5 * i });
-      if (teamsCollection && teamsCollection.items) {
+      if (teamsCollection && teamsCollection.items.length) {
         collection = {
           total: teamsCollection.total,
           items: [...collection.items, ...teamsCollection.items],
         };
+      } else {
+        break;
       }
     }
 

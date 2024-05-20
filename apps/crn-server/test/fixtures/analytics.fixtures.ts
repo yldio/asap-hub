@@ -1,5 +1,6 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
+  FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
   FetchUserCollaborationQuery,
   FetchUserProductivityQuery,
@@ -439,6 +440,89 @@ export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
   },
 });
 
+export const getResearchOutputTeamCollaboration = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchTeamCollaborationQuery['teamsCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'] => [
+  {
+    addedDate: '2023-09-05T03:00:00.000Z',
+    documentType: 'Article',
+    labsCollection: {
+      total: 3,
+    },
+    teamsCollection: {
+      items: [
+        {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+          inactiveSince: null,
+        },
+        {
+          sys: {
+            id: 'team-id-1',
+          },
+          displayName: 'Team B',
+          inactiveSince: null,
+        },
+      ],
+    },
+  },
+];
+
+export const getTeamCollaborationQuery = (): FetchTeamCollaborationQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-1',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: [
+              {
+                addedDate: '2023-09-01T03:00:00.000Z',
+                createdDate: '',
+                documentType: '',
+                labsCollection: {
+                  total: 3,
+                },
+                teamsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'team-1',
+                      },
+                      displayName: 'Team A',
+                      inactiveSince: null,
+                    },
+                    {
+                      sys: {
+                        id: 'team-2',
+                      },
+                      displayName: 'Team B',
+                      inactiveSince: null,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
 export const getUserCollaborationDataObject =
   (): UserCollaborationDataObject => ({
     id: 'user-1',
@@ -449,11 +533,11 @@ export const getUserCollaborationDataObject =
 
 export const getTeamCollaborationDataObject =
   (): TeamCollaborationDataObject => ({
-    id: 'team-1',
+    id: 'team-id-0',
     isInactive: false,
-    name: 'Test Team',
+    name: 'Team A',
     outputsCoProducedWithin: {
-      Article: 0,
+      Article: 1,
       Bioinformatics: 0,
       Dataset: 0,
       'Lab Resource': 0,
@@ -461,13 +545,24 @@ export const getTeamCollaborationDataObject =
     },
     outputsCoProducedAcross: {
       byDocumentType: {
-        Article: 0,
+        Article: 1,
         Bioinformatics: 0,
         Dataset: 0,
         'Lab Resource': 0,
         Protocol: 0,
       },
-      byTeam: [],
+      byTeam: [
+        {
+          id: 'team-id-1',
+          name: 'Team B',
+          isInactive: false,
+          Article: 1,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+      ],
     },
   });
 

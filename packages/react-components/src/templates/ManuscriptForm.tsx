@@ -82,16 +82,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              rules={{
+                required: 'Please enter a title.',
+                maxLength: {
+                  value: 256,
+                  message: 'This title cannot exceed 256 characters.',
+                },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <LabeledTextField
                   title="Title of Manuscript"
-                  maxLength={350}
                   subtitle="(required)"
-                  getValidationMessage={(validationState) =>
-                    validationState.valueMissing ? 'Please enter a title.' : ''
-                  }
-                  required
+                  customValidationMessage={error?.message}
                   value={value}
                   onChange={onChange}
                   enabled={!isSubmitting}

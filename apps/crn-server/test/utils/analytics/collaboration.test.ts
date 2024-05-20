@@ -595,7 +595,7 @@ describe('getTeamCollaborationItems ', () => {
             },
           },
         ],
-        total: 2,
+        total: 1,
       };
       const outputsCoProducedWithin =
         getTeamCollaborationItems(data)[0]!.outputsCoProducedWithin;
@@ -627,7 +627,7 @@ describe('getTeamCollaborationItems ', () => {
             },
           },
         ],
-        total: 2,
+        total: 1,
       };
 
       const outputsCoProducedWithin =

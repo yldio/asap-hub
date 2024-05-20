@@ -63,7 +63,7 @@ const userData: ListUserCollaborationResponse = {
 };
 
 const teamData: ListTeamCollaborationResponse = {
-  total: 2,
+  total: 1,
   items: [
     {
       id: '1',

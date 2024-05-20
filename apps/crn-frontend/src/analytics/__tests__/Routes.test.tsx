@@ -15,8 +15,8 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { getTeamProductivity, getUserProductivity } from '../productivity/api';
 import {
-  getUserCollaboration,
   getTeamCollaboration,
+  getUserCollaboration,
 } from '../collaboration/api';
 import Analytics from '../Routes';
 

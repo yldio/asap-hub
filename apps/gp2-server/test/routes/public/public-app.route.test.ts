@@ -3,6 +3,18 @@ import { publicAppFactory } from '../../../src/publicApp';
 import { outputControllerMock } from '../../mocks/output.controller.mock';
 
 describe('Public App default routes', () => {
+  beforeAll(() => {
+    jest.useFakeTimers({ legacyFakeTimers: true });
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('Should return a 404 when the path is not found', async () => {
     const appNoAuth = publicAppFactory();
 
@@ -52,5 +64,20 @@ describe('Public App default routes', () => {
     await supertest(app).get('/public/outputs?take=5');
 
     expect(outputControllerMock.fetch).toHaveBeenCalledTimes(2);
+  });
+
+  test('Should call the controller twice when it gets called after an hour', async () => {
+    const app = publicAppFactory({
+      outputController: outputControllerMock,
+    });
+
+    await supertest(app).get('/public/outputs/output-id-cache-1-hour');
+
+    // advance by 1 hour and 5 second
+    jest.advanceTimersByTime(3605000);
+
+    await supertest(app).get('/public/outputs/output-id-cache-1-hour');
+
+    expect(outputControllerMock.fetchById).toHaveBeenCalledTimes(2);
   });
 });

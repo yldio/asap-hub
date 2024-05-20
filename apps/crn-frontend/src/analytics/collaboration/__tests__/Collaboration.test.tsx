@@ -173,3 +173,20 @@ it('renders with team data', async () => {
     screen.queryByText('Co-Production Within Teams by Team'),
   ).not.toBeInTheDocument();
 });
+
+it('navigates between user and team collaboration pages', async () => {
+  mockGetUserCollaboration.mockResolvedValueOnce(userData);
+  mockGetTeamCollaboration.mockResolvedValueOnce(teamData);
+
+  await renderPage();
+  const input = screen.getAllByRole('textbox', { hidden: false });
+
+  userEvent.click(input[0]!);
+  userEvent.click(screen.getByText('Team Co-Production'));
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+  expect(screen.getByText('Team Co-Production')).toBeVisible();
+  expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+});

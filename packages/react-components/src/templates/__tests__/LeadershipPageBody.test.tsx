@@ -12,6 +12,8 @@ const pageControlProps = {
 it('renders the selected metric', () => {
   render(
     <AnalyticsLeadershipPageBody
+      searchQuery=""
+      onChangeSearch={jest.fn()}
       metric={'interest-group'}
       data={[]}
       setMetric={() => {}}

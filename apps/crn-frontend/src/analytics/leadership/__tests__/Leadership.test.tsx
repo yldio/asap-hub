@@ -80,6 +80,7 @@ const renderPage = async (
             currentPage: 0,
             pageSize: 10,
             sort: 'team_asc',
+            searchQuery: '',
           }),
         );
       }}

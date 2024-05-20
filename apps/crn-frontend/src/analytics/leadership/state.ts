@@ -18,7 +18,7 @@ type Options = GetListOptions & { sort: SortLeadershipAndMembership };
 
 const analyticsLeadershipIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort'>
+  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
 >({
   key: 'analyticsLeadershipIndex',
   default: undefined,
@@ -34,7 +34,7 @@ export const analyticsLeadershipListState = atomFamily<
 
 export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort'>
+  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
 >({
   key: 'teams',
   get:

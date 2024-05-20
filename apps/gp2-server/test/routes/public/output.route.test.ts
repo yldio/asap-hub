@@ -13,6 +13,7 @@ import { NotFoundError } from '@asap-hub/errors';
 describe('/outputs/ route', () => {
   const publicApp = publicAppFactory({
     outputController: outputControllerMock,
+    cacheMiddleware: (_req, _res, next) => next(),
   });
 
   afterEach(jest.clearAllMocks);

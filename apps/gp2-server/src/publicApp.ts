@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler, Router } from 'express';
 import 'express-async-errors';
+import { middleware as cacheMiddleware } from 'apicache';
 import {
   errorHandlerFactory,
   getHttpLogger,
@@ -100,12 +101,11 @@ export const publicAppFactory = (
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
 
   // add routes
-  app.use('/public', [
-    basicRoutes,
-    outputRoutes,
-    userRoutes,
-    workingGroupRoutes,
-  ]);
+  app.use(
+    '/public',
+    dependencies.cacheMiddleware || cacheMiddleware('1 hour'),
+    [basicRoutes, outputRoutes, userRoutes, workingGroupRoutes],
+  );
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -138,4 +138,5 @@ type PublicAppDependencies = {
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  cacheMiddleware?: RequestHandler;
 };

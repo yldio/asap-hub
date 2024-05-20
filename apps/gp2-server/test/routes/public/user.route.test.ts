@@ -13,6 +13,7 @@ import { userControllerMock } from '../../mocks/user.controller.mock';
 describe('/users/ route', () => {
   const publicApp = publicAppFactory({
     userController: userControllerMock,
+    cacheMiddleware: (_req, _res, next) => next(),
   });
 
   afterEach(jest.clearAllMocks);

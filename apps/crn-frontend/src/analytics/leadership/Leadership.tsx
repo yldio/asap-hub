@@ -9,9 +9,6 @@ import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
-
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAnalyticsLeadership } from './api';
 import { algoliaResultsToStream, leadershipToCSV } from './export';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
@@ -73,7 +70,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { debouncedSearchQuery, searchQuery, setSearchQuery } = useSearch();
-  const { items, total } = useAnalyticsLeadership({
+  const { items, total, client } = useAnalyticsLeadership({
     sort,
     currentPage,
     pageSize,
@@ -82,8 +79,6 @@ const Leadership: FC<Record<string, never>> = () => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-
-  const { client } = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
 
   const exportResults = () =>
     algoliaResultsToStream(
@@ -96,7 +91,7 @@ const Leadership: FC<Record<string, never>> = () => {
       (paginationParams) =>
         getAnalyticsLeadership(client, {
           filters: new Set(),
-          searchQuery: '',
+          searchQuery,
           ...paginationParams,
         }),
       leadershipToCSV(metric),

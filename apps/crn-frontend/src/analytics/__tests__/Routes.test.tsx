@@ -14,7 +14,10 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { getTeamProductivity, getUserProductivity } from '../productivity/api';
-import { getUserCollaboration } from '../collaboration/api';
+import {
+  getTeamCollaboration,
+  getUserCollaboration,
+} from '../collaboration/api';
 import Analytics from '../Routes';
 
 jest.mock('../leadership/api');
@@ -39,6 +42,10 @@ const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
+const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
+  typeof getTeamCollaboration
+>;
+
 const renderPage = async (path: string) => {
   const { container } = render(
     <RecoilRoot>
@@ -183,7 +190,7 @@ describe('Collaboration', () => {
     ).toBeVisible();
   });
 
-  it('renders error message when the response is not a 2XX', async () => {
+  it('renders error message when the user response is not a 2XX', async () => {
     mockGetUserCollaboration.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );
@@ -195,6 +202,23 @@ describe('Collaboration', () => {
 
     await waitFor(() => {
       expect(mockGetUserCollaboration).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+
+  it('renders error message when the team response is not a 2XX', async () => {
+    mockGetTeamCollaboration.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
+    );
+    await renderPage(
+      analytics({})
+        .collaboration({})
+        .collaborationPath({ metric: 'team', type: 'within-team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetTeamCollaboration).toHaveBeenCalled();
     });
 
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();

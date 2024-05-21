@@ -99,7 +99,7 @@ export type UserProductivityDataObject = {
   ratio: string;
 };
 
-export const teamProductivityDocumentTypes = [
+export const teamOutputDocumentTypes = [
   'Article',
   'Bioinformatics',
   'Dataset',
@@ -107,8 +107,7 @@ export const teamProductivityDocumentTypes = [
   'Protocol',
 ] as const;
 
-export type TeamProductivityDocumentType =
-  (typeof teamProductivityDocumentTypes)[number];
+export type TeamOutputDocumentType = (typeof teamOutputDocumentTypes)[number];
 
 export type TeamProductivityDataObject = {
   id: string;
@@ -162,14 +161,14 @@ export type UserCollaborationResponse = UserCollaborationDataObject;
 export type ListUserCollaborationResponse =
   ListResponse<UserCollaborationDataObject>;
 
-type TeamCollaborationWithinOutputData = {
+export type TeamCollaborationWithinOutputData = {
   Article: number;
   Bioinformatics: number;
   Dataset: number;
   'Lab Resource': number;
   Protocol: number;
 };
-type TeamCollaborationAcrossOutputData = {
+export type TeamCollaborationAcrossOutputData = {
   byDocumentType: TeamCollaborationWithinOutputData;
   byTeam: Array<
     {
@@ -179,7 +178,6 @@ type TeamCollaborationAcrossOutputData = {
     } & TeamCollaborationWithinOutputData
   >;
 };
-
 export type TeamCollaborationDataObject = {
   id: string;
   name: string;
@@ -187,5 +185,8 @@ export type TeamCollaborationDataObject = {
   outputsCoProducedWithin: TeamCollaborationWithinOutputData;
   outputsCoProducedAcross: TeamCollaborationAcrossOutputData;
 };
-
+export type ListTeamCollaborationDataObject =
+  ListResponse<TeamCollaborationDataObject>;
 export type TeamCollaborationResponse = TeamCollaborationDataObject;
+export type ListTeamCollaborationResponse =
+  ListResponse<TeamCollaborationDataObject>;

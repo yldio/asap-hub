@@ -37,3 +37,31 @@ export const getUserCollaboration = async (
   }
   return resp.json();
 };
+
+export const getTeamCollaboration = async (
+  options: CollaborationListOptions,
+  authorization: string,
+) => {
+  const { currentPage, pageSize, timeRange } = options;
+  const resp = await fetch(
+    createListApiUrl('/analytics/collaboration/team', {
+      currentPage,
+      pageSize,
+      filters: new Set([timeRange]),
+      searchQuery: '',
+    }).toString(),
+    {
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
+    },
+  );
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch analytics team collaboration. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

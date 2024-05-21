@@ -1,4 +1,7 @@
-import { FetchUserCollaborationQuery } from '@asap-hub/contentful';
+import {
+  FetchTeamCollaborationQuery,
+  FetchUserCollaborationQuery,
+} from '@asap-hub/contentful';
 import {
   Author,
   checkDifferentTeams,
@@ -6,6 +9,7 @@ import {
   EntityWithId,
   findMatchingAuthors,
   getCollaborationCounts,
+  getTeamCollaborationItems,
   getUserCollaborationItems,
 } from '../../../src/utils/analytics/collaboration';
 
@@ -466,6 +470,178 @@ describe('getUserCollaborationItems ', () => {
           outputsCoAuthoredWithinTeam: 0,
         }),
       );
+    });
+  });
+});
+
+describe('getTeamCollaborationItems ', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+
+    jest.setSystemTime(new Date('2023-09-10T03:00:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  describe('across teams', () => {
+    it('counts outputs with multiple teams', () => {
+      const data: FetchTeamCollaborationQuery['teamsCollection'] = {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    documentType: 'Article',
+                    addedDate: '2023-09-01T03:00:00.000Z',
+                    teamsCollection: {
+                      items: [
+                        {
+                          sys: { id: 'team-1' },
+                        },
+                        {
+                          sys: { id: 'team-2' },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 1,
+      };
+
+      const outputsCoProducedAcross =
+        getTeamCollaborationItems(data)[0]!.outputsCoProducedAcross;
+
+      expect(outputsCoProducedAcross.byDocumentType).toEqual(
+        expect.objectContaining({
+          Article: 1,
+        }),
+      );
+      expect(
+        getTeamCollaborationItems(data)[0]?.outputsCoProducedAcross.byTeam[0],
+      ).toEqual(
+        expect.objectContaining({
+          Article: 1,
+        }),
+      );
+    });
+
+    it('does not count outputs with one team', () => {
+      const data: FetchTeamCollaborationQuery['teamsCollection'] = {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    documentType: 'Article',
+                    addedDate: '2023-09-01T03:00:00.000Z',
+                    teamsCollection: {
+                      items: [
+                        {
+                          sys: { id: 'team-1' },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 1,
+      };
+
+      const outputsCoProducedAcross =
+        getTeamCollaborationItems(data)[0]!.outputsCoProducedAcross;
+
+      expect(outputsCoProducedAcross.byDocumentType).toEqual(
+        expect.objectContaining({
+          Article: 0,
+        }),
+      );
+      expect(
+        getTeamCollaborationItems(data)[0]?.outputsCoProducedAcross.byTeam
+          .length,
+      ).toBe(0);
+    });
+  });
+  describe('within teams', () => {
+    it('counts outputs with multiple labs', () => {
+      const data: FetchTeamCollaborationQuery['teamsCollection'] = {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    documentType: 'Article',
+                    addedDate: '2023-09-01T03:00:00.000Z',
+                    labsCollection: {
+                      total: 2,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 1,
+      };
+      const outputsCoProducedWithin =
+        getTeamCollaborationItems(data)[0]!.outputsCoProducedWithin;
+
+      expect(outputsCoProducedWithin).toEqual(
+        expect.objectContaining({
+          Article: 1,
+        }),
+      );
+    });
+
+    it('does not count outputs with one lab', () => {
+      const data: FetchTeamCollaborationQuery['teamsCollection'] = {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: [
+                  {
+                    documentType: 'Article',
+                    addedDate: '2023-09-01T03:00:00.000Z',
+                    labsCollection: {
+                      total: 1,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        total: 1,
+      };
+
+      const outputsCoProducedWithin =
+        getTeamCollaborationItems(data)[0]!.outputsCoProducedWithin;
+
+      expect(outputsCoProducedWithin).toEqual(
+        expect.objectContaining({
+          Article: 0,
+        }),
+      );
+      expect(
+        getTeamCollaborationItems(data)[0]?.outputsCoProducedAcross.byTeam
+          .length,
+      ).toBe(0);
     });
   });
 });

@@ -44,7 +44,7 @@ const columnsStyles = (isWithinTeam: boolean) =>
 
 const collapsedRowStyles = css({
   display: 'grid',
-  margin: `0 ${rem(24)} 0 ${rem(65)}`,
+  margin: `0 ${rem(24)} 0 ${rem(75)}`,
   borderBottom: `1px solid ${steel.rgb}`,
   ':last-child': {
     borderBottom: 'none',

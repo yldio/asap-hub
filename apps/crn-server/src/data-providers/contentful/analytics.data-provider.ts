@@ -9,31 +9,36 @@ import {
   FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_TEAM_PRODUCTIVITY,
+  FETCH_TEAM_COLLABORATION,
   FETCH_USER_COLLABORATION,
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
-  Maybe,
-  ResearchOutputs,
   Sys,
   WorkingGroups,
+  FetchTeamCollaborationQuery,
+  FetchTeamCollaborationQueryVariables,
 } from '@asap-hub/contentful';
 import {
   FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
   TeamProductivityDataObject,
-  TeamProductivityDocumentType,
-  teamProductivityDocumentTypes,
   TeamRole,
   TimeRangeOption,
   UserProductivityDataObject,
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
-import { getUserCollaborationItems } from '../../utils/analytics/collaboration';
+import {
+  getUserCollaborationItems,
+  getTeamCollaborationItems,
+  isTeamOutputDocumentType,
+} from '../../utils/analytics/collaboration';
+import { getFilterOutputByRange } from '../../utils/analytics/common';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -287,6 +292,37 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
       items: getUserCollaborationItems(collection),
     };
   }
+
+  async fetchTeamCollaboration(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListTeamCollaborationDataObject> {
+    const { take = 10, skip = 0, filter: rangeKey } = options;
+
+    let collection: FetchTeamCollaborationQuery['teamsCollection'] = {
+      total: 0,
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { teamsCollection } = await this.contentfulClient.request<
+        FetchTeamCollaborationQuery,
+        FetchTeamCollaborationQueryVariables
+      >(FETCH_TEAM_COLLABORATION, { limit: 5, skip: skip + 5 * i });
+      if (teamsCollection && teamsCollection.items.length) {
+        collection = {
+          total: teamsCollection.total,
+          items: [...collection.items, ...teamsCollection.items],
+        };
+      } else {
+        break;
+      }
+    }
+
+    return {
+      total: collection.total,
+      items: getTeamCollaborationItems(collection, rangeKey),
+    };
+  }
 }
 
 type Team = NonNullable<
@@ -400,48 +436,6 @@ const flattenInterestGroupLeaders = (
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
 
-const getRangeFilterParams = (rangeKey?: TimeRangeOption): string | null => {
-  const now = new Date();
-  const options: Record<TimeRangeOption, string | null> = {
-    '30d': new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
-    '90d': new Date(new Date().setDate(now.getDate() - 90)).toISOString(),
-    'current-year': new Date(now.getFullYear(), 0, 1).toISOString(),
-    'last-year': new Date(
-      new Date().setDate(now.getDate() - 365),
-    ).toISOString(),
-    all: null,
-  };
-  if (rangeKey && rangeKey in options) {
-    return options[rangeKey];
-  }
-  return options['30d'];
-};
-
-type AnalyticOutput = Maybe<
-  Pick<ResearchOutputs, 'sharingStatus' | 'addedDate' | 'createdDate'> & {
-    authorsCollection?: Maybe<{
-      items: Array<
-        Maybe<
-          | { __typename: 'ExternalAuthors' }
-          | ({ __typename: 'Users' } & {
-              sys: Pick<Sys, 'id'>;
-            })
-        >
-      >;
-    }>;
-  }
->;
-export const getFilterOutputByRange =
-  (rangeKey?: TimeRangeOption) => (item: AnalyticOutput) => {
-    const filter = getRangeFilterParams(rangeKey);
-    if (item && filter) {
-      return item.addedDate
-        ? item.addedDate >= filter
-        : item.createdDate >= filter;
-    }
-    return true;
-  };
-
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
   rangeKey?: TimeRangeOption,
@@ -540,16 +534,9 @@ const getTeamProductivityItems = (
       teamItem.linkedFrom?.researchOutputsCollection?.items
         .filter(getFilterOutputByRange(rangeKey))
         .reduce((count, researchOutput) => {
-          const isTeamProductivityDocumentType = (
-            documentType: string,
-          ): documentType is TeamProductivityDocumentType =>
-            teamProductivityDocumentTypes.includes(
-              documentType as TeamProductivityDocumentType,
-            );
-
           if (
             researchOutput?.documentType &&
-            isTeamProductivityDocumentType(researchOutput.documentType)
+            isTeamOutputDocumentType(researchOutput.documentType)
           ) {
             return {
               ...count,

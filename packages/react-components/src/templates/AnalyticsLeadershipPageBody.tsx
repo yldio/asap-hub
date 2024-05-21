@@ -4,11 +4,11 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls } from '..';
+import { PageControls, SearchField } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -43,20 +43,33 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
   exportResults: () => Promise<void>;
+  searchQuery: string;
+  onChangeSearch: (newSearchQuery: string) => void;
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
 const pageControlsStyles = css({
   justifySelf: 'center',
-  paddingTop: `${36 / perRem}em`,
-  paddingBottom: `${36 / perRem}em`,
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
+});
+
+const searchContainerStyles = css({
+  display: 'flex',
+  gap: rem(18),
+  alignItems: 'center',
+  paddingBottom: rem(33),
+});
+
+const searchStyles = css({
+  flexGrow: 1,
 });
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
@@ -68,6 +81,8 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   setMetric,
   data,
   exportResults,
+  searchQuery,
+  onChangeSearch,
   ...pageControlProps
 }) => (
   <article>
@@ -88,6 +103,16 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
       </Paragraph>
     </div>
     <ExportButton exportResults={exportResults} />
+    <div css={searchContainerStyles}>
+      <Subtitle>Teams:</Subtitle>
+      <span css={searchStyles}>
+        <SearchField
+          value={searchQuery}
+          placeholder="Enter team names..."
+          onChange={onChangeSearch}
+        />
+      </span>
+    </div>
     <LeadershipMembershipTable
       metric={metric}
       data={data}

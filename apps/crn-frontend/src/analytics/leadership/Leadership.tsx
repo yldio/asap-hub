@@ -11,10 +11,14 @@ import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
+<<<<<<< HEAD
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAlgolia, useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAnalyticsLeadership } from './api';
 import { algoliaResultsToStream, leadershipToCSV } from './export';
+=======
+import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+>>>>>>> master
 import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {
@@ -72,11 +76,12 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const { currentPage, pageSize } = usePaginationParams();
 
+  const { debouncedSearchQuery, searchQuery, setSearchQuery } = useSearch();
   const { items, total } = useAnalyticsLeadership({
     sort,
     currentPage,
     pageSize,
-    searchQuery: '',
+    searchQuery: debouncedSearchQuery,
     filters: new Set(),
   });
 
@@ -102,6 +107,8 @@ const Leadership: FC<Record<string, never>> = () => {
     <AnalyticsLeadershipPageBody
       metric={metric}
       setMetric={setMetric}
+      searchQuery={searchQuery}
+      onChangeSearch={setSearchQuery}
       sort={sort}
       setSort={setSort}
       sortingDirection={sortingDirection}

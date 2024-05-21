@@ -15,6 +15,8 @@ describe('AnalyticsLeadershipPageBody', () => {
     setSort: jest.fn(),
     sortingDirection: initialSortingDirection,
     setSortingDirection: jest.fn(),
+    searchQuery: '',
+    onChangeSearch: jest.fn(),
   };
   it('renders interest group tab', () => {
     const { getAllByText } = render(

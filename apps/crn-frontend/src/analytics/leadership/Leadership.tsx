@@ -11,14 +11,10 @@ import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
-<<<<<<< HEAD
-import { usePagination, usePaginationParams } from '../../hooks';
-import { useAlgolia, useAnalyticsAlgolia } from '../../hooks/algolia';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAnalyticsLeadership } from './api';
 import { algoliaResultsToStream, leadershipToCSV } from './export';
-=======
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
->>>>>>> master
 import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {

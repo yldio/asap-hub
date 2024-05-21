@@ -17,7 +17,7 @@ it('renders the selected metric', () => {
       exportResults={() => Promise.resolve()}
       metric={'interest-group'}
       data={[]}
-      setMetric={() => { }}
+      setMetric={() => {}}
       sort="team_asc"
       setSort={jest.fn()}
       sortingDirection={initialSortingDirection}

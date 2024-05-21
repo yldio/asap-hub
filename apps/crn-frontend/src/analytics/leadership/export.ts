@@ -17,7 +17,7 @@ export const leadershipToCSV =
       team: data.displayName,
       currentlyInALeadershipRole:
         data[`${metricPrefix}LeadershipRoleCount`].toString(),
-      creviouslyInALeadershipRole:
+      previouslyInALeadershipRole:
         data[`${metricPrefix}PreviousLeadershipRoleCount`].toString(),
       currentlyAMember: data[`${metricPrefix}MemberCount`].toString(),
       previouslyAMember: data[`${metricPrefix}PreviousMemberCount`].toString(),

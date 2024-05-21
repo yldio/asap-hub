@@ -2,6 +2,7 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   Auth0Provider,
   WhenReady,
@@ -27,6 +28,21 @@ jest.mock('@asap-hub/algolia', () => ({
 
 jest.mock('../api');
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
+jest.mock('../api');
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 afterEach(() => {
   jest.clearAllMocks();
 });
@@ -150,4 +166,15 @@ it('calls algolia client with the right index name', async () => {
       }),
     );
   });
+});
+
+it('exports analytics', async () => {
+  mockGetMemberships.mockResolvedValue(data);
+  await renderPage();
+  userEvent.click(screen.getByText(/csv/i));
+  expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+    expect.stringMatching(/leadership_\d+\.csv/),
+    expect.anything(),
+  );
+  expect(mockAlgoliaSearchClientFactory).toHaveBeenCalled();
 });

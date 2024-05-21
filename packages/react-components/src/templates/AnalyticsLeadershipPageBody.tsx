@@ -8,7 +8,7 @@ import { PageControls, SearchField } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -71,6 +71,16 @@ const searchContainerStyles = css({
 const searchStyles = css({
   flexGrow: 1,
 });
+const exportContainerStyles = css({
+  display: 'flex',
+  gap: rem(33),
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+    gap: 0,
+  },
+});
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   sort,
@@ -102,7 +112,9 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
-    <ExportButton exportResults={exportResults} />
+    <span css={exportContainerStyles}>
+      <ExportButton exportResults={exportResults} />
+    </span>
     <div css={searchContainerStyles}>
       <Subtitle>Teams:</Subtitle>
       <span css={searchStyles}>

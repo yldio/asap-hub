@@ -73,7 +73,9 @@ const searchStyles = css({
 });
 const exportContainerStyles = css({
   display: 'flex',
+  justifyContent: 'right',
   gap: rem(33),
+  paddingBottom: rem(33),
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -105,6 +107,9 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         required
       />
     </div>
+    <span css={exportContainerStyles}>
+      <ExportButton exportResults={exportResults} />
+    </span>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>
       <Paragraph>
@@ -112,9 +117,6 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
-    <span css={exportContainerStyles}>
-      <ExportButton exportResults={exportResults} />
-    </span>
     <div css={searchContainerStyles}>
       <Subtitle>Teams:</Subtitle>
       <span css={searchStyles}>

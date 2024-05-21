@@ -32,7 +32,11 @@ export const manuscriptRouteFactory = (
     const { body, loggedInUser } = req;
     const createRequest = validateManuscriptPostRequestParameters(body);
 
-    if (!loggedInUser) throw Boom.forbidden();
+    const userBelongsToTeam = loggedInUser?.teams.some(
+      (team) => team.id === createRequest.teamId,
+    );
+
+    if (!loggedInUser || !userBelongsToTeam) throw Boom.forbidden();
 
     const manuscript = await manuscriptController.create(createRequest);
 

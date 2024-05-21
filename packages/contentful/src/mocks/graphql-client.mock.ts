@@ -68,6 +68,7 @@ export const getContentfulGraphqlClientMockServer = (
     InterestGroupsCollection: resultDto,
     InterestGroupLeadersCollection: resultDto,
     LabsCollection: resultDto,
+    ManuscriptsCollection: resultDto,
     NewsCollection: resultDto,
     PagesCollection: resultDto,
     ResearchOutputsCollection: resultDto,

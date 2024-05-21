@@ -45,11 +45,13 @@ const buttonsInnerContainerStyles = css({
 type ManuscriptFormProps = {
   onSave: (output: ManuscriptPostRequest) => Promise<ManuscriptResponse | void>;
   onSuccess: () => void;
+  teamId: string;
 };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onSave,
   onSuccess,
+  teamId,
 }) => {
   const history = useHistory();
 
@@ -67,7 +69,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   } = methods;
 
   const onSubmit = async (data: ManuscriptPostRequest) => {
-    await onSave(data);
+    await onSave({ ...data, teamId });
 
     onSuccess();
   };
@@ -80,16 +82,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              rules={{
+                required: 'Please enter a title.',
+                maxLength: {
+                  value: 256,
+                  message: 'This title cannot exceed 256 characters.',
+                },
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
                 <LabeledTextField
                   title="Title of Manuscript"
-                  maxLength={350}
                   subtitle="(required)"
-                  getValidationMessage={(validationState) =>
-                    validationState.valueMissing ? 'Please enter a title.' : ''
-                  }
-                  required
+                  customValidationMessage={error?.message}
                   value={value}
                   onChange={onChange}
                   enabled={!isSubmitting}

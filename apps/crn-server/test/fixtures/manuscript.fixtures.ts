@@ -10,6 +10,7 @@ export const getManuscriptDataObject = (
 ): ManuscriptDataObject => ({
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
+  teamId: 'team-1',
   ...data,
 });
 
@@ -26,12 +27,14 @@ export const getContentfulGraphqlManuscripts = (
     id: 'manuscript-id-1',
   },
   title: 'Manuscript Title',
-
+  teamsCollection: {
+    items: [{ sys: { id: 'team-1' } }],
+  },
   ...props,
 });
 
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
-  const { title } = getManuscriptDataObject();
+  const { title, teamId } = getManuscriptDataObject();
 
-  return { title };
+  return { title, teamId };
 };

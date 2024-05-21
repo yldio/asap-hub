@@ -96,7 +96,10 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.click(submitButton);
 
   await waitFor(() => {
-    expect(createManuscript).toHaveBeenCalledWith({ title }, expect.anything());
+    expect(createManuscript).toHaveBeenCalledWith(
+      { title, teamId },
+      expect.anything(),
+    );
     expect(history.location.pathname).toBe(
       `/network/teams/${teamId}/workspace`,
     );

@@ -7,6 +7,7 @@ import {
   TeamListItemDataObject,
   ListTeamDataObject,
   TeamRole,
+  TeamManuscript,
 } from '@asap-hub/model';
 
 import {
@@ -22,7 +23,7 @@ import {
   Environment,
   addLocaleToFields,
 } from '@asap-hub/contentful';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 import { sortMembers } from '../transformers';
 import {
@@ -300,6 +301,10 @@ export const parseContentfulGraphQlTeam = (
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
+    manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
+      (manuscript) =>
+        ({ id: manuscript.sys.id, title: manuscript.title }) as TeamManuscript,
+    ),
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),
     labCount,

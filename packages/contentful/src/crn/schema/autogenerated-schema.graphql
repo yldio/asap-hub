@@ -2460,6 +2460,7 @@ type Manuscripts implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   sys: Sys!
+  teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
   title(locale: String): String
 }
 
@@ -2475,6 +2476,8 @@ input ManuscriptsFilter {
   OR: [ManuscriptsFilter]
   contentfulMetadata: ContentfulMetadataFilter
   sys: SysFilter
+  teams: cfTeamsNestedFilter
+  teamsCollection_exists: Boolean
   title: String
   title_contains: String
   title_exists: Boolean
@@ -2499,6 +2502,30 @@ enum ManuscriptsOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+}
+
+type ManuscriptsTeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
@@ -4411,6 +4438,7 @@ type TeamsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
@@ -4457,6 +4485,19 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {

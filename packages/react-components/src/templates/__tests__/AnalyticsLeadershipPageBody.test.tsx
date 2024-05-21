@@ -8,7 +8,7 @@ describe('AnalyticsLeadershipPageBody', () => {
     numberOfPages: 1,
     currentPageIndex: 0,
     renderPageHref: () => '',
-    setMetric: () => { },
+    setMetric: () => {},
     exportResults: () => Promise.resolve(),
     data: [],
     metric: 'interest-group',

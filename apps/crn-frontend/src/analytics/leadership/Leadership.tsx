@@ -87,9 +87,12 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const exportResults = () =>
     algoliaResultsToStream(
-      createCsvFileStream(`leadership_${format(new Date(), 'MMddyy')}.csv`, {
-        header: true,
-      }),
+      createCsvFileStream(
+        `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
       (paginationParams) =>
         getAnalyticsLeadership(client, {
           filters: new Set(),

@@ -76,6 +76,17 @@ describe('algoliaResultsToStream', () => {
     );
 
     expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
+
     expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('handles undefined response', async () => {
+    const transformSpy = jest.fn();
+    await algoliaResultsToStream(
+      mockCsvStream as unknown as Stringifier,
+      () => Promise.resolve(undefined),
+      transformSpy,
+    );
+    expect(transformSpy).not.toHaveBeenCalled();
   });
 });

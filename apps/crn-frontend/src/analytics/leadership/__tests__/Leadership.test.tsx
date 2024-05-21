@@ -168,13 +168,32 @@ it('calls algolia client with the right index name', async () => {
   });
 });
 
-it('exports analytics', async () => {
-  mockGetMemberships.mockResolvedValue(data);
-  await renderPage();
-  userEvent.click(screen.getByText(/csv/i));
-  expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-    expect.stringMatching(/leadership_\d+\.csv/),
-    expect.anything(),
-  );
-  expect(mockAlgoliaSearchClientFactory).toHaveBeenCalled();
+describe('csv export', () => {
+  it('exports analytics for working groups', async () => {
+    mockGetMemberships.mockResolvedValue(data);
+    await renderPage();
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/leadership_working-group_\d+\.csv/),
+      expect.anything(),
+    );
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalled();
+  });
+
+  it('exports analytics for interest groups', async () => {
+    mockGetMemberships.mockResolvedValue(data);
+    const label = 'Interest Group Leadership & Membership';
+
+    await renderPage();
+    const input = screen.getByRole('textbox', { hidden: false });
+
+    userEvent.click(input);
+    userEvent.click(screen.getByText(label));
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/leadership_interest-group_\d+\.csv/),
+      expect.anything(),
+    );
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalled();
+  });
 });

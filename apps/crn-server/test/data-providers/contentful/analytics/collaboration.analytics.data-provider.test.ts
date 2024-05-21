@@ -391,6 +391,25 @@ describe('team collaboration', () => {
           ],
         },
       },
+      {
+        addedDate: '2023-09-05T03:00:00.000Z',
+        createdDate: '',
+        documentType: 'Article',
+        labsCollection: {
+          total: 3,
+        },
+        teamsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'team-1',
+              },
+              displayName: 'Team A',
+              inactiveSince: null,
+            },
+          ],
+        },
+      },
     ];
     graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection =
       {
@@ -432,7 +451,7 @@ describe('team collaboration', () => {
     });
   });
 
-  test('Should group outputs by team', async () => {
+  test('Should group outputs by team in sorted order (team name asc)', async () => {
     const graphqlResponse = getTeamCollaborationQuery();
     const researchOutputs = [
       {
@@ -455,14 +474,14 @@ describe('team collaboration', () => {
               sys: {
                 id: 'team-2',
               },
-              displayName: 'Team B',
+              displayName: 'Team C',
               inactiveSince: null,
             },
             {
               sys: {
                 id: 'team-3',
               },
-              displayName: 'Team C',
+              displayName: 'Team B',
               inactiveSince: null,
             },
           ],
@@ -488,7 +507,7 @@ describe('team collaboration', () => {
               sys: {
                 id: 'team-2',
               },
-              displayName: 'Team B',
+              displayName: 'Team C',
               inactiveSince: null,
             },
           ],
@@ -519,20 +538,20 @@ describe('team collaboration', () => {
             },
             byTeam: [
               {
-                id: 'team-2',
+                id: 'team-3',
                 name: 'Team B',
                 isInactive: false,
-                Article: 2,
+                Article: 1,
                 Bioinformatics: 0,
                 Dataset: 0,
                 'Lab Resource': 0,
                 Protocol: 0,
               },
               {
-                id: 'team-3',
+                id: 'team-2',
                 name: 'Team C',
                 isInactive: false,
-                Article: 1,
+                Article: 2,
                 Bioinformatics: 0,
                 Dataset: 0,
                 'Lab Resource': 0,

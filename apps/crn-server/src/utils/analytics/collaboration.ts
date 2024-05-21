@@ -286,6 +286,7 @@ export const getTeamCollaborationItems = (
     const outputsCoProducedAcross = getTeamCollaborationAcrossData(
       cleanArray(outputsData?.filter((output) => output.hasMultipleTeams)),
     );
+    outputsCoProducedAcross.byTeam.sort((a, b) => a.name.localeCompare(b.name));
     const outputsCoProducedWithin = getTeamCollaborationWithinData(
       cleanArray(outputsData?.filter((output) => output.hasMultipleLabs)),
     );

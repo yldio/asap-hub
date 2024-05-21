@@ -6,8 +6,9 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, SearchField } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -41,6 +42,7 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   setSortingDirection: React.Dispatch<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
+  exportResults: () => Promise<void>;
   searchQuery: string;
   onChangeSearch: (newSearchQuery: string) => void;
 };
@@ -69,6 +71,18 @@ const searchContainerStyles = css({
 const searchStyles = css({
   flexGrow: 1,
 });
+const exportContainerStyles = css({
+  display: 'flex',
+  justifyContent: 'right',
+  gap: rem(33),
+  paddingBottom: rem(33),
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '100%',
+    gap: 0,
+  },
+});
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   sort,
@@ -78,6 +92,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   metric,
   setMetric,
   data,
+  exportResults,
   searchQuery,
   onChangeSearch,
   ...pageControlProps
@@ -92,6 +107,9 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         required
       />
     </div>
+    <span css={exportContainerStyles}>
+      <ExportButton exportResults={exportResults} />
+    </span>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>
       <Paragraph>

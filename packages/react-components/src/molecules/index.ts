@@ -20,6 +20,7 @@ export { default as EventOwner } from './EventOwner';
 export { default as EventTeams } from './EventTeams';
 export { default as EventTime } from './EventTime';
 export { default as ExternalLink } from './ExternalLink';
+export { default as ExportButton } from './ExportButton';
 export { default as FormCard } from './FormCard';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';

@@ -88,5 +88,8 @@ export const useAnalyticsLeadership = (options: Options) => {
   if (leadership instanceof Error) {
     throw leadership;
   }
-  return leadership;
+  return {
+    ...leadership,
+    client: algoliaClient.client,
+  };
 };

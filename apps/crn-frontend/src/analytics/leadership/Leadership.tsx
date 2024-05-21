@@ -1,3 +1,4 @@
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   LeadershipAndMembershipSortingDirection,
   initialSortingDirection,
@@ -5,9 +6,11 @@ import {
 } from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
+import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-
+import { getAnalyticsLeadership } from './api';
+import { algoliaResultsToStream, leadershipToCSV } from './export';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsLeadership } from './state';
 
@@ -67,7 +70,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { debouncedSearchQuery, searchQuery, setSearchQuery } = useSearch();
-  const { items, total } = useAnalyticsLeadership({
+  const { items, total, client } = useAnalyticsLeadership({
     sort,
     currentPage,
     pageSize,
@@ -76,6 +79,23 @@ const Leadership: FC<Record<string, never>> = () => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+
+  const exportResults = () =>
+    algoliaResultsToStream(
+      createCsvFileStream(
+        `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
+      (paginationParams) =>
+        getAnalyticsLeadership(client, {
+          filters: new Set(),
+          searchQuery,
+          ...paginationParams,
+        }),
+      leadershipToCSV(metric),
+    );
 
   return (
     <AnalyticsLeadershipPageBody
@@ -87,6 +107,7 @@ const Leadership: FC<Record<string, never>> = () => {
       setSort={setSort}
       sortingDirection={sortingDirection}
       setSortingDirection={setSortingDirection}
+      exportResults={exportResults}
       data={getDataForMetric(items, metric)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}

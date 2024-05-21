@@ -14,6 +14,7 @@ it('renders the selected metric', () => {
     <AnalyticsLeadershipPageBody
       searchQuery=""
       onChangeSearch={jest.fn()}
+      exportResults={() => Promise.resolve()}
       metric={'interest-group'}
       data={[]}
       setMetric={() => {}}

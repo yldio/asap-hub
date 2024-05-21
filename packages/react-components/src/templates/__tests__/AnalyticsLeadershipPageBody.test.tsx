@@ -9,6 +9,7 @@ describe('AnalyticsLeadershipPageBody', () => {
     currentPageIndex: 0,
     renderPageHref: () => '',
     setMetric: () => {},
+    exportResults: () => Promise.resolve(),
     data: [],
     metric: 'interest-group',
     sort: 'team_asc',

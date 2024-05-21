@@ -1,4 +1,4 @@
-import { Stringifier } from 'csv-stringify/.';
+import { Stringifier } from 'csv-stringify';
 import { leadershipToCSV, algoliaResultsToStream } from '../export';
 
 describe('leadershipToCSV', () => {

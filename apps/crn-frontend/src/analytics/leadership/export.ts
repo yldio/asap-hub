@@ -39,6 +39,7 @@ export const algoliaResultsToStream = async (
   let morePages = true;
   let currentPage = 0;
   while (morePages) {
+    // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
       currentPage,
       pageSize: 10,

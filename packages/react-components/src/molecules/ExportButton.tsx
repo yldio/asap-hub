@@ -48,8 +48,7 @@ const ExportButton: React.FC<ExportButtonProps> = ({ exportResults }) => {
         noMargin
         small
         onClick={() =>
-          exportResults().catch((e) => {
-            console.log(e);
+          exportResults().catch(() => {
             toast('There was an issue exporting to CSV. Please try again.');
           })
         }

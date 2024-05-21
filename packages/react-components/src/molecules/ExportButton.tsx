@@ -22,8 +22,8 @@ const exportButtonStyles = css({
   gap: rem(8),
   height: '100%',
   alignItems: 'center',
+  padding: rem(9),
   paddingRight: rem(15),
-
   [`@media (max-width: ${tabletScreen.min}px)`]: {
     width: '100%',
   },

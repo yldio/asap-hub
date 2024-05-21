@@ -1,3 +1,4 @@
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   LeadershipAndMembershipSortingDirection,
   initialSortingDirection,
@@ -5,10 +6,15 @@ import {
 } from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
+import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 import { usePagination, usePaginationParams } from '../../hooks';
+import { useAlgolia, useAnalyticsAlgolia } from '../../hooks/algolia';
+import { getAnalyticsLeadership } from './api';
+import { algoliaResultsToStream, leadershipToCSV } from './export';
 import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {
@@ -76,6 +82,22 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
+  const { client } = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+
+  const exportResults = () =>
+    algoliaResultsToStream(
+      createCsvFileStream(`leadership_${format(new Date(), 'MMddyy')}.csv`, {
+        header: true,
+      }),
+      (paginationParams) =>
+        getAnalyticsLeadership(client, {
+          filters: new Set(),
+          searchQuery: '',
+          ...paginationParams,
+        }),
+      leadershipToCSV(metric),
+    );
+
   return (
     <AnalyticsLeadershipPageBody
       metric={metric}
@@ -84,6 +106,7 @@ const Leadership: FC<Record<string, never>> = () => {
       setSort={setSort}
       sortingDirection={sortingDirection}
       setSortingDirection={setSortingDirection}
+      exportResults={exportResults}
       data={getDataForMetric(items, metric)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}

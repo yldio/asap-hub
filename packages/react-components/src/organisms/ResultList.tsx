@@ -1,16 +1,14 @@
-import React, { ComponentProps, useContext, useEffect } from 'react';
+import React, { ComponentProps, useEffect } from 'react';
 import { css } from '@emotion/react';
-import { ToastContext } from '@asap-hub/react-context';
 
-import { ListControls, PageControls } from '../molecules';
-import { Button, Headline3, Paragraph } from '../atoms';
+import { ExportButton, ListControls, PageControls } from '../molecules';
+import { Headline3, Paragraph } from '../atoms';
 import {
   perRem,
   vminLinearCalcClamped,
   mobileScreen,
   tabletScreen,
 } from '../pixels';
-import { ExportIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const headerStyles = css({
@@ -26,37 +24,6 @@ const headerNoResultsStyles = css({
     justifyContent: 'flex-end',
   },
 });
-
-const exportSectionStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: `${15 / perRem}em`,
-
-  [`@media (max-width: ${tabletScreen.min}px)`]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginTop: `${24 / perRem}em`,
-    width: '100%',
-  },
-});
-
-const exportButton = css({
-  gap: `${8 / perRem}em`,
-  height: '100%',
-  alignItems: 'center',
-  paddingRight: `${15 / perRem}em`,
-
-  [`@media (max-width: ${tabletScreen.min}px)`]: {
-    width: '100%',
-  },
-
-  [`@media (min-width:${tabletScreen.min}px) and (max-width: ${mobileScreen.max}px)`]:
-    {
-      minWidth: 'auto',
-    },
-});
-
-const exportIcon = css({ display: 'flex' });
 
 const resultsHeaderStyles = css({
   display: 'flex',
@@ -136,7 +103,6 @@ const ResultList: React.FC<ResultListProps> = ({
   algoliaIndexName,
   ...pageControlsProps
 }) => {
-  const toast = useContext(ToastContext);
   useEffect(() => {
     if (algoliaIndexName) {
       window.dataLayer?.push({ event: 'Hits Viewed' });
@@ -161,29 +127,7 @@ const ResultList: React.FC<ResultListProps> = ({
                   listViewHref={listViewHref}
                 />
               )}
-
-              {exportResults && (
-                <span css={exportSectionStyles}>
-                  <strong>Export as:</strong>
-                  <Button
-                    noMargin
-                    small
-                    onClick={() =>
-                      exportResults().catch(() =>
-                        toast(
-                          'There was an issue exporting to CSV. Please try again.',
-                        ),
-                      )
-                    }
-                    overrideStyles={exportButton}
-                  >
-                    <>
-                      <div css={exportIcon}>{ExportIcon}</div>
-                      CSV
-                    </>
-                  </Button>
-                </span>
-              )}
+              <ExportButton exportResults={exportResults} />
             </span>
           </div>
         )}

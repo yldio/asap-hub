@@ -6,6 +6,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
 import { perRem } from '../pixels';
 
@@ -41,6 +42,7 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   setSortingDirection: React.Dispatch<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
+  exportResults: () => Promise<void>;
 };
 
 const metricDropdownStyles = css({
@@ -65,6 +67,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   metric,
   setMetric,
   data,
+  exportResults,
   ...pageControlProps
 }) => (
   <article>
@@ -84,6 +87,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
+    <ExportButton exportResults={exportResults} />
     <LeadershipMembershipTable
       metric={metric}
       data={data}

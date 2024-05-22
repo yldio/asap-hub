@@ -194,7 +194,6 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             return {
               id: team.sys.id,
               displayName: team.displayName || '',
-              _tags: team.displayName ? [team.displayName] : [],
               interestGroupLeadershipRoleCount: team.inactiveSince
                 ? 0
                 : getUniqueIdCount(currentInterestGroupIdsFromTeamLeaders),

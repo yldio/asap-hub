@@ -1,5 +1,10 @@
 import { AnalyticsData } from '@asap-hub/algolia';
-import { ListResponse, TimeRangeOption, timeRanges } from '@asap-hub/model';
+import {
+  AnalyticsTeamLeadershipResponse,
+  ListResponse,
+  TimeRangeOption,
+  timeRanges,
+} from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import { FileHandle } from 'fs/promises';
 
@@ -102,9 +107,20 @@ const transformRecords = (
   range?: TimeRangeOption,
 ) => ({
   ...record,
+  _tags: getRecordTags(record, type),
   objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
   __meta: {
     type,
     range,
   },
 });
+
+const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
+  switch (type) {
+    case 'team-leadership':
+      const teamName = (record as AnalyticsTeamLeadershipResponse).displayName;
+      return teamName ? [teamName] : [];
+    default:
+      return [];
+  }
+};

@@ -5,7 +5,7 @@ import {
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, SearchField } from '..';
-import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import { Dropdown, Headline3, MultiSelect, Paragraph, Subtitle } from '../atoms';
 import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
@@ -33,6 +33,9 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   typeof PageControls
 > & {
+  tags: string[];
+  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  setTags: (tags: string[]) => void;
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
@@ -85,6 +88,9 @@ const exportContainerStyles = css({
 });
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
+  tags,
+  setTags,
+  loadTags,
   sort,
   setSort,
   sortingDirection,

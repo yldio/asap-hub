@@ -83,7 +83,7 @@ describe('theming', () => {
     const { getByTitle } = render(<OutputVersions {...baseProps} />);
     const icon = getByTitle('External Link');
     const { stroke } = getComputedStyle(icon.parentNode as Element);
-    expect(stroke).toBe(fern.rgb);
+    expect(stroke).toBe(fern.rgba);
   });
 
   it('uses theme primaryColor for the external icon svg', () => {

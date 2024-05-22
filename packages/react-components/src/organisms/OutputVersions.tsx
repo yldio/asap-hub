@@ -1,5 +1,5 @@
 import { ResearchOutputVersion } from '@asap-hub/model';
-import { css, SerializedStyles, Theme } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
@@ -17,7 +17,7 @@ import { formatDateToTimezone } from '../date';
 import { externalLinkIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
-import { defaultThemeVariant, ThemeVariant } from '../theme';
+import { ThemeVariant } from '../theme';
 
 const container = css({
   display: 'grid',
@@ -96,14 +96,6 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   dark: css({ stroke: paper.rgb, ':active': { stroke: paper.rgb } }),
 };
 
-const getSvgColors = (
-  colors: Theme['colors'],
-  themeVariant: ThemeVariant,
-): SerializedStyles =>
-  colors?.primary500
-    ? css({ stroke: colors.primary500.rgba })
-    : themeStyles[themeVariant];
-
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
   display: 'grid',
@@ -131,7 +123,6 @@ export type OutputVersionsProps = {
 };
 
 const OutputVersions: React.FC<OutputVersionsProps> = ({
-  themeVariant = defaultThemeVariant,
   versions,
   versionAction,
   app,
@@ -140,14 +131,12 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
 
-  const iconsStyles = ({ colors }: Theme) =>
-    css({
-      position: 'relative',
-      top: '6px',
-      display: 'inline-flex',
-      alignSelf: 'center',
-      svg: getSvgColors(colors, themeVariant),
-    });
+  const iconsStyles = css({
+    position: 'relative',
+    top: '6px',
+    display: 'inline-flex',
+    alignSelf: 'center',
+  });
 
   return (
     <main css={versionAction && app === 'crn' ? [mainStyles] : []}>
@@ -214,11 +203,8 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
                     </p>
                     <span css={[titleStyles, rowTitleStyles]}>Link</span>
                     <p css={paragraphStyle}>
-                      <Link ellipsed href={link}>
-                        Output{' '}
-                        <span css={(theme) => iconsStyles(theme)}>
-                          {externalLinkIcon}
-                        </span>
+                      <Link ellipsed href={link} applyIconTheme>
+                        Output <span css={iconsStyles}>{externalLinkIcon}</span>
                       </Link>
                     </p>
                   </div>

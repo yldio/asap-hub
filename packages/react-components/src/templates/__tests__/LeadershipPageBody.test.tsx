@@ -12,8 +12,8 @@ const pageControlProps = {
 it('renders the selected metric', () => {
   render(
     <AnalyticsLeadershipPageBody
-      searchQuery=""
-      onChangeSearch={jest.fn()}
+      tags={[]}
+      setTags={jest.fn()}
       exportResults={() => Promise.resolve()}
       metric={'interest-group'}
       data={[]}

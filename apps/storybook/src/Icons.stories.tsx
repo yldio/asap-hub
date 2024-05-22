@@ -2,8 +2,11 @@ import * as components from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Icons' };
 
+export const AboveAverage = () => components.aboveAverageIcon;
 export const AlumniBadge = () => components.alumniBadgeIcon;
 export const AlphabeticalSorting = () => <components.AlphabeticalSortingIcon />;
+export const Average = () => components.averageIcon;
+export const BelowAverage = () => components.belowAverageIcon;
 export const Budget = () => components.budgetIcon;
 export const Calendar = () => components.calendarIcon;
 export const ChevronCircleDown = () => components.chevronCircleDownIcon;

@@ -2,6 +2,7 @@ export * from './auth';
 export { default as AdditionalMaterials } from './AdditionalMaterials';
 export { default as AuthorSelect } from './AuthorSelect';
 export { default as CalendarList } from './CalendarList';
+export { default as CaptionCard } from './CaptionCard';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as ConfirmModal } from './ConfirmModal';

@@ -8,7 +8,7 @@
   "attributesToRetrieve": null,
   "unretrievableAttributes": null,
   "optionalWords": null,
-  "attributesForFaceting": ["searchable(_tags)","__meta.type", "__meta.range"],
+  "attributesForFaceting": ["searchable(_tags)", "__meta.type", "__meta.range"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,

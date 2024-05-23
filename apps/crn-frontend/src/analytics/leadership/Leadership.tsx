@@ -69,13 +69,12 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { tags, setTags, debouncedSearchQuery, searchQuery, setSearchQuery } = useSearch();
+  const { tags, setTags } = useSearch();
   const { items, total, client } = useAnalyticsLeadership({
+    tags,
     sort,
     currentPage,
     pageSize,
-    searchQuery: debouncedSearchQuery,
-    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
@@ -90,8 +89,7 @@ const Leadership: FC<Record<string, never>> = () => {
       ),
       (paginationParams) =>
         getAnalyticsLeadership(client, {
-          filters: new Set(),
-          searchQuery,
+          tags,
           ...paginationParams,
         }),
       leadershipToCSV(metric),
@@ -103,15 +101,12 @@ const Leadership: FC<Record<string, never>> = () => {
       setTags={setTags}
       loadTags={async (tagQuery) => {
         const searchedTags = await client.searchForTagValues([], tagQuery, {
-          facetFilters: tags.map((tag) => `_tags:${tag}`),
         });
         return searchedTags.facetHits.map(({ value }) => ({
           label: value,
           value,
         }));
       }}
-      searchQuery={searchQuery}
-      onChangeSearch={setSearchQuery}
       metric={metric}
       setMetric={setMetric}
       sort={sort}

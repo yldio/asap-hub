@@ -11,6 +11,7 @@
     "algolia:clear-index": "ts-node --transpile-only src/cli.ts algolia:clear-index",
     "algolia:get-settings": "ts-node --transpile-only src/cli.ts algolia:get-settings",
     "algolia:move-index": "ts-node --transpile-only src/cli.ts algolia:move-index",
+    "algolia:process-productivity-metrics": "ts-node --transpile-only src/cli.ts algolia:process-productivity-metrics",
     "algolia:remove-records": "ts-node --transpile-only src/cli.ts algolia:remove-records",
     "algolia:set-settings": "ts-node --transpile-only src/cli.ts algolia:set-settings",
     "algolia:set-analytics-settings": "ts-node --transpile-only src/cli.ts algolia:set-analytics-settings",

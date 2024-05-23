@@ -1,6 +1,15 @@
 import { FetchPaginationOptions, ListResponse } from './common';
 import { TeamResponse, TeamRole } from './team';
 
+export type PerformanceMetrics = {
+  belowAverageMin: number;
+  belowAverageMax: number;
+  averageMin: number;
+  averageMax: number;
+  aboveAverageMin: number;
+  aboveAverageMax: number;
+};
+
 export type SortLeadershipAndMembership =
   | 'team_asc'
   | 'team_desc'

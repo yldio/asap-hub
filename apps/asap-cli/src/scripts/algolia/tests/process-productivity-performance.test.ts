@@ -58,12 +58,7 @@ describe('getBellCurveMetrics', () => {
   });
 
   it('returns correct performance metrics when the data and result have decimal places', () => {
-    const data = [
-      0.5839192429634555, 0.4588917547846599, 0.7144998231708924,
-      0.31761467673226364, 0.9835153157023447, 0.012174713013646232,
-      0.3345662942521736, 0.8791390732735015, 0.6145511688987974,
-      0.4143108942089136,
-    ];
+    const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
     const metrics = getBellCurveMetrics(data, false);
     expect(metrics).toEqual({
       belowAverageMin: 0.01,

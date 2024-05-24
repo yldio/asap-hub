@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { steel, mint, tin, neutral900, pine, charcoal } from '../colors';
 import { crossSmallIcon } from '../icons';
 import { perRem } from '../pixels';
@@ -29,13 +29,17 @@ const highlightStyles = css({
   backgroundColor: mint.rgb,
 });
 
-const hoverStyles = css({
-  ':hover': {
-    backgroundColor: mint.rgb,
-    borderColor: pine.rgb,
-    color: pine.rgb,
-  },
-});
+const hoverStyles = ({
+  primary100 = mint,
+  primary900 = pine,
+}: Theme['colors'] = {}) =>
+  css({
+    ':hover': {
+      backgroundColor: primary100.rgba,
+      borderColor: primary900.rgba,
+      color: primary900.rgba,
+    },
+  });
 
 const disabledStyles = css({
   borderColor: tin.rgb,
@@ -96,10 +100,10 @@ const Tag: React.FC<TagProps> = ({
   <div css={containerStyles} title={title}>
     <ConditionalLinkWrapper href={enabled ? href : undefined}>
       <div
-        css={[
+        css={({ colors }) => [
           styles,
           ...(enabled
-            ? [highlight && highlightStyles, !!href && hoverStyles]
+            ? [highlight && highlightStyles, !!href && hoverStyles(colors)]
             : [disabledStyles]),
         ]}
       >

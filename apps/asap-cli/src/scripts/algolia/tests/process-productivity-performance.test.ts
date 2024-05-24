@@ -17,24 +17,61 @@ describe('getStandardDeviation', () => {
   });
 
   it('should return correct standard deviation for an array of numbers', () => {
-    const numbers = [1, 2, 3, 4, 5];
+    const numbers = [
+      20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+    ];
     const mean =
       numbers.reduce((sum, value) => sum + value, 0) / numbers.length;
-    expect(getStandardDeviation(numbers, mean)).toBeCloseTo(1.414, 3);
+    const stdDev = getStandardDeviation(numbers, mean);
+    expect(mean).toEqual(10.5);
+    expect(stdDev).toBeCloseTo(5.766, 3);
   });
 });
 
 describe('getBellCurveMetrics', () => {
-  it('should return correct bell curve metrics', () => {
-    const data = [1, 2, 3, 4, 5];
+  it('returns correct performance metrics when the data has a variety of integers', () => {
+    const data = [
+      20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+    ];
     const metrics = getBellCurveMetrics(data);
     expect(metrics).toEqual({
       belowAverageMin: 1,
-      belowAverageMax: 1,
-      averageMin: 2,
-      averageMax: 4,
-      aboveAverageMin: 5,
-      aboveAverageMax: 5,
+      belowAverageMax: 4,
+      averageMin: 5,
+      averageMax: 16,
+      aboveAverageMin: 17,
+      aboveAverageMax: 20,
+    });
+  });
+
+  it('returns correct performance metrics when the data has a lot of zeros', () => {
+    const data = [0, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 1, 0, 0, 1, 2];
+    const metrics = getBellCurveMetrics(data);
+    expect(metrics).toEqual({
+      belowAverageMin: 0,
+      belowAverageMax: -1,
+      averageMin: -0,
+      averageMax: 1,
+      aboveAverageMin: 2,
+      aboveAverageMax: 2,
+    });
+  });
+
+  it('returns correct performance metrics when the data and result have decimal places', () => {
+    const data = [
+      0.5839192429634555, 0.4588917547846599, 0.7144998231708924,
+      0.31761467673226364, 0.9835153157023447, 0.012174713013646232,
+      0.3345662942521736, 0.8791390732735015, 0.6145511688987974,
+      0.4143108942089136,
+    ];
+    const metrics = getBellCurveMetrics(data, false);
+    expect(metrics).toEqual({
+      belowAverageMin: 0.01,
+      belowAverageMax: 0.25,
+      averageMin: 0.26,
+      averageMax: 0.8,
+      aboveAverageMin: 0.81,
+      aboveAverageMax: 0.98,
     });
   });
 });

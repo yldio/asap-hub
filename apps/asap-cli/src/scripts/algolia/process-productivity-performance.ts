@@ -10,8 +10,12 @@ import algoliasearch from 'algoliasearch';
 
 type RoundingType = 'ceil' | 'floor';
 
-const roundToTwoDecimals = (number: number, type: RoundingType): number => {
+const roundToTwoDecimals = (number: number, type?: RoundingType): number => {
   const factor = 100;
+
+  if (!type) {
+    return parseFloat(number.toFixed(2));
+  }
 
   return type === 'ceil'
     ? Math.ceil(number * factor) / factor
@@ -42,7 +46,9 @@ export const getBellCurveMetrics = (
   const superiorLimit = mean + stdDev;
 
   return {
-    belowAverageMin: Math.min(...data),
+    belowAverageMin: isInteger
+      ? Math.min(...data)
+      : roundToTwoDecimals(Math.min(...data)),
     belowAverageMax: isInteger
       ? Math.floor(inferiorLimit)
       : roundToTwoDecimals(inferiorLimit, 'floor'),
@@ -55,7 +61,9 @@ export const getBellCurveMetrics = (
     aboveAverageMin: isInteger
       ? Math.ceil(superiorLimit)
       : roundToTwoDecimals(superiorLimit, 'ceil'),
-    aboveAverageMax: Math.max(...data),
+    aboveAverageMax: isInteger
+      ? Math.max(...data)
+      : roundToTwoDecimals(Math.max(...data)),
   };
 };
 

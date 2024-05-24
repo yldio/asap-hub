@@ -77,33 +77,48 @@ describe('deletePreviousObjects', () => {
 });
 
 describe('processUserProductivityPerformance', () => {
-  it('should process user productivity metrics', async () => {
+  it('should process user productivity performance', async () => {
     const mockIndex = {
-      search: jest.fn().mockResolvedValue({
-        hits: [
-          {
-            asapOutput: 1,
-            asapPublicOutput: 0,
-            ratio: 0,
-          },
-          {
-            asapOutput: 2,
-            asapPublicOutput: 0,
-            ratio: 0,
-          },
-          {
-            asapOutput: 2,
-            asapPublicOutput: 2,
-            ratio: 1,
-          },
-        ],
-        nbPages: 1,
-      }),
+      search: jest
+        .fn()
+        .mockResolvedValueOnce({
+          hits: [
+            { objectID: 'old-performance-1' },
+            { objectID: 'old-performance-2' },
+            { objectID: 'old-performance-3' },
+          ],
+        })
+        .mockResolvedValue({
+          hits: [
+            {
+              asapOutput: 1,
+              asapPublicOutput: 0,
+              ratio: 0,
+            },
+            {
+              asapOutput: 2,
+              asapPublicOutput: 0,
+              ratio: 0,
+            },
+            {
+              asapOutput: 2,
+              asapPublicOutput: 2,
+              ratio: 1,
+            },
+          ],
+          nbPages: 1,
+        }),
       deleteObjects: jest.fn().mockResolvedValue({}),
       saveObject: jest.fn().mockResolvedValue({}),
     } as unknown as SearchIndex;
 
     await processUserProductivityPerformance(mockIndex);
+
+    expect(mockIndex.deleteObjects).toHaveBeenCalledWith([
+      'old-performance-1',
+      'old-performance-2',
+      'old-performance-3',
+    ]);
 
     timeRanges.forEach((range) => {
       expect(mockIndex.search).toHaveBeenCalledWith('', {
@@ -150,46 +165,61 @@ describe('processUserProductivityPerformance', () => {
 });
 
 describe('processTeamProductivityPerformance', () => {
-  it('should process team productivity metrics', async () => {
+  it('should process team productivity performance', async () => {
     const mockIndex = {
-      search: jest.fn().mockResolvedValue({
-        hits: [
-          {
-            Article: 19,
-            Bioinformatics: 1,
-            Dataset: 2,
-            'Lab Resource': 4,
-            Protocol: 0,
-          },
-          {
-            Article: 20,
-            Bioinformatics: 10,
-            Dataset: 30,
-            'Lab Resource': 13,
-            Protocol: 10,
-          },
-          {
-            Article: 5,
-            Bioinformatics: 7,
-            Dataset: 8,
-            'Lab Resource': 20,
-            Protocol: 13,
-          },
-          {
-            Article: 0,
-            Bioinformatics: 4,
-            Dataset: 5,
-            'Lab Resource': 7,
-            Protocol: 9,
-          },
-        ],
-        nbPages: 1,
-      }),
+      search: jest
+        .fn()
+        .mockResolvedValueOnce({
+          hits: [
+            { objectID: 'old-performance-1' },
+            { objectID: 'old-performance-2' },
+            { objectID: 'old-performance-3' },
+          ],
+        })
+        .mockResolvedValue({
+          hits: [
+            {
+              Article: 19,
+              Bioinformatics: 1,
+              Dataset: 2,
+              'Lab Resource': 4,
+              Protocol: 0,
+            },
+            {
+              Article: 20,
+              Bioinformatics: 10,
+              Dataset: 30,
+              'Lab Resource': 13,
+              Protocol: 10,
+            },
+            {
+              Article: 5,
+              Bioinformatics: 7,
+              Dataset: 8,
+              'Lab Resource': 20,
+              Protocol: 13,
+            },
+            {
+              Article: 0,
+              Bioinformatics: 4,
+              Dataset: 5,
+              'Lab Resource': 7,
+              Protocol: 9,
+            },
+          ],
+          nbPages: 1,
+        }),
       deleteObjects: jest.fn(),
       saveObject: jest.fn().mockResolvedValue({}),
     } as unknown as SearchIndex;
 
     await processTeamProductivityPerformance(mockIndex);
+
+    expect(mockIndex.deleteObjects).toHaveBeenCalledWith([
+      'old-performance-1',
+      'old-performance-2',
+      'old-performance-3',
+    ]);
 
     timeRanges.forEach((range) => {
       expect(mockIndex.search).toHaveBeenCalledWith('', {

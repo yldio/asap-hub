@@ -7,9 +7,9 @@ import {
   getAllHits,
   getBellCurveMetrics,
   getStandardDeviation,
-  processTeamProductivityMetrics,
-  processUserProductivityMetrics,
-} from '../process-productivity-metrics';
+  processTeamProductivityPerformance,
+  processUserProductivityPerformance,
+} from '../process-productivity-performance';
 
 describe('getStandardDeviation', () => {
   it('should return 0 for an empty array', () => {
@@ -70,13 +70,13 @@ describe('deletePreviousObjects', () => {
 
     await deletePreviousObjects(mockIndex, 'user-productivity');
     expect(mockIndex.search).toHaveBeenCalledWith('', {
-      filters: '__meta.type:"user-productivity-metrics"',
+      filters: '__meta.type:"user-productivity-performance"',
     });
     expect(mockIndex.deleteObjects).toHaveBeenCalledWith(['1', '2']);
   });
 });
 
-describe('processUserProductivityMetrics', () => {
+describe('processUserProductivityPerformance', () => {
   it('should process user productivity metrics', async () => {
     const mockIndex = {
       search: jest.fn().mockResolvedValue({
@@ -103,7 +103,7 @@ describe('processUserProductivityMetrics', () => {
       saveObject: jest.fn().mockResolvedValue({}),
     } as unknown as SearchIndex;
 
-    await processUserProductivityMetrics(mockIndex);
+    await processUserProductivityPerformance(mockIndex);
 
     timeRanges.forEach((range) => {
       expect(mockIndex.search).toHaveBeenCalledWith('', {
@@ -118,7 +118,7 @@ describe('processUserProductivityMetrics', () => {
     expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
     expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
       {
-        __meta: { range: 'all', type: 'user-productivity-metrics' },
+        __meta: { range: 'all', type: 'user-productivity-performance' },
         asapOutput: {
           aboveAverageMax: 2,
           aboveAverageMin: 3,
@@ -149,7 +149,7 @@ describe('processUserProductivityMetrics', () => {
   });
 });
 
-describe('processTeamProductivityMetrics', () => {
+describe('processTeamProductivityPerformance', () => {
   it('should process team productivity metrics', async () => {
     const mockIndex = {
       search: jest.fn().mockResolvedValue({
@@ -189,7 +189,7 @@ describe('processTeamProductivityMetrics', () => {
       saveObject: jest.fn().mockResolvedValue({}),
     } as unknown as SearchIndex;
 
-    await processTeamProductivityMetrics(mockIndex);
+    await processTeamProductivityPerformance(mockIndex);
 
     timeRanges.forEach((range) => {
       expect(mockIndex.search).toHaveBeenCalledWith('', {
@@ -204,7 +204,7 @@ describe('processTeamProductivityMetrics', () => {
     expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
     expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
       {
-        __meta: { range: 'all', type: 'team-productivity-metrics' },
+        __meta: { range: 'all', type: 'team-productivity-performance' },
         article: {
           aboveAverageMax: 20,
           aboveAverageMin: 20,

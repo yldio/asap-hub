@@ -19,7 +19,7 @@
     "algolia:delete-index": "yarn workspace @asap-hub/asap-cli algolia:delete-index",
     "algolia:get-settings": "yarn workspace @asap-hub/asap-cli algolia:get-settings",
     "algolia:move-index": "yarn workspace @asap-hub/asap-cli algolia:move-index",
-    "algolia:process-productivity-metrics": "yarn workspace @asap-hub/asap-cli algolia:process-productivity-metrics",
+    "algolia:process-productivity-performance": "yarn workspace @asap-hub/asap-cli algolia:process-productivity-performance",
     "algolia:remove-records": "yarn workspace @asap-hub/asap-cli algolia:remove-records",
     "algolia:set-settings": "yarn workspace @asap-hub/asap-cli algolia:set-settings",
     "algolia:set-analytics-settings": "yarn workspace @asap-hub/asap-cli algolia:set-analytics-settings",

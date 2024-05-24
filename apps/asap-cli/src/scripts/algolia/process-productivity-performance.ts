@@ -99,13 +99,15 @@ export const deletePreviousObjects = async (
   type: 'user-productivity' | 'team-productivity',
 ) => {
   const previous = await index.search('', {
-    filters: `__meta.type:"${type}-metrics"`,
+    filters: `__meta.type:"${type}-performance"`,
   });
   const objectIDs = previous.hits.map(({ objectID }) => objectID);
   await index.deleteObjects(objectIDs);
 };
 
-export const processUserProductivityMetrics = async (index: SearchIndex) => {
+export const processUserProductivityPerformance = async (
+  index: SearchIndex,
+) => {
   const type = 'user-productivity' as const;
   await deletePreviousObjects(index, type);
 
@@ -123,7 +125,7 @@ export const processUserProductivityMetrics = async (index: SearchIndex) => {
 
     const fields = ['asapOutput', 'asapPublicOutput', 'ratio'];
 
-    const userMetrics = fields.reduce(
+    const userPerformance = fields.reduce(
       (metrics, field) => {
         if (field === 'ratio') {
           return {
@@ -149,10 +151,10 @@ export const processUserProductivityMetrics = async (index: SearchIndex) => {
 
     await index.saveObject(
       {
-        ...userMetrics,
+        ...userPerformance,
         __meta: {
           range,
-          type: `${type}-metrics`,
+          type: `${type}-performance`,
         },
       },
       { autoGenerateObjectIDIfNotExist: true },
@@ -160,7 +162,9 @@ export const processUserProductivityMetrics = async (index: SearchIndex) => {
   });
 };
 
-export const processTeamProductivityMetrics = async (index: SearchIndex) => {
+export const processTeamProductivityPerformance = async (
+  index: SearchIndex,
+) => {
   const type = 'team-productivity' as const;
 
   await deletePreviousObjects(index, type);
@@ -185,7 +189,7 @@ export const processTeamProductivityMetrics = async (index: SearchIndex) => {
       { name: 'Protocol', documentType: 'protocol' },
     ];
 
-    const teamMetricsByDocumentType = fields.reduce(
+    const teamPerformanceByDocumentType = fields.reduce(
       (metrics, { name, documentType }) => ({
         ...metrics,
         [documentType]: getBellCurveMetrics(
@@ -199,10 +203,10 @@ export const processTeamProductivityMetrics = async (index: SearchIndex) => {
 
     await index.saveObject(
       {
-        ...teamMetricsByDocumentType,
+        ...teamPerformanceByDocumentType,
         __meta: {
           range,
-          type: `${type}-metrics`,
+          type: `${type}-performance`,
         },
       },
       { autoGenerateObjectIDIfNotExist: true },
@@ -210,21 +214,21 @@ export const processTeamProductivityMetrics = async (index: SearchIndex) => {
   });
 };
 
-export type ProcessProductivityMetrics = {
+export type ProcessProductivityPerformance = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
 };
 
 /* istanbul ignore next */
-export const processProductivityMetrics = async ({
+export const processProductivityPerformance = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
-}: ProcessProductivityMetrics): Promise<void> => {
+}: ProcessProductivityPerformance): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);
 
-  await processUserProductivityMetrics(index);
-  await processTeamProductivityMetrics(index);
+  await processUserProductivityPerformance(index);
+  await processTeamProductivityPerformance(index);
 };

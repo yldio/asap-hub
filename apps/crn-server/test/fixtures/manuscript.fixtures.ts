@@ -11,6 +11,7 @@ export const getManuscriptDataObject = (
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
   teamId: 'team-1',
+  versions: [],
   ...data,
 });
 

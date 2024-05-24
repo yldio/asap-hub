@@ -50,11 +50,17 @@ const appNameOption = {
   demandOption: trueType,
 };
 
+enum ProductivityMetricOption {
+  all = 'all',
+  'team-productivity' = 'team-productivity',
+  'user-productivity' = 'user-productivity',
+}
+
 const productivityMetricOption = {
   alias: 'm',
   description: 'Productivity Metric',
-  choices: ['all', 'user-productivity', 'team-productivity'],
-  default: 'all',
+  choices: Object.values(ProductivityMetricOption),
+  default: ProductivityMetricOption.all,
 };
 
 type BaseArguments = {
@@ -64,7 +70,7 @@ type BaseArguments = {
 
 interface ProcessProductivityPerformanceArguments extends BaseArguments {
   index: string;
-  metric: string;
+  metric: 'all' | 'user-productivity' | 'team-productivity';
 }
 
 interface DeleteIndexArguments extends BaseArguments {

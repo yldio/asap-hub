@@ -226,7 +226,7 @@ export type ProcessProductivityPerformance = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
-  metric: string;
+  metric: 'all' | 'user-productivity' | 'team-productivity';
 };
 
 /* istanbul ignore next */

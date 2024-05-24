@@ -226,6 +226,7 @@ export type ProcessProductivityPerformance = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
+  metric: 'all' | 'user-productivity' | 'team-productivity';
 };
 
 /* istanbul ignore next */
@@ -233,10 +234,16 @@ export const processProductivityPerformance = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
+  metric,
 }: ProcessProductivityPerformance): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
   const index = client.initIndex(indexName);
 
-  await processUserProductivityPerformance(index);
-  await processTeamProductivityPerformance(index);
+  if (metric === 'all' || metric === 'user-productivity') {
+    await processUserProductivityPerformance(index);
+  }
+
+  if (metric === 'all' || metric === 'team-productivity') {
+    await processTeamProductivityPerformance(index);
+  }
 };

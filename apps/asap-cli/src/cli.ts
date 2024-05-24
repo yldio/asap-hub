@@ -50,6 +50,19 @@ const appNameOption = {
   demandOption: trueType,
 };
 
+enum ProductivityMetricOption {
+  all = 'all',
+  'team-productivity' = 'team-productivity',
+  'user-productivity' = 'user-productivity',
+}
+
+const productivityMetricOption = {
+  alias: 'm',
+  description: 'Productivity Metric',
+  choices: Object.values(ProductivityMetricOption),
+  default: ProductivityMetricOption.all,
+};
+
 type BaseArguments = {
   appid: string;
   apikey: string;
@@ -57,6 +70,7 @@ type BaseArguments = {
 
 interface ProcessProductivityPerformanceArguments extends BaseArguments {
   index: string;
+  metric: 'all' | 'user-productivity' | 'team-productivity';
 }
 
 interface DeleteIndexArguments extends BaseArguments {
@@ -99,12 +113,14 @@ yargs(hideBin(process.argv))
       cli
         .option('appid', appIdOption)
         .option('apikey', apikeyOption)
-        .option('index', indexOption),
-    handler: async ({ index, appid, apikey }) =>
+        .option('index', indexOption)
+        .option('metric', productivityMetricOption),
+    handler: async ({ index, appid, apikey, metric }) =>
       processProductivityPerformance({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
+        metric,
       }),
   })
   .command<DeleteIndexArguments>({

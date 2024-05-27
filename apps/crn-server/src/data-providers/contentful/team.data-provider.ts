@@ -302,8 +302,13 @@ export const parseContentfulGraphQlTeam = (
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
     manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
-      (manuscript) =>
-        ({ id: manuscript.sys.id, title: manuscript.title }) as TeamManuscript,
+      (manuscript): TeamDataObject['manuscripts'][number] => ({
+        id: manuscript.sys.id,
+        title: manuscript.title || '',
+        versions: [
+          { lifecycle: 'Draft manuscript', type: 'Original Research' },
+        ],
+      }),
     ),
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort(sortMembers),

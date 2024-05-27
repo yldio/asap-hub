@@ -40,6 +40,27 @@ export const FETCH_TEAM_BY_ID = gql`
               id
             }
             title
+            versionsCollection(limit: 20, order: sys_publishedAt_DESC) {
+              items {
+                sys {
+                  id
+                }
+                version
+                createdDate
+                updatedDate
+                filesCollection(limit: 20) {
+                  items {
+                    sys {
+                      id
+                    }
+                    url
+                    filename
+                    size
+                    mimeType
+                  }
+                }
+              }
+            }
           }
         }
         teamMembershipCollection(limit: 100) {

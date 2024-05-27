@@ -66,4 +66,10 @@ const parseGraphQLManuscript = (
   id: manuscripts.sys.id,
   title: manuscripts.title || '',
   teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
+  versions: [
+    {
+      lifecycle: 'Draft manuscript',
+      type: 'Original Research',
+    },
+  ],
 });

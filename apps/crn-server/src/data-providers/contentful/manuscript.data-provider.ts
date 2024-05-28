@@ -50,12 +50,30 @@ export class ManuscriptContentfulDataProvider
   async create(input: ManuscriptCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
-    const { teamId, ...plainFields } = input;
+    const {
+      teamId,
+      versions: [version],
+      ...plainFields
+    } = input;
+
+    const manuscriptVersionEntry = await environment.createEntry(
+      'manuscriptVersions',
+      {
+        fields: addLocaleToFields({
+          ...version,
+        }),
+      },
+    );
+
+    await manuscriptVersionEntry.publish();
+
+    const { id: manuscriptVersionId } = manuscriptVersionEntry.sys;
 
     const manuscriptEntry = await environment.createEntry('manuscripts', {
       fields: addLocaleToFields({
         ...plainFields,
         teams: getLinkEntities([teamId]),
+        versions: getLinkEntities([manuscriptVersionId]),
       }),
     });
 

@@ -37,7 +37,7 @@ export type ManuscriptResponse = ManuscriptDataObject;
 
 export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,
-  'title' | 'teamId'
+  'title' | 'teamId' | 'versions'
 >;
 
 export type ManuscriptCreateDataObject = ManuscriptPostRequest;
@@ -48,7 +48,21 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
     properties: {
       title: { type: 'string' },
       teamId: { type: 'string' },
+      versions: {
+        type: 'array',
+        maxItems: 1,
+        minItems: 1,
+        items: {
+          type: 'object',
+          properties: {
+            type: { enum: manuscriptTypes, type: 'string' },
+            lifecycle: { enum: manuscriptLifecycles, type: 'string' },
+          },
+          required: ['type', 'lifecycle'],
+          additionalProperties: false,
+        },
+      },
     },
-    required: ['title'],
+    required: ['title', 'teamId', 'versions'],
     additionalProperties: false,
   };

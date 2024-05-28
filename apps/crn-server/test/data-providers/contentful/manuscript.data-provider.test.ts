@@ -4,6 +4,7 @@ import {
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
+import { when } from 'jest-when';
 
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import {
@@ -29,7 +30,8 @@ describe('Manuscripts Contentful Data Provider', () => {
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
       Manuscripts: () => getContentfulGraphqlManuscripts(),
-      ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
+      ManuscriptsVersionsCollection: () =>
+        getContentfulGraphqlManuscriptVersions(),
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -83,16 +85,41 @@ describe('Manuscripts Contentful Data Provider', () => {
   describe('Create', () => {
     test('can create a manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
+      const manuscriptVersionId = 'manuscript-version-id-1';
       const publish = jest.fn();
-      environmentMock.createEntry.mockResolvedValue({
-        sys: { id: manuscriptId },
-        publish,
-      } as unknown as Entry);
 
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('manuscripts', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptId },
+          publish,
+        } as unknown as Entry);
+
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       const result = await manuscriptDataProvider.create(
-        getManuscriptCreateDataObject(),
+        manuscriptCreateDataObject,
       );
 
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'manuscriptVersions',
+        {
+          fields: {
+            type: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.type,
+            },
+            lifecycle: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
+            },
+          },
+        },
+      );
       expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
         fields: {
           title: {
@@ -103,6 +130,17 @@ describe('Manuscripts Contentful Data Provider', () => {
               {
                 sys: {
                   id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+          versions: {
+            'en-US': [
+              {
+                sys: {
+                  id: manuscriptVersionId,
                   linkType: 'Entry',
                   type: 'Link',
                 },

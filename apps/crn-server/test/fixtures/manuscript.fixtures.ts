@@ -22,7 +22,7 @@ export const getManuscriptDataObject = (
 
 export const getManuscriptResponse = (
   data: Partial<ManuscriptDataObject> = {},
-): ManuscriptResponse => getManuscriptDataObject(data) as ManuscriptResponse;
+): ManuscriptResponse => getManuscriptDataObject(data);
 
 export const getContentfulGraphqlManuscripts = (
   props: Partial<
@@ -50,7 +50,7 @@ export const getContentfulGraphqlManuscriptVersions = () => ({
 });
 
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
-  const { title, teamId } = getManuscriptDataObject();
+  const { title, teamId, versions } = getManuscriptDataObject();
 
-  return { title, teamId };
+  return { title, teamId, versions };
 };

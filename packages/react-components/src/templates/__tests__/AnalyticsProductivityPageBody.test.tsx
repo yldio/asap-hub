@@ -7,6 +7,7 @@ describe('AnalyticsProductivityPageBody', () => {
     setMetric: () => null,
     metric: 'user',
     timeRange: '30d',
+    currentPage: 5,
     children: <span>table</span>,
   };
   it('renders user tab', () => {

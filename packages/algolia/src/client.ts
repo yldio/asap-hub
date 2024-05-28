@@ -4,6 +4,7 @@ import {
   SearchResponse,
 } from '@algolia/client-search';
 import {
+  AnalyticsTeamLeadershipResponse,
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
@@ -11,21 +12,24 @@ import {
   NewsResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
+  TeamProductivityPerformance,
+  TeamProductivityResponse,
+  TimeRangeOption,
   TutorialsResponse,
   UserListItemResponse,
+  UserProductivityPerformance,
+  UserProductivityResponse,
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
-  AnalyticsTeamLeadershipResponse,
-  UserProductivityResponse,
-  TeamProductivityResponse,
-  TimeRangeOption,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
   TEAM_LEADERSHIP,
   TEAM_PRODUCTIVITY,
+  TEAM_PRODUCTIVITY_PERFORMANCE,
   USER_PRODUCTIVITY,
+  USER_PRODUCTIVITY_PERFORMANCE,
 } from './analytics';
 import {
   EVENT_ENTITY_TYPE,
@@ -108,6 +112,8 @@ export type EntityResponses = {
     [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
     [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
     [USER_PRODUCTIVITY]: UserProductivityResponse;
+    [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
+    [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;

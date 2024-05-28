@@ -1,5 +1,7 @@
+import { userProductivityPerformance } from '@asap-hub/fixtures';
 import { TeamRole, UserProductivityResponse } from '@asap-hub/model';
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import UserProductivityTable from '../UserProductivityTable';
 
 describe('UserProductivityTable', () => {
@@ -7,6 +9,12 @@ describe('UserProductivityTable', () => {
     numberOfPages: 1,
     currentPageIndex: 0,
     renderPageHref: () => '',
+  };
+
+  const defaultProps: ComponentProps<typeof UserProductivityTable> = {
+    ...pageControlsProps,
+    performance: userProductivityPerformance,
+    data: [],
   };
 
   const userTeam: UserProductivityResponse['teams'][number] = {
@@ -22,15 +30,28 @@ describe('UserProductivityTable', () => {
     teams: [userTeam],
     asapOutput: 1,
     asapPublicOutput: 2,
-    ratio: '0.50',
+    ratio: '0.10',
   };
 
   it('renders data', () => {
     const data = [user];
     const { getByText } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByText('Test User')).toBeInTheDocument();
+  });
+
+  it('displays the caption and icon in row values', () => {
+    const data = [user];
+    const { getByText, getAllByTitle } = render(
+      <UserProductivityTable {...defaultProps} data={data} />,
+    );
+    expect(getByText('ASAP Output:')).toBeVisible();
+    expect(getByText('ASAP Public Output:')).toBeVisible();
+    expect(getByText('Ratio:')).toBeVisible();
+    expect(getAllByTitle('Below Average').length).toEqual(5);
+    expect(getAllByTitle('Average').length).toEqual(4);
+    expect(getAllByTitle('Above Average').length).toEqual(3);
   });
 
   it('displays alumni badge', () => {
@@ -41,7 +62,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Alumni Member')).toBeInTheDocument();
   });
@@ -54,7 +75,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -70,7 +91,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByText('Multiple teams')).toBeInTheDocument();
   });
@@ -86,7 +107,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByText('Multiple roles')).toBeInTheDocument();
   });
@@ -99,7 +120,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByText('No team')).toBeInTheDocument();
   });
@@ -112,7 +133,7 @@ describe('UserProductivityTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserProductivityTable data={data} {...pageControlsProps} />,
+      <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByText('No role')).toBeInTheDocument();
   });

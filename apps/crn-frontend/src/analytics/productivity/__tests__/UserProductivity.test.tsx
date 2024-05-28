@@ -2,6 +2,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { userProductivityPerformance } from '@asap-hub/fixtures';
 import {
   ListUserProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
@@ -11,7 +12,7 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getUserProductivity } from '../api';
+import { getUserProductivity, getUserProductivityPerformance } from '../api';
 import { analyticsUserProductivityState } from '../state';
 import UserProductivity from '../UserProductivity';
 
@@ -25,6 +26,11 @@ const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
 
+const mockGetUserProductivityPerformance =
+  getUserProductivityPerformance as jest.MockedFunction<
+    typeof getUserProductivityPerformance
+  >;
+
 const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
   team: 'Team A',
   isTeamInactive: false,
@@ -32,7 +38,7 @@ const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
   role: 'Collaborating PI',
 };
 
-const data: ListUserProductivityAlgoliaResponse = {
+const userProductivity: ListUserProductivityAlgoliaResponse = {
   total: 2,
   items: [
     {
@@ -91,9 +97,12 @@ const renderPage = async () => {
 };
 
 it('renders the user productivity data', async () => {
-  mockGetUserProductivity.mockResolvedValueOnce(data);
+  mockGetUserProductivity.mockResolvedValueOnce(userProductivity);
+  mockGetUserProductivityPerformance.mockResolvedValueOnce(
+    userProductivityPerformance,
+  );
 
-  const { container, getAllByText } = await renderPage();
+  const { container, getAllByText, getAllByTitle } = await renderPage();
   expect(container).toHaveTextContent('Ted Mosby');
   expect(container).toHaveTextContent('Collaborating PI');
   expect(container).toHaveTextContent('Robin Scherbatsky');
@@ -103,4 +112,7 @@ it('renders the user productivity data', async () => {
   expect(getAllByText('4')).toHaveLength(1);
   expect(getAllByText('0.33')).toHaveLength(1);
   expect(getAllByText('0.25')).toHaveLength(1);
+  expect(getAllByTitle('Below Average').length).toEqual(3);
+  expect(getAllByTitle('Average').length).toEqual(9);
+  expect(getAllByTitle('Above Average').length).toEqual(3);
 });

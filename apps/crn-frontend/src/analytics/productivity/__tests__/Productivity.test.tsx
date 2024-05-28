@@ -1,5 +1,9 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
+  teamProductivityPerformance,
+  userProductivityPerformance,
+} from '@asap-hub/fixtures';
+import {
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
@@ -14,7 +18,9 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   getTeamProductivity,
+  getTeamProductivityPerformance,
   getUserProductivity,
+  getUserProductivityPerformance,
   ProductivityListOptions,
 } from '../api';
 import Productivity from '../Productivity';
@@ -30,9 +36,26 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
 
+const mockGetTeamProductivityPerformance =
+  getTeamProductivityPerformance as jest.MockedFunction<
+    typeof getTeamProductivityPerformance
+  >;
+
 const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
+
+const mockGetUserProductivityPerformance =
+  getUserProductivityPerformance as jest.MockedFunction<
+    typeof getUserProductivityPerformance
+  >;
+
+mockGetTeamProductivityPerformance.mockResolvedValue(
+  teamProductivityPerformance,
+);
+mockGetUserProductivityPerformance.mockResolvedValue(
+  userProductivityPerformance,
+);
 
 const defaultOptions: ProductivityListOptions = {
   pageSize: 10,

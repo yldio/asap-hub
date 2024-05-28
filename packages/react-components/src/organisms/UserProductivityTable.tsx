@@ -1,13 +1,17 @@
-import { UserProductivityResponse } from '@asap-hub/model';
+import {
+  UserProductivityPerformance,
+  UserProductivityResponse,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls } from '..';
+import { CaptionCard, CaptionItem, PageControls } from '..';
 
 import { Card } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
 import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
 import { rem, tabletScreen } from '../pixels';
+import { getPerformanceIcon } from '../utils';
 
 const container = css({
   display: 'grid',
@@ -55,6 +59,13 @@ const rowStyles = css({
 });
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+
+const rowValueStyles = css({
+  display: 'flex',
+  gap: rem(6),
+  fontWeight: 400,
+});
+
 const counterStyle = css({
   display: 'inline-flex',
   color: lead.rgb,
@@ -119,13 +130,25 @@ const displayRoles = (items: UserProductivityResponse['teams']) => {
 
 type UserProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: UserProductivityResponse[];
+  performance: UserProductivityPerformance;
 };
 
 const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
   data,
+  performance,
   ...pageControlProps
 }) => (
   <>
+    <CaptionCard>
+      <>
+        <CaptionItem label="ASAP Output" {...performance.asapOutput} />
+        <CaptionItem
+          label="ASAP Public Output"
+          {...performance.asapPublicOutput}
+        />
+        <CaptionItem label="Ratio" {...performance.ratio} />
+      </>
+    </CaptionCard>
     <Card padding={false}>
       <div css={container}>
         <div css={[rowStyles, gridTitleStyles]}>
@@ -147,11 +170,23 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
             <span css={[titleStyles, rowTitleStyles]}>Role</span>
             <p>{displayRoles(row.teams)}</p>
             <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
-            <p>{row.asapOutput}</p>
+            <p css={rowValueStyles}>
+              {row.asapOutput}{' '}
+              {getPerformanceIcon(row.asapOutput, performance.asapOutput)}
+            </p>
             <span css={[titleStyles, rowTitleStyles]}>ASAP Public Output</span>
-            <p>{row.asapPublicOutput}</p>
+            <p css={rowValueStyles}>
+              {row.asapPublicOutput}{' '}
+              {getPerformanceIcon(
+                row.asapPublicOutput,
+                performance.asapPublicOutput,
+              )}
+            </p>
             <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
-            <p>{row.ratio}</p>
+            <p css={rowValueStyles}>
+              {row.ratio}{' '}
+              {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
+            </p>
           </div>
         ))}
       </div>

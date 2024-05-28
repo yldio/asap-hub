@@ -2,7 +2,10 @@ import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
   TeamProductivityAlgoliaResponse,
+  TeamProductivityPerformance,
+  TimeRangeOption,
   UserProductivityAlgoliaResponse,
+  UserProductivityPerformance,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -14,7 +17,9 @@ import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
   getTeamProductivity,
+  getTeamProductivityPerformance,
   getUserProductivity,
+  getUserProductivityPerformance,
   ProductivityListOptions,
 } from './api';
 
@@ -95,6 +100,52 @@ export const useAnalyticsUserProductivity = (
     throw userProductivity;
   }
   return userProductivity;
+};
+
+export const userProductivityPerformanceState = atomFamily<
+  UserProductivityPerformance | undefined,
+  string
+>({
+  key: 'analyticsUserProductivityPerformance',
+  default: undefined,
+});
+
+export const useUserProductivityPerformance = (timeRange: TimeRangeOption) => {
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const [userProductivityPerformance, setUserProductivityPerformance] =
+    useRecoilState(userProductivityPerformanceState(timeRange));
+  if (userProductivityPerformance === undefined) {
+    throw getUserProductivityPerformance(algoliaClient.client, timeRange)
+      .then(setUserProductivityPerformance)
+      .catch(setUserProductivityPerformance);
+  }
+  if (userProductivityPerformance instanceof Error) {
+    throw userProductivityPerformance;
+  }
+  return userProductivityPerformance;
+};
+
+export const teamProductivityPerformanceState = atomFamily<
+  TeamProductivityPerformance | undefined,
+  string
+>({
+  key: 'analyticsTeamProductivityPerformance',
+  default: undefined,
+});
+
+export const useTeamProductivityPerformance = (timeRange: TimeRangeOption) => {
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const [teamProductivityPerformance, setTeamProductivityPerformance] =
+    useRecoilState(teamProductivityPerformanceState(timeRange));
+  if (teamProductivityPerformance === undefined) {
+    throw getTeamProductivityPerformance(algoliaClient.client, timeRange)
+      .then(setTeamProductivityPerformance)
+      .catch(setTeamProductivityPerformance);
+  }
+  if (teamProductivityPerformance instanceof Error) {
+    throw teamProductivityPerformance;
+  }
+  return teamProductivityPerformance;
 };
 
 const analyticsTeamProductivityIndexState = atomFamily<

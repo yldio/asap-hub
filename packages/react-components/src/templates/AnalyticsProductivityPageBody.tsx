@@ -20,7 +20,7 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 
 type LeadershipAndMembershipAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange'
+  'timeRange' | 'currentPage'
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
@@ -42,7 +42,7 @@ const controlsStyles = css({
 
 const AnalyticsProductivityPageBody: React.FC<
   LeadershipAndMembershipAnalyticsProps
-> = ({ metric, setMetric, timeRange, children }) => (
+> = ({ metric, setMetric, timeRange, currentPage, children }) => (
   <article>
     <div css={metricDropdownStyles}>
       <Subtitle>Metric</Subtitle>
@@ -55,6 +55,7 @@ const AnalyticsProductivityPageBody: React.FC<
     </div>
     <div css={controlsStyles}>
       <AnalyticsControls
+        currentPage={currentPage}
         timeRange={timeRange}
         href={analytics({}).productivity({}).metric({ metric }).$}
       />

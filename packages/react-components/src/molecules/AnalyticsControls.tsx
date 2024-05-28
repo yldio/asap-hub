@@ -36,9 +36,11 @@ const timeRangeOptions: Record<TimeRangeOption, string> = {
 interface AnalyticsControlsProps {
   readonly timeRange: TimeRangeOption;
   readonly href: string;
+  readonly currentPage: number;
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
+  currentPage,
   href,
 }) => (
   <span css={containerStyles}>
@@ -56,7 +58,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
     >
       {Object.keys(timeRangeOptions).map((key) => ({
         item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-        href: `${href}?range=${key}`,
+        href: `${href}?range=${key}&currentPage=${currentPage}`,
       }))}
     </DropdownButton>
   </span>

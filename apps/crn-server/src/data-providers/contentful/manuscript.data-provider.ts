@@ -11,6 +11,11 @@ import {
   ListResponse,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptLifecycle,
+  manuscriptLifecycles,
+  ManuscriptType,
+  manuscriptTypes,
+  ManuscriptVersion,
 } from '@asap-hub/model';
 
 import { ManuscriptDataProvider } from '../types';
@@ -66,10 +71,27 @@ const parseGraphQLManuscript = (
   id: manuscripts.sys.id,
   title: manuscripts.title || '',
   teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
-  versions: [
-    {
-      lifecycle: 'Draft manuscript',
-      type: 'Original Research',
-    },
-  ],
+  versions: parseGraphqlManuscriptVersion(
+    manuscripts.versionsCollection?.items || [],
+  ),
 });
+
+export const parseGraphqlManuscriptVersion = (
+  versions: NonNullable<ManuscriptItem['versionsCollection']>['items'],
+): ManuscriptVersion[] =>
+  versions
+    .map((version) => ({
+      type: version?.type,
+      lifecycle: version?.lifecycle,
+    }))
+    .filter(
+      (version): version is ManuscriptVersion =>
+        (version &&
+          version.type &&
+          manuscriptTypes.includes(version.type as ManuscriptType) &&
+          version.lifecycle &&
+          manuscriptLifecycles.includes(
+            version.lifecycle as ManuscriptLifecycle,
+          )) ||
+        false,
+    ) ?? [];

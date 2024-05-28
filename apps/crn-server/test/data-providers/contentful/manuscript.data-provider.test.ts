@@ -8,6 +8,7 @@ import { GraphQLError } from 'graphql';
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import {
   getContentfulGraphqlManuscripts,
+  getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
 } from '../../fixtures/manuscript.fixtures';
@@ -28,6 +29,7 @@ describe('Manuscripts Contentful Data Provider', () => {
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
       Manuscripts: () => getContentfulGraphqlManuscripts(),
+      ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
     });
 
   const manuscriptDataProviderMockGraphql =

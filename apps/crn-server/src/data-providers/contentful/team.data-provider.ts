@@ -7,7 +7,6 @@ import {
   TeamListItemDataObject,
   ListTeamDataObject,
   TeamRole,
-  TeamManuscript,
 } from '@asap-hub/model';
 
 import {
@@ -31,6 +30,7 @@ import {
   TeamDataProvider,
 } from '../types/teams.data-provider.types';
 import { parseResearchTags } from './research-tag.data-provider';
+import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
 
 export type TeamByIdItem = NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
@@ -305,9 +305,9 @@ export const parseContentfulGraphQlTeam = (
       (manuscript): TeamDataObject['manuscripts'][number] => ({
         id: manuscript.sys.id,
         title: manuscript.title || '',
-        versions: [
-          { lifecycle: 'Draft manuscript', type: 'Original Research' },
-        ],
+        versions: parseGraphqlManuscriptVersion(
+          manuscript.versionsCollection?.items || [],
+        ),
       }),
     ),
     projectSummary: item.projectSummary ?? undefined,

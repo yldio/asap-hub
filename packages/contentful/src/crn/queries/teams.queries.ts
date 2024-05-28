@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { manuscriptContentQueryFragment } from './manuscript.queries';
 
 export const FETCH_TEAM_BY_ID = gql`
   query FetchTeamById($id: String!) {
@@ -36,31 +37,7 @@ export const FETCH_TEAM_BY_ID = gql`
       linkedFrom {
         manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
           items {
-            sys {
-              id
-            }
-            title
-            versionsCollection(limit: 20, order: sys_publishedAt_DESC) {
-              items {
-                sys {
-                  id
-                }
-                version
-                createdDate
-                updatedDate
-                filesCollection(limit: 20) {
-                  items {
-                    sys {
-                      id
-                    }
-                    url
-                    filename
-                    size
-                    mimeType
-                  }
-                }
-              }
-            }
+            ...ManuscriptsContent
           }
         }
         teamMembershipCollection(limit: 100) {
@@ -98,6 +75,7 @@ export const FETCH_TEAM_BY_ID = gql`
       }
     }
   }
+  ${manuscriptContentQueryFragment}
 `;
 
 export const FETCH_TEAMS = gql`

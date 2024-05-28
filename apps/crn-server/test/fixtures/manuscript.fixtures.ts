@@ -11,7 +11,12 @@ export const getManuscriptDataObject = (
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
   teamId: 'team-1',
-  versions: [],
+  versions: [
+    {
+      lifecycle: 'Preprint, version 1',
+      type: 'Original Research',
+    },
+  ],
   ...data,
 });
 
@@ -32,6 +37,16 @@ export const getContentfulGraphqlManuscripts = (
     items: [{ sys: { id: 'team-1' } }],
   },
   ...props,
+});
+
+export const getContentfulGraphqlManuscriptVersions = () => ({
+  items: [
+    {
+      sys: { id: 'version-1' },
+      type: 'Original Research',
+      lifecycle: 'Preprint, version 1',
+    },
+  ],
 });
 
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {

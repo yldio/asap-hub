@@ -1,12 +1,12 @@
 import { JSONSchemaType } from 'ajv';
 
-const manuscriptTypes = [
+export const manuscriptTypes = [
   'Original Research',
   'Review / Op-Ed / Letter / Hot Topic',
 ] as const;
-export type ManuscripType = (typeof manuscriptTypes)[number];
+export type ManuscriptType = (typeof manuscriptTypes)[number];
 
-const manuscriptLifecycles = [
+export const manuscriptLifecycles = [
   'Draft manuscript (prior to preprint submission)',
   'Draft manuscript',
   'Revised Draft Manuscript (prior to preprint submission)',
@@ -25,11 +25,11 @@ export type ManuscriptDataObject = {
   id: string;
   title: string;
   teamId: string;
-  versions: ManuScriptVersion[];
+  versions: ManuscriptVersion[];
 };
 
-export type ManuScriptVersion = {
-  type: ManuscripType;
+export type ManuscriptVersion = {
+  type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
 };
 

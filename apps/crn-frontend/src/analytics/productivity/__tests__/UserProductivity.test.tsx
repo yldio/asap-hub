@@ -74,6 +74,7 @@ const renderPage = async () => {
             currentPage: 0,
             pageSize: 10,
             timeRange: '30d',
+            sort: 'user_asc',
           }),
         );
       }}

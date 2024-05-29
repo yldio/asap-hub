@@ -45,6 +45,7 @@ const defaultOptions: ProductivityListOptions = {
   pageSize: null,
   currentPage: null,
   timeRange: '30d',
+  sort: 'user_asc',
 };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
@@ -147,10 +148,10 @@ describe('getTeamProductivity', () => {
   });
 
   it('returns successfully fetched team productivity', async () => {
-    const teamProductivity = await getTeamProductivity(
-      algoliaSearchClient,
-      defaultOptions,
-    );
+    const teamProductivity = await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      sort: 'team_asc',
+    });
     expect(teamProductivity).toEqual(
       expect.objectContaining({
         items: [
@@ -175,6 +176,7 @@ describe('getTeamProductivity', () => {
     await getTeamProductivity(algoliaSearchClient, {
       ...defaultOptions,
       timeRange,
+      sort: 'team_asc',
     });
 
     expect(search).toHaveBeenCalledWith(

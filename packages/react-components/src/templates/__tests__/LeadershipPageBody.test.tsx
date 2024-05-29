@@ -11,8 +11,8 @@ const pageControlProps = {
   renderPageHref: () => '',
 };
 
-const renderComponent = (props = {}) => {
-  return render(
+const renderComponent = (props = {}) =>
+  render(
     <AnalyticsLeadershipPageBody
       tags={[]}
       setTags={jest.fn()}
@@ -28,7 +28,7 @@ const renderComponent = (props = {}) => {
       {...pageControlProps}
     />,
   );
-};
+
 it('renders the selected metric', () => {
   renderComponent();
   expect(

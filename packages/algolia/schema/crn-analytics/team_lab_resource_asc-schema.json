@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "asc(Lab Resource)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

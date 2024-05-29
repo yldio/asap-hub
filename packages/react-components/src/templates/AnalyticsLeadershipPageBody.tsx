@@ -129,6 +129,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
       <Subtitle>Teams:</Subtitle>
       <span role="search" css={searchStyles}>
         <MultiSelect
+          noMargin
           leftIndicator={searchIcon}
           noOptionsMessage={() => 'No results found'}
           loadOptions={loadTags}

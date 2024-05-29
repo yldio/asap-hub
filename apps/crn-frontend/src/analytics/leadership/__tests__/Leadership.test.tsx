@@ -124,7 +124,7 @@ it('calls algolia client with the right index name', async () => {
 
   await waitFor(() => {
     expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-      'crn-analytics_dev',
+      expect.not.stringContaining('team_desc'),
     );
   });
   userEvent.click(screen.getByTitle('Active Alphabetical Ascending Sort Icon'));

@@ -5,13 +5,12 @@ export type AnalyticsSearchOptions = {
   currentPage: number | null;
   pageSize: number | null;
   tags: string[];
-}
+};
 
 export const getAnalyticsLeadership = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   { tags, currentPage, pageSize }: AnalyticsSearchOptions,
 ): Promise<ListAnalyticsTeamLeadershipResponse | undefined> => {
-
   const result = await algoliaClient.search(['team-leadership'], '', {
     tagFilters: [tags],
     filters: undefined,

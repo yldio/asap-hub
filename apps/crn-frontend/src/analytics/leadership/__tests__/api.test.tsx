@@ -1,8 +1,7 @@
 import nock from 'nock';
 import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { AnalyticsTeamLeadershipResponse } from '@asap-hub/model';
-import { getAnalyticsLeadership } from '../api';
+import { AnalyticsSearchOptions, getAnalyticsLeadership } from '../api';
 import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
@@ -35,11 +34,10 @@ describe('getMemberships', () => {
     search,
   } as unknown as AlgoliaSearchClient<'analytics'>;
 
-  const defaultOptions: GetListOptions = {
-    searchQuery: '',
+  const defaultOptions: AnalyticsSearchOptions = {
     pageSize: null,
     currentPage: null,
-    filters: new Set(),
+    tags: []
   };
 
   beforeEach(() => {
@@ -84,12 +82,14 @@ describe('getMemberships', () => {
   it('should pass the search query to Algolia', async () => {
     await getAnalyticsLeadership(algoliaSearchClient, {
       ...defaultOptions,
-      searchQuery: 'Alessi',
+      tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team-leadership'],
-      'Alessi',
-      expect.objectContaining({}),
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']]
+      }),
     );
   });
 

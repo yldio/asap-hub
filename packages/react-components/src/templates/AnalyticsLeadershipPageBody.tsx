@@ -127,7 +127,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
     </div>
     <div css={searchContainerStyles}>
       <Subtitle>Teams:</Subtitle>
-      <span css={searchStyles}>
+      <span role="search" css={searchStyles}>
         <MultiSelect
           leftIndicator={searchIcon}
           noOptionsMessage={() => 'No results found'}
@@ -138,7 +138,7 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
             value: tag,
           }))}
           key={`${tags.join('')}`} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
-          placeholder="Search for any tags..."
+          placeholder="Enter team names..."
         />
       </span>
     </div>

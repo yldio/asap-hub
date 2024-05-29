@@ -21,6 +21,52 @@ export const manuscriptLifecycles = [
 ] as const;
 export type ManuscriptLifecycle = (typeof manuscriptLifecycles)[number];
 
+export const manuscriptTypeLifecycles: {
+  lifecycle: ManuscriptLifecycle;
+  types: ManuscriptType[];
+}[] = [
+  {
+    lifecycle: 'Draft manuscript (prior to preprint submission)',
+    types: ['Original Research'],
+  },
+  {
+    lifecycle: 'Revised Draft Manuscript (prior to preprint submission)',
+    types: ['Original Research'],
+  },
+  { lifecycle: 'Preprint, version 1', types: ['Original Research'] },
+  { lifecycle: 'Preprint, version 2', types: ['Original Research'] },
+  { lifecycle: 'Preprint, version 3+', types: ['Original Research'] },
+  {
+    lifecycle: 'Typeset proof',
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
+  },
+  {
+    lifecycle: 'Publication',
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
+  },
+  {
+    lifecycle: 'Publication with addendum or corrigendum',
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
+  },
+  {
+    lifecycle: 'Draft manuscript',
+    types: ['Review / Op-Ed / Letter / Hot Topic'],
+  },
+  {
+    lifecycle: 'Revised Draft Manuscript',
+    types: ['Review / Op-Ed / Letter / Hot Topic'],
+  },
+  {
+    lifecycle: 'Other',
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
+  },
+];
+
+export type ManuscriptVersion = {
+  type: ManuscriptType;
+  lifecycle: ManuscriptLifecycle;
+};
+
 export type ManuscriptDataObject = {
   id: string;
   title: string;
@@ -28,17 +74,17 @@ export type ManuscriptDataObject = {
   versions: ManuscriptVersion[];
 };
 
-export type ManuscriptVersion = {
-  type: ManuscriptType;
-  lifecycle: ManuscriptLifecycle;
-};
-
 export type ManuscriptResponse = ManuscriptDataObject;
 
 export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,
-  'title' | 'teamId' | 'versions'
->;
+  'title' | 'teamId'
+> & {
+  versions: {
+    type: ManuscriptVersion['type'] | '';
+    lifecycle: ManuscriptVersion['lifecycle'] | '';
+  }[];
+};
 
 export type ManuscriptCreateDataObject = ManuscriptPostRequest;
 

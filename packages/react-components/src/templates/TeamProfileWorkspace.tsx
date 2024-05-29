@@ -2,7 +2,6 @@ import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { colors } from '..';
 
 import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
 import { formatDateAndTime } from '../date';
@@ -40,7 +39,6 @@ const manuscriptButtonStyles = css({
   alignSelf: 'center',
   gap: rem(8),
 });
-
 
 const toolContainerStyles = css({
   listStyle: 'none',

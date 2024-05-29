@@ -47,6 +47,8 @@ const CaptionItem: React.FC<CaptionItemProps> = ({
   const belowAverageCaption =
     belowAverageMax < 0 ? `- - -` : `${belowAverageMin} - ${belowAverageMax}`;
 
+  const averageMinPositive = averageMin < 0 ? 0 : averageMin;
+
   return (
     <div css={containerStyles}>
       <Subtitle noMargin>{label}:</Subtitle>
@@ -55,7 +57,9 @@ const CaptionItem: React.FC<CaptionItemProps> = ({
         {belowAverageIcon}
       </div>
       <div css={dataContainerStyles}>
-        <span css={dataTextStyles}>{`${averageMin} - ${averageMax}`}</span>
+        <span
+          css={dataTextStyles}
+        >{`${averageMinPositive} - ${averageMax}`}</span>
         {averageIcon}
       </div>
       <div css={dataContainerStyles}>

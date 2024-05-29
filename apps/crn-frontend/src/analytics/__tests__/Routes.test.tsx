@@ -1,4 +1,8 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import {
+  teamProductivityPerformance,
+  userProductivityPerformance,
+} from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import {
@@ -12,12 +16,17 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAnalyticsLeadership } from '../leadership/api';
-import { getTeamProductivity, getUserProductivity } from '../productivity/api';
 import {
   getTeamCollaboration,
   getUserCollaboration,
 } from '../collaboration/api';
+import { getAnalyticsLeadership } from '../leadership/api';
+import {
+  getTeamProductivity,
+  getTeamProductivityPerformance,
+  getUserProductivity,
+  getUserProductivityPerformance,
+} from '../productivity/api';
 import Analytics from '../Routes';
 
 jest.mock('../leadership/api');
@@ -36,15 +45,32 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
 
+const mockGetTeamProductivityPerformance =
+  getTeamProductivityPerformance as jest.MockedFunction<
+    typeof getTeamProductivityPerformance
+  >;
+
 const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
+const mockGetUserProductivityPerformance =
+  getUserProductivityPerformance as jest.MockedFunction<
+    typeof getUserProductivityPerformance
+  >;
+
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
+
+mockGetTeamProductivityPerformance.mockResolvedValue(
+  teamProductivityPerformance,
+);
+mockGetUserProductivityPerformance.mockResolvedValue(
+  userProductivityPerformance,
+);
 
 const renderPage = async (path: string) => {
   const { container } = render(
@@ -131,19 +157,54 @@ describe('Productivity', () => {
 
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
-});
 
-it('renders error message when user response is not a 2XX', async () => {
-  enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
-  mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
+  it('renders error message when the team performance response is not a 2XX', async () => {
+    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+    mockGetTeamProductivityPerformance.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
+    );
 
-  await renderPage(analytics({}).productivity({}).metric({ metric: 'user' }).$);
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    await waitFor(() => {
+      expect(mockGetTeamProductivityPerformance).toHaveBeenCalled();
+    });
 
-  await waitFor(() => {
-    expect(mockGetUserProductivity).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 
-  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  it('renders error message when user response is not a 2XX', async () => {
+    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+    mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetUserProductivity).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+
+  it('renders error message when the user performance response is not a 2XX', async () => {
+    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
+    mockGetUserProductivityPerformance.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
+    );
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetUserProductivityPerformance).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
 });
 
 describe('Leadership & Membership', () => {

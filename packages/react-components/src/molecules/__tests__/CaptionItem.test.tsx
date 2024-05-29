@@ -23,13 +23,34 @@ it('renders label, values and icons', () => {
   expect(screen.getByTitle('Above Average')).toBeInTheDocument();
 });
 
-it('render below average without numbers when belowAverageMax is negative', () => {
+it('renders below average without numbers when belowAverageMax is negative', () => {
   render(
     <CaptionItem
       label="ASAP Public Output"
       belowAverageMin={0}
       belowAverageMax={-1}
       averageMin={0}
+      averageMax={2}
+      aboveAverageMin={4}
+      aboveAverageMax={6}
+    />,
+  );
+  expect(screen.getByText('ASAP Public Output:')).toBeVisible();
+  expect(screen.getByText('- - -')).toBeVisible();
+  expect(screen.getByTitle('Below Average')).toBeInTheDocument();
+  expect(screen.getByText('0 - 2')).toBeVisible();
+  expect(screen.getByTitle('Average')).toBeInTheDocument();
+  expect(screen.getByText('4 - 6')).toBeVisible();
+  expect(screen.getByTitle('Above Average')).toBeInTheDocument();
+});
+
+it('renders average min as zero when it is negative', () => {
+  render(
+    <CaptionItem
+      label="ASAP Public Output"
+      belowAverageMin={-3}
+      belowAverageMax={-2}
+      averageMin={-1}
       averageMax={2}
       aboveAverageMin={4}
       aboveAverageMax={6}

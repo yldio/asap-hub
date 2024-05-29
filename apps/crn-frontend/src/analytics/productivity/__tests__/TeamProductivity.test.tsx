@@ -2,13 +2,14 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { teamProductivityPerformance } from '@asap-hub/fixtures';
 import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getTeamProductivity } from '../api';
+import { getTeamProductivity, getTeamProductivityPerformance } from '../api';
 import { analyticsTeamProductivityState } from '../state';
 import TeamProductivity from '../TeamProductivity';
 
@@ -21,6 +22,11 @@ afterEach(() => {
 const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
+
+const mockGetTeamProductivityPerformance =
+  getTeamProductivityPerformance as jest.MockedFunction<
+    typeof getTeamProductivityPerformance
+  >;
 
 const data: ListTeamProductivityAlgoliaResponse = {
   total: 2,
@@ -84,8 +90,11 @@ const renderPage = async () => {
 
 it('renders the team productivity data', async () => {
   mockGetTeamProductivity.mockResolvedValueOnce(data);
+  mockGetTeamProductivityPerformance.mockResolvedValueOnce(
+    teamProductivityPerformance,
+  );
 
-  const { container, getAllByText } = await renderPage();
+  const { container, getAllByText, getAllByTitle } = await renderPage();
   expect(container).toHaveTextContent('Team Alessi');
   expect(container).toHaveTextContent('Team De Camilli');
   expect(getAllByText('0')).toHaveLength(3);
@@ -94,4 +103,7 @@ it('renders the team productivity data', async () => {
   expect(getAllByText('3')).toHaveLength(1);
   expect(getAllByText('4')).toHaveLength(1);
   expect(getAllByText('5')).toHaveLength(1);
+  expect(getAllByTitle('Below Average').length).toEqual(12);
+  expect(getAllByTitle('Average').length).toEqual(7);
+  expect(getAllByTitle('Above Average').length).toEqual(6);
 });

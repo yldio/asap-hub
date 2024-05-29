@@ -10,6 +10,20 @@ export type PerformanceMetrics = {
   aboveAverageMax: number;
 };
 
+export type UserProductivityPerformance = {
+  asapOutput: PerformanceMetrics;
+  asapPublicOutput: PerformanceMetrics;
+  ratio: PerformanceMetrics;
+};
+
+export type TeamProductivityPerformance = {
+  article: PerformanceMetrics;
+  bioinformatics: PerformanceMetrics;
+  dataset: PerformanceMetrics;
+  labResource: PerformanceMetrics;
+  protocol: PerformanceMetrics;
+};
+
 export type SortLeadershipAndMembership =
   | 'team_asc'
   | 'team_desc'

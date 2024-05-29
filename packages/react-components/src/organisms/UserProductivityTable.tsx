@@ -1,6 +1,9 @@
 import {
+  SortUserProductivity,
+  userProductivityInitialSortingDirection,
   UserProductivityPerformance,
   UserProductivityResponse,
+  UserProductivitySortingDirection,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -10,7 +13,12 @@ import { CaptionCard, CaptionItem, PageControls } from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
-import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  alumniBadgeIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import { rem, tabletScreen } from '../pixels';
 import { getPerformanceIcon } from '../utils';
 
@@ -59,7 +67,14 @@ const rowStyles = css({
   },
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  gap: rem(8),
+});
+
 
 const rowValueStyles = css({
   display: 'flex',
@@ -93,6 +108,16 @@ const pageControlsStyles = css({
   justifySelf: 'center',
   paddingTop: rem(36),
   paddingBottom: rem(36),
+});
+
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
 });
 
 const displayTeams = (items: UserProductivityResponse['teams']) => {
@@ -132,14 +157,32 @@ const displayRoles = (items: UserProductivityResponse['teams']) => {
 type UserProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: UserProductivityResponse[];
   performance: UserProductivityPerformance;
+  sort: SortUserProductivity;
+  setSort: React.Dispatch<React.SetStateAction<SortUserProductivity>>;
+  sortingDirection: UserProductivitySortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<UserProductivitySortingDirection>
+  >;
 };
 
 const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
   data,
   performance,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   ...pageControlProps
-}) => (
-  <>
+}) => {
+  const isUserSortActive = sort.includes('user');
+  const isTeamSortActive = sort.includes('team');
+  const isRoleSortActive = sort.includes('role');
+  const isAsapOutputSortActive = sort.includes('asap_output');
+  const isAsapPublicOutputSortActive = sort.includes('asap_public_output');
+  const isRatioSortActive = sort.includes('ratio');
+
+  return (
+    <>
     <CaptionCard>
       <>
         <CaptionItem label="ASAP Output" {...performance.asapOutput} />
@@ -150,55 +193,202 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
         <CaptionItem label="Ratio" {...performance.ratio} />
       </>
     </CaptionCard>
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>User</span>
-          <span css={titleStyles}>Team</span>
-          <span css={titleStyles}>Role</span>
-          <span css={titleStyles}>ASAP Output</span>
-          <span css={titleStyles}>ASAP Public Output</span>
-          <span css={titleStyles}>Ratio</span>
-        </div>
-        {data.map((row) => (
-          <div key={row.id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>User</span>
-            <p css={iconStyles}>
-              <Link href={network({}).users({}).user({ userId: row.id }).$}>
+      <Card padding={false}>
+        <div css={container}>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}>
+              User
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isUserSortActive
+                    ? sortingDirection.user === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`user_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    user: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isUserSortActive}
+                  ascending={sortingDirection.user === 'asc'}
+                  description={'User'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Team
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isTeamSortActive
+                    ? sortingDirection.team === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`team_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    team: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isTeamSortActive}
+                  ascending={sortingDirection.team === 'asc'}
+                  description={'Team'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Role
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isRoleSortActive
+                    ? sortingDirection.role === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`role_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    role: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isRoleSortActive}
+                  ascending={sortingDirection.role === 'asc'}
+                  description={'Role'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              ASAP Output
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isAsapOutputSortActive
+                    ? sortingDirection.asapOutput === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`asap_output_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    asapOutput: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isAsapOutputSortActive}
+                  ascending={sortingDirection.asapOutput === 'asc'}
+                  description={'ASAP Output'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              ASAP Public Output
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isAsapPublicOutputSortActive
+                    ? sortingDirection.asapPublicOutput === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`asap_public_output_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    asapPublicOutput: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isAsapPublicOutputSortActive}
+                  ascending={sortingDirection.asapPublicOutput === 'asc'}
+                  description={'ASAP Public Output'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Ratio
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isRatioSortActive
+                    ? sortingDirection.ratio === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`ratio_${newDirection}`);
+                  setSortingDirection({
+                    ...userProductivityInitialSortingDirection,
+                    ratio: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isRatioSortActive}
+                  ascending={sortingDirection.ratio === 'asc'}
+                  description={'Ratio'}
+                />
+              </button>
+            </span>
+          </div>
+          {data.map((row) => (
+            <div key={row.id} css={[rowStyles]}>
+              <span css={[titleStyles, rowTitleStyles]}>User</span>
+              <p css={iconStyles}>
+                <Link href={network({}).users({}).user({ userId: row.id }).$}>
                 {row.name}
               </Link>
               {row.isAlumni && alumniBadgeIcon}
-            </p>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>{displayTeams(row.teams)}</p>
-            <span css={[titleStyles, rowTitleStyles]}>Role</span>
-            <p>{displayRoles(row.teams)}</p>
-            <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
-            <p css={rowValueStyles}>
+              </p>
+              <span css={[titleStyles, rowTitleStyles]}>Team</span>
+              <p>{displayTeams(row.teams)}</p>
+              <span css={[titleStyles, rowTitleStyles]}>Role</span>
+              <p>{displayRoles(row.teams)}</p>
+              <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
+              <p css={rowValueStyles}>
               {row.asapOutput}{' '}
               {getPerformanceIcon(row.asapOutput, performance.asapOutput)}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>ASAP Public Output</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>
+                ASAP Public Output
+              </span>
+              <p css={rowValueStyles}>
               {row.asapPublicOutput}{' '}
               {getPerformanceIcon(
                 row.asapPublicOutput,
                 performance.asapPublicOutput,
               )}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
+              <p css={rowValueStyles}>
               {row.ratio}{' '}
               {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
             </p>
-          </div>
-        ))}
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+            </div>
+          ))}
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default UserProductivityTable;

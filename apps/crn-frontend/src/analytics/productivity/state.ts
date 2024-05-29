@@ -87,7 +87,13 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName =
+    options.sort === 'user_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
+
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
   );
@@ -212,7 +218,12 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: ProductivityListOptions,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName =
+    options.sort === 'team_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_team_${options.sort.replace('team_', '')}`;
+  const algoliaClient = useAnalyticsAlgolia(indexName);
+
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),
   );

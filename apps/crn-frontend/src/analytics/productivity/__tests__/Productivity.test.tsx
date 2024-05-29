@@ -4,6 +4,7 @@ import {
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
+  SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
@@ -61,6 +62,7 @@ const defaultOptions: ProductivityListOptions = {
   pageSize: 10,
   currentPage: 0,
   timeRange: '30d',
+  sort: 'team_asc',
 };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
@@ -119,6 +121,10 @@ const renderPage = async (path: string) => {
 };
 
 describe('user productivity', () => {
+  const userOptions = {
+    ...defaultOptions,
+    sort: 'user_asc' as SortUserProductivity,
+  };
   it('renders with user data', async () => {
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
@@ -129,10 +135,10 @@ describe('user productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetUserProductivity)
-      .calledWith(expect.anything(), defaultOptions)
+      .calledWith(expect.anything(), userOptions)
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
     when(mockGetUserProductivity)
-      .calledWith(expect.anything(), { ...defaultOptions, timeRange: '90d' })
+      .calledWith(expect.anything(), { ...userOptions, timeRange: '90d' })
       .mockResolvedValue({
         items: [
           {

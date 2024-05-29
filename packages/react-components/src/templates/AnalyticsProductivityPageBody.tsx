@@ -18,7 +18,7 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
   label: metricOptions[value as MetricOption],
 }));
 
-type LeadershipAndMembershipAnalyticsProps = Pick<
+type ProductivityAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
   'timeRange' | 'currentPage'
 > & {
@@ -40,9 +40,12 @@ const controlsStyles = css({
   flexDirection: 'row-reverse',
 });
 
-const AnalyticsProductivityPageBody: React.FC<
-  LeadershipAndMembershipAnalyticsProps
-> = ({ metric, setMetric, timeRange, currentPage, children }) => (
+const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
+  metric,
+  setMetric,
+  timeRange, currentPage,
+  children,
+}) => (
   <article>
     <div css={metricDropdownStyles}>
       <Subtitle>Metric</Subtitle>

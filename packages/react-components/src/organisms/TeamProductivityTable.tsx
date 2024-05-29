@@ -1,6 +1,9 @@
 import {
+  SortTeamProductivity,
+  teamProductivityInitialSortingDirection,
   TeamProductivityPerformance,
   TeamProductivityResponse,
+  TeamProductivitySortingDirection,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -10,7 +13,11 @@ import { CaptionCard, CaptionItem, PageControls } from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
-import { InactiveBadgeIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import { rem, tabletScreen } from '../pixels';
 import { getPerformanceIcon } from '../utils';
 
@@ -59,7 +66,13 @@ const rowStyles = css({
   },
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  gap: rem(8),
+});
 
 const rowValueStyles = css({
   display: 'flex',
@@ -78,17 +91,45 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
+});
+
 type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: TeamProductivityResponse[];
   performance: TeamProductivityPerformance;
+  sort: SortTeamProductivity;
+  setSort: React.Dispatch<React.SetStateAction<SortTeamProductivity>>;
+  sortingDirection: TeamProductivitySortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<TeamProductivitySortingDirection>
+  >;
 };
 
 const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
   data,
   performance,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   ...pageControlProps
-}) => (
-  <>
+}) => {
+  const isTeamSortActive = sort.includes('team');
+  const isArticleSortActive = sort.includes('article');
+  const isBioinformaticsSortActive = sort.includes('bioinformatics');
+  const isDatasetSortActive = sort.includes('dataset');
+  const isLabResourceSortActive = sort.includes('lab_resource');
+  const isProtocolSortActive = sort.includes('protocol');
+
+  return (
+    <>
     <CaptionCard>
       <>
         <CaptionItem label="Article" {...performance.article} />
@@ -98,62 +139,206 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
         <CaptionItem label="Datasets" {...performance.dataset} />
       </>
     </CaptionCard>
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>Team</span>
-          <span css={titleStyles}>Articles</span>
-          <span css={titleStyles}>Bioinformatics</span>
-          <span css={titleStyles}>Datasets</span>
-          <span css={titleStyles}>Lab Resources</span>
-          <span css={titleStyles}>Protocols</span>
-        </div>
-        {data.map((row) => (
-          <div key={row.id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p css={iconStyles}>
-              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+      <Card padding={false}>
+        <div css={container}>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}>
+              Team
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isTeamSortActive
+                    ? sortingDirection.team === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`team_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    team: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isTeamSortActive}
+                  ascending={sortingDirection.team === 'asc'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Articles
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isArticleSortActive
+                    ? sortingDirection.article === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`article_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    article: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isArticleSortActive}
+                  ascending={sortingDirection.article === 'asc'}
+                  description={'Article'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Bioinformatics
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isBioinformaticsSortActive
+                    ? sortingDirection.bioinformatics === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`bioinformatics_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    bioinformatics: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isBioinformaticsSortActive}
+                  ascending={sortingDirection.bioinformatics === 'asc'}
+                  description={'Bioinformatics'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Datasets
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isDatasetSortActive
+                    ? sortingDirection.dataset === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`dataset_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    dataset: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isDatasetSortActive}
+                  ascending={sortingDirection.dataset === 'asc'}
+                  description={'Dataset'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Lab Resources
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isLabResourceSortActive
+                    ? sortingDirection.labResource === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`lab_resource_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    labResource: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isLabResourceSortActive}
+                  ascending={sortingDirection.labResource === 'asc'}
+                  description={'Lab Resource'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Protocols
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isProtocolSortActive
+                    ? sortingDirection.protocol === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`protocol_${newDirection}`);
+                  setSortingDirection({
+                    ...teamProductivityInitialSortingDirection,
+                    protocol: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isProtocolSortActive}
+                  ascending={sortingDirection.protocol === 'asc'}
+                  description={'Protocol'}
+                />
+              </button>
+            </span>
+          </div>
+          {data.map((row) => (
+            <div key={row.id} css={[rowStyles]}>
+              <span css={[titleStyles, rowTitleStyles]}>Team</span>
+              <p css={iconStyles}>
+                <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
                 {row.name}
               </Link>
 
               {row.isInactive && <InactiveBadgeIcon />}
-            </p>
-            <span css={[titleStyles, rowTitleStyles]}>Articles</span>
-            <p css={rowValueStyles}>
+              </p>
+              <span css={[titleStyles, rowTitleStyles]}>Articles</span>
+              <p css={rowValueStyles}>
               {row.Article}{' '}
               {getPerformanceIcon(row.Article, performance.article)}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
+              <p css={rowValueStyles}>
               {row.Bioinformatics}{' '}
               {getPerformanceIcon(
                 row.Bioinformatics,
                 performance.bioinformatics,
               )}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Datasets</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>Datasets</span>
+              <p css={rowValueStyles}>
               {row.Dataset}{' '}
               {getPerformanceIcon(row.Dataset, performance.dataset)}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
+              <p css={rowValueStyles}>
               {row['Lab Resource']}{' '}
               {getPerformanceIcon(row['Lab Resource'], performance.labResource)}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Protocols</span>
-            <p css={rowValueStyles}>
+              <span css={[titleStyles, rowTitleStyles]}>Protocols</span>
+              <p css={rowValueStyles}>
               {row.Protocol}{' '}
               {getPerformanceIcon(row.Protocol, performance.protocol)}
             </p>
-          </div>
-        ))}
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+            </div>
+          ))}
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default TeamProductivityTable;

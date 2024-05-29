@@ -1,12 +1,18 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
+
+export type AnalyticsSearchOptions = {
+  currentPage: number | null;
+  pageSize: number | null;
+  tags: string[];
+};
 
 export const getAnalyticsLeadership = async (
   algoliaClient: AlgoliaClient<'analytics'>,
-  { searchQuery, filters, currentPage, pageSize }: GetListOptions,
+  { tags, currentPage, pageSize }: AnalyticsSearchOptions,
 ): Promise<ListAnalyticsTeamLeadershipResponse | undefined> => {
-  const result = await algoliaClient.search(['team-leadership'], searchQuery, {
+  const result = await algoliaClient.search(['team-leadership'], '', {
+    tagFilters: [tags],
     filters: undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,

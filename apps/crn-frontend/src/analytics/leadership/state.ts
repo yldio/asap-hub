@@ -1,4 +1,3 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
@@ -10,15 +9,19 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { getAnalyticsLeadership } from './api';
+import { AnalyticsSearchOptions, getAnalyticsLeadership } from './api';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
-type Options = GetListOptions & { sort: SortLeadershipAndMembership };
+type Options = AnalyticsSearchOptions & { sort: SortLeadershipAndMembership };
+type StateOptionKeyData = Pick<
+  Options,
+  'currentPage' | 'pageSize' | 'sort' | 'tags'
+>;
 
 const analyticsLeadershipIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
+  StateOptionKeyData
 >({
   key: 'analyticsLeadershipIndex',
   default: undefined,
@@ -34,7 +37,7 @@ export const analyticsLeadershipListState = atomFamily<
 
 export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
-  Pick<Options, 'currentPage' | 'pageSize' | 'sort' | 'searchQuery'>
+  StateOptionKeyData
 >({
   key: 'teams',
   get:

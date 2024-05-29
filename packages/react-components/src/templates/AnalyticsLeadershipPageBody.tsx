@@ -4,8 +4,14 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls, SearchField } from '..';
-import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import { noop, PageControls, searchIcon } from '..';
+import {
+  Dropdown,
+  Headline3,
+  MultiSelect,
+  Paragraph,
+  Subtitle,
+} from '../atoms';
 import { ExportButton } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
@@ -33,6 +39,9 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   typeof PageControls
 > & {
+  tags: string[];
+  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  setTags: (tags: string[]) => void;
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
@@ -43,8 +52,6 @@ type LeadershipAndMembershipAnalyticsProps = ComponentProps<
     React.SetStateAction<LeadershipAndMembershipSortingDirection>
   >;
   exportResults: () => Promise<void>;
-  searchQuery: string;
-  onChangeSearch: (newSearchQuery: string) => void;
 };
 
 const metricDropdownStyles = css({
@@ -85,6 +92,9 @@ const exportContainerStyles = css({
 });
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
+  tags,
+  setTags,
+  loadTags = noop,
   sort,
   setSort,
   sortingDirection,
@@ -93,8 +103,6 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   setMetric,
   data,
   exportResults,
-  searchQuery,
-  onChangeSearch,
   ...pageControlProps
 }) => (
   <article>
@@ -119,11 +127,19 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
     </div>
     <div css={searchContainerStyles}>
       <Subtitle>Teams:</Subtitle>
-      <span css={searchStyles}>
-        <SearchField
-          value={searchQuery}
+      <span role="search" css={searchStyles}>
+        <MultiSelect
+          noMargin
+          leftIndicator={searchIcon}
+          noOptionsMessage={() => 'No results found'}
+          loadOptions={loadTags}
+          onChange={(items) => setTags(items.map(({ value }) => value))}
+          values={tags.map((tag) => ({
+            label: tag,
+            value: tag,
+          }))}
+          key={`${tags.join('')}`} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
           placeholder="Enter team names..."
-          onChange={onChangeSearch}
         />
       </span>
     </div>

@@ -75,7 +75,6 @@ const titleStyles = css({
   gap: rem(8),
 });
 
-
 const rowValueStyles = css({
   display: 'flex',
   gap: rem(6),
@@ -183,16 +182,16 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
 
   return (
     <>
-    <CaptionCard>
-      <>
-        <CaptionItem label="ASAP Output" {...performance.asapOutput} />
-        <CaptionItem
-          label="ASAP Public Output"
-          {...performance.asapPublicOutput}
-        />
-        <CaptionItem label="Ratio" {...performance.ratio} />
-      </>
-    </CaptionCard>
+      <CaptionCard>
+        <>
+          <CaptionItem label="ASAP Output" {...performance.asapOutput} />
+          <CaptionItem
+            label="ASAP Public Output"
+            {...performance.asapPublicOutput}
+          />
+          <CaptionItem label="Ratio" {...performance.ratio} />
+        </>
+      </CaptionCard>
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>
@@ -362,24 +361,24 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               <p>{displayRoles(row.teams)}</p>
               <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
               <p css={rowValueStyles}>
-              {row.asapOutput}{' '}
-              {getPerformanceIcon(row.asapOutput, performance.asapOutput)}
-            </p>
+                {row.asapOutput}{' '}
+                {getPerformanceIcon(row.asapOutput, performance.asapOutput)}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>
                 ASAP Public Output
               </span>
               <p css={rowValueStyles}>
-              {row.asapPublicOutput}{' '}
-              {getPerformanceIcon(
-                row.asapPublicOutput,
-                performance.asapPublicOutput,
-              )}
-            </p>
+                {row.asapPublicOutput}{' '}
+                {getPerformanceIcon(
+                  row.asapPublicOutput,
+                  performance.asapPublicOutput,
+                )}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
               <p css={rowValueStyles}>
-              {row.ratio}{' '}
-              {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
-            </p>
+                {row.ratio}{' '}
+                {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
+              </p>
             </div>
           ))}
         </div>

@@ -177,6 +177,7 @@ describe('UserProductivityTable', () => {
       const { getByTitle } = render(
         <UserProductivityTable
           data={[user]}
+          performance={userProductivityPerformance}
           sort={sort}
           setSort={setSort}
           sortingDirection={sortingDirection}

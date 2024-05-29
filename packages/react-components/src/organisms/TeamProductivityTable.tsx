@@ -130,15 +130,15 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
 
   return (
     <>
-    <CaptionCard>
-      <>
-        <CaptionItem label="Article" {...performance.article} />
-        <CaptionItem label="Lab Resources" {...performance.labResource} />
-        <CaptionItem label="Bioinformatics" {...performance.bioinformatics} />
-        <CaptionItem label="Protocols" {...performance.protocol} />
-        <CaptionItem label="Datasets" {...performance.dataset} />
-      </>
-    </CaptionCard>
+      <CaptionCard>
+        <>
+          <CaptionItem label="Article" {...performance.article} />
+          <CaptionItem label="Lab Resources" {...performance.labResource} />
+          <CaptionItem label="Bioinformatics" {...performance.bioinformatics} />
+          <CaptionItem label="Protocols" {...performance.protocol} />
+          <CaptionItem label="Datasets" {...performance.dataset} />
+        </>
+      </CaptionCard>
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>
@@ -304,32 +304,35 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Articles</span>
               <p css={rowValueStyles}>
-              {row.Article}{' '}
-              {getPerformanceIcon(row.Article, performance.article)}
-            </p>
+                {row.Article}{' '}
+                {getPerformanceIcon(row.Article, performance.article)}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>Bioinformatics</span>
               <p css={rowValueStyles}>
-              {row.Bioinformatics}{' '}
-              {getPerformanceIcon(
-                row.Bioinformatics,
-                performance.bioinformatics,
-              )}
-            </p>
+                {row.Bioinformatics}{' '}
+                {getPerformanceIcon(
+                  row.Bioinformatics,
+                  performance.bioinformatics,
+                )}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>Datasets</span>
               <p css={rowValueStyles}>
-              {row.Dataset}{' '}
-              {getPerformanceIcon(row.Dataset, performance.dataset)}
-            </p>
+                {row.Dataset}{' '}
+                {getPerformanceIcon(row.Dataset, performance.dataset)}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
               <p css={rowValueStyles}>
-              {row['Lab Resource']}{' '}
-              {getPerformanceIcon(row['Lab Resource'], performance.labResource)}
-            </p>
+                {row['Lab Resource']}{' '}
+                {getPerformanceIcon(
+                  row['Lab Resource'],
+                  performance.labResource,
+                )}
+              </p>
               <span css={[titleStyles, rowTitleStyles]}>Protocols</span>
               <p css={rowValueStyles}>
-              {row.Protocol}{' '}
-              {getPerformanceIcon(row.Protocol, performance.protocol)}
-            </p>
+                {row.Protocol}{' '}
+                {getPerformanceIcon(row.Protocol, performance.protocol)}
+              </p>
             </div>
           ))}
         </div>

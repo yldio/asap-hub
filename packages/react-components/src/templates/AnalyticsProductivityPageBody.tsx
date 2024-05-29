@@ -43,7 +43,8 @@ const controlsStyles = css({
 const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
-  timeRange, currentPage,
+  timeRange,
+  currentPage,
   children,
 }) => (
   <article>

@@ -8,7 +8,6 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { ListAnalyticsTeamLeadershipResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -170,7 +169,6 @@ describe('search', () => {
       ),
     );
   });
-  it('handles multiple teams', async () => {});
 });
 
 describe('csv export', () => {

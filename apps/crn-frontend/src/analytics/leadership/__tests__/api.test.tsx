@@ -37,7 +37,7 @@ describe('getMemberships', () => {
   const defaultOptions: AnalyticsSearchOptions = {
     pageSize: null,
     currentPage: null,
-    tags: []
+    tags: [],
   };
 
   beforeEach(() => {
@@ -88,7 +88,7 @@ describe('getMemberships', () => {
       ['team-leadership'],
       '',
       expect.objectContaining({
-        tagFilters: [['Alessi']]
+        tagFilters: [['Alessi']],
       }),
     );
   });

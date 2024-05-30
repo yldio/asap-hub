@@ -32,6 +32,7 @@ const mockGetUserProductivityPerformance =
   >;
 
 const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
+  id: '1',
   team: 'Team A',
   isTeamInactive: false,
   isUserInactiveOnTeam: false,

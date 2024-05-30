@@ -82,26 +82,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     },
   });
 
-  console.log({ title, type, lifecycle });
-
   const {
     handleSubmit,
     control,
     formState: { isSubmitting },
     watch,
-    register,
-    unregister,
+    setValue,
   } = methods;
 
   const watchType = watch('versions.0.type');
 
   useEffect(() => {
-    if (watchType) {
-      register('versions.0.lifecycle');
-    } else {
-      unregister('versions.0.lifecycle');
+    if (!watchType) {
+      setValue('versions.0.lifecycle', '');
     }
-  }, [register, unregister, watchType]);
+  }, [setValue, watchType]);
 
   const onSubmit = async (data: ManuscriptPostRequest) => {
     await onSave({ ...data, teamId });

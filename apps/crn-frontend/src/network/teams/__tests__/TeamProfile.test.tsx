@@ -165,7 +165,7 @@ it('navigates to the workspace tab', async () => {
   expect(await screen.findByText(/tools/i)).toBeVisible();
 });
 
-it.only('displays manuscript success toast message and user can dismiss toast', async () => {
+it('displays manuscript success toast message and user can dismiss toast', async () => {
   enable('DISPLAY_MANUSCRIPTS');
 
   await renderPage({

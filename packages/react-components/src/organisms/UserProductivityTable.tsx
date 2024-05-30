@@ -2,11 +2,12 @@ import {
   UserProductivityPerformance,
   UserProductivityResponse,
 } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { CaptionCard, CaptionItem, PageControls } from '..';
 
-import { Card } from '../atoms';
+import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
 import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
@@ -163,7 +164,10 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>User</span>
             <p css={iconStyles}>
-              {row.name} {row.isAlumni && alumniBadgeIcon}
+              <Link href={network({}).users({}).user({ userId: row.id }).$}>
+                {row.name}
+              </Link>
+              {row.isAlumni && alumniBadgeIcon}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p>{displayTeams(row.teams)}</p>

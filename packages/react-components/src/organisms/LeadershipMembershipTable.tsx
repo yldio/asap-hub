@@ -1,7 +1,8 @@
 import { initialSortingDirection } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { Card } from '../atoms';
+import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
@@ -239,7 +240,11 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
         {data.map((row) => (
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>{row.name}</p>
+            <p>
+              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+                {row.name}
+              </Link>
+            </p>
             <span css={[titleStyles, rowTitleStyles]}>
               Currently in a leadership role
             </span>

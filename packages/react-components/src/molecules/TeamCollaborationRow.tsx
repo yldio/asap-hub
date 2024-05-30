@@ -1,7 +1,8 @@
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
-import { Button } from '../atoms';
+import { Button, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { neutral200, steel } from '../colors';
 import { plusRectIcon, minusRectIcon, InactiveBadgeIcon } from '../icons';
@@ -104,7 +105,10 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
         )}
 
         <p css={iconStyles}>
-          {rowItem.name} {rowItem.isInactive && <InactiveBadgeIcon />}
+          <Link href={network({}).teams({}).team({ teamId: rowItem.id }).$}>
+            {rowItem.name}
+          </Link>
+          {rowItem.isInactive && <InactiveBadgeIcon />}
         </p>
         <p>{rowItem.Article}</p>
         <p>{rowItem.Bioinformatics}</p>
@@ -117,7 +121,10 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
         rowItem.collaborationByTeam.map((team) => (
           <div key={team.id} css={[collapsedRowStyles]}>
             <p css={iconStyles}>
-              {team.name} {team.isInactive && <InactiveBadgeIcon />}
+              <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+                {team.name}
+              </Link>
+              {team.isInactive && <InactiveBadgeIcon />}
             </p>
             <p>{team.Article}</p>
             <p>{team.Bioinformatics}</p>

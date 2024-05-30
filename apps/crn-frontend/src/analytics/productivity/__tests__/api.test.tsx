@@ -54,6 +54,7 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
   isAlumni: false,
   teams: [
     {
+      id: '1',
       team: 'Team A',
       isTeamInactive: false,
       isUserInactiveOnTeam: false,

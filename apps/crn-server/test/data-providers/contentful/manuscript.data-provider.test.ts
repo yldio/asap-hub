@@ -83,6 +83,14 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('Create', () => {
+    test('should throw if no versions are provided', async () => {
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions = [];
+      await expect(
+        manuscriptDataProvider.create(manuscriptCreateDataObject),
+      ).rejects.toThrow('No versions provided');
+    });
+
     test('can create a manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';

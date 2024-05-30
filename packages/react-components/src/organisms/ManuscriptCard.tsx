@@ -79,7 +79,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
       {expanded && (
         <div css={[paddingStyles, toastContentStyles]}>
           {versions.map(({ type, lifecycle }, index) => (
-            <>
+            <div key={index}>
               <span css={toastHeaderStyles}>
                 <span css={[iconStyles]}>{article}</span>
                 <Subtitle noMargin>Manuscript</Subtitle>
@@ -91,7 +91,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                 <Pill accent="gray">{type}</Pill>
                 <Pill accent="gray">{lifecycle}</Pill>
               </div>
-            </>
+            </div>
           ))}
         </div>
       )}

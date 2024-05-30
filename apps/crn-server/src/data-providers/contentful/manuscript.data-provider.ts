@@ -56,6 +56,10 @@ export class ManuscriptContentfulDataProvider
       ...plainFields
     } = input;
 
+    if (!version) {
+      throw new Error('No versions provided');
+    }
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {

@@ -1,9 +1,10 @@
 import { TeamRole } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
 
-import { Card, Paragraph } from '../atoms';
+import { Card, Link, Paragraph } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
@@ -185,7 +186,10 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>User</span>
             <p css={iconStyles}>
-              {row.name} {row.isAlumni && alumniBadgeIcon}
+              <Link href={network({}).users({}).user({ userId: row.id }).$}>
+                {row.name}
+              </Link>
+              {row.isAlumni && alumniBadgeIcon}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p>{displayTeams(row.teams)}</p>

@@ -103,6 +103,9 @@ export const FETCH_USER_PRODUCTIVITY = gql`
         teamsCollection(limit: 3) {
           items {
             team {
+              sys {
+                id
+              }
               displayName
               inactiveSince
             }

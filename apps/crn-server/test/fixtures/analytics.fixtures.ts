@@ -163,12 +163,14 @@ export const getUserProductivityDataObject =
     isAlumni: false,
     teams: [
       {
+        id: '1',
         isTeamInactive: false,
         isUserInactiveOnTeam: false,
         role: 'Co-PI (Core Leadership)',
         team: 'Team Alessi',
       },
       {
+        id: '2',
         isTeamInactive: false,
         isUserInactiveOnTeam: false,
         role: 'Collaborating PI',
@@ -329,6 +331,7 @@ export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
               role: 'Co-PI (Core Leadership)',
               inactiveSinceDate: null,
               team: {
+                sys: { id: '1' },
                 displayName: 'Team Alessi',
                 inactiveSince: null,
               },
@@ -337,6 +340,7 @@ export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
               role: 'Collaborating PI',
               inactiveSinceDate: null,
               team: {
+                sys: { id: '2' },
                 displayName: 'Team De Camilli',
                 inactiveSince: null,
               },

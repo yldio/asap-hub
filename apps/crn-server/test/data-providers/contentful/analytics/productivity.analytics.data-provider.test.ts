@@ -201,6 +201,7 @@ describe('fetchUserProductivity', () => {
         role: 'Co-PI (Core Leadership)',
         inactiveSinceDate: null,
         team: {
+          sys: { id: '1' },
           displayName: null,
           inactiveSince: null,
         },
@@ -209,6 +210,7 @@ describe('fetchUserProductivity', () => {
         role: 'Collaborating PI',
         inactiveSinceDate: null,
         team: {
+          sys: { id: '2' },
           displayName: 'Team De Camilli',
           inactiveSince: null,
         },
@@ -222,6 +224,7 @@ describe('fetchUserProductivity', () => {
       ...getUserProductivityDataObject(),
       teams: [
         {
+          id: '2',
           isTeamInactive: false,
           isUserInactiveOnTeam: false,
           role: 'Collaborating PI',
@@ -237,6 +240,7 @@ describe('fetchUserProductivity', () => {
         role: 'Co-PI (Core Leadership)',
         inactiveSinceDate: null,
         team: {
+          sys: { id: '1' },
           displayName: 'Team Alessi',
           inactiveSince: null,
         },
@@ -245,6 +249,7 @@ describe('fetchUserProductivity', () => {
         role: null,
         inactiveSinceDate: null,
         team: {
+          sys: { id: '2' },
           displayName: 'Team De Camilli',
           inactiveSince: null,
         },
@@ -258,6 +263,7 @@ describe('fetchUserProductivity', () => {
       ...getUserProductivityDataObject(),
       teams: [
         {
+          id: '1',
           isTeamInactive: false,
           isUserInactiveOnTeam: false,
           role: 'Co-PI (Core Leadership)',

@@ -19,6 +19,7 @@ describe('UserProductivityTable', () => {
 
   const userTeam: UserProductivityResponse['teams'][number] = {
     team: 'Team A',
+    id: '1',
     isTeamInactive: false,
     isUserInactiveOnTeam: false,
     role: 'Collaborating PI',

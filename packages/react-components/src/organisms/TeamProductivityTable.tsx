@@ -2,11 +2,12 @@ import {
   TeamProductivityPerformance,
   TeamProductivityResponse,
 } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { CaptionCard, CaptionItem, PageControls } from '..';
 
-import { Card } from '../atoms';
+import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { InactiveBadgeIcon } from '../icons';
@@ -111,7 +112,11 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p css={iconStyles}>
-              {row.name} {row.isInactive && <InactiveBadgeIcon />}
+              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+                {row.name}
+              </Link>
+
+              {row.isInactive && <InactiveBadgeIcon />}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Articles</span>
             <p css={rowValueStyles}>

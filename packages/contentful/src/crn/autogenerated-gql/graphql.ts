@@ -10516,7 +10516,11 @@ export type FetchUserProductivityQuery = {
               items: Array<
                 Maybe<
                   Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
-                    team?: Maybe<Pick<Teams, 'displayName' | 'inactiveSince'>>;
+                    team?: Maybe<
+                      Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >;
                   }
                 >
               >;
@@ -23607,6 +23611,22 @@ export const FetchUserProductivityDocument = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {

@@ -447,6 +447,7 @@ const getUserProductivityItems = (
           if (teamItem?.role && teamItem?.team?.displayName) {
             return {
               team: teamItem.team.displayName,
+              id: teamItem.team.sys.id,
               role: teamItem.role as TeamRole,
               isTeamInactive: !!teamItem.team.inactiveSince,
               isUserInactiveOnTeam: !!teamItem.inactiveSinceDate,

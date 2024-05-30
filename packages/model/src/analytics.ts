@@ -107,6 +107,7 @@ export type ListAnalyticsTeamLeadershipResponse =
 
 export type UserProductivityTeam = {
   team: string;
+  id: string;
   role: TeamRole;
   isTeamInactive: boolean;
   isUserInactiveOnTeam: boolean;

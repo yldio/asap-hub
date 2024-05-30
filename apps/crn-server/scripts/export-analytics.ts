@@ -4,6 +4,7 @@ import {
   ListResponse,
   TimeRangeOption,
   timeRanges,
+  UserProductivityTeam,
 } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import { FileHandle } from 'fs/promises';
@@ -105,15 +106,26 @@ const transformRecords = (
   record: AnalyticsData,
   type: Metric,
   range?: TimeRangeOption,
-) => ({
-  ...record,
-  _tags: getRecordTags(record, type),
-  objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
-  __meta: {
-    type,
-    range,
-  },
-});
+) => {
+  const payload = {
+    ...record,
+    _tags: getRecordTags(record, type),
+    objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
+    __meta: {
+      type,
+      range,
+    },
+  };
+
+  if ('teams' in record) {
+    return {
+      ...payload,
+      ...getUserTeamData(record.teams),
+    };
+  }
+
+  return payload;
+};
 
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
   switch (type) {
@@ -124,3 +136,8 @@ const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
       return [];
   }
 };
+
+const getUserTeamData = (teams: UserProductivityTeam[]) =>
+  teams.length > 1
+    ? { team: 'Multiple Teams', role: 'Multiple Roles' }
+    : { team: teams[0]?.team ?? 'No team', role: teams[0]?.role ?? 'No role' };

@@ -65,7 +65,12 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
 
   return (
     <div css={manuscriptContainerStyles}>
-      <span css={toastStyles}>
+      <div
+        css={[
+          { borderBottom: expanded ? `1px solid ${colors.steel.rgb}` : 'none' },
+          toastStyles,
+        ]}
+      >
         <span css={toastHeaderStyles}>
           <span css={[iconStyles]}>
             <Button linkStyle onClick={() => setExpanded(!expanded)}>
@@ -74,12 +79,12 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
           </span>
           <Subtitle noMargin>{title}</Subtitle>
         </span>
-      </span>
+      </div>
 
       {expanded && (
-        <div css={[paddingStyles, toastContentStyles]}>
+        <div>
           {versions.map(({ type, lifecycle }, index) => (
-            <div key={index}>
+            <div key={index} css={[paddingStyles, toastContentStyles]}>
               <span css={toastHeaderStyles}>
                 <span css={[iconStyles]}>{article}</span>
                 <Subtitle noMargin>Manuscript</Subtitle>

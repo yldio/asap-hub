@@ -129,7 +129,7 @@ const renderPage = async (metric: string = 'user') => {
 };
 
 it('renders with user data', async () => {
-  mockGetUserCollaboration.mockResolvedValueOnce(userData);
+  mockGetUserCollaboration.mockResolvedValue(userData);
   await renderPage();
 
   expect(screen.getByText('User Co-Production')).toBeVisible();
@@ -152,7 +152,7 @@ it('renders with user data', async () => {
 });
 
 it('renders with team data', async () => {
-  mockGetTeamCollaboration.mockResolvedValueOnce(teamData);
+  mockGetTeamCollaboration.mockResolvedValue(teamData);
   await renderPage('team');
 
   expect(screen.getByText('Team Co-Production')).toBeVisible();
@@ -175,8 +175,8 @@ it('renders with team data', async () => {
 });
 
 it('navigates between user and team collaboration pages', async () => {
-  mockGetUserCollaboration.mockResolvedValueOnce(userData);
-  mockGetTeamCollaboration.mockResolvedValueOnce(teamData);
+  mockGetUserCollaboration.mockResolvedValue(userData);
+  mockGetTeamCollaboration.mockResolvedValue(teamData);
 
   await renderPage();
   const input = screen.getAllByRole('textbox', { hidden: false });

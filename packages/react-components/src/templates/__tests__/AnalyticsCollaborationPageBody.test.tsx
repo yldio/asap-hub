@@ -8,6 +8,8 @@ describe('AnalyticsProductivityPageBody', () => {
     setType: () => null,
     metric: 'user',
     type: 'within-team',
+    timeRange: '30d',
+    currentPage: 2,
     children: <span>table</span>,
   };
 

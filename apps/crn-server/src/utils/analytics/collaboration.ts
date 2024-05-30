@@ -124,11 +124,13 @@ export const getCollaborationCounts = (
 
 export const getUserCollaborationItems = (
   userCollection: FetchUserCollaborationQuery['usersCollection'],
+  rangeKey?: TimeRangeOption,
 ): UserCollaborationDataObject[] =>
   cleanArray(userCollection?.items).map((user) => {
     const teams = cleanArray(user?.teamsCollection?.items).map((team) => {
-      const analyticData =
-        user.linkedFrom?.researchOutputsCollection?.items.map((output) => {
+      const analyticData = user.linkedFrom?.researchOutputsCollection?.items
+        .filter(getFilterOutputByRange(rangeKey))
+        .map((output) => {
           const authorList = cleanArray(
             cleanArray(output?.authorsCollection?.items).map((author) => {
               if (author.__typename === 'Users') {

@@ -3,7 +3,7 @@ import {
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
-import { usePagination, usePaginationParams } from '../../hooks';
+import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsUserCollaboration } from './state';
 
 const getDataForType = (
@@ -42,10 +42,13 @@ export type CollaborationProps = {
 
 const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { currentPage, pageSize } = usePaginationParams();
+
+  const { timeRange } = useAnalytics();
+
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,
     pageSize,
-    timeRange: '30d',
+    timeRange,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

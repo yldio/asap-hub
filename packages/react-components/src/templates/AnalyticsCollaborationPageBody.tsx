@@ -1,7 +1,10 @@
+import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
-import { perRem } from '../pixels';
+import { AnalyticsControls } from '../molecules';
+import { perRem, rem } from '../pixels';
 
 type MetricOption = 'user' | 'team';
 type TypeOption = 'within-team' | 'across-teams';
@@ -50,7 +53,10 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
             'Number of outputs in which additional teams are listed as contributors to the output',
         };
 
-type CollaborationAnalyticsProps = {
+type CollaborationAnalyticsProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'timeRange' | 'currentPage'
+> & {
   metric: MetricOption;
   type: TypeOption;
   setMetric: (option: MetricOption) => void;
@@ -66,11 +72,19 @@ const tableHeaderStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
+const controlsStyles = css({
+  display: 'flex',
+  flexDirection: 'row-reverse',
+  marginBottom: rem(32),
+});
+
 const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   metric,
   type,
   setMetric,
   setType,
+  timeRange,
+  currentPage,
   children,
 }) => {
   const { header, description } = getPageHeaderDescription(metric, type);
@@ -97,6 +111,16 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
       <div css={tableHeaderStyles}>
         <Headline3>{header}</Headline3>
         <Paragraph>{description}.</Paragraph>
+      </div>
+      <div css={controlsStyles}>
+        <AnalyticsControls
+          currentPage={currentPage}
+          timeRange={timeRange}
+          href={
+            analytics({}).collaboration({}).collaborationPath({ metric, type })
+              .$
+          }
+        />
       </div>
       {children}
     </article>

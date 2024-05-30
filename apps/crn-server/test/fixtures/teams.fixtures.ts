@@ -146,28 +146,12 @@ export const getContentfulGraphqlManuscripts = (): NonNullable<
     {
       sys: { id: '1' },
       title: 'Manuscript 1',
-      versionsCollection: {
-        items: [
-          {
-            sys: { id: 'version-1' },
-            type: 'Original Research',
-            lifecycle: 'Preprint, version 1',
-          },
-        ],
-      },
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
     {
       sys: { id: '2' },
       title: 'Manuscript 2',
-      versionsCollection: {
-        items: [
-          {
-            sys: { id: 'version-1' },
-            type: 'Original Research',
-            lifecycle: 'Preprint, version 1',
-          },
-        ],
-      },
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
   ],
 });

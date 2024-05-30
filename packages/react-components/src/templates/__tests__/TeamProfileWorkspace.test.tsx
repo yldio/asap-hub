@@ -26,33 +26,6 @@ it('renders the team workspace page', () => {
   ).toBeInTheDocument();
 });
 
-it('renders compliance section when feature flag is enabled', () => {
-  const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
-    ...team,
-    manuscripts: [
-      {
-        id: '1',
-        title: 'Nice manuscript',
-        versions: [],
-      },
-      {
-        id: '2',
-        title: 'A Good Manuscript',
-        versions: [],
-      },
-    ],
-  };
-  enable('DISPLAY_MANUSCRIPTS');
-  const { getByRole, queryByRole, rerender } = render(
-    <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
-  );
-  expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
-
-  disable('DISPLAY_MANUSCRIPTS');
-  rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
-  expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
-});
-
 describe('compliance section', () => {
   beforeAll(() => {
     enable('DISPLAY_MANUSCRIPTS');
@@ -60,6 +33,33 @@ describe('compliance section', () => {
 
   afterAll(() => {
     disable('DISPLAY_MANUSCRIPTS');
+  });
+
+  it('renders compliance section when feature flag is enabled', () => {
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          title: 'Nice manuscript',
+          versions: [],
+        },
+        {
+          id: '2',
+          title: 'A Good Manuscript',
+          versions: [],
+        },
+      ],
+    };
+    enable('DISPLAY_MANUSCRIPTS');
+    const { getByRole, queryByRole, rerender } = render(
+      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+    );
+    expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+
+    disable('DISPLAY_MANUSCRIPTS');
+    rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
+    expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
   });
 
   it('renders all manuscript titles', () => {

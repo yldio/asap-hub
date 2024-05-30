@@ -59,9 +59,7 @@ export class ManuscriptContentfulDataProvider
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
-        fields: addLocaleToFields({
-          ...version,
-        }),
+        fields: addLocaleToFields(version),
       },
     );
 

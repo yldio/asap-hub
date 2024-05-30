@@ -13,7 +13,7 @@ module.exports.up = (migration) => {
     .name('Type')
     .type('Symbol')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         in: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
@@ -30,7 +30,7 @@ module.exports.up = (migration) => {
     .name('Lifecycle')
     .type('Symbol')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         in: [

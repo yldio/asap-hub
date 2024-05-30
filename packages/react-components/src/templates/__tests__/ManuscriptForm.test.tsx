@@ -83,7 +83,7 @@ const manuscriptTypeLifecyclesFlat = manuscriptTypeLifecycles.flatMap(
   ({ types, lifecycle }) => types.map((type) => ({ type, lifecycle })),
 );
 it.each(manuscriptTypeLifecyclesFlat)(
-  'displays $1 lifecycle option for when $2 type is selected',
+  'displays $lifecycle lifecycle option for when $type type is selected',
   async ({ lifecycle, type }) => {
     render(
       <StaticRouter>

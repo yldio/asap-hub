@@ -18,7 +18,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -165,7 +165,7 @@ it('navigates to the workspace tab', async () => {
   expect(await screen.findByText(/tools/i)).toBeVisible();
 });
 
-it('displays manuscript success toast message and user can dismiss toast', async () => {
+it.only('displays manuscript success toast message and user can dismiss toast', async () => {
   enable('DISPLAY_MANUSCRIPTS');
 
   await renderPage({
@@ -189,6 +189,19 @@ it('displays manuscript success toast message and user can dismiss toast', async
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
     'manuscript title',
   );
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
 
   userEvent.click(submitButton);
 

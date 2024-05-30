@@ -82,6 +82,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     },
   });
 
+  console.log({ title, type, lifecycle });
+
   const {
     handleSubmit,
     control,
@@ -172,7 +174,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   noOptionsMessage={(option) =>
                     `Sorry, no types match ${option.inputValue}`
                   }
-                  placeholder="Choose a type"
+                  placeholder="Choose a type of manuscript"
                 />
               )}
             />
@@ -200,7 +202,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     noOptionsMessage={(option) =>
                       `Sorry, no options match ${option.inputValue}`
                     }
-                    placeholder="Choose a type"
+                    placeholder="Choose an option"
                   />
                 )}
               />

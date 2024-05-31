@@ -129,6 +129,41 @@ it('displays error message when manuscript title is missing', async () => {
   expect(screen.queryByText(/Please enter a title/i)).toBeNull();
 });
 
+it('displays error message when no type was found', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm {...defaultProps} />
+    </StaticRouter>,
+  );
+
+  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
+  userEvent.type(textbox, 'invalid type');
+
+  expect(screen.getByText(/Sorry, no types match/i)).toBeVisible();
+});
+
+it('displays error message when no lifecycle was found', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm {...defaultProps} />
+    </StaticRouter>,
+  );
+
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'invalid lifecycle');
+
+  expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
+});
+
 it('displays error message when manuscript title is bigger than 256 characters', async () => {
   render(
     <StaticRouter>

@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import UserCollaboration from './UserCollaboration';
 import TeamCollaboration from './TeamCollaboration';
+import { useAnalytics, usePaginationParams } from '../../hooks';
 
 const Collaboration = () => {
   const history = useHistory();
@@ -11,6 +12,8 @@ const Collaboration = () => {
     metric: 'user' | 'team';
     type: 'within-team' | 'across-teams';
   }>();
+  const { timeRange } = useAnalytics();
+  const { currentPage } = usePaginationParams();
 
   const setMetric = (newMetric: 'user' | 'team') =>
     history.push(
@@ -31,6 +34,8 @@ const Collaboration = () => {
       type={type}
       setMetric={setMetric}
       setType={setType}
+      timeRange={timeRange}
+      currentPage={currentPage}
     >
       {metric === 'user' ? (
         <UserCollaboration type={type} />

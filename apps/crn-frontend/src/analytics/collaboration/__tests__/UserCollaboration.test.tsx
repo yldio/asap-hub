@@ -79,7 +79,7 @@ const renderPage = async () => {
 };
 
 it('renders the user collaboration data', async () => {
-  mockGetUserCollaboration.mockResolvedValueOnce(data);
+  mockGetUserCollaboration.mockResolvedValue(data);
 
   const { container, getAllByText } = await renderPage();
   expect(container).toHaveTextContent('Ted Mosby');

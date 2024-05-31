@@ -100,7 +100,7 @@ const renderPage = async () => {
 };
 
 it('renders team collaboration data', async () => {
-  mockGetTeamCollaboration.mockResolvedValueOnce(data);
+  mockGetTeamCollaboration.mockResolvedValue(data);
 
   const { container, getAllByText } = await renderPage();
   expect(container).toHaveTextContent('Team One');

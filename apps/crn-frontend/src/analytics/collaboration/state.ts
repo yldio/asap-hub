@@ -4,12 +4,14 @@ import {
   TeamCollaborationResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
+import { useEffect } from 'react';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
+  useResetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../../auth/state';
 import {
@@ -89,6 +91,15 @@ export const useAnalyticsUserCollaboration = (
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
+
+  const resetUserCollaboration = useResetRecoilState(
+    analyticsUserCollaborationState(options),
+  );
+
+  useEffect(() => {
+    resetUserCollaboration(); // Reset state to force refetch on timeRange change
+  }, [options.timeRange, resetUserCollaboration]);
+
   if (userCollaboration === undefined) {
     throw getUserCollaboration(options, authorization)
       .then(setUserCollaboration)
@@ -100,7 +111,7 @@ export const useAnalyticsUserCollaboration = (
   return userCollaboration;
 };
 
-const analyticsTeamCollaborationIndexState = atomFamily<
+export const analyticsTeamCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
   CollaborationListOptions
 >({
@@ -171,6 +182,15 @@ export const useAnalyticsTeamCollaboration = (
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );
+
+  const resetTeamCollaboration = useResetRecoilState(
+    analyticsTeamCollaborationState(options),
+  );
+
+  useEffect(() => {
+    resetTeamCollaboration(); // Reset state to force refetch on timeRange change
+  }, [options.timeRange, resetTeamCollaboration]);
+
   if (teamCollaboration === undefined) {
     throw getTeamCollaboration(options, authorization)
       .then(setTeamCollaboration)

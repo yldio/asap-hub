@@ -269,7 +269,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     };
   }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter: rangeKey } = options;
     let collection: FetchUserCollaborationQuery['usersCollection'] = {
       total: 0,
       items: [],
@@ -290,7 +290,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection?.total || 0,
-      items: getUserCollaborationItems(collection),
+      items: getUserCollaborationItems(collection, rangeKey),
     };
   }
 

@@ -3,9 +3,9 @@ import {
   TeamCollaborationMetric,
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
-import { usePagination, usePaginationParams } from '../../hooks';
-import { CollaborationProps } from './UserCollaboration';
+import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsTeamCollaboration } from './state';
+import { CollaborationProps } from './UserCollaboration';
 
 const getDataForType = (
   data: TeamCollaborationResponse[],
@@ -33,11 +33,12 @@ const getDataForType = (
 
 const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const { timeRange } = useAnalytics();
 
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,
     pageSize,
-    timeRange: '30d',
+    timeRange,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

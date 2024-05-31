@@ -220,6 +220,16 @@ describe('getCollaborationCounts', () => {
 });
 
 describe('getUserCollaborationItems ', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+
+    jest.setSystemTime(new Date('2023-09-10T03:00:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('skips external authors', () => {
     const data: FetchUserCollaborationQuery['usersCollection'] = {
       items: [
@@ -268,6 +278,7 @@ describe('getUserCollaborationItems ', () => {
               researchOutputsCollection: {
                 items: [
                   {
+                    addedDate: '2023-09-01T03:00:00.000Z',
                     authorsCollection: {
                       items: [
                         {
@@ -376,6 +387,7 @@ describe('getUserCollaborationItems ', () => {
               researchOutputsCollection: {
                 items: [
                   {
+                    addedDate: '2023-09-01T03:00:00.000Z',
                     authorsCollection: {
                       items: [
                         {

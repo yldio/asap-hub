@@ -24,7 +24,7 @@ export const getManuscriptResponse = (
   data: Partial<ManuscriptDataObject> = {},
 ): ManuscriptResponse => getManuscriptDataObject(data);
 
-export const getContentfulGraphqlManuscripts = (
+export const getContentfulGraphqlManuscript = (
   props: Partial<
     NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']>
   > = {},
@@ -36,6 +36,7 @@ export const getContentfulGraphqlManuscripts = (
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
+  versionsCollection: getContentfulGraphqlManuscriptVersions(),
   ...props,
 });
 

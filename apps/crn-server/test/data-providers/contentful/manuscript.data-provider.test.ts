@@ -8,7 +8,7 @@ import { when } from 'jest-when';
 
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import {
-  getContentfulGraphqlManuscripts,
+  getContentfulGraphqlManuscript,
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
@@ -29,7 +29,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Manuscripts: () => getContentfulGraphqlManuscripts(),
+      Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsVersionsCollection: () =>
         getContentfulGraphqlManuscriptVersions(),
     });
@@ -59,6 +59,37 @@ describe('Manuscripts Contentful Data Provider', () => {
         await manuscriptDataProviderMockGraphql.fetchById(manuscriptId);
 
       expect(result).toMatchObject(getManuscriptDataObject());
+    });
+
+    test('should default null values to empty strings and arrays', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.title = null;
+      manuscript.teamsCollection = null;
+      manuscript.versionsCollection = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+      expect(result).toEqual({
+        id: 'manuscript-id-1',
+        teamId: '',
+        title: '',
+        versions: [],
+      });
+    });
+
+    test('should skip versions with invalid type', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.versionsCollection!.items[0]!.type = 'invalid type';
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+      expect(result!.versions).toEqual([]);
     });
 
     test('returns null if query does not return a result', async () => {

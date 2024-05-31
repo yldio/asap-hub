@@ -97,7 +97,9 @@ const parseGraphQLManuscript = (
 });
 
 export const parseGraphqlManuscriptVersion = (
-  versions: NonNullable<ManuscriptItem['versionsCollection']>['items'],
+  versions: NonNullable<
+    NonNullable<ManuscriptItem['versionsCollection']>['items']
+  >,
 ): ManuscriptVersion[] =>
   versions
     .map((version) => ({
@@ -114,4 +116,4 @@ export const parseGraphqlManuscriptVersion = (
             version.lifecycle as ManuscriptLifecycle,
           )) ||
         false,
-    ) ?? [];
+    );

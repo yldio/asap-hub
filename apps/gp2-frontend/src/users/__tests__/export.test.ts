@@ -3,7 +3,12 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { Stringifier } from 'csv-stringify';
 
-import { MAX_RESULTS, usersResponseToStream, userToCSV } from '../export';
+import {
+  MAX_RESULTS,
+  UserCSV,
+  usersResponseToStream,
+  userToCSV,
+} from '../export';
 
 beforeEach(jest.resetAllMocks);
 
@@ -20,6 +25,8 @@ describe('userToCSV', () => {
       onboarded: true,
       fundingStreams: 'funding stream',
       biography: 'this is a biography',
+      stateOrProvince: 'some stateOrProvince',
+      city: 'London',
       social: {
         googleScholar: 'googleScholar',
         orcid: 'orcid',
@@ -35,6 +42,8 @@ describe('userToCSV', () => {
       lastName: 'Stark',
       region: 'Europe',
       role: 'Trainee',
+      stateOrProvince: 'some stateOrProvince',
+      city: 'London',
       fundingStreams: 'funding stream',
       biography: 'this is a biography',
       googleScholar: 'googleScholar',
@@ -49,11 +58,13 @@ describe('userToCSV', () => {
       location: expect.anything(),
       contributingCohorts: expect.anything(),
       degrees: expect.anything(),
-      primaryPosition: expect.anything(),
+      primaryDepartment: expect.anything(),
+      primaryInstitution: expect.anything(),
+      primaryRole: expect.anything(),
       workingGroups: expect.anything(),
       projects: expect.anything(),
       onboarded: expect.anything(),
-    });
+    } satisfies Partial<UserCSV>);
   });
 
   it('joins country and city into location when city is available', () => {
@@ -104,7 +115,7 @@ describe('userToCSV', () => {
     },
   );
 
-  it('flattens the first three positions into primaryPosition, secondaryPosition and tertiaryPosition', () => {
+  it('flattens the first three position roles, institutions and departments into primary, secondary and tertiary', () => {
     const userResponse: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       positions: [
@@ -125,22 +136,37 @@ describe('userToCSV', () => {
         },
       ],
     };
-    const { primaryPosition, secondaryPosition, tertiaryPosition } =
-      userToCSV(userResponse);
-    expect(primaryPosition).toEqual('CEO in Research at Stark Industries');
-    expect(secondaryPosition).toEqual('CTO in Technology at YLD');
-    expect(tertiaryPosition).toEqual('CFO in Finance at Bank of America');
+    const {
+      primaryRole,
+      primaryInstitution,
+      primaryDepartment,
+      secondaryRole,
+      secondaryInstitution,
+      secondaryDepartment,
+      tertiaryRole,
+      tertiaryInstitution,
+      tertiaryDepartment,
+    } = userToCSV(userResponse);
+    expect(primaryRole).toEqual('CEO');
+    expect(primaryInstitution).toEqual('Stark Industries');
+    expect(primaryDepartment).toEqual('Research');
+    expect(secondaryRole).toEqual('CTO');
+    expect(secondaryInstitution).toEqual('YLD');
+    expect(secondaryDepartment).toEqual('Technology');
+    expect(tertiaryRole).toEqual('CFO');
+    expect(tertiaryInstitution).toEqual('Bank of America');
+    expect(tertiaryDepartment).toEqual('Finance');
   });
-  it('positions are left empty if there are no positions', () => {
+  it('position role, department and institution fields are left empty if there are no positions', () => {
     const userResponse: gp2Model.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       positions: [],
     };
-    const { primaryPosition, secondaryPosition, tertiaryPosition } =
+    const { primaryRole, secondaryInstitution, tertiaryDepartment } =
       userToCSV(userResponse);
-    expect(primaryPosition).toBeUndefined();
-    expect(secondaryPosition).toBeUndefined();
-    expect(tertiaryPosition).toBeUndefined();
+    expect(primaryRole).toBeUndefined();
+    expect(secondaryInstitution).toBeUndefined();
+    expect(tertiaryDepartment).toBeUndefined();
   });
   it('flattens and orders projects', () => {
     const userResponse: gp2Model.UserResponse = {

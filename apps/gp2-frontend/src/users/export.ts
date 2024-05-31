@@ -9,12 +9,20 @@ export const userFields = {
   email: 'Email',
   region: 'Region',
   location: 'Location',
+  stateOrProvince: 'State/Province',
+  city: 'City',
   role: 'GP2 role',
   degrees: 'Degrees',
   onboarded: 'Onboarded',
-  primaryPosition: 'Primary position',
-  secondaryPosition: 'Secondary position',
-  tertiaryPosition: 'Tertiary position',
+  primaryInstitution: 'Institution',
+  primaryDepartment: 'Department',
+  primaryRole: 'Role',
+  secondaryInstitution: 'Institution',
+  secondaryDepartment: 'Department',
+  secondaryRole: 'Role',
+  tertiaryInstitution: 'Institution',
+  tertiaryDepartment: 'Department',
+  tertiaryRole: 'Role',
   tags: 'Tags',
   biography: 'Biography',
   projects: 'Projects',
@@ -32,14 +40,10 @@ export const userFields = {
   activatedDate: 'Account activated',
 };
 
-type UserCSV = Record<keyof typeof userFields, CSVValue>;
+export type UserCSV = Record<keyof typeof userFields, CSVValue>;
 
 export const MAX_RESULTS = 10;
 
-const getPositionString = (position?: gp2.UserPosition) =>
-  position
-    ? `${position.role} in ${position.department} at ${position.institution}`
-    : undefined;
 const sorted = (items?: string[]) => items?.sort(caseInsensitive).join(',\n');
 export const userToCSV = ({
   firstName,
@@ -48,6 +52,7 @@ export const userToCSV = ({
   region,
   country,
   city,
+  stateOrProvince,
   role,
   degrees,
   onboarded,
@@ -68,12 +73,20 @@ export const userToCSV = ({
   email,
   region,
   location: city ? `${country}, ${city}` : country,
+  stateOrProvince,
+  city,
   role,
   degrees: sorted(degrees),
   onboarded: onboarded ? 'Yes' : 'No',
-  primaryPosition: getPositionString(positions[0]),
-  secondaryPosition: getPositionString(positions[1]),
-  tertiaryPosition: getPositionString(positions[2]),
+  primaryDepartment: positions?.[0]?.department,
+  primaryInstitution: positions?.[0]?.institution,
+  primaryRole: positions?.[0]?.role,
+  secondaryDepartment: positions?.[1]?.department,
+  secondaryInstitution: positions?.[1]?.institution,
+  secondaryRole: positions?.[1]?.role,
+  tertiaryDepartment: positions?.[2]?.department,
+  tertiaryInstitution: positions?.[2]?.institution,
+  tertiaryRole: positions?.[2]?.role,
   biography,
   tags: sorted(tags.map(({ name }) => name)),
   projects: sorted(projects.map(({ title }) => title)),

@@ -58,6 +58,21 @@ describe('UserCollaborationTable', () => {
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
 
+  it('displays links', () => {
+    const data: UserCollaborationMetric[] = [
+      {
+        ...user,
+        name: 'User A',
+        teams: [{ ...userTeam, team: 'Team A', id: 'team-id' }],
+      },
+    ];
+    const { getByRole } = render(
+      <UserCollaborationTable data={data} {...pageControlsProps} />,
+    );
+    expect(getByRole('link', { name: 'User A' })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'Team A' })).toBeInTheDocument();
+  });
+
   it('handles multiple teams', () => {
     const data: UserCollaborationMetric[] = [
       {

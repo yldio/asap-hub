@@ -99,8 +99,8 @@ interface AnalyticsControlsProps {
   // metric is optional for now since we haven't added search to the collaboration page
   readonly metricOption?: MetricOption;
   readonly tags: string[];
-  readonly loadTags: ComponentProps<typeof MultiSelect>['loadOptions'];
-  readonly setTags: (tags: string[]) => void;
+  readonly loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  readonly setTags?: (tags: string[]) => void;
   readonly href?: string;
   readonly currentPage?: number;
   readonly exportResults?: () => Promise<void>;
@@ -109,7 +109,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
   metricOption,
   tags,
-  setTags,
+  setTags = noop,
   loadTags = noop,
   exportResults,
   currentPage,

@@ -5,7 +5,6 @@ import { ComponentProps } from 'react';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { perRem } from '../pixels';
-import { noop } from '../utils';
 
 type MetricOption = 'user' | 'team';
 type TypeOption = 'within-team' | 'across-teams';
@@ -109,9 +108,7 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
       </div>
       <AnalyticsControls
         currentPage={currentPage}
-        loadTags={noop}
         tags={[]}
-        setTags={noop}
         timeRange={timeRange}
         href={
           analytics({}).collaboration({}).collaborationPath({ metric, type }).$

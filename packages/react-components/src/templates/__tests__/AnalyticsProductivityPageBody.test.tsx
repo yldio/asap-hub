@@ -7,6 +7,9 @@ describe('AnalyticsProductivityPageBody', () => {
     setMetric: () => null,
     metric: 'user',
     timeRange: '30d',
+    tags: [],
+    setTags: jest.fn(),
+    loadTags: jest.fn().mockResolvedValue([]),
     currentPage: 5,
     children: <span>table</span>,
   };

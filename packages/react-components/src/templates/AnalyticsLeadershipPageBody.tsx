@@ -4,7 +4,7 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { noop, PageControls, searchIcon } from '..';
+import { noop, PageControls } from '..';
 import {
   Dropdown,
   Headline3,
@@ -12,9 +12,9 @@ import {
   Paragraph,
   Subtitle,
 } from '../atoms';
-import { ExportButton } from '../molecules';
+import { AnalyticsControls } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
-import { rem, tabletScreen } from '../pixels';
+import { rem } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -68,29 +68,6 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-const searchContainerStyles = css({
-  display: 'flex',
-  gap: rem(18),
-  alignItems: 'center',
-  paddingBottom: rem(33),
-});
-
-const searchStyles = css({
-  flexGrow: 1,
-});
-const exportContainerStyles = css({
-  display: 'flex',
-  justifyContent: 'right',
-  gap: rem(33),
-  paddingBottom: rem(33),
-  [`@media (max-width: ${tabletScreen.min}px)`]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    width: '100%',
-    gap: 0,
-  },
-});
-
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   tags,
   setTags,
@@ -115,9 +92,6 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         required
       />
     </div>
-    <span css={exportContainerStyles}>
-      <ExportButton exportResults={exportResults} />
-    </span>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>
       <Paragraph>
@@ -125,24 +99,13 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
-    <div css={searchContainerStyles}>
-      <Subtitle>Teams:</Subtitle>
-      <span role="search" css={searchStyles}>
-        <MultiSelect
-          noMargin
-          leftIndicator={searchIcon}
-          noOptionsMessage={() => 'No results found'}
-          loadOptions={loadTags}
-          onChange={(items) => setTags(items.map(({ value }) => value))}
-          values={tags.map((tag) => ({
-            label: tag,
-            value: tag,
-          }))}
-          key={`${tags.join('')}`} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
-          placeholder="Enter team names..."
-        />
-      </span>
-    </div>
+    <AnalyticsControls
+      metricOption={'team'}
+      tags={tags}
+      loadTags={loadTags}
+      setTags={setTags}
+      exportResults={exportResults}
+    />
     <LeadershipMembershipTable
       metric={metric}
       data={data}

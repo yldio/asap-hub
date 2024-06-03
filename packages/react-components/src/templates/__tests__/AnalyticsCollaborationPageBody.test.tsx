@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { AnalyticsCollaborationPageBody } from '..';
 
-describe('AnalyticsProductivityPageBody', () => {
+describe('AnalyticsCollaborationPageBody', () => {
   const props: ComponentProps<typeof AnalyticsCollaborationPageBody> = {
     setMetric: () => null,
     setType: () => null,

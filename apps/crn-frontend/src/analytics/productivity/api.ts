@@ -4,6 +4,8 @@ import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
   TeamProductivityPerformance,
+  SortTeamProductivity,
+  SortUserProductivity,
   TimeRangeOption,
   UserProductivityPerformance,
 } from '@asap-hub/model';
@@ -13,6 +15,7 @@ export type ProductivityListOptions = Pick<
   'currentPage' | 'pageSize'
 > & {
   timeRange: TimeRangeOption;
+  sort: SortUserProductivity | SortTeamProductivity;
 };
 
 export const getUserProductivity = async (

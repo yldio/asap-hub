@@ -1,10 +1,15 @@
 import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { teamProductivityPerformance } from '@asap-hub/fixtures';
 import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -12,6 +17,13 @@ import { RecoilRoot } from 'recoil';
 import { getTeamProductivity, getTeamProductivityPerformance } from '../api';
 import { analyticsTeamProductivityState } from '../state';
 import TeamProductivity from '../TeamProductivity';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 
 jest.mock('../api');
 
@@ -26,6 +38,11 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
 const mockGetTeamProductivityPerformance =
   getTeamProductivityPerformance as jest.MockedFunction<
     typeof getTeamProductivityPerformance
+  >;
+
+const mockAlgoliaSearchClientFactory =
+  algoliaSearchClientFactory as jest.MockedFunction<
+    typeof algoliaSearchClientFactory
   >;
 
 const data: ListTeamProductivityAlgoliaResponse = {
@@ -65,6 +82,7 @@ const renderPage = async () => {
             currentPage: 0,
             pageSize: 10,
             timeRange: '30d',
+            sort: 'team_asc',
           }),
         );
       }}
@@ -106,4 +124,31 @@ it('renders the team productivity data', async () => {
   expect(getAllByTitle('Below Average').length).toEqual(12);
   expect(getAllByTitle('Average').length).toEqual(7);
   expect(getAllByTitle('Above Average').length).toEqual(6);
+});
+
+it('calls algolia client with the right index name', async () => {
+  mockGetTeamProductivity.mockResolvedValue(data);
+  mockGetTeamProductivityPerformance.mockResolvedValue(
+    teamProductivityPerformance,
+  );
+
+  const { getByTitle } = await renderPage();
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.not.stringContaining('_team_desc'),
+      }),
+    );
+  });
+
+  userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.stringContaining('_team_desc'),
+      }),
+    );
+  });
 });

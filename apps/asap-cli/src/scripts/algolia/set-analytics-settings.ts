@@ -40,6 +40,29 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_ig_current_membership_desc`,
     `${indexName}_ig_previous_membership_asc`,
     `${indexName}_ig_previous_membership_desc`,
+
+    `${indexName}_user_desc`,
+    `${indexName}_user_asap_output_asc`,
+    `${indexName}_user_asap_output_desc`,
+    `${indexName}_user_asap_public_output_asc`,
+    `${indexName}_user_asap_public_output_desc`,
+    `${indexName}_user_ratio_asc`,
+    `${indexName}_user_ratio_desc`,
+    `${indexName}_user_role_asc`,
+    `${indexName}_user_role_desc`,
+    `${indexName}_user_team_asc`,
+    `${indexName}_user_team_desc`,
+
+    `${indexName}_team_article_asc`,
+    `${indexName}_team_article_desc`,
+    `${indexName}_team_bioinformatics_asc`,
+    `${indexName}_team_bioinformatics_desc`,
+    `${indexName}_team_dataset_asc`,
+    `${indexName}_team_dataset_desc`,
+    `${indexName}_team_lab_resource_asc`,
+    `${indexName}_team_lab_resource_desc`,
+    `${indexName}_team_protocol_asc`,
+    `${indexName}_team_protocol_desc`,
   ];
   await index.setSettings({ ...indexSchema, replicas }).wait();
 

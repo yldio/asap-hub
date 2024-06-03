@@ -105,6 +105,76 @@ export type AnalyticsTeamLeadershipResponse = AnalyticsTeamLeadershipDataObject;
 export type ListAnalyticsTeamLeadershipResponse =
   ListResponse<AnalyticsTeamLeadershipResponse>;
 
+export type SortUserProductivity =
+  | 'user_asc'
+  | 'user_desc'
+  | 'team_asc'
+  | 'team_desc'
+  | 'role_asc'
+  | 'role_desc'
+  | 'asap_output_asc'
+  | 'asap_output_desc'
+  | 'asap_public_output_asc'
+  | 'asap_public_output_desc'
+  | 'ratio_asc'
+  | 'ratio_desc';
+
+export type SortTeamProductivity =
+  | 'team_asc'
+  | 'team_desc'
+  | 'article_asc'
+  | 'article_desc'
+  | 'bioinformatics_asc'
+  | 'bioinformatics_desc'
+  | 'dataset_asc'
+  | 'dataset_desc'
+  | 'lab_resource_asc'
+  | 'lab_resource_desc'
+  | 'protocol_asc'
+  | 'protocol_desc';
+
+export type UserProductivityFields =
+  | 'user'
+  | 'team'
+  | 'role'
+  | 'asapOutput'
+  | 'asapPublicOutput'
+  | 'ratio';
+
+export type TeamProductivityFields =
+  | 'team'
+  | 'article'
+  | 'bioinformatics'
+  | 'dataset'
+  | 'labResource'
+  | 'protocol';
+
+export type TeamProductivitySortingDirection = {
+  [key in TeamProductivityFields]: SortingDirection;
+};
+
+export type UserProductivitySortingDirection = {
+  [key in UserProductivityFields]: SortingDirection;
+};
+
+export const userProductivityInitialSortingDirection = {
+  user: ascending,
+  team: ascending,
+  role: ascending,
+  asapOutput: descending,
+  asapPublicOutput: descending,
+  ratio: descending,
+};
+
+export const teamProductivityInitialSortingDirection = {
+  team: ascending,
+  article: descending,
+  bioinformatics: descending,
+  dataset: descending,
+  labResource: descending,
+  protocol: descending,
+};
+
 export type UserProductivityTeam = {
   team: string;
   id: string;

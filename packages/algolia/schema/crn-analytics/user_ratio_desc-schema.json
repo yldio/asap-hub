@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "desc(ratio)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

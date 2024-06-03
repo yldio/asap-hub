@@ -96,15 +96,21 @@ const pageControlsStyles = css({
 });
 
 const displayTeams = (items: UserProductivityResponse['teams']) => {
-  if (items.length === 0) {
-    return `No team`;
+  const team = items[0];
+  if (items.length <= 0 || !team) {
+    return 'No team';
   }
   if (items.length === 1) {
-    return items[0] && !items[0].isTeamInactive ? (
-      items[0].team
+    return team && !team.isTeamInactive ? (
+      <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+        {team.team}
+      </Link>
     ) : (
       <span css={iconStyles}>
-        {items[0]?.team} <InactiveBadgeIcon />
+        <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+          {team.team}
+        </Link>
+        <InactiveBadgeIcon />
       </span>
     );
   }

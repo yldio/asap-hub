@@ -1,6 +1,5 @@
 import { userProductivityPerformance } from '@asap-hub/fixtures';
 import { TeamRole, UserProductivityResponse } from '@asap-hub/model';
-import { toBeInTheDocument } from '@testing-library/jest-dom/matchers';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import UserProductivityTable from '../UserProductivityTable';

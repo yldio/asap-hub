@@ -1,8 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import userEvent, { specialChars } from '@testing-library/user-event';
 import { manuscriptTypeLifecycles } from '@asap-hub/model';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 
@@ -40,7 +40,7 @@ it('renders the form', async () => {
 it('data is sent on form submission', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
@@ -63,7 +63,7 @@ it('data is sent on form submission', async () => {
 
 it('does not display the lifecycle select box until type is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -71,13 +71,16 @@ it('does not display the lifecycle select box until type is selected', async () 
     screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
   ).not.toBeInTheDocument();
 
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'Original');
-  userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
+  fireEvent.keyDown(
+    screen.getByRole('combobox', {
+      name: /Type of Manuscript/i,
+    }),
+    { key: 'ArrowDown' },
+  );
+  fireEvent.click(await screen.findByText('Original Research'));
 
   expect(
-    screen.getByRole('textbox', {
+    screen.getByRole('combobox', {
       name: /Where is the manuscript in the life cycle/i,
     }),
   ).toBeInTheDocument();
@@ -90,15 +93,18 @@ it.each(manuscriptTypeLifecyclesFlat)(
   'displays $lifecycle lifecycle option for when $type type is selected',
   async ({ lifecycle, type }) => {
     render(
-      <StaticRouter>
+      <StaticRouter location="">
         <ManuscriptForm {...defaultProps} type={type} lifecycle="" />
       </StaticRouter>,
     );
 
-    const lifecycleTextbox = screen.getByRole('textbox', {
-      name: /Where is the manuscript in the life cycle/i,
-    });
-    userEvent.click(lifecycleTextbox);
+    fireEvent.keyDown(
+      screen.getByRole('combobox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+      { key: 'ArrowDown' },
+    );
+    fireEvent.click(await screen.findByText(lifecycle));
 
     expect(screen.getByText(lifecycle)).toBeVisible();
   },
@@ -136,35 +142,38 @@ it('displays error message when manuscript title is missing', async () => {
 
 it('displays error message when no type was found', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
 
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'invalid type');
+  const textbox = screen.getByRole('combobox', { name: /Type of Manuscript/i });
+  fireEvent.change(textbox, { target: { value: 'invalid type' } });
 
   expect(screen.getByText(/Sorry, no types match/i)).toBeVisible();
 });
 
 it('displays error message when no lifecycle was found', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
 
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
+  fireEvent.keyDown(
+    screen.getByRole('combobox', {
+      name: /Type of Manuscript/i,
+    }),
+    { key: 'ArrowDown' },
+  );
+  fireEvent.click(await screen.findByText('Original Research'));
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'invalid lifecycle');
+  fireEvent.change(lifecycleTextbox, {
+    target: { value: 'invalid lifecycle' },
+  });
 
   expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
 });

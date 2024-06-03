@@ -8,16 +8,16 @@ import {
   useEffect,
   useRef,
 } from 'react';
+import type { Options, MultiValueGenericProps, Props } from 'react-select';
 import Select, {
+  SelectInstance,
   ActionMeta,
   components as reactAsyncComponents,
   MultiValueProps,
-  OptionsType,
-  Props,
 } from 'react-select';
-import AsyncSelect, { Props as AsyncProps } from 'react-select/async';
+import type { AsyncProps } from 'react-select/async';
+import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
-import { MultiValueGenericProps } from 'react-select/src/components/MultiValue';
 import {
   SortableContainer,
   SortableContainerProps,
@@ -118,17 +118,13 @@ const containerStyles = (noMargin: boolean) =>
   });
 
 type RefType<T extends MultiSelectOptionsType> =
-  | (Select<T, true> & { getWrappedInstance: undefined })
-  | (AsyncSelect<T, true> & {
+  | (SelectInstance<T, true> & { getWrappedInstance: undefined })
+  | (SelectInstance<T, true> & {
       getWrappedInstance: undefined;
     })
   | {
       blur: undefined;
-      getWrappedInstance: () => Select<T, true>;
-    }
-  | {
-      blur: undefined;
-      getWrappedInstance: () => AsyncSelect<T, true>;
+      getWrappedInstance: () => SelectInstance<T, true>;
     }
   | null;
 
@@ -137,8 +133,8 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
-  readonly onChange?: (newValues: OptionsType<T>) => void;
-  readonly values?: OptionsType<T>;
+  readonly onChange?: (newValues: Options<T>) => void;
+  readonly values?: Options<T>;
   readonly sortable?: boolean;
   readonly creatable?: boolean;
   readonly required?: boolean;
@@ -233,7 +229,6 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     value: values,
     components: {
       MultiValueRemove,
-      // @ts-expect-error // We're failing to provide a required index prop to SortableElement
       MultiValue: sortable ? SortableMultiValue : undefined,
       MultiValueLabel: sortable ? SortableMultiValueLabel : undefined,
       ...(leftIndicator
@@ -256,7 +251,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     },
     onFocus: checkValidation,
     onBlur: checkValidation,
-    onChange: (options: OptionsType<T>, actionMeta: ActionMeta<T>) => {
+    onChange: (options: Options<T>, actionMeta: ActionMeta<T>) => {
       switch (actionMeta.action) {
         case 'remove-value':
         case 'pop-value':

@@ -133,7 +133,9 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
           leftIndicator={searchIcon}
           noOptionsMessage={() => 'No results found'}
           loadOptions={loadTags}
-          onChange={(items) => setTags(items.map(({ value }) => value))}
+          onChange={(items: { label: string; value: string }[]) =>
+            setTags(items.map(({ value }) => value))
+          }
           values={tags.map((tag) => ({
             label: tag,
             value: tag,

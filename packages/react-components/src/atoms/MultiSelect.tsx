@@ -8,14 +8,18 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import type { Options, MultiValueGenericProps, Props } from 'react-select';
-import Select, {
+import type {
+  Options,
+  MultiValueGenericProps,
+  Props,
   SelectInstance,
+  GroupBase,
+} from 'react-select';
+import Select, {
   ActionMeta,
   components as reactAsyncComponents,
   MultiValueProps,
 } from 'react-select';
-import type { AsyncProps } from 'react-select/async';
 import AsyncSelect from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import {
@@ -119,9 +123,6 @@ const containerStyles = (noMargin: boolean) =>
 
 type RefType<T extends MultiSelectOptionsType> =
   | (SelectInstance<T, true> & { getWrappedInstance: undefined })
-  | (SelectInstance<T, true> & {
-      getWrappedInstance: undefined;
-    })
   | {
       blur: undefined;
       getWrappedInstance: () => SelectInstance<T, true>;
@@ -147,7 +148,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
       readonly suggestions: ReadonlyArray<T>;
       readonly loadOptions?: undefined;
     })
-  | (Pick<AsyncProps<T, true>, 'noOptionsMessage' | 'components'> & {
+  | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly loadOptions: (
         inputValue: string,
         callback: (options: ReadonlyArray<T>) => void,

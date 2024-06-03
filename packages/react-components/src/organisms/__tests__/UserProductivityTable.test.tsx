@@ -1,5 +1,6 @@
 import { userProductivityPerformance } from '@asap-hub/fixtures';
 import { TeamRole, UserProductivityResponse } from '@asap-hub/model';
+import { toBeInTheDocument } from '@testing-library/jest-dom/matchers';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import UserProductivityTable from '../UserProductivityTable';
@@ -79,6 +80,21 @@ describe('UserProductivityTable', () => {
       <UserProductivityTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
+  });
+
+  it('displays links', () => {
+    const data: UserProductivityResponse[] = [
+      {
+        ...user,
+        name: 'User A',
+        teams: [{ ...userTeam, team: 'Team A', id: 'team-id' }],
+      },
+    ];
+    const { getByRole } = render(
+      <UserProductivityTable {...defaultProps} data={data} />,
+    );
+    expect(getByRole('link', { name: 'User A' })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'Team A' })).toBeInTheDocument();
   });
 
   it('handles multiple teams', () => {

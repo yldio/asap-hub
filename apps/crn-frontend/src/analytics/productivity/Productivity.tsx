@@ -1,7 +1,8 @@
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { useHistory, useParams } from 'react-router-dom';
-import { useAnalytics, usePaginationParams } from '../../hooks';
+import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
 import TeamProductivity from './TeamProductivity';
 import UserProductivity from './UserProductivity';
@@ -17,6 +18,8 @@ const Productivity = () => {
     );
 
   const { timeRange } = useAnalytics();
+  const { tags, setTags } = useSearch();
+  const { client } = useAnalyticsAlgolia();
 
   return (
     <AnalyticsProductivityPageBody
@@ -24,8 +27,21 @@ const Productivity = () => {
       setMetric={setMetric}
       timeRange={timeRange}
       currentPage={currentPage}
+      tags={tags}
+      setTags={setTags}
+      loadTags={async (tagQuery) => {
+        const searchedTags = await client.searchForTagValues([], tagQuery, {});
+        return searchedTags.facetHits.map(({ value }) => ({
+          label: value,
+          value,
+        }));
+      }}
     >
-      {metric === 'user' ? <UserProductivity /> : <TeamProductivity />}
+      {metric === 'user' ? (
+        <UserProductivity tags={tags} />
+      ) : (
+        <TeamProductivity tags={tags} />
+      )}
     </AnalyticsProductivityPageBody>
   );
 };

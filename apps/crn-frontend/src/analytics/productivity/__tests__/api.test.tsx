@@ -46,6 +46,7 @@ const defaultOptions: ProductivityListOptions = {
   currentPage: null,
   timeRange: '30d',
   sort: 'user_asc',
+  tags: [],
 };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
@@ -131,6 +132,20 @@ describe('getUserProductivity', () => {
       }),
     );
   });
+
+  it('should pass the search query to Algolia', async () => {
+    await getUserProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user-productivity'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
+    );
+  });
 });
 
 describe('getTeamProductivity', () => {
@@ -184,6 +199,20 @@ describe('getTeamProductivity', () => {
       '',
       expect.objectContaining({
         filters: `__meta.range:"${timeRange}"`,
+      }),
+    );
+  });
+
+  it('should pass the search query to Algolia', async () => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
       }),
     );
   });

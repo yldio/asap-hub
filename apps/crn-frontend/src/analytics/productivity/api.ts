@@ -1,5 +1,4 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
@@ -9,10 +8,11 @@ import {
   TimeRangeOption,
   UserProductivityPerformance,
 } from '@asap-hub/model';
+import { AnalyticsSearchOptions } from '../leadership/api';
 
 export type ProductivityListOptions = Pick<
-  GetListOptions,
-  'currentPage' | 'pageSize'
+  AnalyticsSearchOptions,
+  'currentPage' | 'pageSize' | 'tags'
 > & {
   timeRange: TimeRangeOption;
   sort: SortUserProductivity | SortTeamProductivity;
@@ -22,9 +22,10 @@ export const getUserProductivity = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
 ): Promise<ListUserProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange } = options;
+  const { currentPage, pageSize, timeRange, tags } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
   const result = await algoliaClient.search(['user-productivity'], '', {
+    tagFilters: [tags],
     filters: rangeFilter,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
@@ -71,9 +72,10 @@ export const getTeamProductivity = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
 ): Promise<ListTeamProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange } = options;
+  const { currentPage, pageSize, timeRange, tags } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
   const result = await algoliaClient.search(['team-productivity'], '', {
+    tagFilters: [tags],
     filters: rangeFilter,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,

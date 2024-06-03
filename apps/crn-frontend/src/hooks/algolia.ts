@@ -6,7 +6,11 @@ import {
 import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
-import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
+import {
+  ALGOLIA_APP_ID,
+  ALGOLIA_INDEX,
+  ANALYTICS_ALGOLIA_INDEX,
+} from '../config';
 
 export type AlgoliaHook<App extends Apps> = {
   client: AlgoliaClient<App>;
@@ -49,8 +53,8 @@ export const useAlgolia = () => {
   return algolia;
 };
 
-export const useAnalyticsAlgolia = (index: string) => {
+export const useAnalyticsAlgolia = (index?: string) => {
   const user = useCurrentUserCRN();
 
-  return initAlgolia<'analytics'>(user, index);
+  return initAlgolia<'analytics'>(user, index ?? ANALYTICS_ALGOLIA_INDEX);
 };

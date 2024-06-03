@@ -63,6 +63,7 @@ const defaultOptions: ProductivityListOptions = {
   currentPage: 0,
   timeRange: '30d',
   sort: 'team_asc',
+  tags: [],
 };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
@@ -187,7 +188,7 @@ describe('team productivity', () => {
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
-    const input = screen.getByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
     userEvent.click(input);
     userEvent.click(screen.getByText(label));
 

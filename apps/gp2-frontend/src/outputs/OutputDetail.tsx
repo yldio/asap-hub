@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 
@@ -18,7 +18,7 @@ const ShareOutput = lazy(loadShareOutput);
 
 const OutputDetail: FC = () => {
   const { outputId } = useRouteParams(gp2Routing.outputs({}).output);
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const currentUser = useCurrentUserGP2();
   const { isEnabled } = useFlags();
 
@@ -40,7 +40,7 @@ const OutputDetail: FC = () => {
     return <NotFoundPage />;
   }
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <Frame title="Output">
           <OutputDetailPage
@@ -76,7 +76,7 @@ const OutputDetail: FC = () => {
         </Frame>
       </Route>
       <Route component={NotFoundPage} />
-    </Switch>
+    </Routes>
   );
 };
 

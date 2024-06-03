@@ -3,7 +3,7 @@ interface AlgoliaHitProps {
   algoliaQueryId?: string;
   index: number;
 }
-const AlgoliaHit: React.FC<AlgoliaHitProps> = ({
+const AlgoliaHit: React.FC<React.PropsWithChildren<AlgoliaHitProps>> = ({
   objectId,
   index,
   algoliaQueryId,

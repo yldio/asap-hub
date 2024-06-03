@@ -11,7 +11,8 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
@@ -152,7 +153,7 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history}>{children}</Router>
             </NotificationContext.Provider>
           ),
         },
@@ -285,7 +286,7 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <Router navigator={history}>{children}</Router>
           </NotificationContext.Provider>
         ),
       },
@@ -550,7 +551,7 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history}>{children}</Router>
             </NotificationContext.Provider>
           ),
         },

@@ -1,6 +1,6 @@
-import { FC, Suspense } from 'react';
+import { FC, PropsWithChildren, Suspense } from 'react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
 
@@ -17,11 +17,11 @@ beforeEach(() => {
   MockDashboard.mockReset().mockReturnValue(null);
 });
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<PropsWithChildren> = ({ children }) => (
   <RecoilRoot>
     <authTestUtils.UserAuth0Provider>
       <authTestUtils.UserLoggedIn user={{}}>
-        <StaticRouter>
+        <StaticRouter location={'/'}>
           <Suspense fallback="loading">{children}</Suspense>
         </StaticRouter>
       </authTestUtils.UserLoggedIn>

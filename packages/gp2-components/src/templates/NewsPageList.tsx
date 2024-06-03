@@ -22,7 +22,7 @@ const newsFilters: ReadonlyArray<Option<'news' | 'update'> | Title> = [
   { label: 'Updates', value: 'update' },
 ];
 
-const NewsPageList: React.FC<NewsPageListProps> = ({
+const NewsPageList: React.FC<React.PropsWithChildren<NewsPageListProps>> = ({
   children,
   filters,
   onChangeFilter,

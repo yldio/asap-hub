@@ -16,7 +16,10 @@ type DashboardPageProps = {
   readonly firstName?: string;
 };
 
-const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
+const Dashboard: React.FC<React.PropsWithChildren<DashboardPageProps>> = ({
+  firstName,
+  children,
+}) => (
   <article>
     <main css={mainStyles}>
       <div css={headerStyles}>

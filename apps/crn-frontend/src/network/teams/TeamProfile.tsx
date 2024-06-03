@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams, useMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -64,7 +64,7 @@ const DuplicateOutput: FC = () => {
 };
 
 const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 

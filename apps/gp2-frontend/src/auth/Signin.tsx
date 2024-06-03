@@ -1,6 +1,6 @@
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Frame from '../Frame';
 
 const Signin: React.FC<Record<string, never>> = () => {
@@ -8,7 +8,7 @@ const Signin: React.FC<Record<string, never>> = () => {
 
   const { pathname, search, hash } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const history = useHistory();
+  const history = useNavigate();
 
   const values = {
     signup: {

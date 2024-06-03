@@ -12,13 +12,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { gp2 as gp2Validation } from '@asap-hub/validation';
 import { FC, lazy, useEffect } from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Redirect, Route, Routes, useParams, useMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -65,7 +59,7 @@ const DuplicateOutput: FC = () => {
 };
 
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   useEffect(() => {
@@ -109,7 +103,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
 
   if (project) {
     return (
-      <Switch>
+      <Routes>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
             <OutputFormPage>
@@ -132,7 +126,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
           pastTotal={pastEvents?.total || 0}
           {...project}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <ProjectOverview {...project} />
@@ -196,9 +190,9 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             <Redirect to={overview} />
-          </Switch>
+          </Routes>
         </ProjectDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

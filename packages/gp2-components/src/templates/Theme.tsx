@@ -7,7 +7,7 @@ const theme = {
   components,
 };
 
-const Theme: React.FC = ({ children }) => (
+const Theme: React.FC<React.PropsWithChildren> = ({ children }) => (
   <ThemeProvider theme={theme}>{children}</ThemeProvider>
 );
 

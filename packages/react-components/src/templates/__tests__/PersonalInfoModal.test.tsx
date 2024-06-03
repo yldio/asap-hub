@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -20,7 +20,7 @@ it('renders the title', () => {
       backHref="/wrong"
     />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   expect(screen.getByText('Main details', { selector: 'h3' })).toBeVisible();
@@ -34,7 +34,7 @@ it('indicates which fields are required or optional', () => {
       backHref="/wrong"
     />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
 
@@ -70,7 +70,7 @@ it('renders default values into text inputs', () => {
       jobTitle="jobTitle"
       institution="institution"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(
     screen
@@ -92,7 +92,7 @@ it('renders default values into text inputs', () => {
   `);
 });
 
-it('renders a country selector', () => {
+it('renders a country selector', async () => {
   render(
     <PersonalInfoModal
       {...props}
@@ -100,16 +100,16 @@ it('renders a country selector', () => {
       country=""
     />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
 
-  userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.click(screen.getByText('Start Typing...'));
   expect(screen.queryByText('United States')).toBeVisible();
   expect(screen.queryByText('Mexico')).toBeVisible();
 
-  userEvent.click(screen.getByText('Start Typing...'));
-  userEvent.type(screen.getByText('Start Typing...'), 'xx');
+  await userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.type(screen.getByText('Start Typing...'), 'xx');
   expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
@@ -123,14 +123,14 @@ it('shows validation message country when it not selected', async () => {
       jobTitle="Assistant Professor"
     />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
   const field = screen.getByRole('textbox', { name: /country/i });
-  userEvent.click(field);
-  userEvent.tab();
+  await userEvent.click(field);
+  await userEvent.tab();
 
-  userEvent.click(screen.getByRole('button', { name: /save/i }));
+  await userEvent.click(screen.getByRole('button', { name: /save/i }));
   expect(await screen.findByText(/Please add your country/i)).toBeVisible();
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
@@ -156,7 +156,7 @@ it.each`
         jobTitle="Assistant Professor"
       />,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
     const field = screen.getByLabelText(label);
@@ -165,7 +165,7 @@ it.each`
     fireEvent.change(input, { target: { value: '' } });
     expect(input).toHaveValue('');
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
   },
 );
@@ -184,10 +184,10 @@ it('disables the form elements while submitting', async () => {
       stateOrProvince="Yucatán"
       country="Mexico"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
-  userEvent.click(screen.getByText(/save/i));
+  await userEvent.click(screen.getByText(/save/i));
 
   const form = screen.getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -219,7 +219,7 @@ it('triggers the save function', async () => {
     { wrapper: MemoryRouter },
   );
 
-  userEvent.click(screen.getByText('Save'));
+  await userEvent.click(screen.getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     middleName: 'middleName',

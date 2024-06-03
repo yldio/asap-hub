@@ -21,7 +21,7 @@ const navStyles = css({
   marginTop: rem(32),
 });
 
-const EventsPage: React.FC = ({ children }) => {
+const EventsPage: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { isEnabled } = useFlags();
   return (
     <article css={layoutContentStyles}>

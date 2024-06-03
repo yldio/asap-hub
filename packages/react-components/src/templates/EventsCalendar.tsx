@@ -13,10 +13,9 @@ type EventsCalendarPageProps = {
   calendars: ReadonlyArray<BasicCalendarResponse>;
 };
 
-const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({
-  calendars,
-  children,
-}) => (
+const EventsCalendarPage: React.FC<
+  React.PropsWithChildren<EventsCalendarPageProps>
+> = ({ calendars, children }) => (
   <div css={containerStyles}>
     <GoogleCalendar calendars={calendars} />
     {children}

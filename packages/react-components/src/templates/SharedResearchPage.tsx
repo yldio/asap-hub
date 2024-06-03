@@ -11,13 +11,9 @@ const mainStyles = css({
 });
 
 type SharedResearchPageProps = ComponentProps<typeof SharedResearchPageHeader>;
-const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
-  onChangeSearch,
-  searchQuery,
-  children,
-  onChangeFilter,
-  filters,
-}) => (
+const SharedResearchPage: React.FC<
+  React.PropsWithChildren<SharedResearchPageProps>
+> = ({ onChangeSearch, searchQuery, children, onChangeFilter, filters }) => (
   <article>
     <SharedResearchPageHeader
       onChangeSearch={onChangeSearch}

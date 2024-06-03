@@ -1,19 +1,23 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
-import { createMemoryHistory, History } from 'history';
 
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { manuscriptTypeLifecycles } from '@asap-hub/model';
+import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
+
 import ManuscriptForm from '../ManuscriptForm';
 
-let history!: History;
+const mockedUseNavigate = jest.fn();
 
-beforeEach(() => {
-  history = createMemoryHistory();
-});
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUseNavigate,
+}));
 
 const teamId = '42';
+
+beforeEach(jest.clearAllMocks);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
@@ -23,7 +27,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -102,15 +106,14 @@ it.each(manuscriptTypeLifecyclesFlat)(
 
 it('displays error message when manuscript title is missing', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
-
   const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -119,14 +122,16 @@ it('displays error message when manuscript title is missing', async () => {
     screen.getAllByText(/Please enter a title/i).length,
   ).toBeGreaterThanOrEqual(1);
 
-  userEvent.type(input, 'title');
+  await userEvent.type(input, 'title');
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
   });
-  expect(screen.queryByText(/Please enter a title/i)).toBeNull();
+  await waitFor(() => {
+    expect(screen.queryByText(/Please enter a title/i)).not.toBeInTheDocument();
+  });
 });
 
 it('displays error message when no type was found', async () => {
@@ -166,7 +171,7 @@ it('displays error message when no lifecycle was found', async () => {
 
 it('displays error message when manuscript title is bigger than 256 characters', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -174,14 +179,14 @@ it('displays error message when manuscript title is bigger than 256 characters',
   const input = screen.getByRole('textbox', {
     name: /Title of Manuscript/i,
   });
-  userEvent.type(
+  await userEvent.type(
     input,
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
   );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -195,14 +200,14 @@ it('displays error message when manuscript title is bigger than 256 characters',
 it('does not submit when required values are missing', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} onSave={onSave} />
     </StaticRouter>,
   );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -214,22 +219,16 @@ it('does not submit when required values are missing', async () => {
   expect(onSave).not.toHaveBeenCalled();
 });
 
-it('should go back when cancel button is clicked', () => {
-  const { getByText } = render(
-    <Router history={history}>
-      <Route path="/form">
-        <ManuscriptForm {...defaultProps} />
-      </Route>
-    </Router>,
-    { wrapper: MemoryRouter },
+it('should go back when cancel button is clicked', async () => {
+  render(
+    <MemoryRouter>
+      <ManuscriptForm {...defaultProps} />
+    </MemoryRouter>,
   );
 
-  history.push('/another-url');
-  history.push('/form');
+  const cancelButton = screen.getByText(/cancel/i);
+  await userEvent.click(cancelButton);
 
-  const cancelButton = getByText(/cancel/i);
-  expect(cancelButton).toBeInTheDocument();
-  userEvent.click(cancelButton);
-
-  expect(history.location.pathname).toBe('/another-url');
+  expect(mockedUseNavigate).toHaveBeenCalledTimes(1);
+  expect(mockedUseNavigate).toHaveBeenCalledWith(-1);
 });

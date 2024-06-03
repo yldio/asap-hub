@@ -98,7 +98,7 @@ const renderWorkingGroupProfile = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <Route
                 path={
                   network.template +

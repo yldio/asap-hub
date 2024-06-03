@@ -10,7 +10,9 @@ const mainStyles = css({
 
 type AboutPageProps = ComponentProps<typeof AboutPageHeader>;
 
-const About: React.FC<AboutPageProps> = ({ children }) => (
+const About: React.FC<React.PropsWithChildren<AboutPageProps>> = ({
+  children,
+}) => (
   <article>
     <AboutPageHeader />
     <main css={mainStyles}>{children}</main>

@@ -11,13 +11,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Redirect, Route, Routes, useParams, useMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -62,7 +56,7 @@ const DuplicateOutput: FC = () => {
 };
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   useEffect(() => {
@@ -106,7 +100,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
 
   if (workingGroup) {
     return (
-      <Switch>
+      <Routes>
         <Route exact path={path + createOutputRoute.template}>
           <Frame title="Create Output">
             <OutputFormPage>
@@ -129,7 +123,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
           upcomingTotal={upcomingEvents?.total || 0}
           pastTotal={pastEvents?.total || 0}
         >
-          <Switch>
+          <Routes>
             <Route path={overview}>
               <Frame title="Overview">
                 <WorkingGroupOverview {...workingGroup} />
@@ -197,9 +191,9 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             <Redirect to={overview} />
-          </Switch>
+          </Routes>
         </WorkingGroupDetailPage>
-      </Switch>
+      </Routes>
     );
   }
   return <NotFoundPage />;

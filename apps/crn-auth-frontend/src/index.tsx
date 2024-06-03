@@ -1,17 +1,17 @@
 import { StrictMode } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { GlobalStyles } from '@asap-hub/react-components';
 
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+root.render(
   <StrictMode>
     <GlobalStyles />
     <App />
   </StrictMode>,
-  document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change

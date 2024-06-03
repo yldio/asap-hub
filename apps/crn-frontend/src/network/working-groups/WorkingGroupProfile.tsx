@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams, useMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -61,7 +61,7 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
   const route = network({}).workingGroups({}).workingGroup;
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
@@ -134,7 +134,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       <ResearchOutputPermissionsContext.Provider
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
-        <Switch>
+        <Routes>
           {canShareResearchOutput && (
             <Route path={path + createOutput.template}>
               <Frame title="Share Output">
@@ -196,7 +196,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
               type="working group"
             />
           </WorkingGroupPage>
-        </Switch>
+        </Routes>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

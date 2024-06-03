@@ -2,7 +2,7 @@ import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { Redirect, Route, Routes, useNavigate } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -32,7 +32,7 @@ export const navigationPromptHandler = (
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUserCRN();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(
     () =>
@@ -53,10 +53,10 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   }
 
   return (
-    <Switch>
+    <Routes>
       <Route path={ownProfilePath}>{children}</Route>
       <Redirect to={ownProfilePath} />
-    </Switch>
+    </Routes>
   );
 };
 

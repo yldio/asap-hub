@@ -351,9 +351,9 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               <span css={[titleStyles, rowTitleStyles]}>User</span>
               <p css={iconStyles}>
                 <Link href={network({}).users({}).user({ userId: row.id }).$}>
-                {row.name}
-              </Link>
-              {row.isAlumni && alumniBadgeIcon}
+                  {row.name}
+                </Link>
+                {row.isAlumni && alumniBadgeIcon}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Team</span>
               <p>{displayTeams(row.teams)}</p>

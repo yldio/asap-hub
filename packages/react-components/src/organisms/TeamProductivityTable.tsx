@@ -297,10 +297,10 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
               <span css={[titleStyles, rowTitleStyles]}>Team</span>
               <p css={iconStyles}>
                 <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
-                {row.name}
-              </Link>
+                  {row.name}
+                </Link>
 
-              {row.isInactive && <InactiveBadgeIcon />}
+                {row.isInactive && <InactiveBadgeIcon />}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Articles</span>
               <p css={rowValueStyles}>

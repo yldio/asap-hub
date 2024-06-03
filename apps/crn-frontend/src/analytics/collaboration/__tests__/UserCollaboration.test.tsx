@@ -23,6 +23,7 @@ const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
 >;
 
 const userTeam: UserCollaborationResponse['teams'][number] = {
+  id: '1',
   team: 'Team A',
   isTeamInactive: false,
   role: 'Collaborating PI',

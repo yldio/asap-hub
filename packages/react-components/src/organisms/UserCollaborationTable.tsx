@@ -82,6 +82,7 @@ const pageControlsStyles = css({
 
 type Team = {
   team: string;
+  id: string;
   role?: TeamRole;
   isTeamInactive: boolean;
   outputsCoAuthored: number;
@@ -117,15 +118,21 @@ const TeamsInfo: React.FC<{
 );
 
 const displayTeams = (items: UserCollaborationMetric['teams']) => {
-  if (items.length === 0) {
+  const team = items[0];
+  if (items.length <= 0 || !team) {
     return `No team`;
   }
   if (items.length === 1) {
     return items[0] && !items[0].isTeamInactive ? (
-      items[0].team
+      <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+        {team.team}
+      </Link>
     ) : (
       <span css={iconStyles}>
-        {items[0]?.team} <InactiveBadgeIcon />
+        <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+          {team.team}
+        </Link>
+        <InactiveBadgeIcon />
       </span>
     );
   }

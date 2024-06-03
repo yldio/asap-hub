@@ -167,6 +167,7 @@ export type ListTeamProductivityAlgoliaResponse =
   ListResponse<TeamProductivityAlgoliaResponse>;
 
 export type UserCollaborationTeam = {
+  id: string;
   team: string;
   role?: TeamRole;
   isTeamInactive: boolean;

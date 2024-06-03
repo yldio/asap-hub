@@ -16,6 +16,7 @@ const getDataForType = (
       name: row.name,
       isAlumni: row.isAlumni,
       teams: row.teams.map((team) => ({
+        id: team.id,
         team: team.team,
         role: team.role,
         isTeamInactive: team.isTeamInactive,
@@ -28,6 +29,7 @@ const getDataForType = (
     name: row.name,
     isAlumni: row.isAlumni,
     teams: row.teams.map((team) => ({
+      id: team.id,
       team: team.team,
       role: team.role,
       isTeamInactive: team.isTeamInactive,

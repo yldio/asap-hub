@@ -12,6 +12,7 @@ describe('UserCollaborationTable', () => {
   };
 
   const userTeam: UserCollaborationMetric['teams'][number] = {
+    id: '1',
     team: 'Team A',
     isTeamInactive: false,
     role: 'Collaborating PI',

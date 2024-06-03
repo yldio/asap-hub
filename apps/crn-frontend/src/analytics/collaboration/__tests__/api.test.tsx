@@ -32,6 +32,7 @@ const userCollaborationResponse: ListUserCollaborationResponse = {
       isAlumni: false,
       teams: [
         {
+          id: '1',
           team: 'Team A',
           isTeamInactive: false,
           role: 'Collaborating PI',

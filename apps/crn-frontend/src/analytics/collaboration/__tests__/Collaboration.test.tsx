@@ -37,6 +37,7 @@ const userData: ListUserCollaborationResponse = {
       name: 'User',
       teams: [
         {
+          id: '1',
           team: 'Team A',
           role: 'Key Personnel',
           isTeamInactive: false,
@@ -51,6 +52,7 @@ const userData: ListUserCollaborationResponse = {
       name: 'User',
       teams: [
         {
+          id: '1',
           team: 'Team A',
           role: 'Key Personnel',
           isTeamInactive: true,

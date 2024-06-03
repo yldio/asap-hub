@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { TimeRangeOption } from '@asap-hub/model';
+import { ComponentProps } from 'react';
 
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
 import { rem, tabletScreen } from '../pixels';
 import { MultiSelect, Subtitle } from '../atoms';
 import { noop, searchIcon } from '..';
-import { ComponentProps } from 'react';
 import ExportButton from './ExportButton';
 
 export type MetricOption = 'user' | 'team';
@@ -96,7 +96,8 @@ const searchTexts = {
 
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
-  readonly metricOption?: MetricOption; //metric is optional for now since we haven't added search to the collaboration page
+  // metric is optional for now since we haven't added search to the collaboration page
+  readonly metricOption?: MetricOption;
   readonly tags: string[];
   readonly loadTags: ComponentProps<typeof MultiSelect>['loadOptions'];
   readonly setTags: (tags: string[]) => void;

@@ -158,6 +158,7 @@ export const getUserCollaborationItems = (
       );
 
       return {
+        id: team.team ? team.team.sys.id : '',
         team: team.team?.displayName ?? '',
         role: (team.role as TeamRole) ?? undefined,
         isTeamInactive: !!team.inactiveSinceDate,

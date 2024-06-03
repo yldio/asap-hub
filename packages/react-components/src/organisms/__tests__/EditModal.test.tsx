@@ -32,7 +32,7 @@ it('renders a dialog with given children', () => {
 
 it('initially does not prompt when trying to leave', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-  const history = createMemoryHistory({ getUserConfirmation });
+  const history = createMemoryHistory();
   render(
     <Router navigator={history} location={history.location}>
       <EditModal {...props} />
@@ -44,7 +44,7 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-  const history = createMemoryHistory({ getUserConfirmation });
+  const history = createMemoryHistory();
   render(
     <Router navigator={history} location={history.location}>
       <EditModal {...props} dirty />
@@ -97,7 +97,7 @@ describe('when saving', () => {
   describe('and the form is valid', () => {
     const renderEditModal = ({ handleSave = jest.fn() } = {}) => {
       const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-      const history = createMemoryHistory({ getUserConfirmation });
+      const history = createMemoryHistory();
       const { rerender } = render(
         <Router navigator={history} location={history.location}>
           <EditModal {...props} backHref="/back" onSave={handleSave} dirty />

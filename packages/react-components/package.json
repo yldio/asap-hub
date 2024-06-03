@@ -41,6 +41,7 @@
     "ramda": "0.27.1",
     "react-hook-form": "^7.51.4",
     "react-router-hash-link": "2.4.3",
+    "react-router-prompt": "^0.7.0",
     "react-select": "^5.8.0",
     "react-sortable-hoc": "2.0.0",
     "regenerator-runtime": "0.14.0",
@@ -93,7 +94,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.22.2",
-    "react-select-event": "^5.5.1",
     "react-test-renderer": "17.0.2"
   }
 }

@@ -19,7 +19,7 @@ let getUserConfirmation!: jest.MockedFunction<
 let history!: History;
 beforeEach(() => {
   getUserConfirmation = jest.fn((_message, cb) => cb(true));
-  history = createMemoryHistory({ getUserConfirmation });
+  history = createMemoryHistory();
 });
 
 it('renders a form with given children', () => {
@@ -229,7 +229,7 @@ describe('when saving', () => {
           rejectSave = reject;
         }),
       );
-      history = createMemoryHistory({ getUserConfirmation });
+      history = createMemoryHistory();
       result = render(
         <InnerToastContext.Provider value={innerMockToast}>
           <Router navigator={history} location={'/url'}>

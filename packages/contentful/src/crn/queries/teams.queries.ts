@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { manuscriptContentQueryFragment } from './manuscript.queries';
 
 export const FETCH_TEAM_BY_ID = gql`
   query FetchTeamById($id: String!) {
@@ -36,10 +37,7 @@ export const FETCH_TEAM_BY_ID = gql`
       linkedFrom {
         manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
           items {
-            sys {
-              id
-            }
-            title
+            ...ManuscriptsContent
           }
         }
         teamMembershipCollection(limit: 100) {
@@ -77,6 +75,7 @@ export const FETCH_TEAM_BY_ID = gql`
       }
     }
   }
+  ${manuscriptContentQueryFragment}
 `;
 
 export const FETCH_TEAMS = gql`

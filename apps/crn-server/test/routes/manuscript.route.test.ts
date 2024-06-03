@@ -125,7 +125,7 @@ describe('/manuscripts/ route', () => {
       expect(response.status).toEqual(403);
     });
 
-    test('Should return a 201 when is hit', async () => {
+    test('Should return a 201 and pass input to the controller', async () => {
       const teamId = 'team-1';
 
       const createManuscriptRequest: ManuscriptPostRequest = {
@@ -157,6 +157,71 @@ describe('/manuscripts/ route', () => {
       );
 
       expect(response.body).toEqual(manuscriptResponse);
+    });
+
+    describe('Validation', () => {
+      test('Should return 400 when title is missing', async () => {
+        const { title: _title, ...createManuscriptRequest } =
+          getManuscriptCreateDataObject();
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when teamId is missing', async () => {
+        const { teamId: _teamId, ...createManuscriptRequest } =
+          getManuscriptCreateDataObject();
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when versions are missing', async () => {
+        const { versions: _versions, ...createManuscriptRequest } =
+          getManuscriptCreateDataObject();
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when more than a single version is sent', async () => {
+        const createManuscriptRequest = getManuscriptCreateDataObject();
+        createManuscriptRequest.versions.push({
+          lifecycle: 'Preprint, version 2',
+          type: 'Original Research',
+        });
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when an empty array of versions is sent', async () => {
+        const createManuscriptRequest = getManuscriptCreateDataObject();
+        createManuscriptRequest.versions = [];
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
     });
   });
 });

@@ -11,6 +11,11 @@ import {
   ListResponse,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptLifecycle,
+  manuscriptLifecycles,
+  ManuscriptType,
+  manuscriptTypes,
+  ManuscriptVersion,
 } from '@asap-hub/model';
 
 import { ManuscriptDataProvider } from '../types';
@@ -45,12 +50,32 @@ export class ManuscriptContentfulDataProvider
   async create(input: ManuscriptCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
-    const { teamId, ...plainFields } = input;
+    const {
+      teamId,
+      versions: [version],
+      ...plainFields
+    } = input;
+
+    if (!version) {
+      throw new Error('No versions provided');
+    }
+
+    const manuscriptVersionEntry = await environment.createEntry(
+      'manuscriptVersions',
+      {
+        fields: addLocaleToFields(version),
+      },
+    );
+
+    await manuscriptVersionEntry.publish();
+
+    const { id: manuscriptVersionId } = manuscriptVersionEntry.sys;
 
     const manuscriptEntry = await environment.createEntry('manuscripts', {
       fields: addLocaleToFields({
         ...plainFields,
         teams: getLinkEntities([teamId]),
+        versions: getLinkEntities([manuscriptVersionId]),
       }),
     });
 
@@ -66,4 +91,29 @@ const parseGraphQLManuscript = (
   id: manuscripts.sys.id,
   title: manuscripts.title || '',
   teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
+  versions: parseGraphqlManuscriptVersion(
+    manuscripts.versionsCollection?.items || [],
+  ),
 });
+
+export const parseGraphqlManuscriptVersion = (
+  versions: NonNullable<
+    NonNullable<ManuscriptItem['versionsCollection']>['items']
+  >,
+): ManuscriptVersion[] =>
+  versions
+    .map((version) => ({
+      type: version?.type,
+      lifecycle: version?.lifecycle,
+    }))
+    .filter(
+      (version): version is ManuscriptVersion =>
+        (version &&
+          version.type &&
+          manuscriptTypes.includes(version.type as ManuscriptType) &&
+          version.lifecycle &&
+          manuscriptLifecycles.includes(
+            version.lifecycle as ManuscriptLifecycle,
+          )) ||
+        false,
+    );

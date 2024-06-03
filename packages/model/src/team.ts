@@ -46,7 +46,10 @@ export interface TeamMember {
   inactiveSinceDate?: string;
 }
 
-export type TeamManuscript = Pick<ManuscriptResponse, 'id' | 'title'>;
+export type TeamManuscript = Pick<
+  ManuscriptResponse,
+  'id' | 'title' | 'versions'
+>;
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;

@@ -2,21 +2,13 @@ import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { colors } from '..';
 
-import {
-  Caption,
-  Card,
-  Display,
-  Headline2,
-  Link,
-  Paragraph,
-  Subtitle,
-} from '../atoms';
+import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
 import { formatDateAndTime } from '../date';
-import { plusIcon, plusRectIcon } from '../icons';
+import { plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { ToolCard } from '../organisms';
+import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, perRem, rem } from '../pixels';
 
 const containerStyles = css({
@@ -46,17 +38,6 @@ const manuscriptButtonStyles = css({
   flexGrow: 0,
   alignSelf: 'center',
   gap: rem(8),
-});
-
-const manuscriptContainerStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(16),
-  marginTop: rem(12),
-  padding: `${rem(24)} ${rem(16)}`,
-  backgroundColor: colors.pearl.rgb,
-  border: `1px solid ${colors.steel.rgb}`,
-  borderRadius: '8px',
 });
 
 const toolContainerStyles = css({
@@ -117,9 +98,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
             </Paragraph>
           </div>
           {manuscripts.map((manuscript) => (
-            <div key={manuscript.id} css={manuscriptContainerStyles}>
-              {plusRectIcon}
-              <Subtitle noMargin>{manuscript.title}</Subtitle>
+            <div key={manuscript.id}>
+              <ManuscriptCard {...manuscript} />
             </div>
           ))}
         </Card>

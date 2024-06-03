@@ -11,14 +11,20 @@ export const getManuscriptDataObject = (
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
   teamId: 'team-1',
+  versions: [
+    {
+      lifecycle: 'Preprint, version 1',
+      type: 'Original Research',
+    },
+  ],
   ...data,
 });
 
 export const getManuscriptResponse = (
   data: Partial<ManuscriptDataObject> = {},
-): ManuscriptResponse => getManuscriptDataObject(data) as ManuscriptResponse;
+): ManuscriptResponse => getManuscriptDataObject(data);
 
-export const getContentfulGraphqlManuscripts = (
+export const getContentfulGraphqlManuscript = (
   props: Partial<
     NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']>
   > = {},
@@ -30,11 +36,22 @@ export const getContentfulGraphqlManuscripts = (
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
+  versionsCollection: getContentfulGraphqlManuscriptVersions(),
   ...props,
 });
 
-export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
-  const { title, teamId } = getManuscriptDataObject();
+export const getContentfulGraphqlManuscriptVersions = () => ({
+  items: [
+    {
+      sys: { id: 'version-1' },
+      type: 'Original Research',
+      lifecycle: 'Preprint, version 1',
+    },
+  ],
+});
 
-  return { title, teamId };
+export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
+  const { title, teamId, versions } = getManuscriptDataObject();
+
+  return { title, teamId, versions };
 };

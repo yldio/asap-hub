@@ -17,6 +17,7 @@ import {
 import { EventBridgeEvent } from 'aws-lambda';
 import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
+import { getContentfulGraphqlManuscriptVersions } from './manuscript.fixtures';
 
 export const getContentfulGraphql = (teamById = false) => ({
   Teams: () =>
@@ -25,6 +26,7 @@ export const getContentfulGraphql = (teamById = false) => ({
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
   ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
+  ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
 });
 
 export const getContentfulGraphqlTeamById = (): NonNullable<
@@ -141,8 +143,16 @@ export const getContentfulGraphqlManuscripts = (): NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
 >['manuscriptsCollection'] => ({
   items: [
-    { sys: { id: '1' }, title: 'Manuscript 1' },
-    { sys: { id: '2' }, title: 'Manuscript 2' },
+    {
+      sys: { id: '1' },
+      title: 'Manuscript 1',
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
+    },
+    {
+      sys: { id: '2' },
+      title: 'Manuscript 2',
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
+    },
   ],
 });
 
@@ -187,8 +197,26 @@ export const getTeamDataObject = (): TeamDataObject => ({
     },
   ],
   manuscripts: [
-    { id: '1', title: 'Manuscript 1' },
-    { id: '2', title: 'Manuscript 2' },
+    {
+      id: '1',
+      title: 'Manuscript 1',
+      versions: [
+        {
+          lifecycle: 'Preprint, version 1',
+          type: 'Original Research',
+        },
+      ],
+    },
+    {
+      id: '2',
+      title: 'Manuscript 2',
+      versions: [
+        {
+          lifecycle: 'Preprint, version 1',
+          type: 'Original Research',
+        },
+      ],
+    },
   ],
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',

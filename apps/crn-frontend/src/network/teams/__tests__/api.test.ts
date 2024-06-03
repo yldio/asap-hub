@@ -256,6 +256,12 @@ describe('Manuscript', () => {
     const payload: ManuscriptPostRequest = {
       title: 'The Manuscript',
       teamId: '42',
+      versions: [
+        {
+          lifecycle: 'Draft manuscript',
+          type: 'Original Research',
+        },
+      ],
     };
     it('makes an authorized POST request to create a manuscript', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

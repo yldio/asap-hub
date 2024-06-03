@@ -6,4 +6,5 @@ export const createManuscriptResponse = (
   id: `manuscript_${itemIndex}`,
   title: `Manuscript ${itemIndex + 1}`,
   teamId: 'team-1',
+  versions: [],
 });

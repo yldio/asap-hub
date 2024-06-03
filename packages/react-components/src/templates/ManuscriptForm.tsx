@@ -1,9 +1,17 @@
-import { ManuscriptPostRequest, ManuscriptResponse } from '@asap-hub/model';
+import {
+  ManuscriptLifecycle,
+  ManuscriptPostRequest,
+  ManuscriptResponse,
+  ManuscriptType,
+  manuscriptTypeLifecycles,
+  manuscriptTypes,
+  ManuscriptVersion,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { FormCard, LabeledTextField } from '..';
+import { FormCard, LabeledDropdown, LabeledTextField } from '..';
 import { Button } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
@@ -46,19 +54,31 @@ type ManuscriptFormProps = {
   onSave: (output: ManuscriptPostRequest) => Promise<ManuscriptResponse | void>;
   onSuccess: () => void;
   teamId: string;
-};
+} & Partial<Pick<ManuscriptPostRequest, 'title'>> & {
+    type?: ManuscriptVersion['type'] | '';
+    lifecycle?: ManuscriptVersion['lifecycle'] | '';
+  };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onSave,
   onSuccess,
   teamId,
+  title,
+  type,
+  lifecycle,
 }) => {
   const history = useHistory();
 
   const methods = useForm<ManuscriptPostRequest>({
     mode: 'onBlur',
     defaultValues: {
-      title: '',
+      title: title || '',
+      versions: [
+        {
+          type: type || '',
+          lifecycle: lifecycle || '',
+        },
+      ],
     },
   });
 
@@ -66,13 +86,33 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     handleSubmit,
     control,
     formState: { isSubmitting },
+    watch,
+    setValue,
   } = methods;
+
+  const watchType = watch('versions.0.type');
+
+  useEffect(() => {
+    if (!watchType) {
+      setValue('versions.0.lifecycle', '');
+    }
+  }, [setValue, watchType]);
 
   const onSubmit = async (data: ManuscriptPostRequest) => {
     await onSave({ ...data, teamId });
 
     onSuccess();
   };
+
+  const lifecycleSuggestions =
+    watchType === ''
+      ? []
+      : manuscriptTypeLifecycles
+          .filter(({ types }) => types.includes(watchType))
+          .map(({ lifecycle: lifecycleSuggestion }) => ({
+            value: lifecycleSuggestion,
+            label: lifecycleSuggestion,
+          }));
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,6 +143,65 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 />
               )}
             />
+
+            <Controller
+              name="versions.0.type"
+              control={control}
+              rules={{
+                required: 'Please select a type.',
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <LabeledDropdown<ManuscriptType | ''>
+                  title="Type of Manuscript"
+                  subtitle="(required)"
+                  description="Select the type that matches your manuscript the best."
+                  options={manuscriptTypes.map((option) => ({
+                    value: option,
+                    label: option,
+                  }))}
+                  onChange={onChange}
+                  customValidationMessage={error?.message}
+                  value={value}
+                  enabled={!isSubmitting}
+                  noOptionsMessage={(option) =>
+                    `Sorry, no types match ${option.inputValue}`
+                  }
+                  placeholder="Choose a type of manuscript"
+                />
+              )}
+            />
+
+            {watchType && (
+              <Controller
+                name="versions.0.lifecycle"
+                control={control}
+                rules={{
+                  required: 'Please select an option.',
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <LabeledDropdown<ManuscriptLifecycle | ''>
+                    title="Where is the manuscript in the life cycle?"
+                    subtitle="(required)"
+                    description="Select the option that matches your manuscript the best."
+                    options={lifecycleSuggestions}
+                    onChange={onChange}
+                    customValidationMessage={error?.message}
+                    value={value}
+                    enabled={!isSubmitting}
+                    noOptionsMessage={(option) =>
+                      `Sorry, no options match ${option.inputValue}`
+                    }
+                    placeholder="Choose an option"
+                  />
+                )}
+              />
+            )}
           </FormCard>
 
           <div css={buttonsOuterContainerStyles}>

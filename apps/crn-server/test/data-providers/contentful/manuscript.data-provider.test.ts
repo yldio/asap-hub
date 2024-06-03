@@ -4,10 +4,12 @@ import {
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
+import { when } from 'jest-when';
 
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import {
-  getContentfulGraphqlManuscripts,
+  getContentfulGraphqlManuscript,
+  getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
 } from '../../fixtures/manuscript.fixtures';
@@ -27,7 +29,9 @@ describe('Manuscripts Contentful Data Provider', () => {
 
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Manuscripts: () => getContentfulGraphqlManuscripts(),
+      Manuscripts: () => getContentfulGraphqlManuscript(),
+      ManuscriptsVersionsCollection: () =>
+        getContentfulGraphqlManuscriptVersions(),
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -57,6 +61,37 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result).toMatchObject(getManuscriptDataObject());
     });
 
+    test('should default null values to empty strings and arrays', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.title = null;
+      manuscript.teamsCollection = null;
+      manuscript.versionsCollection = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+      expect(result).toEqual({
+        id: 'manuscript-id-1',
+        teamId: '',
+        title: '',
+        versions: [],
+      });
+    });
+
+    test('should skip versions with invalid type', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.versionsCollection!.items[0]!.type = 'invalid type';
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+      expect(result!.versions).toEqual([]);
+    });
+
     test('returns null if query does not return a result', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: null,
@@ -79,18 +114,51 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('Create', () => {
+    test('should throw if no versions are provided', async () => {
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions = [];
+      await expect(
+        manuscriptDataProvider.create(manuscriptCreateDataObject),
+      ).rejects.toThrow('No versions provided');
+    });
+
     test('can create a manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
+      const manuscriptVersionId = 'manuscript-version-id-1';
       const publish = jest.fn();
-      environmentMock.createEntry.mockResolvedValue({
-        sys: { id: manuscriptId },
-        publish,
-      } as unknown as Entry);
 
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('manuscripts', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptId },
+          publish,
+        } as unknown as Entry);
+
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       const result = await manuscriptDataProvider.create(
-        getManuscriptCreateDataObject(),
+        manuscriptCreateDataObject,
       );
 
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'manuscriptVersions',
+        {
+          fields: {
+            type: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.type,
+            },
+            lifecycle: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
+            },
+          },
+        },
+      );
       expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
         fields: {
           title: {
@@ -101,6 +169,17 @@ describe('Manuscripts Contentful Data Provider', () => {
               {
                 sys: {
                   id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+          versions: {
+            'en-US': [
+              {
+                sys: {
+                  id: manuscriptVersionId,
                   linkType: 'Entry',
                   type: 'Link',
                 },

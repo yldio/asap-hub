@@ -9,7 +9,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -91,13 +91,35 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     screen.getByRole('textbox', { name: /title of manuscript/i }),
     title,
   );
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
   userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(createManuscript).toHaveBeenCalledWith(
-      { title, teamId },
+      {
+        title,
+        teamId,
+        versions: [
+          {
+            lifecycle: 'Typeset proof',
+            type: 'Original Research',
+          },
+        ],
+      },
       expect.anything(),
     );
     expect(history.location.pathname).toBe(

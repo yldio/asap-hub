@@ -4,6 +4,8 @@ import {
   getByText as getChildByText,
   render,
   waitFor,
+  screen,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -24,25 +26,105 @@ it('renders the team workspace page', () => {
   ).toBeInTheDocument();
 });
 
-it('renders compliance section when feature flag is enabled', () => {
-  const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
-    ...team,
-    manuscripts: [
-      { id: '1', title: 'Nice manuscript' },
-      { id: '2', title: 'A Good Manuscript' },
-    ],
-  };
-  enable('DISPLAY_MANUSCRIPTS');
-  const { container, getByRole, queryByRole, rerender } = render(
-    <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
-  );
-  expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
-  expect(container).toHaveTextContent('Nice manuscript');
-  expect(container).toHaveTextContent('A Good Manuscript');
+describe('compliance section', () => {
+  beforeAll(() => {
+    enable('DISPLAY_MANUSCRIPTS');
+  });
 
-  disable('DISPLAY_MANUSCRIPTS');
-  rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
-  expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
+  afterAll(() => {
+    disable('DISPLAY_MANUSCRIPTS');
+  });
+
+  it('renders compliance section when feature flag is enabled', () => {
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          title: 'Nice manuscript',
+          versions: [],
+        },
+        {
+          id: '2',
+          title: 'A Good Manuscript',
+          versions: [],
+        },
+      ],
+    };
+    enable('DISPLAY_MANUSCRIPTS');
+    const { getByRole, queryByRole, rerender } = render(
+      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+    );
+    expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+
+    disable('DISPLAY_MANUSCRIPTS');
+    rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
+    expect(queryByRole('heading', { name: 'Compliance' })).toBeNull();
+  });
+
+  it('renders all manuscript titles', () => {
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          title: 'Nice manuscript',
+          versions: [],
+        },
+        {
+          id: '2',
+          title: 'A Good Manuscript',
+          versions: [],
+        },
+      ],
+    };
+    const { container } = render(
+      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+    );
+    expect(container).toHaveTextContent('Nice manuscript');
+    expect(container).toHaveTextContent('A Good Manuscript');
+  });
+
+  it('renders type and lifecycle values when expanded', () => {
+    const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
+      ...team,
+      manuscripts: [
+        {
+          id: '1',
+          title: 'Nice manuscript',
+          versions: [
+            {
+              type: 'Original Research',
+              lifecycle: 'Draft manuscript',
+            },
+          ],
+        },
+        {
+          id: '2',
+          title: 'A Good Manuscript',
+          versions: [
+            {
+              type: 'Review / Op-Ed / Letter / Hot Topic',
+              lifecycle: 'Preprint, version 1',
+            },
+          ],
+        },
+      ],
+    };
+    const { container } = render(
+      <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
+    );
+
+    expect(container).not.toHaveTextContent('Original Research');
+    expect(container).not.toHaveTextContent('Draft manuscript');
+
+    const manuscriptTitle = screen.getByText('Nice manuscript');
+    const manuscriptCard = manuscriptTitle.closest('div');
+    userEvent.click(within(manuscriptCard!).getByRole('button'));
+
+    expect(container).toHaveTextContent('Original Research');
+    expect(container).toHaveTextContent('Draft manuscript');
+  });
 });
 
 it('renders contact project manager when point of contact provided', () => {

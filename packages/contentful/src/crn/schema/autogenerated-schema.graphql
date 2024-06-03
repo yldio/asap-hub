@@ -2455,6 +2455,76 @@ enum LabsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions)"""
+type ManuscriptVersions implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  lifecycle(locale: String): String
+  linkedFrom(allowedLocales: [String]): ManuscriptVersionsLinkingCollections
+  sys: Sys!
+  type(locale: String): String
+}
+
+type ManuscriptVersionsCollection {
+  items: [ManuscriptVersions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ManuscriptVersionsFilter {
+  AND: [ManuscriptVersionsFilter]
+  OR: [ManuscriptVersionsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  lifecycle: String
+  lifecycle_contains: String
+  lifecycle_exists: Boolean
+  lifecycle_in: [String]
+  lifecycle_not: String
+  lifecycle_not_contains: String
+  lifecycle_not_in: [String]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type ManuscriptVersionsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+}
+
+enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum ManuscriptVersionsOrder {
+  lifecycle_ASC
+  lifecycle_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
 type Manuscripts implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -2462,6 +2532,7 @@ type Manuscripts implements Entry {
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
   title(locale: String): String
+  versionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, where: ManuscriptVersionsFilter): ManuscriptsVersionsCollection
 }
 
 type ManuscriptsCollection {
@@ -2485,6 +2556,8 @@ input ManuscriptsFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  versions: cfManuscriptVersionsNestedFilter
+  versionsCollection_exists: Boolean
 }
 
 type ManuscriptsLinkingCollections {
@@ -2526,6 +2599,28 @@ enum ManuscriptsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type ManuscriptsVersionsCollection {
+  items: [ManuscriptVersions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptsVersionsCollectionOrder {
+  lifecycle_ASC
+  lifecycle_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
@@ -2975,6 +3070,8 @@ type Query {
   interestGroupsCollection(limit: Int = 100, locale: String, order: [InterestGroupsOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsFilter): InterestGroupsCollection
   labs(id: String!, locale: String, preview: Boolean): Labs
   labsCollection(limit: Int = 100, locale: String, order: [LabsOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): LabsCollection
+  manuscriptVersions(id: String!, locale: String, preview: Boolean): ManuscriptVersions
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsOrder], preview: Boolean, skip: Int = 0, where: ManuscriptVersionsFilter): ManuscriptVersionsCollection
   manuscripts(id: String!, locale: String, preview: Boolean): Manuscripts
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptsOrder], preview: Boolean, skip: Int = 0, where: ManuscriptsFilter): ManuscriptsCollection
   media(id: String!, locale: String, preview: Boolean): Media
@@ -6531,6 +6628,27 @@ input cfLabsNestedFilter {
   name_not_contains: String
   name_not_in: [String]
   sys: SysFilter
+}
+
+input cfManuscriptVersionsNestedFilter {
+  AND: [cfManuscriptVersionsNestedFilter]
+  OR: [cfManuscriptVersionsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  lifecycle: String
+  lifecycle_contains: String
+  lifecycle_exists: Boolean
+  lifecycle_in: [String]
+  lifecycle_not: String
+  lifecycle_not_contains: String
+  lifecycle_not_in: [String]
+  sys: SysFilter
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
 }
 
 input cfNewsNestedFilter {

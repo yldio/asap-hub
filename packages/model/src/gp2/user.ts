@@ -96,8 +96,8 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
-  activeCampaignId?: string;
   activatedDate?: string;
+  activeCampaignId?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -128,6 +128,7 @@ export type UserDataObject = {
   role: UserRole;
   social?: UserSocial;
   stateOrProvince: string;
+  systemPublishedVersion?: number;
   tags: TagDataObject[];
   telephone?: Telephone;
   workingGroups: UserWorkingGroup[];
@@ -196,7 +197,6 @@ export interface UserResponse
 
 export type PublicUserResponse = Pick<
   UserResponse,
-  | 'id'
   | 'avatarUrl'
   | 'biography'
   | 'city'
@@ -204,9 +204,11 @@ export type PublicUserResponse = Pick<
   | 'degrees'
   | 'displayName'
   | 'firstName'
+  | 'id'
   | 'lastName'
   | 'middleName'
   | 'outputs'
+  | 'systemPublishedVersion'
 > & {
   publishDate: string;
   workingGroups: Array<

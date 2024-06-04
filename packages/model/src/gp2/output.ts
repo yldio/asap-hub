@@ -206,6 +206,7 @@ export type PublicOutputResponse = Pick<
     | Pick<ExternalUserResponse, 'displayName'>
   >;
   lastModifiedDate: string;
+  finalPublishDate?: string;
 };
 
 export type ListOutputResponse = ListResponse<OutputResponse>;

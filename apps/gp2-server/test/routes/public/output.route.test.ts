@@ -146,6 +146,60 @@ describe('/outputs/ route', () => {
       expect(response.body).toEqual(getPublicOutputResponse());
     });
 
+    describe('Final Output Publish Date field', () => {
+      test('Should be the publish date for a non-versioned output', async () => {
+        const outputId = 'output-id';
+        const outputResponse = getOutputResponse();
+        outputResponse.publishDate = '2011-11-11T11:00:00Z';
+        outputResponse.versions = [];
+        outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+        const response = await supertest(publicApp).get(
+          `/public/outputs/${outputId}`,
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.finalPublishDate).toBe('2011-11-11T11:00:00Z');
+      });
+
+      test('Should be the publish date if the versions are undefined', async () => {
+        const outputId = 'output-id';
+        const outputResponse = getOutputResponse();
+        outputResponse.publishDate = '2011-11-11T11:00:00Z';
+        outputResponse.versions = undefined;
+        outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+        const response = await supertest(publicApp).get(
+          `/public/outputs/${outputId}`,
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.finalPublishDate).toBe('2011-11-11T11:00:00Z');
+      });
+
+      test('Should be undefined for a versioned output', async () => {
+        const outputId = 'output-id';
+        const outputResponse = getOutputResponse();
+        outputResponse.versions = [
+          {
+            id: '1',
+            addedDate: '',
+            title: 'Version 1',
+            documentType: 'Dataset',
+            link: 'https://version1.com',
+          },
+        ];
+        outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+        const response = await supertest(publicApp).get(
+          `/public/outputs/${outputId}`,
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.finalPublishDate).toBeUndefined();
+      });
+    });
+
     test('Should return 404 when the output does not exist', async () => {
       outputControllerMock.fetchById.mockRejectedValueOnce(
         new NotFoundError(

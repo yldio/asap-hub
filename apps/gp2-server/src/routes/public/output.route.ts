@@ -77,4 +77,8 @@ const mapOutputToPublicOutput = (
   title: output.title,
   type: output.type,
   workingGroups: output.workingGroups,
+  finalPublishDate:
+    Array.isArray(output.versions) && output.versions.length > 0
+      ? undefined
+      : output.publishDate,
 });

@@ -125,6 +125,7 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
     shortDescription: shortDescription!,
     systemPublishedVersion: systemPublishedVersion!,
     lastModifiedDate: lastUpdatedPartial,
+    finalPublishDate: undefined,
     authors: (authors as gp2Model.UserAuthor[]).map(
       ({ id, firstName, lastName, displayName, avatarUrl }) => ({
         id,
@@ -134,7 +135,7 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
         avatarUrl,
       }),
     ),
-  } satisfies Required<gp2Model.PublicOutputResponse>;
+  };
 };
 
 export const getListOutputResponse = (): gp2Model.ListOutputResponse => ({

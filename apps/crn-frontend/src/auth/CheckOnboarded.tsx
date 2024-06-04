@@ -56,7 +56,7 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   return (
     <Routes>
       <Route path={ownProfilePath}>{children}</Route>
-      <Navigate to={ownProfilePath} />
+      <Route path="*" element={<Navigate to={ownProfilePath} />} />
     </Routes>
   );
 };

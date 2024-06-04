@@ -206,6 +206,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
+                path="*"
                 element={
                   <Frame title="Not Found">
                     <NotFoundPage />

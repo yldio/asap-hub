@@ -210,6 +210,8 @@ export type PublicUserResponse = Pick<
   | 'outputs'
   | 'systemPublishedVersion'
 > & {
+  title?: string;
+  institution?: string;
   publishDate: string;
   workingGroups: Array<
     Pick<WorkingGroupResponse, 'id' | 'title'> & {

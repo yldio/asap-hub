@@ -122,32 +122,35 @@ export const getUserResponse = (
 
 export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
   const {
-    id,
     avatarUrl,
     biography,
     city,
     country,
     degrees,
+    displayName,
     firstName,
+    id,
     lastName,
     middleName,
     outputs,
-    displayName,
+    positions,
   } = getUserResponse();
   return {
-    id,
-    systemPublishedVersion: 23,
     avatarUrl,
     biography,
     city,
     country,
     degrees,
+    displayName,
     firstName,
+    id,
+    institution: positions[0]?.institution,
     lastName,
     middleName,
     outputs,
-    displayName,
     publishDate: '2020-09-23T20:45:22.000Z',
+    systemPublishedVersion: 23,
+    title: positions[0]?.role,
     workingGroups: [
       {
         id: 'test-working-group-id',

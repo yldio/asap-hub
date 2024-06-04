@@ -49,6 +49,8 @@ const mapUserToPublicUser = (
   id: user.id,
   lastName: user.lastName,
   middleName: user.middleName,
+  institution: user.positions[0]?.institution,
+  title: user.positions[0]?.role,
   outputs: user.outputs.filter(filterOutputs).map((output) => ({
     id: output.id,
     title: output.title,

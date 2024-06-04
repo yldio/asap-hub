@@ -178,6 +178,7 @@ export type UserPatchRequest = Omit<
   | 'orcidWorks'
   | 'activeCampaignCreatedAt'
   | 'activeCampaignId'
+  | 'systemPublishedVersion'
 >;
 
 export type UserAvatarPostRequest = {

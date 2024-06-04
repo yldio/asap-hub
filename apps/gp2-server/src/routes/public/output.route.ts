@@ -81,4 +81,10 @@ const mapOutputToPublicOutput = (
     Array.isArray(output.versions) && output.versions.length > 0
       ? undefined
       : output.publishDate,
+  preprintPublishDate:
+    output.documentType === 'Article' &&
+    output.type === 'Research' &&
+    output.subtype === 'Preprints'
+      ? output.publishDate
+      : undefined,
 });

@@ -9,6 +9,7 @@ import {
 } from '../../fixtures/output.fixtures';
 import { outputControllerMock } from '../../mocks/output.controller.mock';
 import { NotFoundError } from '@asap-hub/errors';
+import { outputDocumentTypes, outputTypes } from '@asap-hub/model/src/gp2';
 
 describe('/outputs/ route', () => {
   const publicApp = publicAppFactory({
@@ -197,6 +198,82 @@ describe('/outputs/ route', () => {
 
         expect(response.status).toBe(200);
         expect(response.body.finalPublishDate).toBeUndefined();
+      });
+    });
+
+    describe('Preprint Publish Date field', () => {
+      const outputDocumentTypesWithoutArticle = outputDocumentTypes.filter(
+        (documentType) => documentType !== 'Article',
+      );
+      test.each(outputDocumentTypesWithoutArticle)(
+        'Should be undefined for when document type is %i',
+        async (documentType) => {
+          const outputId = 'output-id';
+          const outputResponse = getOutputResponse();
+          outputResponse.documentType = documentType;
+          outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+          const response = await supertest(publicApp).get(
+            `/public/outputs/${outputId}`,
+          );
+
+          expect(response.status).toBe(200);
+          expect(response.body.preprintPublishDate).toBeUndefined();
+        },
+      );
+      const outputTypesWithoutResearch = outputTypes.filter(
+        (subtype) => subtype !== 'Research',
+      );
+      test.each(outputTypesWithoutResearch)(
+        'Should be undefined for when document type is Article and the type is %i',
+        async (type) => {
+          const outputId = 'output-id';
+          const outputResponse = getOutputResponse();
+          outputResponse.documentType = 'Article';
+          outputResponse.type = type;
+          outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+          const response = await supertest(publicApp).get(
+            `/public/outputs/${outputId}`,
+          );
+
+          expect(response.status).toBe(200);
+          expect(response.body.preprintPublishDate).toBeUndefined();
+        },
+      );
+
+      test('Should be the publish date when document type is Article and type is Research and subtype is Preprints', async () => {
+        const outputId = 'output-id';
+        const outputResponse = getOutputResponse();
+        outputResponse.documentType = 'Article';
+        outputResponse.type = 'Research';
+        outputResponse.subtype = 'Preprints';
+        outputResponse.publishDate = '2011-11-11T11:00:00Z';
+        outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+        const response = await supertest(publicApp).get(
+          `/public/outputs/${outputId}`,
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.preprintPublishDate).toBe('2011-11-11T11:00:00Z');
+      });
+
+      test('Should be undefined when document type is Article and type is Research and subtype is Published', async () => {
+        const outputId = 'output-id';
+        const outputResponse = getOutputResponse();
+        outputResponse.documentType = 'Article';
+        outputResponse.type = 'Research';
+        outputResponse.subtype = 'Published';
+        outputResponse.publishDate = '2011-11-11T11:00:00Z';
+        outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+        const response = await supertest(publicApp).get(
+          `/public/outputs/${outputId}`,
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.body.preprintPublishDate).toBeUndefined();
       });
     });
 

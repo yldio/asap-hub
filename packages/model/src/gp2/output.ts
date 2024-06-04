@@ -207,6 +207,7 @@ export type PublicOutputResponse = Pick<
   >;
   lastModifiedDate: string;
   finalPublishDate?: string;
+  preprintPublishDate?: string;
 };
 
 export type ListOutputResponse = ListResponse<OutputResponse>;

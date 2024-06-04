@@ -60,7 +60,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   }, [auth0, setAuth0, resetAuth0]);
 
   useEffect(() => {
-    // order by the likelyhood of user navigating there
+    // order by the likelihood of user navigating there
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadDashboard()
       .then(loadNews)

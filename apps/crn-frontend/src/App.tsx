@@ -90,47 +90,66 @@ const App: FC<Record<string, never>> = () => {
           <LastLocationProvider>
             <Frame title={null}>
               <Routes>
-                <Route path={welcome.template}>
-                  <UtilityBar>
-                    <ToastStack>
-                      <Welcome />
-                    </ToastStack>
-                  </UtilityBar>
-                </Route>
-                <Route path={logout.template}>
-                  <Frame title="Logout">
-                    <Logout />
-                  </Frame>
-                </Route>
-                <Route path={staticPages({}).terms.template}>
-                  <BasicLayout>
-                    <Frame title={null}>
-                      <Content pageId="terms-and-conditions" />
+                <Route
+                  path={welcome.template}
+                  element={
+                    <UtilityBar>
+                      <ToastStack>
+                        <Welcome />
+                      </ToastStack>
+                    </UtilityBar>
+                  }
+                />
+                <Route
+                  path={logout.template}
+                  element={
+                    <Frame title="Logout">
+                      <Logout />
                     </Frame>
-                  </BasicLayout>
-                </Route>
-                <Route path={staticPages({}).privacyPolicy.template}>
-                  <BasicLayout>
-                    <Frame title={null}>
-                      <Content pageId="privacy-policy" />
-                    </Frame>
-                  </BasicLayout>
-                </Route>
-                <Route>
-                  <CheckAuth>
-                    {({ isAuthenticated }) =>
-                      !isAuthenticated ? (
-                        <Frame title={null}>
-                          <Signin />
-                        </Frame>
-                      ) : (
-                        <Frame title={null} fallback={<LoadingLayout />}>
-                          <AuthenticatedApp />
-                        </Frame>
-                      )
-                    }
-                  </CheckAuth>
-                </Route>
+                  }
+                />
+
+                <Route
+                  path={staticPages({}).terms.template}
+                  element={
+                    <BasicLayout>
+                      <Frame title={null}>
+                        <Content pageId="terms-and-conditions" />
+                      </Frame>
+                    </BasicLayout>
+                  }
+                />
+
+                <Route
+                  path={staticPages({}).privacyPolicy.template}
+                  element={
+                    <BasicLayout>
+                      <Frame title={null}>
+                        <Content pageId="privacy-policy" />
+                      </Frame>
+                    </BasicLayout>
+                  }
+                />
+
+                <Route
+                  // TODO: check if this makes sense
+                  path=""
+                  element={
+                    <CheckAuth>
+                      {({ isAuthenticated }) =>
+                        !isAuthenticated ? (
+                          <Frame title={null}>
+                            <Signin />
+                          </Frame>
+                        ) : (
+                          <Frame title={null} fallback={<LoadingLayout />}>
+                            <AuthenticatedApp />
+                          </Frame>
+                        )
+                      }
+                    </CheckAuth>
+                  }
+                />
               </Routes>
             </Frame>
           </LastLocationProvider>

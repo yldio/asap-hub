@@ -3,7 +3,13 @@ import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+} from 'react-router-dom';
 
 const loadProductivity = () =>
   import(/* webpackChunkName: "productivity" */ './productivity/Productivity');
@@ -20,98 +26,129 @@ const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 
-const Routes = () => {
+const AnalyticsRoutes = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  const { path } = useMatch();
+  const { pathname: path } = useLocation();
 
   return (
-    <Switch>
+    <Routes>
       {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
         <Route path={path + analytics({}).productivity.template}>
-          <Switch>
+          <Routes>
             <Route
-              exact
               path={
                 path +
                 analytics({}).productivity.template +
                 analytics({}).productivity({}).metric.template
               }
-            >
-              <AnalyticsPage>
-                <Frame title="Resource & Data Sharing">
-                  <ProductivityBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+              element={
+                <AnalyticsPage>
+                  <Frame title="Resource & Data Sharing">
+                    <ProductivityBody />
+                  </Frame>
+                </AnalyticsPage>
+              }
             />
-          </Switch>
+
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={
+                    analytics({}).productivity({}).metric({ metric: 'user' }).$
+                  }
+                />
+              }
+            />
+          </Routes>
         </Route>
       )}
       {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
         <Route path={path + analytics({}).collaboration.template}>
-          <Switch>
+          <Routes>
             <Route
-              exact
               path={
                 path +
                 analytics({}).collaboration.template +
                 analytics({}).collaboration({}).collaborationPath.template
               }
-            >
-              <AnalyticsPage>
-                <Frame title="Collaboration">
-                  <CollaborationBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .collaboration({})
-                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
+              element={
+                <AnalyticsPage>
+                  <Frame title="Collaboration">
+                    <CollaborationBody />
+                  </Frame>
+                </AnalyticsPage>
               }
             />
-          </Switch>
+            <Route
+              path="*"
+              element={
+                <Navigate
+                  to={
+                    analytics({}).collaboration({}).collaborationPath({
+                      metric: 'user',
+                      type: 'within-team',
+                    }).$
+                  }
+                />
+              }
+            />
+          </Routes>
         </Route>
       )}
       <Route path={path + analytics({}).leadership.template}>
-        <Switch>
+        <Routes>
           <Route
-            exact
             path={
               path +
               analytics({}).leadership.template +
               analytics({}).leadership({}).metric.template
             }
-          >
-            <AnalyticsPage>
-              <Frame title="Leadership & Membership">
-                <LeadershipBody />
-              </Frame>
-            </AnalyticsPage>
-          </Route>
-          <Redirect
-            to={
-              analytics({}).leadership({}).metric({ metric: 'working-group' }).$
+            element={
+              <AnalyticsPage>
+                <Frame title="Leadership & Membership">
+                  <LeadershipBody />
+                </Frame>
+              </AnalyticsPage>
             }
           />
-        </Switch>
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to={
+                  analytics({})
+                    .leadership({})
+                    .metric({ metric: 'working-group' }).$
+                }
+              />
+            }
+          />
+        </Routes>
       </Route>
       {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') ? (
-        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
+        <Route
+          path="*"
+          element={
+            <Navigate to={analytics({}).productivity({ metric: 'user' }).$} />
+          }
+        />
       ) : (
-        <Redirect
-          to={analytics({}).leadership({ metric: 'working-group' }).$}
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={analytics({}).leadership({ metric: 'working-group' }).$}
+            />
+          }
         />
       )}
-    </Switch>
+    </Routes>
   );
 };
 
-export default Routes;
+export default AnalyticsRoutes;

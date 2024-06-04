@@ -1,8 +1,9 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
+import ReactRouterPrompt from 'react-router-prompt';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Prompt, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { usePushFromHere } from '../routing';
 
 const styles = css({
@@ -98,17 +99,28 @@ const Form = <T extends void | Record<string, unknown>>({
 
   return (
     <>
-      <Prompt
+      <ReactRouterPrompt
         when={
           status === 'isSaving' ||
           status === 'hasError' ||
           (status === 'initial' && dirty)
         }
-        message={() => {
+      >
+        {({ isActive, onConfirm, onCancel }) => {
           toast(null);
-          return 'Are you sure you want to leave? Unsaved changes will be lost.';
+
+          return (
+            <div css={css({ display: isActive ? 'block' : 'none' })}>
+              <p>
+                'Are you sure you want to leave? Unsaved changes will be lost.'
+              </p>
+              <button onClick={onCancel}>Cancel</button>
+              <button onClick={onConfirm}>Ok</button>
+            </div>
+          );
         }}
-      />
+      </ReactRouterPrompt>
+
       <form ref={formRef} css={styles}>
         {children({
           onCancel,

@@ -1,23 +1,26 @@
-import { Routes, Route, useMatch } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import Welcome from './Welcome';
 
-const Routes: React.FC<Record<string, never>> = () => {
-  const { path } = useMatch();
+const WelcomeRoutes: React.FC<Record<string, never>> = () => {
+  const location = useLocation();
 
   return (
     <Routes>
-      <Route exact path={path + welcome({}).invited.template}>
-        <Frame title="Register">
-          <Welcome />
-        </Frame>
-      </Route>
-      <Route component={NotFoundPage} />
+      <Route
+        path={location.pathname + welcome({}).invited.template}
+        element={
+          <Frame title="Register">
+            <Welcome />
+          </Frame>
+        }
+      ></Route>
+      <Route element={<NotFoundPage />} />
     </Routes>
   );
 };
 
-export default Routes;
+export default WelcomeRoutes;

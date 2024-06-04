@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 
 export const mockedUser: gp2.UserResponse = {
   id: 'user-id-1',
+  lastModifiedDate: '2020-09-23T20:45:22.000Z',
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',
   fullDisplayName: 'Tony Stark',

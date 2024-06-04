@@ -186,8 +186,7 @@ export type UserAvatarPostRequest = {
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
-export interface UserResponse
-  extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
+export interface UserResponse extends Omit<UserDataObject, 'connections'> {
   displayName: string;
   fullDisplayName: string;
   projectIds: string[];
@@ -205,6 +204,7 @@ export type PublicUserResponse = Pick<
   | 'displayName'
   | 'firstName'
   | 'id'
+  | 'lastModifiedDate'
   | 'lastName'
   | 'middleName'
   | 'outputs'
@@ -222,7 +222,10 @@ export type PublicUserResponse = Pick<
 export type ListUserResponse = ListResponse<UserResponse>;
 export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
 
-export type UserMetadataResponse = Omit<UserResponse, 'fullDisplayName'> & {
+export type UserMetadataResponse = Omit<
+  UserResponse,
+  'fullDisplayName' | 'lastModifiedDate'
+> & {
   algoliaApiKey: string | null;
 };
 export type UserUpdateRequest = UserUpdateDataObject;

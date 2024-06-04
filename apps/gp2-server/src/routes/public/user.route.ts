@@ -48,6 +48,7 @@ const mapUserToPublicUser = (
   firstName: user.firstName,
   id: user.id,
   lastName: user.lastName,
+  lastModifiedDate: user.lastModifiedDate,
   middleName: user.middleName,
   institution: user.positions[0]?.institution,
   title: user.positions[0]?.role,

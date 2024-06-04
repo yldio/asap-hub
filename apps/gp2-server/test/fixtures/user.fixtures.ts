@@ -12,6 +12,7 @@ export const getUserResponse = (
 ): gp2Model.UserResponse => ({
   id: 'user-id-1',
   systemPublishedVersion: 23,
+  lastModifiedDate: '2023-07-06T07:23:32.000Z',
   activeCampaignId: '1',
   avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
@@ -131,6 +132,7 @@ export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
     firstName,
     id,
     lastName,
+    lastModifiedDate,
     middleName,
     outputs,
     positions,
@@ -146,6 +148,7 @@ export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
     id,
     institution: positions[0]?.institution,
     lastName,
+    lastModifiedDate,
     middleName,
     outputs,
     publishDate: '2020-09-23T20:45:22.000Z',
@@ -185,6 +188,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
     getUserResponse(),
     {
       id: 'user-id-2',
+      lastModifiedDate: '2022-12-24T23:23:23.000Z',
       systemPublishedVersion: 9,
       createdDate: '2020-09-23T20:45:22.000Z',
       displayName: 'Tony Stark',

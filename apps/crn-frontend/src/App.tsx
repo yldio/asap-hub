@@ -133,7 +133,7 @@ const App: FC<Record<string, never>> = () => {
 
                 <Route
                   // TODO: check if this makes sense
-                  path="/*"
+                  path="/"
                   element={
                     <CheckAuth>
                       {({ isAuthenticated }) =>

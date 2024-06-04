@@ -1,7 +1,7 @@
 import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
@@ -21,54 +21,65 @@ const Events: FC<Record<string, never>> = () => {
     loadCalendars().then(loadEventList);
   }, []);
 
-  const { path } = useMatch();
+  const { pathname: path } = useLocation();
   const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
     <Routes>
-      <Route exact path={path + events({}).calendar.template}>
-        <EventsPage>
-          <Frame title="Subscribe to Calendars">
-            <Calendars currentTime={currentTime} />
+      <Route
+        path={path + events({}).calendar.template}
+        element={
+          <EventsPage>
+            <Frame title="Subscribe to Calendars">
+              <Calendars currentTime={currentTime} />
+            </Frame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={path + events({}).upcoming.template}
+        element={
+          <EventsPage
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+          >
+            <SearchFrame title="Upcoming Events">
+              <EventList
+                currentTime={currentTime}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={path + events({}).past.template}
+        element={
+          <EventsPage
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+          >
+            <SearchFrame title="Past Events">
+              <EventList
+                past
+                currentTime={currentTime}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={path + events({}).event.template}
+        element={
+          <Frame title="Event">
+            <Event />
           </Frame>
-        </EventsPage>
-      </Route>
-
-      <Route exact path={path + events({}).upcoming.template}>
-        <EventsPage
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-        >
-          <SearchFrame title="Upcoming Events">
-            <EventList
-              currentTime={currentTime}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </EventsPage>
-      </Route>
-      <Route exact path={path + events({}).past.template}>
-        <EventsPage
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-        >
-          <SearchFrame title="Past Events">
-            <EventList
-              past
-              currentTime={currentTime}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </EventsPage>
-      </Route>
-      <Route path={path + events({}).event.template}>
-        <Frame title="Event">
-          <Event />
-        </Frame>
-      </Route>
-      <Redirect to={events({}).upcoming({}).$} />
+        }
+      />
+      <Route path="*" element={<Navigate to={events({}).upcoming({}).$} />} />
     </Routes>
   );
 };

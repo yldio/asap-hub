@@ -4,6 +4,7 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { Options } from 'react-select';
 import { noop, PageControls, searchIcon } from '..';
 import {
   Dropdown,
@@ -133,7 +134,9 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
           leftIndicator={searchIcon}
           noOptionsMessage={() => 'No results found'}
           loadOptions={loadTags}
-          onChange={(items) => setTags(items.map(({ value }) => value))}
+          onChange={(items: Options<{ label: string; value: string }>) =>
+            setTags(items.map(({ value }) => value))
+          }
           values={tags.map((tag) => ({
             label: tag,
             value: tag,

@@ -8,9 +8,9 @@ import {
   ManuscriptVersion,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FormCard, LabeledDropdown, LabeledTextField } from '..';
 import { Button } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -59,15 +59,15 @@ type ManuscriptFormProps = {
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
   };
 
-const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
+const ManuscriptForm = ({
   onSave,
   onSuccess,
   teamId,
   title,
   type,
   lifecycle,
-}) => {
-  const history = useHistory();
+}: ManuscriptFormProps) => {
+  const navigate = useNavigate();
 
   const methods = useForm<ManuscriptPostRequest>({
     mode: 'onBlur',
@@ -209,7 +209,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Button
                 noMargin
                 enabled={!isSubmitting}
-                onClick={() => history.goBack()}
+                onClick={() => navigate(-1)}
               >
                 Cancel
               </Button>

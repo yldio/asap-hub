@@ -4,7 +4,9 @@ import { gp2 } from '@asap-hub/routing';
 
 import { useOnboarding } from '../hooks/onboarding';
 
-const Onboarding: React.FC = ({ children }) => {
+const Onboarding: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const user = useCurrentUserGP2();
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

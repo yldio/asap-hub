@@ -4,9 +4,9 @@ import {
   PasswordResetEmailSentPage,
 } from '@asap-hub/react-components';
 import {
-  useHistory,
-  Switch,
-  useRouteMatch,
+  useNavigate,
+  Routes,
+  useMatch,
   Route,
   Redirect,
 } from 'react-router-dom';
@@ -22,13 +22,13 @@ interface ForgotPasswordProps {
   readonly setEmail: (newEmail: string) => void;
 }
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
-  const history = useHistory();
-  const { path } = useRouteMatch();
+  const history = useNavigate();
+  const { path } = useMatch();
 
   const [error, setError] = useState<WebAuthError | Error>();
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <ForgotPasswordPage
           email={email}
@@ -49,7 +49,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
         <PasswordResetEmailSentPage signInHref="/" />
       </Route>
       <Redirect to="/" />
-    </Switch>
+    </Routes>
   );
 };
 

@@ -4,7 +4,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
 
@@ -49,7 +49,7 @@ const News = lazy(loadNews);
 const Tags = lazy(loadTags);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   const user = useCurrentUserGP2();
 
@@ -73,7 +73,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
   return (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
-      <Switch>
+      <Routes>
         <Route exact path={path}>
           <Frame title="Dashboard">
             <Dashboard />
@@ -120,7 +120,7 @@ const OnboardedApp: FC<Record<string, never>> = () => {
             <NotFoundPage />
           </Frame>
         </Route>
-      </Switch>
+      </Routes>
     </Layout>
   );
 };

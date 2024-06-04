@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
@@ -15,7 +15,7 @@ type Filter = {
 
 export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
-  const history = useHistory();
+  const history = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 

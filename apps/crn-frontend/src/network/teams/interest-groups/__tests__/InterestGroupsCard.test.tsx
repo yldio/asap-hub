@@ -1,6 +1,6 @@
 import { createElement, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
@@ -21,7 +21,9 @@ mockConsoleError();
 
 const id = 't42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
+  children,
+}) => (
   <RecoilRoot
     initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
   >
@@ -96,7 +98,7 @@ it('links to the group', async () => {
 
 it('throws if the team does not exist', async () => {
   mockGetTeamInterestGroups.mockResolvedValue(undefined);
-  const errorWrapper: FC = ({ children }) =>
+  const errorWrapper: FC<React.PropsWithChildren<unknown>> = ({ children }) =>
     createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(<InterestGroupsCard id={id} />, {
     wrapper: errorWrapper,

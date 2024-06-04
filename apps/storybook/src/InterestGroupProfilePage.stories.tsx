@@ -1,5 +1,5 @@
 import { InterestGroupProfilePage } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { network } from '@asap-hub/routing';
 
 import { array, boolean, select, text } from './knobs';

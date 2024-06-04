@@ -2,7 +2,7 @@ import { NewsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { lazy, useEffect } from 'react';
 
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadNewsDirectory = () =>
@@ -15,10 +15,10 @@ const Routes: React.FC<Record<string, never>> = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNewsDirectory();
   }, []);
-  const { path } = useRouteMatch();
+  const { path } = useMatch();
 
   return (
-    <Switch>
+    <Routes>
       <Route exact path={path}>
         <NewsPage>
           <Frame title="News">
@@ -27,7 +27,7 @@ const Routes: React.FC<Record<string, never>> = () => {
         </NewsPage>
       </Route>
       <Route component={NotFoundPage} />
-    </Switch>
+    </Routes>
   );
 };
 

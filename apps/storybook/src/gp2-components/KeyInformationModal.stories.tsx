@@ -1,7 +1,7 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { KeyInformationModal } from '@asap-hub/gp2-components';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 export default {
   title: 'GP2 / Molecules / Onboarding / Key Information Modal',

@@ -4,7 +4,7 @@ import TutorialsPageHeader from './TutorialsPageHeader';
 
 type TutorialsPageProps = ComponentProps<typeof TutorialsPageHeader>;
 
-const TutorialsPage: React.FC<TutorialsPageProps> = ({
+const TutorialsPage: React.FC<React.PropsWithChildren<TutorialsPageProps>> = ({
   children,
   ...props
 }) => (

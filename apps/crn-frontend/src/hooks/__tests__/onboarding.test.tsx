@@ -26,7 +26,11 @@ const emptyUser: UserResponse = {
 };
 
 const wrapper =
-  ({ user }: { user?: UserResponse }): React.FC =>
+  ({
+    user,
+  }: {
+    user?: UserResponse;
+  }): React.FC<React.PropsWithChildren<unknown>> =>
   ({ children }) => (
     <RecoilRoot
       initializeState={({ set }) => {

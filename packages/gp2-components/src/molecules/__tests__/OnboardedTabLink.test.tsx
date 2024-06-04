@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import OnboardedTabLink from '../OnboardedTabLink';
 
 describe('OnboardedTabLink', () => {

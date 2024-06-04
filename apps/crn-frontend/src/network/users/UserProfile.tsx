@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
+import { Navigate, Route, Routes, useMatch } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
 import {
@@ -137,58 +137,79 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
             {
               <>
                 <Routes>
-                  <Route path={path + tabRoutes.research.template}>
-                    <Frame title="Research">
-                      <Research user={user} />
-                    </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.about.template}>
-                    <Frame title="About">
-                      <About user={user} />
-                    </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.outputs.template}>
-                    <Frame title="Outputs">
-                      <Outputs userId={user?.id} />
-                    </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.upcoming.template}>
-                    <Frame title="Upcoming Events">
-                      <EventsList
-                        constraint={{ userId: user?.id }}
-                        currentTime={currentTime}
-                        past={false}
-                        noEventsComponent={
-                          <NoEvents
-                            link={events({}).upcoming({}).$}
-                            type="member"
-                          />
-                        }
-                      />
-                    </Frame>
-                  </Route>
-                  <Route path={path + tabRoutes.past.template}>
-                    <Frame title="Past Events">
-                      <EventsList
-                        past
-                        constraint={{ userId: user?.id }}
-                        currentTime={currentTime}
-                        noEventsComponent={
-                          <NoEvents
-                            past
-                            link={events({}).past({}).$}
-                            type="member"
-                          />
-                        }
-                      />
-                    </Frame>
-                  </Route>
-                  <Redirect to={tabRoutes.research({}).$} />
+                  <Route
+                    path={path + tabRoutes.research.template}
+                    element={
+                      <Frame title="Research">
+                        <Research user={user} />
+                      </Frame>
+                    }
+                  />
+
+                  <Route
+                    path={path + tabRoutes.about.template}
+                    element={
+                      <Frame title="About">
+                        <About user={user} />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={path + tabRoutes.outputs.template}
+                    element={
+                      <Frame title="Outputs">
+                        <Outputs userId={user?.id} />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={path + tabRoutes.upcoming.template}
+                    element={
+                      <Frame title="Upcoming Events">
+                        <EventsList
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          past={false}
+                          noEventsComponent={
+                            <NoEvents
+                              link={events({}).upcoming({}).$}
+                              type="member"
+                            />
+                          }
+                        />
+                      </Frame>
+                    }
+                  />
+
+                  <Route
+                    path={path + tabRoutes.past.template}
+                    element={
+                      <Frame title="Past Events">
+                        <EventsList
+                          past
+                          constraint={{ userId: user?.id }}
+                          currentTime={currentTime}
+                          noEventsComponent={
+                            <NoEvents
+                              past
+                              link={events({}).past({}).$}
+                              type="member"
+                            />
+                          }
+                        />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={<Navigate to={tabRoutes.research({}).$} />}
+                  />
                 </Routes>
                 {isOwnProfile && tabRoute && (
-                  <Route path={path + tabRoute.template}>
-                    <Editing user={user} backHref={tabRoute({}).$} />
-                  </Route>
+                  <Route
+                    path={path + tabRoute.template}
+                    element={<Editing user={user} backHref={tabRoute({}).$} />}
+                  />
                 )}
               </>
             }

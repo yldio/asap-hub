@@ -72,6 +72,7 @@ const Network: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
 
+  console.log('*', path + network({}).users.template);
   const [currentTime] = useState(new Date());
   return (
     <Routes>

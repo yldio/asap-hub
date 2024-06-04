@@ -2,7 +2,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-dom-last-location';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -86,7 +86,7 @@ const App: FC<Record<string, never>> = () => {
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
         <SentryAuth0 />
-        <Router location={history.location} navigator={history}>
+        <Router>
           <LastLocationProvider>
             <Frame title={null}>
               <Routes>
@@ -133,7 +133,7 @@ const App: FC<Record<string, never>> = () => {
 
                 <Route
                   // TODO: check if this makes sense
-                  path=""
+                  path="/*"
                   element={
                     <CheckAuth>
                       {({ isAuthenticated }) =>

@@ -2,7 +2,7 @@ import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useMatch } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -14,7 +14,7 @@ const NewsList = lazy(loadNewsList);
 const NewsDetailsPage = lazy(loadNews);
 
 const News: FC<Record<string, never>> = () => {
-  const { path } = useMatch();
+  const { pathname: path } = useLocation();
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNews().then(loadNewsList);
@@ -28,23 +28,30 @@ const News: FC<Record<string, never>> = () => {
   } = useSearch();
   return (
     <Routes>
-      <Route exact path={path}>
-        <NewsPage
-          searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
+      <Route
+        path={path}
+        element={
+          <NewsPage
+            searchQuery={searchQuery}
+            onChangeSearch={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <Frame title={null}>
+              <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
+            </Frame>
+          </NewsPage>
+        }
+      />
+
+      <Route
+        path={path + news({}).article.template}
+        element={
           <Frame title={null}>
-            <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
+            <NewsDetailsPage />
           </Frame>
-        </NewsPage>
-      </Route>
-      <Route path={path + news({}).article.template}>
-        <Frame title={null}>
-          <NewsDetailsPage />
-        </Frame>
-      </Route>
+        }
+      />
     </Routes>
   );
 };

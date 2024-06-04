@@ -2,7 +2,7 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Routes, Route, useMatch } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -21,8 +21,8 @@ const options: { label: string; value: CRNTagSearchEntities }[] = [
   { label: 'Working Groups', value: 'working-group' },
 ];
 
-const Routes: React.FC<Record<string, never>> = () => {
-  const { path } = useMatch();
+const TagRoutes: React.FC<Record<string, never>> = () => {
+  const { pathname: path } = useLocation();
   const { client } = useAlgolia();
   const { tags, setTags, filters, toggleFilter } = useSearch();
 
@@ -34,33 +34,36 @@ const Routes: React.FC<Record<string, never>> = () => {
 
   return (
     <Routes>
-      <Route exact path={path}>
-        <TagsPage
-          tags={tags}
-          setTags={setTags}
-          loadTags={async (tagQuery) => {
-            const searchedTags = await client.searchForTagValues(
-              entities,
-              tagQuery,
-              { facetFilters: tags.map((tag) => `_tags:${tag}`) },
-            );
-            return searchedTags.facetHits.map(({ value }) => ({
-              label: value,
-              value,
-            }));
-          }}
-          filters={new Set(urlEntities)}
-          filterOptions={[{ title: 'AREAS' }, ...options]}
-          onChangeFilter={toggleFilter}
-        >
-          <Frame title="Search">
-            <Tags entities={entities} />
-          </Frame>
-        </TagsPage>
-      </Route>
-      <Route component={NotFoundPage} />
+      <Route
+        path={path}
+        element={
+          <TagsPage
+            tags={tags}
+            setTags={setTags}
+            loadTags={async (tagQuery) => {
+              const searchedTags = await client.searchForTagValues(
+                entities,
+                tagQuery,
+                { facetFilters: tags.map((tag) => `_tags:${tag}`) },
+              );
+              return searchedTags.facetHits.map(({ value }) => ({
+                label: value,
+                value,
+              }));
+            }}
+            filters={new Set(urlEntities)}
+            filterOptions={[{ title: 'AREAS' }, ...options]}
+            onChangeFilter={toggleFilter}
+          >
+            <Frame title="Search">
+              <Tags entities={entities} />
+            </Frame>
+          </TagsPage>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };
 
-export default Routes;
+export default TagRoutes;

@@ -80,6 +80,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
+  console.log('*** network.template', network.template);
   return (
     <Onboardable>
       {(onboardable) => (

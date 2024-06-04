@@ -1,6 +1,12 @@
 import { useFlags } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Routes, useMatch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+} from 'react-router-dom';
 
 import { EventsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
@@ -20,30 +26,39 @@ const Events: FC<Record<string, never>> = () => {
     loadEventDirectory().then(loadEvent);
   }, []);
 
-  const { path } = useMatch();
+  const { pathname: path } = useLocation();
   const [currentTime] = useState(new Date());
   const { isEnabled } = useFlags();
 
   return (
     <Routes>
-      <Route exact path={path + gp2.events({}).calendar.template}>
-        <EventsPage>
-          <Frame title="Subscribe to Calendars">
-            <Calendars />
-          </Frame>
-        </EventsPage>
-      </Route>
+      <Route
+        path={path + gp2.events({}).calendar.template}
+        element={
+          <EventsPage>
+            <Frame title="Subscribe to Calendars">
+              <Calendars />
+            </Frame>
+          </EventsPage>
+        }
+      />
 
-      <Route exact path={path + gp2.events({}).upcoming.template}>
-        <EventsPage>
-          <EventsDirectory currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      </Route>
-      <Route exact path={path + gp2.events({}).past.template}>
-        <EventsPage>
-          <EventsDirectory past currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      </Route>
+      <Route
+        path={path + gp2.events({}).upcoming.template}
+        element={
+          <EventsPage>
+            <EventsDirectory currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
+      <Route
+        path={path + gp2.events({}).past.template}
+        element={
+          <EventsPage>
+            <EventsDirectory past currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
       <Route path={path + gp2.events({}).event.template}>
         <Frame title="Event">
           <Event />

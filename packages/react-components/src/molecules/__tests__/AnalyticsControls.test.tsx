@@ -49,7 +49,11 @@ describe('AnalyticsControls', () => {
     delete (window as Partial<Window>).location;
     window.location = { search: '?range=30d&tag=TestTag' } as Location;
 
-    const { getByText } = render(<AnalyticsControls {...defaultProps} timeRange={'30d'} />);
-    expect(getByText('Last 90 days').closest('a')!.href).toContain('tag=TestTag');
+    const { getByText } = render(
+      <AnalyticsControls {...defaultProps} timeRange={'30d'} />,
+    );
+    expect(getByText('Last 90 days').closest('a')!.href).toContain(
+      'tag=TestTag',
+    );
   });
 });

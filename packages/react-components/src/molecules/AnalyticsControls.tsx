@@ -137,7 +137,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                 label: tag,
                 value: tag,
               }))}
-              key={`${tags.join('')}`}
+              key={`${tags.join('')},${metricOption}`}
               placeholder={searchTexts[metricOption].placeholder}
             />
           </span>

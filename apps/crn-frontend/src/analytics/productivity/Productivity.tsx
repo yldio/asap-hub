@@ -21,6 +21,9 @@ const Productivity = () => {
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
 
+  const entityType =
+    metric === 'user' ? 'user-productivity' : 'team-productivity';
+
   return (
     <AnalyticsProductivityPageBody
       metric={metric}
@@ -30,7 +33,11 @@ const Productivity = () => {
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {
-        const searchedTags = await client.searchForTagValues([], tagQuery, {});
+        const searchedTags = await client.searchForTagValues(
+          [entityType],
+          tagQuery,
+          {},
+        );
         return searchedTags.facetHits.map(({ value }) => ({
           label: value,
           value,

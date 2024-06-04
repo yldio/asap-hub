@@ -114,57 +114,65 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   exportResults,
   currentPage,
   href,
-}) => (
-  <>
-    {metricOption && (
-      <div css={searchContainerStyles}>
-        <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
-        <span role="search" css={searchStyles}>
-          <MultiSelect
-            noMargin
-            leftIndicator={searchIcon}
-            noOptionsMessage={() => 'No results found'}
-            loadOptions={loadTags}
-            onChange={(items) => setTags(items.map(({ value }) => value))}
-            values={tags.map((tag) => ({
-              label: tag,
-              value: tag,
-            }))}
-            key={`${tags.join('')}`}
-            placeholder={searchTexts[metricOption].placeholder}
-          />
-        </span>
-      </div>
-    )}
-    <span css={containerStyles}>
-      {timeRange && (
-        <span css={viewContainerStyles}>
-          <strong>View:</strong>
-          <DropdownButton
-            noMargin
-            buttonChildren={() => (
-              <>
-                <span css={{ marginRight: rem(10) }}>
-                  {timeRangeOptions[timeRange]}
-                </span>
-                {dropdownChevronIcon}
-              </>
-            )}
-          >
-            {Object.keys(timeRangeOptions).map((key) => ({
-              item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-              href: `${href}?range=${key}&currentPage=${currentPage}`,
-            }))}
-          </DropdownButton>
-        </span>
+}) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.delete('range');
+  searchParams.delete('currentPage');
+  const tagsQueryString = searchParams.has('tag')
+    ? '&' + searchParams.toString()
+    : '';
+  return (
+    <>
+      {metricOption && (
+        <div css={searchContainerStyles}>
+          <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
+          <span role="search" css={searchStyles}>
+            <MultiSelect
+              noMargin
+              leftIndicator={searchIcon}
+              noOptionsMessage={() => 'No results found'}
+              loadOptions={loadTags}
+              onChange={(items) => setTags(items.map(({ value }) => value))}
+              values={tags.map((tag) => ({
+                label: tag,
+                value: tag,
+              }))}
+              key={`${tags.join('')}`}
+              placeholder={searchTexts[metricOption].placeholder}
+            />
+          </span>
+        </div>
       )}
-      {exportResults && (
-        <span css={exportContainerStyles}>
-          <ExportButton exportResults={exportResults} />
-        </span>
-      )}
-    </span>
-  </>
-);
+      <span css={containerStyles}>
+        {timeRange && (
+          <span css={viewContainerStyles}>
+            <strong>View:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={{ marginRight: rem(10) }}>
+                    {timeRangeOptions[timeRange]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(timeRangeOptions).map((key) => ({
+                item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
+                href: `${href}?range=${key}&currentPage=${currentPage}${tagsQueryString}`,
+              }))}
+            </DropdownButton>
+          </span>
+        )}
+        {exportResults && (
+          <span css={exportContainerStyles}>
+            <ExportButton exportResults={exportResults} />
+          </span>
+        )}
+      </span>
+    </>
+  );
+};
 
 export default AnalyticsControls;

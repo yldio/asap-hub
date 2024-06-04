@@ -96,8 +96,8 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
-  activeCampaignId?: string;
   activatedDate?: string;
+  activeCampaignId?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -128,6 +128,7 @@ export type UserDataObject = {
   role: UserRole;
   social?: UserSocial;
   stateOrProvince: string;
+  systemPublishedVersion?: number;
   tags: TagDataObject[];
   telephone?: Telephone;
   workingGroups: UserWorkingGroup[];
@@ -177,6 +178,7 @@ export type UserPatchRequest = Omit<
   | 'orcidWorks'
   | 'activeCampaignCreatedAt'
   | 'activeCampaignId'
+  | 'systemPublishedVersion'
 >;
 
 export type UserAvatarPostRequest = {
@@ -185,8 +187,7 @@ export type UserAvatarPostRequest = {
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
-export interface UserResponse
-  extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
+export interface UserResponse extends Omit<UserDataObject, 'connections'> {
   displayName: string;
   fullDisplayName: string;
   projectIds: string[];
@@ -196,7 +197,6 @@ export interface UserResponse
 
 export type PublicUserResponse = Pick<
   UserResponse,
-  | 'id'
   | 'avatarUrl'
   | 'biography'
   | 'city'
@@ -204,10 +204,15 @@ export type PublicUserResponse = Pick<
   | 'degrees'
   | 'displayName'
   | 'firstName'
+  | 'id'
+  | 'lastModifiedDate'
   | 'lastName'
   | 'middleName'
   | 'outputs'
+  | 'systemPublishedVersion'
 > & {
+  title?: string;
+  institution?: string;
   publishDate: string;
   workingGroups: Array<
     Pick<WorkingGroupResponse, 'id' | 'title'> & {
@@ -218,7 +223,10 @@ export type PublicUserResponse = Pick<
 export type ListUserResponse = ListResponse<UserResponse>;
 export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
 
-export type UserMetadataResponse = Omit<UserResponse, 'fullDisplayName'> & {
+export type UserMetadataResponse = Omit<
+  UserResponse,
+  'fullDisplayName' | 'lastModifiedDate'
+> & {
   algoliaApiKey: string | null;
 };
 export type UserUpdateRequest = UserUpdateDataObject;

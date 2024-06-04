@@ -11,6 +11,8 @@ export const getUserResponse = (
   overrides: Partial<gp2Model.UserResponse> = {},
 ): gp2Model.UserResponse => ({
   id: 'user-id-1',
+  systemPublishedVersion: 23,
+  lastModifiedDate: '2023-07-06T07:23:32.000Z',
   activeCampaignId: '1',
   avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
@@ -121,31 +123,37 @@ export const getUserResponse = (
 
 export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
   const {
-    id,
     avatarUrl,
     biography,
     city,
     country,
     degrees,
+    displayName,
     firstName,
+    id,
     lastName,
+    lastModifiedDate,
     middleName,
     outputs,
-    displayName,
+    positions,
   } = getUserResponse();
   return {
-    id,
     avatarUrl,
     biography,
     city,
     country,
     degrees,
+    displayName,
     firstName,
+    id,
+    institution: positions[0]?.institution,
     lastName,
+    lastModifiedDate,
     middleName,
     outputs,
-    displayName,
     publishDate: '2020-09-23T20:45:22.000Z',
+    systemPublishedVersion: 23,
+    title: positions[0]?.role,
     workingGroups: [
       {
         id: 'test-working-group-id',
@@ -180,6 +188,8 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
     getUserResponse(),
     {
       id: 'user-id-2',
+      lastModifiedDate: '2022-12-24T23:23:23.000Z',
+      systemPublishedVersion: 9,
       createdDate: '2020-09-23T20:45:22.000Z',
       displayName: 'Tony Stark',
       fullDisplayName: 'Tony Stark',
@@ -215,6 +225,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
 
 export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
   id: 'user-id-1',
+  systemPublishedVersion: 23,
   activeCampaignId: '1',
   avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
@@ -435,6 +446,7 @@ export const getContentfulGraphqlUser = (
     id: 'user-id-1',
     firstPublishedAt: '2020-09-23T20:45:22.000Z',
     publishedAt: '2023-07-06T07:23:32.000Z',
+    publishedVersion: 23,
   },
   activeCampaignId: '1',
   activatedDate: '2020-09-24T20:45:22.000Z',

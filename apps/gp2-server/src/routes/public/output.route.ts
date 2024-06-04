@@ -52,16 +52,7 @@ export const outputRouteFactory = (
 const mapOutputToPublicOutput = (
   output: gp2Model.OutputResponse,
 ): gp2Model.PublicOutputResponse => ({
-  id: output.id,
-  title: output.title,
-  documentType: output.documentType,
   addedDate: output.addedDate,
-  tags: output.tags,
-  publishDate: output.publishDate,
-  type: output.type,
-  workingGroups: output.workingGroups,
-  systemPublishedVersion: output.systemPublishedVersion,
-  shortDescription: output.shortDescription,
   authors: output.authors.map((author) => {
     if ('onboarded' in author) {
       return {
@@ -76,4 +67,24 @@ const mapOutputToPublicOutput = (
       displayName: author.displayName,
     };
   }),
+  documentType: output.documentType,
+  id: output.id,
+  lastModifiedDate: output.lastUpdatedPartial,
+  publishDate: output.publishDate,
+  shortDescription: output.shortDescription,
+  systemPublishedVersion: output.systemPublishedVersion,
+  tags: output.tags,
+  title: output.title,
+  type: output.type,
+  workingGroups: output.workingGroups,
+  finalPublishDate:
+    Array.isArray(output.versions) && output.versions.length > 0
+      ? undefined
+      : output.publishDate,
+  preprintPublishDate:
+    output.documentType === 'Article' &&
+    output.type === 'Research' &&
+    output.subtype === 'Preprints'
+      ? output.publishDate
+      : undefined,
 });

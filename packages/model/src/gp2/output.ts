@@ -102,7 +102,6 @@ export type RelatedOutputs = {
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
-  lastModifiedDate?: string;
   link?: string;
   publishDate?: string;
   title: string;
@@ -206,6 +205,7 @@ export type PublicOutputResponse = Pick<
       >
     | Pick<ExternalUserResponse, 'displayName'>
   >;
+  lastModifiedDate: string;
 };
 
 export type ListOutputResponse = ListResponse<OutputResponse>;

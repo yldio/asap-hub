@@ -110,6 +110,7 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
     authors,
     shortDescription,
     systemPublishedVersion,
+    lastUpdatedPartial,
   } = getOutputDataObject();
 
   return {
@@ -123,6 +124,7 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
     addedDate,
     shortDescription: shortDescription!,
     systemPublishedVersion: systemPublishedVersion!,
+    lastModifiedDate: lastUpdatedPartial,
     authors: (authors as gp2Model.UserAuthor[]).map(
       ({ id, firstName, lastName, displayName, avatarUrl }) => ({
         id,

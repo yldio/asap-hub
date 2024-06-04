@@ -34,16 +34,16 @@ export type WorkingGroupResponse = WorkingGroupDataObject;
 
 export type PublicWorkingGroupResponse = Pick<
   WorkingGroupResponse,
-  | 'id'
-  | 'title'
   | 'description'
-  | 'shortDescription'
-  | 'primaryEmail'
-  | 'secondaryEmail'
+  | 'id'
   | 'members'
+  | 'primaryEmail'
   | 'publishDate'
+  | 'secondaryEmail'
+  | 'shortDescription'
   | 'systemPublishedVersion'
->;
+  | 'title'
+> & { lastModifiedDate: string };
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 export type ListPublicWorkingGroupResponse =

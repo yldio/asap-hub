@@ -99,27 +99,28 @@ export const getListWorkingGroupsResponse =
 export const getPublicWorkingGroupResponse =
   (): gp2Model.PublicWorkingGroupResponse => {
     const {
-      id,
       description,
-      title,
-      shortDescription,
+      id,
       members,
       primaryEmail,
-      secondaryEmail,
       publishDate,
+      secondaryEmail,
+      shortDescription,
       systemPublishedVersion,
+      title,
     } = getWorkingGroupResponse();
 
     return {
-      id,
       description,
-      title,
-      shortDescription,
-      primaryEmail,
-      secondaryEmail,
+      id,
+      lastModifiedDate: publishDate,
       members,
+      primaryEmail,
       publishDate,
+      secondaryEmail,
+      shortDescription,
       systemPublishedVersion,
+      title,
     };
   };
 

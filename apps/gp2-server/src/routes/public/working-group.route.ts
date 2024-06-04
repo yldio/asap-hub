@@ -37,13 +37,14 @@ export const workingGroupRouteFactory = (
 const mapWorkingGroupToPublicWorkingGroup = (
   workingGroup: gp2Model.WorkingGroupResponse,
 ): gp2Model.PublicWorkingGroupResponse => ({
-  id: workingGroup.id,
   description: workingGroup.description,
+  id: workingGroup.id,
+  lastModifiedDate: workingGroup.publishDate,
   members: workingGroup.members,
-  shortDescription: workingGroup.shortDescription,
-  title: workingGroup.title,
   primaryEmail: workingGroup.primaryEmail,
-  secondaryEmail: workingGroup.secondaryEmail,
   publishDate: workingGroup.publishDate,
+  secondaryEmail: workingGroup.secondaryEmail,
+  shortDescription: workingGroup.shortDescription,
   systemPublishedVersion: workingGroup.systemPublishedVersion,
+  title: workingGroup.title,
 });

@@ -119,7 +119,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   searchParams.delete('range');
   searchParams.delete('currentPage');
   const tagsQueryString = searchParams.has('tag')
-    ? '&' + searchParams.toString()
+    ? `&${searchParams.toString()}`
     : '';
   return (
     <>

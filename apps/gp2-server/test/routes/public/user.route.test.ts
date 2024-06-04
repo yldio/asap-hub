@@ -138,6 +138,52 @@ describe('/users/ route', () => {
       expect(response.body).toEqual(getPublicUserResponse());
     });
 
+    test('Should return a comma separated list of institutions when multiple positions are present', async () => {
+      const userResponse = getUserResponse();
+      userResponse.positions = [
+        {
+          role: 'CEO',
+          department: 'Research',
+          institution: 'Stark Industries',
+        },
+        {
+          role: 'CTO',
+          department: 'Technology',
+          institution: 'YLD',
+        },
+      ];
+      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+      const response = await supertest(publicApp).get(
+        `/public/users/${userResponse.id}`,
+      );
+
+      expect(response.body.institution).toEqual('Stark Industries, YLD');
+    });
+
+    test('Should return a comma separated list of roles for the title when multiple positions are present', async () => {
+      const userResponse = getUserResponse();
+      userResponse.positions = [
+        {
+          role: 'CEO',
+          department: 'Research',
+          institution: 'Stark Industries',
+        },
+        {
+          role: 'CTO',
+          department: 'Technology',
+          institution: 'YLD',
+        },
+      ];
+      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+      const response = await supertest(publicApp).get(
+        `/public/users/${userResponse.id}`,
+      );
+
+      expect(response.body.title).toEqual('CEO, CTO');
+    });
+
     test('Should return 404 when the user does not exist', async () => {
       userControllerMock.fetchById.mockRejectedValueOnce(
         new NotFoundError(undefined, `user with id invalid-id not found`),

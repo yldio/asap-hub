@@ -50,8 +50,10 @@ const mapUserToPublicUser = (
   lastName: user.lastName,
   lastModifiedDate: user.lastModifiedDate,
   middleName: user.middleName,
-  institution: user.positions[0]?.institution,
-  title: user.positions[0]?.role,
+  institution: user.positions
+    .map((position) => position.institution)
+    .join(', '),
+  title: user.positions.map((position) => position.role).join(', '),
   outputs: user.outputs.filter(filterOutputs).map((output) => ({
     id: output.id,
     title: output.title,

@@ -1,5 +1,5 @@
 import { parse } from 'qs';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { RouteNode } from 'typesafe-routes';
 import * as gp2 from './gp2';
 
@@ -25,7 +25,7 @@ export { gp2 };
 export const useRouteParams = <R extends RouteNode<string, any, any>>(
   route: R,
 ): ReturnType<R['parseParams']> => {
-  const { search } = useLocation();
+  const [search] = useSearchParams();
   return route.parseParams({
     ...useParams(),
     ...parse(search, { ignoreQueryPrefix: true }),

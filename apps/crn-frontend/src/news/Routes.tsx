@@ -15,6 +15,9 @@ const NewsDetailsPage = lazy(loadNews);
 
 const News: FC<Record<string, never>> = () => {
   const { pathname: path } = useLocation();
+  console.log('path', path);
+  console.log('article.template', news({}).article.template);
+  console.log('path + article.template', path + news({}).article.template);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNews().then(loadNewsList);
@@ -29,7 +32,7 @@ const News: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={path}
+        path="*"
         element={
           <NewsPage
             searchQuery={searchQuery}
@@ -45,7 +48,8 @@ const News: FC<Record<string, never>> = () => {
       />
 
       <Route
-        path={path + news({}).article.template}
+        path={path + news({}).article}
+        // path="/news/:articleId"
         element={
           <Frame title={null}>
             <NewsDetailsPage />

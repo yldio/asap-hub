@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import {
   about,
-  discover,
+  discoverRoutes,
   network,
   sharedResearch,
   newsRoutes,
@@ -92,7 +92,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={discover({}).$}
+          href={discoverRoutes.DEFAULT.LIST.buildPath({})}
           icon={discoverIcon}
           enabled={userOnboarded}
         >

@@ -1,5 +1,11 @@
-import { route } from 'typesafe-routes';
+import { route } from 'react-router-typesafe-routes/dom';
 
-const dismissGettingStarted = route('dismiss-getting-started', {}, {});
-
-export default route('/', {}, { dismissGettingStarted });
+export const dashboardRoutes = {
+  DEFAULT: route(
+    '',
+    {},
+    {
+      DISMISS_GETTING_STARTED: route('dismiss-getting-started'),
+    },
+  ),
+};

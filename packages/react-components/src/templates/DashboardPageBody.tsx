@@ -4,7 +4,7 @@ import {
   network,
   newsRoutes,
   sharedResearch,
-  dashboard,
+  dashboardRoutes,
   events as eventsRoute,
 } from '@asap-hub/routing';
 import {
@@ -115,7 +115,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Accordion
               items={guideAccordion}
               info={{
-                href: dashboard({}).dismissGettingStarted({}).$,
+                href: dashboardRoutes.DEFAULT.DISMISS_GETTING_STARTED.buildPath(
+                  {},
+                ),
                 hrefText: 'Don’t Show Again',
                 text: 'Want to remove this section?',
               }}

@@ -7,7 +7,7 @@ import {
   useCurrentUserCRN,
   useCurrentUserTeamRolesCRN,
 } from '@asap-hub/react-context';
-import { dashboard as dashboardRoute } from '@asap-hub/routing';
+import { dashboardRoutes } from '@asap-hub/routing';
 import { FC, useState } from 'react';
 import { useMatch } from 'react-router-dom';
 
@@ -22,7 +22,9 @@ const Dashboard: FC<Record<string, never>> = () => {
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }
-  const displayModal = useMatch(dashboardRoute({}).dismissGettingStarted({}).$);
+  const displayModal = useMatch(
+    dashboardRoutes.DEFAULT.$.DISMISS_GETTING_STARTED.path,
+  );
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();

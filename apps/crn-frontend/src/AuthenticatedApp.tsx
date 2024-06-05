@@ -4,8 +4,8 @@ import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
   analytics,
-  dashboard,
-  discover,
+  dashboardRoutes,
+  discoverRoutes,
   events,
   network,
   newsRoutes,
@@ -122,7 +122,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           <CheckOnboarded>
             <Routes>
               <Route
-                path={dashboard.template}
+                path={dashboardRoutes.DEFAULT.path}
                 element={
                   <Frame title="Dashboard">
                     <Dashboard />
@@ -130,7 +130,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={dashboard({}).dismissGettingStarted({}).$}
+                path={dashboardRoutes.DEFAULT.DISMISS_GETTING_STARTED.path}
                 element={
                   <Frame title="Dashboard">
                     <Dashboard />
@@ -138,7 +138,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={discover.template}
+                path={discoverRoutes.DEFAULT.path}
                 element={
                   <Frame title="Guides & Tutorials">
                     <Discover />

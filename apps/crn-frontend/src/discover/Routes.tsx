@@ -3,9 +3,9 @@ import {
   SearchFrame,
 } from '@asap-hub/frontend-utils';
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
-import { discover } from '@asap-hub/routing';
+import { discoverRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>
@@ -30,17 +30,39 @@ const Discover: FC<Record<string, never>> = () => {
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
-  const { pathname: path } = useLocation();
   const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
 
   return (
     <Routes>
       <Route
-        path={
-          path +
-          discover({}).tutorials.template +
-          discover({}).tutorials({}).tutorial.template
+        path={discoverRoutes.DEFAULT.$.LIST.path}
+        element={
+          <Frame title="Guides">
+            <DiscoverPage>
+              <Guides />
+            </DiscoverPage>
+          </Frame>
         }
+      />
+
+      <Route
+        path={discoverRoutes.DEFAULT.$.TUTORIALS.relativePath}
+        element={
+          <DiscoverPage>
+            <TutorialsPage
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+            >
+              <SearchFrame title="Tutorials">
+                <TutorialList searchQuery={debouncedSearchQuery} />
+              </SearchFrame>
+            </TutorialsPage>
+          </DiscoverPage>
+        }
+      />
+
+      <Route
+        path={discoverRoutes.DEFAULT.$.TUTORIALS.DETAILS.relativePath}
         element={
           <Frame title={null}>
             <TutorialPage />
@@ -48,36 +70,11 @@ const Discover: FC<Record<string, never>> = () => {
         }
       />
 
-      <DiscoverPage>
-        <Routes>
-          <Route
-            path={path + discover({}).guides.template}
-            element={
-              <Frame title="Guides">
-                <Guides />
-              </Frame>
-            }
-          />
-
-          <Route
-            path={path + discover({}).tutorials.template}
-            element={
-              <TutorialsPage
-                searchQuery={searchQuery}
-                onSearchQueryChange={setSearchQuery}
-              >
-                <SearchFrame title="Tutorials">
-                  <TutorialList searchQuery={debouncedSearchQuery} />
-                </SearchFrame>
-              </TutorialsPage>
-            }
-          />
-          <Route
-            path="*"
-            element={<Navigate to={discover({}).guides({}).$} />}
-          />
-        </Routes>
-      </DiscoverPage>
+      {/* TODO: Check if this is right */}
+      <Route
+        path="*"
+        element={<Navigate to={discoverRoutes.DEFAULT.$.LIST.path} />}
+      />
     </Routes>
   );
 };

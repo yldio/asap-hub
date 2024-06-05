@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { TutorialsResponse } from '@asap-hub/model';
-import { network, discover } from '@asap-hub/routing';
+import { network, discoverRoutes } from '@asap-hub/routing';
 
 import { Card, Paragraph } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
@@ -92,7 +92,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   teams,
   tags,
 }) => {
-  const href = discover({}).tutorials({}).tutorial({ tutorialId: id }).$;
+  const href = discoverRoutes.DEFAULT.TUTORIALS.DETAILS.buildPath({ id });
 
   const tutorialImage = (
     <>

@@ -5,7 +5,7 @@ import * as gp2 from './gp2';
 
 export { default as about } from './about';
 export { default as analytics } from './analytics';
-export { default as discover } from './discover';
+export * from './discover';
 export { default as events } from './events';
 export { default as logout } from './logout';
 export { default as network } from './network';
@@ -15,7 +15,7 @@ export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
 export { default as tags } from './tags';
-export { default as dashboard } from './dashboard';
+export * from './dashboard';
 
 export type { RouteNode };
 export { gp2 };

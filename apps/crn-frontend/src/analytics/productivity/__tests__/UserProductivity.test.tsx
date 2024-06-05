@@ -92,6 +92,7 @@ const renderPage = async () => {
             pageSize: 10,
             timeRange: '30d',
             sort: 'user_asc',
+            tags: [],
           }),
         );
       }}
@@ -100,7 +101,7 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <UserProductivity />
+              <UserProductivity tags={[]} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

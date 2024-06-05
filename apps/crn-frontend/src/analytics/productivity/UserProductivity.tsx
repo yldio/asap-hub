@@ -11,7 +11,11 @@ import {
   useUserProductivityPerformance,
 } from './state';
 
-const UserProductivity = () => {
+export type ProductivityProps = {
+  tags: string[];
+};
+
+const UserProductivity: React.FC<ProductivityProps> = ({ tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
   const [sort, setSort] = useState<SortUserProductivity>('user_asc');
@@ -23,8 +27,9 @@ const UserProductivity = () => {
   const { items: data, total } = useAnalyticsUserProductivity({
     currentPage,
     pageSize,
-    timeRange,
     sort,
+    tags,
+    timeRange,
   });
 
   const performance = useUserProductivityPerformance(timeRange);

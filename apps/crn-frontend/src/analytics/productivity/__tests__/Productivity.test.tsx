@@ -1,3 +1,4 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   teamProductivityPerformance,
@@ -9,7 +10,7 @@ import {
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
@@ -17,6 +18,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -27,6 +29,11 @@ import {
 import Productivity from '../Productivity';
 
 jest.mock('../api');
+
+jest.mock('../../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
+
 mockConsoleError();
 
 afterEach(() => {
@@ -58,11 +65,30 @@ mockGetUserProductivityPerformance.mockResolvedValue(
   userProductivityPerformance,
 );
 
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['searchForTagValues']
+>;
+
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
+>;
+
+beforeEach(() => {
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+});
+
 const defaultOptions: ProductivityListOptions = {
   pageSize: 10,
   currentPage: 0,
   timeRange: '30d',
   sort: 'team_asc',
+  tags: [],
 };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
@@ -187,7 +213,7 @@ describe('team productivity', () => {
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
-    const input = screen.getByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
     userEvent.click(input);
     userEvent.click(screen.getByText(label));
 
@@ -235,5 +261,29 @@ describe('team productivity', () => {
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
+  });
+});
+
+describe('search', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+  it('allows typing in search queries', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    const searchBox = getSearchBox();
+
+    userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-productivity'],
+        'test123',
+        {},
+      ),
+    );
   });
 });

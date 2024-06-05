@@ -100,7 +100,11 @@ const Leadership: FC<Record<string, never>> = () => {
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {
-        const searchedTags = await client.searchForTagValues([], tagQuery, {});
+        const searchedTags = await client.searchForTagValues(
+          ['team-leadership'],
+          tagQuery,
+          {},
+        );
         return searchedTags.facetHits.map(({ value }) => ({
           label: value,
           value,

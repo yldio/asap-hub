@@ -10,8 +10,9 @@ import {
   useAnalyticsTeamProductivity,
   useTeamProductivityPerformance,
 } from './state';
+import { ProductivityProps } from './UserProductivity';
 
-const TeamProductivity = () => {
+const TeamProductivity: React.FC<ProductivityProps> = ({ tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
   const [sort, setSort] = useState<SortTeamProductivity>('team_asc');
@@ -23,8 +24,9 @@ const TeamProductivity = () => {
   const { items: data, total } = useAnalyticsTeamProductivity({
     currentPage,
     pageSize,
-    timeRange,
     sort,
+    tags,
+    timeRange,
   });
 
   const performance = useTeamProductivityPerformance(timeRange);

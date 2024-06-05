@@ -2,8 +2,10 @@ import { AnalyticsData } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
   ListResponse,
+  TeamProductivityResponse,
   TimeRangeOption,
   timeRanges,
+  UserProductivityResponse,
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { promises as fs } from 'fs';
@@ -128,10 +130,18 @@ const transformRecords = (
 };
 
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
+  let tag = '';
   switch (type) {
     case 'team-leadership':
-      const teamName = (record as AnalyticsTeamLeadershipResponse).displayName;
-      return teamName ? [teamName] : [];
+      tag = (record as AnalyticsTeamLeadershipResponse).displayName;
+      return tag ? [tag] : [];
+    case 'user-productivity':
+      const { name, teams } = record as UserProductivityResponse;
+      const teamNames = teams.map((team) => team.team);
+      return name ? [name].concat(teamNames) : teamNames;
+    case 'team-productivity':
+      tag = (record as TeamProductivityResponse).name;
+      return tag ? [tag] : [];
     default:
       return [];
   }

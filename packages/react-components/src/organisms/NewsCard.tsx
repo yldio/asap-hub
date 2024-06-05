@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
-import { news, discover } from '@asap-hub/routing';
+import { newsRoutes, discover } from '@asap-hub/routing';
 
 import { Card, Headline4, Ellipsis } from '../atoms';
 import { rem, smallDesktopScreen } from '../pixels';
@@ -86,7 +86,7 @@ const NewsCard: React.FC<
   const href =
     type === 'Tutorial'
       ? discover({}).tutorials({}).tutorial({ tutorialId: id }).$
-      : news({}).article({ articleId: id }).$;
+      : newsRoutes.DEFAULT.DETAILS.buildPath({ id });
   const titleComponent = text ? (
     <LinkHeadline href={href} level={4} noMargin>
       {title}

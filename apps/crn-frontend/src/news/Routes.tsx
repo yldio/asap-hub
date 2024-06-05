@@ -1,8 +1,8 @@
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
-import { news } from '@asap-hub/routing';
+import { newsRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -14,10 +14,6 @@ const NewsList = lazy(loadNewsList);
 const NewsDetailsPage = lazy(loadNews);
 
 const News: FC<Record<string, never>> = () => {
-  const { pathname: path } = useLocation();
-  console.log('path', path);
-  console.log('article.template', news({}).article.template);
-  console.log('path + article.template', path + news({}).article.template);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadNews().then(loadNewsList);
@@ -32,7 +28,7 @@ const News: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path="*"
+        path={newsRoutes.DEFAULT.$.LIST.path}
         element={
           <NewsPage
             searchQuery={searchQuery}
@@ -48,8 +44,7 @@ const News: FC<Record<string, never>> = () => {
       />
 
       <Route
-        path={path + news({}).article}
-        // path="/news/:articleId"
+        path={newsRoutes.DEFAULT.$.DETAILS.path}
         element={
           <Frame title={null}>
             <NewsDetailsPage />

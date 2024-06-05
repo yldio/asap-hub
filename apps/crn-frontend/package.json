@@ -44,6 +44,7 @@
     "react-hook-form": "^7.51.4",
     "react-router-dom": "6.22.2",
     "react-router-dom-last-location": "0.2.6",
+    "react-router-typesafe-routes": "^1.2.2",
     "recoil": "0.7.7",
     "stream": "npm:stream-browserify@3.0.0",
     "use-debounce": "8.0.4",

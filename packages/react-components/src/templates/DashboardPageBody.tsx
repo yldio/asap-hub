@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import {
   network,
-  news as newsRoute,
+  newsRoutes,
   sharedResearch,
   dashboard,
   events as eventsRoute,
@@ -199,7 +199,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             subtitle="Explore the latest shared research and learn more about them."
           />
           <p css={viewAllStyles}>
-            <Link href={newsRoute({}).$}>View All →</Link>
+            <Link href={newsRoutes.DEFAULT.LIST.buildPath({})}>View All →</Link>
           </p>
         </div>
       ) : null}

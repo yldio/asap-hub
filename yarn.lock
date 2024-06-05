@@ -948,6 +948,7 @@ __metadata:
     react-hook-form: ^7.51.4
     react-router-dom: 6.22.2
     react-router-dom-last-location: 0.2.6
+    react-router-typesafe-routes: ^1.2.2
     react-test-renderer: 17.0.2
     recoil: 0.7.7
     stream: "npm:stream-browserify@3.0.0"
@@ -1729,6 +1730,7 @@ __metadata:
     "@types/qs": 6.9.11
     qs: 6.11.2
     react-router-dom: 6.22.2
+    react-router-typesafe-routes: ^1.2.2
     typesafe-routes: 9.0.1
     typescript: 4.9.5
   peerDependencies:
@@ -39642,6 +39644,28 @@ __metadata:
     react-dom: ">=16.8"
     react-router-dom: ">=6.19"
   checksum: 524c4cb51ffe2f4b722c77f88a676fe4fd8aaea09515e64eaddda82f0418dd94f82999e032c0c3989aee112b2b4db655a68658ce4a1f6ccc2f496ea13552cfae
+  languageName: node
+  linkType: hard
+
+"react-router-typesafe-routes@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "react-router-typesafe-routes@npm:1.2.2"
+  peerDependencies:
+    react: ">=16.8"
+    react-router-dom: ^6.7.0
+    react-router-native: ^6.7.0
+    yup: ^1.0.0
+    zod: ^3.0.0
+  peerDependenciesMeta:
+    react-router-dom:
+      optional: true
+    react-router-native:
+      optional: true
+    yup:
+      optional: true
+    zod:
+      optional: true
+  checksum: c943c246d86938bb507bf7adb898b315944fcefe37f4e4b7f361c750c1f160c7d83d7a607a94f4ede5d0d76380842f148d270624679374d4a3275bb0e33eb655
   languageName: node
   linkType: hard
 

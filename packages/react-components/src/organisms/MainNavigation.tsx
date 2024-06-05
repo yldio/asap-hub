@@ -4,7 +4,7 @@ import {
   discover,
   network,
   sharedResearch,
-  news,
+  newsRoutes,
   events,
   analytics,
 } from '@asap-hub/routing';
@@ -83,7 +83,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={news({}).$}
+          href={newsRoutes.DEFAULT.LIST.buildPath({})}
           icon={newsIcon}
           enabled={userOnboarded}
         >

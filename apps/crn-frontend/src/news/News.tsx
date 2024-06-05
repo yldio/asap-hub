@@ -1,15 +1,13 @@
-import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
-import { useParams } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
-
+import { NewsDetailsPage, NotFoundPage } from '@asap-hub/react-components';
+import { newsRoutes } from '@asap-hub/routing';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { useNewsById } from './state';
 
 const News: React.FC<Record<string, never>> = () => {
-  console.log('aqui');
-  const { articleId } = useParams<{ articleId: string }>();
+  const { id } = useTypedParams(newsRoutes.DEFAULT.DETAILS);
 
-  console.log('articleId', articleId);
-  const news = useNewsById(articleId || '7ooqZ1GAU7Dr0veb0qKk4K');
+  const news = useNewsById(id);
 
   if (news) {
     const props = {
@@ -22,8 +20,6 @@ const News: React.FC<Record<string, never>> = () => {
       </Frame>
     );
   }
-
-  console.log('before not found');
 
   return <NotFoundPage />;
 };

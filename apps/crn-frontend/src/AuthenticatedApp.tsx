@@ -8,7 +8,7 @@ import {
   discover,
   events,
   network,
-  news,
+  newsRoutes,
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
@@ -165,7 +165,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 />
               )}
               <Route
-                path={news.template}
+                path={newsRoutes.DEFAULT.path}
                 element={
                   <Frame title="News">
                     <News />

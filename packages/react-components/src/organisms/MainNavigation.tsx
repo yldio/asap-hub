@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import {
   about,
   discoverRoutes,
-  network,
+  networkRoutes,
   sharedResearch,
   newsRoutes,
   events,
@@ -56,7 +56,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
     <ul css={listStyles}>
       <li>
         <NavigationLink
-          href={network({}).$}
+          href={networkRoutes.DEFAULT.USERS.buildPath({})}
           icon={networkIcon}
           enabled={userOnboarded}
         >

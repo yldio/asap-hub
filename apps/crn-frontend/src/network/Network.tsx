@@ -1,14 +1,8 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useMatch,
-} from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
@@ -63,7 +57,6 @@ const Network: FC<Record<string, never>> = () => {
   }, []);
 
   const { pathname: path } = useLocation();
-  console.log('path', path);
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -72,12 +65,11 @@ const Network: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
 
-  console.log('*', path + network({}).users.template);
   const [currentTime] = useState(new Date());
   return (
     <Routes>
       <Route
-        path={path + network({}).users.template}
+        path={networkRoutes.DEFAULT.$.USERS.relativePath}
         element={
           <NetworkPage
             page="users"
@@ -93,17 +85,14 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={
-          path +
-          network({}).users.template +
-          network({}).users({}).user.template
-        }
+        path={networkRoutes.DEFAULT.$.USERS.DETAILS.relativePath}
         element={
           <Frame title="User Profile">
             <UserProfile currentTime={currentTime} />
           </Frame>
         }
       />
+      {/* 
       <Route
         path={path + network({}).teams.template}
         element={
@@ -193,8 +182,11 @@ const Network: FC<Record<string, never>> = () => {
             <WorkingGroupProfile currentTime={currentTime} />
           </Frame>
         }
+      /> */}
+      <Route
+        path="*"
+        element={<Navigate to={networkRoutes.DEFAULT.$.USERS.relativePath} />}
       />
-      <Route path="*" element={<Navigate to={network({}).users({}).$} />} />
     </Routes>
   );
 };

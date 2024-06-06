@@ -1,6 +1,6 @@
 import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
@@ -67,17 +67,19 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   tools,
   onDeleteTool,
 }) => {
-  const toolsRoute = network({})
-    .teams({})
-    .team({ teamId: id })
-    .workspace({})
-    .tools({});
+  const toolsRoute = networkRoutes.DEFAULT.path; // TODO: fix this
+  // network({})
+  //   .teams({})
+  //   .team({ teamId: id })
+  //   .workspace({})
+  //   .tools({});
 
-  const manuscriptRoute = network({})
-    .teams({})
-    .team({ teamId: id })
-    .workspace({})
-    .createManuscript({}).$;
+  const manuscriptRoute = networkRoutes.DEFAULT.path; // TODO: fix this
+  // network({})
+  //   .teams({})
+  //   .team({ teamId: id })
+  //   .workspace({})
+  //   .createManuscript({}).$;
 
   return (
     <div css={containerStyles}>

@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { css } from '@emotion/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { Link, Divider } from '../atoms';
@@ -59,7 +59,9 @@ interface WorkingGroupsListProps {
 
 const WorkingGroupsList: React.FC<WorkingGroupsListProps> = ({ groups }) => {
   const wgHref = (id: string) =>
-    network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$;
+    // TODO: fix this
+    networkRoutes.DEFAULT.path;
+  // network({}).workingGroups({}).workingGroup({ workingGroupId: id }).$;
 
   return (
     <ul css={[containerStyles]}>

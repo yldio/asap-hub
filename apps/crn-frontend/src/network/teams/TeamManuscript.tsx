@@ -4,7 +4,7 @@ import {
   ManuscriptHeader,
   usePushFromHere,
 } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import { refreshTeamState, usePostManuscript } from './state';

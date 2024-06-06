@@ -1,5 +1,5 @@
 import { WorkingGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Caption, StateTag } from '../atoms';
 import { successIcon } from '../icons';
@@ -26,9 +26,10 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   complete,
   tags,
 }) => {
-  const href = network({})
-    .workingGroups({})
-    .workingGroup({ workingGroupId: id }).$;
+  const href = networkRoutes.DEFAULT.path; // TODO: fix this
+  // network({})
+  //   .workingGroups({})
+  //   .workingGroup({ workingGroupId: id }).$;
 
   const footer = (
     <Caption noMargin>{`Last updated: ${formatDate(

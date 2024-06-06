@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { DiscoverResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { HelpSection, RichText, TeamMembersSection } from '../organisms';
 import { perRem } from '../pixels';
@@ -26,7 +26,9 @@ const AboutPageBody: React.FC<AboutPageBodyProps> = ({
 }) => {
   const membersTeamIdData = membersTeamId
     ? {
-        href: network({}).teams({}).team({ teamId: membersTeamId }).$,
+        // TODO: fix this
+        href: networkRoutes.DEFAULT.path,
+        // network({}).teams({}).team({ teamId: membersTeamId }).$,
         hrefText: 'Explore the ASAP team',
       }
     : {};

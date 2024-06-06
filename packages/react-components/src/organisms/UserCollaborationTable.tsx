@@ -1,5 +1,5 @@
 import { TeamRole } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
@@ -186,7 +186,11 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>User</span>
             <p css={iconStyles}>
-              <Link href={network({}).users({}).user({ userId: row.id }).$}>
+              <Link
+                href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                  id: row.id,
+                })}
+              >
                 {row.name}
               </Link>
               {row.isAlumni && alumniBadgeIcon}

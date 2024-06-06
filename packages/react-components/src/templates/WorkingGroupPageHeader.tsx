@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { WorkingGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { useContext } from 'react';
 
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -169,173 +169,175 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
   pastEventsCount,
   calendars,
 }) => {
-  const { canShareResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
+  // TODO: fix here
+  return <h1>hello</h1>;
+  // const { canShareResearchOutput } = useContext(
+  //   ResearchOutputPermissionsContext,
+  // );
 
-  const route = network({})
-    .workingGroups({})
-    .workingGroup({ workingGroupId: id });
+  // const route = network({})
+  //   .workingGroups({})
+  //   .workingGroup({ workingGroupId: id });
 
-  return (
-    <header css={containerStyles}>
-      <div css={titleStyle}>
-        <Display styleAsHeading={2}>{title}</Display>
-        {complete && (
-          <StateTag accent="green" icon={successIcon} label="Complete" />
-        )}
-      </div>
-      <section css={contactSectionStyles}>
-        <UserAvatarList
-          members={[...leaders, ...members].map((member) => member.user)}
-          fullListRoute={`${
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .about({}).$
-          }#${membersListElementId}`}
-        />
-        {pointOfContact && !complete && (
-          <div css={pointOfContactStyles}>
-            <div css={{ display: 'flex', flexGrow: 1 }}>
-              <Link
-                buttonStyle
-                small
-                primary
-                href={`${createMailTo(pointOfContact.user.email)}`}
-                noMargin
-              >
-                Contact PM
-              </Link>
-            </div>
-            <CopyButton
-              hoverTooltipText="Copy Email"
-              clickTooltipText="Email Copied"
-              onClick={() =>
-                navigator.clipboard.writeText(pointOfContact.user.email)
-              }
-            />
-          </div>
-        )}
+  // return (
+  //   <header css={containerStyles}>
+  //     <div css={titleStyle}>
+  //       <Display styleAsHeading={2}>{title}</Display>
+  //       {complete && (
+  //         <StateTag accent="green" icon={successIcon} label="Complete" />
+  //       )}
+  //     </div>
+  //     <section css={contactSectionStyles}>
+  //       <UserAvatarList
+  //         members={[...leaders, ...members].map((member) => member.user)}
+  //         fullListRoute={`${
+  //           network({})
+  //             .workingGroups({})
+  //             .workingGroup({ workingGroupId: id })
+  //             .about({}).$
+  //         }#${membersListElementId}`}
+  //       />
+  //       {pointOfContact && !complete && (
+  //         <div css={pointOfContactStyles}>
+  //           <div css={{ display: 'flex', flexGrow: 1 }}>
+  //             <Link
+  //               buttonStyle
+  //               small
+  //               primary
+  //               href={`${createMailTo(pointOfContact.user.email)}`}
+  //               noMargin
+  //             >
+  //               Contact PM
+  //             </Link>
+  //           </div>
+  //           <CopyButton
+  //             hoverTooltipText="Copy Email"
+  //             clickTooltipText="Email Copied"
+  //             onClick={() =>
+  //               navigator.clipboard.writeText(pointOfContact.user.email)
+  //             }
+  //           />
+  //         </div>
+  //       )}
 
-        {canShareResearchOutput && (
-          <div css={createStyles}>
-            <DropdownButton
-              buttonChildren={() => (
-                <span css={dropdownButtonStyling}>
-                  {plusIcon}
-                  Share an output
-                </span>
-              )}
-            >
-              {{
-                item: <>{article} Article</>,
-                href: route.createOutput({
-                  outputDocumentType: 'article',
-                }).$,
-              }}
-              {{
-                item: <>{bioinformatics} Bioinformatics</>,
-                href: route.createOutput({
-                  outputDocumentType: 'bioinformatics',
-                }).$,
-              }}
-              {{
-                item: <>{crnReportIcon} CRN Report</>,
-                href: route.createOutput({
-                  outputDocumentType: 'report',
-                }).$,
-              }}
-              {{
-                item: <>{dataset} Dataset</>,
-                href: route.createOutput({
-                  outputDocumentType: 'dataset',
-                }).$,
-              }}
-              {{
-                item: <>{labResource} Lab Resource</>,
-                href: route.createOutput({
-                  outputDocumentType: 'lab-resource',
-                }).$,
-              }}
-              {{
-                item: <>{protocol} Protocol</>,
-                href: route.createOutput({
-                  outputDocumentType: 'protocol',
-                }).$,
-              }}
-            </DropdownButton>
-          </div>
-        )}
-      </section>
-      <div css={rowStyles}>
-        <div css={toolsStyles}>
-          {externalLink && (
-            <Link href={externalLink} buttonStyle small>
-              {googleDriveIcon} Access Drive
-            </Link>
-          )}
-          {calendars[0]?.id && !complete && (
-            <CalendarLink id={calendars[0]?.id}>
-              <span css={{ display: 'flex', gap: '8px' }}>
-                {systemCalendarIcon}Subscribe
-              </span>
-            </CalendarLink>
-          )}
-        </div>
-        <div css={lastUpdatedStyles}>
-          <Caption asParagraph accent="lead">
-            Last updated:{' '}
-            {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-          </Caption>
-        </div>
-      </div>
-      <TabNav>
-        <TabLink
-          href={
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .about({}).$
-          }
-        >
-          About
-        </TabLink>
-        {!complete && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
-        <TabLink
-          href={
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .outputs({}).$
-          }
-        >
-          Outputs ({workingGroupsOutputsCount})
-        </TabLink>
-        {workingGroupsDraftOutputsCount !== undefined && (
-          <TabLink
-            href={
-              network({})
-                .workingGroups({})
-                .workingGroup({ workingGroupId: id })
-                .draftOutputs({}).$
-            }
-          >
-            Draft Outputs ({workingGroupsDraftOutputsCount})
-          </TabLink>
-        )}
+  //       {canShareResearchOutput && (
+  //         <div css={createStyles}>
+  //           <DropdownButton
+  //             buttonChildren={() => (
+  //               <span css={dropdownButtonStyling}>
+  //                 {plusIcon}
+  //                 Share an output
+  //               </span>
+  //             )}
+  //           >
+  //             {{
+  //               item: <>{article} Article</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'article',
+  //               }).$,
+  //             }}
+  //             {{
+  //               item: <>{bioinformatics} Bioinformatics</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'bioinformatics',
+  //               }).$,
+  //             }}
+  //             {{
+  //               item: <>{crnReportIcon} CRN Report</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'report',
+  //               }).$,
+  //             }}
+  //             {{
+  //               item: <>{dataset} Dataset</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'dataset',
+  //               }).$,
+  //             }}
+  //             {{
+  //               item: <>{labResource} Lab Resource</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'lab-resource',
+  //               }).$,
+  //             }}
+  //             {{
+  //               item: <>{protocol} Protocol</>,
+  //               href: route.createOutput({
+  //                 outputDocumentType: 'protocol',
+  //               }).$,
+  //             }}
+  //           </DropdownButton>
+  //         </div>
+  //       )}
+  //     </section>
+  //     <div css={rowStyles}>
+  //       <div css={toolsStyles}>
+  //         {externalLink && (
+  //           <Link href={externalLink} buttonStyle small>
+  //             {googleDriveIcon} Access Drive
+  //           </Link>
+  //         )}
+  //         {calendars[0]?.id && !complete && (
+  //           <CalendarLink id={calendars[0]?.id}>
+  //             <span css={{ display: 'flex', gap: '8px' }}>
+  //               {systemCalendarIcon}Subscribe
+  //             </span>
+  //           </CalendarLink>
+  //         )}
+  //       </div>
+  //       <div css={lastUpdatedStyles}>
+  //         <Caption asParagraph accent="lead">
+  //           Last updated:{' '}
+  //           {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+  //         </Caption>
+  //       </div>
+  //     </div>
+  //     <TabNav>
+  //       <TabLink
+  //         href={
+  //           network({})
+  //             .workingGroups({})
+  //             .workingGroup({ workingGroupId: id })
+  //             .about({}).$
+  //         }
+  //       >
+  //         About
+  //       </TabLink>
+  //       {!complete && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
+  //       <TabLink
+  //         href={
+  //           network({})
+  //             .workingGroups({})
+  //             .workingGroup({ workingGroupId: id })
+  //             .outputs({}).$
+  //         }
+  //       >
+  //         Outputs ({workingGroupsOutputsCount})
+  //       </TabLink>
+  //       {workingGroupsDraftOutputsCount !== undefined && (
+  //         <TabLink
+  //           href={
+  //             network({})
+  //               .workingGroups({})
+  //               .workingGroup({ workingGroupId: id })
+  //               .draftOutputs({}).$
+  //           }
+  //         >
+  //           Draft Outputs ({workingGroupsDraftOutputsCount})
+  //         </TabLink>
+  //       )}
 
-        {!complete && (
-          <TabLink href={route.upcoming({}).$}>
-            Upcoming Events {`(${upcomingEventsCount})`}
-          </TabLink>
-        )}
-        <TabLink href={route.past({}).$}>
-          Past Events {`(${pastEventsCount})`}
-        </TabLink>
-      </TabNav>
-    </header>
-  );
+  //       {!complete && (
+  //         <TabLink href={route.upcoming({}).$}>
+  //           Upcoming Events {`(${upcomingEventsCount})`}
+  //         </TabLink>
+  //       )}
+  //       <TabLink href={route.past({}).$}>
+  //         Past Events {`(${pastEventsCount})`}
+  //       </TabLink>
+  //     </TabNav>
+  //   </header>
+  // );
 };
 
 export default WorkingGroupPageHeader;

@@ -9,9 +9,10 @@ import {
   useCurrentUserCRN,
   UserProfileContext,
 } from '@asap-hub/react-context';
-import { events, network, useRouteParams } from '@asap-hub/routing';
+import { events, networkRoutes } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { Navigate, Route, Routes, useMatch } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
@@ -43,11 +44,9 @@ type UserProfileProps = {
 };
 
 const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
-  const route = network({}).users({}).user;
-  const { path } = useMatch();
-  const { userId } = useRouteParams(route);
+  const route = networkRoutes.DEFAULT.USERS.DETAILS;
+  const { id: userId } = useTypedParams(networkRoutes.DEFAULT.USERS.DETAILS);
 
-  const tabRoutes = route({ userId });
   const tabRoute = useCurrentUserProfileTabRoute();
 
   const user = useUserById(userId);
@@ -95,14 +94,14 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     > = {
       ...user,
 
-      editPersonalInfoHref:
-        isOwnProfile && tabRoute
-          ? tabRoute({}).editPersonalInfo({}).$
-          : undefined,
-      editContactInfoHref:
-        isOwnProfile && tabRoute
-          ? tabRoute({}).editContactInfo({}).$
-          : undefined,
+      editPersonalInfoHref: undefined,
+      // isOwnProfile && tabRoute
+      //   ? tabRoute({}).editPersonalInfo({}).$
+      //   : undefined,
+      editContactInfoHref: undefined,
+      // isOwnProfile && tabRoute
+      //   ? tabRoute({}).editContactInfo({}).$
+      //   : undefined,
       onImageSelect:
         isOwnProfile && tabRoute
           ? (file: File) => {
@@ -138,7 +137,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
               <>
                 <Routes>
                   <Route
-                    path={path + tabRoutes.research.template}
+                    path={route.RESEARCH.path}
                     element={
                       <Frame title="Research">
                         <Research user={user} />
@@ -147,7 +146,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   />
 
                   <Route
-                    path={path + tabRoutes.about.template}
+                    path={route.ABOUT.path}
                     element={
                       <Frame title="About">
                         <About user={user} />
@@ -155,7 +154,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     }
                   />
                   <Route
-                    path={path + tabRoutes.outputs.template}
+                    path={route.OUTPUTS.path}
                     element={
                       <Frame title="Outputs">
                         <Outputs userId={user?.id} />
@@ -163,7 +162,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     }
                   />
                   <Route
-                    path={path + tabRoutes.upcoming.template}
+                    path={route.UPCOMING.path}
                     element={
                       <Frame title="Upcoming Events">
                         <EventsList
@@ -182,7 +181,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   />
 
                   <Route
-                    path={path + tabRoutes.past.template}
+                    path={route.PAST.path}
                     element={
                       <Frame title="Past Events">
                         <EventsList
@@ -200,17 +199,17 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       </Frame>
                     }
                   />
-                  <Route
+                  {/* <Route
                     path="*"
                     element={<Navigate to={tabRoutes.research({}).$} />}
-                  />
+                  /> */}
                 </Routes>
-                {isOwnProfile && tabRoute && (
+                {/* {isOwnProfile && tabRoute && (
                   <Route
                     path={path + tabRoute.template}
                     element={<Editing user={user} backHref={tabRoute({}).$} />}
                   />
-                )}
+                )} */}
               </>
             }
           </UserProfilePage>

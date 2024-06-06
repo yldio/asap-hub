@@ -8,7 +8,7 @@ export { default as analytics } from './analytics';
 export * from './discover';
 export { default as events } from './events';
 export { default as logout } from './logout';
-export { default as network } from './network';
+export * from './network';
 export type { OutputDocumentTypeParameter } from './network';
 export * from './news';
 export { default as sharedResearch } from './shared-research';

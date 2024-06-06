@@ -1,5 +1,5 @@
 import { initialSortingDirection } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Card, Link } from '../atoms';
@@ -241,7 +241,13 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p>
-              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+              <Link
+                href={
+                  // TODO: fix this
+                  networkRoutes.DEFAULT.path
+                  // network({}).teams({}).team({ teamId: row.id }).$
+                }
+              >
                 {row.name}
               </Link>
             </p>

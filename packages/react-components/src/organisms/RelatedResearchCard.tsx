@@ -1,5 +1,9 @@
 import { EventResponse, gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing, network, sharedResearch } from '@asap-hub/routing';
+import {
+  gp2 as gp2Routing,
+  networkRoutes,
+  sharedResearch,
+} from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
@@ -179,9 +183,11 @@ const RelatedResearchCard = <
                     <Link
                       ellipsed
                       href={
-                        network({}).workingGroups({}).workingGroup({
-                          workingGroupId: output.workingGroups[0].id,
-                        }).$
+                        // TODO: fix this
+                        networkRoutes.DEFAULT.path
+                        // network({}).workingGroups({}).workingGroup({
+                        //   workingGroupId: output.workingGroups[0].id,
+                        // }).$
                       }
                     >
                       {output.workingGroups[0].title}
@@ -193,9 +199,11 @@ const RelatedResearchCard = <
                       <Link
                         ellipsed
                         href={
-                          network({}).teams({}).team({
-                            teamId: output.teams[0].id,
-                          }).$
+                          // TODO: fix this
+                          networkRoutes.DEFAULT.path
+                          // network({}).teams({}).team({
+                          //   teamId: output.teams[0].id,
+                          // }).$
                         }
                       >
                         {output.teams[0].displayName}

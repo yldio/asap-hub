@@ -1,5 +1,5 @@
 import { TeamRole, UserTeam } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { Fragment } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
@@ -81,7 +81,11 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   const sortedTeams = [...teams].sort(
     (a, b) => priorities[a.role] - priorities[b.role],
   );
-  const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
+  const teamHref = (
+    id: string, // TODO: fix this
+  ) => networkRoutes.DEFAULT.path;
+  // network({}).teams({}).team({ teamId: id }).$;
+
   const [inactiveTeams, activeTeams] = splitListBy(
     sortedTeams,
     (team) =>

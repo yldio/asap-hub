@@ -1,6 +1,6 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
@@ -145,7 +145,10 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
   teamDraftOutputsCount,
 }) => {
-  const route = network({}).teams({}).team({ teamId: id });
+  const route =
+    // TODO: fix this
+    networkRoutes.DEFAULT.path;
+  // network({}).teams({}).team({ teamId: id });
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );

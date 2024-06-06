@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import {
-  network,
+  networkRoutes,
   newsRoutes,
   sharedResearch,
   dashboardRoutes,
@@ -189,7 +189,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
         <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
         <p css={viewAllStyles}>
-          <Link href={network({}).users({}).$}>View All →</Link>
+          <Link href={networkRoutes.DEFAULT.USERS.buildPath({})}>
+            View All →
+          </Link>
         </p>
       </div>
       {news.length ? (

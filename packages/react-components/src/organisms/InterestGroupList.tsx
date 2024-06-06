@@ -1,5 +1,5 @@
 import { InterestGroupResponse, UserResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { Fragment } from 'react';
 import { Divider, Link } from '../atoms';
@@ -65,9 +65,11 @@ const InterestGroupList: React.FC<InterestGroupListProps> = ({
             <Link
               ellipsed
               href={
-                network({})
-                  .interestGroups({})
-                  .interestGroup({ interestGroupId: interestGroup.id }).$
+                // TODO: fix this
+                networkRoutes.DEFAULT.path
+                // network({})
+                //   .interestGroups({})
+                //   .interestGroup({ interestGroupId: interestGroup.id }).$
               }
             >
               {interestGroup.name}

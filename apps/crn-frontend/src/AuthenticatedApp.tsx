@@ -7,7 +7,7 @@ import {
   dashboardRoutes,
   discoverRoutes,
   events,
-  network,
+  networkRoutes,
   newsRoutes,
   sharedResearch,
   tags,
@@ -88,33 +88,47 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           onboardable={onboardable}
           canViewAnalytics={canViewAnalytics}
           onboardModalHref={
-            tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
-          userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+          userProfileHref={
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // network({}).users({}).user({ userId: user.id }).$
+          }
           firstName={user.firstName}
           lastName={user.lastName}
           displayName={user.displayName}
           avatarUrl={user.avatarUrl}
           teams={user.teams.map(({ id, displayName = '' }) => ({
             name: displayName,
-            href: network({}).teams({}).team({ teamId: id }).$,
+            href:
+              // TODO: fix this
+              networkRoutes.DEFAULT.path,
+            // network({}).teams({}).team({ teamId: id }).$,
           }))}
           workingGroups={user.workingGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: network({})
-                .workingGroups({})
-                .workingGroup({ workingGroupId: id }).$,
+              // TODO: fix this
+              href: networkRoutes.DEFAULT.path,
+              // network({})
+              //   .workingGroups({})
+              //   .workingGroup({ workingGroupId: id }).$,
             }),
           )}
           interestGroups={user.interestGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: network({})
-                .interestGroups({})
-                .interestGroup({ interestGroupId: id }).$,
+              href:
+                // TODO: fix this
+                networkRoutes.DEFAULT.path,
+              // network({})
+              //   .interestGroups({})
+              //   .interestGroup({ interestGroupId: id }).$,
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"
@@ -173,7 +187,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={network.template}
+                path={networkRoutes.DEFAULT.path}
                 element={
                   <Frame title={null}>
                     <Network />

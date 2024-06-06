@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { isUserOnboardable } from '@asap-hub/validation';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 import { OnboardingFooter } from '@asap-hub/react-components';
 

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { css } from '@emotion/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import {
   LabIcon,
@@ -130,7 +130,13 @@ const AssociationList: FC<AssociationListProps> = ({
             {inline || <Indicator type={type} />}
             {type === 'Team' && (
               <>
-                <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                <Link
+                  href={
+                    // TODO: fix this
+                    networkRoutes.DEFAULT.path
+                    // network({}).teams({}).team({ teamId: id }).$
+                  }
+                >
                   {type} {displayName}
                 </Link>
                 {inactiveSince && (
@@ -148,9 +154,11 @@ const AssociationList: FC<AssociationListProps> = ({
             {type === 'Working Group' && (
               <Link
                 href={
-                  network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: id }).$
+                  // TODO: fix this
+                  networkRoutes.DEFAULT.path
+                  // network({})
+                  //   .workingGroups({})
+                  //   .workingGroup({ workingGroupId: id }).$
                 }
               >
                 {displayName}

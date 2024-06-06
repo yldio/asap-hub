@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import formatDistance from 'date-fns/formatDistance';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
 import { paper, lead, steel } from '../colors';
@@ -104,9 +104,10 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   calendarId,
   contactEmails,
 }) => {
-  const route = network({})
-    .interestGroups({})
-    .interestGroup({ interestGroupId: id });
+  const route = networkRoutes.DEFAULT.path; // TODO: fix this
+  // network({})
+  //   .interestGroups({})
+  //   .interestGroup({ interestGroupId: id });
 
   return (
     <header>

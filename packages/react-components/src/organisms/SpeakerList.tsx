@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { EventSpeaker } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { useState } from 'react';
 import { Headline3, Headline4, Avatar, Link, Button } from '../atoms';
 import { tabletScreen, perRem } from '../pixels';
@@ -193,7 +193,10 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
               ) : (
                 <Link
                   href={
-                    network({}).teams({}).team({ teamId: speaker.team.id }).$
+                    // TODO: fix this
+                    networkRoutes.DEFAULT.path
+
+                    // network({}).teams({}).team({ teamId: speaker.team.id }).$
                   }
                 >
                   <>
@@ -219,9 +222,9 @@ const SpeakerList: React.FC<SpeakerListProps> = ({ speakers, endDate }) => {
                 )}
                 {('user' in speaker && (
                   <Link
-                    href={
-                      network({}).users({}).user({ userId: speaker.user.id }).$
-                    }
+                    href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                      id: speaker.user.id,
+                    })}
                   >
                     <span css={internalSpeakerStyle}>
                       <span>{speaker.user.displayName}</span>

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { InterestGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Paragraph, StateTag } from '../atoms';
 import { InactiveBadgeIcon, TeamIcon } from '../icons';
@@ -28,9 +28,12 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
   active,
   googleDrive,
 }) => {
-  const href = network({})
-    .interestGroups({})
-    .interestGroup({ interestGroupId: id }).$;
+  const href =
+    // TODO: fix this
+    networkRoutes.DEFAULT.path;
+  // network({})
+  //   .interestGroups({})
+  //   .interestGroup({ interestGroupId: id }).$;
 
   const footer = (
     <Paragraph noMargin>

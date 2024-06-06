@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/model';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { useMatch } from 'react-router-dom';
@@ -272,25 +272,29 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   );
 
   const isCreatingTeamArticle = useMatch(
-    network({})
-      .teams({})
-      .team({
-        teamId: teams[0]?.value || '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
+    // TODO: fix this
+    networkRoutes.DEFAULT.path,
+    // network({})
+    //   .teams({})
+    //   .team({
+    //     teamId: teams[0]?.value || '',
+    //   })
+    //   .createOutput({
+    //     outputDocumentType: 'article',
+    //   }).$,
   );
 
   const isCreatingWorkingGroupArticle = useMatch(
-    network({})
-      .workingGroups({})
-      .workingGroup({
-        workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
+    // TODO: fix this
+    networkRoutes.DEFAULT.path,
+    // network({})
+    //   .workingGroups({})
+    //   .workingGroup({
+    //     workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
+    //   })
+    //   .createOutput({
+    //     outputDocumentType: 'article',
+    //   }).$,
   );
 
   const isCreatingOutput =

@@ -6,7 +6,7 @@ import {
   activeUserMembershipStatus,
   inactiveUserMembershipStatus,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -136,27 +136,42 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       </div>
       <TabNav>
         <TabLink
-          href={network({}).users({}).$ + queryParamString(searchQuery)}
+          href={
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // network({}).users({}).$ + queryParamString(searchQuery)
+          }
           Icon={UserIcon}
         >
           People
         </TabLink>
         <TabLink
-          href={network({}).teams({}).$ + queryParamString(searchQuery)}
+          href={
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // network({}).teams({}).$ + queryParamString(searchQuery)
+          }
           Icon={TeamIcon}
         >
           Teams
         </TabLink>
         <TabLink
           href={
-            network({}).interestGroups({}).$ + queryParamString(searchQuery)
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+
+            // network({}).interestGroups({}).$ + queryParamString(searchQuery)
           }
           Icon={InterestGroupsIcon}
         >
           Interest Groups
         </TabLink>
         <TabLink
-          href={network({}).workingGroups({}).$ + queryParamString(searchQuery)}
+          href={
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // network({}).workingGroups({}).$ + queryParamString(searchQuery)
+          }
           Icon={WorkingGroupsIcon}
         >
           Working Groups

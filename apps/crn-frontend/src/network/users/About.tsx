@@ -20,30 +20,33 @@ const About: React.FC<AboutProps> = ({ user }) => {
   return (
     <Routes>
       <Route
+        path="*"
+        element={
+          <UserProfileAbout
+            {...user}
+            editBiographyHref={
+              id === user.id
+                ? route.EDIT_BIOGRAPHY.buildPath({
+                    id: user.id,
+                  })
+                : undefined
+            }
+          />
+        }
+      />
+      <Route
         path={route.EDIT_BIOGRAPHY.path}
         element={
           <Frame title="Edit Biography">
-            <>
-              <UserProfileAbout
-                {...user}
-                editBiographyHref={
-                  id === user.id
-                    ? route.EDIT_BIOGRAPHY.buildPath({
-                        id: user.id,
-                      })
-                    : undefined
-                }
-              />
-              <BiographyModal
-                biography={user.biography}
-                backHref={route.path}
-                onSave={(newBiography) =>
-                  patchUser({
-                    biography: newBiography,
-                  })
-                }
-              />
-            </>
+            <BiographyModal
+              biography={user.biography}
+              backHref={route.path}
+              onSave={(newBiography) =>
+                patchUser({
+                  biography: newBiography,
+                })
+              }
+            />
           </Frame>
         }
       />

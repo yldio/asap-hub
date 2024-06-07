@@ -3,7 +3,7 @@ import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { networkRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Routes, useParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { v4 as uuid } from 'uuid';
 
@@ -43,8 +43,11 @@ type TeamProfileProps = {
 };
 
 const DuplicateOutput: FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useTypedParams(
+    networkRoutes.DEFAULT.TEAMS.DETAILS.DUPLICATE_OUTPUT,
+  );
   const output = useResearchOutputById(id);
+
   if (output && output.teams[0]?.id) {
     return (
       <TeamOutput
@@ -120,7 +123,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       draftOutputs: teamDetailsRoutes.DRAFT_OUTPUTS.relativePath,
     };
 
-    console.log('paths', paths.workspace);
     return (
       <ResearchOutputPermissionsContext.Provider
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
@@ -140,7 +142,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
             {canShareResearchOutput && (
               <Route
-                path={route.CREATE_OUTPUT.path}
+                path={teamDetailsRoutes.CREATE_OUTPUT.relativePath}
                 element={
                   <Frame title="Share Output">
                     <TeamOutput teamId={teamId} />
@@ -150,7 +152,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
             )}
             {canDuplicateResearchOutput && (
               <Route
-                path={route.DUPLICATE_OUTPUT.path}
+                path={teamDetailsRoutes.DUPLICATE_OUTPUT.path}
                 element={
                   <Frame title="Duplicate Output">
                     <DuplicateOutput />

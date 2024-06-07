@@ -13,7 +13,7 @@ import { events, networkRoutes } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
-import { Navigate, Route, Routes, useMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { useEvents } from '../../events/state';
 import {
@@ -137,7 +137,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
               <>
                 <Routes>
                   <Route
-                    path={route.RESEARCH.path}
+                    path={route.$.RESEARCH.relativePath}
                     element={
                       <Frame title="Research">
                         <Research user={user} />
@@ -154,7 +154,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     }
                   />
                   <Route
-                    path={route.OUTPUTS.path}
+                    path={route.$.OUTPUTS.relativePath}
                     element={
                       <Frame title="Outputs">
                         <Outputs userId={user?.id} />
@@ -162,7 +162,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     }
                   />
                   <Route
-                    path={route.UPCOMING.path}
+                    path={route.$.UPCOMING.relativePath}
                     element={
                       <Frame title="Upcoming Events">
                         <EventsList
@@ -181,7 +181,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   />
 
                   <Route
-                    path={route.PAST.path}
+                    path={route.$.PAST.relativePath}
                     element={
                       <Frame title="Past Events">
                         <EventsList
@@ -199,10 +199,16 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       </Frame>
                     }
                   />
-                  {/* <Route
+                  <Route
                     path="*"
-                    element={<Navigate to={tabRoutes.research({}).$} />}
-                  /> */}
+                    element={
+                      <Navigate
+                        to={networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath(
+                          { id: userId },
+                        )}
+                      />
+                    }
+                  />
                 </Routes>
                 {/* {isOwnProfile && tabRoute && (
                   <Route

@@ -26,10 +26,9 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   complete,
   tags,
 }) => {
-  const href = networkRoutes.DEFAULT.path; // TODO: fix this
-  // network({})
-  //   .workingGroups({})
-  //   .workingGroup({ workingGroupId: id }).$;
+  const href = networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+    workingGroupId: id,
+  });
 
   const footer = (
     <Caption noMargin>{`Last updated: ${formatDate(

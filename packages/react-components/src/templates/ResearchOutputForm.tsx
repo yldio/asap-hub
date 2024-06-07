@@ -271,31 +271,35 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
-  const isCreatingTeamArticle = useMatch(
-    // TODO: fix this
-    networkRoutes.DEFAULT.path,
-    // network({})
-    //   .teams({})
-    //   .team({
-    //     teamId: teams[0]?.value || '',
-    //   })
-    //   .createOutput({
-    //     outputDocumentType: 'article',
-    //   }).$,
-  );
+  const isCreatingTeamArticle = true;
 
-  const isCreatingWorkingGroupArticle = useMatch(
-    // TODO: fix this
-    networkRoutes.DEFAULT.path,
-    // network({})
-    //   .workingGroups({})
-    //   .workingGroup({
-    //     workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-    //   })
-    //   .createOutput({
-    //     outputDocumentType: 'article',
-    //   }).$,
-  );
+  // useMatch(
+  //   // TODO: fix this
+  //   networkRoutes.DEFAULT.path,
+  //   // network({})
+  //   //   .teams({})
+  //   //   .team({
+  //   //     teamId: teams[0]?.value || '',
+  //   //   })
+  //   //   .createOutput({
+  //   //     outputDocumentType: 'article',
+  //   //   }).$,
+  // );
+
+  const isCreatingWorkingGroupArticle = false;
+
+  // useMatch(
+  //   // TODO: fix this
+  //   networkRoutes.DEFAULT.path,
+  //   // network({})
+  //   //   .workingGroups({})
+  //   //   .workingGroup({
+  //   //     workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
+  //   //   })
+  //   //   .createOutput({
+  //   //     outputDocumentType: 'article',
+  //   //   }).$,
+  // );
 
   const isCreatingOutput =
     isCreatingTeamArticle || isCreatingWorkingGroupArticle;

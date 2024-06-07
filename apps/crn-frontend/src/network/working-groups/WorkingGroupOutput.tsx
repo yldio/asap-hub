@@ -14,7 +14,7 @@ import {
   usePrevious,
 } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import React, {
   ComponentProps,
   ReactNode,
@@ -22,6 +22,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
+
 import { useWorkingGroupById } from './state';
 import {
   handleError,
@@ -51,10 +53,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
-  const route = network({})
-    .workingGroups({})
-    .workingGroup({ workingGroupId }).createOutput;
-  const { outputDocumentType } = useRouteParams(route);
+  const route = networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT;
+
+  const { outputDocumentType } = useTypedParams(route);
 
   const documentType =
     researchOutputData?.documentType ||

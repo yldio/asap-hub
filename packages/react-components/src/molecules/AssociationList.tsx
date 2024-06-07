@@ -131,11 +131,9 @@ const AssociationList: FC<AssociationListProps> = ({
             {type === 'Team' && (
               <>
                 <Link
-                  href={
-                    // TODO: fix this
-                    networkRoutes.DEFAULT.path
-                    // network({}).teams({}).team({ teamId: id }).$
-                  }
+                  href={networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+                    teamId: id,
+                  })}
                 >
                   {type} {displayName}
                 </Link>
@@ -153,13 +151,9 @@ const AssociationList: FC<AssociationListProps> = ({
             )}
             {type === 'Working Group' && (
               <Link
-                href={
-                  // TODO: fix this
-                  networkRoutes.DEFAULT.path
-                  // network({})
-                  //   .workingGroups({})
-                  //   .workingGroup({ workingGroupId: id }).$
-                }
+                href={networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+                  workingGroupId: id,
+                })}
               >
                 {displayName}
               </Link>

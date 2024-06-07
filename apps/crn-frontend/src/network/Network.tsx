@@ -172,7 +172,7 @@ const Network: FC<Record<string, never>> = () => {
       />
       <Route
         path="*"
-        element={<Navigate to={networkRoutes.DEFAULT.$.USERS.relativePath} />}
+        element={<Navigate to={networkRoutes.DEFAULT.USERS.buildPath({})} />}
       />
     </Routes>
   );

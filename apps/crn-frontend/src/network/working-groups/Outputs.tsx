@@ -9,7 +9,7 @@ import {
   utils,
   ResearchOutputsSearch,
 } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { ComponentProps } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -128,16 +128,20 @@ const OutputsList: React.FC<OutputsListProps> = ({
       renderPageHref={renderPageHref}
       isListView={isListView}
       cardViewHref={
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId })
-          .outputs({}).$ + cardViewParams
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.OUTPUTS.path +
+        // network({})
+        //   .workingGroups({})
+        //   .workingGroup({ workingGroupId })
+        //   .outputs({}).$
+        cardViewParams
       }
       listViewHref={
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId })
-          .outputs({}).$ + listViewParams
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.OUTPUTS.path +
+        // network({})
+        //   .workingGroups({})
+        //   .workingGroup({ workingGroupId })
+        //   .outputs({}).$
+        listViewParams
       }
       userAssociationMember={userAssociationMember}
       workingGroupAssociation

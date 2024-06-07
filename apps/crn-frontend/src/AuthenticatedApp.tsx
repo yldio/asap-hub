@@ -92,43 +92,34 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             networkRoutes.DEFAULT.path
             // tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
-          userProfileHref={
-            // TODO: fix this
-            networkRoutes.DEFAULT.path
-            // network({}).users({}).user({ userId: user.id }).$
-          }
+          userProfileHref={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+            id: user.id,
+          })}
           firstName={user.firstName}
           lastName={user.lastName}
           displayName={user.displayName}
           avatarUrl={user.avatarUrl}
           teams={user.teams.map(({ id, displayName = '' }) => ({
             name: displayName,
-            href:
-              // TODO: fix this
-              networkRoutes.DEFAULT.path,
-            // network({}).teams({}).team({ teamId: id }).$,
+            href: networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: id }),
           }))}
           workingGroups={user.workingGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              // TODO: fix this
-              href: networkRoutes.DEFAULT.path,
-              // network({})
-              //   .workingGroups({})
-              //   .workingGroup({ workingGroupId: id }).$,
+              href: networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+                workingGroupId: id,
+              }),
             }),
           )}
           interestGroups={user.interestGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              href:
-                // TODO: fix this
-                networkRoutes.DEFAULT.path,
-              // network({})
-              //   .interestGroups({})
-              //   .interestGroup({ interestGroupId: id }).$,
+              href: networkRoutes.DEFAULT.path,
+              // href: networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
+              //   interestGroupId: id,
+              // }),
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"

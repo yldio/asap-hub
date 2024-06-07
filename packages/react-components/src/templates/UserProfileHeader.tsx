@@ -354,18 +354,22 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         </div>
         <div css={tabNavStyles}>
           <TabNav>
-            <TabLink href={tabRoutes.RESEARCH.path}>Research</TabLink>
-            <TabLink href={tabRoutes.ABOUT.path}>Background</TabLink>
-            <TabLink href={tabRoutes.OUTPUTS.path}>
+            <TabLink href={tabRoutes.RESEARCH.buildPath({ id })}>
+              Research
+            </TabLink>
+            <TabLink href={tabRoutes.ABOUT.buildPath({ id })}>
+              Background
+            </TabLink>
+            <TabLink href={tabRoutes.OUTPUTS.buildPath({ id })}>
               Shared Outputs
               {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
             </TabLink>
-            <TabLink href={tabRoutes.UPCOMING.path}>
+            <TabLink href={tabRoutes.UPCOMING.buildPath({ id })}>
               Upcoming Events
               {upcomingEventsCount !== undefined && ` (${upcomingEventsCount})`}
             </TabLink>
 
-            <TabLink href={tabRoutes.PAST.path}>
+            <TabLink href={tabRoutes.PAST.buildPath({ id })}>
               Past Events
               {pastEventsCount !== undefined && ` (${pastEventsCount})`}
             </TabLink>

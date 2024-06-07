@@ -37,10 +37,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
   memberCount,
   labCount,
 }) => {
-  const href =
-    // TODO: fix this
-    networkRoutes.DEFAULT.path;
-  // network({}).teams({}).team({ teamId: id }).$;
+  const href = networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: id });
 
   const footer = (
     <div css={footerStyles}>

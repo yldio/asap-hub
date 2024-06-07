@@ -2,7 +2,7 @@ import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage } from '@asap-hub/react-components';
 import { networkRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
@@ -56,7 +56,6 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadWorkingGroupProfile);
   }, []);
 
-  const { pathname: path } = useLocation();
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -92,9 +91,9 @@ const Network: FC<Record<string, never>> = () => {
           </Frame>
         }
       />
-      {/* 
+
       <Route
-        path={path + network({}).teams.template}
+        path={networkRoutes.DEFAULT.$.TEAMS.relativePath}
         element={
           <NetworkPage
             page="teams"
@@ -110,11 +109,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={
-          path +
-          network({}).teams.template +
-          network({}).teams({}).team.template
-        }
+        path={networkRoutes.DEFAULT.$.TEAMS.DETAILS.relativePath}
         element={
           <Frame title="Team Profile">
             <TeamProfile currentTime={currentTime} />
@@ -122,7 +117,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + network({}).interestGroups.template}
+        path={networkRoutes.DEFAULT.$.INTEREST_GROUPS.relativePath}
         element={
           <NetworkPage
             page="interest-groups"
@@ -141,11 +136,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={
-          path +
-          network({}).interestGroups.template +
-          network({}).interestGroups({}).interestGroup.template
-        }
+        path={networkRoutes.DEFAULT.$.INTEREST_GROUPS.DETAILS.relativePath}
         element={
           <Frame title="Interest Group Profile">
             <InterestGroupProfile currentTime={currentTime} />
@@ -153,7 +144,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + network({}).workingGroups.template}
+        path={networkRoutes.DEFAULT.$.WORKING_GROUPS.relativePath}
         element={
           <NetworkPage
             page="working-groups"
@@ -172,17 +163,13 @@ const Network: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={
-          path +
-          network({}).workingGroups.template +
-          network({}).workingGroups({}).workingGroup.template
-        }
+        path={networkRoutes.DEFAULT.$.WORKING_GROUPS.DETAILS.relativePath}
         element={
           <Frame title="Working Group Profile">
             <WorkingGroupProfile currentTime={currentTime} />
           </Frame>
         }
-      /> */}
+      />
       <Route
         path="*"
         element={<Navigate to={networkRoutes.DEFAULT.$.USERS.relativePath} />}

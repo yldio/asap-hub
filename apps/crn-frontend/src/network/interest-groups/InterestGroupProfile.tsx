@@ -1,12 +1,11 @@
-import { FC, lazy, useEffect, useState } from 'react';
-import { useMatch } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-
 import {
   InterestGroupProfilePage,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
+import { FC, lazy, useEffect, useState } from 'react';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
+import { v4 as uuid } from 'uuid';
 
 import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
@@ -30,11 +29,11 @@ type InterestGroupProfileProps = {
 const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   currentTime,
 }) => {
-  const { path } = useMatch();
-  const route = network({}).interestGroups({}).interestGroup;
+  const route = networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS;
+  const { interestGroupId } = useTypedParams(route);
+
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
 
-  const { interestGroupId } = useRouteParams(route);
   const interestGroup = useInterestGroupById(interestGroupId);
 
   useEffect(() => {
@@ -47,21 +46,20 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   });
 
   if (interestGroup) {
-    const { about, past, upcoming, calendar } = route({
-      interestGroupId,
-    });
     const paths = {
-      about: path + about.template,
-      calendar: path + calendar.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
+      about: route.ABOUT.buildPath({ interestGroupId }),
+      calendar: route.CALENDAR.buildPath({ interestGroupId }),
+      past: route.PAST.buildPath({ interestGroupId }),
+      upcoming: route.UPCOMING.buildPath({ interestGroupId }),
     };
 
     return (
       <InterestGroupProfilePage
-        groupTeamsHref={`${
-          route({ interestGroupId }).about({}).$
-        }#${groupTeamsElementId}`}
+        // groupTeamsHref={`${
+        //   route({ interestGroupId }).about({}).$
+        // }#${groupTeamsElementId}`}
+        // TODO: fix this
+        groupTeamsHref={route.ABOUT.buildPath({ interestGroupId })}
         upcomingEventsCount={upcomingEvents?.total || 0}
         pastEventsCount={pastEvents?.total || 0}
         numberOfTeams={

@@ -67,19 +67,15 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   tools,
   onDeleteTool,
 }) => {
-  const toolsRoute = networkRoutes.DEFAULT.path; // TODO: fix this
-  // network({})
-  //   .teams({})
-  //   .team({ teamId: id })
-  //   .workspace({})
-  //   .tools({});
+  const toolsRoute =
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.TOOLS.buildPath({
+      teamId: id,
+    });
 
-  const manuscriptRoute = networkRoutes.DEFAULT.path; // TODO: fix this
-  // network({})
-  //   .teams({})
-  //   .team({ teamId: id })
-  //   .workspace({})
-  //   .createManuscript({}).$;
+  const manuscriptRoute =
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.CREATE_MANUSCRIPT.buildPath({
+      teamId: id,
+    });
 
   return (
     <div css={containerStyles}>
@@ -119,7 +115,9 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               <li key={`tool-${index}`}>
                 <ToolCard
                   {...tool}
-                  editHref={toolsRoute.tool({ toolIndex: `${index}` }).$}
+                  editHref={networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.TOOLS.TOOL.buildPath(
+                    { teamId: id, toolIndex: index },
+                  )}
                   onDelete={onDeleteTool && (() => onDeleteTool(index))}
                 />
               </li>
@@ -127,7 +125,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
           </ul>
         )}
         <div css={newToolStyles}>
-          <Link href={toolsRoute.$} buttonStyle>
+          <Link href={toolsRoute} buttonStyle>
             <span>Add a new team link</span>
           </Link>
         </div>

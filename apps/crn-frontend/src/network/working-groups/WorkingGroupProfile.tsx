@@ -1,11 +1,11 @@
-import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Routes, useParams, useMatch } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-
 import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, WorkingGroupPage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
+import { FC, lazy, useEffect, useState } from 'react';
+import { Route, Routes, useParams } from 'react-router-dom';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
+import { v4 as uuid } from 'uuid';
 
 import { usePaginationParams } from '../../hooks';
 import {
@@ -61,11 +61,10 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
-  const { path } = useMatch();
-  const route = network({}).workingGroups({}).workingGroup;
+  const route = networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS;
+  const { workingGroupId } = useTypedParams(route);
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
-  const { workingGroupId } = useRouteParams(route);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
   const canShareResearchOutput = useCanShareResearchOutput(
@@ -110,25 +109,13 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   });
 
   if (workingGroup) {
-    const {
-      about,
-      calendar,
-      createOutput,
-      outputs,
-      draftOutputs,
-      past,
-      upcoming,
-      duplicateOutput,
-    } = route({
-      workingGroupId,
-    });
     const paths = {
-      about: path + about.template,
-      calendar: path + calendar.template,
-      outputs: path + outputs.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
-      draftOutputs: path + draftOutputs.template,
+      about: route.ABOUT.buildPath({ workingGroupId }),
+      calendar: route.CALENDAR.buildPath({ workingGroupId }),
+      outputs: route.OUTPUTS.buildPath({ workingGroupId }),
+      past: route.PAST.buildPath({ workingGroupId }),
+      upcoming: route.UPCOMING.buildPath({ workingGroupId }),
+      draftOutputs: route.DRAFT_OUTPUTS.buildPath({ workingGroupId }),
     };
     return (
       <ResearchOutputPermissionsContext.Provider
@@ -136,14 +123,14 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       >
         <Routes>
           {canShareResearchOutput && (
-            <Route path={path + createOutput.template}>
+            <Route path={route.$.CREATE_OUTPUT.relativePath}>
               <Frame title="Share Output">
                 <WorkingGroupOutput workingGroupId={workingGroupId} />
               </Frame>
             </Route>
           )}
           {canDuplicateResearchOutput && (
-            <Route path={path + duplicateOutput.template}>
+            <Route path={route.$.DUPLICATE_OUTPUT.relativePath}>
               <Frame title="Duplicate Output">
                 <DuplicateOutput />
               </Frame>

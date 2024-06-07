@@ -145,10 +145,8 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pastEventsCount,
   teamDraftOutputsCount,
 }) => {
-  const route =
-    // TODO: fix this
-    networkRoutes.DEFAULT.path;
-  // network({}).teams({}).team({ teamId: id });
+  const params = { teamId: id };
+  const route = networkRoutes.DEFAULT.TEAMS.DETAILS;
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
@@ -171,7 +169,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       >
         <UserAvatarList
           members={members}
-          fullListRoute={`${route.about({}).$}#${teamListElementId}`}
+          // TODO: fix this
+          fullListRoute={`${route.ABOUT.buildPath(
+            params,
+          )}#${teamListElementId}`}
+          // fullListRoute={`${route.about({})}#${teamListElementId}`}
         />
         {pointOfContact && (
           <div css={pointOfContactStyles}>
@@ -215,58 +217,72 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             >
               {{
                 item: <>{article} Article</>,
-                href: route.createOutput({ outputDocumentType: 'article' }).$,
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
+                  outputDocumentType: 'article',
+                }),
               }}
               {{
                 item: <>{bioinformatics} Bioinformatics</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
                   outputDocumentType: 'bioinformatics',
-                }).$,
+                }),
               }}
               {{
                 item: <>{crnReportIcon} CRN Report</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
                   outputDocumentType: 'report',
-                }).$,
+                }),
               }}
               {{
                 item: <>{dataset} Dataset</>,
-                href: route.createOutput({ outputDocumentType: 'dataset' }).$,
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
+                  outputDocumentType: 'dataset',
+                }),
               }}
               {{
                 item: <>{labResource} Lab Resource</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
                   outputDocumentType: 'lab-resource',
-                }).$,
+                }),
               }}
               {{
                 item: <>{protocol} Protocol</>,
-                href: route.createOutput({ outputDocumentType: 'protocol' }).$,
+                href: route.CREATE_OUTPUT.buildPath({
+                  teamId: id,
+                  outputDocumentType: 'protocol',
+                }),
               }}
             </DropdownButton>
           </div>
         )}
       </section>
       <TabNav>
-        <TabLink href={route.about({}).$}>About</TabLink>
+        <TabLink href={route.$.ABOUT.relativePath}>About</TabLink>
         {tools && (
-          <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
+          <TabLink href={route.WORKSPACE.buildPath({ teamId: id })}>
+            Team Workspace
+          </TabLink>
         )}
 
-        <TabLink href={route.outputs({}).$}>
+        <TabLink href={route.$.OUTPUTS.relativePath}>
           Outputs ({teamOutputsCount})
         </TabLink>
         {teamDraftOutputsCount !== undefined ? (
-          <TabLink href={route.draftOutputs({}).$}>
+          <TabLink href={route.$.DRAFT_OUTPUTS.relativePath}>
             Draft Outputs ({teamDraftOutputsCount})
           </TabLink>
         ) : null}
         {isActive && (
-          <TabLink href={route.upcoming({}).$}>
+          <TabLink href={route.$.UPCOMING.relativePath}>
             Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
-        <TabLink href={route.past({}).$}>
+        <TabLink href={route.$.PAST.relativePath}>
           Past Events {`(${pastEventsCount})`}
         </TabLink>
       </TabNav>

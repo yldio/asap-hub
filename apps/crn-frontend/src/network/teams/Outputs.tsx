@@ -5,7 +5,7 @@ import {
   ResearchOutputsSearch,
   utils,
 } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps } from 'react';
 import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
@@ -130,10 +130,14 @@ const OutputsList: React.FC<OutputsListProps> = ({
       renderPageHref={renderPageHref}
       isListView={isListView}
       cardViewHref={
-        network({}).teams({}).team({ teamId }).outputs({}).$ + cardViewParams
+        networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$.OUTPUTS.relativePath +
+        cardViewParams
+        // network({}).teams({}).team({ teamId }).outputs({}).$ + cardViewParams
       }
       listViewHref={
-        network({}).teams({}).team({ teamId }).outputs({}).$ + listViewParams
+        networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$.OUTPUTS.relativePath +
+        // network({}).teams({}).team({ teamId }).outputs({}).$ +
+        listViewParams
       }
       userAssociationMember={userAssociationMember}
       contactEmail={contactEmail}

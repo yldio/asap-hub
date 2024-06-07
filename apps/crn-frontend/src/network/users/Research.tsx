@@ -9,7 +9,7 @@ import {
   ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { Route, useMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
@@ -23,13 +23,15 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
 
   const { id } = useCurrentUserCRN() ?? {};
-  const { path } = useMatch();
-  const route = network({}).users({}).user({ userId: user.id }).research({});
+  // const { path } = useMatch();
+  const route = networkRoutes.DEFAULT.USERS.DETAILS;
+
+  // network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
 
   const commonModalProps = {
-    backHref: route.$,
+    backHref: route,
     onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
   };
 
@@ -59,44 +61,65 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           </Frame>
         }
         editExpertiseAndResourcesHref={
-          id === user.id ? route.editExpertiseAndResources({}).$ : undefined
+          id === user.id
+            ? route.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.buildPath({
+                id: user.id,
+              })
+            : undefined
         }
         editQuestionsHref={
-          id === user.id ? route.editQuestions({}).$ : undefined
+          id === user.id
+            ? route.RESEARCH.EDIT_QUESTIONS.buildPath({ id: user.id })
+            : undefined
         }
-        editRoleHref={id === user.id ? route.editRole({}).$ : undefined}
+        editRoleHref={
+          id === user.id
+            ? route.RESEARCH.EDIT_ROLE.buildPath({ id: user.id })
+            : undefined
+        }
         isOwnProfile={id === user.id}
       />
       {id === user.id && (
         <>
-          <Route path={path + route.editRole.template}>
-            <Frame title="Edit Role">
-              <RoleModal
-                {...commonModalProps}
-                teams={user.teams}
-                labs={user.labs}
-                researchInterests={user.researchInterests}
-                responsibilities={user.responsibilities}
-                role={user.role}
-                reachOut={user.reachOut}
-                firstName={user.firstName}
-              />
-            </Frame>
-          </Route>
-          <Route path={path + route.editQuestions.template}>
-            <Frame title="Edit Open Questions">
-              <OpenQuestionsModal {...user} {...commonModalProps} />
-            </Frame>
-          </Route>
-          <Route path={path + route.editExpertiseAndResources.template}>
-            <Frame title="Edit Expertise and Resources">
-              <ExpertiseAndResourcesModal
-                {...user}
-                {...commonModalProps}
-                suggestions={researchTagsSuggestions}
-              />
-            </Frame>
-          </Route>
+          <Route
+            path={route.$.RESEARCH.EDIT_ROLE.relativePath}
+            element={
+              <Frame title="Edit Role">
+                <RoleModal
+                  {...commonModalProps}
+                  teams={user.teams}
+                  labs={user.labs}
+                  researchInterests={user.researchInterests}
+                  responsibilities={user.responsibilities}
+                  role={user.role}
+                  reachOut={user.reachOut}
+                  firstName={user.firstName}
+                />
+              </Frame>
+            }
+          />
+
+          <Route
+            path={route.$.RESEARCH.EDIT_QUESTIONS.relativePath}
+            element={
+              <Frame title="Edit Open Questions">
+                <OpenQuestionsModal {...user} {...commonModalProps} />
+              </Frame>
+            }
+          />
+
+          <Route
+            path={route.$.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.relativePath}
+            element={
+              <Frame title="Edit Expertise and Resources">
+                <ExpertiseAndResourcesModal
+                  {...user}
+                  {...commonModalProps}
+                  suggestions={researchTagsSuggestions}
+                />
+              </Frame>
+            }
+          />
         </>
       )}
     </>

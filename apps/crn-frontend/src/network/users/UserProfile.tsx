@@ -146,7 +146,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   />
 
                   <Route
-                    path={route.ABOUT.path}
+                    path={route.$.ABOUT.relativePath}
                     element={
                       <Frame title="About">
                         <About user={user} />

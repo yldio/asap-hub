@@ -2,8 +2,8 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { UserResponse } from '@asap-hub/model';
 import { BiographyModal, UserProfileAbout } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
-import { Route, useMatch } from 'react-router-dom';
+import { networkRoutes } from '@asap-hub/routing';
+import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 
@@ -13,33 +13,41 @@ type AboutProps = {
 const About: React.FC<AboutProps> = ({ user }) => {
   const { id } = useCurrentUserCRN() ?? {};
 
-  const { path } = useMatch();
-  const route = network({}).users({}).user({ userId: user.id }).about({});
+  const route = networkRoutes.DEFAULT.USERS.DETAILS.ABOUT;
 
   const patchUser = usePatchUserById(user.id);
 
   return (
-    <>
-      <UserProfileAbout
-        {...user}
-        editBiographyHref={
-          id === user.id ? route.editBiography({}).$ : undefined
+    <Routes>
+      <Route
+        path={route.EDIT_BIOGRAPHY.path}
+        element={
+          <Frame title="Edit Biography">
+            <>
+              <UserProfileAbout
+                {...user}
+                editBiographyHref={
+                  id === user.id
+                    ? route.EDIT_BIOGRAPHY.buildPath({
+                        id: user.id,
+                      })
+                    : undefined
+                }
+              />
+              <BiographyModal
+                biography={user.biography}
+                backHref={route.path}
+                onSave={(newBiography) =>
+                  patchUser({
+                    biography: newBiography,
+                  })
+                }
+              />
+            </>
+          </Frame>
         }
       />
-      <Route exact path={path + route.editBiography.template}>
-        <Frame title="Edit Biography">
-          <BiographyModal
-            biography={user.biography}
-            backHref={route.$}
-            onSave={(newBiography) =>
-              patchUser({
-                biography: newBiography,
-              })
-            }
-          />
-        </Frame>
-      </Route>
-    </>
+    </Routes>
   );
 };
 

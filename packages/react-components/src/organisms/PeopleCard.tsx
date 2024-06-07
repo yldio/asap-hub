@@ -59,8 +59,6 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
     id,
   });
 
-  console.log('userHref', userHref);
-
   const userAvatar = (
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
   );

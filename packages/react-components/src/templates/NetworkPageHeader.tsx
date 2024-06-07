@@ -147,8 +147,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </TabLink>
         <TabLink
           href={
+            networkRoutes.DEFAULT.TEAMS.buildPath({})
             // TODO: fix this
-            networkRoutes.DEFAULT.path
             // network({}).teams({}).$ + queryParamString(searchQuery)
           }
           Icon={TeamIcon}
@@ -158,7 +158,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <TabLink
           href={
             // TODO: fix this
-            networkRoutes.DEFAULT.path
+            networkRoutes.DEFAULT.INTEREST_GROUPS.buildPath({})
 
             // network({}).interestGroups({}).$ + queryParamString(searchQuery)
           }
@@ -169,7 +169,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <TabLink
           href={
             // TODO: fix this
-            networkRoutes.DEFAULT.path
+            networkRoutes.DEFAULT.WORKING_GROUPS.buildPath({})
             // network({}).workingGroups({}).$ + queryParamString(searchQuery)
           }
           Icon={WorkingGroupsIcon}

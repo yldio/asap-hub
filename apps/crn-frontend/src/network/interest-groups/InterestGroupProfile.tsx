@@ -46,11 +46,14 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   });
 
   if (interestGroup) {
+    const interestGroupDetailsRoutes =
+      networkRoutes.DEFAULT.$.INTEREST_GROUPS.$.DETAILS.$;
+
     const paths = {
-      about: route.ABOUT.buildPath({ interestGroupId }),
-      calendar: route.CALENDAR.buildPath({ interestGroupId }),
-      past: route.PAST.buildPath({ interestGroupId }),
-      upcoming: route.UPCOMING.buildPath({ interestGroupId }),
+      about: interestGroupDetailsRoutes.ABOUT.relativePath,
+      calendar: interestGroupDetailsRoutes.CALENDAR.relativePath,
+      past: interestGroupDetailsRoutes.PAST.relativePath,
+      upcoming: interestGroupDetailsRoutes.UPCOMING.relativePath,
     };
 
     return (

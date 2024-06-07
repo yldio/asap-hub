@@ -28,12 +28,9 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
   active,
   googleDrive,
 }) => {
-  const href =
-    // TODO: fix this
-    networkRoutes.DEFAULT.path;
-  // network({})
-  //   .interestGroups({})
-  //   .interestGroup({ interestGroupId: id }).$;
+  const href = networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
+    interestGroupId: id,
+  });
 
   const footer = (
     <Paragraph noMargin>

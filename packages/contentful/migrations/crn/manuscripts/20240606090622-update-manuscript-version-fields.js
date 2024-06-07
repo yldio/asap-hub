@@ -54,8 +54,8 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   manuscriptVersions
-    .createField('details')
-    .name('Details')
+    .createField('otherDetails')
+    .name('Other Details')
     .type('Symbol')
     .localized(false)
     .required(false)
@@ -66,8 +66,8 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const manuscriptVersions = migration.editContentType('manuscriptVersions');
-  manuscriptVersions.deleteField('preprintDOI');
-  manuscriptVersions.deleteField('publicationDOI');
-  manuscriptVersions.deleteField('requestingAPCCoverage');
-  manuscriptVersions.deleteField('details');
+  manuscriptVersions.deleteField('preprintDoi');
+  manuscriptVersions.deleteField('publicationDoi');
+  manuscriptVersions.deleteField('requestingApcCoverage');
+  manuscriptVersions.deleteField('otherDetails');
 };

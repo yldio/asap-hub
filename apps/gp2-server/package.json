@@ -54,6 +54,7 @@
     "luxon": "1.28.1",
     "mime-types": "2.1.35",
     "odata-query": "7.0.4",
+    "openai": "^4.49.0",
     "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
     "react-router-dom": "5.3.4",

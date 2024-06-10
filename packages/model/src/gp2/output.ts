@@ -185,6 +185,8 @@ export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
 
 export type OutputResponse = OutputBaseResponse;
 
+export type OutputGenerateContentResponse = Partial<Pick<OutputResponse, 'shortDescription'>>;
+
 export type PublicOutputResponse = Pick<
   OutputBaseResponse,
   | 'title'
@@ -245,6 +247,10 @@ export type OutputPostRequest = {
 };
 
 export type OutputPutRequest = OutputPostRequest;
+
+export type OutputGenerateContentRequest = Partial<
+  Pick<OutputPostRequest, 'description'>
+>;
 
 export type FetchOutputSearchFilter = {
   documentType?: OutputDocumentType[];

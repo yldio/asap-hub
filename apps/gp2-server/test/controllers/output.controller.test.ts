@@ -13,12 +13,14 @@ import {
   getOutputUpdateDataObject,
 } from '../fixtures/output.fixtures';
 import { externalUserDataProviderMock } from '../mocks/external-user.data-provider.mock';
+import { generativeContentDataProviderMock } from '../mocks/generative-content.data-provider.mock';
 import { outputDataProviderMock } from '../mocks/output.data-provider.mock';
 
 describe('outputs controller', () => {
   const outputs = new Outputs(
     outputDataProviderMock,
     externalUserDataProviderMock,
+    generativeContentDataProviderMock,
   );
 
   afterEach(jest.resetAllMocks);
@@ -608,6 +610,45 @@ describe('outputs controller', () => {
           }),
         );
       });
+    });
+  });
+
+  describe('Generate content method', () => {
+    test('Should throw when fails to generate the content', async () => {
+      generativeContentDataProviderMock.summariseContent.mockRejectedValueOnce(
+        new GenericError(),
+      );
+
+      await expect(
+        outputs.generateContent({
+          description: 'description',
+        }),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should generate the content and return it', async () => {
+      generativeContentDataProviderMock.summariseContent.mockResolvedValueOnce(
+        'some summarised content',
+      );
+
+      const result = await outputs.generateContent({
+        description: 'some description',
+      });
+
+      expect(result).toEqual({
+        shortDescription: 'some summarised content',
+      } satisfies Awaited<ReturnType<typeof outputs.generateContent>>);
+      expect(
+        generativeContentDataProviderMock.summariseContent,
+      ).toHaveBeenCalledWith('some description');
+    });
+
+    test('Should return an empty string if no description was provided', async () => {
+      const result = await outputs.generateContent({});
+
+      expect(result).toEqual({
+        shortDescription: '',
+      } satisfies Awaited<ReturnType<typeof outputs.generateContent>>);
     });
   });
 });

@@ -1,9 +1,13 @@
 import { CSVValue, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipDataObject,
-  AnalyticsTeamLeadershipResponse,
-  ListAnalyticsTeamLeadershipResponse,
+  ListResponse,
+  TeamProductivityDataObject,
+  TeamProductivityPerformance,
+  UserProductivityDataObject,
+  UserProductivityPerformance,
 } from '@asap-hub/model';
+import { getPerformanceText } from '@asap-hub/react-components/src/utils';
 import { Stringifier } from 'csv-stringify/browser/esm';
 
 type LeadershipRowCSV = Record<string, CSVValue>;
@@ -24,17 +28,69 @@ export const leadershipToCSV =
     };
   };
 
-export const algoliaResultsToStream = async (
+export const userProductivityToCSV =
+  (performance: UserProductivityPerformance) =>
+  (data: UserProductivityDataObject) => ({
+    user: data.name,
+    status: data.isAlumni ? 'Alumni' : 'Active',
+    teamA: data.teams[0]?.team,
+    roleA: data.teams[0]?.role,
+    teamB: data.teams[1]?.team,
+    roleB: data.teams[1]?.role,
+    ASAPOutputValue: data.asapOutput,
+    ASAPOutputAverage: getPerformanceText(
+      data.asapOutput,
+      performance.asapOutput,
+    ),
+    ASAPPublicOutputValue: data.asapPublicOutput,
+    ASAPPublicOutputAverage: getPerformanceText(
+      data.asapPublicOutput,
+      performance.asapPublicOutput,
+    ),
+    ratio: data.ratio,
+  });
+
+export const teamProductivityToCSV =
+  (performance: TeamProductivityPerformance) =>
+  (data: TeamProductivityDataObject) => ({
+    team: data.name,
+    status: data.isInactive ? 'Inactive' : 'Active',
+    ASAPArticleOutputValue: data.Article,
+    ASAPArticleOutputAverage: getPerformanceText(
+      data.Article,
+      performance.article,
+    ),
+    ASAPBioinformaticOutputValue: data.Bioinformatics,
+    ASAPBioinformaticOutputAverage: getPerformanceText(
+      data.Bioinformatics,
+      performance.bioinformatics,
+    ),
+    ASAPDatasetOutputValue: data.Dataset,
+    ASAPDatasetOutputAverage: getPerformanceText(
+      data.Dataset,
+      performance.dataset,
+    ),
+    ASAPALabResourceValue: data['Lab Resource'],
+    ASAPALabResourceAverage: getPerformanceText(
+      data['Lab Resource'],
+      performance.labResource,
+    ),
+    ASAPProtocolValue: data.Protocol,
+    ASAPProtocolAverage: getPerformanceText(
+      data.Protocol,
+      performance.protocol,
+    ),
+  });
+
+export const algoliaResultsToStream = async <T>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<ListAnalyticsTeamLeadershipResponse | undefined>
+    Promise<ListResponse<T> | undefined>
   >,
-  transform: (
-    result: AnalyticsTeamLeadershipResponse,
-  ) => Record<string, unknown>,
+  transform: (result: T) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

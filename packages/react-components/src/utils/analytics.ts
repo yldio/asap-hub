@@ -18,3 +18,21 @@ export const getPerformanceIcon = (
 
   return aboveAverageIcon;
 };
+
+export const getPerformanceText = (
+  value: number,
+  performanceMetrics: PerformanceMetrics,
+) => {
+  if (value <= performanceMetrics.belowAverageMax) {
+    return 'Below';
+  }
+
+  if (
+    value >= performanceMetrics.averageMin &&
+    value <= performanceMetrics.averageMax
+  ) {
+    return 'Average';
+  }
+
+  return 'Above';
+};

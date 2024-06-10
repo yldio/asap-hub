@@ -4,17 +4,20 @@ import {
   TeamProductivitySortingDirection,
 } from '@asap-hub/model';
 import { TeamProductivityTable } from '@asap-hub/react-components';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamProductivity,
   useTeamProductivityPerformance,
 } from './state';
 
-const TeamProductivity = () => {
+interface TeamProductivityProps {
+  sort: SortTeamProductivity;
+  setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
+}
+const TeamProductivity = ({ sort, setSort }: TeamProductivityProps) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
-  const [sort, setSort] = useState<SortTeamProductivity>('team_asc');
   const [sortingDirection, setSortingDirection] =
     useState<TeamProductivitySortingDirection>(
       teamProductivityInitialSortingDirection,

@@ -5,6 +5,7 @@ import { analytics } from '@asap-hub/routing';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import AnalyticsControls from '../molecules/AnalyticsControls';
 import { perRem } from '../pixels';
+import { ExportButton } from '../molecules';
 
 type MetricOption = 'user' | 'team';
 
@@ -25,6 +26,7 @@ type ProductivityAnalyticsProps = Pick<
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   children: React.ReactNode;
+  exportResults: () => Promise<void>;
 };
 
 const metricDropdownStyles = css({
@@ -46,6 +48,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   timeRange,
   currentPage,
   children,
+  exportResults,
 }) => (
   <article>
     <div css={metricDropdownStyles}>
@@ -63,6 +66,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
         timeRange={timeRange}
         href={analytics({}).productivity({}).metric({ metric }).$}
       />
+      <ExportButton exportResults={exportResults} />
     </div>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>

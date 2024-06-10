@@ -3,6 +3,7 @@ import {
   LeadershipAndMembershipSortingDirection,
   initialSortingDirection,
   SortLeadershipAndMembership,
+  AnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -80,7 +81,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   const exportResults = () =>
-    algoliaResultsToStream(
+    algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
       createCsvFileStream(
         `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {

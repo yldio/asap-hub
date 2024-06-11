@@ -3392,6 +3392,10 @@ export type ManuscriptVersions = Entry & {
   contentfulMetadata: ContentfulMetadata;
   lifecycle?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
+  otherDetails?: Maybe<Scalars['String']>;
+  preprintDoi?: Maybe<Scalars['String']>;
+  publicationDoi?: Maybe<Scalars['String']>;
+  requestingApcCoverage?: Maybe<Scalars['String']>;
   sys: Sys;
   type?: Maybe<Scalars['String']>;
 };
@@ -3404,6 +3408,26 @@ export type ManuscriptVersionsLifecycleArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsOtherDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsPreprintDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsPublicationDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsRequestingApcCoverageArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3429,6 +3453,36 @@ export type ManuscriptVersionsFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  otherDetails?: InputMaybe<Scalars['String']>;
+  otherDetails_contains?: InputMaybe<Scalars['String']>;
+  otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  otherDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  otherDetails_not?: InputMaybe<Scalars['String']>;
+  otherDetails_not_contains?: InputMaybe<Scalars['String']>;
+  otherDetails_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  preprintDoi?: InputMaybe<Scalars['String']>;
+  preprintDoi_contains?: InputMaybe<Scalars['String']>;
+  preprintDoi_exists?: InputMaybe<Scalars['Boolean']>;
+  preprintDoi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  preprintDoi_not?: InputMaybe<Scalars['String']>;
+  preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
+  preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publicationDoi?: InputMaybe<Scalars['String']>;
+  publicationDoi_contains?: InputMaybe<Scalars['String']>;
+  publicationDoi_exists?: InputMaybe<Scalars['Boolean']>;
+  publicationDoi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publicationDoi_not?: InputMaybe<Scalars['String']>;
+  publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
+  publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  requestingApcCoverage?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_contains?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_exists?: InputMaybe<Scalars['Boolean']>;
+  requestingApcCoverage_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  requestingApcCoverage_not?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_not_contains?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   sys?: InputMaybe<SysFilter>;
   type?: InputMaybe<Scalars['String']>;
   type_contains?: InputMaybe<Scalars['String']>;
@@ -3479,6 +3533,14 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 export enum ManuscriptVersionsOrder {
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
+  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3614,6 +3676,14 @@ export type ManuscriptsVersionsCollection = {
 export enum ManuscriptsVersionsCollectionOrder {
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
+  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6406,6 +6476,8 @@ export type Sys = {
   environmentId: Scalars['String'];
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
+  /** The locale that was requested. */
+  locale?: Maybe<Scalars['String']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   publishedVersion?: Maybe<Scalars['Int']>;
   spaceId: Scalars['String'];
@@ -9627,6 +9699,36 @@ export type CfManuscriptVersionsNestedFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  otherDetails?: InputMaybe<Scalars['String']>;
+  otherDetails_contains?: InputMaybe<Scalars['String']>;
+  otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  otherDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  otherDetails_not?: InputMaybe<Scalars['String']>;
+  otherDetails_not_contains?: InputMaybe<Scalars['String']>;
+  otherDetails_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  preprintDoi?: InputMaybe<Scalars['String']>;
+  preprintDoi_contains?: InputMaybe<Scalars['String']>;
+  preprintDoi_exists?: InputMaybe<Scalars['Boolean']>;
+  preprintDoi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  preprintDoi_not?: InputMaybe<Scalars['String']>;
+  preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
+  preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publicationDoi?: InputMaybe<Scalars['String']>;
+  publicationDoi_contains?: InputMaybe<Scalars['String']>;
+  publicationDoi_exists?: InputMaybe<Scalars['Boolean']>;
+  publicationDoi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publicationDoi_not?: InputMaybe<Scalars['String']>;
+  publicationDoi_not_contains?: InputMaybe<Scalars['String']>;
+  publicationDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  requestingApcCoverage?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_contains?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_exists?: InputMaybe<Scalars['Boolean']>;
+  requestingApcCoverage_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  requestingApcCoverage_not?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_not_contains?: InputMaybe<Scalars['String']>;
+  requestingApcCoverage_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   sys?: InputMaybe<SysFilter>;
   type?: InputMaybe<Scalars['String']>;
   type_contains?: InputMaybe<Scalars['String']>;
@@ -14682,9 +14784,15 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
   versionsCollection?: Maybe<{
     items: Array<
       Maybe<
-        Pick<ManuscriptVersions, 'type' | 'lifecycle'> & {
-          sys: Pick<Sys, 'id'>;
-        }
+        Pick<
+          ManuscriptVersions,
+          | 'type'
+          | 'lifecycle'
+          | 'preprintDoi'
+          | 'publicationDoi'
+          | 'requestingApcCoverage'
+          | 'otherDetails'
+        > & { sys: Pick<Sys, 'id'> }
       >
     >;
   }>;
@@ -14704,9 +14812,15 @@ export type FetchManuscriptByIdQuery = {
       versionsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<ManuscriptVersions, 'type' | 'lifecycle'> & {
-              sys: Pick<Sys, 'id'>;
-            }
+            Pick<
+              ManuscriptVersions,
+              | 'type'
+              | 'lifecycle'
+              | 'preprintDoi'
+              | 'publicationDoi'
+              | 'requestingApcCoverage'
+              | 'otherDetails'
+            > & { sys: Pick<Sys, 'id'> }
           >
         >;
       }>;
@@ -16200,9 +16314,15 @@ export type FetchTeamByIdQuery = {
                 versionsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<ManuscriptVersions, 'type' | 'lifecycle'> & {
-                        sys: Pick<Sys, 'id'>;
-                      }
+                      Pick<
+                        ManuscriptVersions,
+                        | 'type'
+                        | 'lifecycle'
+                        | 'preprintDoi'
+                        | 'publicationDoi'
+                        | 'requestingApcCoverage'
+                        | 'otherDetails'
+                      > & { sys: Pick<Sys, 'id'> }
                     >
                   >;
                 }>;
@@ -19604,6 +19724,22 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'lifecycle' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'preprintDoi' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationDoi' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'requestingApcCoverage' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'otherDetails' },
                       },
                     ],
                   },

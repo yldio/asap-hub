@@ -105,9 +105,13 @@ export const parseGraphqlManuscriptVersion = (
     .map((version) => ({
       type: version?.type,
       lifecycle: version?.lifecycle,
+      preprintDoi: version?.preprintDoi,
+      publicationDoi: version?.publicationDoi,
+      requestingApcCoverage: version?.requestingApcCoverage,
+      otherDetails: version?.otherDetails,
     }))
     .filter(
-      (version): version is ManuscriptVersion =>
+      (version) =>
         (version &&
           version.type &&
           manuscriptTypes.includes(version.type as ManuscriptType) &&
@@ -116,4 +120,4 @@ export const parseGraphqlManuscriptVersion = (
             version.lifecycle as ManuscriptLifecycle,
           )) ||
         false,
-    );
+    ) as ManuscriptVersion[];

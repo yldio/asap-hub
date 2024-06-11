@@ -15,6 +15,10 @@ export const manuscriptContentQueryFragment = gql`
         }
         type
         lifecycle
+        preprintDoi
+        publicationDoi
+        requestingApcCoverage
+        otherDetails
       }
     }
   }

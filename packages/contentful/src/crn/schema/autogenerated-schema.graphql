@@ -2460,6 +2460,10 @@ type ManuscriptVersions implements Entry {
   contentfulMetadata: ContentfulMetadata!
   lifecycle(locale: String): String
   linkedFrom(allowedLocales: [String]): ManuscriptVersionsLinkingCollections
+  otherDetails(locale: String): String
+  preprintDoi(locale: String): String
+  publicationDoi(locale: String): String
+  requestingApcCoverage(locale: String): String
   sys: Sys!
   type(locale: String): String
 }
@@ -2482,6 +2486,34 @@ input ManuscriptVersionsFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  otherDetails: String
+  otherDetails_contains: String
+  otherDetails_exists: Boolean
+  otherDetails_in: [String]
+  otherDetails_not: String
+  otherDetails_not_contains: String
+  otherDetails_not_in: [String]
+  preprintDoi: String
+  preprintDoi_contains: String
+  preprintDoi_exists: Boolean
+  preprintDoi_in: [String]
+  preprintDoi_not: String
+  preprintDoi_not_contains: String
+  preprintDoi_not_in: [String]
+  publicationDoi: String
+  publicationDoi_contains: String
+  publicationDoi_exists: Boolean
+  publicationDoi_in: [String]
+  publicationDoi_not: String
+  publicationDoi_not_contains: String
+  publicationDoi_not_in: [String]
+  requestingApcCoverage: String
+  requestingApcCoverage_contains: String
+  requestingApcCoverage_exists: Boolean
+  requestingApcCoverage_in: [String]
+  requestingApcCoverage_not: String
+  requestingApcCoverage_not_contains: String
+  requestingApcCoverage_not_in: [String]
   sys: SysFilter
   type: String
   type_contains: String
@@ -2513,6 +2545,14 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 enum ManuscriptVersionsOrder {
   lifecycle_ASC
   lifecycle_DESC
+  otherDetails_ASC
+  otherDetails_DESC
+  preprintDoi_ASC
+  preprintDoi_DESC
+  publicationDoi_ASC
+  publicationDoi_DESC
+  requestingApcCoverage_ASC
+  requestingApcCoverage_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2611,6 +2651,14 @@ type ManuscriptsVersionsCollection {
 enum ManuscriptsVersionsCollectionOrder {
   lifecycle_ASC
   lifecycle_DESC
+  otherDetails_ASC
+  otherDetails_DESC
+  preprintDoi_ASC
+  preprintDoi_DESC
+  publicationDoi_ASC
+  publicationDoi_DESC
+  requestingApcCoverage_ASC
+  requestingApcCoverage_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4281,6 +4329,8 @@ type Sys {
   environmentId: String!
   firstPublishedAt: DateTime
   id: String!
+  """The locale that was requested."""
+  locale: String
   publishedAt: DateTime
   publishedVersion: Int
   spaceId: String!
@@ -6641,6 +6691,34 @@ input cfManuscriptVersionsNestedFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  otherDetails: String
+  otherDetails_contains: String
+  otherDetails_exists: Boolean
+  otherDetails_in: [String]
+  otherDetails_not: String
+  otherDetails_not_contains: String
+  otherDetails_not_in: [String]
+  preprintDoi: String
+  preprintDoi_contains: String
+  preprintDoi_exists: Boolean
+  preprintDoi_in: [String]
+  preprintDoi_not: String
+  preprintDoi_not_contains: String
+  preprintDoi_not_in: [String]
+  publicationDoi: String
+  publicationDoi_contains: String
+  publicationDoi_exists: Boolean
+  publicationDoi_in: [String]
+  publicationDoi_not: String
+  publicationDoi_not_contains: String
+  publicationDoi_not_in: [String]
+  requestingApcCoverage: String
+  requestingApcCoverage_contains: String
+  requestingApcCoverage_exists: Boolean
+  requestingApcCoverage_in: [String]
+  requestingApcCoverage_not: String
+  requestingApcCoverage_not_contains: String
+  requestingApcCoverage_not_in: [String]
   sys: SysFilter
   type: String
   type_contains: String

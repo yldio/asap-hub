@@ -151,7 +151,7 @@ export const manuscriptState = atomFamily<
   ManuscriptResponse | undefined,
   string
 >({
-  key: 'researchOutput',
+  key: 'manuscript',
   default: undefined,
 });
 

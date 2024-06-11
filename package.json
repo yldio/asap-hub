@@ -30,7 +30,7 @@
     "build:typecheck": "turbo build:typecheck:tsc",
     "build:typecheck:tsc": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "check:packages": "yarn install --immutable --immutable-cache",
-    "clean": "rimraf \"{apps,packages}/*/{build*,.turbo,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
+    "clean": "rimraf \"{apps,packages}/*/{dist,build*,.turbo,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
     "contentful:migration:count:crn": "APP=crn ./packages/contentful/scripts/migration-count.sh",
     "contentful:migration:count:gp2": "APP=gp2 ./packages/contentful/scripts/migration-count.sh",
     "contentful:migration:create:crn": "APP=crn ./packages/contentful/scripts/migration-create.sh",

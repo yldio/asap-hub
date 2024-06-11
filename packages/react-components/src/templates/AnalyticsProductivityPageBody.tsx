@@ -4,7 +4,7 @@ import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import AnalyticsControls from '../molecules/AnalyticsControls';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 import { ExportButton } from '../molecules';
 
 type MetricOption = 'user' | 'team';
@@ -30,16 +30,17 @@ type ProductivityAnalyticsProps = Pick<
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
 const controlsStyles = css({
   display: 'flex',
   flexDirection: 'row-reverse',
+  gap: rem(32),
 });
 
 const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
@@ -61,12 +62,12 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
       />
     </div>
     <div css={controlsStyles}>
+      <ExportButton exportResults={exportResults} />
       <AnalyticsControls
         currentPage={currentPage}
         timeRange={timeRange}
         href={analytics({}).productivity({}).metric({ metric }).$}
       />
-      <ExportButton exportResults={exportResults} />
     </div>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>

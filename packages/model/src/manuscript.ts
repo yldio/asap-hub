@@ -8,9 +8,7 @@ export type ManuscriptType = (typeof manuscriptTypes)[number];
 
 export const manuscriptLifecycles = [
   'Draft manuscript (prior to preprint submission)',
-  'Draft manuscript',
   'Revised Draft Manuscript (prior to preprint submission)',
-  'Revised Draft Manuscript',
   'Preprint, version 1',
   'Preprint, version 2',
   'Preprint, version 3+',
@@ -27,11 +25,11 @@ export const manuscriptTypeLifecycles: {
 }[] = [
   {
     lifecycle: 'Draft manuscript (prior to preprint submission)',
-    types: ['Original Research'],
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
   },
   {
     lifecycle: 'Revised Draft Manuscript (prior to preprint submission)',
-    types: ['Original Research'],
+    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
   },
   { lifecycle: 'Preprint, version 1', types: ['Original Research'] },
   { lifecycle: 'Preprint, version 2', types: ['Original Research'] },
@@ -47,14 +45,6 @@ export const manuscriptTypeLifecycles: {
   {
     lifecycle: 'Publication with addendum or corrigendum',
     types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
-  },
-  {
-    lifecycle: 'Draft manuscript',
-    types: ['Review / Op-Ed / Letter / Hot Topic'],
-  },
-  {
-    lifecycle: 'Revised Draft Manuscript',
-    types: ['Review / Op-Ed / Letter / Hot Topic'],
   },
   {
     lifecycle: 'Other',
@@ -81,9 +71,7 @@ export const manuscriptFormFieldsMapping: Record<
 > = {
   'Original Research': {
     'Draft manuscript (prior to preprint submission)': [],
-    'Draft manuscript': [],
     'Revised Draft Manuscript (prior to preprint submission)': [],
-    'Revised Draft Manuscript': [],
     'Preprint, version 1': ['preprintDoi'],
     'Preprint, version 2': ['preprintDoi'],
     'Preprint, version 3+': ['preprintDoi'],
@@ -98,9 +86,7 @@ export const manuscriptFormFieldsMapping: Record<
   },
   'Review / Op-Ed / Letter / Hot Topic': {
     'Draft manuscript (prior to preprint submission)': [],
-    'Draft manuscript': [],
     'Revised Draft Manuscript (prior to preprint submission)': [],
-    'Revised Draft Manuscript': [],
     'Preprint, version 1': [],
     'Preprint, version 2': [],
     'Preprint, version 3+': [],

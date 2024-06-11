@@ -57,9 +57,7 @@ const limitStyles = css({
 const limitAndExtrasStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
-  'div:first-of-type': {
-    paddingTop: `${16 / perRem}em`,
-  },
+  paddingTop: `${16 / perRem}em`,
 });
 
 type TextAreaProps = {

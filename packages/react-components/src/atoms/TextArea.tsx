@@ -49,13 +49,17 @@ const invalidStyles = css({
   },
 });
 
-const validationAndLimitStyles = css({
-  display: 'grid',
-  gridTemplateColumns: 'auto max-content',
-});
 const limitStyles = css({
   textAlign: 'right',
   fontWeight: 'bold',
+});
+
+const limitAndExtrasStyles = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+  'div:first-of-type': {
+    paddingTop: `${16 / perRem}em`,
+  },
 });
 
 type TextAreaProps = {
@@ -66,6 +70,8 @@ type TextAreaProps = {
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
+
+  readonly extras?: React.ReactNode;
 } & Pick<
   InputHTMLAttributes<HTMLTextAreaElement>,
   'id' | 'placeholder' | 'required' | 'maxLength'
@@ -81,6 +87,8 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   value,
   onChange = noop,
+
+  extras,
 
   ...props
 }) => {
@@ -117,21 +125,24 @@ const TextArea: React.FC<TextAreaProps> = ({
           },
         ]}
       />
-      <div css={validationAndLimitStyles}>
+      <div>
         <div css={validationMessageStyles}>
           {validationMessage || (reachedMaxLength && 'Character count reached')}
         </div>
-        {maxLength !== undefined && (
-          <div
-            css={({ colors: { primary500 = fern } = {} }) => [
-              validationMessageStyles,
-              limitStyles,
-              { color: reachedMaxLength ? ember.rgb : primary500.rgba },
-            ]}
-          >
-            {value.length}/{maxLength}
-          </div>
-        )}
+        <div css={limitAndExtrasStyles}>
+          <div>{extras}</div>
+          {maxLength !== undefined && (
+            <div
+              css={({ colors: { primary500 = fern } = {} }) => [
+                validationMessageStyles,
+                limitStyles,
+                { color: reachedMaxLength ? ember.rgb : primary500.rgba },
+              ]}
+            >
+              {value.length}/{maxLength}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

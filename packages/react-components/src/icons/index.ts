@@ -1,6 +1,7 @@
 export { default as aboutIcon } from './about';
 export { default as aboveAverageIcon } from './above-average';
 export { default as actionIcon } from './action';
+export { default as aiGenerate } from './ai-generate';
 export { default as AlphabeticalSortingIcon } from './alphabetical-sorting';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as analyticsIcon } from './analytics';

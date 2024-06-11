@@ -35,6 +35,7 @@ import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField, getIconForDocumentType } from '../utils';
 import { ConfirmAndSaveOutput } from '../organisms/ConfirmAndSaveOutput';
 import { GetWrappedOnSave } from '../organisms/Form';
+import OutputShortDescriptionCard from '../organisms/OutputShortDescriptionCard';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
@@ -118,6 +119,7 @@ type OutputFormProps = {
       typeof ResearchOutputRelatedEventsCard
     >['getRelatedEventSuggestions']
   >;
+  getShortDescriptionFromDescription: (description: string) => Promise<string>;
   serverValidationErrors?: ValidationErrorResponse['data'];
   clearServerValidationError?: (instancePath: string) => void;
   createVersion?: boolean;
@@ -205,6 +207,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   relatedOutputs = [],
   relatedEvents = [],
   getRelatedOutputSuggestions,
+  getShortDescriptionFromDescription,
   cohortSuggestions,
   contributingCohorts,
   mainEntityId,
@@ -502,19 +505,15 @@ const OutputForm: React.FC<OutputFormProps> = ({
                         ></Markdown>
                       }
                     />
-                    <LabeledTextArea
-                      title="Short Description"
-                      subtitle="(required)"
-                      tip="Add a short description based on what you wrote on the
-                          description field above."
+                    <OutputShortDescriptionCard
                       onChange={setShortDescription}
-                      getValidationMessage={() =>
-                        'Please enter a short description'
-                      }
-                      required
                       enabled={!isSaving}
                       value={newShortDescription}
-                      maxLength={250}
+                      getShortDescription={() =>
+                        getShortDescriptionFromDescription(
+                          description || newDescription,
+                        )
+                      }
                     />
                     {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(
                       documentType,

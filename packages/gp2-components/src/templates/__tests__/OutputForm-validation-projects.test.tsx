@@ -1,10 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import { StaticRouter } from 'react-router-dom';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
-  const defaultProps = {
+  const defaultProps: ComponentProps<typeof OutputForm> = {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'project' as const,
@@ -15,6 +16,7 @@ describe('OutputForm', () => {
     mainEntityId: '12',
     getRelatedOutputSuggestions: jest.fn(),
     getRelatedEventSuggestions: jest.fn(),
+    getShortDescriptionFromDescription: jest.fn(),
   };
 
   describe('validation', () => {

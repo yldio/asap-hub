@@ -9,6 +9,7 @@ import {
   useRelatedOutputSuggestions,
   useRelatedEventsSuggestions,
   useAuthorSuggestions,
+  useOutputGeneratedContent,
 } from '../outputs';
 import { useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
@@ -34,6 +35,7 @@ const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
+  const getShortDescriptionFromDescription = useOutputGeneratedContent();
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
   const { items: workingGroupSuggestions } = useWorkingGroupsState();
@@ -78,6 +80,7 @@ const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
         getRelatedEventSuggestions={getRelatedEventSuggestions}
+        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}

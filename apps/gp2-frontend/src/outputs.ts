@@ -6,9 +6,11 @@ import {
   isValidationErrorResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
+import { useRecoilValue } from 'recoil';
+import { authorizationState } from './auth/state';
 import { getEvents } from './events/api';
 import { useAlgolia } from './hooks/algolia';
-import { getOutputs } from './outputs/api';
+import { getGeneratedOutputContent, getOutputs } from './outputs/api';
 import { getUsersAndExternalUsers } from './users/api';
 
 export const useRelatedOutputSuggestions = (currentId?: string) => {
@@ -69,6 +71,15 @@ export const useAuthorSuggestions = () => {
           value: author.id,
         })),
       );
+};
+
+export const useOutputGeneratedContent = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return (description: string): Promise<string> =>
+    getGeneratedOutputContent({ description }, authorization).then(
+      (output) => output.shortDescription || '',
+    );
 };
 
 export const handleError =

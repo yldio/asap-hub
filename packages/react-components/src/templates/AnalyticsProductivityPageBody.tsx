@@ -5,10 +5,9 @@ import { analytics } from '@asap-hub/routing';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { rem } from '../pixels';
 
-import AnalyticsControls, {
-  MetricOption,
-} from '../molecules/AnalyticsControls';
+import AnalyticsControls from '../molecules/AnalyticsControls';
 
+type MetricOption = 'user' | 'team';
 const metricOptions: Record<MetricOption, string> = {
   user: 'User Productivity',
   team: 'Team Productivity',

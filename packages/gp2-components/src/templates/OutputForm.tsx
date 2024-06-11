@@ -510,9 +510,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       enabled={!isSaving}
                       value={newShortDescription}
                       getShortDescription={() =>
-                        getShortDescriptionFromDescription(
-                          description || newDescription,
-                        )
+                        getShortDescriptionFromDescription(newDescription)
                       }
                     />
                     {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(

@@ -117,6 +117,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
           {
             lifecycle: 'Typeset proof',
             type: 'Original Research',
+            requestingApcCoverage: 'Already submitted',
           },
         ],
       },

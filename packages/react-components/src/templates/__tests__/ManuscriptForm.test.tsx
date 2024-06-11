@@ -4,7 +4,12 @@ import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { manuscriptTypeLifecycles } from '@asap-hub/model';
+import {
+  manuscriptFormFieldsMapping,
+  ManuscriptLifecycle,
+  ManuscriptType,
+  manuscriptTypeLifecycles,
+} from '@asap-hub/model';
 import ManuscriptForm from '../ManuscriptForm';
 
 let history!: History;
@@ -190,6 +195,107 @@ it('displays error message when manuscript title is bigger than 256 characters',
   expect(
     screen.getAllByText(/This title cannot exceed 256 characters./i).length,
   ).toBeGreaterThanOrEqual(1);
+});
+
+it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
+  const onSave = jest.fn();
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Typeset proof"
+        onSave={onSave}
+      />
+    </StaticRouter>,
+  );
+
+  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith({
+      title: 'manuscript title',
+      teamId,
+      versions: [
+        expect.objectContaining({
+          type: 'Original Research',
+          lifecycle: 'Typeset proof',
+          requestingApcCoverage: 'Already submitted',
+        }),
+      ],
+    });
+  });
+});
+
+describe('preprintDoi', () => {
+  it.each([
+    { lifecycle: 'Preprint, version 1', status: 'required' },
+    { lifecycle: 'Preprint, version 2', status: 'required' },
+    { lifecycle: 'Preprint, version 3+', status: 'required' },
+    { lifecycle: 'Publication', status: 'optional' },
+    {
+      lifecycle: 'Publication with addendum or corrigendum',
+      status: 'optional',
+    },
+  ] as { lifecycle: ManuscriptLifecycle; status: string }[])(
+    'preprintDoi is $status when lifecycle is $lifecycle',
+    async ({ lifecycle, status }) => {
+      render(
+        <StaticRouter>
+          <ManuscriptForm
+            {...defaultProps}
+            type="Original Research"
+            lifecycle={lifecycle}
+          />
+        </StaticRouter>,
+      );
+
+      expect(
+        screen.getByRole('textbox', {
+          name: new RegExp(`Preprint DOI \\(${status}\\)`, 'i'),
+        }),
+      ).toBeVisible();
+    },
+  );
+});
+
+describe('renders the necessary fields', () => {
+  const fieldInputMapping = {
+    preprintDoi: 'Preprint DOI',
+    publicationDoi: 'Publication DOI',
+    requestingApcCoverage: 'Will you be requesting APC coverage',
+    otherDetails: 'Please provide details',
+    type: 'Type of Manuscript',
+    lifecycle: 'Where is the manuscript in the life cycle?',
+  };
+
+  describe.each(Object.keys(manuscriptFormFieldsMapping))(
+    'when type is %s',
+    (type) => {
+      const manuscriptType = type as ManuscriptType;
+      it.each(Object.keys(manuscriptFormFieldsMapping[manuscriptType]))(
+        'lifecycle is %s',
+        (lifecycle) => {
+          const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
+          const { getByText } = render(
+            <StaticRouter>
+              <ManuscriptForm
+                {...defaultProps}
+                type={manuscriptType}
+                lifecycle={manuscriptLifecycle}
+              />
+            </StaticRouter>,
+          );
+
+          manuscriptFormFieldsMapping[manuscriptType][
+            manuscriptLifecycle
+          ].forEach((field) => {
+            expect(getByText(fieldInputMapping[field])).toBeVisible();
+          });
+        },
+      );
+    },
+  );
 });
 
 it('does not submit when required values are missing', async () => {

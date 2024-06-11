@@ -127,6 +127,7 @@ describe('user productivity', () => {
   };
   it('renders with user data', async () => {
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
@@ -134,6 +135,7 @@ describe('user productivity', () => {
   });
 
   it('renders data for different time ranges', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     when(mockGetUserProductivity)
       .calledWith(expect.anything(), userOptions)
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });

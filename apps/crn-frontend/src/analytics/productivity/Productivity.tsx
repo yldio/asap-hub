@@ -11,12 +11,9 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAnalytics, usePaginationParams } from '../../hooks';
-import {
-  algoliaResultsToStream,
-  teamProductivityToCSV,
-  userProductivityToCSV,
-} from '../leadership/export';
+import { algoliaResultsToStream } from '../leadership/export';
 import { getTeamProductivity, getUserProductivity } from './api';
+import { teamProductivityToCSV, userProductivityToCSV } from './export';
 import {
   useAnalyticsTeamProductivity,
   useAnalyticsUserProductivity,
@@ -102,7 +99,11 @@ const Productivity = () => {
       currentPage={currentPage}
       exportResults={exportResults}
     >
-      {metric === 'user' ? <UserProductivity /> : <TeamProductivity />}
+      {metric === 'user' ? (
+        <UserProductivity sort={userSort} setSort={setUserSort} />
+      ) : (
+        <TeamProductivity sort={teamSort} setSort={setTeamSort} />
+      )}
     </AnalyticsProductivityPageBody>
   );
 };

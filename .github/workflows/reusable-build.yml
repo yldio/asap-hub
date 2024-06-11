@@ -52,6 +52,9 @@ on:
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
         required: false
+      GP2_OPENAI_API_KEY:
+        description: 'GP2 OpenAI API Key'
+        required: true
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
         required: false
@@ -367,6 +370,7 @@ jobs:
           contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.gp2-hostname }}
+          openai-api-key: ${{ secrets.GP2_OPENAI_API_KEY }}
           sentry-dsn-api: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
           sentry-dsn-public-api: ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}

@@ -59,6 +59,9 @@ inputs:
   hostname:
     description: 'Hostname'
     required: true
+  openai-api-key:
+    description: 'OpenAI API Key'
+    required: false
   sentry-dsn-api:
     description: 'Sentry DSN for the API'
     required: true
@@ -124,6 +127,7 @@ runs:
         HOSTNAME: ${{ inputs.hostname }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
+        OPENAI_API_KEY: ${{ inputs.openai-api-key }}
         SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}
         SENTRY_DSN_PUBLIC_API: ${{ inputs.sentry-dsn-public-api }}
         SENTRY_DSN_HANDLERS: ${{ inputs.sentry-dsn-handlers }}

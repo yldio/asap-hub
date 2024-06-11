@@ -17,6 +17,7 @@ import assert from 'assert';
   'CONTENTFUL_SPACE_ID',
   'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
+  'OPENAI_API_KEY',
   'SES_REGION',
   'SLS_STAGE',
 ].forEach((env) => {
@@ -46,6 +47,7 @@ const contentfulManagementAccessToken =
 const contentfulSpaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
+const openaiApiKey = process.env.OPENAI_API_KEY!;
 
 if (stage === 'dev' || stage === 'production') {
   ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
@@ -269,6 +271,7 @@ const serverlessConfig: AWS = {
         AUTH0_CLIENT_ID: auth0ClientId,
         CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
         SENTRY_DSN: sentryDsnApi,
+        OPENAI_API_KEY: openaiApiKey,
       },
     },
     auth0FetchByCode: {

@@ -28,6 +28,26 @@ it('displays Additional Information section when present', () => {
   ).toBeVisible();
 });
 
+it('renders a divider between fields in Additional Information section', () => {
+  const { getByRole, queryAllByRole } = render(
+    <ManuscriptCard
+      {...props}
+      versions={[
+        {
+          ...props.versions[0]!,
+          preprintDoi: '10.1101/gr.10.12.1841',
+          publicationDoi: '10.1101/gr.10.12.1842',
+          requestingApcCoverage: 'Already submitted',
+          otherDetails: 'Necessary info',
+        },
+      ]}
+    />,
+  );
+
+  userEvent.click(getByRole('button'));
+  expect(queryAllByRole('separator').length).toEqual(4);
+});
+
 it.each`
   field                      | title                         | newValue
   ${'preprintDoi'}           | ${'Preprint DOI'}             | ${'10.1101/gr.10.12.1841'}

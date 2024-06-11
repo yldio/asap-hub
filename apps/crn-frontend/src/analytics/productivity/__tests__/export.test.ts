@@ -56,7 +56,7 @@ describe('userProductivityToCSV', () => {
   });
 });
 
-describe('teamProductivityToCSV ', () => {
+describe('teamProductivityToCSV', () => {
   it('handles basic data', () => {
     const data: TeamProductivityDataObject = {
       id: '1',

@@ -1,7 +1,7 @@
 import { PerformanceMetrics } from '@asap-hub/model';
 import { getPerformanceText } from '../analytics';
 
-describe('getPerformanceText ', () => {
+describe('getPerformanceText', () => {
   const performanceMetrics: PerformanceMetrics = {
     belowAverageMin: 0,
     belowAverageMax: 4,

@@ -81,24 +81,24 @@ const Productivity = () => {
           }),
         userProductivityToCSV(userPerformance),
       );
-    } else {
-      return algoliaResultsToStream<TeamProductivityAlgoliaResponse>(
-        createCsvFileStream(
-          `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
-          {
-            header: true,
-          },
-        ),
-        (paginationParams) =>
-          getTeamProductivity(teamClient, {
-            sort: teamSort,
-            timeRange,
-            tags,
-            ...paginationParams,
-          }),
-        teamProductivityToCSV(teamPerformance),
-      );
     }
+
+    return algoliaResultsToStream<TeamProductivityAlgoliaResponse>(
+      createCsvFileStream(
+        `productivity_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
+      (paginationParams) =>
+        getTeamProductivity(teamClient, {
+          sort: teamSort,
+          timeRange,
+          tags,
+          ...paginationParams,
+        }),
+      teamProductivityToCSV(teamPerformance),
+    );
   };
 
   return (

@@ -14,8 +14,13 @@ import {
 interface UserProductivityProps {
   sort: SortUserProductivity;
   setSort: Dispatch<SetStateAction<SortUserProductivity>>;
+  tags: string[];
 }
-const UserProductivity = ({ sort, setSort }: UserProductivityProps) => {
+const UserProductivity: React.FC<UserProductivityProps> = ({
+  sort,
+  setSort,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
   const [sortingDirection, setSortingDirection] =
@@ -26,8 +31,9 @@ const UserProductivity = ({ sort, setSort }: UserProductivityProps) => {
   const { items: data, total } = useAnalyticsUserProductivity({
     currentPage,
     pageSize,
-    timeRange,
     sort,
+    tags,
+    timeRange,
   });
 
   const performance = useUserProductivityPerformance(timeRange);

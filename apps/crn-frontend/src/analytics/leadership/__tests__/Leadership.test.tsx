@@ -147,7 +147,11 @@ describe('search', () => {
     userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
-      expect(mockSearchForTagValues).toHaveBeenCalledWith([], 'test123', {}),
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-leadership'],
+        'test123',
+        {},
+      ),
     );
   });
   it('Will search algolia using selected team', async () => {

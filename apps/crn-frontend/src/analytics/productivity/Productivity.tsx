@@ -10,7 +10,8 @@ import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useAnalytics, usePaginationParams } from '../../hooks';
+import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../leadership/export';
 import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';
@@ -35,6 +36,11 @@ const Productivity = () => {
     );
 
   const { timeRange } = useAnalytics();
+  const { tags, setTags } = useSearch();
+  const { client } = useAnalyticsAlgolia();
+
+  const entityType =
+    metric === 'user' ? 'user-productivity' : 'team-productivity';
 
   const [userSort, setUserSort] = useState<SortUserProductivity>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamProductivity>('team_asc');
@@ -98,11 +104,24 @@ const Productivity = () => {
       timeRange={timeRange}
       currentPage={currentPage}
       exportResults={exportResults}
+      tags={tags}
+      setTags={setTags}
+      loadTags={async (tagQuery) => {
+        const searchedTags = await client.searchForTagValues(
+          [entityType],
+          tagQuery,
+          {},
+        );
+        return searchedTags.facetHits.map(({ value }) => ({
+          label: value,
+          value,
+        }));
+      }}
     >
       {metric === 'user' ? (
-        <UserProductivity sort={userSort} setSort={setUserSort} />
+        <UserProductivity sort={userSort} setSort={setUserSort} tags={tags} />
       ) : (
-        <TeamProductivity sort={teamSort} setSort={setTeamSort} />
+        <TeamProductivity sort={teamSort} setSort={setTeamSort} tags={tags} />
       )}
     </AnalyticsProductivityPageBody>
   );

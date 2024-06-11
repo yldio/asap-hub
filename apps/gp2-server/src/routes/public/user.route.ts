@@ -39,17 +39,21 @@ export const userRouteFactory = (userController: UserController): Router => {
 const mapUserToPublicUser = (
   user: gp2Model.UserResponse,
 ): gp2Model.PublicUserResponse => ({
-  id: user.id,
-  displayName: user.displayName,
-  country: user.country,
-  degrees: user.degrees,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  publishDate: user.createdDate,
   avatarUrl: user.avatarUrl,
   biography: user.biography,
   city: user.city,
+  country: user.country,
+  degrees: user.degrees,
+  displayName: user.displayName,
+  firstName: user.firstName,
+  id: user.id,
+  lastName: user.lastName,
+  lastModifiedDate: user.lastModifiedDate,
   middleName: user.middleName,
+  institution: user.positions
+    .map((position) => position.institution)
+    .join(', '),
+  title: user.positions.map((position) => position.role).join(', '),
   outputs: user.outputs.filter(filterOutputs).map((output) => ({
     id: output.id,
     title: output.title,
@@ -57,6 +61,8 @@ const mapUserToPublicUser = (
     sharingStatus: output.sharingStatus,
     gp2Supported: output.gp2Supported,
   })),
+  publishDate: user.createdDate,
+  systemPublishedVersion: user.systemPublishedVersion,
   workingGroups: user.workingGroups.map((workingGroup) => ({
     id: workingGroup.id,
     title: workingGroup.title,

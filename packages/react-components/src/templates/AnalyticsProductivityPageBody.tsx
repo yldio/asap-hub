@@ -3,11 +3,12 @@ import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
-import AnalyticsControls from '../molecules/AnalyticsControls';
 import { rem } from '../pixels';
 import { ExportButton } from '../molecules';
 
-type MetricOption = 'user' | 'team';
+import AnalyticsControls, {
+  MetricOption,
+} from '../molecules/AnalyticsControls';
 
 const metricOptions: Record<MetricOption, string> = {
   user: 'User Productivity',
@@ -21,7 +22,7 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 
 type ProductivityAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange' | 'currentPage'
+  'timeRange' | 'currentPage' | 'tags' | 'loadTags' | 'setTags'
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
@@ -47,6 +48,9 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
   timeRange,
+  tags,
+  setTags,
+  loadTags,
   currentPage,
   children,
   exportResults,
@@ -61,19 +65,23 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
         required
       />
     </div>
-    <div css={controlsStyles}>
-      <ExportButton exportResults={exportResults} />
-      <AnalyticsControls
-        currentPage={currentPage}
-        timeRange={timeRange}
-        href={analytics({}).productivity({}).metric({ metric }).$}
-      />
-    </div>
     <div css={tableHeaderStyles}>
       <Headline3>{metricOptions[metric]}</Headline3>
       <Paragraph>
         Overview of ASAP outputs shared on the CRN Hub by {metric}.
       </Paragraph>
+    </div>
+    <div css={controlsStyles}>
+      <ExportButton exportResults={exportResults} />
+      <AnalyticsControls
+        currentPage={currentPage}
+        timeRange={timeRange}
+        metricOption={metric}
+        tags={tags}
+        loadTags={loadTags}
+        setTags={setTags}
+        href={analytics({}).productivity({}).metric({ metric }).$}
+      />
     </div>
     {children}
   </article>

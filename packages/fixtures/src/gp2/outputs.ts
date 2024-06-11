@@ -15,7 +15,6 @@ const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   created: '2020-09-07T17:36:54Z',
   addedDate: '2020-10-08T16:35:54Z',
   lastUpdatedPartial: '2020-11-09T20:36:54Z',
-  lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
   sharingStatus: 'Public',
   authors: [userAuthor],

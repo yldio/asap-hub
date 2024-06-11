@@ -4,7 +4,7 @@ import { ComponentProps } from 'react';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { perRem, rem } from '../pixels';
+import { perRem } from '../pixels';
 
 type MetricOption = 'user' | 'team';
 type TypeOption = 'within-team' | 'across-teams';
@@ -72,12 +72,6 @@ const tableHeaderStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-const controlsStyles = css({
-  display: 'flex',
-  flexDirection: 'row-reverse',
-  marginBottom: rem(32),
-});
-
 const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   metric,
   type,
@@ -112,16 +106,14 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
         <Headline3>{header}</Headline3>
         <Paragraph>{description}.</Paragraph>
       </div>
-      <div css={controlsStyles}>
-        <AnalyticsControls
-          currentPage={currentPage}
-          timeRange={timeRange}
-          href={
-            analytics({}).collaboration({}).collaborationPath({ metric, type })
-              .$
-          }
-        />
-      </div>
+      <AnalyticsControls
+        currentPage={currentPage}
+        tags={[]}
+        timeRange={timeRange}
+        href={
+          analytics({}).collaboration({}).collaborationPath({ metric, type }).$
+        }
+      />
       {children}
     </article>
   );

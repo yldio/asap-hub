@@ -14,8 +14,13 @@ import {
 interface TeamProductivityProps {
   sort: SortTeamProductivity;
   setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
+  tags: string[];
 }
-const TeamProductivity = ({ sort, setSort }: TeamProductivityProps) => {
+const TeamProductivity: React.FC<TeamProductivityProps> = ({
+  sort,
+  setSort,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
   const [sortingDirection, setSortingDirection] =
@@ -26,8 +31,9 @@ const TeamProductivity = ({ sort, setSort }: TeamProductivityProps) => {
   const { items: data, total } = useAnalyticsTeamProductivity({
     currentPage,
     pageSize,
-    timeRange,
     sort,
+    tags,
+    timeRange,
   });
 
   const performance = useTeamProductivityPerformance(timeRange);

@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 
 export const getUserResponse = (): gp2.UserResponse => ({
   id: 'userId',
+  lastModifiedDate: '2020-09-25T09:42:51.000Z',
   createdDate: '2020-09-25T09:42:51.000Z',
   onboarded: true,
   email: 'tony@stark.com',

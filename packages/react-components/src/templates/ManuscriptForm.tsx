@@ -63,6 +63,16 @@ const preprintLifecycles = [
   'Preprint, version 3+',
 ];
 
+const apcCoverageLifecycles = [
+  'Typeset proof',
+  'Publication',
+  'Publication with addendum or corrigendum',
+];
+
+const optionalVersionFields: Array<
+  keyof Omit<ManuscriptVersion, 'type' | 'lifecycle'>
+> = ['preprintDoi', 'publicationDoi', 'requestingApcCoverage', 'otherDetails'];
+
 type ManuscriptFormProps = {
   onSave: (output: ManuscriptPostRequest) => Promise<ManuscriptResponse | void>;
   onSuccess: () => void;
@@ -127,28 +137,45 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   }, [setValue, watchType]);
 
   useEffect(() => {
-    reset(
-      {
-        ...getValues(),
-        versions: [
-          {
-            ...getValues().versions[0],
-            publicationDoi: '',
-            preprintDoi: '',
-            requestingApcCoverage: [
-              'Typeset proof',
-              'Publication',
-              'Publication with addendum or corrigendum',
-            ].includes(watchLifecycle)
-              ? 'Already submitted'
-              : '',
-            otherDetails: '',
-          },
-        ],
-      },
-      { keepDefaultValues: true },
-    );
-  }, [getValues, reset, watchLifecycle]);
+    if (watchType && watchLifecycle) {
+      let fieldsToReset = optionalVersionFields;
+      fieldsToReset = fieldsToReset.filter(
+        (field) =>
+          !manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+            field,
+          ),
+      );
+
+      const obj = fieldsToReset.reduce(
+        (map, field) => ({ ...map, [field]: '' }),
+        {} as {
+          [key in (typeof optionalVersionFields)[number]]:
+            | ''
+            | 'Already submitted';
+        },
+      );
+
+      if (
+        apcCoverageLifecycles.includes(watchLifecycle) &&
+        !getValues('versions.0.requestingApcCoverage')
+      ) {
+        obj.requestingApcCoverage = 'Already submitted';
+      }
+
+      reset(
+        {
+          ...getValues(),
+          versions: [
+            {
+              ...getValues().versions[0],
+              ...obj,
+            },
+          ],
+        },
+        { keepDefaultValues: true },
+      );
+    }
+  }, [getValues, reset, watchType, watchLifecycle]);
 
   const onSubmit = async (data: ManuscriptPostRequest) => {
     const versionData = data.versions[0] as ManuscriptVersion;
@@ -390,6 +417,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   control={control}
                   rules={{
                     required: 'Please provide details',
+                    maxLength: {
+                      value: 256,
+                      message: 'Details cannot exceed 256 characters.',
+                    },
                   }}
                   render={({
                     field: { value, onChange },

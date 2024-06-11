@@ -46,7 +46,7 @@ it('data is sent on form submission', async () => {
         {...defaultProps}
         title="manuscript title"
         type="Original Research"
-        lifecycle="Draft manuscript"
+        lifecycle="Draft manuscript (prior to preprint submission)"
         onSave={onSave}
       />
     </StaticRouter>,
@@ -56,7 +56,12 @@ it('data is sent on form submission', async () => {
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
-      versions: [{ type: 'Original Research', lifecycle: 'Draft manuscript' }],
+      versions: [
+        {
+          type: 'Original Research',
+          lifecycle: 'Draft manuscript (prior to preprint submission)',
+        },
+      ],
       teamId,
     });
   });
@@ -197,6 +202,39 @@ it('displays error message when manuscript title is bigger than 256 characters',
   ).toBeGreaterThanOrEqual(1);
 });
 
+it('displays error message when other details is bigger than 256 characters', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="Manuscript"
+        type="Original Research"
+        lifecycle="Other"
+      />
+    </StaticRouter>,
+  );
+
+  const input = screen.getByRole('textbox', {
+    name: /Please provide details/i,
+  });
+  userEvent.type(
+    input,
+    "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
+  );
+
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
+
+  expect(
+    screen.getAllByText(/Details cannot exceed 256 characters./i).length,
+  ).toBeGreaterThanOrEqual(1);
+});
+
 it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
   const onSave = jest.fn();
   render(
@@ -296,6 +334,131 @@ describe('renders the necessary fields', () => {
       );
     },
   );
+});
+
+it('resets form fields to default values when no longer visible', async () => {
+  const onSave = jest.fn();
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        onSave={onSave}
+      />
+    </StaticRouter>,
+  );
+
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Publication');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const preprintDoi = '10.4444/test';
+  const publicationDoi = '10.4467/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
+  });
+  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  const publicationDoiTextbox = screen.getByRole('textbox', {
+    name: /Publication DOI/i,
+  });
+  userEvent.type(publicationDoiTextbox, publicationDoi);
+
+  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
+  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
+
+  userEvent.type(lifecycleTextbox, 'Draft manuscript');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  expect(
+    screen.queryByRole('textbox', {
+      name: /Preprint DOI/i,
+    }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('textbox', {
+      name: /Publication DOI/i,
+    }),
+  ).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith({
+      title: 'manuscript title',
+      versions: [
+        expect.objectContaining({
+          preprintDoi: undefined,
+          publicationDoi: undefined,
+        }),
+      ],
+      teamId,
+    });
+  });
+});
+
+it('maintains values provided when lifecycle changes but field is still visible', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm {...defaultProps} title="manuscript title" />
+    </StaticRouter>,
+  );
+
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Publication');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  const preprintDoi = '10.4444/test';
+  const publicationDoi = '10.4467/test';
+
+  const preprintDoiTextbox = screen.getByRole('textbox', {
+    name: /Preprint DOI/i,
+  });
+  userEvent.type(preprintDoiTextbox, preprintDoi);
+
+  const publicationDoiTextbox = screen.getByRole('textbox', {
+    name: /Publication DOI/i,
+  });
+  userEvent.type(publicationDoiTextbox, publicationDoi);
+
+  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
+  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
+
+  userEvent.type(lifecycleTextbox, 'Preprint, version 1');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  expect(
+    screen.getByRole('textbox', {
+      name: /Preprint DOI/i,
+    }),
+  ).toHaveValue(preprintDoi);
+  expect(
+    screen.queryByRole('textbox', {
+      name: /Publication DOI/i,
+    }),
+  ).not.toBeInTheDocument();
 });
 
 it('does not submit when required values are missing', async () => {

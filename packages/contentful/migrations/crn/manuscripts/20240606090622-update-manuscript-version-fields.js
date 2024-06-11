@@ -62,6 +62,22 @@ module.exports.up = (migration) => {
     .validations([])
     .disabled(false)
     .omitted(false);
+
+  manuscriptVersions.editField('lifecycle').validations([
+    {
+      in: [
+        'Draft manuscript (prior to preprint submission)',
+        'Revised Draft Manuscript (prior to preprint submission)',
+        'Preprint, version 1',
+        'Preprint, version 2',
+        'Preprint, version 3+',
+        'Typeset proof',
+        'Publication',
+        'Publication with addendum or corrigendum',
+        'Other',
+      ],
+    },
+  ]);
 };
 
 module.exports.down = (migration) => {
@@ -70,4 +86,21 @@ module.exports.down = (migration) => {
   manuscriptVersions.deleteField('publicationDoi');
   manuscriptVersions.deleteField('requestingApcCoverage');
   manuscriptVersions.deleteField('otherDetails');
+  manuscriptVersions.editField('lifecycle').validations([
+    {
+      in: [
+        'Draft manuscript (prior to preprint submission)',
+        'Draft manuscript',
+        'Revised Draft Manuscript (prior to preprint submission)',
+        'Revised Draft Manuscript',
+        'Preprint, version 1',
+        'Preprint, version 2',
+        'Preprint, version 3+',
+        'Typeset proof',
+        'Publication',
+        'Publication with addendum or corrigendum',
+        'Other',
+      ],
+    },
+  ]);
 };

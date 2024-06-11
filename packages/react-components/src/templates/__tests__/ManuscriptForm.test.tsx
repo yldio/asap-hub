@@ -378,7 +378,10 @@ it('resets form fields to default values when no longer visible', async () => {
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
-  userEvent.type(lifecycleTextbox, 'Draft manuscript');
+  userEvent.type(
+    lifecycleTextbox,
+    'Draft manuscript (prior to preprint submission)',
+  );
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 

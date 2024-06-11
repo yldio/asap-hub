@@ -4,7 +4,6 @@ import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { rem } from '../pixels';
-import { ExportButton } from '../molecules';
 
 import AnalyticsControls, {
   MetricOption,
@@ -38,12 +37,6 @@ const tableHeaderStyles = css({
   paddingBottom: rem(24),
 });
 
-const controlsStyles = css({
-  display: 'flex',
-  flexDirection: 'row-reverse',
-  gap: rem(32),
-});
-
 const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
@@ -71,18 +64,16 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
         Overview of ASAP outputs shared on the CRN Hub by {metric}.
       </Paragraph>
     </div>
-    <div css={controlsStyles}>
-      <ExportButton exportResults={exportResults} />
-      <AnalyticsControls
-        currentPage={currentPage}
-        timeRange={timeRange}
-        metricOption={metric}
-        tags={tags}
-        loadTags={loadTags}
-        setTags={setTags}
-        href={analytics({}).productivity({}).metric({ metric }).$}
-      />
-    </div>
+    <AnalyticsControls
+      currentPage={currentPage}
+      timeRange={timeRange}
+      metricOption={metric}
+      tags={tags}
+      loadTags={loadTags}
+      setTags={setTags}
+      href={analytics({}).productivity({}).metric({ metric }).$}
+      exportResults={exportResults}
+    />
     {children}
   </article>
 );

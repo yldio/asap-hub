@@ -49,6 +49,7 @@ const Productivity = () => {
     currentPage,
     pageSize,
     timeRange,
+    tags,
     sort: userSort,
   });
   const userPerformance = useUserProductivityPerformance(timeRange);
@@ -57,6 +58,7 @@ const Productivity = () => {
     currentPage,
     pageSize,
     timeRange,
+    tags,
     sort: teamSort,
   });
   const teamPerformance = useTeamProductivityPerformance(timeRange);
@@ -74,6 +76,7 @@ const Productivity = () => {
           getUserProductivity(userClient, {
             sort: userSort,
             timeRange,
+            tags,
             ...paginationParams,
           }),
         userProductivityToCSV(userPerformance),
@@ -90,6 +93,7 @@ const Productivity = () => {
           getTeamProductivity(teamClient, {
             sort: teamSort,
             timeRange,
+            tags,
             ...paginationParams,
           }),
         teamProductivityToCSV(teamPerformance),

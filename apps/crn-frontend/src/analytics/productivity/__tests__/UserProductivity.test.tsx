@@ -48,6 +48,8 @@ const mockAlgoliaSearchClientFactory =
     typeof algoliaSearchClientFactory
   >;
 
+const mockSetSort = jest.fn();
+
 const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
   id: '1',
   team: 'Team A',
@@ -101,7 +103,11 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <UserProductivity tags={[]} />
+              <UserProductivity
+                setSort={mockSetSort}
+                sort={'user_asc'}
+                tags={[]}
+              />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -154,12 +160,5 @@ it('calls algolia client with the right index name', async () => {
   });
 
   userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
-
-  await waitFor(() => {
-    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        algoliaIndex: expect.stringContaining('_user_desc'),
-      }),
-    );
-  });
+  expect(mockSetSort).toHaveBeenCalledWith('user_desc');
 });

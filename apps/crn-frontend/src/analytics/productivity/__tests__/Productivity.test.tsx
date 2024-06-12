@@ -1,5 +1,6 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   teamProductivityPerformance,
   userProductivityPerformance,
@@ -28,11 +29,25 @@ import {
 } from '../api';
 import Productivity from '../Productivity';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
 jest.mock('../api');
 
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
 }));
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 mockConsoleError();
 
@@ -153,6 +168,7 @@ describe('user productivity', () => {
   };
   it('renders with user data', async () => {
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
@@ -160,6 +176,7 @@ describe('user productivity', () => {
   });
 
   it('renders data for different time ranges', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     when(mockGetUserProductivity)
       .calledWith(expect.anything(), userOptions)
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
@@ -284,6 +301,33 @@ describe('search', () => {
         'test123',
         {},
       ),
+    );
+  });
+});
+
+describe('csv export', () => {
+  it('exports analytics for user', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_user_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+
+  it('exports analytics for teams', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    const input = screen.getAllByRole('textbox', { hidden: false })[0];
+
+    input && userEvent.click(input);
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_team_\d+\.csv/),
+      expect.anything(),
     );
   });
 });

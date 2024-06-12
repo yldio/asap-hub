@@ -1,8 +1,7 @@
 import { CSVValue, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipDataObject,
-  AnalyticsTeamLeadershipResponse,
-  ListAnalyticsTeamLeadershipResponse,
+  ListResponse,
 } from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify/browser/esm';
 
@@ -24,17 +23,15 @@ export const leadershipToCSV =
     };
   };
 
-export const algoliaResultsToStream = async (
+export const algoliaResultsToStream = async <T>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<ListAnalyticsTeamLeadershipResponse | undefined>
+    Promise<ListResponse<T> | undefined>
   >,
-  transform: (
-    result: AnalyticsTeamLeadershipResponse,
-  ) => Record<string, unknown>,
+  transform: (result: T) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

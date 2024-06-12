@@ -5,6 +5,7 @@ import { AnalyticsProductivityPageBody } from '..';
 describe('AnalyticsProductivityPageBody', () => {
   const props: ComponentProps<typeof AnalyticsProductivityPageBody> = {
     setMetric: () => null,
+    exportResults: () => Promise.resolve(),
     metric: 'user',
     timeRange: '30d',
     tags: [],

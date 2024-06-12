@@ -3,11 +3,11 @@ import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
-import AnalyticsControls, {
-  MetricOption,
-} from '../molecules/AnalyticsControls';
 import { rem } from '../pixels';
 
+import AnalyticsControls from '../molecules/AnalyticsControls';
+
+type MetricOption = 'user' | 'team';
 const metricOptions: Record<MetricOption, string> = {
   user: 'User Productivity',
   team: 'Team Productivity',
@@ -25,6 +25,7 @@ type ProductivityAnalyticsProps = Pick<
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   children: React.ReactNode;
+  exportResults: () => Promise<void>;
 };
 
 const metricDropdownStyles = css({
@@ -44,6 +45,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   loadTags,
   currentPage,
   children,
+  exportResults,
 }) => (
   <article>
     <div css={metricDropdownStyles}>
@@ -69,6 +71,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
       loadTags={loadTags}
       setTags={setTags}
       href={analytics({}).productivity({}).metric({ metric }).$}
+      exportResults={exportResults}
     />
     {children}
   </article>

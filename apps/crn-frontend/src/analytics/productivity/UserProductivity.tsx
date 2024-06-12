@@ -4,21 +4,25 @@ import {
   UserProductivitySortingDirection,
 } from '@asap-hub/model';
 import { UserProductivityTable } from '@asap-hub/react-components';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserProductivity,
   useUserProductivityPerformance,
 } from './state';
 
-export type ProductivityProps = {
+interface UserProductivityProps {
+  sort: SortUserProductivity;
+  setSort: Dispatch<SetStateAction<SortUserProductivity>>;
   tags: string[];
-};
-
-const UserProductivity: React.FC<ProductivityProps> = ({ tags }) => {
+}
+const UserProductivity: React.FC<UserProductivityProps> = ({
+  sort,
+  setSort,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
-  const [sort, setSort] = useState<SortUserProductivity>('user_asc');
   const [sortingDirection, setSortingDirection] =
     useState<UserProductivitySortingDirection>(
       userProductivityInitialSortingDirection,

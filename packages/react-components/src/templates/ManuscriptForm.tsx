@@ -73,6 +73,11 @@ type OptionalVersionFields = Array<
   keyof Omit<ManuscriptVersion, 'type' | 'lifecycle'>
 >;
 
+type DefaultFieldValueMapping = Record<
+  OptionalVersionFields[number],
+  '' | 'Already submitted'
+>;
+
 const optionalVersionFields: OptionalVersionFields = [
   'preprintDoi',
   'publicationDoi',
@@ -92,13 +97,34 @@ const getFieldsToReset = (
       ].includes(field),
   );
 
-const setDefaultFieldValues = (fieldsList: OptionalVersionFields) =>
-  fieldsList.reduce(
+const getDefaultRequestingApcCoverageValue = (
+  lifecycle: ManuscriptLifecycle,
+  requestingApcCoverage: ManuscriptVersion['requestingApcCoverage'] | '',
+) =>
+  apcCoverageLifecycles.includes(lifecycle) && !requestingApcCoverage
+    ? 'Already submitted'
+    : '';
+
+const setDefaultFieldValues = (
+  fieldsList: OptionalVersionFields,
+  lifecycle: ManuscriptLifecycle,
+  requestingApcCoverage: ManuscriptVersion['requestingApcCoverage'] | '',
+) => {
+  const fieldDefaultValueMap = fieldsList.reduce(
     (map, field) => ({ ...map, [field]: '' }),
-    {} as {
-      [key in (typeof optionalVersionFields)[number]]: '' | 'Already submitted';
-    },
+    {} as DefaultFieldValueMapping,
   );
+
+  // By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
+  const defaultRequestingApcCoverageValue =
+    getDefaultRequestingApcCoverageValue(lifecycle, requestingApcCoverage);
+
+  if (defaultRequestingApcCoverageValue)
+    fieldDefaultValueMap.requestingApcCoverage =
+      defaultRequestingApcCoverageValue;
+
+  return fieldDefaultValueMap;
+};
 
 type ManuscriptFormProps = Omit<ManuscriptVersion, 'type' | 'lifecycle'> &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
@@ -169,15 +195,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         watchType,
         watchLifecycle,
       );
-      const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
-
-      // By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
-      if (
-        apcCoverageLifecycles.includes(watchLifecycle) &&
-        !getValues('versions.0.requestingApcCoverage')
-      ) {
-        fieldDefaultValueMap.requestingApcCoverage = 'Already submitted';
-      }
+      const fieldDefaultValueMap = setDefaultFieldValues(
+        fieldsToReset,
+        watchLifecycle,
+        getValues('versions.0.requestingApcCoverage'),
+      );
 
       reset(
         {

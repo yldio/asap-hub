@@ -171,7 +171,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       );
       const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
 
-      //By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
+      // By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
       if (
         apcCoverageLifecycles.includes(watchLifecycle) &&
         !getValues('versions.0.requestingApcCoverage')

@@ -12,6 +12,7 @@ type OutputShortDescriptionCardProps = Omit<
   'title' | 'subtitle' | 'tip' | 'getValidationMessage'
 > & {
   getShortDescription: () => Promise<string>;
+  buttonEnabled?: boolean;
 };
 const { rem } = pixels;
 
@@ -22,6 +23,7 @@ const iconStyles = css({
 
 const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
   enabled,
+  buttonEnabled = true,
   onChange,
   getShortDescription,
   ...props
@@ -64,6 +66,7 @@ const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
             noMargin
             small
             enabled={
+              buttonEnabled &&
               enabled &&
               generatingStatus !== 'isGenerating' &&
               generatingStatus !== 'isRegenerating'

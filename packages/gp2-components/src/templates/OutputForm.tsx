@@ -507,6 +507,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     />
                     <OutputShortDescriptionCard
                       onChange={setShortDescription}
+                      buttonEnabled={newDescription.length > 0}
                       enabled={!isSaving}
                       value={newShortDescription}
                       getShortDescription={() =>

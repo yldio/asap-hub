@@ -21,6 +21,18 @@ describe('OutputShortDescriptionCard', () => {
     expect(screen.getByRole('button', { name: /Generate/i })).toBeVisible();
   });
 
+  it('disables the button when buttonEnabled property is set to false', () => {
+    render(
+      <OutputShortDescriptionCard
+        getShortDescription={getShortDescription}
+        value="current short description"
+        buttonEnabled={false}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /Generate/i })).toBeDisabled();
+  });
+
   it('calls getShortDescription and saves the retrieved value when generate button is clicked', async () => {
     render(
       <OutputShortDescriptionCard

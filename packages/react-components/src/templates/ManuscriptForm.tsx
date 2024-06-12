@@ -69,21 +69,47 @@ const apcCoverageLifecycles = [
   'Publication with addendum or corrigendum',
 ];
 
-const optionalVersionFields: Array<
+type OptionalVersionFields = Array<
   keyof Omit<ManuscriptVersion, 'type' | 'lifecycle'>
-> = ['preprintDoi', 'publicationDoi', 'requestingApcCoverage', 'otherDetails'];
+>;
 
-type ManuscriptFormProps = {
-  onSave: (output: ManuscriptPostRequest) => Promise<ManuscriptResponse | void>;
-  onSuccess: () => void;
-  teamId: string;
-} & Partial<Pick<ManuscriptPostRequest, 'title'>> & {
+const optionalVersionFields: OptionalVersionFields = [
+  'preprintDoi',
+  'publicationDoi',
+  'requestingApcCoverage',
+  'otherDetails',
+];
+
+const getFieldsToReset = (
+  fieldsList: OptionalVersionFields,
+  manuscriptType: ManuscriptType,
+  manuscriptLifecycle: ManuscriptLifecycle,
+) =>
+  fieldsList.filter(
+    (field) =>
+      !manuscriptFormFieldsMapping[manuscriptType][
+        manuscriptLifecycle
+      ].includes(field),
+  );
+
+const setDefaultFieldValues = (fieldsList: OptionalVersionFields) =>
+  fieldsList.reduce(
+    (map, field) => ({ ...map, [field]: '' }),
+    {} as {
+      [key in (typeof optionalVersionFields)[number]]: '' | 'Already submitted';
+    },
+  );
+
+type ManuscriptFormProps = Omit<ManuscriptVersion, 'type' | 'lifecycle'> &
+  Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
-    requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
-    preprintDoi?: ManuscriptVersion['preprintDoi'] | '';
-    publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
-    otherDetails?: ManuscriptVersion['otherDetails'] | '';
+
+    onSave: (
+      output: ManuscriptPostRequest,
+    ) => Promise<ManuscriptResponse | void>;
+    onSuccess: () => void;
+    teamId: string;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -138,28 +164,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   useEffect(() => {
     if (watchType && watchLifecycle) {
-      let fieldsToReset = optionalVersionFields;
-      fieldsToReset = fieldsToReset.filter(
-        (field) =>
-          !manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-            field,
-          ),
+      const fieldsToReset = getFieldsToReset(
+        optionalVersionFields,
+        watchType,
+        watchLifecycle,
       );
+      const fieldDefaultValueMap = setDefaultFieldValues(fieldsToReset);
 
-      const obj = fieldsToReset.reduce(
-        (map, field) => ({ ...map, [field]: '' }),
-        {} as {
-          [key in (typeof optionalVersionFields)[number]]:
-            | ''
-            | 'Already submitted';
-        },
-      );
-
+      //By default, in the ui the requestingApcCoverage radio button indicates as set to Already submitted but is not captured in formdata, this does that
       if (
         apcCoverageLifecycles.includes(watchLifecycle) &&
         !getValues('versions.0.requestingApcCoverage')
       ) {
-        obj.requestingApcCoverage = 'Already submitted';
+        fieldDefaultValueMap.requestingApcCoverage = 'Already submitted';
       }
 
       reset(
@@ -168,7 +185,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           versions: [
             {
               ...getValues().versions[0],
-              ...obj,
+              ...fieldDefaultValueMap,
             },
           ],
         },

@@ -11,6 +11,7 @@ import {
   article,
   Divider,
   Link,
+  lead,
 } from '..';
 import { paddingStyles } from '../card';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -82,6 +83,7 @@ const additionalInformationEntryStyles = css({
 });
 const additionalInformationValueStyles = css({
   textAlign: 'right',
+  color: lead.rgb,
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: `${rem(12)}`,

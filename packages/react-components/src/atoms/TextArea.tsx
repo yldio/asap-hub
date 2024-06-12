@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
 import { useValidation, styles, validationMessageStyles } from '../form';
-import { noop } from '../utils';
+import { mergeRefs, noop } from '../utils';
 import { ember, rose, fern, tin, lead, silver } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 
@@ -74,76 +74,83 @@ type TextAreaProps = {
   InputHTMLAttributes<HTMLTextAreaElement>,
   'id' | 'placeholder' | 'required' | 'maxLength'
 >;
-const TextArea: React.FC<TextAreaProps> = ({
-  enabled = true,
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  (
+    {
+      enabled = true,
 
-  required,
-  maxLength,
+      required,
+      maxLength,
 
-  customValidationMessage = '',
-  getValidationMessage,
-
-  value,
-  onChange = noop,
-
-  extras,
-
-  ...props
-}) => {
-  const { validationMessage, validationTargetProps } =
-    useValidation<HTMLTextAreaElement>(
-      customValidationMessage,
+      customValidationMessage = '',
       getValidationMessage,
-    );
 
-  const reachedMaxLength =
-    value.length >= (maxLength ?? Number.POSITIVE_INFINITY);
+      value,
+      onChange = noop,
 
-  return (
-    <div css={containerStyles}>
-      <textarea
-        {...props}
-        {...validationTargetProps}
-        disabled={!enabled}
-        required={required}
-        maxLength={maxLength}
-        value={value}
-        onChange={({ currentTarget: { value: newValue } }) =>
-          onChange(newValue)
-        }
-        css={({ colors }) => [
-          styles,
-          textareaStyles,
-          enabled || disabledStyles,
-          validationMessage && invalidStyles,
-          colors?.primary500 && {
-            ':focus': {
-              borderColor: colors?.primary500.rgba,
+      extras,
+
+      ...props
+    },
+    ref,
+  ) => {
+    const { validationMessage, validationTargetProps } =
+      useValidation<HTMLTextAreaElement>(
+        customValidationMessage,
+        getValidationMessage,
+      );
+
+    const reachedMaxLength =
+      value.length >= (maxLength ?? Number.POSITIVE_INFINITY);
+
+    return (
+      <div css={containerStyles}>
+        <textarea
+          {...props}
+          {...validationTargetProps}
+          disabled={!enabled}
+          required={required}
+          maxLength={maxLength}
+          value={value}
+          ref={mergeRefs(ref, validationTargetProps.ref)}
+          onChange={({ currentTarget: { value: newValue } }) =>
+            onChange(newValue)
+          }
+          css={({ colors }) => [
+            styles,
+            textareaStyles,
+            enabled || disabledStyles,
+            validationMessage && invalidStyles,
+            colors?.primary500 && {
+              ':focus': {
+                borderColor: colors?.primary500.rgba,
+              },
             },
-          },
-        ]}
-      />
-      <div>
-        <div css={validationMessageStyles}>
-          {validationMessage || (reachedMaxLength && 'Character count reached')}
-        </div>
-        <div css={limitAndExtrasStyles}>
-          <div>{extras}</div>
-          {maxLength !== undefined && (
-            <div
-              css={({ colors: { primary500 = fern } = {} }) => [
-                validationMessageStyles,
-                limitStyles,
-                { color: reachedMaxLength ? ember.rgb : primary500.rgba },
-              ]}
-            >
-              {value.length}/{maxLength}
-            </div>
-          )}
+          ]}
+        />
+        <div>
+          <div css={validationMessageStyles}>
+            {validationMessage ||
+              (reachedMaxLength && 'Character count reached')}
+          </div>
+          <div css={limitAndExtrasStyles}>
+            <div>{extras}</div>
+            {maxLength !== undefined && (
+              <div
+                css={({ colors: { primary500 = fern } = {} }) => [
+                  validationMessageStyles,
+                  limitStyles,
+                  { color: reachedMaxLength ? ember.rgb : primary500.rgba },
+                ]}
+              >
+                {value.length}/{maxLength}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
 
 export default TextArea;

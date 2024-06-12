@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, forwardRef } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
@@ -49,31 +49,29 @@ const infoWrapperStyle = css({
   },
 });
 
-const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
-  title,
-  subtitle,
-  tip,
-  info,
-  ...textAreaProps
-}) => (
-  <div css={{ paddingBottom: `${18 / perRem}em` }}>
-    <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
-      <Paragraph>
-        <span css={{ display: 'flex', marginBottom: 0 }}>
-          <strong>{title}</strong>
-          <span css={subtitleStyles}>{subtitle}</span>
-          {info && (
-            <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
-              <Info>
-                <span css={infoStyle}>{info}</span>
-              </Info>
-            </span>
-          )}
-        </span>
-        <span css={tipStyles}>{tip}</span>
-      </Paragraph>
-    </Label>
-  </div>
+const LabeledTextArea = forwardRef<HTMLTextAreaElement, LabeledTextAreaProps>(
+  ({ title, subtitle, tip, info, ...textAreaProps }, ref) => (
+    <div css={{ paddingBottom: `${18 / perRem}em` }}>
+      <Label
+        forContent={(id) => <TextArea {...textAreaProps} ref={ref} id={id} />}
+      >
+        <Paragraph>
+          <span css={{ display: 'flex', marginBottom: 0 }}>
+            <strong>{title}</strong>
+            <span css={subtitleStyles}>{subtitle}</span>
+            {info && (
+              <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
+                <Info>
+                  <span css={infoStyle}>{info}</span>
+                </Info>
+              </span>
+            )}
+          </span>
+          <span css={tipStyles}>{tip}</span>
+        </Paragraph>
+      </Label>
+    </div>
+  ),
 );
 
 export default LabeledTextArea;

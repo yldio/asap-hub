@@ -4,6 +4,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
+  cleanup,
   render,
   screen,
   waitFor,
@@ -106,6 +107,7 @@ describe('ShareOutput', () => {
     window.scrollTo = jest.fn();
   });
   afterEach(jest.resetAllMocks);
+  afterEach(cleanup);
   mockConsoleError();
 
   it('renders the title in edit page', async () => {

@@ -7,6 +7,8 @@ import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
   ...createUserResponse({ teams: 1, labs: 1 }),
+  researchInterests: 'some research interest',
+  responsibilities: 'some responsbility',
   role: 'Grantee',
   backHref: '/wrong',
 };

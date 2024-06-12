@@ -4,7 +4,7 @@ import {
   UserProductivityDataObject,
   UserProductivityPerformance,
 } from '@asap-hub/model';
-import { getPerformanceText } from '@asap-hub/react-components/src/utils';
+import { utils } from '@asap-hub/react-components';
 
 export const userProductivityToCSV =
   (performance: UserProductivityPerformance) =>
@@ -16,12 +16,12 @@ export const userProductivityToCSV =
     teamB: data.teams[1]?.team || '',
     roleB: data.teams[1]?.role || '',
     ASAPOutputValue: data.asapOutput,
-    ASAPOutputAverage: getPerformanceText(
+    ASAPOutputAverage: utils.getPerformanceText(
       data.asapOutput,
       performance.asapOutput,
     ),
     ASAPPublicOutputValue: data.asapPublicOutput,
-    ASAPPublicOutputAverage: getPerformanceText(
+    ASAPPublicOutputAverage: utils.getPerformanceText(
       data.asapPublicOutput,
       performance.asapPublicOutput,
     ),
@@ -34,27 +34,27 @@ export const teamProductivityToCSV =
     team: data.name,
     status: data.isInactive ? 'Inactive' : 'Active',
     ASAPArticleOutputValue: data.Article,
-    ASAPArticleOutputAverage: getPerformanceText(
+    ASAPArticleOutputAverage: utils.getPerformanceText(
       data.Article,
       performance.article,
     ),
     ASAPBioinformaticOutputValue: data.Bioinformatics,
-    ASAPBioinformaticOutputAverage: getPerformanceText(
+    ASAPBioinformaticOutputAverage: utils.getPerformanceText(
       data.Bioinformatics,
       performance.bioinformatics,
     ),
     ASAPDatasetOutputValue: data.Dataset,
-    ASAPDatasetOutputAverage: getPerformanceText(
+    ASAPDatasetOutputAverage: utils.getPerformanceText(
       data.Dataset,
       performance.dataset,
     ),
     ASAPALabResourceValue: data['Lab Resource'],
-    ASAPALabResourceAverage: getPerformanceText(
+    ASAPALabResourceAverage: utils.getPerformanceText(
       data['Lab Resource'],
       performance.labResource,
     ),
     ASAPProtocolValue: data.Protocol,
-    ASAPProtocolAverage: getPerformanceText(
+    ASAPProtocolAverage: utils.getPerformanceText(
       data.Protocol,
       performance.protocol,
     ),

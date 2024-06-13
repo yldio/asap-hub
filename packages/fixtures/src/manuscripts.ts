@@ -6,5 +6,10 @@ export const createManuscriptResponse = (
   id: `manuscript_${itemIndex}`,
   title: `Manuscript ${itemIndex + 1}`,
   teamId: 'team-1',
-  versions: [],
+  versions: [
+    {
+      lifecycle: 'Draft manuscript (prior to preprint submission)',
+      type: 'Original Research',
+    },
+  ],
 });

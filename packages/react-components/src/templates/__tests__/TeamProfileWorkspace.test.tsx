@@ -95,7 +95,7 @@ describe('compliance section', () => {
           versions: [
             {
               type: 'Original Research',
-              lifecycle: 'Draft manuscript',
+              lifecycle: 'Draft manuscript (prior to preprint submission)',
             },
           ],
         },
@@ -116,14 +116,18 @@ describe('compliance section', () => {
     );
 
     expect(container).not.toHaveTextContent('Original Research');
-    expect(container).not.toHaveTextContent('Draft manuscript');
+    expect(container).not.toHaveTextContent(
+      'Draft manuscript (prior to preprint submission)',
+    );
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
     const manuscriptCard = manuscriptTitle.closest('div');
     userEvent.click(within(manuscriptCard!).getByRole('button'));
 
     expect(container).toHaveTextContent('Original Research');
-    expect(container).toHaveTextContent('Draft manuscript');
+    expect(container).toHaveTextContent(
+      'Draft manuscript (prior to preprint submission)',
+    );
   });
 });
 

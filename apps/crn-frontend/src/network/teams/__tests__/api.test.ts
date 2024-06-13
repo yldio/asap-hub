@@ -258,7 +258,7 @@ describe('Manuscript', () => {
       teamId: '42',
       versions: [
         {
-          lifecycle: 'Draft manuscript',
+          lifecycle: 'Publication',
           type: 'Original Research',
         },
       ],

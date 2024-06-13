@@ -69,7 +69,7 @@ const documents = {
     types.FetchInterestGroupsByUserIdDocument,
   '\n  query FetchLabs($limit: Int, $skip: Int, $where: LabsFilter) {\n    labsCollection(limit: $limit, skip: $skip, where: $where, order: name_ASC) {\n      total\n      items {\n        sys {\n          id\n        }\n        name\n      }\n    }\n  }\n':
     types.FetchLabsDocument,
-  '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n      }\n    }\n  }\n':
+  '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n        preprintDoi\n        publicationDoi\n        requestingApcCoverage\n        otherDetails\n      }\n    }\n  }\n':
     types.ManuscriptsContentFragmentDoc,
   '\n  query FetchManuscriptById($id: String!) {\n    manuscripts(id: $id) {\n      ...ManuscriptsContent\n      teamsCollection(limit: 10) {\n        items {\n          sys {\n            id\n          }\n        }\n      }\n    }\n  }\n  \n':
     types.FetchManuscriptByIdDocument,
@@ -315,8 +315,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n      }\n    }\n  }\n',
-): (typeof documents)['\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n      }\n    }\n  }\n'];
+  source: '\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n        preprintDoi\n        publicationDoi\n        requestingApcCoverage\n        otherDetails\n      }\n    }\n  }\n',
+): (typeof documents)['\n  fragment ManuscriptsContent on Manuscripts {\n    sys {\n      id\n    }\n    title\n    versionsCollection(limit: 20, order: sys_publishedAt_DESC) {\n      items {\n        sys {\n          id\n        }\n        type\n        lifecycle\n        preprintDoi\n        publicationDoi\n        requestingApcCoverage\n        otherDetails\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -76,6 +76,7 @@ const additionalInformationListStyles = css({
 const additionalInformationEntryStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
+  columnGap: rem(24),
   padding: `${rem(8)} 0`,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',

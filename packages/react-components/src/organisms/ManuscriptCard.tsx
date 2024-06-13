@@ -84,6 +84,7 @@ const additionalInformationEntryStyles = css({
 const additionalInformationValueStyles = css({
   textAlign: 'right',
   color: lead.rgb,
+  overflowWrap: 'anywhere',
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: `${rem(12)}`,

@@ -1,5 +1,9 @@
 import { Maybe, ResearchOutputs, Sys } from '@asap-hub/contentful';
-import { TimeRangeOption } from '@asap-hub/model';
+import {
+  TeamOutputDocumentType,
+  teamOutputDocumentTypes,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 type AnalyticOutput = Maybe<
   Pick<ResearchOutputs, 'sharingStatus' | 'addedDate' | 'createdDate'> & {
@@ -45,3 +49,16 @@ export const getFilterOutputByRange =
     }
     return true;
   };
+
+export const isTeamOutputDocumentType = (
+  documentType: string,
+): documentType is TeamOutputDocumentType =>
+  teamOutputDocumentTypes.includes(documentType as TeamOutputDocumentType);
+
+// remove string from one array that are present in another array and return a new array of strings
+export const removeDuplicates = (arr1: string[], arr2: string[]): string[] => [
+  ...arr1.filter((elem) => !arr2.includes(elem)),
+];
+
+export const getUniqueIdCount = (arr: (string | undefined)[]): number =>
+  [...new Set(arr.filter((elem) => !!elem))].length;

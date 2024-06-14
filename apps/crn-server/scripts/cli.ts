@@ -60,6 +60,8 @@ yargs(hideBin(process.argv))
             'team-leadership',
             'team-productivity',
             'user-productivity',
+            'team-collaboration',
+            'user-collaboration',
           ],
           demandOption: true,
         })

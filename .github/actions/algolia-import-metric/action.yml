@@ -38,7 +38,7 @@ runs:
     - name: Import Metric
       shell: bash
       run: |
-        metrics=(team-leadership team-productivity user-productivity)
+        metrics=(team-leadership team-productivity user-productivity team-collaboration user-collaboration)
 
         if [[ "$METRIC" == "all" ]]; then
           for iteratedMetric in "${metrics[@]}"; do yarn export:analytics $iteratedMetric -f $iteratedMetric.json

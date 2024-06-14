@@ -6,6 +6,7 @@ import { BackendError } from '@asap-hub/frontend-utils';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -24,7 +25,7 @@ import {
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getOutputs, updateOutput } from '../api';
+import { getOutputs, updateOutput, getGeneratedOutputContent } from '../api';
 import ShareOutput from '../ShareOutput';
 
 jest.mock('../api');
@@ -38,6 +39,10 @@ const mockUpdateOutput = updateOutput as jest.MockedFunction<
 >;
 
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+const mockGetGeneratedOutputContent =
+  getGeneratedOutputContent as jest.MockedFunction<
+    typeof getGeneratedOutputContent
+  >;
 const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 const mockGetContributingCohorts =
   getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
@@ -129,6 +134,27 @@ describe('ShareOutput', () => {
       expect.objectContaining({ title, link }),
       expect.anything(),
     );
+  });
+
+  it('generates the short description based on the current description', async () => {
+    const id = 'output-id';
+
+    mockGetGeneratedOutputContent.mockResolvedValueOnce({
+      shortDescription: 'test generated short description 1',
+    });
+
+    await renderShareOutput(getEditPath(id), {
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: /short description/i }),
+      ).toHaveValue('test generated short description 1');
+    });
   });
 
   it('will show server side validation error for link', async () => {

@@ -24,6 +24,7 @@ describe('OutputForm', () => {
     entityType: 'workingGroup' as const,
     getRelatedOutputSuggestions: jest.fn(),
     getRelatedEventSuggestions: jest.fn(),
+    getShortDescriptionFromDescription: jest.fn(),
     tagSuggestions: [],
     cohortSuggestions: [],
     workingGroupSuggestions: [],
@@ -93,11 +94,17 @@ describe('OutputForm', () => {
     const shareOutput = jest.fn();
     shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
 
+    const getShortDescriptionFromDescription = jest.fn();
+    getShortDescriptionFromDescription.mockReturnValue(
+      'Short description content',
+    );
+
     return {
       addNotification,
       getAuthorSuggestions,
       getRelatedEventSuggestions,
       getRelatedOutputSuggestions,
+      getShortDescriptionFromDescription,
       history,
       shareOutput,
     };
@@ -322,6 +329,45 @@ describe('OutputForm', () => {
     });
   });
 
+  it('can generate short description when description is present', async () => {
+    const { addNotification, getShortDescriptionFromDescription, history } =
+      setup();
+    getShortDescriptionFromDescription.mockResolvedValue(
+      'An interesting article',
+    );
+
+    render(
+      <OutputForm
+        {...defaultProps}
+        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
+        description="An interesting article"
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toHaveValue('');
+
+    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: /short description/i }),
+      ).toHaveValue('An interesting article');
+    });
+  });
   describe('Edit output', () => {
     it('renders with projects', () => {
       const output = {

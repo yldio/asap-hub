@@ -78,7 +78,6 @@ export const publicAppFactory = (
     contentfulGraphQLClient,
     getContentfulRestClientFactory,
   );
-
   const userController =
     dependencies.userController ||
     new UserController(userDataProvider, assetDataProvider);

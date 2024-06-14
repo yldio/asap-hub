@@ -8,6 +8,7 @@ import {
   useRelatedOutputSuggestions,
   useRelatedEventsSuggestions,
   useAuthorSuggestions,
+  useOutputGeneratedContent,
 } from '../outputs';
 import { useProjects } from '../projects/state';
 import { useContributingCohorts, useTags } from '../shared/state';
@@ -28,6 +29,7 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
   const getAuthorSuggestions = useAuthorSuggestions();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions(output.id);
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
+  const getShortDescriptionFromDescription = useOutputGeneratedContent();
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
   const { items: workingGroupSuggestions } = useWorkingGroupsState();
@@ -61,6 +63,7 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
           )
         }
         getAuthorSuggestions={getAuthorSuggestions}
+        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
         getRelatedEventSuggestions={getRelatedEventSuggestions}

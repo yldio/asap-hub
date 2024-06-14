@@ -6,9 +6,14 @@ import {
 } from '@asap-hub/model';
 import {
   OutputPostRequest,
+  OutputResponse,
   OutputVersionPostObject,
 } from '@asap-hub/model/src/gp2';
 import Boom from '@hapi/boom';
+import {
+  GenerativeContentDataProvider,
+  generativeContentDataProviderNoop,
+} from '../data-providers/generative-content.data-provider';
 import { OutputDataProvider } from '../data-providers/types';
 import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
 
@@ -16,6 +21,7 @@ export default class OutputController {
   constructor(
     private outputDataProvider: OutputDataProvider,
     private externalUserDataProvider: ExternalUserDataProvider,
+    private generativeContentDataProvider: GenerativeContentDataProvider = generativeContentDataProviderNoop,
   ) {}
 
   async fetchById(outputId: string): Promise<gp2Model.OutputResponse> {
@@ -50,38 +56,6 @@ export default class OutputController {
     };
   }
 
-  private async parseToDataObject(
-    data: OutputCreateData | OutputUpdateData,
-  ): Promise<
-    Omit<
-      gp2Model.OutputCreateDataObject | gp2Model.OutputUpdateDataObject,
-      'createdBy' | 'updatedBy' | 'addedDate'
-    >
-  > {
-    return {
-      authors: await this.mapAuthorsPostRequestToId(data.authors ?? []),
-      documentType: data.documentType,
-      link: data.link,
-      publishDate: data.publishDate,
-      subtype: data.subtype,
-      title: data.title,
-      type: data.type,
-      description: data.description,
-      shortDescription: data.shortDescription,
-      sharingStatus: data.sharingStatus,
-      gp2Supported: data.gp2Supported,
-      tagIds: data.tagIds,
-      doi: data.doi,
-      rrid: data.rrid,
-      accessionNumber: data.accessionNumber,
-      workingGroupIds: data.workingGroupIds,
-      projectIds: data.projectIds,
-      mainEntityId: data.mainEntityId,
-      contributingCohortIds: data.contributingCohortIds,
-      relatedOutputIds: data.relatedOutputIds,
-      relatedEventIds: data.relatedEventIds,
-    };
-  }
   async create(
     data: OutputCreateData,
   ): Promise<gp2Model.OutputResponse | null> {
@@ -145,6 +119,58 @@ export default class OutputController {
     );
 
     return this.fetchById(id);
+  }
+
+  async generateContent(
+    data: Partial<Pick<OutputPostRequest, 'description'>>,
+  ): Promise<Partial<Pick<OutputResponse, 'shortDescription'>>> {
+    if (!data.description) {
+      return {
+        shortDescription: '',
+      };
+    }
+
+    const shortDescription =
+      await this.generativeContentDataProvider.summariseContent(
+        data.description,
+      );
+
+    return {
+      shortDescription,
+    };
+  }
+
+  private async parseToDataObject(
+    data: OutputCreateData | OutputUpdateData,
+  ): Promise<
+    Omit<
+      gp2Model.OutputCreateDataObject | gp2Model.OutputUpdateDataObject,
+      'createdBy' | 'updatedBy' | 'addedDate'
+    >
+  > {
+    return {
+      authors: await this.mapAuthorsPostRequestToId(data.authors ?? []),
+      documentType: data.documentType,
+      link: data.link,
+      publishDate: data.publishDate,
+      subtype: data.subtype,
+      title: data.title,
+      type: data.type,
+      description: data.description,
+      shortDescription: data.shortDescription,
+      sharingStatus: data.sharingStatus,
+      gp2Supported: data.gp2Supported,
+      tagIds: data.tagIds,
+      doi: data.doi,
+      rrid: data.rrid,
+      accessionNumber: data.accessionNumber,
+      workingGroupIds: data.workingGroupIds,
+      projectIds: data.projectIds,
+      mainEntityId: data.mainEntityId,
+      contributingCohortIds: data.contributingCohortIds,
+      relatedOutputIds: data.relatedOutputIds,
+      relatedEventIds: data.relatedEventIds,
+    };
   }
 
   private async validateOutput(

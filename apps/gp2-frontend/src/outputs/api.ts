@@ -147,3 +147,30 @@ export const updateOutput = async (
   }
   return response;
 };
+
+export const getGeneratedOutputContent = async (
+  output: gp2.OutputGenerateContentRequest,
+  authorization: string,
+): Promise<gp2.OutputGenerateContentResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/outputs/generate-content`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(output),
+  });
+
+  const response = await resp.json();
+
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to generate content for output. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+
+  return response;
+};

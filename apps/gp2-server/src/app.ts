@@ -82,6 +82,7 @@ import { workingGroupNetworkRouteFactory } from './routes/working-group-network.
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import pinoLogger from './utils/logger';
+import { GenerativeContentDataProvider } from './data-providers/generative-content.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -194,6 +195,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const generativeContentDataProvider = new GenerativeContentDataProvider();
+
   // Controllers
 
   const workingGroupController =
@@ -221,7 +224,11 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.reminderController || new ReminderController(reminderDataProvider);
   const outputController =
     libs.outputController ||
-    new OutputController(outputDataProvider, externalUserDataProvider);
+    new OutputController(
+      outputDataProvider,
+      externalUserDataProvider,
+      generativeContentDataProvider,
+    );
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohortController(contributingCohortDataProvider);

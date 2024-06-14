@@ -60,6 +60,9 @@ on:
         required: false
       GP2_CI_PR_AUTH0_CLIENT_SECRET:
         description: 'GP2 CI PR Auth0 Client Secret'
+      GP2_OPENAI_API_KEY:
+        description: 'GP2 OpenAI API Key'
+        required: true
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true
@@ -163,6 +166,7 @@ jobs:
           contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.gp2-hostname }}
+          openai-api-key: ${{ secrets.GP2_OPENAI_API_KEY }}
           sentry-dsn-api: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
           sentry-dsn-public-api: ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}

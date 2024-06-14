@@ -1,9 +1,14 @@
 /* istanbul ignore file */
 import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  OutputGenerateContentRequest,
+  OutputGenerateContentResponse,
+} from '@asap-hub/model/src/gp2';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import OutputController from '../controllers/output.controller';
 import {
+  validateOutputGenerateContentRequestParameters,
   validateOutputParameters,
   validateOutputPostRequestParameters,
   validateOutputPutRequestParameters,
@@ -61,6 +66,19 @@ export const outputRouteFactory = (
     });
 
     res.status(201).json(output);
+  });
+
+  outputRoutes.post<
+    OutputGenerateContentRequest,
+    OutputGenerateContentResponse
+  >('/outputs/generate-content', async (req, res) => {
+    const { body } = req;
+    const generateRequest =
+      validateOutputGenerateContentRequestParameters(body);
+
+    const output = await outputController.generateContent(generateRequest);
+
+    res.status(200).json(output);
   });
 
   outputRoutes.put('/outputs/:outputId', async (req, res) => {

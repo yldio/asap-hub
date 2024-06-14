@@ -33,3 +33,9 @@ export const updateOutput = jest.fn(
     documentType,
   }),
 );
+
+export const getGeneratedOutputContent = jest.fn(
+  async (): Promise<gp2Model.OutputGenerateContentResponse> => ({
+    shortDescription: 'summarised short description',
+  }),
+);

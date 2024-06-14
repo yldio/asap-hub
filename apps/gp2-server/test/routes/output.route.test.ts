@@ -586,6 +586,30 @@ describe('/outputs/ route', () => {
       });
     });
   });
+
+  describe('POST /outputs/generate-content', () => {
+    test('Should return a 200 when is hit', async () => {
+      const { description } = getOutputPostRequest();
+
+      outputControllerMock.generateContent.mockResolvedValueOnce({
+        shortDescription: 'some short description',
+      });
+
+      const { app: adminApp } = getApp({ role: 'Administrator' });
+      const response = await supertest(adminApp)
+        .post('/outputs/generate-content')
+        .send({ description })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        shortDescription: 'some short description',
+      });
+      expect(outputControllerMock.generateContent).toHaveBeenCalledWith({
+        description,
+      });
+    });
+  });
 });
 
 const getApp = ({

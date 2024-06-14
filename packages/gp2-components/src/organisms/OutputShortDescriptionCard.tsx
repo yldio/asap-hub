@@ -5,7 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 
 type OutputShortDescriptionCardProps = Omit<
   ComponentProps<typeof LabeledTextArea>,
@@ -32,6 +32,8 @@ const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
     'initial' | 'isGenerating' | 'isRegenerating' | 'hasGenerated'
   >('initial');
 
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleGenerate = async () => {
     setGeneratingStatus(
       generatingStatus === 'initial' ? 'isGenerating' : 'isRegenerating',
@@ -42,6 +44,11 @@ const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
     }
     setGeneratingStatus('hasGenerated');
   };
+
+  useEffect(() => {
+    textAreaRef.current?.focus();
+    textAreaRef.current?.blur();
+  }, [generatingStatus]);
 
   return (
     <>
@@ -60,6 +67,7 @@ const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
           generatingStatus !== 'isRegenerating'
         }
         maxLength={250}
+        ref={textAreaRef}
         extras={
           <Button
             primary

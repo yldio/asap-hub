@@ -2,6 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { Notification, NotificationContext } from '@asap-hub/react-context';
 import {
+  cleanup,
   fireEvent,
   render,
   screen,
@@ -110,6 +111,7 @@ describe('OutputForm', () => {
     };
   };
   afterEach(jest.resetAllMocks);
+  afterEach(cleanup);
 
   it.each`
     entityType        | entityText         | notificationMessage                                      | entity

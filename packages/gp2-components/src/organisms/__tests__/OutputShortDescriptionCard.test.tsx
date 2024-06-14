@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import OutputShortDescriptionCard from '../OutputShortDescriptionCard';
 
 describe('OutputShortDescriptionCard', () => {
@@ -66,6 +66,39 @@ describe('OutputShortDescriptionCard', () => {
       expect(
         screen.getByRole('button', { name: /Generate/i }),
       ).toHaveTextContent('Regenerate');
+    });
+  });
+
+  it('shows the error message when short description is empty but removes it once text is generated', async () => {
+    const { rerender, getByRole } = render(
+      <OutputShortDescriptionCard
+        getShortDescription={getShortDescription}
+        value=""
+      />,
+    );
+
+    fireEvent.focusOut(getByRole('textbox'));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Please enter a short description/i),
+      ).toBeVisible();
+    });
+
+    const generateButton = screen.getByRole('button', { name: /Generate/i });
+    generateButton.click();
+
+    rerender(
+      <OutputShortDescriptionCard
+        getShortDescription={getShortDescription}
+        value="current short description"
+      />,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/Please enter a short description/i),
+      ).not.toBeInTheDocument();
     });
   });
 });

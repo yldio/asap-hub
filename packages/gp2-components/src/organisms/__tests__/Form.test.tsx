@@ -4,13 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { ValidationErrorResponse } from '@asap-hub/model';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Router,
-  StaticRouter,
-} from 'react-router-dom';
+import { Link, MemoryRouter, Route, Router } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { Button } from '@asap-hub/react-components';
 import Form from '../Form';
 
@@ -39,7 +34,7 @@ it('renders a form with given children', () => {
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <Router history={history}>
+    <Router navigator={history}>
       <Form {...props}>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -51,7 +46,7 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <Router history={history}>
+    <Router navigator={history}>
       <Form {...props} dirty>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -65,7 +60,7 @@ it('prompts when trying to leave after making edits', () => {
 describe('on cancel', () => {
   it('prompts after making edits', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -85,7 +80,7 @@ describe('on cancel', () => {
   });
   it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -106,7 +101,7 @@ describe('on cancel', () => {
 
   it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
-      <Router history={history}>
+      <Router navigator={history}>
         <Route path="/form">
           <Form {...props} dirty>
             {({ onCancel }) => (
@@ -240,7 +235,7 @@ describe('when saving', () => {
             removeNotification: jest.fn(),
           }}
         >
-          <Router history={history}>
+          <Router navigator={history}>
             <Form {...props} dirty>
               {({ getWrappedOnSave, isSaving }) => (
                 <>
@@ -324,7 +319,7 @@ describe('when saving', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>
+            <Router navigator={history}>
               <Form {...props}>
                 {({ getWrappedOnSave, isSaving }) => (
                   <>
@@ -408,7 +403,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router history={history}>
+        <Router navigator={history}>
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>
@@ -453,7 +448,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router history={history}>
+        <Router navigator={history}>
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>

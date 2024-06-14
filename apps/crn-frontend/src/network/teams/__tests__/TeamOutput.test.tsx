@@ -21,7 +21,8 @@ import {
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,

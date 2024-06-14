@@ -9,7 +9,7 @@ const mainStyles = css({
 });
 
 const WorkingGroupPage: React.FC<
-  ComponentProps<typeof WorkingGroupPageHeader>
+  React.PropsWithChildren<ComponentProps<typeof WorkingGroupPageHeader>>
 > = ({ children, ...props }) => (
   <article>
     <WorkingGroupPageHeader {...props} />

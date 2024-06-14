@@ -26,7 +26,7 @@ export const makeFlagDecorator =
   (name: string, flag: Flag): Decorator =>
   (storyFn, context) => {
     const enabled = boolean(name, true);
-    const Provider: ComponentType = enabled
+    const Provider: ComponentType<React.PropsWithChildren<unknown>> = enabled
       ? Fragment
       : ({ children }) => <DisableFlag flag={flag}>{children}</DisableFlag>;
     return <Provider>{storyFn({ ...context })}</Provider>;

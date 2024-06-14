@@ -18,10 +18,9 @@ const containerStyles = (image: string) =>
     filter: `drop-shadow(0px 2px 4px ${colors.neutral500.rgb})`,
   });
 
-const CardWithBackground: React.FC<CardWithBackgroundProps> = ({
-  image,
-  children,
-}) => (
+const CardWithBackground: React.FC<
+  React.PropsWithChildren<CardWithBackgroundProps>
+> = ({ image, children }) => (
   <div css={containerStyles(image)}>
     <Card>{children}</Card>
   </div>

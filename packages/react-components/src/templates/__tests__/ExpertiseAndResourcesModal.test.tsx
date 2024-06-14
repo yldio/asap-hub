@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
   expect(
     getByText('Expertise, Resources and Tags', { selector: 'h3' }),
@@ -26,7 +26,7 @@ it('renders the title', () => {
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
-    wrapper: StaticRouter,
+    wrapper: MemoryRouter,
   });
 
   [
@@ -43,7 +43,7 @@ it('renders default values into text inputs', () => {
       {...props}
       expertiseAndResourceDescription="example description"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(getByLabelText(/expertise and resources/i)).toHaveValue(
     'example description',
@@ -94,11 +94,11 @@ it('disables the form elements while submitting', async () => {
       onSave={handleSave}
     />,
     {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     },
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -114,14 +114,14 @@ describe('tags selection', () => {
   it('displays a no options message', async () => {
     const { getByLabelText, getByText } = render(
       <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
 
-    userEvent.type(getByLabelText(/tags/i), 'def');
+    await userEvent.type(getByLabelText(/tags/i), 'def');
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
-  it('displays an error message when not enough tags have been selected on save', () => {
+  it('displays an error message when not enough tags have been selected on save', async () => {
     const handleSave = jest.fn();
     const { getByText, getByLabelText } = render(
       <ExpertiseAndResourcesModal
@@ -130,21 +130,21 @@ describe('tags selection', () => {
         onSave={handleSave}
       />,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
     const input = getByLabelText(/tags/i);
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
       ember.rgb,
     );
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
       steel.rgb,
     );
     expect(handleSave).not.toHaveBeenCalled();
   });
 
-  it('removes error message when enough tags are selected', () => {
+  it('removes error message when enough tags are selected', async () => {
     const handleSave = jest.fn();
     const { getByLabelText, getByText, queryByText } = render(
       <ExpertiseAndResourcesModal
@@ -154,14 +154,14 @@ describe('tags selection', () => {
         onSave={handleSave}
       />,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
 
     const input = getByLabelText(/tags/i);
-    userEvent.click(input);
-    userEvent.type(input, '4');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '4');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
@@ -169,9 +169,9 @@ describe('tags selection', () => {
     );
     expect(getByText('Please add a minimum of 5 tags')).toBeVisible();
 
-    userEvent.click(input);
-    userEvent.type(input, '5');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '5');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(

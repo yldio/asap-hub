@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { Router, MemoryRouter, StaticRouter } from 'react-router-dom';
+import { Router, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -34,7 +34,7 @@ it('initially does not prompt when trying to leave', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
   const history = createMemoryHistory({ getUserConfirmation });
   render(
-    <Router history={history}>
+    <Router navigator={history} location={history.location}>
       <EditModal {...props} />
     </Router>,
   );
@@ -46,7 +46,7 @@ it('prompts when trying to leave after making edits', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
   const history = createMemoryHistory({ getUserConfirmation });
   render(
-    <Router history={history}>
+    <Router navigator={history} location={history.location}>
       <EditModal {...props} dirty />
     </Router>,
   );
@@ -83,7 +83,7 @@ describe('when saving', () => {
         >
           {() => <input type="text" />}
         </EditModal>,
-        { wrapper: StaticRouter },
+        { wrapper: MemoryRouter },
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
@@ -99,7 +99,7 @@ describe('when saving', () => {
       const getUserConfirmation = jest.fn((_message, cb) => cb(true));
       const history = createMemoryHistory({ getUserConfirmation });
       const { rerender } = render(
-        <Router history={history}>
+        <Router navigator={history} location={history.location}>
           <EditModal {...props} backHref="/back" onSave={handleSave} dirty />
         </Router>,
       );
@@ -177,7 +177,7 @@ describe('when saving', () => {
 
           // not going to be dirty anymore since the values have just been saved
           rerender(
-            <Router history={history}>
+            <Router navigator={history} location={history.location}>
               <EditModal {...props} backHref="/back" onSave={handleSave} />
             </Router>,
           );
@@ -195,7 +195,7 @@ describe('when saving', () => {
             handleSave,
           });
           rerender(
-            <Router history={history}>
+            <Router navigator={history} location={history.location}>
               <EditModal
                 {...props}
                 backHref="/back"
@@ -262,7 +262,7 @@ describe('when saving', () => {
 
         const handleSaveAgain = jest.fn().mockRejectedValue(new Error());
         rerender(
-          <Router history={history}>
+          <Router navigator={history} location={history.location}>
             <EditModal {...props} onSave={handleSaveAgain} dirty />
           </Router>,
         );

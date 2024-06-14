@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 
 export const mockedUser: gp2.UserResponse = {
   id: 'user-id-1',
+  lastModifiedDate: '2020-09-23T20:45:22.000Z',
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',
   fullDisplayName: 'Tony Stark',
@@ -25,6 +26,15 @@ export const mockedUser: gp2.UserResponse = {
     },
   ],
   onboarded: true,
+  outputs: [
+    {
+      id: 'output-id',
+      title: 'an output title',
+      shortDescription: 'a short description',
+      sharingStatus: 'Public',
+      gp2Supported: 'Yes',
+    },
+  ],
   projects: [
     {
       id: 'project-id',
@@ -40,6 +50,7 @@ export const mockedUser: gp2.UserResponse = {
       id: 'working-group-id',
       title: 'a working group title',
       members: [{ userId: 'user-id-1', role: 'Co-lead' }],
+      role: 'Co-lead',
     },
   ],
   workingGroupIds: ['working-group-id'],

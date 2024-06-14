@@ -33,7 +33,9 @@ const config: StorybookConfig = {
   }),
   framework: {
     name: getAbsolutePath('@storybook/react-vite'),
-    options: {},
+    options: {
+      fastRefresh: true,
+    },
   },
   docs: {
     autodocs: 'tag',

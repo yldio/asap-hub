@@ -49,7 +49,7 @@ const preview = {
           },
         },
       },
-      defaultViewport: 'mobile',
+      defaultViewport: 'smallDesktop',
     },
   },
 };

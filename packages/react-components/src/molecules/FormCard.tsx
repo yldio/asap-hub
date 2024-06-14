@@ -8,6 +8,10 @@ interface FormCardProps {
   description?: string;
 }
 
+const cardStyles = css({
+  paddingTop: `${14 / perRem}em`,
+});
+
 const descriptionStyles = css({
   paddingTop: 0,
   paddingBottom: 0,
@@ -22,7 +26,7 @@ const FormCard: React.FC<FormCardProps> = ({
   title,
   description,
 }) => (
-  <Card padding={false}>
+  <Card padding={false} overrideStyles={cardStyles}>
     <div role="presentation" css={[paddingStyles]}>
       <Headline3 noMargin>{title}</Headline3>
     </div>

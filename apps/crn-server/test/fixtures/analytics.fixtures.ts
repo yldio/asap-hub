@@ -1,6 +1,8 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
+  FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
+  FetchUserCollaborationQuery,
   FetchUserProductivityQuery,
 } from '@asap-hub/contentful';
 import {
@@ -8,12 +10,18 @@ import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
+  ListTeamCollaborationResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
+  ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  TeamCollaborationDataObject,
+  TeamCollaborationResponse,
   TeamProductivityDataObject,
   TeamProductivityResponse,
+  UserCollaborationDataObject,
+  UserCollaborationResponse,
   UserProductivityDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
@@ -157,12 +165,14 @@ export const getUserProductivityDataObject =
     isAlumni: false,
     teams: [
       {
+        id: '1',
         isTeamInactive: false,
         isUserInactiveOnTeam: false,
         role: 'Co-PI (Core Leadership)',
         team: 'Team Alessi',
       },
       {
+        id: '2',
         isTeamInactive: false,
         isUserInactiveOnTeam: false,
         role: 'Collaborating PI',
@@ -184,9 +194,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   >['researchOutputsCollection']
 >['items'] => [
   {
-    sys: {
-      publishedAt: '2023-09-08T03:00:00.000Z',
-    },
+    addedDate: '2023-09-08T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -200,9 +208,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-07T03:00:00.000Z',
-    },
+    addedDate: '2023-09-07T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -222,9 +228,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-06T03:00:00.000Z',
-    },
+    addedDate: '2023-09-06T03:00:00.000Z',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -238,9 +242,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-09-05T03:00:00.000Z',
-    },
+    addedDate: '2023-09-05T03:00:00.000Z',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -254,9 +256,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
     },
   },
   {
-    sys: {
-      publishedAt: '2023-07-05T03:00:00.000Z',
-    },
+    addedDate: '2023-07-05T03:00:00.000Z',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -293,27 +293,19 @@ export const getResearchOutputTeamProductivity = (): NonNullable<
   >['researchOutputsCollection']
 >['items'] => [
   {
-    sys: {
-      publishedAt: '2023-09-05T03:00:00.000Z',
-    },
+    addedDate: '2023-09-05T03:00:00.000Z',
     documentType: 'Article',
   },
   {
-    sys: {
-      publishedAt: '2023-09-03T03:00:00.000Z',
-    },
+    addedDate: '2023-09-03T03:00:00.000Z',
     documentType: 'Bioinformatics',
   },
   {
-    sys: {
-      publishedAt: '2023-09-01T03:00:00.000Z',
-    },
+    addedDate: '2023-09-01T03:00:00.000Z',
     documentType: 'Grant Document',
   },
   {
-    sys: {
-      publishedAt: null,
-    },
+    addedDate: null,
     documentType: 'Protocol',
   },
 ];
@@ -341,6 +333,7 @@ export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
               role: 'Co-PI (Core Leadership)',
               inactiveSinceDate: null,
               team: {
+                sys: { id: '1' },
                 displayName: 'Team Alessi',
                 inactiveSince: null,
               },
@@ -349,6 +342,7 @@ export const getUserProductivityQuery = (): FetchUserProductivityQuery => ({
               role: 'Collaborating PI',
               inactiveSinceDate: null,
               team: {
+                sys: { id: '2' },
                 displayName: 'Team De Camilli',
                 inactiveSince: null,
               },
@@ -403,3 +397,195 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
+
+export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
+  usersCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Jane',
+        lastName: 'Doe',
+        nickname: 'Jenny',
+        alumniSinceDate: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: getResearchOutputUserProductivity(),
+          },
+        },
+        teamsCollection: {
+          items: [
+            {
+              role: 'Co-PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team Alessi',
+                inactiveSince: null,
+              },
+            },
+            {
+              role: 'Collaborating PI',
+              inactiveSinceDate: null,
+              team: {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team De Camilli',
+                inactiveSince: null,
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+
+export const getResearchOutputTeamCollaboration = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchTeamCollaborationQuery['teamsCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'] => [
+  {
+    addedDate: '2023-09-05T03:00:00.000Z',
+    documentType: 'Article',
+    labsCollection: {
+      total: 3,
+    },
+    teamsCollection: {
+      items: [
+        {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+          inactiveSince: null,
+        },
+        {
+          sys: {
+            id: 'team-id-1',
+          },
+          displayName: 'Team B',
+          inactiveSince: null,
+        },
+      ],
+    },
+  },
+];
+
+export const getTeamCollaborationQuery = (): FetchTeamCollaborationQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-1',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: [
+              {
+                addedDate: '2023-09-01T03:00:00.000Z',
+                createdDate: '',
+                documentType: '',
+                labsCollection: {
+                  total: 3,
+                },
+                teamsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'team-1',
+                      },
+                      displayName: 'Team A',
+                      inactiveSince: null,
+                    },
+                    {
+                      sys: {
+                        id: 'team-2',
+                      },
+                      displayName: 'Team B',
+                      inactiveSince: null,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
+export const getUserCollaborationDataObject =
+  (): UserCollaborationDataObject => ({
+    id: 'user-1',
+    isAlumni: false,
+    name: 'User User',
+    teams: [],
+  });
+
+export const getTeamCollaborationDataObject =
+  (): TeamCollaborationDataObject => ({
+    id: 'team-id-0',
+    isInactive: false,
+    name: 'Team A',
+    outputsCoProducedWithin: {
+      Article: 1,
+      Bioinformatics: 0,
+      Dataset: 0,
+      'Lab Resource': 0,
+      Protocol: 0,
+    },
+    outputsCoProducedAcross: {
+      byDocumentType: {
+        Article: 1,
+        Bioinformatics: 0,
+        Dataset: 0,
+        'Lab Resource': 0,
+        Protocol: 0,
+      },
+      byTeam: [
+        {
+          id: 'team-id-1',
+          name: 'Team B',
+          isInactive: false,
+          Article: 1,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+      ],
+    },
+  });
+
+export const getUserCollaborationResponse = (): UserCollaborationResponse =>
+  getUserCollaborationDataObject();
+
+export const getTeamCollaborationResponse = (): TeamCollaborationResponse =>
+  getTeamCollaborationDataObject();
+
+export const getListUserCollaborationResponse =
+  (): ListUserCollaborationResponse => ({
+    total: 1,
+    items: [getUserCollaborationResponse()],
+  });
+
+export const getListTeamCollaborationResponse =
+  (): ListTeamCollaborationResponse => ({
+    total: 1,
+    items: [getTeamCollaborationResponse()],
+  });

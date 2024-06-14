@@ -6,7 +6,9 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
   getListAnalyticsTeamLeadershipResponse,
+  getListTeamCollaborationResponse,
   getListTeamProductivityResponse,
+  getListUserCollaborationResponse,
   getListUserProductivityResponse,
 } from '../fixtures/analytics.fixtures';
 import { analyticsControllerMock } from '../mocks/analytics.controller.mock';
@@ -161,6 +163,116 @@ describe('/analytics/ route', () => {
 
       expect(
         analyticsControllerMock.fetchTeamProductivity,
+      ).toHaveBeenCalledWith({
+        take: 15,
+        skip: 5,
+      } satisfies FetchPaginationOptions);
+    });
+  });
+
+  describe('GET /analytics/collaboration/user', () => {
+    test('Should return 200 when no results are found', async () => {
+      analyticsControllerMock.fetchUserCollaboration.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should return 500 when an error occurs', async () => {
+      analyticsControllerMock.fetchUserCollaboration.mockRejectedValueOnce(
+        new Error('Test error'),
+      );
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Should return the response from the controller', async () => {
+      analyticsControllerMock.fetchUserCollaboration.mockResolvedValueOnce(
+        getListUserCollaborationResponse(),
+      );
+      const response = await supertest(app).get(
+        '/analytics/collaboration/user',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getListUserCollaborationResponse());
+    });
+
+    test('Should call the controller with the correct parameters', async () => {
+      await supertest(app).get('/analytics/collaboration/user').query({
+        take: 15,
+        skip: 5,
+      });
+
+      expect(
+        analyticsControllerMock.fetchUserCollaboration,
+      ).toHaveBeenCalledWith({
+        take: 15,
+        skip: 5,
+      } satisfies FetchPaginationOptions);
+    });
+  });
+
+  describe('GET /analytics/collaboration/team', () => {
+    test('Should return 200 when no results are found', async () => {
+      analyticsControllerMock.fetchTeamCollaboration.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+      const response = await supertest(app).get(
+        '/analytics/collaboration/team',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should return 500 when an error occurs', async () => {
+      analyticsControllerMock.fetchTeamCollaboration.mockRejectedValueOnce(
+        new Error('Test error'),
+      );
+      const response = await supertest(app).get(
+        '/analytics/collaboration/team',
+      );
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Should return the response from the controller', async () => {
+      analyticsControllerMock.fetchTeamCollaboration.mockResolvedValueOnce(
+        getListTeamCollaborationResponse(),
+      );
+      const response = await supertest(app).get(
+        '/analytics/collaboration/team',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getListTeamCollaborationResponse());
+    });
+
+    test('Should call the controller with the correct parameters', async () => {
+      await supertest(app).get('/analytics/collaboration/team').query({
+        take: 15,
+        skip: 5,
+      });
+
+      expect(
+        analyticsControllerMock.fetchTeamCollaboration,
       ).toHaveBeenCalledWith({
         take: 15,
         skip: 5,

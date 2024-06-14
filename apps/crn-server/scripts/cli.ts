@@ -56,7 +56,11 @@ yargs(hideBin(process.argv))
         .positional('metric', {
           describe: 'choose a metric to export data',
           type: 'string',
-          choices: ['team-leadership'],
+          choices: [
+            'team-leadership',
+            'team-productivity',
+            'user-productivity',
+          ],
           demandOption: true,
         })
         .option('filename', {

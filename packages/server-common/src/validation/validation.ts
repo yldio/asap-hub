@@ -1,4 +1,9 @@
-import { FetchOptions, FetchPaginationOptions, gp2 } from '@asap-hub/model';
+import {
+  FetchAnalyticsOptions,
+  FetchOptions,
+  FetchPaginationOptions,
+  gp2,
+} from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
 import addFormats from 'ajv-formats';
@@ -172,6 +177,25 @@ export const fetchPaginationOptionsValidationSchema: JSONSchemaType<FetchPaginat
 
 export const validateFetchPaginationOptions = validateInput(
   fetchPaginationOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
+export const fetchAnalyticsOptionsValidationSchema: JSONSchemaType<FetchAnalyticsOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      filter: { type: 'string', nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateFetchAnalyticsOptions = validateInput(
+  fetchAnalyticsOptionsValidationSchema,
   {
     skipNull: true,
     coerce: true,

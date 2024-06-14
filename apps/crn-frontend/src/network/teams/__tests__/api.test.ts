@@ -1,22 +1,29 @@
-import nock from 'nock';
 import {
-  createTeamResponse,
-  createListTeamResponse,
   createListLabsResponse,
+  createListTeamResponse,
+  createTeamResponse,
+  createManuscriptResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputPostRequest, TeamResponse } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  ManuscriptPostRequest,
+  ResearchOutputPostRequest,
+  TeamResponse,
+} from '@asap-hub/model';
+import nock from 'nock';
 
 import { API_BASE_URL } from '../../../config';
-import {
-  getTeam,
-  patchTeam,
-  getTeams,
-  createResearchOutput,
-  updateTeamResearchOutput,
-  getLabs,
-} from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import {
+  createManuscript,
+  createResearchOutput,
+  getLabs,
+  getManuscript,
+  getTeam,
+  getTeams,
+  patchTeam,
+  updateTeamResearchOutput,
+} from '../api';
 
 jest.mock('../../../config');
 
@@ -241,5 +248,68 @@ describe('getLabs', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch labs. Expected status 2xx. Received status 500."`,
     );
+  });
+});
+
+describe('Manuscript', () => {
+  describe('POST', () => {
+    const payload: ManuscriptPostRequest = {
+      title: 'The Manuscript',
+      teamId: '42',
+      versions: [
+        {
+          lifecycle: 'Publication',
+          type: 'Original Research',
+        },
+      ],
+    };
+    it('makes an authorized POST request to create a manuscript', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .post('/manuscripts', payload)
+        .reply(201, { id: 123 });
+
+      await createManuscript(payload, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('errors for an error status', async () => {
+      nock(API_BASE_URL).post('/manuscripts').reply(500, {});
+
+      await expect(
+        createManuscript(payload, 'Bearer x'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to create manuscript. Expected status 201. Received status 500."`,
+      );
+    });
+  });
+
+  describe('GET', () => {
+    it('makes an authorized GET request for the manuscript id', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .get('/manuscripts/42')
+        .reply(200, {});
+      await getManuscript('42', 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully fetched manuscript', async () => {
+      const manuscript = createManuscriptResponse();
+      nock(API_BASE_URL).get('/manuscripts/42').reply(200, manuscript);
+      expect(await getManuscript('42', '')).toEqual(manuscript);
+    });
+
+    it('returns undefined for a 404', async () => {
+      nock(API_BASE_URL).get('/manuscripts/42').reply(404);
+      expect(await getManuscript('42', '')).toBe(undefined);
+    });
+
+    it('errors for another status', async () => {
+      nock(API_BASE_URL).get('/manuscripts/42').reply(500);
+      await expect(
+        getManuscript('42', ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to fetch manuscript with id 42. Expected status 2xx or 404. Received status 500."`,
+      );
+    });
   });
 });

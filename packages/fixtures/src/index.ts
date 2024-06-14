@@ -1,4 +1,5 @@
 export * from './auth';
+export * from './analytics';
 export * from './calendars';
 export * from './dashboard';
 export * from './discover';
@@ -7,6 +8,7 @@ export * as gp2 from './gp2';
 export * from './interest-groups';
 export * from './guides';
 export * from './labs';
+export * from './manuscripts';
 export * from './news';
 export * from './pages';
 export * from './reminder';

@@ -30,6 +30,7 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
     },
   ],
   tags: [],
+  publishDate: '2023-05-17T13:39:03.250Z',
 };
 
 export const createWorkingGroupResponse = (
@@ -53,3 +54,13 @@ export const createWorkingGroupNetworkResponse =
       { role: 'complexDisease', workingGroups: [createWorkingGroupResponse()] },
     ],
   });
+
+export const createListWorkingGroupResponse = (
+  items = 10,
+  total = 10,
+): gp2.ListWorkingGroupResponse => ({
+  total,
+  items: Array.from({ length: items }, (_, idx) => ({
+    ...createWorkingGroupResponse({ title: `Working Group ${idx}` }),
+  })),
+});

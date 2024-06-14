@@ -30,6 +30,7 @@ describe('OutputDropdown', () => {
             title: 'Test Group',
             id: '1',
             members: [],
+            role: 'Co-lead',
           },
         ],
         projects: [
@@ -120,6 +121,7 @@ describe('OutputDropdown', () => {
             title: 'Test Group',
             id: '1',
             members: [],
+            role: 'Co-lead',
           },
         ],
       });
@@ -143,11 +145,13 @@ describe('OutputDropdown', () => {
             title: 'Working Group 1',
             id: '1',
             members: [],
+            role: 'Co-lead',
           },
           {
             title: 'Working Group 2',
             id: '2',
             members: [],
+            role: 'Co-lead',
           },
         ],
         projects: [

@@ -1,9 +1,20 @@
+import {
+  LeadershipAndMembershipSortingDirection,
+  SortLeadershipAndMembership,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls } from '..';
-import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
+import { noop, PageControls } from '..';
+import {
+  Dropdown,
+  Headline3,
+  MultiSelect,
+  Paragraph,
+  Subtitle,
+} from '../atoms';
+import { AnalyticsControls } from '../molecules';
 import { LeadershipMembershipTable } from '../organisms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
 
 type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
@@ -28,29 +39,47 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 type LeadershipAndMembershipAnalyticsProps = ComponentProps<
   typeof PageControls
 > & {
+  tags: string[];
+  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  setTags: (tags: string[]) => void;
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   data: MetricData[];
+  sort: SortLeadershipAndMembership;
+  setSort: React.Dispatch<React.SetStateAction<SortLeadershipAndMembership>>;
+  sortingDirection: LeadershipAndMembershipSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<LeadershipAndMembershipSortingDirection>
+  >;
+  exportResults: () => Promise<void>;
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
 const pageControlsStyles = css({
   justifySelf: 'center',
-  paddingTop: `${36 / perRem}em`,
-  paddingBottom: `${36 / perRem}em`,
+  paddingTop: rem(36),
+  paddingBottom: rem(36),
 });
 
 const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
+  tags,
+  setTags,
+  loadTags = noop,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   metric,
   setMetric,
   data,
+  exportResults,
   ...pageControlProps
 }) => (
   <article>
@@ -70,7 +99,21 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
         membership role within a Working Group.
       </Paragraph>
     </div>
-    <LeadershipMembershipTable data={data} />
+    <AnalyticsControls
+      metricOption={'team'}
+      tags={tags}
+      loadTags={loadTags}
+      setTags={setTags}
+      exportResults={exportResults}
+    />
+    <LeadershipMembershipTable
+      metric={metric}
+      data={data}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+    />
     <section css={pageControlsStyles}>
       <PageControls {...pageControlProps} />
     </section>

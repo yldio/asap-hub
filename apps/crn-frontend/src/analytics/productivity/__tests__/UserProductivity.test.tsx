@@ -1,16 +1,32 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
-  ListUserProductivityResponse,
-  UserProductivityResponse,
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { userProductivityPerformance } from '@asap-hub/fixtures';
+import {
+  ListUserProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getUserProductivity } from '../api';
+import { getUserProductivity, getUserProductivityPerformance } from '../api';
 import { analyticsUserProductivityState } from '../state';
 import UserProductivity from '../UserProductivity';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 
 jest.mock('../api');
 
@@ -22,18 +38,32 @@ const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
 
-const userTeam: UserProductivityResponse['teams'][number] = {
+const mockGetUserProductivityPerformance =
+  getUserProductivityPerformance as jest.MockedFunction<
+    typeof getUserProductivityPerformance
+  >;
+
+const mockAlgoliaSearchClientFactory =
+  algoliaSearchClientFactory as jest.MockedFunction<
+    typeof algoliaSearchClientFactory
+  >;
+
+const mockSetSort = jest.fn();
+
+const userTeam: UserProductivityAlgoliaResponse['teams'][number] = {
+  id: '1',
   team: 'Team A',
   isTeamInactive: false,
   isUserInactiveOnTeam: false,
   role: 'Collaborating PI',
 };
 
-const data: ListUserProductivityResponse = {
+const userProductivity: ListUserProductivityAlgoliaResponse = {
   total: 2,
   items: [
     {
       id: '1',
+      objectID: '1-user-productivity-30d',
       name: 'Ted Mosby',
       isAlumni: false,
       teams: [userTeam],
@@ -43,6 +73,7 @@ const data: ListUserProductivityResponse = {
     },
     {
       id: '2',
+      objectID: '2-user-productivity-30d',
       name: 'Robin Scherbatsky',
       isAlumni: false,
       teams: [{ ...userTeam, role: 'Key Personnel' }],
@@ -61,15 +92,24 @@ const renderPage = async () => {
           analyticsUserProductivityState({
             currentPage: 0,
             pageSize: 10,
+            timeRange: '30d',
+            sort: 'user_asc',
+            tags: [],
           }),
         );
       }}
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <UserProductivity />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <UserProductivity
+                setSort={mockSetSort}
+                sort={'user_asc'}
+                tags={[]}
+              />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
@@ -83,9 +123,12 @@ const renderPage = async () => {
 };
 
 it('renders the user productivity data', async () => {
-  mockGetUserProductivity.mockResolvedValueOnce(data);
+  mockGetUserProductivity.mockResolvedValueOnce(userProductivity);
+  mockGetUserProductivityPerformance.mockResolvedValueOnce(
+    userProductivityPerformance,
+  );
 
-  const { container, getAllByText } = await renderPage();
+  const { container, getAllByText, getAllByTitle } = await renderPage();
   expect(container).toHaveTextContent('Ted Mosby');
   expect(container).toHaveTextContent('Collaborating PI');
   expect(container).toHaveTextContent('Robin Scherbatsky');
@@ -95,4 +138,27 @@ it('renders the user productivity data', async () => {
   expect(getAllByText('4')).toHaveLength(1);
   expect(getAllByText('0.33')).toHaveLength(1);
   expect(getAllByText('0.25')).toHaveLength(1);
+  expect(getAllByTitle('Below Average').length).toEqual(3);
+  expect(getAllByTitle('Average').length).toEqual(9);
+  expect(getAllByTitle('Above Average').length).toEqual(3);
+});
+
+it('calls algolia client with the right index name', async () => {
+  mockGetUserProductivity.mockResolvedValue(userProductivity);
+  mockGetUserProductivityPerformance.mockResolvedValue(
+    userProductivityPerformance,
+  );
+
+  const { getByTitle } = await renderPage();
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.not.stringContaining('_user_desc'),
+      }),
+    );
+  });
+
+  userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+  expect(mockSetSort).toHaveBeenCalledWith('user_desc');
 });

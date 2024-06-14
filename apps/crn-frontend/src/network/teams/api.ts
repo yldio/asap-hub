@@ -6,6 +6,8 @@ import {
 import {
   ListLabsResponse,
   ListTeamResponse,
+  ManuscriptPostRequest,
+  ManuscriptResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
@@ -150,6 +152,51 @@ export const getLabs = async (
   if (!resp.ok) {
     throw new Error(
       `Failed to fetch labs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const createManuscript = async (
+  manuscript: ManuscriptPostRequest,
+  authorization: string,
+): Promise<ManuscriptResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(manuscript),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create manuscript. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
+export const getManuscript = async (
+  id: string,
+  authorization: string,
+): Promise<ManuscriptResponse | undefined> => {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/${id}`, {
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+  });
+  if (!resp.ok) {
+    if (resp.status === 404) {
+      return undefined;
+    }
+    throw new Error(
+      `Failed to fetch manuscript with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

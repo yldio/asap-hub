@@ -111,10 +111,11 @@ export const MultiValueRemove = (
   </reactAsyncComponents.MultiValueRemove>
 );
 
-const containerStyles = css({
-  flexBasis: '100%',
-  marginTop: rem(15),
-});
+const containerStyles = (noMargin: boolean) =>
+  css({
+    flexBasis: '100%',
+    marginTop: noMargin ? 0 : rem(15),
+  });
 
 type RefType<T extends MultiSelectOptionsType> =
   | (Select<T, true> & { getWrappedInstance: undefined })
@@ -144,6 +145,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
   readonly maxMenuHeight?: number;
   readonly leftIndicator?: ReactNode;
+  readonly noMargin?: boolean;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -175,6 +177,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   required = false,
   getValidationMessage,
   leftIndicator,
+  noMargin = false,
 }: MultiSelectProps<T>): ReactElement => {
   const theme = useTheme();
   // This is to handle a bug with Select where the right click would make it impossible to write
@@ -278,7 +281,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     : AsyncSelect;
 
   return (
-    <div css={containerStyles} onContextMenu={handleOnContextMenu}>
+    <div css={containerStyles(noMargin)} onContextMenu={handleOnContextMenu}>
       {suggestions ? (
         <SelectComponent<T, true>
           {...commonProps}

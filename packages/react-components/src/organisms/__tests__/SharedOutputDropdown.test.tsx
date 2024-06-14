@@ -48,6 +48,7 @@ describe('AssociationItem', () => {
       title: 'A Working Group',
       id: '1',
       members: [],
+      role: 'Co-lead',
     };
     const { getByText } = render(<AssociationItem association={group} />);
 

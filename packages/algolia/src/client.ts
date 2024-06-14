@@ -4,6 +4,7 @@ import {
   SearchResponse,
 } from '@algolia/client-search';
 import {
+  AnalyticsTeamLeadershipResponse,
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
@@ -11,15 +12,25 @@ import {
   NewsResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
+  TeamProductivityPerformance,
+  TeamProductivityResponse,
+  TimeRangeOption,
   TutorialsResponse,
   UserListItemResponse,
+  UserProductivityPerformance,
+  UserProductivityResponse,
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
-  AnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
-import { TEAM_LEADERSHIP } from './analytics';
+import {
+  TEAM_LEADERSHIP,
+  TEAM_PRODUCTIVITY,
+  TEAM_PRODUCTIVITY_PERFORMANCE,
+  USER_PRODUCTIVITY,
+  USER_PRODUCTIVITY_PERFORMANCE,
+} from './analytics';
 import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
@@ -56,6 +67,11 @@ export type EntityData =
   | UserResponse
   | WorkingGroupResponse;
 
+export type AnalyticsData =
+  | AnalyticsTeamLeadershipResponse
+  | UserProductivityResponse
+  | TeamProductivityResponse;
+
 export type EntityResponses = {
   [CRN]: {
     [RESEARCH_OUTPUT_ENTITY_TYPE]: WithMeta<
@@ -85,14 +101,19 @@ export type EntityResponses = {
   };
   [GP2]: {
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;
+    [EXTERNAL_USER_ENTITY_TYPE]: gp2Model.ExternalUserResponse;
     [NEWS_ENTITY_TYPE]: gp2Model.NewsResponse;
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
-    [EXTERNAL_USER_ENTITY_TYPE]: gp2Model.ExternalUserResponse;
+    [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
   [ANALYTICS]: {
     [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
+    [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
+    [USER_PRODUCTIVITY]: UserProductivityResponse;
+    [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
+    [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;
@@ -103,6 +124,7 @@ export type DistributeToEntityRecords<
   objectID: string;
   __meta: {
     type: ResponsesKey;
+    range?: TimeRangeOption;
   };
 };
 export type ClientSearchResponse<

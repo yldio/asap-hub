@@ -1,3 +1,4 @@
+import { initialSortingDirection } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { AnalyticsLeadershipPageBody } from '..';
@@ -8,8 +9,15 @@ describe('AnalyticsLeadershipPageBody', () => {
     currentPageIndex: 0,
     renderPageHref: () => '',
     setMetric: () => {},
+    exportResults: () => Promise.resolve(),
     data: [],
     metric: 'interest-group',
+    sort: 'team_asc',
+    setSort: jest.fn(),
+    sortingDirection: initialSortingDirection,
+    setSortingDirection: jest.fn(),
+    setTags: jest.fn(),
+    tags: [],
   };
   it('renders interest group tab', () => {
     const { getAllByText } = render(

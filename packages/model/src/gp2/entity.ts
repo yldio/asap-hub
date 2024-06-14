@@ -4,15 +4,17 @@ import {
   OutputResponse,
   ProjectResponse,
   UserResponse,
+  WorkingGroupResponse,
 } from '.';
 import { ListResponse } from '../common';
 
 export const entityType = [
-  'output',
   'event',
-  'user',
   'news',
+  'output',
   'project',
+  'user',
+  'working-group',
 ] as const;
 export type EntityType = (typeof entityType)[number];
 
@@ -21,19 +23,22 @@ export type EntityMetadata = {
 };
 
 export type EntityResponse =
-  | (OutputResponse & {
-      __meta: EntityMetadata;
-    })
   | (EventResponse & {
-      __meta: EntityMetadata;
-    })
-  | (UserResponse & {
       __meta: EntityMetadata;
     })
   | (NewsResponse & {
       __meta: EntityMetadata;
     })
+  | (OutputResponse & {
+      __meta: EntityMetadata;
+    })
   | (ProjectResponse & {
+      __meta: EntityMetadata;
+    })
+  | (UserResponse & {
+      __meta: EntityMetadata;
+    })
+  | (WorkingGroupResponse & {
       __meta: EntityMetadata;
     });
 

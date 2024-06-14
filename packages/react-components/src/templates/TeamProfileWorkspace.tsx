@@ -1,12 +1,15 @@
+import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
+import { css } from '@emotion/react';
 
-import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
-import { ToolCard } from '../organisms';
-import { mailToSupport, createMailTo } from '../mail';
+import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
 import { formatDateAndTime } from '../date';
+import { plusIcon } from '../icons';
+import { createMailTo, mailToSupport } from '../mail';
+import { ToolCard } from '../organisms';
+import ManuscriptCard from '../organisms/ManuscriptCard';
+import { mobileScreen, perRem, rem } from '../pixels';
 
 const containerStyles = css({
   display: 'grid',
@@ -19,6 +22,24 @@ const newToolStyles = css({
     display: 'block',
   },
 });
+
+const complianceContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const complianceHeaderStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+});
+
+const manuscriptButtonStyles = css({
+  flexGrow: 0,
+  alignSelf: 'center',
+  gap: rem(8),
+});
+
 const toolContainerStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -29,7 +50,10 @@ const toolContainerStyles = css({
 });
 
 type TeamProfileWorkspaceProps = Readonly<
-  Pick<TeamResponse, 'id' | 'pointOfContact' | 'lastModifiedDate'>
+  Pick<
+    TeamResponse,
+    'id' | 'pointOfContact' | 'lastModifiedDate' | 'manuscripts'
+  >
 > & {
   readonly tools: ReadonlyArray<TeamTool>;
   readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
@@ -39,7 +63,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
   pointOfContact,
   lastModifiedDate,
-
+  manuscripts,
   tools,
   onDeleteTool,
 }) => {
@@ -48,8 +72,39 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
     .team({ teamId: id })
     .workspace({})
     .tools({});
+
+  const manuscriptRoute = network({})
+    .teams({})
+    .team({ teamId: id })
+    .workspace({})
+    .createManuscript({}).$;
+
   return (
     <div css={containerStyles}>
+      {isEnabled('DISPLAY_MANUSCRIPTS') && (
+        <Card>
+          <div css={complianceContainerStyles}>
+            <div css={complianceHeaderStyles}>
+              <Display styleAsHeading={3}>Compliance</Display>
+              <div css={css(manuscriptButtonStyles)}>
+                <Link href={manuscriptRoute} primary noMargin small buttonStyle>
+                  {plusIcon} Share Manuscript
+                </Link>
+              </div>
+            </div>
+            <Paragraph accent="lead">
+              This directory contains all manuscripts with their compliance
+              reports.
+            </Paragraph>
+          </div>
+          {manuscripts.map((manuscript) => (
+            <div key={manuscript.id}>
+              <ManuscriptCard {...manuscript} />
+            </div>
+          ))}
+        </Card>
+      )}
+
       <Card>
         <Display styleAsHeading={3}>Collaboration Tools (Team Only)</Display>
         <Paragraph accent="lead">

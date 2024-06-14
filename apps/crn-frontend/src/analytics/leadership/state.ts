@@ -1,7 +1,7 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
+  SortLeadershipAndMembership,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -9,12 +9,19 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
+import { AnalyticsSearchOptions, getAnalyticsLeadership } from './api';
+import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getAnalyticsLeadership } from './api';
+
+type Options = AnalyticsSearchOptions & { sort: SortLeadershipAndMembership };
+type StateOptionKeyData = Pick<
+  Options,
+  'currentPage' | 'pageSize' | 'sort' | 'tags'
+>;
 
 const analyticsLeadershipIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  StateOptionKeyData
 >({
   key: 'analyticsLeadershipIndex',
   default: undefined,
@@ -30,7 +37,7 @@ export const analyticsLeadershipListState = atomFamily<
 
 export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  StateOptionKeyData
 >({
   key: 'teams',
   get:
@@ -65,8 +72,13 @@ export const analyticsLeadershipState = selectorFamily<
     },
 });
 
-export const useAnalyticsLeadership = (options: GetListOptions) => {
-  const algoliaClient = useAnalyticsAlgolia();
+export const useAnalyticsLeadership = (options: Options) => {
+  const indexName =
+    options.sort === 'team_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_${options.sort}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
 
   const [leadership, setLeadership] = useRecoilState(
     analyticsLeadershipState(options),
@@ -79,5 +91,8 @@ export const useAnalyticsLeadership = (options: GetListOptions) => {
   if (leadership instanceof Error) {
     throw leadership;
   }
-  return leadership;
+  return {
+    ...leadership,
+    client: algoliaClient.client,
+  };
 };

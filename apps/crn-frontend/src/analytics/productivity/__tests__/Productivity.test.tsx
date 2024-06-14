@@ -1,16 +1,54 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  teamProductivityPerformance,
+  userProductivityPerformance,
+} from '@asap-hub/fixtures';
+import {
+  SortUserProductivity,
+  TeamProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
+} from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { when } from 'jest-when';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getTeamProductivity, getUserProductivity } from '../api';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
+import {
+  getTeamProductivity,
+  getTeamProductivityPerformance,
+  getUserProductivity,
+  getUserProductivityPerformance,
+  ProductivityListOptions,
+} from '../api';
 import Productivity from '../Productivity';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
+
 jest.mock('../api');
+
+jest.mock('../../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
+
 mockConsoleError();
 
 afterEach(() => {
@@ -21,13 +59,85 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
 
+const mockGetTeamProductivityPerformance =
+  getTeamProductivityPerformance as jest.MockedFunction<
+    typeof getTeamProductivityPerformance
+  >;
+
 const mockGetUserProductivity = getUserProductivity as jest.MockedFunction<
   typeof getUserProductivity
 >;
 
-const renderPage = async (
-  path = analytics({}).productivity({}).metric({ metric: 'user' }).$,
-) => {
+const mockGetUserProductivityPerformance =
+  getUserProductivityPerformance as jest.MockedFunction<
+    typeof getUserProductivityPerformance
+  >;
+
+mockGetTeamProductivityPerformance.mockResolvedValue(
+  teamProductivityPerformance,
+);
+mockGetUserProductivityPerformance.mockResolvedValue(
+  userProductivityPerformance,
+);
+
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['searchForTagValues']
+>;
+
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
+>;
+
+beforeEach(() => {
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+});
+
+const defaultOptions: ProductivityListOptions = {
+  pageSize: 10,
+  currentPage: 0,
+  timeRange: '30d',
+  sort: 'team_asc',
+  tags: [],
+};
+
+const userProductivityResponse: UserProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-user-productivity-30d',
+  name: 'Test User',
+  isAlumni: false,
+  teams: [
+    {
+      id: '1',
+      team: 'Team A',
+      isTeamInactive: false,
+      isUserInactiveOnTeam: false,
+      role: 'Collaborating PI',
+    },
+  ],
+  asapOutput: 200,
+  asapPublicOutput: 100,
+  ratio: '0.50',
+};
+
+const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-team-productivity-30d',
+  name: 'Team Alessi',
+  isInactive: false,
+  Article: 50,
+  Bioinformatics: 0,
+  Dataset: 0,
+  'Lab Resource': 0,
+  Protocol: 0,
+};
+
+const renderPage = async (path: string) => {
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -51,24 +161,173 @@ const renderPage = async (
   return result;
 };
 
-beforeEach(() => {
-  mockGetUserProductivity.mockResolvedValueOnce({ items: [], total: 0 });
-  mockGetTeamProductivity.mockResolvedValueOnce({ items: [], total: 0 });
+describe('user productivity', () => {
+  const userOptions = {
+    ...defaultOptions,
+    sort: 'user_asc' as SortUserProductivity,
+  };
+  it('renders with user data', async () => {
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+    expect(screen.getAllByText('User Productivity').length).toBe(2);
+  });
+
+  it('renders data for different time ranges', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), userOptions)
+      .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), { ...userOptions, timeRange: '90d' })
+      .mockResolvedValue({
+        items: [
+          {
+            ...userProductivityResponse,
+            objectID: '1-user-productivity-90d',
+            asapOutput: 600,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('600')).not.toBeInTheDocument();
+
+    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    userEvent.click(rangeButton);
+    userEvent.click(screen.getByText(/Last 90 days/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('600')).toBeVisible();
+    expect(screen.queryByText('200')).not.toBeInTheDocument();
+
+    userEvent.click(rangeButton);
+    userEvent.click(screen.getByText(/Last 30 days/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('600')).not.toBeInTheDocument();
+  });
 });
 
-it('renders with user data', async () => {
-  await renderPage();
-  expect(screen.getAllByText('User Productivity').length).toBe(2);
+describe('team productivity', () => {
+  it('renders with team data', async () => {
+    const label = 'Team Productivity';
+
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+    const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+    userEvent.click(input);
+    userEvent.click(screen.getByText(label));
+
+    expect(screen.getAllByText(label).length).toBe(2);
+  });
+
+  it('renders data for different time ranges', async () => {
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), defaultOptions)
+      .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), { ...defaultOptions, timeRange: '90d' })
+      .mockResolvedValue({
+        items: [
+          {
+            ...teamProductivityResponse,
+            objectID: '1-team-productivity-90d',
+            Article: 60,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
+
+    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    userEvent.click(rangeButton);
+    userEvent.click(screen.getByText(/Last 90 days/));
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('60')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    userEvent.click(rangeButton);
+    userEvent.click(screen.getByText(/Last 30 days/));
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
+  });
 });
 
-it('renders with team data', async () => {
-  const label = 'Team Productivity';
+describe('search', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+  it('allows typing in search queries', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    const searchBox = getSearchBox();
 
-  await renderPage();
-  const input = screen.getByRole('textbox', { hidden: false });
+    userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['team-productivity'],
+        'test123',
+        {},
+      ),
+    );
+  });
+});
 
-  userEvent.click(input);
-  userEvent.click(screen.getByText(label));
+describe('csv export', () => {
+  it('exports analytics for user', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_user_\d+\.csv/),
+      expect.anything(),
+    );
+  });
 
-  expect(screen.getAllByText(label).length).toBe(2);
+  it('exports analytics for teams', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+    const input = screen.getAllByRole('textbox', { hidden: false })[0];
+
+    input && userEvent.click(input);
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/productivity_team_\d+\.csv/),
+      expect.anything(),
+    );
+  });
 });

@@ -1,12 +1,23 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  ListTeamProductivityResponse,
-  ListUserProductivityResponse,
+  teamProductivityPerformance,
+  userProductivityPerformance,
+} from '@asap-hub/fixtures';
+import {
+  TeamProductivityAlgoliaResponse,
+  TimeRangeOption,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { API_BASE_URL } from '../../../config';
-import { getTeamProductivity, getUserProductivity } from '../api';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
+import {
+  getTeamProductivity,
+  getTeamProductivityPerformance,
+  getUserProductivity,
+  getUserProductivityPerformance,
+  ProductivityListOptions,
+} from '../api';
 
 jest.mock('../../../config');
 
@@ -14,115 +25,290 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const options: Pick<GetListOptions, 'currentPage' | 'pageSize'> = {
-  pageSize: 10,
-  currentPage: 0,
+type Search = () => Promise<
+  ClientSearchResponse<
+    'analytics',
+    | 'team-productivity'
+    | 'team-productivity-performance'
+    | 'user-productivity'
+    | 'user-productivity-performance'
+  >
+>;
+
+const search: jest.MockedFunction<Search> = jest.fn();
+
+const algoliaSearchClient = {
+  search,
+} as unknown as AlgoliaSearchClient<'analytics'>;
+
+const defaultOptions: ProductivityListOptions = {
+  pageSize: null,
+  currentPage: null,
+  timeRange: '30d',
+  sort: 'user_asc',
+  tags: [],
 };
 
-const userProductivityResponse: ListUserProductivityResponse = {
-  total: 1,
-  items: [
+const userProductivityResponse: UserProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-user-productivity-30d',
+  name: 'Test User',
+  isAlumni: false,
+  teams: [
     {
       id: '1',
-      name: 'Test User',
-      isAlumni: false,
-      teams: [
-        {
-          team: 'Team A',
-          isTeamInactive: false,
-          isUserInactiveOnTeam: false,
-          role: 'Collaborating PI',
-        },
-      ],
-      asapOutput: 1,
-      asapPublicOutput: 2,
-      ratio: '0.50',
+      team: 'Team A',
+      isTeamInactive: false,
+      isUserInactiveOnTeam: false,
+      role: 'Collaborating PI',
     },
   ],
+  asapOutput: 1,
+  asapPublicOutput: 2,
+  ratio: '0.50',
+};
+const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-team-productivity-30d',
+  name: 'Test Team',
+  isInactive: false,
+  Article: 1,
+  Bioinformatics: 2,
+  Dataset: 3,
+  'Lab Resource': 4,
+  Protocol: 5,
 };
 
 describe('getUserProductivity', () => {
-  it('makes an authorized GET request for analytics user productivity section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getUserProductivity(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'user-productivity'>([
+        {
+          ...userProductivityResponse,
+          objectID: `${userProductivityResponse.id}-user-productivity-30d`,
+          __meta: { type: 'user-productivity', range: '30d' },
+        },
+      ]),
+    );
   });
-
   it('returns successfully fetched user productivity', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0' })
-      .reply(200, userProductivityResponse);
-    expect(await getUserProductivity(options, '')).toEqual(
-      userProductivityResponse,
+    const userProductivity = await getUserProductivity(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+    expect(userProductivity).toEqual(
+      expect.objectContaining({
+        items: [
+          {
+            ...userProductivityResponse,
+            __meta: { type: 'user-productivity', range: '30d' },
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/user')
-      .query({ take: '10', skip: '0' })
-      .reply(500);
-    await expect(
-      getUserProductivity(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics user productivity. Expected status 2xx. Received status 500."`,
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns user productivity for $range', async ({ timeRange }) => {
+    await getUserProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['user-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
+      }),
+    );
+  });
+
+  it('should pass the search query to Algolia', async () => {
+    await getUserProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user-productivity'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
     );
   });
 });
 
-const teamProductivityResponse: ListTeamProductivityResponse = {
-  total: 1,
-  items: [
-    {
-      id: '1',
-      name: 'Test Team',
-      isInactive: false,
-      Article: 1,
-      Bioinformatics: 2,
-      Dataset: 3,
-      'Lab Resource': 4,
-      Protocol: 5,
-    },
-  ],
-};
-
 describe('getTeamProductivity', () => {
-  it('makes an authorized GET request for analytics team productivity section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getTeamProductivity(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'team-productivity'>([
+        {
+          ...teamProductivityResponse,
+          __meta: { type: 'team-productivity', range: '30d' },
+        },
+      ]),
+    );
   });
 
   it('returns successfully fetched team productivity', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0' })
-      .reply(200, teamProductivityResponse);
-    expect(await getTeamProductivity(options, '')).toEqual(
-      teamProductivityResponse,
+    const teamProductivity = await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      sort: 'team_asc',
+    });
+    expect(teamProductivity).toEqual(
+      expect.objectContaining({
+        items: [
+          {
+            ...teamProductivityResponse,
+            __meta: { type: 'team-productivity', range: '30d' },
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/productivity/team')
-      .query({ take: '10', skip: '0' })
-      .reply(500);
-    await expect(
-      getTeamProductivity(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics team productivity. Expected status 2xx. Received status 500."`,
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns team productivity for $range', async ({ timeRange }) => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+      sort: 'team_asc',
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
+      }),
     );
   });
+
+  it('should pass the search query to Algolia', async () => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
+    );
+  });
+});
+
+describe('getTeamProductivityPerformance', () => {
+  beforeEach(() => {
+    search.mockReset();
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
+        {
+          ...teamProductivityPerformance,
+          objectID: '12',
+          __meta: { type: 'team-productivity-performance', range: '30d' },
+        },
+      ]),
+    );
+  });
+
+  it('returns successfully fetched team productivity performance', async () => {
+    const result = await getTeamProductivityPerformance(
+      algoliaSearchClient,
+      '30d',
+    );
+    expect(result).toEqual(
+      expect.objectContaining(teamProductivityPerformance),
+    );
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `(
+    'returns team productivity performance for $range',
+    async ({ timeRange }: { timeRange: TimeRangeOption }) => {
+      await getTeamProductivityPerformance(algoliaSearchClient, timeRange);
+
+      expect(search).toHaveBeenCalledWith(
+        ['team-productivity-performance'],
+        '',
+        expect.objectContaining({
+          filters: `__meta.range:"${timeRange}"`,
+        }),
+      );
+    },
+  );
+});
+
+describe('getUserProductivityPerformance', () => {
+  beforeEach(() => {
+    search.mockReset();
+
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'user-productivity-performance'>([
+        {
+          ...userProductivityPerformance,
+          objectID: '1',
+          __meta: { type: 'user-productivity-performance', range: '30d' },
+        },
+      ]),
+    );
+  });
+
+  it('returns successfully fetched user productivity performance', async () => {
+    const result = await getUserProductivityPerformance(
+      algoliaSearchClient,
+      '30d',
+    );
+    expect(result).toEqual(
+      expect.objectContaining(userProductivityPerformance),
+    );
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `(
+    'returns team productivity performance for $range',
+    async ({ timeRange }: { timeRange: TimeRangeOption }) => {
+      await getUserProductivityPerformance(algoliaSearchClient, timeRange);
+
+      expect(search).toHaveBeenCalledWith(
+        ['user-productivity-performance'],
+        '',
+        expect.objectContaining({
+          filters: `__meta.range:"${timeRange}"`,
+        }),
+      );
+    },
+  );
 });

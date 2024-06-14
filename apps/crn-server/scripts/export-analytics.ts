@@ -1,67 +1,153 @@
+import { AnalyticsData } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
-  ListAnalyticsTeamLeadershipResponse,
+  ListResponse,
+  TeamProductivityResponse,
+  TimeRangeOption,
+  timeRanges,
+  UserProductivityResponse,
+  UserProductivityTeam,
 } from '@asap-hub/model';
 import { promises as fs } from 'fs';
+import { FileHandle } from 'fs/promises';
 
 import AnalyticsController from '../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependencies';
 
 export const PAGE_SIZE = 10;
 
-export type Metric = 'team-leadership';
+export type Metric =
+  | 'team-leadership'
+  | 'team-productivity'
+  | 'user-productivity';
 
 export const exportAnalyticsData = async (
   metric: Metric,
   filename?: string,
 ): Promise<void> => {
+  const file = await fs.open(filename || `${metric}.json`, 'w');
+
+  await file.write('[\n');
+  metric === 'team-leadership'
+    ? await exportData(metric, file)
+    : await exportDataForRanges(metric, file);
+
+  await file.write(']');
+};
+
+const exportDataForRanges = async (
+  metric: Metric,
+  file: FileHandle,
+): Promise<void> => {
+  for (let i = 0; i < timeRanges.length; i += 1) {
+    await exportData(metric, file, timeRanges[i]);
+    if (i != timeRanges.length - 1) {
+      await file.write(',');
+    }
+  }
+};
+
+const exportData = async (
+  metric: Metric,
+  file: FileHandle,
+  range?: TimeRangeOption,
+): Promise<void> => {
   const analyticsController = new AnalyticsController(
     getAnalyticsDataProvider(),
   );
-  const file = await fs.open(filename || `${metric}.json`, 'w');
+
   let recordCount = 0;
-  let total: number;
-  let records: ListAnalyticsTeamLeadershipResponse;
+  let total = 0;
+  let records: ListResponse<AnalyticsData> | null = null;
   let page = 1;
-
-  await file.write('[\n');
-
   do {
-    records = await analyticsController.fetchTeamLeadership({
-      take: PAGE_SIZE,
-      skip: (page - 1) * PAGE_SIZE,
-    });
-
-    total = records.total;
-
-    if (page != 1) {
-      await file.write(',\n');
+    if (metric === 'team-leadership') {
+      records = await analyticsController.fetchTeamLeadership({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+      });
+    } else if (metric === 'team-productivity') {
+      records = await analyticsController.fetchTeamProductivity({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+        filter: range,
+      });
+    } else {
+      records = await analyticsController.fetchUserProductivity({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+        filter: range,
+      });
     }
 
-    await file.write(
-      JSON.stringify(
-        records.items.map((record) => transformRecords(record, metric)),
-        null,
-        2,
-      ).slice(1, -1),
-    );
+    if (records) {
+      total = records.total;
 
-    page++;
-    recordCount += records.items.length;
+      if (page != 1) {
+        await file.write(',\n');
+      }
+
+      await file.write(
+        JSON.stringify(
+          records.items.map((record) =>
+            transformRecords(record, metric, range),
+          ),
+          null,
+          2,
+        ).slice(1, -1),
+      );
+
+      page++;
+      recordCount += records.items.length;
+    }
   } while (total > recordCount);
-
-  await file.write(']');
-
   console.log(`Finished exporting ${recordCount} records`);
 };
 
 const transformRecords = (
-  record: AnalyticsTeamLeadershipResponse,
+  record: AnalyticsData,
   type: Metric,
-) => ({
-  ...record,
-  objectID: record.id,
-  __meta: {
-    type,
-  },
-});
+  range?: TimeRangeOption,
+) => {
+  const payload = {
+    ...record,
+    _tags: getRecordTags(record, type),
+    objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
+    __meta: {
+      type,
+      range,
+    },
+  };
+
+  if ('teams' in record) {
+    return {
+      ...payload,
+      ...getUserTeamData(record.teams),
+    };
+  }
+
+  return payload;
+};
+
+const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
+  let tag = '';
+  switch (type) {
+    case 'team-leadership':
+      tag = (record as AnalyticsTeamLeadershipResponse).displayName;
+      return tag ? [tag] : [];
+    case 'user-productivity':
+      const { name, teams } = record as UserProductivityResponse;
+      const teamNames = teams.map((team) => team.team);
+      return name ? [name].concat(teamNames) : teamNames;
+    case 'team-productivity':
+      tag = (record as TeamProductivityResponse).name;
+      return tag ? [tag] : [];
+    default:
+      return [];
+  }
+};
+
+const getUserTeamData = (teams: UserProductivityTeam[]) =>
+  teams.length > 1
+    ? { team: 'Multiple Teams', role: 'Multiple Roles' }
+    : { team: teams[0]?.team ?? 'No team', role: teams[0]?.role ?? 'No role' };

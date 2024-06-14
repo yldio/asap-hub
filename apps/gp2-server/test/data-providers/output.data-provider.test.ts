@@ -65,7 +65,7 @@ describe('Outputs data provider', () => {
           {
             documentType: 'Dataset',
             entity: {
-              id: '42',
+              id: 'project-id',
               title: 'A Project',
               type: 'Projects',
             },
@@ -76,7 +76,7 @@ describe('Outputs data provider', () => {
           {
             documentType: 'Article',
             entity: {
-              id: '42',
+              id: 'project-id',
               title: 'A Project',
               type: 'Projects',
             },
@@ -604,7 +604,7 @@ describe('Outputs data provider', () => {
               {
                 documentType: 'Dataset',
                 entity: {
-                  id: '42',
+                  id: 'project-id',
                   title: 'A Project',
                   type: 'Projects',
                 },
@@ -615,7 +615,7 @@ describe('Outputs data provider', () => {
               {
                 documentType: 'Article',
                 entity: {
-                  id: '42',
+                  id: 'project-id',
                   title: 'A Project',
                   type: 'Projects',
                 },
@@ -728,6 +728,8 @@ describe('Outputs data provider', () => {
           filter: {
             documentType: ['Article'],
             title: 'some-title',
+            gp2Supported: 'Yes',
+            sharingStatus: 'Public',
           },
         });
 
@@ -736,7 +738,12 @@ describe('Outputs data provider', () => {
           {
             ...expectedDefaultParams,
             where: {
-              AND: [{ title: 'some-title' }, { documentType_in: ['Article'] }],
+              AND: [
+                { title: 'some-title' },
+                { documentType_in: ['Article'] },
+                { gp2Supported: 'Yes' },
+                { sharingStatus: 'Public' },
+              ],
             },
           },
         );

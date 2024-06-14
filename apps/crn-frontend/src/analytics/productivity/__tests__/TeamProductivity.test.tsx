@@ -1,13 +1,29 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { ListTeamProductivityResponse } from '@asap-hub/model';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { teamProductivityPerformance } from '@asap-hub/fixtures';
+import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getTeamProductivity } from '../api';
+import { getTeamProductivity, getTeamProductivityPerformance } from '../api';
 import { analyticsTeamProductivityState } from '../state';
 import TeamProductivity from '../TeamProductivity';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 
 jest.mock('../api');
 
@@ -19,11 +35,24 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
   typeof getTeamProductivity
 >;
 
-const data: ListTeamProductivityResponse = {
+const mockGetTeamProductivityPerformance =
+  getTeamProductivityPerformance as jest.MockedFunction<
+    typeof getTeamProductivityPerformance
+  >;
+
+const mockAlgoliaSearchClientFactory =
+  algoliaSearchClientFactory as jest.MockedFunction<
+    typeof algoliaSearchClientFactory
+  >;
+
+const mockSetSort = jest.fn();
+
+const data: ListTeamProductivityAlgoliaResponse = {
   total: 2,
   items: [
     {
       id: '1',
+      objectID: '1-team-productivity-30d',
       name: 'Team Alessi',
       isInactive: false,
       Article: 1,
@@ -34,6 +63,7 @@ const data: ListTeamProductivityResponse = {
     },
     {
       id: '2',
+      objectID: '1-user-productivity-30d',
       name: 'Team De Camilli',
       isInactive: false,
       Article: 0,
@@ -53,15 +83,24 @@ const renderPage = async () => {
           analyticsTeamProductivityState({
             currentPage: 0,
             pageSize: 10,
+            timeRange: '30d',
+            sort: 'team_asc',
+            tags: [],
           }),
         );
       }}
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <TeamProductivity />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <TeamProductivity
+                sort="team_asc"
+                setSort={mockSetSort}
+                tags={[]}
+              />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
@@ -76,8 +115,11 @@ const renderPage = async () => {
 
 it('renders the team productivity data', async () => {
   mockGetTeamProductivity.mockResolvedValueOnce(data);
+  mockGetTeamProductivityPerformance.mockResolvedValueOnce(
+    teamProductivityPerformance,
+  );
 
-  const { container, getAllByText } = await renderPage();
+  const { container, getAllByText, getAllByTitle } = await renderPage();
   expect(container).toHaveTextContent('Team Alessi');
   expect(container).toHaveTextContent('Team De Camilli');
   expect(getAllByText('0')).toHaveLength(3);
@@ -86,4 +128,27 @@ it('renders the team productivity data', async () => {
   expect(getAllByText('3')).toHaveLength(1);
   expect(getAllByText('4')).toHaveLength(1);
   expect(getAllByText('5')).toHaveLength(1);
+  expect(getAllByTitle('Below Average').length).toEqual(12);
+  expect(getAllByTitle('Average').length).toEqual(7);
+  expect(getAllByTitle('Above Average').length).toEqual(6);
+});
+
+it('calls algolia client with the right index name', async () => {
+  mockGetTeamProductivity.mockResolvedValue(data);
+  mockGetTeamProductivityPerformance.mockResolvedValue(
+    teamProductivityPerformance,
+  );
+
+  const { getByTitle } = await renderPage();
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.not.stringContaining('_team_desc'),
+      }),
+    );
+  });
+
+  userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+  expect(mockSetSort).toHaveBeenCalledWith('team_desc');
 });

@@ -6,8 +6,10 @@ import AnalyticsController from '../../src/controllers/analytics.controller';
 import {
   getListAnalyticsTeamLeadershipDataObject,
   getListAnalyticsTeamLeadershipResponse,
+  getListTeamCollaborationResponse,
   getListTeamProductivityDataObject,
   getListTeamProductivityResponse,
+  getListUserCollaborationResponse,
   getListUserProductivityDataObject,
   getListUserProductivityResponse,
 } from '../fixtures/analytics.fixtures';
@@ -122,6 +124,76 @@ describe('Analytics controller', () => {
 
       expect(
         analyticsDataProviderMock.fetchTeamProductivity,
+      ).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('fetchUserCollaboration method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchUserCollaboration.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchUserCollaboration({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the collaboration data', async () => {
+      analyticsDataProviderMock.fetchUserCollaboration.mockResolvedValue(
+        getListUserCollaborationResponse(),
+      );
+
+      const result = await analyticsController.fetchUserCollaboration({});
+
+      expect(result).toEqual(getListUserCollaborationResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchUserCollaboration(options);
+
+      expect(
+        analyticsDataProviderMock.fetchUserCollaboration,
+      ).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('fetchTeamCollaboration method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchTeamCollaboration.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchTeamCollaboration({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the team collaboration data', async () => {
+      analyticsDataProviderMock.fetchTeamCollaboration.mockResolvedValue(
+        getListTeamCollaborationResponse(),
+      );
+
+      const result = await analyticsController.fetchTeamCollaboration({});
+
+      expect(result).toEqual(getListTeamCollaborationResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchTeamCollaboration(options);
+
+      expect(
+        analyticsDataProviderMock.fetchTeamCollaboration,
       ).toHaveBeenCalledWith(options);
     });
   });

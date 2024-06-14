@@ -67,6 +67,7 @@ export type InterestGroupCreateDataObject = Omit<
   | 'contactEmails'
   | 'calendars'
   | 'tools'
+  | 'tags'
 > & {
   leaders: {
     user: string;

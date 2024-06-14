@@ -3,6 +3,8 @@ import { Connection, UserSocialLinks } from '../user';
 import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
+import { OutputResponse } from './output';
+import { WorkingGroupResponse } from '../working-group';
 
 export const userRoles = [
   'Administrator',
@@ -43,6 +45,11 @@ export const userRegions = [
   'South America',
 ] as const;
 
+export type UserOutput = Pick<
+  OutputResponse,
+  'id' | 'title' | 'shortDescription' | 'gp2Supported' | 'sharingStatus'
+>;
+
 export type UserRegion = (typeof userRegions)[number];
 
 export type UserPosition = {
@@ -61,6 +68,7 @@ export type UserWorkingGroupMember = Pick<
 >;
 export type UserWorkingGroup = Pick<WorkingGroupDataObject, 'id' | 'title'> & {
   members: UserWorkingGroupMember[];
+  role: UserWorkingGroupMember['role'];
 };
 
 type Telephone = { countryCode?: string; number?: string };
@@ -88,8 +96,8 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
-  activeCampaignId?: string;
   activatedDate?: string;
+  activeCampaignId?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -112,6 +120,7 @@ export type UserDataObject = {
   orcidLastModifiedDate?: string;
   orcidLastSyncDate?: string;
   orcidWorks?: OrcidWork[];
+  outputs: UserOutput[];
   positions: UserPosition[];
   projects: UserProject[];
   questions: string[];
@@ -119,6 +128,7 @@ export type UserDataObject = {
   role: UserRole;
   social?: UserSocial;
   stateOrProvince: string;
+  systemPublishedVersion?: number;
   tags: TagDataObject[];
   telephone?: Telephone;
   workingGroups: UserWorkingGroup[];
@@ -130,6 +140,7 @@ export type UserCreateDataObject = Omit<
   | 'createdDate'
   | 'lastModifiedDate'
   | 'avatarUrl'
+  | 'outputs'
   | 'projects'
   | 'workingGroups'
   | 'contributingCohorts'
@@ -167,6 +178,7 @@ export type UserPatchRequest = Omit<
   | 'orcidWorks'
   | 'activeCampaignCreatedAt'
   | 'activeCampaignId'
+  | 'systemPublishedVersion'
 >;
 
 export type UserAvatarPostRequest = {
@@ -175,16 +187,46 @@ export type UserAvatarPostRequest = {
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
-export interface UserResponse
-  extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
+export interface UserResponse extends Omit<UserDataObject, 'connections'> {
   displayName: string;
   fullDisplayName: string;
   projectIds: string[];
   workingGroupIds: string[];
   tagIds: string[];
 }
+
+export type PublicUserResponse = Pick<
+  UserResponse,
+  | 'avatarUrl'
+  | 'biography'
+  | 'city'
+  | 'country'
+  | 'degrees'
+  | 'displayName'
+  | 'firstName'
+  | 'id'
+  | 'lastModifiedDate'
+  | 'lastName'
+  | 'middleName'
+  | 'outputs'
+  | 'systemPublishedVersion'
+> & {
+  title?: string;
+  institution?: string;
+  publishDate: string;
+  workingGroups: Array<
+    Pick<WorkingGroupResponse, 'id' | 'title'> & {
+      role: UserWorkingGroupMember['role'];
+    }
+  >;
+};
 export type ListUserResponse = ListResponse<UserResponse>;
-export type UserMetadataResponse = Omit<UserResponse, 'fullDisplayName'> & {
+export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
+
+export type UserMetadataResponse = Omit<
+  UserResponse,
+  'fullDisplayName' | 'lastModifiedDate'
+> & {
   algoliaApiKey: string | null;
 };
 export type UserUpdateRequest = UserUpdateDataObject;

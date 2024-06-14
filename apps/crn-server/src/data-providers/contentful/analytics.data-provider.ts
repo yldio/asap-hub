@@ -3,29 +3,42 @@ import {
   FetchAnalyticsTeamLeadershipQueryVariables,
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables,
+  FetchUserCollaborationQuery,
+  FetchUserCollaborationQueryVariables,
   FetchUserProductivityQuery,
   FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_TEAM_PRODUCTIVITY,
+  FETCH_TEAM_COLLABORATION,
+  FETCH_USER_COLLABORATION,
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
   InterestGroups,
   Sys,
   WorkingGroups,
+  FetchTeamCollaborationQuery,
+  FetchTeamCollaborationQueryVariables,
 } from '@asap-hub/contentful';
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
   TeamProductivityDataObject,
-  TeamProductivityDocumentType,
-  teamProductivityDocumentTypes,
   TeamRole,
+  TimeRangeOption,
   UserProductivityDataObject,
   UserProductivityTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import {
+  getUserCollaborationItems,
+  getTeamCollaborationItems,
+  isTeamOutputDocumentType,
+} from '../../utils/analytics/collaboration';
+import { getFilterOutputByRange } from '../../utils/analytics/common';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
@@ -181,6 +194,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
             return {
               id: team.sys.id,
               displayName: team.displayName || '',
+              _tags: team.displayName ? [team.displayName] : [],
               interestGroupLeadershipRoleCount: team.inactiveSince
                 ? 0
                 : getUniqueIdCount(currentInterestGroupIdsFromTeamLeaders),
@@ -240,9 +254,10 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   }
 
   async fetchUserProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListUserProductivityDataObject> {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter: rangeKey } = options;
+
     const { usersCollection } = await this.contentfulClient.request<
       FetchUserProductivityQuery,
       FetchUserProductivityQueryVariables
@@ -250,14 +265,14 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: usersCollection?.total || 0,
-      items: getUserProductivityItems(usersCollection),
+      items: getUserProductivityItems(usersCollection, rangeKey),
     };
   }
 
   async fetchTeamProductivity(
-    options: FetchPaginationOptions,
+    options: FetchAnalyticsOptions,
   ): Promise<ListTeamProductivityDataObject> {
-    const { take = 10, skip = 0 } = options;
+    const { take = 10, skip = 0, filter: rangeKey } = options;
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamProductivityQuery,
       FetchTeamProductivityQueryVariables
@@ -265,7 +280,63 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getTeamProductivityItems(teamsCollection),
+      items: getTeamProductivityItems(teamsCollection, rangeKey),
+    };
+  }
+  async fetchUserCollaboration(options: FetchAnalyticsOptions) {
+    const { take = 10, skip = 0, filter: rangeKey } = options;
+    let collection: FetchUserCollaborationQuery['usersCollection'] = {
+      total: 0,
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { usersCollection } = await this.contentfulClient.request<
+        FetchUserCollaborationQuery,
+        FetchUserCollaborationQueryVariables
+      >(FETCH_USER_COLLABORATION, { limit: 5, skip: skip + 5 * i });
+      if (usersCollection && usersCollection.items) {
+        collection = {
+          total: usersCollection.total,
+          items: [...collection.items, ...usersCollection.items],
+        };
+      }
+    }
+
+    return {
+      total: collection?.total || 0,
+      items: getUserCollaborationItems(collection, rangeKey),
+    };
+  }
+
+  async fetchTeamCollaboration(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListTeamCollaborationDataObject> {
+    const { take = 10, skip = 0, filter: rangeKey } = options;
+
+    let collection: FetchTeamCollaborationQuery['teamsCollection'] = {
+      total: 0,
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { teamsCollection } = await this.contentfulClient.request<
+        FetchTeamCollaborationQuery,
+        FetchTeamCollaborationQueryVariables
+      >(FETCH_TEAM_COLLABORATION, { limit: 5, skip: skip + 5 * i });
+      if (teamsCollection && teamsCollection.items.length) {
+        collection = {
+          total: teamsCollection.total,
+          items: [...collection.items, ...teamsCollection.items],
+        };
+      } else {
+        break;
+      }
+    }
+
+    return {
+      total: collection.total,
+      items: getTeamCollaborationItems(collection, rangeKey),
     };
   }
 }
@@ -383,6 +454,7 @@ const getUniqueIdCount = (arr: (string | undefined)[]): number =>
 
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
+  rangeKey?: TimeRangeOption,
 ): UserProductivityDataObject[] =>
   cleanArray(usersCollection?.items).map((user) => {
     const teams =
@@ -391,6 +463,7 @@ const getUserProductivityItems = (
           if (teamItem?.role && teamItem?.team?.displayName) {
             return {
               team: teamItem.team.displayName,
+              id: teamItem.team.sys.id,
               role: teamItem.role as TeamRole,
               isTeamInactive: !!teamItem.team.inactiveSince,
               isUserInactiveOnTeam: !!teamItem.inactiveSinceDate,
@@ -406,15 +479,16 @@ const getUserProductivityItems = (
             userProductivityItem !== null,
         ) || [];
 
-    const userOutputsCount =
-      user.linkedFrom?.researchOutputsCollection?.items.reduce(
+    const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
+      .filter(getFilterOutputByRange(rangeKey))
+      .reduce(
         (outputsCount, outputItem) => {
           const isAuthor = outputItem?.authorsCollection?.items.some(
             (author) =>
               author?.__typename === 'Users' && author.sys.id === user.sys.id,
           );
 
-          if (isAuthor && isPublishedInLastMonth(outputItem?.sys.publishedAt)) {
+          if (isAuthor) {
             if (outputItem?.sharingStatus === 'Public') {
               return {
                 outputs: outputsCount.outputs + 1,
@@ -435,9 +509,9 @@ const getUserProductivityItems = (
           publicOutputs: 0,
         },
       ) || {
-        outputs: 0,
-        publicOutputs: 0,
-      };
+      outputs: 0,
+      publicOutputs: 0,
+    };
 
     return {
       id: user.sys.id,
@@ -462,6 +536,7 @@ const getUserProductivityItems = (
 
 const getTeamProductivityItems = (
   teamsCollection: FetchTeamProductivityQuery['teamsCollection'],
+  rangeKey?: TimeRangeOption,
 ): TeamProductivityDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     const initialDocumentTypesCount = {
@@ -473,19 +548,12 @@ const getTeamProductivityItems = (
     };
 
     const documentTypesCount =
-      teamItem.linkedFrom?.researchOutputsCollection?.items.reduce(
-        (count, researchOutput) => {
-          const isTeamProductivityDocumentType = (
-            documentType: string,
-          ): documentType is TeamProductivityDocumentType =>
-            teamProductivityDocumentTypes.includes(
-              documentType as TeamProductivityDocumentType,
-            );
-
+      teamItem.linkedFrom?.researchOutputsCollection?.items
+        .filter(getFilterOutputByRange(rangeKey))
+        .reduce((count, researchOutput) => {
           if (
-            isPublishedInLastMonth(researchOutput?.sys.publishedAt) &&
             researchOutput?.documentType &&
-            isTeamProductivityDocumentType(researchOutput.documentType)
+            isTeamOutputDocumentType(researchOutput.documentType)
           ) {
             return {
               ...count,
@@ -494,9 +562,7 @@ const getTeamProductivityItems = (
             };
           }
           return count;
-        },
-        initialDocumentTypesCount,
-      ) || initialDocumentTypesCount;
+        }, initialDocumentTypesCount) || initialDocumentTypesCount;
 
     return {
       id: teamItem.sys.id,
@@ -509,18 +575,6 @@ const getTeamProductivityItems = (
       Protocol: documentTypesCount.Protocol,
     };
   });
-
-const isPublishedInLastMonth = (outputPublishedDate: string) => {
-  const currentDate = new Date();
-  const lastMonthDate = new Date();
-  lastMonthDate.setMonth(currentDate.getMonth() - 1);
-
-  return outputPublishedDate
-    ? new Date(outputPublishedDate) >= lastMonthDate &&
-        new Date(outputPublishedDate) <= currentDate
-    : false;
-};
-
 // remove string from one array that are present in another array and return a new array of strings
 const removeDuplicates = (arr1: string[], arr2: string[]): string[] => [
   ...arr1.filter((elem) => !arr2.includes(elem)),

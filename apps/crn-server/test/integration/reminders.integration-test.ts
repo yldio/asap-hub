@@ -20,11 +20,6 @@ import {
 } from './fixtures';
 import { getCalendarFixture } from './fixtures/calendar';
 
-jest.mock('../../src/config', () => ({
-  ...jest.requireActual('../../src/config'),
-  logLevel: 'silent',
-}));
-
 jest.setTimeout(240000);
 
 const fixtures = FixtureFactory();

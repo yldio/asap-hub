@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "asc(asapPublicOutput)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

@@ -17,6 +17,7 @@ import {
 import { EventBridgeEvent } from 'aws-lambda';
 import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
+import { getContentfulGraphqlManuscriptVersions } from './manuscript.fixtures';
 
 export const getContentfulGraphql = (teamById = false) => ({
   Teams: () =>
@@ -24,6 +25,8 @@ export const getContentfulGraphql = (teamById = false) => ({
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
+  ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
+  ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
 });
 
 export const getContentfulGraphqlTeamById = (): NonNullable<
@@ -50,6 +53,7 @@ export const getContentfulGraphqlTeamById = (): NonNullable<
     },
   },
   linkedFrom: {
+    manuscriptsCollection: getContentfulGraphqlManuscripts(),
     teamMembershipCollection: {
       items: [
         {
@@ -135,6 +139,23 @@ export const getContentfulGraphqlTeamMemberLabs = () => ({
   ],
 });
 
+export const getContentfulGraphqlManuscripts = (): NonNullable<
+  NonNullable<FetchTeamByIdQuery['teams']>['linkedFrom']
+>['manuscriptsCollection'] => ({
+  items: [
+    {
+      sys: { id: '1' },
+      title: 'Manuscript 1',
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
+    },
+    {
+      sys: { id: '2' },
+      title: 'Manuscript 2',
+      versionsCollection: getContentfulGraphqlManuscriptVersions(),
+    },
+  ],
+});
+
 export const getContentfulTeamsGraphqlResponse =
   (): ContentfulFetchTeamsQuery => ({
     teamsCollection: {
@@ -172,6 +193,28 @@ export const getTeamDataObject = (): TeamDataObject => ({
       labs: [
         { id: 'cd7be4902', name: 'Brighton' },
         { id: 'cd7be4903', name: 'Liverpool' },
+      ],
+    },
+  ],
+  manuscripts: [
+    {
+      id: '1',
+      title: 'Manuscript 1',
+      versions: [
+        {
+          lifecycle: 'Preprint, version 1',
+          type: 'Original Research',
+        },
+      ],
+    },
+    {
+      id: '2',
+      title: 'Manuscript 2',
+      versions: [
+        {
+          lifecycle: 'Preprint, version 1',
+          type: 'Original Research',
+        },
       ],
     },
   ],

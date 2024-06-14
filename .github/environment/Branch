@@ -16,5 +16,6 @@ gp2-auth0-domain=dev-gp2-hub.us.auth0.com
 gp2-ci-auth0-client-id=o6NEEPm9WVKt1aqRr25tbFDlAV8WQVnR
 gp2-sentry-dsn-api=
 gp2-sentry-dsn-handlers=
+gp2-sentry-dsn-public-api=
 gp2-ses-region=eu-west-1
 react-app-environment=development

@@ -45,6 +45,8 @@ export const getWorkingGroupDataObject =
       name: 'working group calendar',
     },
     tags: [{ id: '42', name: 'tag-1' }],
+    publishDate: '2023-05-17T13:39:03.250Z',
+    systemPublishedVersion: 14,
   });
 
 export const getWorkingGroupUpdateDataObject =
@@ -92,6 +94,40 @@ export const getListWorkingGroupsResponse =
   (): gp2Model.ListWorkingGroupResponse => ({
     total: 1,
     items: [getWorkingGroupResponse()],
+  });
+
+export const getPublicWorkingGroupResponse =
+  (): gp2Model.PublicWorkingGroupResponse => {
+    const {
+      description,
+      id,
+      members,
+      primaryEmail,
+      publishDate,
+      secondaryEmail,
+      shortDescription,
+      systemPublishedVersion,
+      title,
+    } = getWorkingGroupResponse();
+
+    return {
+      description,
+      id,
+      lastModifiedDate: publishDate,
+      members,
+      primaryEmail,
+      publishDate,
+      secondaryEmail,
+      shortDescription,
+      systemPublishedVersion,
+      title,
+    };
+  };
+
+export const getListPublicWorkingGroupResponse =
+  (): gp2Model.ListPublicWorkingGroupResponse => ({
+    total: 1,
+    items: [getPublicWorkingGroupResponse()],
   });
 
 export const getContentfulGraphqlWorkingGroupMembers = () => ({
@@ -148,6 +184,9 @@ export const getContentfulGraphqlWorkingGroup = (
 > => ({
   sys: {
     id: '11',
+    publishedAt: '2023-05-17T13:39:03.250Z',
+    publishedVersion: 14,
+    firstPublishedAt: '2021-01-01T13:39:03.250Z',
   },
   title: 'a working group title',
   shortDescription: 'Short description',

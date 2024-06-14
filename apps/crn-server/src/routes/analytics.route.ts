@@ -1,9 +1,14 @@
 import {
   ListAnalyticsTeamLeadershipResponse,
+  ListTeamCollaborationResponse,
   ListTeamProductivityResponse,
+  ListUserCollaborationResponse,
   ListUserProductivityResponse,
 } from '@asap-hub/model';
-import { validateFetchPaginationOptions } from '@asap-hub/server-common';
+import {
+  validateFetchAnalyticsOptions,
+  validateFetchPaginationOptions,
+} from '@asap-hub/server-common';
 import { Response, Router } from 'express';
 import AnalyticsController from '../controllers/analytics.controller';
 
@@ -28,8 +33,7 @@ export const analyticsRouteFactory = (
     '/productivity/user',
     async (req, res: Response<ListUserProductivityResponse>) => {
       const parameters = req.query;
-      const query = validateFetchPaginationOptions(parameters);
-
+      const query = validateFetchAnalyticsOptions(parameters);
       const result = await analyticsController.fetchUserProductivity(query);
 
       res.json(result);
@@ -40,9 +44,30 @@ export const analyticsRouteFactory = (
     '/productivity/team',
     async (req, res: Response<ListTeamProductivityResponse>) => {
       const parameters = req.query;
-      const query = validateFetchPaginationOptions(parameters);
+      const query = validateFetchAnalyticsOptions(parameters);
 
       const result = await analyticsController.fetchTeamProductivity(query);
+
+      res.json(result);
+    },
+  );
+
+  analyticsRoutes.get(
+    '/collaboration/user',
+    async (req, res: Response<ListUserCollaborationResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchAnalyticsOptions(parameters);
+      const result = await analyticsController.fetchUserCollaboration(query);
+
+      res.json(result);
+    },
+  );
+  analyticsRoutes.get(
+    '/collaboration/team',
+    async (req, res: Response<ListTeamCollaborationResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchAnalyticsOptions(parameters);
+      const result = await analyticsController.fetchTeamCollaboration(query);
 
       res.json(result);
     },

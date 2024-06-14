@@ -1,10 +1,19 @@
-import { FC } from 'react';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  LeadershipAndMembershipSortingDirection,
+  initialSortingDirection,
+  SortLeadershipAndMembership,
+  AnalyticsTeamLeadershipResponse,
+} from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
-import { useHistory, useParams } from 'react-router-dom';
 import { analytics } from '@asap-hub/routing';
-
+import { format } from 'date-fns';
+import { FC, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { getAnalyticsLeadership } from './api';
+import { algoliaResultsToStream, leadershipToCSV } from './export';
+import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsLeadership } from './state';
-import { usePagination, usePaginationParams } from '../../hooks';
 
 type MetricResponse = {
   id: string;
@@ -49,24 +58,66 @@ const Leadership: FC<Record<string, never>> = () => {
   const { metric } = useParams<{
     metric: 'working-group' | 'interest-group';
   }>();
-  const setMetric = (newMetric: 'working-group' | 'interest-group') =>
+  const setMetric = (newMetric: 'working-group' | 'interest-group') => {
     history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    setSort('team_asc');
+    setSortingDirection(initialSortingDirection);
+  };
+
+  const [sort, setSort] = useState<SortLeadershipAndMembership>('team_asc');
+  const [sortingDirection, setSortingDirection] =
+    useState<LeadershipAndMembershipSortingDirection>(initialSortingDirection);
 
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { items, total } = useAnalyticsLeadership({
+  const { tags, setTags } = useSearch();
+  const { items, total, client } = useAnalyticsLeadership({
+    tags,
+    sort,
     currentPage,
     pageSize,
-    searchQuery: '',
-    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
+  const exportResults = () =>
+    algoliaResultsToStream<AnalyticsTeamLeadershipResponse>(
+      createCsvFileStream(
+        `leadership_${metric}_${format(new Date(), 'MMddyy')}.csv`,
+        {
+          header: true,
+        },
+      ),
+      (paginationParams) =>
+        getAnalyticsLeadership(client, {
+          tags,
+          ...paginationParams,
+        }),
+      leadershipToCSV(metric),
+    );
+
   return (
     <AnalyticsLeadershipPageBody
+      tags={tags}
+      setTags={setTags}
+      loadTags={async (tagQuery) => {
+        const searchedTags = await client.searchForTagValues(
+          ['team-leadership'],
+          tagQuery,
+          {},
+        );
+        return searchedTags.facetHits.map(({ value }) => ({
+          label: value,
+          value,
+        }));
+      }}
       metric={metric}
       setMetric={setMetric}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+      exportResults={exportResults}
       data={getDataForMetric(items, metric)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}

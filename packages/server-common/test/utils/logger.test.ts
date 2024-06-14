@@ -4,6 +4,8 @@ import {
   errorHandlerFactory,
   getHttpLogger,
   pino,
+  redaction,
+  addUserIdProp,
 } from '@asap-hub/server-common';
 import express, { RequestHandler, Router } from 'express';
 import supertest from 'supertest';
@@ -34,7 +36,11 @@ describe('Http Logger', () => {
   router.get('/success', async (req, res) => {
     res.send('foo');
   });
-  const httpLogger = getHttpLogger({ logger });
+  const httpLogger = getHttpLogger({
+    logger,
+    serializers: redaction,
+    customProps: addUserIdProp,
+  });
   const app = express();
   app.use([authHandlerMock, httpLogger, router, errorHandlerFactory()]);
 

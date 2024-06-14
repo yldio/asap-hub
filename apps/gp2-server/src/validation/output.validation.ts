@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
@@ -17,44 +17,47 @@ const outputParametersValidationSchema: JSONSchemaType<OutputParameters> = {
   additionalProperties: false,
 };
 
-const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOptions> =
-  {
-    type: 'object',
-    properties: {
-      take: { type: 'number', nullable: true },
-      skip: { type: 'number', nullable: true },
-      search: { type: 'string', nullable: true },
-      filter: {
-        type: 'object',
-        properties: {
-          workingGroupId: { type: 'string', nullable: true },
-          projectId: { type: 'string', nullable: true },
-          eventId: { type: 'string', nullable: true },
-          authorId: {
-            type: 'string',
-            nullable: true,
-          },
-          externalAuthorId: {
-            type: 'string',
-            nullable: true,
-          },
-          documentType: {
-            type: 'array',
-            items: { type: 'string' },
-            nullable: true,
-          },
-          link: {
-            type: 'string',
-            nullable: true,
-            pattern: urlExpression,
-          },
-          title: { type: 'string', nullable: true },
+const outputsParametersValidationSchema: JSONSchemaType<
+  FetchOptions<
+    Omit<gp2Model.FetchOutputFilter, 'gp2Supported' | 'sharingStatus'>
+  >
+> = {
+  type: 'object',
+  properties: {
+    take: { type: 'number', nullable: true },
+    skip: { type: 'number', nullable: true },
+    search: { type: 'string', nullable: true },
+    filter: {
+      type: 'object',
+      properties: {
+        workingGroupId: { type: 'string', nullable: true },
+        projectId: { type: 'string', nullable: true },
+        eventId: { type: 'string', nullable: true },
+        authorId: {
+          type: 'string',
+          nullable: true,
         },
-        nullable: true,
+        externalAuthorId: {
+          type: 'string',
+          nullable: true,
+        },
+        documentType: {
+          type: 'array',
+          items: { type: 'string' },
+          nullable: true,
+        },
+        link: {
+          type: 'string',
+          nullable: true,
+          pattern: urlExpression,
+        },
+        title: { type: 'string', nullable: true },
       },
+      nullable: true,
     },
-    additionalProperties: false,
-  };
+  },
+  additionalProperties: false,
+};
 
 export const validateOutputParameters = validateInput(
   outputParametersValidationSchema,

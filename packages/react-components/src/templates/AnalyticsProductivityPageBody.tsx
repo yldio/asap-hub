@@ -1,10 +1,13 @@
+import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
+import { analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
-import { perRem } from '../pixels';
+import { rem } from '../pixels';
+
+import AnalyticsControls from '../molecules/AnalyticsControls';
 
 type MetricOption = 'user' | 'team';
-
 const metricOptions: Record<MetricOption, string> = {
   user: 'User Productivity',
   team: 'Team Productivity',
@@ -15,23 +18,35 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
   label: metricOptions[value as MetricOption],
 }));
 
-type LeadershipAndMembershipAnalyticsProps = {
+type ProductivityAnalyticsProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'timeRange' | 'currentPage' | 'tags' | 'loadTags' | 'setTags'
+> & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   children: React.ReactNode;
+  exportResults: () => Promise<void>;
 };
 
 const metricDropdownStyles = css({
-  marginBottom: `${48 / perRem}em`,
+  marginBottom: rem(48),
 });
 
 const tableHeaderStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  paddingBottom: rem(24),
 });
 
-const AnalyticsProductivityPageBody: React.FC<
-  LeadershipAndMembershipAnalyticsProps
-> = ({ metric, setMetric, children }) => (
+const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
+  metric,
+  setMetric,
+  timeRange,
+  tags,
+  setTags,
+  loadTags,
+  currentPage,
+  children,
+  exportResults,
+}) => (
   <article>
     <div css={metricDropdownStyles}>
       <Subtitle>Metric</Subtitle>
@@ -48,6 +63,16 @@ const AnalyticsProductivityPageBody: React.FC<
         Overview of ASAP outputs shared on the CRN Hub by {metric}.
       </Paragraph>
     </div>
+    <AnalyticsControls
+      currentPage={currentPage}
+      timeRange={timeRange}
+      metricOption={metric}
+      tags={tags}
+      loadTags={loadTags}
+      setTags={setTags}
+      href={analytics({}).productivity({}).metric({ metric }).$}
+      exportResults={exportResults}
+    />
     {children}
   </article>
 );

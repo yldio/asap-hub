@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 
 export const getUserResponse = (): gp2.UserResponse => ({
   id: 'userId',
+  lastModifiedDate: '2020-09-25T09:42:51.000Z',
   createdDate: '2020-09-25T09:42:51.000Z',
   onboarded: true,
   email: 'tony@stark.com',
@@ -27,6 +28,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
   biography:
     'Anthony Edward "Tony" Stark was a billionaire industrialist, a founding member of the Avengers, and the former CEO of Stark Industries.',
   degrees: ['PhD'],
+  outputs: [],
   projects: [],
   projectIds: [],
   workingGroups: [],

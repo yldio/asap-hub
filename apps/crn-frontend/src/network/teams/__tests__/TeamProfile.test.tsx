@@ -9,6 +9,7 @@ import {
   createTeamResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import {
@@ -17,7 +18,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
@@ -31,10 +32,20 @@ import {
 import { refreshResearchOutputState } from '../../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput, getTeam } from '../api';
+import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
-jest.mock('../api');
+// jest.mock('../api');
+jest.mock('../api', () => ({
+  ...jest.requireActual('../api'),
+  getTeam: jest.fn(),
+  createResearchOutput: jest.fn(),
+  createManuscript: jest
+    .fn()
+    .mockResolvedValue({ title: 'A manuscript', id: '1' }),
+}));
+
 jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
@@ -85,7 +96,9 @@ const renderPage = async (
                   network({}).teams({}).team.template
                 }
               >
-                <TeamProfile currentTime={currentTime} />
+                <ManuscriptToastProvider>
+                  <TeamProfile currentTime={currentTime} />
+                </ManuscriptToastProvider>
               </Route>
             </Router>
           </WhenReady>
@@ -151,6 +164,60 @@ it('navigates to the workspace tab', async () => {
   userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
   expect(await screen.findByText(/tools/i)).toBeVisible();
 });
+
+it('displays manuscript success toast message and user can dismiss toast', async () => {
+  enable('DISPLAY_MANUSCRIPTS');
+
+  await renderPage({
+    ...createTeamResponse(),
+    tools: [],
+  });
+
+  userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
+
+  expect(await screen.findByText(/tools/i)).toBeVisible();
+
+  userEvent.click(screen.getByText(/Share Manuscript/i));
+
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  await waitFor(() => {
+    expect(submitButton).toBeVisible();
+  });
+
+  userEvent.type(
+    screen.getByRole('textbox', { name: /Title of Manuscript/i }),
+    'manuscript title',
+  );
+  const typeTextbox = screen.getByRole('textbox', {
+    name: /Type of Manuscript/i,
+  });
+  userEvent.type(typeTextbox, 'Original');
+  userEvent.type(typeTextbox, specialChars.enter);
+  typeTextbox.blur();
+
+  const lifecycleTextbox = screen.getByRole('textbox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  userEvent.type(lifecycleTextbox, 'Typeset proof');
+  userEvent.type(lifecycleTextbox, specialChars.enter);
+  lifecycleTextbox.blur();
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(submitButton).not.toBeVisible();
+  });
+
+  expect(
+    screen.getByText('Manuscript submitted successfully.'),
+  ).toBeInTheDocument();
+
+  userEvent.click(screen.getByLabelText('Close'));
+
+  expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
+});
+
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
   await renderPage({
     ...createTeamResponse(),

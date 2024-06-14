@@ -1,0 +1,13 @@
+{
+  "ranking": [
+    "desc(Dataset)",
+    "typo",
+    "geo",
+    "words",
+    "filters",
+    "proximity",
+    "attribute",
+    "exact",
+    "custom"
+  ]
+}

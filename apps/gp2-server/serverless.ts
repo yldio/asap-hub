@@ -48,12 +48,15 @@ const contentfulWebhookAuthenticationToken =
   process.env.CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 
 if (stage === 'dev' || stage === 'production') {
-  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnPublicApi = process.env.SENTRY_DSN_PUBLIC_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
@@ -235,6 +238,21 @@ const serverlessConfig: AWS = {
     ],
   },
   functions: {
+    publicApiHandler: {
+      handler: 'src/handlers/public-api-handler.publicApiHandler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/public/{proxy+}',
+          },
+        },
+      ],
+      environment: {
+        APP_ORIGIN: appUrl,
+        SENTRY_DSN: sentryDsnPublicApi,
+      },
+    },
     apiHandler: {
       handler: 'src/handlers/api-handler.apiHandler',
       events: [
@@ -731,7 +749,28 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-
+    algoliaIndexWorkingGroup: {
+      handler: './src/handlers/working-group/algolia-index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'WorkingGroupsPublished',
+                'WorkingGroupsUnpublished',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     updateEventsMeetingLink: {
       handler:
         './src/handlers/event/update-events-meeting-link-handler.handler',
@@ -973,6 +1012,18 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      HttpApiStage: {
+        Type: 'AWS::ApiGatewayV2::Stage',
+        DependsOn: ['HttpApiRouteGetPublicProxyVar'],
+        Properties: {
+          RouteSettings: {
+            'GET /public/{proxy+}': {
+              ThrottlingBurstLimit: 30,
+              ThrottlingRateLimit: 100,
+            },
+          },
         },
       },
       FrontendBucket: {

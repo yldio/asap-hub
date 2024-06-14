@@ -112,6 +112,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.crn-hostname }}
           sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
+          sentry-dsn-public-api: 'n-a'
           sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
           ses-region: ${{ steps.setup.outputs.crn-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
@@ -137,6 +138,8 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Echo gp2-sentry-dsn-public
+        run: echo ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
       - name: Deploy sls for gp2
         id: deploy
         uses: ./.github/actions/sls-deployment
@@ -161,6 +164,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           hostname: ${{ steps.setup.outputs.gp2-hostname }}
           sentry-dsn-api: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
+          sentry-dsn-public-api: ${{ steps.setup.outputs.gp2-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
           ses-region: ${{ steps.setup.outputs.gp2-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
@@ -204,7 +208,7 @@ jobs:
       - name: Synchronize Schema
         run: |
           yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -p crn
-          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX -p crn-analytics
+          yarn algolia:set-analytics-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

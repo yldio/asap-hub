@@ -3178,6 +3178,7 @@ export type Outputs = Entry & {
   relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
   rrid?: Maybe<Scalars['String']>;
   sharingStatus?: Maybe<Scalars['String']>;
+  shortDescription?: Maybe<Scalars['String']>;
   subtype?: Maybe<Scalars['String']>;
   sys: Sys;
   tagsCollection?: Maybe<OutputsTagsCollection>;
@@ -3306,6 +3307,11 @@ export type OutputsRridArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsSharingStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3511,6 +3517,13 @@ export type OutputsFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   subtype?: InputMaybe<Scalars['String']>;
   subtype_contains?: InputMaybe<Scalars['String']>;
   subtype_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7661,6 +7674,13 @@ export type CfOutputsNestedFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   subtype?: InputMaybe<Scalars['String']>;
   subtype_contains?: InputMaybe<Scalars['String']>;
   subtype_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10345,6 +10365,7 @@ export type OutputsContentDataFragment = Pick<
   | 'type'
   | 'subtype'
   | 'description'
+  | 'shortDescription'
   | 'gp2Supported'
   | 'sharingStatus'
   | 'link'
@@ -10484,6 +10505,7 @@ export type FetchOutputByIdQuery = {
       | 'type'
       | 'subtype'
       | 'description'
+      | 'shortDescription'
       | 'gp2Supported'
       | 'sharingStatus'
       | 'link'
@@ -10640,6 +10662,7 @@ export type FetchOutputsQuery = {
             | 'type'
             | 'subtype'
             | 'description'
+            | 'shortDescription'
             | 'gp2Supported'
             | 'sharingStatus'
             | 'link'
@@ -10807,6 +10830,7 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                 | 'type'
                 | 'subtype'
                 | 'description'
+                | 'shortDescription'
                 | 'gp2Supported'
                 | 'sharingStatus'
                 | 'link'
@@ -10983,6 +11007,7 @@ export type FetchOutputsByUserIdQuery = {
                 | 'type'
                 | 'subtype'
                 | 'description'
+                | 'shortDescription'
                 | 'gp2Supported'
                 | 'sharingStatus'
                 | 'link'
@@ -11159,6 +11184,7 @@ export type FetchOutputsByExternalUserIdQuery = {
                 | 'type'
                 | 'subtype'
                 | 'description'
+                | 'shortDescription'
                 | 'gp2Supported'
                 | 'sharingStatus'
                 | 'link'
@@ -11335,6 +11361,7 @@ export type FetchOutputsByProjectIdQuery = {
                 | 'type'
                 | 'subtype'
                 | 'description'
+                | 'shortDescription'
                 | 'gp2Supported'
                 | 'sharingStatus'
                 | 'link'
@@ -11511,6 +11538,7 @@ export type FetchOutputsByEventIdQuery = {
                 | 'type'
                 | 'subtype'
                 | 'description'
+                | 'shortDescription'
                 | 'gp2Supported'
                 | 'sharingStatus'
                 | 'link'
@@ -12446,6 +12474,16 @@ export type UsersContentDataFragment = Pick<
         >
       >;
     }>;
+    outputsCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          Pick<
+            Outputs,
+            'title' | 'shortDescription' | 'sharingStatus' | 'gp2Supported'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }>;
   }>;
 };
 
@@ -12580,6 +12618,16 @@ export type FetchUserByIdQuery = {
                   }>;
                 }>;
               }
+            >
+          >;
+        }>;
+        outputsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                Outputs,
+                'title' | 'shortDescription' | 'sharingStatus' | 'gp2Supported'
+              > & { sys: Pick<Sys, 'id'> }
             >
           >;
         }>;
@@ -12727,6 +12775,19 @@ export type FetchUsersQuery = {
                         }>;
                       }>;
                     }
+                  >
+                >;
+              }>;
+              outputsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Outputs,
+                      | 'title'
+                      | 'shortDescription'
+                      | 'sharingStatus'
+                      | 'gp2Supported'
+                    > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
               }>;
@@ -14920,6 +14981,7 @@ export const OutputsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
           { kind: 'Field', name: { kind: 'Name', value: 'gp2Supported' } },
           { kind: 'Field', name: { kind: 'Name', value: 'sharingStatus' } },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
@@ -16503,6 +16565,60 @@ export const UsersContentDataFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '8' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shortDescription' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sharingStatus' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'gp2Supported' },
                             },
                           ],
                         },

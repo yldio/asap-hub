@@ -8,7 +8,7 @@
   "attributesToRetrieve": null,
   "unretrievableAttributes": null,
   "optionalWords": null,
-  "attributesForFaceting": ["__meta.type"],
+  "attributesForFaceting": ["searchable(_tags)", "__meta.type", "__meta.range"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,
@@ -24,7 +24,7 @@
     "exact",
     "custom"
   ],
-  "customRanking": ["asc(displayName)"],
+  "customRanking": ["asc(displayName)", "asc(name)"],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",
   "queryType": "prefixLast",

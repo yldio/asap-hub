@@ -2,7 +2,7 @@ import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
-import { isBoom } from '@hapi/boom';
+import { notFound, isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import EventController from '../../controllers/event.controller';
 import { EventContentfulDataProvider } from '../../data-providers/event.data-provider';
@@ -28,6 +28,10 @@ export const indexEventHandler =
       try {
         const calendarEvent = await eventController.fetchById(id);
         log.debug(`Fetched calendar event ${calendarEvent.id}`);
+
+        if (calendarEvent.hidden) {
+          throw notFound();
+        }
 
         const data = {
           ...calendarEvent,

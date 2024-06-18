@@ -29,6 +29,18 @@ describe('Event index handler', () => {
     });
   });
 
+  test('Should fetch the event and remove the record in Algolia when event is hidden', async () => {
+    const eventResponse = { ...getEventResponse(), hidden: true };
+    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+
+    await indexHandler(publishedEvent(eventResponse.id));
+
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      eventResponse.id,
+    );
+  });
+
   test('Should populate the _tags field before saving the event to Algolia', async () => {
     const eventResponse = getEventResponse();
     eventResponse.tags = [{ id: '1', name: 'event tag' }];

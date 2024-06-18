@@ -1,4 +1,3 @@
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   ListUserCollaborationAlgoliaResponse,
   UserCollaborationResponse,
@@ -9,6 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getUserCollaboration } from '../api';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsUserCollaborationState } from '../state';
 import UserCollaboration from '../UserCollaboration';
 
@@ -39,12 +39,14 @@ const data: ListUserCollaborationAlgoliaResponse = {
       name: 'Ted Mosby',
       isAlumni: false,
       teams: [userTeam],
+      objectID: '1',
     },
     {
       id: '2',
       name: 'Robin Scherbatsky',
       isAlumni: false,
       teams: [{ ...userTeam, role: 'Key Personnel' }],
+      objectID: '2',
     },
   ],
 };

@@ -59,6 +59,7 @@ const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredWithinTeam: 2,
         },
       ],
+      objectID: '1-user-collaboration-30d',
     },
   ],
 };
@@ -98,6 +99,7 @@ const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
           },
         ],
       },
+      objectID: '1-team-collaboration-30d',
     },
   ],
 };

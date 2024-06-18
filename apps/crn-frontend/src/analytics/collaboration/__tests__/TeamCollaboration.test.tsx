@@ -1,5 +1,4 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { ListTeamCollaborationAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -7,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getTeamCollaboration } from '../api';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
 
@@ -51,6 +51,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
         },
         byTeam: [],
       },
+      objectID: '1',
     },
     {
       id: '2',
@@ -73,6 +74,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
         },
         byTeam: [],
       },
+      objectID: '2',
     },
   ],
 };

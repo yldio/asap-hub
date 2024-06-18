@@ -1,8 +1,8 @@
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
-  TeamCollaborationResponse,
-  UserCollaborationResponse,
+  TeamCollaborationAlgoliaResponse,
+  UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { useEffect } from 'react';
 import {
@@ -29,7 +29,7 @@ const analyticsUserCollaborationIndexState = atomFamily<
 });
 
 export const analyticsUserCollaborationListState = atomFamily<
-  UserCollaborationResponse | undefined,
+  UserCollaborationAlgoliaResponse | undefined,
   string
 >({
   key: 'analyticsUserCollaborationList',
@@ -46,7 +46,7 @@ export const analyticsUserCollaborationState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsUserCollaborationIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const users: UserCollaborationResponse[] = [];
+      const users: UserCollaborationAlgoliaResponse[] = [];
       for (const id of index.ids) {
         const user = get(analyticsUserCollaborationListState(id));
         if (user === undefined) return undefined;
@@ -120,7 +120,7 @@ export const analyticsTeamCollaborationIndexState = atomFamily<
 });
 
 export const analyticsTeamCollaborationListState = atomFamily<
-  TeamCollaborationResponse | undefined,
+  TeamCollaborationAlgoliaResponse | undefined,
   string
 >({
   key: 'analyticsTeamCollaborationList',
@@ -137,7 +137,7 @@ export const analyticsTeamCollaborationState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsTeamCollaborationIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: TeamCollaborationResponse[] = [];
+      const teams: TeamCollaborationAlgoliaResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsTeamCollaborationListState(id));
         if (team === undefined) return undefined;

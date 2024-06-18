@@ -1,7 +1,10 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
-import { TimeRangeOption } from '@asap-hub/model';
-
-import createListApiUrl from '../../CreateListApiUrl';
+import { AlgoliaClient } from '@asap-hub/algolia';
+import { GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -11,57 +14,39 @@ export type CollaborationListOptions = Pick<
 };
 
 export const getUserCollaboration = async (
+  algoliaClient: AlgoliaClient<'analytics'>,
   options: CollaborationListOptions,
-  authorization: string,
-) => {
+): Promise<ListUserCollaborationAlgoliaResponse> => {
   const { currentPage, pageSize, timeRange } = options;
-  const resp = await fetch(
-    createListApiUrl('/analytics/collaboration/user', {
-      currentPage,
-      pageSize,
-      filters: new Set([timeRange]),
-      searchQuery: '',
-    }).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch analytics user collaboration. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const result = await algoliaClient.search(['user-collaboration'], '', {
+    filters: rangeFilter,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };
 
 export const getTeamCollaboration = async (
+  algoliaClient: AlgoliaClient<'analytics'>,
   options: CollaborationListOptions,
-  authorization: string,
-) => {
+): Promise<ListTeamCollaborationAlgoliaResponse> => {
   const { currentPage, pageSize, timeRange } = options;
-  const resp = await fetch(
-    createListApiUrl('/analytics/collaboration/team', {
-      currentPage,
-      pageSize,
-      filters: new Set([timeRange]),
-      searchQuery: '',
-    }).toString(),
-    {
-      headers: {
-        authorization,
-        ...createSentryHeaders(),
-      },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch analytics team collaboration. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const result = await algoliaClient.search(['team-collaboration'], '', {
+    filters: rangeFilter,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
+  return {
+    items: result.hits,
+    total: result.nbHits,
+    algoliaIndexName: result.index,
+    algoliaQueryId: result.queryID,
+  };
 };

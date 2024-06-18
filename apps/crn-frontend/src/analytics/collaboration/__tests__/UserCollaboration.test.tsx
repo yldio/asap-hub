@@ -1,6 +1,5 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
-  ListUserCollaborationResponse,
+  ListUserCollaborationAlgoliaResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
@@ -9,6 +8,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getUserCollaboration } from '../api';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsUserCollaborationState } from '../state';
 import UserCollaboration from '../UserCollaboration';
 
@@ -31,7 +31,7 @@ const userTeam: UserCollaborationResponse['teams'][number] = {
   outputsCoAuthoredAcrossTeams: 2,
 };
 
-const data: ListUserCollaborationResponse = {
+const data: ListUserCollaborationAlgoliaResponse = {
   total: 2,
   items: [
     {
@@ -39,12 +39,14 @@ const data: ListUserCollaborationResponse = {
       name: 'Ted Mosby',
       isAlumni: false,
       teams: [userTeam],
+      objectID: '1',
     },
     {
       id: '2',
       name: 'Robin Scherbatsky',
       isAlumni: false,
       teams: [{ ...userTeam, role: 'Key Personnel' }],
+      objectID: '2',
     },
   ],
 };
@@ -64,9 +66,11 @@ const renderPage = async () => {
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <UserCollaboration type="within-team" />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <UserCollaboration type="within-team" />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,

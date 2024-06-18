@@ -4,6 +4,7 @@ import {
   SearchResponse,
 } from '@algolia/client-search';
 import {
+  AnalyticsTeamLeadershipAlgoliaResponse,
   AnalyticsTeamLeadershipResponse,
   EventResponse,
   ExternalAuthorResponse,
@@ -11,12 +12,16 @@ import {
   InterestGroupResponse,
   NewsResponse,
   ResearchOutputResponse,
+  TeamCollaborationResponse,
   TeamListItemResponse,
+  TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   TeamProductivityResponse,
   TimeRangeOption,
   TutorialsResponse,
+  UserCollaborationResponse,
   UserListItemResponse,
+  UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
   UserProductivityResponse,
   UserResponse,
@@ -25,9 +30,11 @@ import {
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
+  TEAM_COLLABORATION,
   TEAM_LEADERSHIP,
   TEAM_PRODUCTIVITY,
   TEAM_PRODUCTIVITY_PERFORMANCE,
+  USER_COLLABORATION,
   USER_PRODUCTIVITY,
   USER_PRODUCTIVITY_PERFORMANCE,
 } from './analytics';
@@ -70,7 +77,9 @@ export type EntityData =
 export type AnalyticsData =
   | AnalyticsTeamLeadershipResponse
   | UserProductivityResponse
-  | TeamProductivityResponse;
+  | TeamProductivityResponse
+  | UserCollaborationResponse
+  | TeamCollaborationResponse;
 
 export type EntityResponses = {
   [CRN]: {
@@ -109,11 +118,13 @@ export type EntityResponses = {
     [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
   [ANALYTICS]: {
-    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
-    [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
-    [USER_PRODUCTIVITY]: UserProductivityResponse;
+    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipAlgoliaResponse;
+    [TEAM_PRODUCTIVITY]: TeamProductivityAlgoliaResponse;
+    [USER_PRODUCTIVITY]: UserProductivityAlgoliaResponse;
     [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
     [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
+    [TEAM_COLLABORATION]: TeamCollaborationResponse;
+    [USER_COLLABORATION]: UserCollaborationResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

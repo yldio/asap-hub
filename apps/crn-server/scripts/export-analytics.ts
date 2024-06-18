@@ -1,4 +1,4 @@
-import { AnalyticsData } from '@asap-hub/algolia';
+import { AnalyticsData, EntityResponses } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
   ListResponse,
@@ -19,7 +19,9 @@ export const PAGE_SIZE = 10;
 export type Metric =
   | 'team-leadership'
   | 'team-productivity'
-  | 'user-productivity';
+  | 'user-productivity'
+  | 'team-collaboration'
+  | 'user-collaboration';
 
 export const exportAnalyticsData = async (
   metric: Metric,
@@ -72,11 +74,21 @@ const exportData = async (
         skip: (page - 1) * PAGE_SIZE,
         filter: range,
       });
-    } else {
+    } else if (metric === 'user-productivity') {
       records = await analyticsController.fetchUserProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
         filter: range,
+      });
+    } else if (metric === 'team-collaboration') {
+      records = await analyticsController.fetchTeamCollaboration({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
+      });
+    } else {
+      records = await analyticsController.fetchUserCollaboration({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
       });
     }
 
@@ -108,7 +120,7 @@ const transformRecords = (
   record: AnalyticsData,
   type: Metric,
   range?: TimeRangeOption,
-) => {
+): EntityResponses['analytics'][keyof EntityResponses['analytics']] => {
   const payload = {
     ...record,
     _tags: getRecordTags(record, type),
@@ -119,7 +131,7 @@ const transformRecords = (
     },
   };
 
-  if ('teams' in record) {
+  if ('teams' in record && 'asapOutput' in record) {
     return {
       ...payload,
       ...getUserTeamData(record.teams),

@@ -1,10 +1,11 @@
+import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  ListTeamCollaborationResponse,
-  ListUserCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { API_BASE_URL } from '../../../config';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getUserCollaboration,
   CollaborationListOptions,
@@ -17,13 +18,31 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const options: CollaborationListOptions = {
+type Search = () => Promise<
+  ClientSearchResponse<
+    'analytics',
+    | 'team-productivity'
+    | 'team-productivity-performance'
+    | 'user-productivity'
+    | 'user-productivity-performance'
+    | 'team-collaboration'
+    | 'user-collaboration'
+  >
+>;
+
+const search: jest.MockedFunction<Search> = jest.fn();
+
+const algoliaSearchClient = {
+  search,
+} as unknown as AlgoliaSearchClient<'analytics'>;
+
+const defaultOptions: CollaborationListOptions = {
   pageSize: 10,
   currentPage: 0,
   timeRange: '30d',
 };
 
-const userCollaborationResponse: ListUserCollaborationResponse = {
+const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
   total: 1,
   items: [
     {
@@ -40,11 +59,12 @@ const userCollaborationResponse: ListUserCollaborationResponse = {
           outputsCoAuthoredWithinTeam: 2,
         },
       ],
+      objectID: '1-user-collaboration-30d',
     },
   ],
 };
 
-const teamCollaborationResponse: ListTeamCollaborationResponse = {
+const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
   total: 1,
   items: [
     {
@@ -79,76 +99,105 @@ const teamCollaborationResponse: ListTeamCollaborationResponse = {
           },
         ],
       },
+      objectID: '1-team-collaboration-30d',
     },
   ],
 };
 
 describe('getUserCollaboration', () => {
-  it('makes an authorized GET request for analytics user collaboration section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/collaboration/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getUserCollaboration(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched user productivity', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/collaboration/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, userCollaborationResponse);
-    expect(await getUserCollaboration(options, '')).toEqual(
-      userCollaborationResponse,
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'user-collaboration'>([
+        {
+          ...userCollaborationResponse.items[0]!,
+          objectID: `${
+            userCollaborationResponse.items[0]!.id
+          }-user-collaboration-30d`,
+          __meta: { type: 'user-collaboration', range: '30d' },
+        },
+      ]),
     );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/collaboration/user')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(500);
-    await expect(
-      getUserCollaboration(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics user collaboration. Expected status 2xx. Received status 500."`,
+  it('returns successfully fetched user collaboration', async () => {
+    const userCollaboration = await getUserCollaboration(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+
+    expect(userCollaboration).toMatchObject(userCollaborationResponse);
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns user collaboration for $range', async ({ timeRange }) => {
+    await getUserCollaboration(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['user-collaboration'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
+      }),
     );
   });
 });
 
 describe('getTeamCollaboration', () => {
-  it('makes an authorized GET request for analytics team collaboration section', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/analytics/collaboration/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, {});
+  beforeEach(() => {
+    search.mockReset();
 
-    await getTeamCollaboration(options, 'Bearer x');
-
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns successfully fetched team collaboration data', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/collaboration/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(200, teamCollaborationResponse);
-    expect(await getTeamCollaboration(options, '')).toEqual(
-      teamCollaborationResponse,
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'team-collaboration'>([
+        {
+          ...teamCollaborationResponse.items[0]!,
+          objectID: `${
+            teamCollaborationResponse.items[0]!.id
+          }-team-collaboration-30d`,
+          __meta: { type: 'team-collaboration', range: '30d' },
+        },
+      ]),
     );
   });
 
-  it('errors for error status', async () => {
-    nock(API_BASE_URL)
-      .get('/analytics/collaboration/team')
-      .query({ take: '10', skip: '0', filter: '30d' })
-      .reply(500);
-    await expect(
-      getTeamCollaboration(options, 'Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch analytics team collaboration. Expected status 2xx. Received status 500."`,
+  it('returns successfully fetched team collaboration', async () => {
+    const teamCollaboration = await getTeamCollaboration(
+      algoliaSearchClient,
+      defaultOptions,
+    );
+
+    expect(teamCollaboration).toMatchObject(teamCollaborationResponse);
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `('returns team collaboration for $range', async ({ timeRange }) => {
+    await getTeamCollaboration(algoliaSearchClient, {
+      ...defaultOptions,
+      timeRange,
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['team-collaboration'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"${timeRange}"`,
+      }),
     );
   });
 });

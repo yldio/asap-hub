@@ -11,6 +11,8 @@ on:
           - team-leadership
           - team-productivity
           - user-productivity
+          - team-collaboration
+          - user-collaboration
           - all
       environment-name:
         required: true

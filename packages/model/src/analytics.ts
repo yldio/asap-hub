@@ -102,6 +102,11 @@ export type ListAnalyticsTeamLeadershipDataObject =
   ListResponse<AnalyticsTeamLeadershipDataObject>;
 
 export type AnalyticsTeamLeadershipResponse = AnalyticsTeamLeadershipDataObject;
+export type AnalyticsTeamLeadershipAlgoliaResponse =
+  AnalyticsTeamLeadershipDataObject & {
+    objectID: string;
+  };
+
 export type ListAnalyticsTeamLeadershipResponse =
   ListResponse<AnalyticsTeamLeadershipResponse>;
 
@@ -253,8 +258,13 @@ export type UserCollaborationDataObject = {
 export type ListUserCollaborationDataObject =
   ListResponse<UserCollaborationDataObject>;
 export type UserCollaborationResponse = UserCollaborationDataObject;
+export type UserCollaborationAlgoliaResponse = UserCollaborationDataObject & {
+  objectID: string;
+};
 export type ListUserCollaborationResponse =
-  ListResponse<UserCollaborationDataObject>;
+  ListResponse<UserCollaborationResponse>;
+export type ListUserCollaborationAlgoliaResponse =
+  ListResponse<UserCollaborationAlgoliaResponse>;
 
 export type TeamCollaborationWithinOutputData = {
   Article: number;
@@ -283,5 +293,10 @@ export type TeamCollaborationDataObject = {
 export type ListTeamCollaborationDataObject =
   ListResponse<TeamCollaborationDataObject>;
 export type TeamCollaborationResponse = TeamCollaborationDataObject;
+export type TeamCollaborationAlgoliaResponse = TeamCollaborationDataObject & {
+  objectID: string;
+};
 export type ListTeamCollaborationResponse =
-  ListResponse<TeamCollaborationDataObject>;
+  ListResponse<TeamCollaborationResponse>;
+export type ListTeamCollaborationAlgoliaResponse =
+  ListResponse<TeamCollaborationAlgoliaResponse>;

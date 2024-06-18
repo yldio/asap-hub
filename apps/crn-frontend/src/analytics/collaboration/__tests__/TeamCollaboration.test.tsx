@@ -1,5 +1,9 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { ListTeamCollaborationResponse } from '@asap-hub/model';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { ListTeamCollaborationAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -8,6 +12,13 @@ import { RecoilRoot } from 'recoil';
 import { getTeamCollaboration } from '../api';
 import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 
 jest.mock('../api');
 
@@ -19,7 +30,7 @@ const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
 
-const data: ListTeamCollaborationResponse = {
+const data: ListTeamCollaborationAlgoliaResponse = {
   total: 2,
   items: [
     {
@@ -84,9 +95,11 @@ const renderPage = async () => {
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <TeamCollaboration type="within-team" />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <TeamCollaboration type="within-team" />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,

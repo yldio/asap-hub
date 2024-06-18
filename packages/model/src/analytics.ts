@@ -258,7 +258,7 @@ export type UserCollaborationDataObject = {
 export type ListUserCollaborationDataObject =
   ListResponse<UserCollaborationDataObject>;
 export type UserCollaborationResponse = UserCollaborationDataObject;
-export type ListUserCollaborationResponse =
+export type ListUserCollaborationAlgoliaResponse =
   ListResponse<UserCollaborationDataObject>;
 
 export type TeamCollaborationWithinOutputData = {
@@ -288,5 +288,5 @@ export type TeamCollaborationDataObject = {
 export type ListTeamCollaborationDataObject =
   ListResponse<TeamCollaborationDataObject>;
 export type TeamCollaborationResponse = TeamCollaborationDataObject;
-export type ListTeamCollaborationResponse =
+export type ListTeamCollaborationAlgoliaResponse =
   ListResponse<TeamCollaborationDataObject>;

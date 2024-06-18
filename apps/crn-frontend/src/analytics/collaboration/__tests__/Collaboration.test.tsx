@@ -1,7 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
-  ListTeamCollaborationResponse,
-  ListUserCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -28,7 +28,7 @@ const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
 
-const userData: ListUserCollaborationResponse = {
+const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
   items: [
     {
@@ -64,7 +64,7 @@ const userData: ListUserCollaborationResponse = {
   ],
 };
 
-const teamData: ListTeamCollaborationResponse = {
+const teamData: ListTeamCollaborationAlgoliaResponse = {
   total: 1,
   items: [
     {

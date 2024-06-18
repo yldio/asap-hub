@@ -1,6 +1,6 @@
 import {
-  ListTeamCollaborationResponse,
-  ListUserCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
   TeamCollaborationResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
@@ -10,10 +10,10 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
   useResetRecoilState,
 } from 'recoil';
-import { authorizationState } from '../../auth/state';
+import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
   CollaborationListOptions,
   getUserCollaboration,
@@ -37,7 +37,7 @@ export const analyticsUserCollaborationListState = atomFamily<
 });
 
 export const analyticsUserCollaborationState = selectorFamily<
-  ListUserCollaborationResponse | Error | undefined,
+  ListUserCollaborationAlgoliaResponse | Error | undefined,
   CollaborationListOptions
 >({
   key: 'userCollaboration',
@@ -87,7 +87,7 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: CollaborationListOptions,
 ) => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
@@ -101,7 +101,7 @@ export const useAnalyticsUserCollaboration = (
   }, [options.timeRange, resetUserCollaboration]);
 
   if (userCollaboration === undefined) {
-    throw getUserCollaboration(options, authorization)
+    throw getUserCollaboration(algoliaClient.client, options)
       .then(setUserCollaboration)
       .catch(setUserCollaboration);
   }
@@ -128,7 +128,7 @@ export const analyticsTeamCollaborationListState = atomFamily<
 });
 
 export const analyticsTeamCollaborationState = selectorFamily<
-  ListTeamCollaborationResponse | Error | undefined,
+  ListTeamCollaborationAlgoliaResponse | Error | undefined,
   CollaborationListOptions
 >({
   key: 'teamCollaboration',
@@ -178,7 +178,7 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: CollaborationListOptions,
 ) => {
-  const authorization = useRecoilValue(authorizationState);
+  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );
@@ -192,7 +192,7 @@ export const useAnalyticsTeamCollaboration = (
   }, [options.timeRange, resetTeamCollaboration]);
 
   if (teamCollaboration === undefined) {
-    throw getTeamCollaboration(options, authorization)
+    throw getTeamCollaboration(algoliaClient.client, options)
       .then(setTeamCollaboration)
       .catch(setTeamCollaboration);
   }

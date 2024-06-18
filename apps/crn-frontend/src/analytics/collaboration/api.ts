@@ -1,6 +1,10 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { TimeRangeOption } from '@asap-hub/model';
+import {
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -12,7 +16,7 @@ export type CollaborationListOptions = Pick<
 export const getUserCollaboration = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: CollaborationListOptions,
-) => {
+): Promise<ListUserCollaborationAlgoliaResponse> => {
   const { currentPage, pageSize, timeRange } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
   const result = await algoliaClient.search(['user-collaboration'], '', {
@@ -31,7 +35,7 @@ export const getUserCollaboration = async (
 export const getTeamCollaboration = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: CollaborationListOptions,
-) => {
+): Promise<ListTeamCollaborationAlgoliaResponse> => {
   const { currentPage, pageSize, timeRange } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
   const result = await algoliaClient.search(['team-collaboration'], '', {

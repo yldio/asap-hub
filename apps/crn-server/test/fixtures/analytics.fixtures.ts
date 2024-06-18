@@ -10,10 +10,10 @@ import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
-  ListTeamCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
-  ListUserCollaborationResponse,
+  ListUserCollaborationAlgoliaResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
   TeamCollaborationDataObject,
@@ -577,13 +577,13 @@ export const getTeamCollaborationResponse = (): TeamCollaborationResponse =>
   getTeamCollaborationDataObject();
 
 export const getListUserCollaborationResponse =
-  (): ListUserCollaborationResponse => ({
+  (): ListUserCollaborationAlgoliaResponse => ({
     total: 1,
     items: [getUserCollaborationResponse()],
   });
 
 export const getListTeamCollaborationResponse =
-  (): ListTeamCollaborationResponse => ({
+  (): ListTeamCollaborationAlgoliaResponse => ({
     total: 1,
     items: [getTeamCollaborationResponse()],
   });

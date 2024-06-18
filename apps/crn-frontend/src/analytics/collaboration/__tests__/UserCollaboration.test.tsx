@@ -1,6 +1,9 @@
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import {
-  ListUserCollaborationResponse,
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import {
+  ListUserCollaborationAlgoliaResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
@@ -31,7 +34,7 @@ const userTeam: UserCollaborationResponse['teams'][number] = {
   outputsCoAuthoredAcrossTeams: 2,
 };
 
-const data: ListUserCollaborationResponse = {
+const data: ListUserCollaborationAlgoliaResponse = {
   total: 2,
   items: [
     {
@@ -64,9 +67,11 @@ const renderPage = async () => {
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
-            <UserCollaboration type="within-team" />
-          </MemoryRouter>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/analytics']}>
+              <UserCollaboration type="within-team" />
+            </MemoryRouter>
+          </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,

@@ -1,7 +1,7 @@
 import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  ListTeamCollaborationResponse,
-  ListUserCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
@@ -42,7 +42,7 @@ const defaultOptions: CollaborationListOptions = {
   timeRange: '30d',
 };
 
-const userCollaborationResponse: ListUserCollaborationResponse = {
+const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
   total: 1,
   items: [
     {
@@ -63,7 +63,7 @@ const userCollaborationResponse: ListUserCollaborationResponse = {
   ],
 };
 
-const teamCollaborationResponse: ListTeamCollaborationResponse = {
+const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
   total: 1,
   items: [
     {

@@ -1,8 +1,8 @@
 import {
   ListAnalyticsTeamLeadershipResponse,
-  ListTeamCollaborationResponse,
+  ListTeamCollaborationAlgoliaResponse,
   ListTeamProductivityResponse,
-  ListUserCollaborationResponse,
+  ListUserCollaborationAlgoliaResponse,
   ListUserProductivityResponse,
 } from '@asap-hub/model';
 import {
@@ -54,7 +54,7 @@ export const analyticsRouteFactory = (
 
   analyticsRoutes.get(
     '/collaboration/user',
-    async (req, res: Response<ListUserCollaborationResponse>) => {
+    async (req, res: Response<ListUserCollaborationAlgoliaResponse>) => {
       const parameters = req.query;
       const query = validateFetchAnalyticsOptions(parameters);
       const result = await analyticsController.fetchUserCollaboration(query);
@@ -64,7 +64,7 @@ export const analyticsRouteFactory = (
   );
   analyticsRoutes.get(
     '/collaboration/team',
-    async (req, res: Response<ListTeamCollaborationResponse>) => {
+    async (req, res: Response<ListTeamCollaborationAlgoliaResponse>) => {
       const parameters = req.query;
       const query = validateFetchAnalyticsOptions(parameters);
       const result = await analyticsController.fetchTeamCollaboration(query);

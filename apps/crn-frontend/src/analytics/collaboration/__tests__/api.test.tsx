@@ -184,7 +184,7 @@ describe('getTeamCollaboration', () => {
     ${'This year (Jan-Today)'}   | ${'current-year'}
     ${'Last 12 months'}          | ${'last-year'}
     ${'Since Hub Launch (2020)'} | ${'all'}
-  `('returns user collaboration for $range', async ({ timeRange }) => {
+  `('returns team collaboration for $range', async ({ timeRange }) => {
     await getTeamCollaboration(algoliaSearchClient, {
       ...defaultOptions,
       timeRange,

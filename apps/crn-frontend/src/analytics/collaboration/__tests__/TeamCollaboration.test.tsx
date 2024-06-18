@@ -1,8 +1,5 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { ListTeamCollaborationAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -17,7 +14,7 @@ jest.mock('@asap-hub/algolia', () => ({
   ...jest.requireActual('@asap-hub/algolia'),
   algoliaSearchClientFactory: jest
     .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+    .mockReturnValue({} as AlgoliaSearchClient<'analytics'>),
 }));
 
 jest.mock('../api');

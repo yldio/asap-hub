@@ -20,6 +20,11 @@ export const getTeamLeadershipItem = (team: Team) => {
     getCurrentInterestGroupIdsFromInterestGroupCollection(team);
   const previousInterestGroupIdsFromInterestGroupCollection =
     getPreviousInterestGroupIdsFromInterestGroupCollection(team);
+  const currentInterestGroupIdsFromProjectManagers =
+    getCurrentInterestGroupIdsFromProjectManagers(team);
+  const previousInterestGroupIdsFromProjectManagers =
+    getPreviousInterestGroupIdsFromProjectManagers(team);
+
   const currentWorkingGroupIdsFromTeamLeaders =
     getCurrentWorkingGroupIdsFromTeamLeaders(team);
   const currentWorkingGroupIdsFromProjectManagers =
@@ -35,14 +40,6 @@ export const getTeamLeadershipItem = (team: Team) => {
   const previousWorkingGroupIdsFromTeamMembers =
     getPreviousWorkingGroupIdsFromTeamMembers(team);
 
-  console.log(
-    'previousInterestGroupIdsFromTeamLeaders ,',
-    previousInterestGroupIdsFromTeamLeaders,
-  );
-  console.log(
-    'previousInterestGroupIdsFromInterestGroupCollection',
-    previousInterestGroupIdsFromInterestGroupCollection,
-  );
   return {
     id: team.sys.id,
     displayName: team.displayName || '',
@@ -61,10 +58,12 @@ export const getTeamLeadershipItem = (team: Team) => {
       ? 0
       : getUniqueIdCount([
           ...currentInterestGroupIdsFromTeamLeaders,
+          ...currentInterestGroupIdsFromProjectManagers,
           ...currentInterestGroupIdsFromInterestGroupCollection,
         ]),
     interestGroupPreviousMemberCount: getUniqueIdCount([
       ...previousInterestGroupIdsFromTeamLeaders,
+      ...previousInterestGroupIdsFromProjectManagers,
       ...previousInterestGroupIdsFromInterestGroupCollection,
     ]),
     workingGroupLeadershipRoleCount: team.inactiveSince
@@ -114,6 +113,18 @@ export const getCurrentInterestGroupIdsFromTeamLeaders = (
         .map((item) => item.groupId) || [],
   ) || [];
 
+export const getCurrentInterestGroupIdsFromProjectManagers = (
+  team: Team,
+): string[] =>
+  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+    (teamMembershipItem) =>
+      teamMembershipItem?.linkedFrom?.usersCollection?.items
+        .flatMap(flattenInterestGroupLeaders)
+        .filter((item) => isCurrent(item, teamMembershipItem))
+        .filter((item) => item.role === 'Project Manager')
+        .map((item) => item.groupId) || [],
+  ) || [];
+
 export const getCurrentInterestGroupIdsFromInterestGroupCollection = (
   team: Team,
 ): string[] =>
@@ -135,6 +146,20 @@ export const getPreviousInterestGroupIdsFromTeamLeaders = (
           (item) => !isCurrent(item, teamMembershipItem) || team.inactiveSince,
         )
         .filter((item) => item.role !== 'Project Manager')
+        .map((item) => item.groupId) || [],
+  ) || [];
+
+export const getPreviousInterestGroupIdsFromProjectManagers = (
+  team: Team,
+): string[] =>
+  team.linkedFrom?.teamMembershipCollection?.items.flatMap(
+    (teamMembershipItem) =>
+      teamMembershipItem?.linkedFrom?.usersCollection?.items
+        .flatMap(flattenInterestGroupLeaders)
+        .filter(
+          (item) => !isCurrent(item, teamMembershipItem) || team.inactiveSince,
+        )
+        .filter((item) => item.role === 'Project Manager')
         .map((item) => item.groupId) || [],
   ) || [];
 

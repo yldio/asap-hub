@@ -51,6 +51,7 @@ const makeLeader = (groupId: string, active = true, role = 'Chair'): User => ({
     interestGroupLeadersCollection: {
       items: [
         {
+          role,
           linkedFrom: {
             interestGroupsCollection: {
               items: [{ sys: { id: groupId }, active }],
@@ -107,14 +108,28 @@ describe('getCurrentWorkingGroupIdsFromTeamLeaders', () => {
 
 describe('getTeamLeadershipItem', () => {
   describe('Project Manager role', () => {
-    it('counts current PM in memberships but not leadership', () => {
+    it('counts current PM in IG memberships but not leadership', () => {
+      const team = makeTestTeam([makeLeader('A', true, 'Project Manager')]);
+      const result = getTeamLeadershipItem(team);
+      expect(result.interestGroupLeadershipRoleCount).toBe(0);
+      expect(result.interestGroupMemberCount).toBe(1);
+    });
+
+    it('counts previous PM in IG memberships but not leadership', () => {
+      const team = makeTestTeam([makeLeader('A', false, 'Project Manager')]);
+      const result = getTeamLeadershipItem(team);
+      expect(result.interestGroupPreviousLeadershipRoleCount).toBe(0);
+      expect(result.interestGroupPreviousMemberCount).toBe(1);
+    });
+
+    it('counts current PM in WG memberships but not leadership', () => {
       const team = makeTestTeam([makeLeader('A', true, 'Project Manager')]);
       const result = getTeamLeadershipItem(team);
       expect(result.workingGroupLeadershipRoleCount).toBe(0);
       expect(result.workingGroupMemberCount).toBe(1);
     });
 
-    it('counts previous PM in memberships but not leadership', () => {
+    it('counts previous PM in WG memberships but not leadership', () => {
       const team = makeTestTeam([makeLeader('A', false, 'Project Manager')]);
       const result = getTeamLeadershipItem(team);
       expect(result.workingGroupPreviousLeadershipRoleCount).toBe(0);

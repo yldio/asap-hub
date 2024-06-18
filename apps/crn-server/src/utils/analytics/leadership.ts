@@ -35,6 +35,14 @@ export const getTeamLeadershipItem = (team: Team) => {
   const previousWorkingGroupIdsFromTeamMembers =
     getPreviousWorkingGroupIdsFromTeamMembers(team);
 
+  console.log(
+    'previousInterestGroupIdsFromTeamLeaders ,',
+    previousInterestGroupIdsFromTeamLeaders,
+  );
+  console.log(
+    'previousInterestGroupIdsFromInterestGroupCollection',
+    previousInterestGroupIdsFromInterestGroupCollection,
+  );
   return {
     id: team.sys.id,
     displayName: team.displayName || '',
@@ -123,7 +131,9 @@ export const getPreviousInterestGroupIdsFromTeamLeaders = (
     (teamMembershipItem) =>
       teamMembershipItem?.linkedFrom?.usersCollection?.items
         .flatMap(flattenInterestGroupLeaders)
-        .filter((item) => !isCurrent(item, teamMembershipItem))
+        .filter(
+          (item) => !isCurrent(item, teamMembershipItem) || team.inactiveSince,
+        )
         .filter((item) => item.role !== 'Project Manager')
         .map((item) => item.groupId) || [],
   ) || [];

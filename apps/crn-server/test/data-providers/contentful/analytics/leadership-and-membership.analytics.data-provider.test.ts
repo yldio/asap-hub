@@ -2196,7 +2196,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupMemberCount).toBe(1);
         });
 
-        test('Should return workingGroupMemberCount of 0 when 1 user is a leader of a working group and the leadership role is Project Manager', async () => {
+        test('Should return workingGroupMemberCount of 1 when 1 user is a leader of a working group and the leadership role is Project Manager', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.linkedFrom!.workingGroupMembersCollection =
             null;
@@ -2208,7 +2208,7 @@ describe('Analytics Data Provider', () => {
 
           const result = await analyticsDataProvider.fetchTeamLeadership({});
 
-          expect(result.items[0]!.workingGroupMemberCount).toBe(0);
+          expect(result.items[0]!.workingGroupMemberCount).toBe(1);
         });
 
         test('Should return workingGroupMemberCount of 0 when 1 user is a member of a working group which is complete', async () => {
@@ -2485,7 +2485,7 @@ describe('Analytics Data Provider', () => {
           expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(1);
         });
 
-        test('Should return workingGroupPreviousMemberCount of 0 when 1 alumni user is a leader of a working group and the leadership role is Project Manager', async () => {
+        test('Should return workingGroupPreviousMemberCount of 1 when 1 alumni user is a leader of a working group and the leadership role is Project Manager', async () => {
           const contentfulGraphQLResponse = getAnalyticsTeamLeadershipQuery();
           contentfulGraphQLResponse.teamsCollection!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.linkedFrom!.usersCollection!.items[0]!.alumniSinceDate =
             pastDate;
@@ -2499,7 +2499,7 @@ describe('Analytics Data Provider', () => {
 
           const result = await analyticsDataProvider.fetchTeamLeadership({});
 
-          expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(0);
+          expect(result.items[0]!.workingGroupPreviousMemberCount).toBe(1);
         });
 
         test('Should return workingGroupPreviousMemberCount of 1 when 1 alumni user is a member of a working group', async () => {

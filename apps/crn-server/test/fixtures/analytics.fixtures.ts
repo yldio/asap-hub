@@ -182,6 +182,21 @@ export const getUserProductivityDataObject =
     asapOutput: 3,
     asapPublicOutput: 1,
     ratio: '0.33',
+    asapArticleOutput: 0,
+    asapArticlePublicOutput: 0,
+    articleRatio: '0.00',
+    asapBioinformaticsOutput: 0,
+    asapBioinformaticsPublicOutput: 0,
+    bioinformaticsRatio: '0.00',
+    asapDatasetOutput: 0,
+    asapDatasetPublicOutput: 0,
+    datasetRatio: '0.00',
+    asapLabResourceOutput: 0,
+    asapLabResourcePublicOutput: 0,
+    labResourceRatio: '0.00',
+    asapProtocolOutput: 0,
+    asapProtocolPublicOutput: 0,
+    protocolRatio: '0.00',
   });
 
 export const getResearchOutputUserProductivity = (): NonNullable<

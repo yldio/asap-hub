@@ -42,6 +42,21 @@ describe('UserProductivityTable', () => {
     asapOutput: 1,
     asapPublicOutput: 2,
     ratio: '0.10',
+    asapArticleOutput: 0,
+    asapArticlePublicOutput: 0,
+    articleRatio: '0.00',
+    asapBioinformaticsOutput: 0,
+    asapBioinformaticsPublicOutput: 0,
+    bioinformaticsRatio: '0.00',
+    asapDatasetOutput: 0,
+    asapDatasetPublicOutput: 0,
+    datasetRatio: '0.00',
+    asapLabResourceOutput: 0,
+    asapLabResourcePublicOutput: 0,
+    labResourceRatio: '0.00',
+    asapProtocolOutput: 0,
+    asapProtocolPublicOutput: 0,
+    protocolRatio: '0.00',
   };
 
   it('renders data', () => {

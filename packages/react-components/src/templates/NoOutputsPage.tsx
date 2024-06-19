@@ -41,7 +41,6 @@ const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
       <Display styleAsHeading={3}>{title}</Display>
       <Paragraph accent="lead">{description}</Paragraph>
     </div>
-    networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$.OUTPUTS.relativePath +
     {!hideExploreButton && (
       <Link
         buttonStyle

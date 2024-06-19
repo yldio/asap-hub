@@ -1,16 +1,10 @@
 import { boolean, route, string } from 'react-router-typesafe-routes/dom';
 
-const editResearchOutput = route('edit/:researchOutputId', {
-  params: { researchOutputId: string().defined() },
-});
+const editResearchOutput = route('edit');
 
-const versionResearchOutput = route('version/:researchOutputId', {
-  params: { researchOutputId: string().defined() },
-});
+const versionResearchOutput = route('version');
 
-const publishResearchOutput = route('publishedNow/:researchOutputId', {
-  params: { researchOutputId: string().defined() },
-});
+const publishResearchOutput = route('publishedNow');
 
 export const sharedResearchRoutes = {
   DEFAULT: route(

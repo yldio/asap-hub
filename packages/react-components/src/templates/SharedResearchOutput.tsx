@@ -90,7 +90,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     props.documentType,
   );
 
-  console.log('supposed to render shared research output');
   const tags = [
     ...props.methods,
     ...props.organisms,

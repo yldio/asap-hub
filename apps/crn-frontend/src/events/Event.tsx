@@ -8,16 +8,18 @@ import {
   useDateHasPassed,
   considerEndedAfter,
 } from '@asap-hub/react-components';
-import { events, useRouteParams } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 
 import { useEventById, useQuietRefreshEventById } from './state';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 
 const Event: React.FC = () => {
-  const { eventId } = useRouteParams(events({}).event);
+  const { eventId } = useTypedParams(eventRoutes.DEFAULT.DETAILS);
   const event = useEventById(eventId);
   const refreshEvent = useQuietRefreshEventById(eventId);
-  const backHref = useBackHref() ?? events({}).$;
+
+  const backHref = useBackHref() ?? eventRoutes.DEFAULT.path;
 
   const hasFinished = useDateHasPassed(
     considerEndedAfter(event?.endDate || ''),

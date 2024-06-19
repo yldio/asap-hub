@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 
 import { Display, Card, Link, Paragraph, Headline2 } from '../atoms';
 import { mobileScreen } from '../pixels';
@@ -34,11 +34,9 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
           <Link
             buttonStyle
             primary
-            href={
-              sharedResearch({}).researchOutput({
-                researchOutputId: proposalURL,
-              }).$
-            }
+            href={sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: proposalURL,
+            })}
           >
             Read Full Proposal
           </Link>

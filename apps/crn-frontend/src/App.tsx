@@ -2,7 +2,13 @@ import { useFlags } from '@asap-hub/react-context';
 import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-dom-last-location';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -81,12 +87,78 @@ const App: FC<Record<string, never>> = () => {
     setCurrentOverrides();
   }, [setCurrentOverrides, setEnvironment]);
 
+  const router = createBrowserRouter([
+    {
+      path: welcome.template,
+      element: (
+        <UtilityBar>
+          <ToastStack>
+            <Welcome />
+          </ToastStack>
+        </UtilityBar>
+      ),
+    },
+    {
+      path: logout.template,
+      element: (
+        <Frame title="Logout">
+          <Logout />
+        </Frame>
+      ),
+    },
+    {
+      path: staticPages({}).terms.template,
+      element: (
+        <BasicLayout>
+          <Frame title={null}>
+            <Content pageId="terms-and-conditions" />
+          </Frame>
+        </BasicLayout>
+      ),
+    },
+    {
+      path: staticPages({}).privacyPolicy.template,
+      element: (
+        <BasicLayout>
+          <Frame title={null}>
+            <Content pageId="privacy-policy" />
+          </Frame>
+        </BasicLayout>
+      ),
+    },
+    // find better way to include LastLocationProvider
+    {
+      path: '/*',
+      element: (
+        <CheckAuth>
+          {({ isAuthenticated }) =>
+            !isAuthenticated ? (
+              <LastLocationProvider>
+                <Frame title={null}>
+                  <Signin />
+                </Frame>
+              </LastLocationProvider>
+            ) : (
+              <LastLocationProvider>
+                <Frame title={null} fallback={<LoadingLayout />}>
+                  <AuthenticatedApp />
+                </Frame>
+              </LastLocationProvider>
+            )
+          }
+        </CheckAuth>
+      ),
+    },
+  ]);
+
   return (
     <Frame title="ASAP Hub">
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
         <SentryAuth0 />
-        <Router>
+        <RouterProvider router={router} />
+
+        {/* <Router>
           <LastLocationProvider>
             <Frame title={null}>
               <Routes>
@@ -153,7 +225,7 @@ const App: FC<Record<string, never>> = () => {
               </Routes>
             </Frame>
           </LastLocationProvider>
-        </Router>
+        </Router> */}
       </AuthProvider>
     </Frame>
   );

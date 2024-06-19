@@ -1,5 +1,5 @@
 import { EventsPage } from '@asap-hub/react-components';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
@@ -21,7 +21,7 @@ const Events: FC<Record<string, never>> = () => {
     loadCalendars().then(loadEventList);
   }, []);
 
-  const { pathname: path } = useLocation();
+  // const { pathname: path } = useLocation();
   const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
@@ -29,7 +29,7 @@ const Events: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={path + events({}).calendar.template}
+        path={eventRoutes.DEFAULT.$.CALENDAR.relativePath}
         element={
           <EventsPage>
             <Frame title="Subscribe to Calendars">
@@ -39,7 +39,7 @@ const Events: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + events({}).upcoming.template}
+        path={eventRoutes.DEFAULT.$.UPCOMING.relativePath}
         element={
           <EventsPage
             searchQuery={searchQuery}
@@ -55,7 +55,7 @@ const Events: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + events({}).past.template}
+        path={eventRoutes.DEFAULT.$.PAST.relativePath}
         element={
           <EventsPage
             searchQuery={searchQuery}
@@ -72,14 +72,17 @@ const Events: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + events({}).event.template}
+        path={eventRoutes.DEFAULT.$.DETAILS.relativePath}
         element={
           <Frame title="Event">
             <Event />
           </Frame>
         }
       />
-      <Route path="*" element={<Navigate to={events({}).upcoming({}).$} />} />
+      <Route
+        path="*"
+        element={<Navigate to={eventRoutes.DEFAULT.$.UPCOMING.relativePath} />}
+      />
     </Routes>
   );
 };

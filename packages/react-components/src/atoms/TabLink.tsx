@@ -9,7 +9,7 @@ import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
 import IconProps from '../icons/props';
 
-const activeClassName = 'active-link';
+const activeClassName = 'active';
 const styles = css({
   display: 'inline-block',
   paddingTop: rem(24),

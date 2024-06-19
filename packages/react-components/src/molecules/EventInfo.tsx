@@ -1,5 +1,5 @@
 import { BasicEvent } from '@asap-hub/model';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -78,7 +78,9 @@ const EventInfo: React.FC<EventInfoProps> = ({
   );
 
   const link =
-    status === 'Cancelled' ? undefined : events({}).event({ eventId: id }).$;
+    status === 'Cancelled'
+      ? undefined
+      : eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id });
 
   return (
     <div css={cardStyles}>

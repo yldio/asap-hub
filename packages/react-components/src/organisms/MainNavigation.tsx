@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import {
-  about,
+  aboutRoutes,
   discoverRoutes,
   networkRoutes,
-  sharedResearch,
+  sharedResearchRoutes,
   newsRoutes,
-  events,
-  analytics,
+  eventRoutes,
+  analyticsRoutes,
 } from '@asap-hub/routing';
 
 import {
@@ -56,7 +56,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
     <ul css={listStyles}>
       <li>
         <NavigationLink
-          href={networkRoutes.DEFAULT.USERS.buildPath({})}
+          href={networkRoutes.DEFAULT.buildPath({})}
           icon={networkIcon}
           enabled={userOnboarded}
         >
@@ -65,7 +65,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={sharedResearch({}).$}
+          href={sharedResearchRoutes.DEFAULT.LIST.buildPath({})}
           icon={<LibraryIcon />}
           enabled={userOnboarded}
         >
@@ -74,7 +74,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={events({}).$}
+          href={eventRoutes.DEFAULT.buildPath({})}
           icon={calendarIcon}
           enabled={userOnboarded}
         >
@@ -101,7 +101,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={about({}).$}
+          href={aboutRoutes.buildPath({})}
           icon={aboutIcon}
           enabled={userOnboarded}
         >
@@ -111,7 +111,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       {canViewAnalytics && (
         <li>
           <NavigationLink
-            href={analytics({}).$}
+            href={analyticsRoutes.DEFAULT.buildPath({})}
             icon={analyticsIcon}
             enabled={userOnboarded}
           >

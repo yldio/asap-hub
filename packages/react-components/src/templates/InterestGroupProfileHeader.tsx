@@ -104,7 +104,7 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   calendarId,
   contactEmails,
 }) => {
-  const route = networkRoutes.DEFAULT.path; // TODO: fix this
+  const route = networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS; //TODO: fix this
   // network({})
   //   .interestGroups({})
   //   .interestGroup({ interestGroupId: id });
@@ -195,17 +195,31 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
           </div>
         </div>
         <TabNav>
-          <TabLink href={route.about({}).$}>About</TabLink>
-          {active && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
+          <TabLink href={route.ABOUT.buildPath({ interestGroupId: id })}>
+            About
+          </TabLink>
+          {active && (
+            <TabLink href={route.CALENDAR.buildPath({ interestGroupId: id })}>
+              Calendar
+            </TabLink>
+          )}
           {active && (
             <TabLink
-              href={route.upcoming({}).$ + queryParamString(searchQuery)}
+              href={
+                route.UPCOMING.buildPath({ interestGroupId: id }) +
+                queryParamString(searchQuery)
+              }
             >
               Upcoming Events ({upcomingEventsCount})
             </TabLink>
           )}
 
-          <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
+          <TabLink
+            href={
+              route.PAST.buildPath({ interestGroupId: id }) +
+              queryParamString(searchQuery)
+            }
+          >
             Past Events ({pastEventsCount})
           </TabLink>
         </TabNav>

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { ReactNode } from 'react';
 
 import { Display, Paragraph, Link } from '../atoms';
@@ -41,8 +41,13 @@ const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
       <Display styleAsHeading={3}>{title}</Display>
       <Paragraph accent="lead">{description}</Paragraph>
     </div>
+    networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$.OUTPUTS.relativePath +
     {!hideExploreButton && (
-      <Link buttonStyle primary href={sharedResearch({}).$}>
+      <Link
+        buttonStyle
+        primary
+        href={sharedResearchRoutes.DEFAULT.$.LIST.relativePath}
+      >
         Explore Shared Research
       </Link>
     )}

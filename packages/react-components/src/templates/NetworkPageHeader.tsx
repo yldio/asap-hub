@@ -138,7 +138,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <TabLink
           href={
             // TODO: fix this
-            networkRoutes.DEFAULT.path
+            networkRoutes.DEFAULT.USERS.buildPath({})
             // network({}).users({}).$ + queryParamString(searchQuery)
           }
           Icon={UserIcon}

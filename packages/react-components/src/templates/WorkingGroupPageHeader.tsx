@@ -301,25 +301,25 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         </div>
       </div>
       <TabNav>
-        <TabLink href={route.ABOUT.relativePath}>About</TabLink>
+        <TabLink href={route.$.ABOUT.relativePath}>About</TabLink>
         {!complete && (
-          <TabLink href={route.CALENDAR.relativePath}>Calendar</TabLink>
+          <TabLink href={route.$.CALENDAR.relativePath}>Calendar</TabLink>
         )}
-        <TabLink href={route.OUTPUTS.relativePath}>
+        <TabLink href={route.$.OUTPUTS.relativePath}>
           Outputs ({workingGroupsOutputsCount})
         </TabLink>
         {workingGroupsDraftOutputsCount !== undefined && (
-          <TabLink href={route.DRAFT_OUTPUTS.relativePath}>
+          <TabLink href={route.$.DRAFT_OUTPUTS.relativePath}>
             Draft Outputs ({workingGroupsDraftOutputsCount})
           </TabLink>
         )}
 
         {!complete && (
-          <TabLink href={route.UPCOMING.relativePath}>
+          <TabLink href={route.$.UPCOMING.relativePath}>
             Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
-        <TabLink href={route.PAST.relativePath}>
+        <TabLink href={route.$.PAST.relativePath}>
           Past Events {`(${pastEventsCount})`}
         </TabLink>
       </TabNav>

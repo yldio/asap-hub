@@ -1,4 +1,4 @@
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -117,8 +117,12 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
           currentPage={currentPage}
           timeRange={timeRange}
           href={
-            analytics({}).collaboration({}).collaborationPath({ metric, type })
-              .$
+            analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+              metric,
+              type,
+            })
+            // analytics({}).collaboration({}).collaborationPath({ metric, type })
+            //   .$
           }
         />
       </div>

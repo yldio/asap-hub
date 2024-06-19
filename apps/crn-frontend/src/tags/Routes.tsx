@@ -35,7 +35,7 @@ const TagRoutes: React.FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={path}
+        path=""
         element={
           <TagsPage
             tags={tags}

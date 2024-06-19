@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 
@@ -59,8 +59,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       renderPageHref={renderPageHref}
       isListView={isListView}
       exportResults={exportResults}
-      cardViewHref={sharedResearch({}).$ + cardViewParams}
-      listViewHref={sharedResearch({}).$ + listViewParams}
+      cardViewHref={sharedResearchRoutes.DEFAULT.LIST.path + cardViewParams}
+      listViewHref={sharedResearchRoutes.DEFAULT.LIST.path + listViewParams}
     />
   );
 };

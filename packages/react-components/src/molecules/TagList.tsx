@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { tags as tagsRoute } from '@asap-hub/routing';
+import { tagRoutes } from '@asap-hub/routing';
 
 import { rem, tabletScreen } from '../pixels';
 import { Tag } from '../atoms';
@@ -97,7 +97,11 @@ const TagList: React.FC<TagListProps> = ({
             centerContent && centredItemStyles,
           ]}
         >
-          <Tag title={tag} href={tagsRoute({ tag }).$} enabled={enabled}>
+          <Tag
+            title={tag}
+            href={tagRoutes.buildPath({}, { tag })}
+            enabled={enabled}
+          >
             {tag}
           </Tag>
         </li>

@@ -35,7 +35,7 @@ const Discover: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={discoverRoutes.DEFAULT.$.LIST.path}
+        path={discoverRoutes.DEFAULT.$.GUIDES.relativePath}
         element={
           <Frame title="Guides">
             <DiscoverPage>
@@ -73,7 +73,7 @@ const Discover: FC<Record<string, never>> = () => {
       {/* TODO: Check if this is right */}
       <Route
         path="*"
-        element={<Navigate to={discoverRoutes.DEFAULT.$.LIST.path} />}
+        element={<Navigate to={discoverRoutes.DEFAULT.$.GUIDES.relativePath} />}
       />
     </Routes>
   );

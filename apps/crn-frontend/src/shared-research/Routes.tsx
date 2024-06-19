@@ -1,6 +1,6 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { SharedResearchPage } from '@asap-hub/react-components';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ const SharedResearch: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={path}
+        path={sharedResearchRoutes.DEFAULT.$.LIST.path}
         element={
           <SharedResearchPage
             onChangeSearch={setSearchQuery}
@@ -52,7 +52,7 @@ const SharedResearch: FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={path + sharedResearch({}).researchOutput.template}
+        path={sharedResearchRoutes.DEFAULT.$.DETAILS.path}
         element={<ResearchOutput />}
       />
     </Routes>

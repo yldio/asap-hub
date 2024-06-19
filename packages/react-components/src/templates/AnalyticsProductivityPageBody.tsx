@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import AnalyticsControls from '../molecules/AnalyticsControls';
@@ -57,7 +57,10 @@ const AnalyticsProductivityPageBody: React.FC<
       <AnalyticsControls
         currentPage={currentPage}
         timeRange={timeRange}
-        href={analytics({}).productivity({}).metric({ metric }).$}
+        href={
+          analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric })
+          //analytics({}).productivity({}).metric({ metric }).$
+        }
       />
     </div>
     <div css={tableHeaderStyles}>

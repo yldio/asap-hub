@@ -1,7 +1,7 @@
 import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
 import {
   Navigate,
@@ -32,86 +32,52 @@ const AnalyticsRoutes = () => {
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  const { pathname: path } = useLocation();
+  // const { pathname: path } = useLocation();
+  console.log(analytics.DEFAULT.$.LEADERSHIP.relativePath);
 
   return (
     <Routes>
       {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
-        <Route path={path + analytics({}).productivity.template}>
-          <Routes>
-            <Route
-              path={
-                path +
-                analytics({}).productivity.template +
-                analytics({}).productivity({}).metric.template
-              }
-              element={
-                <AnalyticsPage>
-                  <Frame title="Resource & Data Sharing">
-                    <ProductivityBody />
-                  </Frame>
-                </AnalyticsPage>
-              }
-            />
+        <Route path={analytics.DEFAULT.$.PRODUCTIVITY.relativePath}>
+          <Route
+            path={analytics.DEFAULT.PRODUCTIVITY.$.METRIC.relativePath}
+            element={
+              <AnalyticsPage>
+                <Frame title="Resource & Data Sharing">
+                  <ProductivityBody />
+                </Frame>
+              </AnalyticsPage>
+            }
+          />
 
-            <Route
-              path="*"
-              element={
-                <Navigate
-                  to={
-                    analytics({}).productivity({}).metric({ metric: 'user' }).$
-                  }
-                />
-              }
-            />
-          </Routes>
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to={
+                  analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+                    metric: 'user',
+                  })
+                  // analytics({}).productivity({}).metric({ metric: 'user' }).$
+                }
+              />
+            }
+          />
         </Route>
       )}
       {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
-        <Route path={path + analytics({}).collaboration.template}>
-          <Routes>
-            <Route
-              path={
-                path +
-                analytics({}).collaboration.template +
-                analytics({}).collaboration({}).collaborationPath.template
-              }
-              element={
-                <AnalyticsPage>
-                  <Frame title="Collaboration">
-                    <CollaborationBody />
-                  </Frame>
-                </AnalyticsPage>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <Navigate
-                  to={
-                    analytics({}).collaboration({}).collaborationPath({
-                      metric: 'user',
-                      type: 'within-team',
-                    }).$
-                  }
-                />
-              }
-            />
-          </Routes>
-        </Route>
-      )}
-      <Route path={path + analytics({}).leadership.template}>
-        <Routes>
+        <Route path={analytics.DEFAULT.$.COLLABORATION.relativePath}>
           <Route
             path={
-              path +
-              analytics({}).leadership.template +
-              analytics({}).leadership({}).metric.template
+              analytics.DEFAULT.COLLABORATION.$.METRIC.relativePath
+              // path +
+              // analytics({}).collaboration.template +
+              // analytics({}).collaboration({}).collaborationPath.template
             }
             element={
               <AnalyticsPage>
-                <Frame title="Leadership & Membership">
-                  <LeadershipBody />
+                <Frame title="Collaboration">
+                  <CollaborationBody />
                 </Frame>
               </AnalyticsPage>
             }
@@ -121,20 +87,64 @@ const AnalyticsRoutes = () => {
             element={
               <Navigate
                 to={
-                  analytics({})
-                    .leadership({})
-                    .metric({ metric: 'working-group' }).$
+                  analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+                    metric: 'user',
+                    type: 'within-team',
+                  })
+                  // analytics({}).collaboration({}).collaborationPath({
+                  //   metric: 'user',
+                  //   type: 'within-team',
+                  // }).$
                 }
               />
             }
           />
-        </Routes>
+        </Route>
+      )}
+      <Route path={analytics.DEFAULT.$.LEADERSHIP.relativePath}>
+        <Route
+          path={
+            analytics.DEFAULT.LEADERSHIP.$.METRIC.relativePath
+            // path +
+            // analytics({}).leadership.template +
+            // analytics({}).leadership({}).metric.template
+          }
+          element={
+            <AnalyticsPage>
+              <Frame title="Leadership & Membership">
+                <LeadershipBody />
+              </Frame>
+            </AnalyticsPage>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={
+                analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
+                  metric: 'working-group',
+                })
+                // analytics({})
+                //   .leadership({})
+                //   .metric({ metric: 'working-group' }).$
+              }
+            />
+          }
+        />
       </Route>
       {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') ? (
         <Route
           path="*"
           element={
-            <Navigate to={analytics({}).productivity({ metric: 'user' }).$} />
+            <Navigate
+              to={
+                analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+                  metric: 'user',
+                })
+                // analytics({}).productivity({ metric: 'user' }).$
+              }
+            />
           }
         />
       ) : (
@@ -142,7 +152,12 @@ const AnalyticsRoutes = () => {
           path="*"
           element={
             <Navigate
-              to={analytics({}).leadership({ metric: 'working-group' }).$}
+              to={
+                analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
+                  metric: 'working-group',
+                })
+                // analytics({}).leadership({ metric: 'working-group' }).$
+              }
             />
           }
         />

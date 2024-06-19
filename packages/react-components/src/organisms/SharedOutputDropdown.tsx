@@ -181,15 +181,22 @@ export const SharedOutputDropdownWrapper: React.FC<
     outputDocumentType: OutputDocumentTypeParameter,
   ) =>
     // TODO: fix this
-    networkRoutes.DEFAULT.path;
-  // isWGMembership(association)
-  //   ? network({})
-  //       .workingGroups({})
-  //       .workingGroup({ workingGroupId: association.id })
-  //       .createOutput({ outputDocumentType }).$
-  //   : network({}).teams({}).team({ teamId: association.id }).createOutput({
-  //       outputDocumentType,
-  //     }).$;
+    // networkRoutes.DEFAULT.path;
+    isWGMembership(association)
+      ? networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+          workingGroupId: association.id,
+          outputDocumentType,
+        })
+      : // .workingGroups({})
+        // .workingGroup({ workingGroupId: association.id })
+        // .createOutput({ outputDocumentType }).$
+        networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath({
+          teamId: association.id,
+          outputDocumentType,
+        });
+  // network({}).teams({}).team({ teamId: association.id }).createOutput({
+  //     outputDocumentType,
+  //   }).$;
 
   const dropdownOptions = (selectedAssociation: Association) => [
     {

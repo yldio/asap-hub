@@ -13,7 +13,7 @@ import {
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
 
-const activeClassName = 'active-link';
+const activeClassName = 'active';
 
 const styles = css({
   display: 'block',
@@ -98,7 +98,7 @@ export const Navigation: React.FC<React.PropsWithChildren<NavigationProps>> = ({
     return (
       <NavLink
         to={url}
-        className={activeClassName}
+        // className={activeClassName}
         css={({ colors, components }) => [
           styles,
           squareBorder && squareBorderStyles,

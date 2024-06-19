@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { networkRoutes } from '@asap-hub/routing';
-import { Route, useMatch } from 'react-router-dom';
+import { Route, Routes, useMatch } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
@@ -31,7 +31,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const patchUser = usePatchUserById(user.id);
 
   const commonModalProps = {
-    backHref: route,
+    backHref: route.path,
     onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
   };
 
@@ -80,9 +80,9 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         isOwnProfile={id === user.id}
       />
       {id === user.id && (
-        <>
+        <Routes>
           <Route
-            path={route.$.RESEARCH.EDIT_ROLE.relativePath}
+            path={route.RESEARCH.$.EDIT_ROLE.relativePath}
             element={
               <Frame title="Edit Role">
                 <RoleModal
@@ -100,7 +100,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           />
 
           <Route
-            path={route.$.RESEARCH.EDIT_QUESTIONS.relativePath}
+            path={route.RESEARCH.$.EDIT_QUESTIONS.relativePath}
             element={
               <Frame title="Edit Open Questions">
                 <OpenQuestionsModal {...user} {...commonModalProps} />
@@ -109,7 +109,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           />
 
           <Route
-            path={route.$.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.relativePath}
+            path={route.RESEARCH.$.EDIT_EXPERTISE_AND_RESOURCES.relativePath}
             element={
               <Frame title="Edit Expertise and Resources">
                 <ExpertiseAndResourcesModal
@@ -120,7 +120,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
               </Frame>
             }
           />
-        </>
+        </Routes>
       )}
     </>
   );

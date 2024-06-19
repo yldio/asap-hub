@@ -1,5 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { networkRoutes, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
 
@@ -89,6 +89,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
+
+  console.log('supposed to render shared research output');
   const tags = [
     ...props.methods,
     ...props.organisms,
@@ -208,11 +210,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             cancelText="Cancel"
             confirmText="Publish Output"
             onSave={() => publishOutput()}
-            successHref={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .researchOutputPublished({}).$
-            }
+            successHref={sharedResearchRoutes.DEFAULT.DETAILS.PUBLISH_RESEARCH_OUTPUT.buildPath(
+              { researchOutputId: id },
+            )}
             onCancel={() => {
               setDisplayPublishModal(false);
             }}

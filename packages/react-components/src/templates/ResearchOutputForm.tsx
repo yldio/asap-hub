@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/model';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
-import { networkRoutes, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { useMatch } from 'react-router-dom';
@@ -407,15 +407,20 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               setRemotePayload(currentPayload);
               if (researchOutput) {
                 const { id } = researchOutput;
-                const savePath = sharedResearch({}).researchOutput({
-                  researchOutputId: id,
-                  draftCreated: draftSave && !researchOutputData?.id,
-                }).$;
-                const publishPath = sharedResearch({})
-                  .researchOutput({
+                const savePath = sharedResearchRoutes.DEFAULT.DETAILS.buildPath(
+                  {
                     researchOutputId: id,
-                  })
-                  .researchOutputPublished({}).$;
+                  },
+                  {
+                    draftCreated: draftSave && !researchOutputData?.id,
+                  },
+                );
+                const publishPath =
+                  sharedResearchRoutes.DEFAULT.DETAILS.PUBLISH_RESEARCH_OUTPUT.buildPath(
+                    {
+                      researchOutputId: id,
+                    },
+                  );
                 setRedirectOnSave(
                   (!published || versionAction === 'create') && !draftSave
                     ? publishPath

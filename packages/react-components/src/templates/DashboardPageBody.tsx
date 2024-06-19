@@ -3,9 +3,9 @@ import { css } from '@emotion/react';
 import {
   networkRoutes,
   newsRoutes,
-  sharedResearch,
+  sharedResearchRoutes,
   dashboardRoutes,
-  events as eventsRoute,
+  eventRoutes,
 } from '@asap-hub/routing';
 import {
   TeamRole,
@@ -153,7 +153,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
         {upcomingEvents && upcomingEvents.length > 3 && (
           <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Link href={eventsRoute({}).upcoming({}).$}>View All →</Link>
+            <Link href={eventRoutes.DEFAULT.UPCOMING.path}>View All →</Link>
           </p>
         )}
       </div>
@@ -164,7 +164,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
         <PastEventsDashboardCard events={pastEvents} />
         <p css={viewAllStyles} data-testid="view-past-events">
-          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+          <Link href={eventRoutes.DEFAULT.PAST.path}>View All →</Link>
         </p>
       </div>
       <div>
@@ -178,7 +178,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         />
         {recentSharedOutputs && recentSharedOutputs.total > 5 && (
           <p css={viewAllStyles} data-testid="view-recent-shared-outputs">
-            <Link href={sharedResearch({}).$}>View All →</Link>
+            <Link href={sharedResearchRoutes.DEFAULT.LIST.buildPath({})}>
+              View All →
+            </Link>
           </p>
         )}
       </div>

@@ -9,7 +9,7 @@ import {
   useCurrentUserCRN,
   UserProfileContext,
 } from '@asap-hub/react-context';
-import { events, networkRoutes } from '@asap-hub/routing';
+import { eventRoutes, networkRoutes } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
@@ -171,7 +171,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           past={false}
                           noEventsComponent={
                             <NoEvents
-                              link={events({}).upcoming({}).$}
+                              link={eventRoutes.DEFAULT.UPCOMING.buildPath({})}
                               type="member"
                             />
                           }
@@ -191,7 +191,10 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           noEventsComponent={
                             <NoEvents
                               past
-                              link={events({}).past({}).$}
+                              link={
+                                eventRoutes.DEFAULT.PAST.buildPath({})
+                                // events({}).past({}).$
+                              }
                               type="member"
                             />
                           }

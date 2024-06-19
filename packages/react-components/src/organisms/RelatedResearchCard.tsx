@@ -2,7 +2,7 @@ import { EventResponse, gp2 } from '@asap-hub/model';
 import {
   gp2 as gp2Routing,
   networkRoutes,
-  sharedResearch,
+  sharedResearchRoutes,
 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -167,9 +167,9 @@ const RelatedResearchCard = <
                   ellipsed
                   href={
                     'teams' in output
-                      ? sharedResearch({}).researchOutput({
+                      ? sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
                           researchOutputId: id,
-                        }).$
+                        })
                       : gp2Routing.outputs({}).output({ outputId: id }).$
                   }
                 >

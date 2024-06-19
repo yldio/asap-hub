@@ -2,15 +2,15 @@ import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
-  about,
-  analytics,
+  aboutRoutes,
+  analyticsRoutes,
   dashboardRoutes,
   discoverRoutes,
-  events,
+  eventRoutes,
   networkRoutes,
   newsRoutes,
-  sharedResearch,
-  tags,
+  sharedResearchRoutes,
+  tagRoutes,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -116,10 +116,9 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: networkRoutes.DEFAULT.path,
-              // href: networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
-              //   interestGroupId: id,
-              // }),
+              href: networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
+                interestGroupId: id,
+              }),
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"
@@ -152,7 +151,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               />
 
               <Route
-                path={about.template}
+                path={aboutRoutes.path}
                 element={
                   <Frame title="About ASAP">
                     <About />
@@ -161,7 +160,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               />
               {canViewAnalytics && (
                 <Route
-                  path={analytics.template}
+                  path={analyticsRoutes.DEFAULT.path}
                   element={
                     <Frame title="Analytics">
                       <Analytics />
@@ -186,7 +185,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={sharedResearch.template}
+                path={sharedResearchRoutes.DEFAULT.path}
                 element={
                   <Frame title="Shared Research">
                     <SharedResearch />
@@ -194,7 +193,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={events.template}
+                path={eventRoutes.DEFAULT.path}
                 element={
                   <Frame title={null}>
                     <Events />
@@ -202,7 +201,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 }
               />
               <Route
-                path={tags.template}
+                path={tagRoutes.path}
                 element={
                   <Frame title="Tags">
                     <Tags />

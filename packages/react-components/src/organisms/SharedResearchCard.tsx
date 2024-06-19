@@ -1,5 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { networkRoutes, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Caption, StateTag } from '../atoms';
@@ -84,7 +84,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       <LinkHeadline
         level={2}
         styleAsHeading={4}
-        href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+        href={sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+          researchOutputId,
+        })}
       >
         {title}
       </LinkHeadline>

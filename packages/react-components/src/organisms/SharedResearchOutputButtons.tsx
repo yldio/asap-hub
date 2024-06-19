@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { mobileScreen, rem } from '../pixels';
 import { Link, Button } from '../atoms';
@@ -89,11 +89,9 @@ const SharedResearchOutputButtons: React.FC<
           <div css={leftButtons}>
             <Link
               noMargin
-              href={
-                sharedResearch({})
-                  .researchOutput({ researchOutputId: id })
-                  .editResearchOutput({}).$
-              }
+              href={sharedResearchRoutes.DEFAULT.DETAILS.EDIT_RESEARCH_OUTPUT.buildPath(
+                { researchOutputId: id },
+              )}
               buttonStyle
               small
               primary
@@ -125,11 +123,9 @@ const SharedResearchOutputButtons: React.FC<
         <div css={leftButtons}>
           <Link
             noMargin
-            href={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .versionResearchOutput({}).$
-            }
+            href={sharedResearchRoutes.DEFAULT.DETAILS.VERSION_RESEARCH_OUTPUT.buildPath(
+              { researchOutputId: id },
+            )}
             buttonStyle
             small
             primary

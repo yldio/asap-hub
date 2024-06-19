@@ -29,6 +29,7 @@ import {
   TeamProductivityDataObject,
   TeamRole,
   TimeRangeOption,
+  UserOutputType,
   UserProductivityDataObject,
   UserProductivityTeam,
 } from '@asap-hub/model';
@@ -437,6 +438,14 @@ const flattenInterestGroupLeaders = (
 const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
 
+const getDocumentTypeKeys = (documentType: string | null | undefined) =>
+  documentType && isTeamOutputDocumentType(documentType)
+    ? [
+        `${documentType} Outputs` as UserOutputType,
+        `${documentType} Public Outputs` as UserOutputType,
+      ]
+    : [];
+
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
   rangeKey?: TimeRangeOption,
@@ -473,17 +482,46 @@ const getUserProductivityItems = (
               author?.__typename === 'Users' && author.sys.id === user.sys.id,
           );
 
+          const documentTypeKeys = getDocumentTypeKeys(
+            outputItem?.documentType,
+          );
+
           if (isAuthor) {
             if (outputItem?.sharingStatus === 'Public') {
+              // if (outputItem.documentType && isTeamOutputDocumentType(outputItem.documentType)) {
+              //   const documentTypeOutputsKey = `${outputItem.documentType}Outputs` as UserOutputType;
+              //   const documentTypePublicOutputsKey = `${outputItem.documentType}PublicOutputs` as UserOutputType;
+              //   return {
+              //     ...outputsCount,
+              //     outputs: outputsCount.outputs + 1,
+              //     publicOutputs: outputsCount.publicOutputs + 1,
+              //     [documentTypeOutputsKey]: outputsCount[documentTypeOutputsKey] + 1,
+              //     [documentTypePublicOutputsKey]: outputsCount[documentTypePublicOutputsKey] + 1
+              //   };
+              // }
+
               return {
+                ...outputsCount,
                 outputs: outputsCount.outputs + 1,
                 publicOutputs: outputsCount.publicOutputs + 1,
+                ...(documentTypeKeys.length > 0 && {
+                  [`${documentTypeKeys[0]}`]:
+                    outputsCount[`${documentTypeKeys[0] as UserOutputType}`] +
+                    1,
+                  [`${documentTypeKeys[1]}`]:
+                    outputsCount[`${documentTypeKeys[1] as UserOutputType}`] +
+                    1,
+                }),
               };
             }
 
             return {
               ...outputsCount,
               outputs: outputsCount.outputs + 1,
+              ...(documentTypeKeys.length > 0 && {
+                [`${documentTypeKeys[0]}`]:
+                  outputsCount[`${documentTypeKeys[0] as UserOutputType}`] + 1,
+              }),
             };
           }
 
@@ -492,10 +530,30 @@ const getUserProductivityItems = (
         {
           outputs: 0,
           publicOutputs: 0,
+          'Article Public Outputs': 0,
+          'Article Outputs': 0,
+          'Bioinformatics Public Outputs': 0,
+          'Bioinformatics Outputs': 0,
+          'Dataset Public Outputs': 0,
+          'Dataset Outputs': 0,
+          'Lab Resource Public Outputs': 0,
+          'Lab Resource Outputs': 0,
+          'Protocol Public Outputs': 0,
+          'Protocol Outputs': 0,
         },
       ) || {
       outputs: 0,
       publicOutputs: 0,
+      'Article Public Outputs': 0,
+      'Article Outputs': 0,
+      'Bioinformatics Public Outputs': 0,
+      'Bioinformatics Outputs': 0,
+      'Dataset Public Outputs': 0,
+      'Dataset Outputs': 0,
+      'Lab Resource Public Outputs': 0,
+      'Lab Resource Outputs': 0,
+      'Protocol Public Outputs': 0,
+      'Protocol Outputs': 0,
     };
 
     return {
@@ -515,6 +573,53 @@ const getUserProductivityItems = (
           ? (userOutputsCount.publicOutputs / userOutputsCount.outputs).toFixed(
               2,
             )
+          : '0.00',
+      asapArticleOutput: userOutputsCount['Article Outputs'],
+      asapArticlePublicOutput: userOutputsCount['Article Public Outputs'],
+      articleRatio:
+        userOutputsCount['Article Outputs'] > 0
+          ? (
+              userOutputsCount['Article Public Outputs'] /
+              userOutputsCount['Article Outputs']
+            ).toFixed(2)
+          : '0.00',
+      asapBioinformaticsOutput: userOutputsCount['Bioinformatics Outputs'],
+      asapBioinformaticsPublicOutput:
+        userOutputsCount['Bioinformatics Public Outputs'],
+      bioinformaticsRatio:
+        userOutputsCount['Bioinformatics Outputs'] > 0
+          ? (
+              userOutputsCount['Bioinformatics Public Outputs'] /
+              userOutputsCount['Bioinformatics Outputs']
+            ).toFixed(2)
+          : '0.00',
+      asapDatasetOutput: userOutputsCount['Dataset Outputs'],
+      asapDatasetPublicOutput: userOutputsCount['Dataset Public Outputs'],
+      datasetRatio:
+        userOutputsCount['Dataset Outputs'] > 0
+          ? (
+              userOutputsCount['Dataset Public Outputs'] /
+              userOutputsCount['Dataset Outputs']
+            ).toFixed(2)
+          : '0.00',
+      asapLabResourceOutput: userOutputsCount['Lab Resource Outputs'],
+      asapLabResourcePublicOutput:
+        userOutputsCount['Lab Resource Public Outputs'],
+      labResourceRatio:
+        userOutputsCount['Lab Resource Outputs'] > 0
+          ? (
+              userOutputsCount['Lab Resource Public Outputs'] /
+              userOutputsCount['Lab Resource Outputs']
+            ).toFixed(2)
+          : '0.00',
+      asapProtocolOutput: userOutputsCount['Protocol Outputs'],
+      asapProtocolPublicOutput: userOutputsCount['Protocol Public Outputs'],
+      protocolRatio:
+        userOutputsCount['Protocol Outputs'] > 0
+          ? (
+              userOutputsCount['Protocol Public Outputs'] /
+              userOutputsCount['Protocol Outputs']
+            ).toFixed(2)
           : '0.00',
     };
   });

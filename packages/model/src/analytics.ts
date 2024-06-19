@@ -78,6 +78,17 @@ export const timeRanges = [
 
 export type TimeRangeOption = (typeof timeRanges)[number];
 
+export const documentCategories = [
+  'article',
+  'bioinformatics',
+  'dataset',
+  'labResource',
+  'protocol',
+  'all',
+] as const;
+
+export type DocumentCategoryOption = (typeof documentCategories)[number];
+
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: TimeRangeOption;
 };
@@ -196,6 +207,21 @@ export type UserProductivityDataObject = {
   asapOutput: number;
   asapPublicOutput: number;
   ratio: string;
+  asapArticleOutput: number;
+  asapArticlePublicOutput: number;
+  articleRatio: string;
+  asapBioinformaticsOutput: number;
+  asapBioinformaticsPublicOutput: number;
+  bioinformaticsRatio: string;
+  asapDatasetOutput: number;
+  asapDatasetPublicOutput: number;
+  datasetRatio: string;
+  asapLabResourceOutput: number;
+  asapLabResourcePublicOutput: number;
+  labResourceRatio: string;
+  asapProtocolOutput: number;
+  asapProtocolPublicOutput: number;
+  protocolRatio: string;
 };
 
 export const teamOutputDocumentTypes = [
@@ -205,6 +231,21 @@ export const teamOutputDocumentTypes = [
   'Lab Resource',
   'Protocol',
 ] as const;
+
+export const userOutputTypes = [
+  'Article Public Outputs',
+  'Article Outputs',
+  'Bioinformatics Public Outputs',
+  'Bioinformatics Outputs',
+  'Dataset Public Outputs',
+  'Dataset Outputs',
+  'Lab Resource Public Outputs',
+  'Lab Resource Outputs',
+  'Protocol Public Outputs',
+  'Protocol Outputs',
+] as const;
+
+export type UserOutputType = (typeof userOutputTypes)[number];
 
 export type TeamOutputDocumentType = (typeof teamOutputDocumentTypes)[number];
 

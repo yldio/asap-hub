@@ -7,12 +7,13 @@ import {
 
 const UserProductivity = () => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory } = useAnalytics();
 
   const { items: data, total } = useAnalyticsUserProductivity({
     currentPage,
     pageSize,
     timeRange,
+    documentCategory
   });
 
   const performance = useUserProductivityPerformance(timeRange);

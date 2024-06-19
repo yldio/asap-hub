@@ -16,13 +16,15 @@ const Productivity = () => {
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
 
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory, type } = useAnalytics();
 
   return (
     <AnalyticsProductivityPageBody
       metric={metric}
       setMetric={setMetric}
       timeRange={timeRange}
+      documentCategory={documentCategory}
+      type={type}
       currentPage={currentPage}
     >
       {metric === 'user' ? <UserProductivity /> : <TeamProductivity />}

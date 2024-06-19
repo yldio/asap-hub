@@ -189,7 +189,15 @@ export const fetchAnalyticsOptionsValidationSchema: JSONSchemaType<FetchAnalytic
     properties: {
       take: { type: 'number', nullable: true },
       skip: { type: 'number', nullable: true },
-      filter: { type: 'string', nullable: true },
+      filter: {
+        type: 'object',
+        properties: {
+          timeRange: { type: 'string', nullable: true },
+          documentType: { type: 'string', nullable: true },
+          sharingStatus: { type: 'string', nullable: true },
+        },
+        nullable: true,
+      },
     },
     additionalProperties: false,
   };

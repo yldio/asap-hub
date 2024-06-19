@@ -1,8 +1,10 @@
 import { AnalyticsData } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
+  documentTypes,
+  FilterAnalyticsOptions,
   ListResponse,
-  TimeRangeOption,
+  sharingStatusTypes,
   timeRanges,
 } from '@asap-hub/model';
 import { promises as fs } from 'fs';
@@ -27,19 +29,45 @@ export const exportAnalyticsData = async (
   await file.write('[\n');
   metric === 'team-leadership'
     ? await exportData(metric, file)
-    : await exportDataForRanges(metric, file);
+    : await exportDataWithFilters(metric, file);
 
   await file.write(']');
 };
 
-const exportDataForRanges = async (
+const exportDataWithFilters = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {
-  for (let i = 0; i < timeRanges.length; i += 1) {
-    await exportData(metric, file, timeRanges[i]);
-    if (i != timeRanges.length - 1) {
-      await file.write(',');
+  if (metric === 'user-productivity') {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      for (let j = 0; j < documentTypes.length; j += 1) {
+        await exportData(metric, file, {
+          timeRange: timeRanges[i],
+          documentType: documentTypes[j],
+        });
+        if (j != documentTypes.length - 1) {
+          await file.write(',');
+        }
+      }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
+    }
+  }
+  if (metric === 'team-productivity') {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      for (let j = 0; j < sharingStatusTypes.length; j += 1) {
+        await exportData(metric, file, {
+          timeRange: timeRanges[i],
+          sharingStatus: sharingStatusTypes[j],
+        });
+        if (j != sharingStatusTypes.length - 1) {
+          await file.write(',');
+        }
+      }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
     }
   }
 };
@@ -47,7 +75,7 @@ const exportDataForRanges = async (
 const exportData = async (
   metric: Metric,
   file: FileHandle,
-  range?: TimeRangeOption,
+  filter?: FilterAnalyticsOptions,
 ): Promise<void> => {
   const analyticsController = new AnalyticsController(
     getAnalyticsDataProvider(),
@@ -67,13 +95,19 @@ const exportData = async (
       records = await analyticsController.fetchTeamProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: range,
+        filter: {
+          timeRange: filter?.timeRange,
+          documentType: filter?.documentType,
+        },
       });
     } else {
       records = await analyticsController.fetchUserProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: range,
+        filter: {
+          timeRange: filter?.timeRange,
+          sharingStatus: filter?.sharingStatus,
+        },
       });
     }
 
@@ -87,7 +121,11 @@ const exportData = async (
       await file.write(
         JSON.stringify(
           records.items.map((record) =>
-            transformRecords(record, metric, range),
+            transformRecords(record, metric, {
+              timeRange: filter?.timeRange,
+              documentType: filter?.documentType,
+              sharingStatus: filter?.sharingStatus,
+            }),
           ),
           null,
           2,
@@ -104,14 +142,18 @@ const exportData = async (
 const transformRecords = (
   record: AnalyticsData,
   type: Metric,
-  range?: TimeRangeOption,
+  filter?: FilterAnalyticsOptions,
 ) => ({
   ...record,
   _tags: getRecordTags(record, type),
-  objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
+  objectID: `${record.id}-${type}${formatField(filter?.timeRange)}${formatField(
+    filter?.documentType,
+  )}${formatField(filter?.sharingStatus)}`,
   __meta: {
     type,
-    range,
+    range: filter?.timeRange,
+    documentType: filter?.documentType,
+    sharingStatus: filter?.sharingStatus,
   },
 });
 
@@ -124,3 +166,5 @@ const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
       return [];
   }
 };
+
+const formatField = (field: string | undefined) => (field ? '-' + field : '');

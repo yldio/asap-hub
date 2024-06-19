@@ -1,8 +1,15 @@
 import { Maybe, ResearchOutputs, Sys } from '@asap-hub/contentful';
-import { TimeRangeOption } from '@asap-hub/model';
+import {
+  DocumentTypeOption,
+  SharingStatusOption,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 type AnalyticOutput = Maybe<
-  Pick<ResearchOutputs, 'sharingStatus' | 'addedDate' | 'createdDate'> & {
+  Pick<
+    ResearchOutputs,
+    'sharingStatus' | 'documentType' | 'addedDate' | 'createdDate'
+  > & {
     authorsCollection?: Maybe<{
       items: Array<
         Maybe<
@@ -42,6 +49,27 @@ export const getFilterOutputByRange =
       return item.addedDate
         ? item.addedDate >= filter
         : item.createdDate >= filter;
+    }
+    return true;
+  };
+
+export const getFilterOutputByDocumentType =
+  (documentType?: DocumentTypeOption) => (item: AnalyticOutput) => {
+    if (item && documentType && documentType !== 'all') {
+      return item.documentType === documentType;
+    }
+    return true;
+  };
+
+export const getFilterOutputBySharingStatus =
+  (sharingStatus?: SharingStatusOption) => (item: AnalyticOutput) => {
+    if (item && sharingStatus && sharingStatus !== 'all') {
+      return (sharingStatus === 'asap-public-output' &&
+        item.sharingStatus === 'Public') ||
+        (sharingStatus === 'asap-output' &&
+          item.sharingStatus === 'Network Only')
+        ? true
+        : false;
     }
     return true;
   };

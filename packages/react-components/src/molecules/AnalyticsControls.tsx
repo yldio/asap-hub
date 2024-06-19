@@ -1,9 +1,15 @@
 import { css } from '@emotion/react';
-import { TimeRangeOption } from '@asap-hub/model';
+import {
+  DocumentTypeOption,
+  SharingStatusOption,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
 import { rem, tabletScreen } from '../pixels';
+
+export type MetricOption = 'user' | 'team';
 
 const containerStyles = css({
   display: 'flex',
@@ -33,18 +39,79 @@ const timeRangeOptions: Record<TimeRangeOption, string> = {
   all: 'Since Hub Launch (2020)',
 };
 
+const documentCategoryOptions: Record<DocumentTypeOption, string> = {
+  all: 'All',
+  article: 'Article',
+  bioinformatics: 'Bioinformatics',
+  dataset: 'Dataset',
+  'lab-resource': 'Lab Resource',
+  protocol: 'Protocol',
+};
+
+const typeOptions: Record<SharingStatusOption, string> = {
+  all: 'All',
+  'asap-output': 'ASAP Output',
+  'asap-public-output': 'ASAP Public Output',
+};
+
 interface AnalyticsControlsProps {
+  readonly metric: MetricOption;
   readonly timeRange: TimeRangeOption;
+  readonly documentCategory?: DocumentTypeOption;
+  readonly type?: SharingStatusOption;
   readonly href: string;
   readonly currentPage: number;
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
+  metric,
   timeRange,
+  documentCategory,
+  type,
   currentPage,
   href,
 }) => (
   <span css={containerStyles}>
-    <strong>View as:</strong>
+    {metric === 'user' && documentCategory && (
+      <>
+        <strong>Document:</strong>
+        <DropdownButton
+          noMargin
+          buttonChildren={() => (
+            <>
+              <span css={{ marginRight: rem(10) }}>
+                {documentCategoryOptions[documentCategory]}
+              </span>
+              {dropdownChevronIcon}
+            </>
+          )}
+        >
+          {Object.keys(documentCategoryOptions).map((key) => ({
+            item: <>{documentCategoryOptions[key as DocumentTypeOption]}</>,
+            href: `${href}?documentCategory=${key}`,
+          }))}
+        </DropdownButton>
+      </>
+    )}
+    {metric === 'team' && type && (
+      <>
+        <strong>Type:</strong>
+        <DropdownButton
+          noMargin
+          buttonChildren={() => (
+            <>
+              <span css={{ marginRight: rem(10) }}>{typeOptions[type]}</span>
+              {dropdownChevronIcon}
+            </>
+          )}
+        >
+          {Object.keys(typeOptions).map((key) => ({
+            item: <>{typeOptions[key as SharingStatusOption]}</>,
+            href: `${href}?type=${key}`,
+          }))}
+        </DropdownButton>
+      </>
+    )}
+    <strong>View:</strong>
     <DropdownButton
       noMargin
       buttonChildren={() => (

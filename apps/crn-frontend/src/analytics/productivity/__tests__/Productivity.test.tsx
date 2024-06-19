@@ -65,7 +65,7 @@ const defaultOptions: ProductivityListOptions = {
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-user-productivity-30d',
+  objectID: '1-user-productivity-30d-all',
   name: 'Test User',
   isAlumni: false,
   teams: [
@@ -84,7 +84,7 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
 
 const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-team-productivity-30d',
+  objectID: '1-team-productivity-30d-all',
   name: 'Team Alessi',
   isInactive: false,
   Article: 50,
@@ -129,15 +129,15 @@ describe('user productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetUserProductivity)
-      .calledWith(expect.anything(), defaultOptions)
+      .calledWith(expect.anything(), {...defaultOptions, documentCategory: 'all'})
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
     when(mockGetUserProductivity)
-      .calledWith(expect.anything(), { ...defaultOptions, timeRange: '90d' })
+      .calledWith(expect.anything(), { ...defaultOptions, documentCategory: 'all', timeRange: '90d' })
       .mockResolvedValue({
         items: [
           {
             ...userProductivityResponse,
-            objectID: '1-user-productivity-90d',
+            objectID: '1-user-productivity-90d-all',
             asapOutput: 600,
           },
         ],
@@ -150,7 +150,7 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getAllByRole('button', { name: /chevron down/i })[1]!;
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
@@ -190,15 +190,15 @@ describe('team productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), defaultOptions)
+      .calledWith(expect.anything(), {...defaultOptions, type: 'all'})
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), { ...defaultOptions, timeRange: '90d' })
+      .calledWith(expect.anything(), { ...defaultOptions, type: 'all', timeRange: '90d' })
       .mockResolvedValue({
         items: [
           {
             ...teamProductivityResponse,
-            objectID: '1-team-productivity-90d',
+            objectID: '1-team-productivity-90d-all',
             Article: 60,
           },
         ],
@@ -211,7 +211,7 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getAllByRole('button', { name: /chevron down/i })[1]!;
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>

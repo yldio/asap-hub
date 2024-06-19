@@ -76,10 +76,33 @@ export const timeRanges = [
   'all',
 ] as const;
 
+export const documentTypes = [
+  'all',
+  'article',
+  'bioinformatics',
+  'dataset',
+  'lab-resource',
+  'protocol',
+] as const;
+
+export const sharingStatusTypes = [
+  'all',
+  'asap-output',
+  'asap-public-output',
+] as const;
+
 export type TimeRangeOption = (typeof timeRanges)[number];
+export type DocumentTypeOption = (typeof documentTypes)[number];
+export type SharingStatusOption = (typeof sharingStatusTypes)[number];
+
+export type FilterAnalyticsOptions = {
+  timeRange?: TimeRangeOption;
+  documentType?: DocumentTypeOption;
+  sharingStatus?: SharingStatusOption;
+};
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
-  filter?: TimeRangeOption;
+  filter?: FilterAnalyticsOptions;
 };
 
 export type AnalyticsTeamLeadershipDataObject = Pick<

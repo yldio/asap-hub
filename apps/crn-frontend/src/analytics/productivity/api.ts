@@ -1,8 +1,10 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
+  DocumentTypeOption,
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
+  SharingStatusOption,
   TeamProductivityPerformance,
   TimeRangeOption,
   UserProductivityPerformance,
@@ -13,16 +15,20 @@ export type ProductivityListOptions = Pick<
   'currentPage' | 'pageSize'
 > & {
   timeRange: TimeRangeOption;
+  documentCategory?: DocumentTypeOption;
+  type?: SharingStatusOption;
 };
 
 export const getUserProductivity = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
 ): Promise<ListUserProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange } = options;
+  const { currentPage, pageSize, timeRange, documentCategory } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const documentCategoryFilter = `__meta.documentCategory:"${documentCategory || 'all'}"`;
+  const filter = `(${rangeFilter}) AND (${documentCategoryFilter})`
   const result = await algoliaClient.search(['user-productivity'], '', {
-    filters: rangeFilter,
+    filters: filter,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });
@@ -68,10 +74,12 @@ export const getTeamProductivity = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: ProductivityListOptions,
 ): Promise<ListTeamProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange } = options;
+  const { currentPage, pageSize, timeRange, type } = options;
   const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+  const typeFilter = `__meta.sharingStatus:"${type || 'all'}"`;
+  const filter = `(${rangeFilter}) AND (${typeFilter})`
   const result = await algoliaClient.search(['team-productivity'], '', {
-    filters: rangeFilter,
+    filters: filter,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

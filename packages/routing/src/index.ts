@@ -3,18 +3,18 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { RouteNode } from 'typesafe-routes';
 import * as gp2 from './gp2';
 
-export { default as about } from './about';
-export { default as analytics } from './analytics';
+export * from './about';
+export * from './analytics';
 export * from './discover';
-export { default as events } from './events';
 export { default as logout } from './logout';
 export * from './network';
 export type { OutputDocumentTypeParameter } from './network';
 export * from './news';
-export { default as sharedResearch } from './shared-research';
+export * from './shared-research';
+export * from './events';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
-export { default as tags } from './tags';
+export * from './tags';
 export * from './dashboard';
 
 export type { RouteNode };

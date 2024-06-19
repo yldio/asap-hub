@@ -7,13 +7,12 @@ import {
   TeamCollaborationDataObject,
   TeamCollaborationWithinOutputData,
   TeamOutputDocumentType,
-  teamOutputDocumentTypes,
   TeamRole,
   TimeRangeOption,
   UserCollaborationDataObject,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
-import { getFilterOutputByRange } from './common';
+import { getFilterOutputByRange, isTeamOutputDocumentType } from './common';
 
 export type EntityWithId = {
   sys: {
@@ -26,11 +25,6 @@ export type Author = {
   teams: EntityWithId[];
   labs: EntityWithId[];
 };
-
-export const isTeamOutputDocumentType = (
-  documentType: string,
-): documentType is TeamOutputDocumentType =>
-  teamOutputDocumentTypes.includes(documentType as TeamOutputDocumentType);
 
 export const checkDifferentTeams = (
   referenceTeams: EntityWithId[],

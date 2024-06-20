@@ -15,6 +15,7 @@ import {
 } from 'recoil';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -108,51 +109,26 @@ export const useAnalyticsUserProductivity = (
   return { ...userProductivity, client: algoliaClient.client };
 };
 
-export const userProductivityPerformanceState = atomFamily<
-  UserProductivityPerformance | undefined,
-  string
->({
-  key: 'analyticsUserProductivityPerformance',
-  default: undefined,
-});
+export const userProductivityPerformanceState =
+  makePerformanceState<UserProductivityPerformance>(
+    'analyticsUserProductivityPerformance',
+  );
+export const useUserProductivityPerformance =
+  makePerformanceHook<UserProductivityPerformance>(
+    userProductivityPerformanceState,
+    getUserProductivityPerformance,
+  );
 
-export const useUserProductivityPerformance = (timeRange: TimeRangeOption) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
-  const [userProductivityPerformance, setUserProductivityPerformance] =
-    useRecoilState(userProductivityPerformanceState(timeRange));
-  if (userProductivityPerformance === undefined) {
-    throw getUserProductivityPerformance(algoliaClient.client, timeRange)
-      .then(setUserProductivityPerformance)
-      .catch(setUserProductivityPerformance);
-  }
-  if (userProductivityPerformance instanceof Error) {
-    throw userProductivityPerformance;
-  }
-  return userProductivityPerformance;
-};
+export const teamProductivityPerformanceState =
+  makePerformanceState<TeamProductivityPerformance>(
+    'analyticsTeamProductivityPerformance',
+  );
 
-export const teamProductivityPerformanceState = atomFamily<
-  TeamProductivityPerformance | undefined,
-  string
->({
-  key: 'analyticsTeamProductivityPerformance',
-  default: undefined,
-});
-
-export const useTeamProductivityPerformance = (timeRange: TimeRangeOption) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
-  const [teamProductivityPerformance, setTeamProductivityPerformance] =
-    useRecoilState(teamProductivityPerformanceState(timeRange));
-  if (teamProductivityPerformance === undefined) {
-    throw getTeamProductivityPerformance(algoliaClient.client, timeRange)
-      .then(setTeamProductivityPerformance)
-      .catch(setTeamProductivityPerformance);
-  }
-  if (teamProductivityPerformance instanceof Error) {
-    throw teamProductivityPerformance;
-  }
-  return teamProductivityPerformance;
-};
+export const useTeamProductivityPerformance =
+  makePerformanceHook<TeamProductivityPerformance>(
+    teamProductivityPerformanceState,
+    getTeamProductivityPerformance,
+  );
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

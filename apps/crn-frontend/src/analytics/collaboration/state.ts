@@ -1,7 +1,10 @@
+import { AnalyticsSearchOptionsWithRange } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   TeamCollaborationAlgoliaResponse,
+  TeamCollaborationPerformance,
+  TimeRangeOption,
   UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { useEffect } from 'react';
@@ -14,10 +17,12 @@ import {
 } from 'recoil';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
   CollaborationListOptions,
   getUserCollaboration,
   getTeamCollaboration,
+  getTeamCollaborationPerformance,
 } from './api';
 
 const analyticsUserCollaborationIndexState = atomFamily<
@@ -85,7 +90,7 @@ export const analyticsUserCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsUserCollaboration = (
-  options: CollaborationListOptions,
+  options: AnalyticsSearchOptionsWithRange,
 ) => {
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [userCollaboration, setUserCollaboration] = useRecoilState(
@@ -176,7 +181,7 @@ export const analyticsTeamCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsTeamCollaboration = (
-  options: CollaborationListOptions,
+  options: AnalyticsSearchOptionsWithRange,
 ) => {
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
@@ -201,3 +206,14 @@ export const useAnalyticsTeamCollaboration = (
   }
   return teamCollaboration;
 };
+
+export const teamCollaborationPerformanceState =
+  makePerformanceState<TeamCollaborationPerformance>(
+    'analyticsTeamCollaborationPerformance',
+  );
+
+export const useTeamCollaborationPerformance =
+  makePerformanceHook<TeamCollaborationPerformance>(
+    teamCollaborationPerformanceState,
+    getTeamCollaborationPerformance,
+  );

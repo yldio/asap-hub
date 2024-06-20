@@ -214,7 +214,9 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
@@ -275,7 +277,9 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>

@@ -1,5 +1,7 @@
 import {
+  DocumentCategoryOption,
   SortUserProductivity,
+  UserProductivityDataObject,
   userProductivityInitialSortingDirection,
   UserProductivityPerformance,
   UserProductivityResponse,
@@ -159,9 +161,30 @@ const displayRoles = (items: UserProductivityResponse['teams']) => {
   );
 };
 
+const documentCategoryOutputDetailsMap: Record<
+  DocumentCategoryOption,
+  [string, string, string]
+> = {
+  all: ['asapOutput', 'asapPublicOutput', 'ratio'],
+  article: ['asapArticleOutput', 'asapArticlePublicOutput', 'articleRatio'],
+  bioinformatics: [
+    'asapBioinformaticsOutput',
+    'asapBioinformaticsPublicOutput',
+    'bioinformaticsRatio',
+  ],
+  dataset: ['asapDatasetOutput', 'asapDatasetPublicOutput', 'datasetRatio'],
+  labResource: [
+    'asapLabResourceOutput',
+    'asapLabResourcePublicOutput',
+    'labResourceRatio',
+  ],
+  protocol: ['asapProtocolOutput', 'asapProtocolPublicOutput', 'protocolRatio'],
+};
+
 type UserProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: UserProductivityResponse[];
   performance: UserProductivityPerformance;
+  documentCategory: DocumentCategoryOption;
   sort: SortUserProductivity;
   setSort: React.Dispatch<React.SetStateAction<SortUserProductivity>>;
   sortingDirection: UserProductivitySortingDirection;
@@ -173,6 +196,7 @@ type UserProductivityTableProps = ComponentProps<typeof PageControls> & {
 const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
   data,
   performance,
+  documentCategory,
   sort,
   setSort,
   sortingDirection,
@@ -185,6 +209,9 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
   const isAsapOutputSortActive = sort.includes('asap_output');
   const isAsapPublicOutputSortActive = sort.includes('asap_public_output');
   const isRatioSortActive = sort.includes('ratio');
+
+  const [asapOutput, asapPublicOutput, ratio] =
+    documentCategoryOutputDetailsMap[documentCategory];
 
   return (
     <>
@@ -367,14 +394,14 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               <p>{displayRoles(row.teams)}</p>
               <span css={[titleStyles, rowTitleStyles]}>ASAP Output</span>
               <p css={rowValueStyles}>
-                {row.asapOutput}{' '}
+                {row[asapOutput as keyof UserProductivityDataObject]}{' '}
                 {getPerformanceIcon(row.asapOutput, performance.asapOutput)}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>
                 ASAP Public Output
               </span>
               <p css={rowValueStyles}>
-                {row.asapPublicOutput}{' '}
+                {row[asapPublicOutput as keyof UserProductivityDataObject]}{' '}
                 {getPerformanceIcon(
                   row.asapPublicOutput,
                   performance.asapPublicOutput,
@@ -382,7 +409,7 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Ratio</span>
               <p css={rowValueStyles}>
-                {row.ratio}{' '}
+                {row[ratio as keyof UserProductivityDataObject]}{' '}
                 {getPerformanceIcon(parseFloat(row.ratio), performance.ratio)}
               </p>
             </div>

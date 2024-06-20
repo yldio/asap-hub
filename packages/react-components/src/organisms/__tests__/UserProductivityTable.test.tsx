@@ -20,6 +20,7 @@ describe('UserProductivityTable', () => {
   const defaultProps: ComponentProps<typeof UserProductivityTable> = {
     ...pageControlsProps,
     performance: userProductivityPerformance,
+    documentCategory: 'all',
     data: [],
     sort: 'user_asc' as SortUserProductivity,
     setSort: jest.fn(),
@@ -207,6 +208,7 @@ describe('UserProductivityTable', () => {
       const { getByTitle } = render(
         <UserProductivityTable
           data={[user]}
+          documentCategory="all"
           performance={userProductivityPerformance}
           sort={sort}
           setSort={setSort}

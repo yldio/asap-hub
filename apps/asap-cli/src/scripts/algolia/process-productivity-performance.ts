@@ -22,6 +22,32 @@ const roundToTwoDecimals = (number: number, type?: RoundingType): number => {
     : Math.floor(number * factor) / factor;
 };
 
+export const outputCategoryOptions = [
+  'asapOutput',
+  'asapPublicOutput',
+  'asapArticleOutput',
+  'asapArticlePublicOutput',
+  'asapBioinformaticsOutput',
+  'asapBioinformaticsPublicOutput',
+  'asapDatasetOutput',
+  'asapDatasetPublicOutput',
+  'asapLabResourceOutput',
+  'asapLabResourcePublicOutput',
+  'asapProtocolOutput',
+  'asapProtocolPublicOutput',
+] as const;
+type OutputCategoryOption = (typeof outputCategoryOptions)[number];
+
+export const ratioOptions = [
+  'ratio',
+  'articleRatio',
+  'bioinformaticsRatio',
+  'datasetRatio',
+  'labResourceRatio',
+  'protocolRatio',
+] as const;
+type RatioAttributeOption = (typeof ratioOptions)[number];
+
 export const getStandardDeviation = (
   numbers: number[],
   mean: number,
@@ -75,6 +101,21 @@ type UserProductivityHit = Hit & {
   asapOutput: number;
   asapPublicOutput: number;
   ratio: string;
+  asapArticleOutput: number;
+  asapArticlePublicOutput: number;
+  articleRatio: string;
+  asapBioinformaticsOutput: number;
+  asapBioinformaticsPublicOutput: number;
+  bioinformaticsRatio: string;
+  asapDatasetOutput: number;
+  asapDatasetPublicOutput: number;
+  datasetRatio: string;
+  asapLabResourceOutput: number;
+  asapLabResourcePublicOutput: number;
+  labResourceRatio: string;
+  asapProtocolOutput: number;
+  asapProtocolPublicOutput: number;
+  protocolRatio: string;
 };
 
 type TeamProductivityHit = Hit & {
@@ -123,7 +164,7 @@ export const processUserProductivityPerformance = async (
     const getPaginatedHits = (page: number) =>
       index.search<UserProductivityHit>('', {
         filters: `__meta.range:"${range}" AND (__meta.type:"${type}")`,
-        attributesToRetrieve: ['asapOutput', 'asapPublicOutput', 'ratio'],
+        attributesToRetrieve: [...outputCategoryOptions, ...ratioOptions],
         page,
         hitsPerPage: 50,
       });
@@ -131,15 +172,17 @@ export const processUserProductivityPerformance = async (
     const userProductivityHits =
       await getAllHits<UserProductivityHit>(getPaginatedHits);
 
-    const fields = ['asapOutput', 'asapPublicOutput', 'ratio'];
+    const fields = [...outputCategoryOptions, ...ratioOptions] as string[];
 
     const userPerformance = fields.reduce(
       (metrics, field) => {
-        if (field === 'ratio') {
+        if ((ratioOptions as ReadonlyArray<string>).includes(field)) {
           return {
             ...metrics,
-            ratio: getBellCurveMetrics(
-              userProductivityHits.map((hit) => parseFloat(hit.ratio)),
+            [field]: getBellCurveMetrics(
+              userProductivityHits.map((hit) =>
+                parseFloat(hit[field as RatioAttributeOption]),
+              ),
               false,
             ),
           };
@@ -149,7 +192,7 @@ export const processUserProductivityPerformance = async (
           ...metrics,
           [field]: getBellCurveMetrics(
             userProductivityHits.map(
-              (hit) => hit[field as 'asapOutput' | 'asapPublicOutput'],
+              (hit) => hit[field as OutputCategoryOption],
             ),
           ),
         };

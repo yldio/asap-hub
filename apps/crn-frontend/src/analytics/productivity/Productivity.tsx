@@ -35,7 +35,7 @@ const Productivity = () => {
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
 
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
 
@@ -106,6 +106,7 @@ const Productivity = () => {
       metric={metric}
       setMetric={setMetric}
       timeRange={timeRange}
+      documentCategory={documentCategory}
       currentPage={currentPage}
       exportResults={exportResults}
       tags={tags}

@@ -198,18 +198,6 @@ const getUserProductivityItems = (
 
           if (isAuthor) {
             if (outputItem?.sharingStatus === 'Public') {
-              // if (outputItem.documentType && isTeamOutputDocumentType(outputItem.documentType)) {
-              //   const documentTypeOutputsKey = `${outputItem.documentType}Outputs` as UserOutputType;
-              //   const documentTypePublicOutputsKey = `${outputItem.documentType}PublicOutputs` as UserOutputType;
-              //   return {
-              //     ...outputsCount,
-              //     outputs: outputsCount.outputs + 1,
-              //     publicOutputs: outputsCount.publicOutputs + 1,
-              //     [documentTypeOutputsKey]: outputsCount[documentTypeOutputsKey] + 1,
-              //     [documentTypePublicOutputsKey]: outputsCount[documentTypePublicOutputsKey] + 1
-              //   };
-              // }
-
               return {
                 ...outputsCount,
                 outputs: outputsCount.outputs + 1,

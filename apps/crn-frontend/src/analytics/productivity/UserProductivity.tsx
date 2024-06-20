@@ -22,7 +22,7 @@ const UserProductivity: React.FC<UserProductivityProps> = ({
   tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory } = useAnalytics();
   const [sortingDirection, setSortingDirection] =
     useState<UserProductivitySortingDirection>(
       userProductivityInitialSortingDirection,
@@ -45,6 +45,7 @@ const UserProductivity: React.FC<UserProductivityProps> = ({
       data={data}
       performance={performance}
       sort={sort}
+      documentCategory={documentCategory}
       setSort={setSort}
       sortingDirection={sortingDirection}
       setSortingDirection={setSortingDirection}

@@ -6,7 +6,7 @@ import { NoTokenAlgoliaClient } from './no-token-client';
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
 export * from './crn/types';
-export * from './analytics/types';
+export * from './analytics';
 export * from './filters';
 export {
   EMPTY_ALGOLIA_RESPONSE,

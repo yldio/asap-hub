@@ -1,8 +1,9 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import { getMetricWithRange, getPerformanceForMetric } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  TeamCollaborationPerformance,
   TimeRangeOption,
 } from '@asap-hub/model';
 
@@ -13,40 +14,17 @@ export type CollaborationListOptions = Pick<
   timeRange: TimeRangeOption;
 };
 
-export const getUserCollaboration = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  options: CollaborationListOptions,
-): Promise<ListUserCollaborationAlgoliaResponse> => {
-  const { currentPage, pageSize, timeRange } = options;
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const result = await algoliaClient.search(['user-collaboration'], '', {
-    filters: rangeFilter,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
-};
+export const getUserCollaboration =
+  getMetricWithRange<ListUserCollaborationAlgoliaResponse>(
+    'user-collaboration',
+  );
 
-export const getTeamCollaboration = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  options: CollaborationListOptions,
-): Promise<ListTeamCollaborationAlgoliaResponse> => {
-  const { currentPage, pageSize, timeRange } = options;
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const result = await algoliaClient.search(['team-collaboration'], '', {
-    filters: rangeFilter,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
-};
+export const getTeamCollaboration =
+  getMetricWithRange<ListTeamCollaborationAlgoliaResponse>(
+    'team-collaboration',
+  );
+
+export const getTeamCollaborationPerformance =
+  getPerformanceForMetric<TeamCollaborationPerformance>(
+    'team-collaboration-performance',
+  );

@@ -1,3 +1,7 @@
+import {
+  PerformanceMetricByDocumentType,
+  PerformanceMetrics,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, TeamCollaborationRow } from '..';
@@ -6,6 +10,7 @@ import { Card } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
+import PerformanceCard from './PerformanceCard';
 
 const container = css({
   display: 'grid',
@@ -78,6 +83,7 @@ export type TeamCollaborationMetric = {
 
 type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: TeamCollaborationMetric[];
+  performance: PerformanceMetricByDocumentType;
 };
 
 const TeamCollaborationTable: React.FC<TeamProductivityTableProps> = ({
@@ -85,6 +91,15 @@ const TeamCollaborationTable: React.FC<TeamProductivityTableProps> = ({
   ...pageControlProps
 }) => (
   <>
+    <PerformanceCard
+      performance={[
+        { label: 'Article', ...performance.article },
+        { label: 'Lab Resources', ...performance.labResource },
+        { label: 'Bioinformatics', ...performance.bioinformatics },
+        { label: 'Protocols', ...performance.protocol },
+        { label: 'Datasets', ...performance.dataset },
+      ]}
+    />
     <Card padding={false}>
       <div css={container}>
         <div

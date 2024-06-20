@@ -23,7 +23,7 @@ const dataTextStyles = css({
   color: lead.rgb,
 });
 
-type CaptionItemProps = {
+export type CaptionItemProps = {
   label: string;
   belowAverageMin: number;
   belowAverageMax: number;

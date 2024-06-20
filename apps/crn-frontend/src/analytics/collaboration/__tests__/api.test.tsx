@@ -1,4 +1,8 @@
-import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithRange,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
@@ -6,11 +10,7 @@ import {
 import nock from 'nock';
 
 import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
-import {
-  getUserCollaboration,
-  CollaborationListOptions,
-  getTeamCollaboration,
-} from '../api';
+import { getUserCollaboration, getTeamCollaboration } from '../api';
 
 jest.mock('../../../config');
 
@@ -36,10 +36,12 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultOptions: CollaborationListOptions = {
+const defaultOptions: AnalyticsSearchOptionsWithRange = {
   pageSize: 10,
   currentPage: 0,
   timeRange: '30d',
+  tags: [],
+  sort: '',
 };
 
 const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {

@@ -1,9 +1,11 @@
+import { AnalyticsSearchOptionsWithRange } from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
+  SortTeamProductivity,
+  SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
-  TimeRangeOption,
   UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
 } from '@asap-hub/model';
@@ -21,12 +23,11 @@ import {
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
-  ProductivityListOptions,
 } from './api';
 
 const analyticsUserProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortUserProductivity>
 >({
   key: 'analyticsUserProductivityIndex',
   default: undefined,
@@ -42,7 +43,7 @@ export const analyticsUserProductivityListState = atomFamily<
 
 export const analyticsUserProductivityState = selectorFamily<
   ListUserProductivityAlgoliaResponse | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortUserProductivity>
 >({
   key: 'userProductivity',
   get:
@@ -86,12 +87,12 @@ export const analyticsUserProductivityState = selectorFamily<
 });
 
 export const useAnalyticsUserProductivity = (
-  options: ProductivityListOptions,
+  options: AnalyticsSearchOptionsWithRange<SortUserProductivity>,
 ) => {
   const indexName =
     options.sort === 'user_asc'
       ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
+      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort?.replace('user_', '')}`;
 
   const algoliaClient = useAnalyticsAlgolia(indexName);
 
@@ -132,7 +133,7 @@ export const useTeamProductivityPerformance =
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
 >({
   key: 'analyticsTeamProductivityIndex',
   default: undefined,
@@ -148,7 +149,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 
 export const analyticsTeamProductivityState = selectorFamily<
   ListTeamProductivityAlgoliaResponse | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
 >({
   key: 'teamProductivity',
   get:
@@ -192,7 +193,7 @@ export const analyticsTeamProductivityState = selectorFamily<
 });
 
 export const useAnalyticsTeamProductivity = (
-  options: ProductivityListOptions,
+  options: AnalyticsSearchOptionsWithRange<SortTeamProductivity>,
 ) => {
   const indexName =
     options.sort === 'team_asc'

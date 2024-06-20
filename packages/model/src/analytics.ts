@@ -16,7 +16,7 @@ export type UserProductivityPerformance = {
   ratio: PerformanceMetrics;
 };
 
-type PerformanceMetricByDocumentType = {
+export type PerformanceMetricByDocumentType = {
   article: PerformanceMetrics;
   bioinformatics: PerformanceMetrics;
   dataset: PerformanceMetrics;

@@ -1,5 +1,5 @@
 import {
-  TeamProductivityPerformance,
+  PerformanceMetricByDocumentType,
   UserProductivityPerformance,
 } from '@asap-hub/model';
 
@@ -30,7 +30,7 @@ export const userProductivityPerformance: UserProductivityPerformance = {
   },
 };
 
-export const teamProductivityPerformance: TeamProductivityPerformance = {
+export const performanceByDocumentType: PerformanceMetricByDocumentType = {
   article: {
     belowAverageMin: 0,
     belowAverageMax: 2,

@@ -4,7 +4,6 @@ import {
   ListUserCollaborationAlgoliaResponse,
   TeamCollaborationAlgoliaResponse,
   TeamCollaborationPerformance,
-  TimeRangeOption,
   UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { useEffect } from 'react';
@@ -19,7 +18,6 @@ import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
-  CollaborationListOptions,
   getUserCollaboration,
   getTeamCollaboration,
   getTeamCollaborationPerformance,
@@ -27,7 +25,7 @@ import {
 
 const analyticsUserCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithRange
 >({
   key: 'analyticsUserCollaborationIndex',
   default: undefined,
@@ -43,7 +41,7 @@ export const analyticsUserCollaborationListState = atomFamily<
 
 export const analyticsUserCollaborationState = selectorFamily<
   ListUserCollaborationAlgoliaResponse | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithRange
 >({
   key: 'userCollaboration',
   get:
@@ -118,7 +116,7 @@ export const useAnalyticsUserCollaboration = (
 
 export const analyticsTeamCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithRange
 >({
   key: 'analyticsTeamCollaborationIndex',
   default: undefined,
@@ -134,7 +132,7 @@ export const analyticsTeamCollaborationListState = atomFamily<
 
 export const analyticsTeamCollaborationState = selectorFamily<
   ListTeamCollaborationAlgoliaResponse | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithRange
 >({
   key: 'teamCollaboration',
   get:

@@ -1,9 +1,15 @@
-import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithRange,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
 import {
   teamProductivityPerformance,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
+  SortTeamProductivity,
+  SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   TimeRangeOption,
   UserProductivityAlgoliaResponse,
@@ -16,7 +22,6 @@ import {
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
-  ProductivityListOptions,
 } from '../api';
 
 jest.mock('../../../config');
@@ -41,13 +46,23 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultOptions: ProductivityListOptions = {
-  pageSize: null,
-  currentPage: null,
-  timeRange: '30d',
-  sort: 'user_asc',
-  tags: [],
-};
+const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> =
+  {
+    pageSize: null,
+    currentPage: null,
+    timeRange: '30d',
+    sort: 'user_asc',
+    tags: [],
+  };
+
+const defaultTeamOptions: AnalyticsSearchOptionsWithRange<SortTeamProductivity> =
+  {
+    pageSize: null,
+    currentPage: null,
+    timeRange: '30d',
+    sort: 'team_asc',
+    tags: [],
+  };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
@@ -96,7 +111,7 @@ describe('getUserProductivity', () => {
   it('returns successfully fetched user productivity', async () => {
     const userProductivity = await getUserProductivity(
       algoliaSearchClient,
-      defaultOptions,
+      defaultUserOptions,
     );
     expect(userProductivity).toEqual(
       expect.objectContaining({
@@ -120,7 +135,7 @@ describe('getUserProductivity', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns user productivity for $range', async ({ timeRange }) => {
     await getUserProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       timeRange,
     });
 
@@ -135,7 +150,7 @@ describe('getUserProductivity', () => {
 
   it('should pass the search query to Algolia', async () => {
     await getUserProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(
@@ -164,7 +179,7 @@ describe('getTeamProductivity', () => {
 
   it('returns successfully fetched team productivity', async () => {
     const teamProductivity = await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       sort: 'team_asc',
     });
     expect(teamProductivity).toEqual(
@@ -189,7 +204,7 @@ describe('getTeamProductivity', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns team productivity for $range', async ({ timeRange }) => {
     await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       timeRange,
       sort: 'team_asc',
     });
@@ -205,7 +220,7 @@ describe('getTeamProductivity', () => {
 
   it('should pass the search query to Algolia', async () => {
     await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(

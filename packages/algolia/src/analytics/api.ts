@@ -8,9 +8,11 @@ export type AnalyticsSearchOptions = {
   tags: string[];
 };
 
-export type AnalyticsSearchOptionsWithRange = AnalyticsSearchOptions & {
-  timeRange: TimeRangeOption;
-};
+export type AnalyticsSearchOptionsWithRange<Sort = string> =
+  AnalyticsSearchOptions & {
+    timeRange: TimeRangeOption;
+    sort: Sort;
+  };
 
 export const getPerformanceForMetric =
   <T>(key: AnalyticPerformanceType) =>
@@ -30,10 +32,10 @@ export const getPerformanceForMetric =
   };
 
 export const getMetricWithRange =
-  <T>(key: AnalyticType) =>
+  <T, Sort = string>(key: AnalyticType) =>
   async (
     algoliaClient: AlgoliaClient<'analytics'>,
-    options: AnalyticsSearchOptionsWithRange,
+    options: AnalyticsSearchOptionsWithRange<Sort>,
   ): Promise<T | undefined> => {
     const { currentPage, pageSize, timeRange, tags } = options;
     const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;

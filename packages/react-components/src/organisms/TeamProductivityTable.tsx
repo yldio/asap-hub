@@ -8,7 +8,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { CaptionCard, CaptionItem, PageControls } from '..';
+import { PageControls } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
@@ -20,6 +20,7 @@ import {
 } from '../icons';
 import { rem, tabletScreen } from '../pixels';
 import { getPerformanceIcon } from '../utils';
+import PerformanceCard from './PerformanceCard';
 
 const container = css({
   display: 'grid',
@@ -130,15 +131,15 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
 
   return (
     <>
-      <CaptionCard>
-        <>
-          <CaptionItem label="Article" {...performance.article} />
-          <CaptionItem label="Lab Resources" {...performance.labResource} />
-          <CaptionItem label="Bioinformatics" {...performance.bioinformatics} />
-          <CaptionItem label="Protocols" {...performance.protocol} />
-          <CaptionItem label="Datasets" {...performance.dataset} />
-        </>
-      </CaptionCard>
+      <PerformanceCard
+        performance={[
+          { label: 'Article', ...performance.article },
+          { label: 'Lab Resources', ...performance.labResource },
+          { label: 'Bioinformatics', ...performance.bioinformatics },
+          { label: 'Protocols', ...performance.protocol },
+          { label: 'Datasets', ...performance.dataset },
+        ]}
+      />
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>

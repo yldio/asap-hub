@@ -4,6 +4,7 @@ import TeamCollaborationTable, {
   CollaborationType,
   TeamCollaborationMetric,
 } from '../TeamCollaborationTable';
+import { performanceByDocumentType } from '@asap-hub/fixtures';
 
 describe('TeamCollaborationTable', () => {
   const pageControlsProps = {
@@ -40,8 +41,13 @@ describe('TeamCollaborationTable', () => {
     const data = [
       { ...teamCollaboration, type: 'within-team' as CollaborationType },
     ];
+
     const { getByText } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        data={data}
+        performance={performanceByDocumentType}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Test Team')).toBeInTheDocument();
   });
@@ -54,7 +60,11 @@ describe('TeamCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        performance={performanceByDocumentType}
+        data={data}
+        {...pageControlsProps}
+      />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -66,7 +76,11 @@ describe('TeamCollaborationTable', () => {
       },
     ];
     const { getByRole, getByText, queryByText } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        performance={performanceByDocumentType}
+        data={data}
+        {...pageControlsProps}
+      />,
     );
     expect(queryByText('Other Team')).not.toBeInTheDocument();
     fireEvent.click(getByRole('button'));

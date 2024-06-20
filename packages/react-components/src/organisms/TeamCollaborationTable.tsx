@@ -1,7 +1,4 @@
-import {
-  PerformanceMetricByDocumentType,
-  PerformanceMetrics,
-} from '@asap-hub/model';
+import { PerformanceMetricByDocumentType } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, TeamCollaborationRow } from '..';
@@ -81,13 +78,14 @@ export type TeamCollaborationMetric = {
   type: CollaborationType;
 };
 
-type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {
+type TeamCollaborationTableProps = ComponentProps<typeof PageControls> & {
   data: TeamCollaborationMetric[];
   performance: PerformanceMetricByDocumentType;
 };
 
-const TeamCollaborationTable: React.FC<TeamProductivityTableProps> = ({
+const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
   data,
+  performance,
   ...pageControlProps
 }) => (
   <>

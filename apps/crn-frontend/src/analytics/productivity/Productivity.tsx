@@ -110,7 +110,7 @@ const Productivity = () => {
       metric={metric}
       setMetric={setMetric}
       timeRange={timeRange}
-      documentCategory={documentCategory}
+      documentCategory={metric === 'user' ? documentCategory : undefined}
       currentPage={currentPage}
       exportResults={exportResults}
       tags={tags}

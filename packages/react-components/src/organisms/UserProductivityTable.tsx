@@ -8,7 +8,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { CaptionCard, CaptionItem, PageControls } from '..';
+import { PageControls } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';

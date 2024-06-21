@@ -131,15 +131,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
 
   return (
     <>
-      <PerformanceCard
-        performance={[
-          { label: 'Article', ...performance.article },
-          { label: 'Lab Resources', ...performance.labResource },
-          { label: 'Bioinformatics', ...performance.bioinformatics },
-          { label: 'Protocols', ...performance.protocol },
-          { label: 'Datasets', ...performance.dataset },
-        ]}
-      />
+      <PerformanceCard performance={performance} type="by-document" />
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>

@@ -45,6 +45,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
   timeRange,
+  documentCategory,
   tags,
   setTags,
   loadTags,
@@ -71,6 +72,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
     <AnalyticsControls
       currentPage={currentPage}
       timeRange={timeRange}
+      documentCategory={documentCategory}
       metricOption={metric}
       tags={tags}
       loadTags={loadTags}

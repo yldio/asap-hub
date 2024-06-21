@@ -119,6 +119,7 @@ export const FETCH_USER_PRODUCTIVITY = gql`
               addedDate
               createdDate
               sharingStatus
+              documentType
               authorsCollection(limit: 10) {
                 items {
                   __typename

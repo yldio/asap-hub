@@ -97,6 +97,8 @@ beforeEach(() => {
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
+  mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+  mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
 });
 
 const defaultOptions: ProductivityListOptions = {
@@ -169,8 +171,6 @@ describe('user productivity', () => {
     sort: 'user_asc' as SortUserProductivity,
   };
   it('renders with user data', async () => {
-    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
@@ -178,7 +178,6 @@ describe('user productivity', () => {
   });
 
   it('renders data for different time ranges', async () => {
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     when(mockGetUserProductivity)
       .calledWith(expect.anything(), userOptions)
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
@@ -227,9 +226,6 @@ describe('user productivity', () => {
 describe('team productivity', () => {
   it('renders with team data', async () => {
     const label = 'Team Productivity';
-
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
-    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
@@ -291,7 +287,6 @@ describe('search', () => {
     return within(searchContainer).getByRole('textbox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );

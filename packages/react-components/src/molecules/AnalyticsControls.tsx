@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { TimeRangeOption } from '@asap-hub/model';
+import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 
 import { dropdownChevronIcon } from '../icons';
@@ -83,6 +83,15 @@ const timeRangeOptions: Record<TimeRangeOption, string> = {
   'last-year': 'Last 12 months',
   all: 'Since Hub Launch (2020)',
 };
+const documentCategoryOptions: Record<DocumentCategoryOption, string> = {
+  all: 'All',
+  article: 'Article',
+  bioinformatics: 'Bioinformatics',
+  dataset: 'Dataset',
+  'lab-resource': 'Lab Resource',
+  protocol: 'Protocol',
+};
+
 const searchTexts = {
   user: {
     label: 'Users & Teams',
@@ -96,6 +105,7 @@ const searchTexts = {
 
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
+  readonly documentCategory?: DocumentCategoryOption;
   // metric is optional for now since we haven't added search to the collaboration page
   readonly metricOption?: MetricOption;
   readonly tags: string[];
@@ -107,6 +117,7 @@ interface AnalyticsControlsProps {
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
+  documentCategory,
   metricOption,
   tags,
   setTags = noop,
@@ -118,6 +129,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   const searchParams = new URLSearchParams(window.location.search);
   searchParams.delete('range');
   searchParams.delete('currentPage');
+  searchParams.delete('documentCategory');
   const tagsQueryString = searchParams.has('tag')
     ? `&${searchParams.toString()}`
     : '';
@@ -141,6 +153,33 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
               placeholder={searchTexts[metricOption].placeholder}
             />
           </span>
+          {documentCategory && (
+            <div>
+              <span css={viewContainerStyles}>
+                <strong>Document Category:</strong>
+                <DropdownButton
+                  noMargin
+                  buttonChildren={() => (
+                    <>
+                      <span css={{ marginRight: rem(10) }}>
+                        {documentCategoryOptions[documentCategory]}
+                      </span>
+                      {dropdownChevronIcon}
+                    </>
+                  )}
+                >
+                  {Object.keys(documentCategoryOptions).map((key) => ({
+                    item: (
+                      <>
+                        {documentCategoryOptions[key as DocumentCategoryOption]}
+                      </>
+                    ),
+                    href: `${href}?range=${timeRange}&documentCategory=${key}&currentPage=${currentPage}${tagsQueryString}`,
+                  }))}
+                </DropdownButton>
+              </span>
+            </div>
+          )}
         </div>
       )}
       <span css={containerStyles}>
@@ -160,7 +199,11 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
             >
               {Object.keys(timeRangeOptions).map((key) => ({
                 item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-                href: `${href}?range=${key}&currentPage=${currentPage}${tagsQueryString}`,
+                href: `${href}?range=${key}${
+                  documentCategory
+                    ? `&documentCategory=${documentCategory}`
+                    : ''
+                }&currentPage=${currentPage}${tagsQueryString}`,
               }))}
             </DropdownButton>
           </span>

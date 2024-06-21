@@ -1,4 +1,5 @@
 import {
+  DocumentCategoryOption,
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
   TeamProductivityAlgoliaResponse,
@@ -22,6 +23,11 @@ import {
   getUserProductivityPerformance,
   ProductivityListOptions,
 } from './api';
+
+type UserPerformanceKeyData = Pick<
+  ProductivityListOptions,
+  'timeRange' | 'documentCategory'
+>;
 
 const analyticsUserProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -110,18 +116,27 @@ export const useAnalyticsUserProductivity = (
 
 export const userProductivityPerformanceState = atomFamily<
   UserProductivityPerformance | undefined,
-  string
+  UserPerformanceKeyData
 >({
   key: 'analyticsUserProductivityPerformance',
   default: undefined,
 });
 
-export const useUserProductivityPerformance = (timeRange: TimeRangeOption) => {
+export const useUserProductivityPerformance = (
+  timeRange: TimeRangeOption,
+  documentCategory: DocumentCategoryOption,
+) => {
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [userProductivityPerformance, setUserProductivityPerformance] =
-    useRecoilState(userProductivityPerformanceState(timeRange));
+    useRecoilState(
+      userProductivityPerformanceState({ timeRange, documentCategory }),
+    );
   if (userProductivityPerformance === undefined) {
-    throw getUserProductivityPerformance(algoliaClient.client, timeRange)
+    throw getUserProductivityPerformance(
+      algoliaClient.client,
+      timeRange,
+      documentCategory,
+    )
       .then(setUserProductivityPerformance)
       .catch(setUserProductivityPerformance);
   }

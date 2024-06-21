@@ -21,6 +21,7 @@ import {
 } from '../icons';
 import { rem, tabletScreen } from '../pixels';
 import { getPerformanceIcon } from '../utils';
+import PerformanceCard from './PerformanceCard';
 
 const container = css({
   display: 'grid',
@@ -188,16 +189,7 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
 
   return (
     <>
-      <CaptionCard>
-        <>
-          <CaptionItem label="ASAP Output" {...performance.asapOutput} />
-          <CaptionItem
-            label="ASAP Public Output"
-            {...performance.asapPublicOutput}
-          />
-          <CaptionItem label="Ratio" {...performance.ratio} />
-        </>
-      </CaptionCard>
+      <PerformanceCard performance={performance} type="by-output" />
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>

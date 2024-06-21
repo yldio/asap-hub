@@ -4,7 +4,7 @@ import {
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import {
-  teamProductivityPerformance,
+  performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
@@ -239,7 +239,7 @@ describe('getTeamProductivityPerformance', () => {
     search.mockResolvedValue(
       createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
         {
-          ...teamProductivityPerformance,
+          ...performanceByDocumentType,
           objectID: '12',
           __meta: { type: 'team-productivity-performance', range: '30d' },
         },
@@ -252,9 +252,7 @@ describe('getTeamProductivityPerformance', () => {
       algoliaSearchClient,
       '30d',
     );
-    expect(result).toEqual(
-      expect.objectContaining(teamProductivityPerformance),
-    );
+    expect(result).toEqual(expect.objectContaining(performanceByDocumentType));
   });
 
   it.each`

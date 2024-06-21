@@ -1,10 +1,11 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
+import { performanceByDocumentType } from '@asap-hub/fixtures';
+
 import TeamCollaborationTable, {
   CollaborationType,
   TeamCollaborationMetric,
 } from '../TeamCollaborationTable';
-import { performanceByDocumentType } from '@asap-hub/fixtures';
 
 describe('TeamCollaborationTable', () => {
   const pageControlsProps = {

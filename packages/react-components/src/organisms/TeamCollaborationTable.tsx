@@ -89,15 +89,7 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
   ...pageControlProps
 }) => (
   <>
-    <PerformanceCard
-      performance={[
-        { label: 'Article', ...performance.article },
-        { label: 'Lab Resources', ...performance.labResource },
-        { label: 'Bioinformatics', ...performance.bioinformatics },
-        { label: 'Protocols', ...performance.protocol },
-        { label: 'Datasets', ...performance.dataset },
-      ]}
-    />
+    <PerformanceCard performance={performance} type="by-document" />
     <Card padding={false}>
       <div css={container}>
         <div

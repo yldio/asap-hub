@@ -5,7 +5,7 @@ import {
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
-  teamProductivityPerformance,
+  performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
@@ -76,9 +76,7 @@ const mockGetUserProductivityPerformance =
     typeof getUserProductivityPerformance
   >;
 
-mockGetTeamProductivityPerformance.mockResolvedValue(
-  teamProductivityPerformance,
-);
+mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(
   userProductivityPerformance,
 );

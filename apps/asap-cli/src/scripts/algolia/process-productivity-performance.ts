@@ -1,5 +1,6 @@
 import { SearchResponse } from '@algolia/client-search';
 import {
+  documentCategories,
   PerformanceMetrics,
   TeamOutputDocumentType,
   teamOutputDocumentTypes,
@@ -120,53 +121,56 @@ export const processUserProductivityPerformance = async (
   await deletePreviousObjects(index, type);
 
   timeRanges.forEach(async (range) => {
-    const getPaginatedHits = (page: number) =>
-      index.search<UserProductivityHit>('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"${type}")`,
-        attributesToRetrieve: ['asapOutput', 'asapPublicOutput', 'ratio'],
-        page,
-        hitsPerPage: 50,
-      });
+    documentCategories.forEach(async (documentCategory) => {
+      const getPaginatedHits = (page: number) =>
+        index.search<UserProductivityHit>('', {
+          filters: `__meta.range:"${range}" AND (__meta.documentCategory:"${documentCategory}") AND (__meta.type:"${type}")`,
+          attributesToRetrieve: ['asapOutput', 'asapPublicOutput', 'ratio'],
+          page,
+          hitsPerPage: 50,
+        });
 
-    const userProductivityHits =
-      await getAllHits<UserProductivityHit>(getPaginatedHits);
+      const userProductivityHits =
+        await getAllHits<UserProductivityHit>(getPaginatedHits);
 
-    const fields = ['asapOutput', 'asapPublicOutput', 'ratio'];
+      const fields = ['asapOutput', 'asapPublicOutput', 'ratio'];
 
-    const userPerformance = fields.reduce(
-      (metrics, field) => {
-        if (field === 'ratio') {
+      const userPerformance = fields.reduce(
+        (metrics, field) => {
+          if (field === 'ratio') {
+            return {
+              ...metrics,
+              ratio: getBellCurveMetrics(
+                userProductivityHits.map((hit) => parseFloat(hit.ratio)),
+                false,
+              ),
+            };
+          }
+
           return {
             ...metrics,
-            ratio: getBellCurveMetrics(
-              userProductivityHits.map((hit) => parseFloat(hit.ratio)),
-              false,
+            [field]: getBellCurveMetrics(
+              userProductivityHits.map(
+                (hit) => hit[field as 'asapOutput' | 'asapPublicOutput'],
+              ),
             ),
           };
-        }
-
-        return {
-          ...metrics,
-          [field]: getBellCurveMetrics(
-            userProductivityHits.map(
-              (hit) => hit[field as 'asapOutput' | 'asapPublicOutput'],
-            ),
-          ),
-        };
-      },
-      {} as Record<string, PerformanceMetrics>,
-    );
-
-    await index.saveObject(
-      {
-        ...userPerformance,
-        __meta: {
-          range,
-          type: `${type}-performance`,
         },
-      },
-      { autoGenerateObjectIDIfNotExist: true },
-    );
+        {} as Record<string, PerformanceMetrics>,
+      );
+
+      await index.saveObject(
+        {
+          ...userPerformance,
+          __meta: {
+            range,
+            type: `${type}-performance`,
+            documentCategory,
+          },
+        },
+        { autoGenerateObjectIDIfNotExist: true },
+      );
+    });
   });
 };
 

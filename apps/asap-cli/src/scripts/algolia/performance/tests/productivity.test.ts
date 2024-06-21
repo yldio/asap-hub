@@ -1,4 +1,9 @@
-import { teamOutputDocumentTypes, timeRanges } from '@asap-hub/model';
+import { SearchResponse } from '@algolia/client-search';
+import {
+  documentCategories,
+  teamOutputDocumentTypes,
+  timeRanges,
+} from '@asap-hub/model';
 import type { SearchIndex } from 'algoliasearch';
 
 import {
@@ -51,19 +56,25 @@ describe('processUserProductivityPerformance', () => {
     ]);
 
     timeRanges.forEach((range) => {
-      expect(mockIndex.search).toHaveBeenCalledWith('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"user-productivity")`,
-        attributesToRetrieve: ['asapOutput', 'asapPublicOutput', 'ratio'],
-        page: expect.any(Number),
-        hitsPerPage: 50,
+      documentCategories.forEach((category) => {
+        expect(mockIndex.search).toHaveBeenCalledWith('', {
+          filters: `__meta.range:"${range}" AND (__meta.documentCategory:"${category}") AND (__meta.type:"user-productivity")`,
+          attributesToRetrieve: ['asapOutput', 'asapPublicOutput', 'ratio'],
+          page: expect.any(Number),
+          hitsPerPage: 50,
+        });
       });
     });
 
-    // one for each time range
-    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
+    // one for each time range and document category combination
+    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(30);
     expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
       {
-        __meta: { range: 'all', type: 'user-productivity-performance' },
+        __meta: {
+          range: 'all',
+          type: 'user-productivity-performance',
+          documentCategory: 'protocol',
+        },
         asapOutput: {
           aboveAverageMax: 2,
           aboveAverageMin: 3,

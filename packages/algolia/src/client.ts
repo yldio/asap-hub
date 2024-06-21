@@ -6,6 +6,7 @@ import {
 import {
   AnalyticsTeamLeadershipAlgoliaResponse,
   AnalyticsTeamLeadershipResponse,
+  DocumentCategoryOption,
   EventResponse,
   ExternalAuthorResponse,
   gp2 as gp2Model,
@@ -136,6 +137,7 @@ export type DistributeToEntityRecords<
   __meta: {
     type: ResponsesKey;
     range?: TimeRangeOption;
+    documentCategory?: DocumentCategoryOption;
   };
 };
 export type ClientSearchResponse<

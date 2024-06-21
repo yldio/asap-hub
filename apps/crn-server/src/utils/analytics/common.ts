@@ -1,12 +1,16 @@
 import { Maybe, ResearchOutputs, Sys } from '@asap-hub/contentful';
 import {
+  DocumentCategoryOption,
   TeamOutputDocumentType,
   teamOutputDocumentTypes,
   TimeRangeOption,
 } from '@asap-hub/model';
 
 type AnalyticOutput = Maybe<
-  Pick<ResearchOutputs, 'sharingStatus' | 'addedDate' | 'createdDate'> & {
+  Pick<
+    ResearchOutputs,
+    'documentType' | 'sharingStatus' | 'addedDate' | 'createdDate'
+  > & {
     authorsCollection?: Maybe<{
       items: Array<
         Maybe<
@@ -46,6 +50,14 @@ export const getFilterOutputByRange =
       return item.addedDate
         ? item.addedDate >= filter
         : item.createdDate >= filter;
+    }
+    return true;
+  };
+
+export const getFilterOutputByDocumentCategory =
+  (documentCategory?: DocumentCategoryOption) => (item: AnalyticOutput) => {
+    if (item && documentCategory && documentCategory !== 'all') {
+      return item.documentType === documentCategory;
     }
     return true;
   };

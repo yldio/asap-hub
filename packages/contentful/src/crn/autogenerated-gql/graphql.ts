@@ -10810,7 +10810,10 @@ export type FetchUserProductivityQuery = {
                   Maybe<
                     Pick<
                       ResearchOutputs,
-                      'addedDate' | 'createdDate' | 'sharingStatus'
+                      | 'addedDate'
+                      | 'createdDate'
+                      | 'sharingStatus'
+                      | 'documentType'
                     > & {
                       authorsCollection?: Maybe<{
                         items: Array<
@@ -24166,6 +24169,13 @@ export const FetchUserProductivityDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'sharingStatus',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'documentType',
                                           },
                                         },
                                         {

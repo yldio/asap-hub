@@ -54,10 +54,21 @@ export const getFilterOutputByRange =
     return true;
   };
 
+const documentCategoryMap: Record<DocumentCategoryOption, string | null> = {
+  all: null,
+  article: 'Article',
+  bioinformatics: 'Bioinformatics',
+  dataset: 'Dataset',
+  'lab-resource': 'Lab Resource',
+  protocol: 'Protocol',
+};
+
 export const getFilterOutputByDocumentCategory =
   (documentCategory?: DocumentCategoryOption) => (item: AnalyticOutput) => {
     if (item && documentCategory && documentCategory !== 'all') {
-      return item.documentType === documentCategory;
+      return item.documentType
+        ? item.documentType === documentCategoryMap[documentCategory]
+        : false;
     }
     return true;
   };

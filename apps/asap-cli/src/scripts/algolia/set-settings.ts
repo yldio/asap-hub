@@ -71,5 +71,8 @@ export const setAlgoliaSettings = async ({
   );
 
   const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
-  await replicaIndex.setSettings(replicaIndexSchema);
+  await replicaIndex.setSettings({
+    ...replicaIndexSchema,
+    attributesForFaceting: indexSchema.attributesForFaceting,
+  });
 };

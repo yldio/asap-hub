@@ -74,6 +74,9 @@ export const setAlgoliaAnalyticsSettings = async ({
       'utf8',
     );
     const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
-    await replicaIndex.setSettings(replicaIndexSchema);
+    await replicaIndex.setSettings({
+      ...replicaIndexSchema,
+      attributesForFaceting: indexSchema.attributesForFaceting,
+    });
   });
 };

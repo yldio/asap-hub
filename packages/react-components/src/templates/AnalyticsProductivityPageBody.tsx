@@ -20,7 +20,12 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 
 type ProductivityAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange' | 'currentPage' | 'tags' | 'loadTags' | 'setTags'
+  | 'timeRange'
+  | 'documentCategory'
+  | 'currentPage'
+  | 'tags'
+  | 'loadTags'
+  | 'setTags'
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;

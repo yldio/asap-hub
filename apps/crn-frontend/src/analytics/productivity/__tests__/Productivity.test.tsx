@@ -6,6 +6,7 @@ import {
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
+  DocumentCategoryOption,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
@@ -108,7 +109,7 @@ const defaultOptions: ProductivityListOptions = {
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-user-productivity-30d',
+  objectID: '1-user-productivity-30d-all',
   name: 'Test User',
   isAlumni: false,
   teams: [
@@ -164,6 +165,7 @@ const renderPage = async (path: string) => {
 describe('user productivity', () => {
   const userOptions = {
     ...defaultOptions,
+    documentCategory: 'all' as DocumentCategoryOption,
     sort: 'user_asc' as SortUserProductivity,
   };
   it('renders with user data', async () => {
@@ -186,7 +188,7 @@ describe('user productivity', () => {
         items: [
           {
             ...userProductivityResponse,
-            objectID: '1-user-productivity-90d',
+            objectID: '1-user-productivity-90d-all',
             asapOutput: 600,
           },
         ],
@@ -199,7 +201,9 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>

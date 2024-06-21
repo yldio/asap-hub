@@ -19,6 +19,7 @@ import {
 import {
   FetchAnalyticsOptions,
   FetchPaginationOptions,
+  FilterAnalyticsOptions,
   ListAnalyticsTeamLeadershipDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
@@ -35,6 +36,7 @@ import {
   getTeamCollaborationItems,
 } from '../../utils/analytics/collaboration';
 import {
+  getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
   isTeamOutputDocumentType,
 } from '../../utils/analytics/common';
@@ -62,7 +64,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   async fetchUserProductivity(
     options: FetchAnalyticsOptions,
   ): Promise<ListUserProductivityDataObject> {
-    const { take = 10, skip = 0, filter: rangeKey } = options;
+    const { take = 10, skip = 0, filter } = options;
 
     const { usersCollection } = await this.contentfulClient.request<
       FetchUserProductivityQuery,
@@ -71,14 +73,14 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: usersCollection?.total || 0,
-      items: getUserProductivityItems(usersCollection, rangeKey),
+      items: getUserProductivityItems(usersCollection, filter),
     };
   }
 
   async fetchTeamProductivity(
     options: FetchAnalyticsOptions,
   ): Promise<ListTeamProductivityDataObject> {
-    const { take = 10, skip = 0, filter: rangeKey } = options;
+    const { take = 10, skip = 0, filter } = options;
     const { teamsCollection } = await this.contentfulClient.request<
       FetchTeamProductivityQuery,
       FetchTeamProductivityQueryVariables
@@ -86,11 +88,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getTeamProductivityItems(teamsCollection, rangeKey),
+      items: getTeamProductivityItems(teamsCollection, filter?.timeRange),
     };
   }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {
-    const { take = 10, skip = 0, filter: rangeKey } = options;
+    const { take = 10, skip = 0, filter } = options;
     let collection: FetchUserCollaborationQuery['usersCollection'] = {
       total: 0,
       items: [],
@@ -111,14 +113,14 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection?.total || 0,
-      items: getUserCollaborationItems(collection, rangeKey),
+      items: getUserCollaborationItems(collection, filter?.timeRange),
     };
   }
 
   async fetchTeamCollaboration(
     options: FetchAnalyticsOptions,
   ): Promise<ListTeamCollaborationDataObject> {
-    const { take = 10, skip = 0, filter: rangeKey } = options;
+    const { take = 10, skip = 0, filter } = options;
 
     let collection: FetchTeamCollaborationQuery['teamsCollection'] = {
       total: 0,
@@ -142,14 +144,14 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection.total,
-      items: getTeamCollaborationItems(collection, rangeKey),
+      items: getTeamCollaborationItems(collection, filter?.timeRange),
     };
   }
 }
 
 const getUserProductivityItems = (
   usersCollection: FetchUserProductivityQuery['usersCollection'],
-  rangeKey?: TimeRangeOption,
+  filter?: FilterAnalyticsOptions,
 ): UserProductivityDataObject[] =>
   cleanArray(usersCollection?.items).map((user) => {
     const teams =
@@ -175,7 +177,8 @@ const getUserProductivityItems = (
         ) || [];
 
     const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
-      .filter(getFilterOutputByRange(rangeKey))
+      .filter(getFilterOutputByRange(filter?.timeRange))
+      .filter(getFilterOutputByDocumentCategory(filter?.documentCategory))
       .reduce(
         (outputsCount, outputItem) => {
           const isAuthor = outputItem?.authorsCollection?.items.some(

@@ -128,6 +128,14 @@ const generateLink = (
     documentCategory ? `&documentCategory=${documentCategory}` : ''
   }&currentPage=${currentPage}${tagsQueryString}`;
 
+const updateSearchParams = (): URLSearchParams => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.delete('range');
+  searchParams.delete('currentPage');
+  searchParams.delete('documentCategory');
+  return searchParams;
+};
+
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
@@ -151,10 +159,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   currentPage,
   href,
 }) => {
-  const searchParams = new URLSearchParams(window.location.search);
-  searchParams.delete('range');
-  searchParams.delete('currentPage');
-  searchParams.delete('documentCategory');
+  const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
     ? `&${searchParams.toString()}`
     : '';

@@ -100,6 +100,11 @@ describe('filtering', () => {
         included: 'Protocol',
         excluded: 'article',
       },
+      {
+        key: 'protocol',
+        included: 'Protocol',
+        excluded: '',
+      },
     ])(
       'filters outputs for document category $key',
       ({ key, included, excluded }) => {

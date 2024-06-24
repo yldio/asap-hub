@@ -1,5 +1,8 @@
-import { TimeRangeOption } from '@asap-hub/model';
-import { getFilterOutputByRange } from '../../../src/utils/analytics/common';
+import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
+import {
+  getFilterOutputByDocumentCategory,
+  getFilterOutputByRange,
+} from '../../../src/utils/analytics/common';
 
 describe('filtering', () => {
   beforeAll(() => {
@@ -63,6 +66,63 @@ describe('filtering', () => {
       ];
 
       expect(items.filter(getFilterOutputByRange('30d')).length).toBe(3);
+    });
+  });
+
+  describe('getFilterOutputByDocumentCategory', () => {
+    it.each<{
+      key?: DocumentCategoryOption;
+      included: string;
+      excluded: string;
+    }>([
+      {
+        key: 'article',
+        included: 'Article',
+        excluded: 'Bioinformatics',
+      },
+      {
+        key: 'bioinformatics',
+        included: 'Bioinformatics',
+        excluded: 'Dataset',
+      },
+      {
+        key: 'dataset',
+        included: 'Dataset',
+        excluded: 'Lab Resource',
+      },
+      {
+        key: 'lab-resource',
+        included: 'Lab Resource',
+        excluded: 'Protocol',
+      },
+      {
+        key: 'protocol',
+        included: 'Protocol',
+        excluded: 'article',
+      },
+    ])(
+      'filters outputs for document category $key',
+      ({ key, included, excluded }) => {
+        const items = [{ documentType: included }, { documentType: excluded }];
+
+        expect(
+          items.filter(getFilterOutputByDocumentCategory(key)).length,
+        ).toBe(1);
+      },
+    );
+
+    it('does not filter when document category key is "all"', () => {
+      const items = [
+        { documentType: 'Article' },
+        { documentType: 'Bioinformatics' },
+        { documentType: 'Dataset' },
+        { documentType: 'Lab Resource' },
+        { documentType: 'Protocol' },
+      ];
+
+      expect(
+        items.filter(getFilterOutputByDocumentCategory('all')).length,
+      ).toBe(5);
     });
   });
 });

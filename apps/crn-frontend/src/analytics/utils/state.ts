@@ -7,7 +7,7 @@ import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 export const makePerformanceState = <T>(key: string) =>
   atomFamily<T | undefined, string>({
-    key: key,
+    key,
     default: undefined,
   });
 

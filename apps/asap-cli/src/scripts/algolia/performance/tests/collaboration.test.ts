@@ -2,7 +2,7 @@ import { timeRanges } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import { processTeamCollaborationPerformance } from '../collaboration';
 
-describe('processTeamCollaborationPerformance ', () => {
+describe('processTeamCollaborationPerformance', () => {
   it('should process team collaboration performance', async () => {
     const mockIndex = {
       search: jest

@@ -100,6 +100,10 @@ export type FilterAnalyticsOptions = {
   documentCategory?: DocumentCategoryOption;
 };
 
+export const outputTypes = ['public', 'all'] as const;
+
+export type OutputTypeOption = (typeof outputTypes)[number];
+
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: FilterAnalyticsOptions;
 };

@@ -17,7 +17,7 @@ import {
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { specialChars } from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -297,12 +297,13 @@ describe('team productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), defaultTeamOptions)
+      .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
         timeRange: '90d',
+        outputType: 'all',
       })
       .mockResolvedValue({
         items: [
@@ -339,6 +340,50 @@ describe('team productivity', () => {
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
+  });
+
+  it('renders data for different types', async () => {
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
+      .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'public',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...teamProductivityResponse,
+            objectID: '1-team-productivity-public',
+            Article: 60,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
+
+    const typeDropdown = screen.getByLabelText('type');
+    userEvent.type(typeDropdown, 'ASAP Public');
+    userEvent.type(typeDropdown, specialChars.enter);
+    typeDropdown.blur();
+
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    );
+
+    expect(mockGetTeamProductivity).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ ...defaultTeamOptions, outputType: 'public' }),
+    );
+
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+    expect(screen.getByText('60')).toBeVisible();
   });
 });
 

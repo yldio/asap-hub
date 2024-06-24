@@ -1,4 +1,5 @@
 import {
+  OutputTypeOption,
   SortTeamProductivity,
   teamProductivityInitialSortingDirection,
   TeamProductivitySortingDirection,
@@ -14,11 +15,13 @@ import {
 interface TeamProductivityProps {
   sort: SortTeamProductivity;
   setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
+  type: OutputTypeOption;
   tags: string[];
 }
 const TeamProductivity: React.FC<TeamProductivityProps> = ({
   sort,
   setSort,
+  type,
   tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -34,6 +37,7 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
     sort,
     tags,
     timeRange,
+    outputType: type,
   });
 
   const performance = useTeamProductivityPerformance({ timeRange });

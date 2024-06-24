@@ -1,4 +1,8 @@
-import { TimeRangeOption, DocumentCategoryOption } from '@asap-hub/model';
+import {
+  TimeRangeOption,
+  DocumentCategoryOption,
+  OutputTypeOption,
+} from '@asap-hub/model';
 import { AlgoliaClient } from '..';
 import { AnalyticPerformanceType, AnalyticType } from './types';
 
@@ -13,6 +17,7 @@ export type AnalyticsSearchOptionsWithFiltering<Sort = string> =
     timeRange: TimeRangeOption;
     sort: Sort;
     documentCategory?: DocumentCategoryOption;
+    outputType?: OutputTypeOption;
   };
 
 export type AnalyticsPerformanceOptions = Pick<
@@ -56,9 +61,10 @@ export const getMetric =
     const documentCategoryFilter = `__meta.documentCategory:"${
       documentCategory || 'all'
     }"`;
-    const filters = documentCategory
-      ? `(${rangeFilter}) AND (${documentCategoryFilter})`
-      : `(${rangeFilter})`;
+    const outputTypeFilter = `__meta.outputType:"${
+      options.outputType || 'all'
+    }"`;
+    const filters = `(${rangeFilter})${documentCategory ? ` AND (${documentCategoryFilter})` : ''}${options.outputType ? ` AND (${outputTypeFilter})` : ''}`;
 
     const result = await algoliaClient.search([key], '', {
       tagFilters: [tags],

@@ -203,7 +203,22 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `(__meta.range:"${timeRange}")`,
+        filters: `__meta.range:"${timeRange}" AND __meta.outputType:"all"`,
+      }),
+    );
+  });
+
+  it('returns team productivity for a specific output type', async () => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultTeamOptions,
+      outputType: 'public',
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `__meta.range:"30d" AND __meta.outputType:"public"`,
       }),
     );
   });

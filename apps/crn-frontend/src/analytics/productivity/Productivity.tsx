@@ -34,6 +34,7 @@ const Productivity = () => {
     history.push(
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
+  const [type, setType] = useState<'public' | 'all'>('all');
 
   const { timeRange, documentCategory } = useAnalytics();
   const { tags, setTags } = useSearch();
@@ -62,6 +63,7 @@ const Productivity = () => {
     currentPage,
     pageSize,
     timeRange,
+    outputType: type,
     tags,
     sort: teamSort,
   });
@@ -110,6 +112,8 @@ const Productivity = () => {
     <AnalyticsProductivityPageBody
       metric={metric}
       setMetric={setMetric}
+      type={type}
+      setType={setType}
       timeRange={timeRange}
       documentCategory={metric === 'user' ? documentCategory : undefined}
       currentPage={currentPage}
@@ -131,7 +135,12 @@ const Productivity = () => {
       {metric === 'user' ? (
         <UserProductivity sort={userSort} setSort={setUserSort} tags={tags} />
       ) : (
-        <TeamProductivity sort={teamSort} setSort={setTeamSort} tags={tags} />
+        <TeamProductivity
+          sort={teamSort}
+          setSort={setTeamSort}
+          type={type}
+          tags={tags}
+        />
       )}
     </AnalyticsProductivityPageBody>
   );

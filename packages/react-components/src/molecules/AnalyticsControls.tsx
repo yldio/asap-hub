@@ -72,6 +72,14 @@ const searchContainerStyles = css({
   display: 'flex',
   gap: rem(15),
   alignItems: 'center',
+  paddingBottom: rem(24),
+  '& > div': {
+    display: 'flex',
+    gap: rem(18),
+  },
+  '& > div:nth-of-type(1)': {
+    flexGrow: 1,
+  },
 });
 
 const searchStyles = css({
@@ -147,6 +155,7 @@ interface AnalyticsControlsProps {
   readonly href?: string;
   readonly currentPage?: number;
   readonly exportResults?: () => Promise<void>;
+  readonly metricSubcontrols?: React.ReactNode;
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
@@ -158,6 +167,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   exportResults,
   currentPage,
   href,
+  metricSubcontrols,
 }) => {
   const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
@@ -216,6 +226,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
               </DropdownButton>
             </div>
           )}
+          {metricSubcontrols}
         </div>
       )}
       <span css={containerStyles}>

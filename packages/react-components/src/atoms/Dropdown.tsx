@@ -29,6 +29,7 @@ export interface DropdownProps<V extends string> {
   readonly enabled?: boolean;
   readonly required?: boolean;
   readonly placeholder?: string;
+  readonly name?: string;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -42,6 +43,7 @@ export default function Dropdown<V extends string>({
   enabled = true,
   required = false,
   placeholder = 'Start Typing...',
+  name,
 
   value,
   onChange = noop,
@@ -97,6 +99,7 @@ export default function Dropdown<V extends string>({
         tabSelectsValue={false}
         autoComplete={uuidV4()}
         onBlur={checkValidation}
+        aria-label={name}
       />
       <input
         {...validationTargetProps}

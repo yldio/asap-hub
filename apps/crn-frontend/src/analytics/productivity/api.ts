@@ -13,12 +13,24 @@ import {
   SortTeamProductivity,
   SortUserProductivity,
   UserProductivityPerformance,
+  DocumentCategoryOption,
+  OutputTypeOption,
 } from '@asap-hub/model';
 
 export const getUserProductivity = getMetric<
   ListUserProductivityAlgoliaResponse,
   SortUserProductivity
 >(USER_PRODUCTIVITY);
+
+export type ProductivityListOptions = Pick<
+  AnalyticsSearchOptions,
+  'currentPage' | 'pageSize' | 'tags'
+> & {
+  timeRange: TimeRangeOption;
+  documentCategory?: DocumentCategoryOption;
+  outputType?: OutputTypeOption;
+  sort: SortUserProductivity | SortTeamProductivity;
+};
 
 export const getTeamProductivity = getMetric<
   ListTeamProductivityAlgoliaResponse,

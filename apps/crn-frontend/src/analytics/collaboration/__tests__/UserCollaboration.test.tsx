@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getUserCollaboration } from '../api';
+import { getUserCollaboration, getUserCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsUserCollaborationState } from '../state';
 import UserCollaboration from '../UserCollaboration';

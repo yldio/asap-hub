@@ -1,5 +1,6 @@
 import {
   PerformanceMetricByDocumentType,
+  TeamCollaborationPerformance,
   UserProductivityPerformance,
 } from '@asap-hub/model';
 
@@ -71,4 +72,9 @@ export const performanceByDocumentType: PerformanceMetricByDocumentType = {
     aboveAverageMin: 3,
     aboveAverageMax: 3,
   },
+};
+
+export const teamCollaborationPerformance: TeamCollaborationPerformance = {
+  withinTeam: performanceByDocumentType,
+  accrossTeam: performanceByDocumentType,
 };

@@ -1,4 +1,5 @@
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
@@ -81,9 +82,12 @@ describe('Analytics controller', () => {
     });
 
     test('Should call the data provider with the correct options', async () => {
-      const options: FetchPaginationOptions = {
+      const options: FetchAnalyticsOptions = {
         take: 10,
         skip: 5,
+        filter: {
+          documentCategory: 'all',
+        },
       };
       await analyticsController.fetchUserProductivity(options);
 

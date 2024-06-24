@@ -221,6 +221,54 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
   });
+
+  it('renders data for different document categories', async () => {
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), userOptions)
+      .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), {
+        ...userOptions,
+        documentCategory: 'article',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...userProductivityResponse,
+            objectID: '1-user-productivity-30d-article',
+            asapOutput: 50,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    const categoryButton = screen.getByRole('button', {
+      name: /all chevron down/i,
+    });
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/Article/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('200')).not.toBeInTheDocument();
+
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/All/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+  });
 });
 
 describe('team productivity', () => {

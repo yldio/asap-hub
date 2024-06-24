@@ -33,7 +33,7 @@ const containerStyles = css({
   },
 });
 
-const viewContainerStyles = css({
+const selectContainerStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(15),
@@ -53,11 +53,25 @@ const viewContainerStyles = css({
   },
 });
 
+const searchSelectContainerStyles = css({
+  display: 'flex',
+  gap: rem(33),
+  paddingBottom: rem(24),
+});
+
+const categoryContainerStyles = css({
+  '> div': {
+    height: '100%',
+    '> button': {
+      alignItems: 'center',
+    },
+  },
+});
+
 const searchContainerStyles = css({
   display: 'flex',
-  gap: rem(18),
+  gap: rem(15),
   alignItems: 'center',
-  paddingBottom: rem(24),
 });
 
 const searchStyles = css({
@@ -103,6 +117,17 @@ const searchTexts = {
   },
 };
 
+const generateLink = (
+  href?: string,
+  currentPage?: number,
+  tagsQueryString?: string,
+  timeRange?: string,
+  documentCategory?: string,
+) =>
+  `${href}?range=${timeRange}${
+    documentCategory ? `&documentCategory=${documentCategory}` : ''
+  }&currentPage=${currentPage}${tagsQueryString}`;
+
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
@@ -136,55 +161,61 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   return (
     <>
       {metricOption && (
-        <div css={searchContainerStyles}>
-          <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
-          <span role="search" css={searchStyles}>
-            <MultiSelect
-              noMargin
-              leftIndicator={searchIcon}
-              noOptionsMessage={() => 'No results found'}
-              loadOptions={loadTags}
-              onChange={(items) => setTags(items.map(({ value }) => value))}
-              values={tags.map((tag) => ({
-                label: tag,
-                value: tag,
-              }))}
-              key={`${tags.join('')},${metricOption}`}
-              placeholder={searchTexts[metricOption].placeholder}
-            />
-          </span>
+        <div css={searchSelectContainerStyles}>
+          <div css={[searchContainerStyles, searchStyles]}>
+            <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
+            <span role="search" css={searchStyles}>
+              <MultiSelect
+                noMargin
+                leftIndicator={searchIcon}
+                noOptionsMessage={() => 'No results found'}
+                loadOptions={loadTags}
+                onChange={(items) => setTags(items.map(({ value }) => value))}
+                values={tags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                }))}
+                key={`${tags.join('')},${metricOption}`}
+                placeholder={searchTexts[metricOption].placeholder}
+              />
+            </span>
+          </div>
           {documentCategory && (
-            <div>
-              <span css={viewContainerStyles}>
-                <strong>Document Category:</strong>
-                <DropdownButton
-                  noMargin
-                  buttonChildren={() => (
+            <div css={[selectContainerStyles, categoryContainerStyles]}>
+              <strong>Document Category:</strong>
+              <DropdownButton
+                noMargin
+                buttonChildren={() => (
+                  <>
+                    <span css={{ marginRight: rem(8) }}>
+                      {documentCategoryOptions[documentCategory]}
+                    </span>
+                    {dropdownChevronIcon}
+                  </>
+                )}
+              >
+                {Object.keys(documentCategoryOptions).map((key) => ({
+                  item: (
                     <>
-                      <span css={{ marginRight: rem(10) }}>
-                        {documentCategoryOptions[documentCategory]}
-                      </span>
-                      {dropdownChevronIcon}
+                      {documentCategoryOptions[key as DocumentCategoryOption]}
                     </>
-                  )}
-                >
-                  {Object.keys(documentCategoryOptions).map((key) => ({
-                    item: (
-                      <>
-                        {documentCategoryOptions[key as DocumentCategoryOption]}
-                      </>
-                    ),
-                    href: `${href}?range=${timeRange}&documentCategory=${key}&currentPage=${currentPage}${tagsQueryString}`,
-                  }))}
-                </DropdownButton>
-              </span>
+                  ),
+                  href: generateLink(
+                    href,
+                    currentPage,
+                    tagsQueryString,
+                    timeRange,
+                    key,
+                  ),
+                }))}
+              </DropdownButton>
             </div>
           )}
         </div>
       )}
       <span css={containerStyles}>
         {timeRange && (
-          <span css={viewContainerStyles}>
+          <span css={selectContainerStyles}>
             <strong>View:</strong>
             <DropdownButton
               noMargin
@@ -199,11 +230,13 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
             >
               {Object.keys(timeRangeOptions).map((key) => ({
                 item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-                href: `${href}?range=${key}${
-                  documentCategory
-                    ? `&documentCategory=${documentCategory}`
-                    : ''
-                }&currentPage=${currentPage}${tagsQueryString}`,
+                href: generateLink(
+                  href,
+                  currentPage,
+                  tagsQueryString,
+                  key,
+                  documentCategory,
+                ),
               }))}
             </DropdownButton>
           </span>

@@ -4,6 +4,7 @@ import {
   TeamOutputDocumentType,
   teamOutputDocumentTypes,
   TimeRangeOption,
+  OutputTypeOption,
 } from '@asap-hub/model';
 
 type AnalyticOutput = Maybe<
@@ -85,3 +86,11 @@ export const removeDuplicates = (arr1: string[], arr2: string[]): string[] => [
 
 export const getUniqueIdCount = (arr: (string | undefined)[]): number =>
   [...new Set(arr.filter((elem) => !!elem))].length;
+
+export const getFilterOutputBySharingStatus =
+  (outputType?: OutputTypeOption) => (item: AnalyticOutput) => {
+    if (outputType === 'public') {
+      return item?.sharingStatus === 'Public';
+    }
+    return true;
+  };

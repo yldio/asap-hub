@@ -98,6 +98,7 @@ export type DocumentCategoryOption = (typeof documentCategories)[number];
 export type FilterAnalyticsOptions = {
   timeRange?: TimeRangeOption;
   documentCategory?: DocumentCategoryOption;
+  outputType?: OutputTypeOption;
 };
 
 export const outputTypes = ['public', 'all'] as const;

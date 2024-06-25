@@ -4,6 +4,7 @@ import {
   documentCategories,
   FilterAnalyticsOptions,
   ListResponse,
+  outputTypes,
   TeamProductivityResponse,
   timeRanges,
   UserProductivityResponse,
@@ -49,12 +50,21 @@ const exportDataWithFilters = async (
           timeRange: timeRanges[i],
           documentCategory: documentCategories[j],
         });
-        if (j != documentCategories.length - 1) {
+        if (i != outputTypes.length - 1 && j != timeRanges.length - 1) {
           await file.write(',');
         }
       }
-      if (i != timeRanges.length - 1) {
-        await file.write(',');
+    }
+  } else if (metric === 'team-productivity') {
+    for (let i = 0; i < outputTypes.length; i += 1) {
+      for (let j = 0; j < timeRanges.length; j += 1) {
+        await exportData(metric, file, {
+          timeRange: timeRanges[j],
+          outputType: outputTypes[i],
+        });
+        if (i != outputTypes.length - 1 && j != timeRanges.length - 1) {
+          await file.write(',');
+        }
       }
     }
   } else {
@@ -90,7 +100,10 @@ const exportData = async (
       records = await analyticsController.fetchTeamProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: { timeRange: filter?.timeRange },
+        filter: {
+          timeRange: filter?.timeRange,
+          outputType: filter?.outputType,
+        },
       });
     } else if (metric === 'user-productivity') {
       records = await analyticsController.fetchUserProductivity({
@@ -126,6 +139,7 @@ const exportData = async (
             transformRecords(record, metric, {
               timeRange: filter?.timeRange,
               documentCategory: filter?.documentCategory,
+              outputType: filter?.outputType,
             }),
           ),
           null,
@@ -155,6 +169,7 @@ const transformRecords = (
       type,
       range: filter?.timeRange,
       documentCategory: filter?.documentCategory,
+      outputType: filter?.outputType,
     },
   };
 

@@ -1,4 +1,5 @@
 import {
+  FetchAnalyticsOptions,
   FetchPaginationOptions,
   ListAnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
@@ -156,17 +157,25 @@ describe('/analytics/ route', () => {
     });
 
     test('Should call the controller with the correct parameters', async () => {
-      await supertest(app).get('/analytics/productivity/team').query({
-        take: 15,
-        skip: 5,
-      });
+      await supertest(app)
+        .get('/analytics/productivity/team')
+        .query({
+          take: 15,
+          skip: 5,
+          filter: {
+            timeRange: '30d',
+          },
+        });
 
       expect(
         analyticsControllerMock.fetchTeamProductivity,
       ).toHaveBeenCalledWith({
         take: 15,
         skip: 5,
-      } satisfies FetchPaginationOptions);
+        filter: {
+          timeRange: '30d',
+        },
+      } satisfies FetchAnalyticsOptions);
     });
   });
 

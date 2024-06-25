@@ -10855,7 +10855,10 @@ export type FetchTeamProductivityQuery = {
                   Maybe<
                     Pick<
                       ResearchOutputs,
-                      'addedDate' | 'createdDate' | 'documentType'
+                      | 'addedDate'
+                      | 'createdDate'
+                      | 'documentType'
+                      | 'sharingStatus'
                     >
                   >
                 >;
@@ -24408,6 +24411,13 @@ export const FetchTeamProductivityDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'documentType',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'sharingStatus',
                                           },
                                         },
                                       ],

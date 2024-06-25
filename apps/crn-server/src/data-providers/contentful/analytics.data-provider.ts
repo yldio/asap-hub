@@ -24,6 +24,7 @@ import {
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
+  OutputTypeOption,
   TeamProductivityDataObject,
   TeamRole,
   TimeRangeOption,
@@ -39,6 +40,7 @@ import {
   getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
   isTeamOutputDocumentType,
+  getFilterOutputBySharingStatus,
 } from '../../utils/analytics/common';
 import { getTeamLeadershipItems } from '../../utils/analytics/leadership';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
@@ -88,7 +90,7 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getTeamProductivityItems(teamsCollection, filter?.timeRange),
+      items: getTeamProductivityItems(teamsCollection, filter?.timeRange, filter?.outputType),
     };
   }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {
@@ -235,6 +237,7 @@ const getUserProductivityItems = (
 const getTeamProductivityItems = (
   teamsCollection: FetchTeamProductivityQuery['teamsCollection'],
   rangeKey?: TimeRangeOption,
+  outputType?: OutputTypeOption,
 ): TeamProductivityDataObject[] =>
   cleanArray(teamsCollection?.items).map((teamItem) => {
     const initialDocumentTypesCount = {
@@ -248,6 +251,7 @@ const getTeamProductivityItems = (
     const documentTypesCount =
       teamItem.linkedFrom?.researchOutputsCollection?.items
         .filter(getFilterOutputByRange(rangeKey))
+        .filter(getFilterOutputBySharingStatus(outputType))
         .reduce((count, researchOutput) => {
           if (
             researchOutput?.documentType &&

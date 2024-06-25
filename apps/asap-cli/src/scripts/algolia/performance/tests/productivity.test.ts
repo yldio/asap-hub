@@ -1,4 +1,3 @@
-import { SearchResponse } from '@algolia/client-search';
 import {
   documentCategories,
   teamOutputDocumentTypes,

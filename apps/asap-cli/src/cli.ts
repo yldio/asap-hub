@@ -107,8 +107,8 @@ interface SetAnalyticsSettings extends BaseArguments {
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
 yargs(hideBin(process.argv))
   .command<ProcessProductivityPerformanceArguments>({
-    command: 'algolia:process-productivity-performance',
-    describe: 'process productivity performance',
+    command: 'algolia:process-performance',
+    describe: 'process analytics performance',
     builder: (cli) =>
       cli
         .option('appid', appIdOption)

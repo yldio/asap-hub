@@ -80,6 +80,7 @@ const Productivity = () => {
           getUserProductivity(userClient, {
             sort: userSort,
             timeRange,
+            documentCategory,
             tags,
             ...paginationParams,
           }),

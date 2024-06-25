@@ -1,6 +1,7 @@
 import {
-  TeamProductivityPerformance,
   UserProductivityPerformance,
+  PerformanceMetricByDocumentType,
+  TeamCollaborationPerformance,
 } from '@asap-hub/model';
 
 export const userProductivityPerformance: UserProductivityPerformance = {
@@ -29,8 +30,7 @@ export const userProductivityPerformance: UserProductivityPerformance = {
     aboveAverageMax: 1,
   },
 };
-
-export const teamProductivityPerformance: TeamProductivityPerformance = {
+export const performanceByDocumentType: PerformanceMetricByDocumentType = {
   article: {
     belowAverageMin: 0,
     belowAverageMax: 2,
@@ -71,4 +71,9 @@ export const teamProductivityPerformance: TeamProductivityPerformance = {
     aboveAverageMin: 3,
     aboveAverageMax: 3,
   },
+};
+
+export const teamCollaborationPerformance: TeamCollaborationPerformance = {
+  withinTeam: performanceByDocumentType,
+  accrossTeam: performanceByDocumentType,
 };

@@ -1,9 +1,11 @@
+import { AnalyticsSearchOptionsWithRange } from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
+  SortTeamProductivity,
+  SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
-  TimeRangeOption,
   UserProductivityAlgoliaResponse,
   UserProductivityPerformance,
 } from '@asap-hub/model';
@@ -15,17 +17,17 @@ import {
 } from 'recoil';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
-  ProductivityListOptions,
 } from './api';
 
 const analyticsUserProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortUserProductivity>
 >({
   key: 'analyticsUserProductivityIndex',
   default: undefined,
@@ -41,7 +43,7 @@ export const analyticsUserProductivityListState = atomFamily<
 
 export const analyticsUserProductivityState = selectorFamily<
   ListUserProductivityAlgoliaResponse | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortUserProductivity>
 >({
   key: 'userProductivity',
   get:
@@ -85,12 +87,12 @@ export const analyticsUserProductivityState = selectorFamily<
 });
 
 export const useAnalyticsUserProductivity = (
-  options: ProductivityListOptions,
+  options: AnalyticsSearchOptionsWithRange<SortUserProductivity>,
 ) => {
   const indexName =
     options.sort === 'user_asc'
       ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
+      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort?.replace('user_', '')}`;
 
   const algoliaClient = useAnalyticsAlgolia(indexName);
 
@@ -108,55 +110,30 @@ export const useAnalyticsUserProductivity = (
   return { ...userProductivity, client: algoliaClient.client };
 };
 
-export const userProductivityPerformanceState = atomFamily<
-  UserProductivityPerformance | undefined,
-  string
->({
-  key: 'analyticsUserProductivityPerformance',
-  default: undefined,
-});
+export const userProductivityPerformanceState =
+  makePerformanceState<UserProductivityPerformance>(
+    'analyticsUserProductivityPerformance',
+  );
+export const useUserProductivityPerformance =
+  makePerformanceHook<UserProductivityPerformance>(
+    userProductivityPerformanceState,
+    getUserProductivityPerformance,
+  );
 
-export const useUserProductivityPerformance = (timeRange: TimeRangeOption) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
-  const [userProductivityPerformance, setUserProductivityPerformance] =
-    useRecoilState(userProductivityPerformanceState(timeRange));
-  if (userProductivityPerformance === undefined) {
-    throw getUserProductivityPerformance(algoliaClient.client, timeRange)
-      .then(setUserProductivityPerformance)
-      .catch(setUserProductivityPerformance);
-  }
-  if (userProductivityPerformance instanceof Error) {
-    throw userProductivityPerformance;
-  }
-  return userProductivityPerformance;
-};
+export const teamProductivityPerformanceState =
+  makePerformanceState<TeamProductivityPerformance>(
+    'analyticsTeamProductivityPerformance',
+  );
 
-export const teamProductivityPerformanceState = atomFamily<
-  TeamProductivityPerformance | undefined,
-  string
->({
-  key: 'analyticsTeamProductivityPerformance',
-  default: undefined,
-});
-
-export const useTeamProductivityPerformance = (timeRange: TimeRangeOption) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
-  const [teamProductivityPerformance, setTeamProductivityPerformance] =
-    useRecoilState(teamProductivityPerformanceState(timeRange));
-  if (teamProductivityPerformance === undefined) {
-    throw getTeamProductivityPerformance(algoliaClient.client, timeRange)
-      .then(setTeamProductivityPerformance)
-      .catch(setTeamProductivityPerformance);
-  }
-  if (teamProductivityPerformance instanceof Error) {
-    throw teamProductivityPerformance;
-  }
-  return teamProductivityPerformance;
-};
+export const useTeamProductivityPerformance =
+  makePerformanceHook<TeamProductivityPerformance>(
+    teamProductivityPerformanceState,
+    getTeamProductivityPerformance,
+  );
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
 >({
   key: 'analyticsTeamProductivityIndex',
   default: undefined,
@@ -172,7 +149,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 
 export const analyticsTeamProductivityState = selectorFamily<
   ListTeamProductivityAlgoliaResponse | Error | undefined,
-  ProductivityListOptions
+  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
 >({
   key: 'teamProductivity',
   get:
@@ -216,7 +193,7 @@ export const analyticsTeamProductivityState = selectorFamily<
 });
 
 export const useAnalyticsTeamProductivity = (
-  options: ProductivityListOptions,
+  options: AnalyticsSearchOptionsWithRange<SortTeamProductivity>,
 ) => {
   const indexName =
     options.sort === 'team_asc'

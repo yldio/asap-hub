@@ -1,4 +1,4 @@
-import { teamProductivityPerformance } from '@asap-hub/fixtures';
+import { performanceByDocumentType } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
   teamProductivityInitialSortingDirection,
@@ -18,7 +18,7 @@ describe('TeamProductivityTable', () => {
 
   const defaultProps: ComponentProps<typeof TeamProductivityTable> = {
     ...pageControlsProps,
-    performance: teamProductivityPerformance,
+    performance: performanceByDocumentType,
     data: [],
     sort: 'team_asc' as SortTeamProductivity,
     setSort: jest.fn(),
@@ -102,7 +102,7 @@ describe('TeamProductivityTable', () => {
       const { getByTitle } = render(
         <TeamProductivityTable
           data={[teamProductivity]}
-          performance={teamProductivityPerformance}
+          performance={performanceByDocumentType}
           sort={sort}
           setSort={setSort}
           sortingDirection={sortingDirection}

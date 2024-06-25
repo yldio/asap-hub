@@ -147,6 +147,7 @@ export {
   PagesSection,
   PastEventsDashboardCard,
   PeopleCard,
+  PerformanceCard,
   ProfileCardList,
   ProfileExpertiseAndResources,
   QuestionsSection,

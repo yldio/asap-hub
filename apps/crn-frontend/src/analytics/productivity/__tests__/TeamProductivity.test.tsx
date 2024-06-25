@@ -6,7 +6,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { teamProductivityPerformance } from '@asap-hub/fixtures';
+import { performanceByDocumentType } from '@asap-hub/fixtures';
 import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -116,7 +116,7 @@ const renderPage = async () => {
 it('renders the team productivity data', async () => {
   mockGetTeamProductivity.mockResolvedValueOnce(data);
   mockGetTeamProductivityPerformance.mockResolvedValueOnce(
-    teamProductivityPerformance,
+    performanceByDocumentType,
   );
 
   const { container, getAllByText, getAllByTitle } = await renderPage();
@@ -136,7 +136,7 @@ it('renders the team productivity data', async () => {
 it('calls algolia client with the right index name', async () => {
   mockGetTeamProductivity.mockResolvedValue(data);
   mockGetTeamProductivityPerformance.mockResolvedValue(
-    teamProductivityPerformance,
+    performanceByDocumentType,
   );
 
   const { getByTitle } = await renderPage();

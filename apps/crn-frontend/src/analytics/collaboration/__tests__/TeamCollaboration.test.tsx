@@ -4,12 +4,12 @@ import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { teamCollaborationPerformance } from '@asap-hub/fixtures';
 
 import { getTeamCollaboration, getTeamCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
-import { teamCollaborationPerformance } from '@asap-hub/fixtures';
 
 jest.mock('@asap-hub/algolia', () => ({
   ...jest.requireActual('@asap-hub/algolia'),

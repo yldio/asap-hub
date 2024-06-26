@@ -16,10 +16,11 @@ import type {
   AlgoliaSearchClient,
   ClientSearchResponse,
 } from '@asap-hub/algolia';
+import { createAlgoliaResponse } from '@asap-hub/algolia';
+
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getInstitutions,
   getUser,

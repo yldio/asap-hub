@@ -1,4 +1,8 @@
-import { AlgoliaSearchClient, ClientSearch } from '@asap-hub/algolia';
+import {
+  createAlgoliaResponse,
+  AlgoliaSearchClient,
+  ClientSearch,
+} from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
@@ -6,7 +10,6 @@ import {
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getEvent, getEvents } from '../api';
 
 jest.mock('../../config');

@@ -1,3 +1,4 @@
+import { createAlgoliaResponse } from '@asap-hub/algolia';
 import {
   createResearchOutputResponse,
   createTeamResponse,
@@ -10,7 +11,6 @@ import {
 } from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify';
 
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   algoliaResultsToStream,
   MAX_CONTENTFUL_RESULTS,

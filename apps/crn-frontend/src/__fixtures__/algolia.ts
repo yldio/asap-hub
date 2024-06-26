@@ -1,11 +1,9 @@
 import {
+  createAlgoliaResponse,
   ClientSearchResponse,
   RESEARCH_OUTPUT_ENTITY_TYPE,
 } from '@asap-hub/algolia';
-import {
-  createAlgoliaResponse,
-  createResearchOutputResponse,
-} from '@asap-hub/fixtures';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 type SearchResponse = ClientSearchResponse<'crn', 'research-output'>;
 export const createResearchOutputAlgoliaRecord = (

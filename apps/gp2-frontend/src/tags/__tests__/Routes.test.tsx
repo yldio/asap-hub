@@ -1,11 +1,11 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
+import { createAlgoliaResponse } from '@asap-hub/algolia';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
-  createAlgoliaResponse,
   createEventAlgoliaRecord,
   createOutputAlgoliaRecord,
 } from '../../__fixtures__/algolia';

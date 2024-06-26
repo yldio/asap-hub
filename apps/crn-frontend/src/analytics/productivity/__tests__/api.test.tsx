@@ -51,6 +51,7 @@ const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> 
     pageSize: null,
     currentPage: null,
     timeRange: '30d',
+    documentCategory: 'all',
     sort: 'user_asc',
     tags: [],
   };
@@ -202,7 +203,7 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });
@@ -259,7 +260,7 @@ describe('getTeamProductivityPerformance', () => {
         ['team-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
+          filters: `(__meta.range:"${timeRange}")`,
         }),
       );
     },

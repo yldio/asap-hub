@@ -34,7 +34,6 @@ export const getPerformanceForMetric =
     const filters = documentCategory
       ? `(${rangeFilter}) AND (${documentCategoryFilter})`
       : `(${rangeFilter})`;
-
     const result = await algoliaClient.search(
       [key as AnalyticPerformanceType as 'team-leadership'],
       '',
@@ -57,7 +56,10 @@ export const getMetricWithRange =
     const documentCategoryFilter = `__meta.documentCategory:"${
       documentCategory || 'all'
     }"`;
-    const filters = `(${rangeFilter}) AND (${documentCategoryFilter})`;
+    const filters = documentCategory
+      ? `(${rangeFilter}) AND (${documentCategoryFilter})`
+      : `(${rangeFilter})`;
+
     const result = await algoliaClient.search(
       [key as AnalyticType as 'user-productivity'],
       '',

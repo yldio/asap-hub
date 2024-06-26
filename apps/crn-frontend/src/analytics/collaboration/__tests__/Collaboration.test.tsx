@@ -1,4 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { teamCollaborationPerformance } from '@asap-hub/fixtures';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
@@ -11,7 +12,11 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { getUserCollaboration, getTeamCollaboration } from '../api';
+import {
+  getUserCollaboration,
+  getTeamCollaboration,
+  getTeamCollaborationPerformance,
+} from '../api';
 import Collaboration from '../Collaboration';
 
 jest.mock('../api');
@@ -27,6 +32,14 @@ const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
+
+const mockGetTeamCollaborationPerformance =
+  getTeamCollaborationPerformance as jest.MockedFunction<
+    typeof getTeamCollaborationPerformance
+  >;
+mockGetTeamCollaborationPerformance.mockResolvedValue(
+  teamCollaborationPerformance,
+);
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,

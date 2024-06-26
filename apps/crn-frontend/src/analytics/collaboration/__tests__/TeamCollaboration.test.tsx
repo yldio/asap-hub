@@ -5,10 +5,11 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getTeamCollaboration } from '../api';
+import { getTeamCollaboration, getTeamCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
+import { teamCollaborationPerformance } from '@asap-hub/fixtures';
 
 jest.mock('@asap-hub/algolia', () => ({
   ...jest.requireActual('@asap-hub/algolia'),
@@ -26,6 +27,14 @@ afterEach(() => {
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
+
+const mockGetTeamCollaborationPerformance =
+  getTeamCollaborationPerformance as jest.MockedFunction<
+    typeof getTeamCollaborationPerformance
+  >;
+mockGetTeamCollaborationPerformance.mockResolvedValue(
+  teamCollaborationPerformance,
+);
 
 const data: ListTeamCollaborationAlgoliaResponse = {
   total: 2,
@@ -88,6 +97,8 @@ const renderPage = async () => {
             currentPage: 0,
             pageSize: 10,
             timeRange: '30d',
+            tags: [],
+            sort: '',
           }),
         );
       }}

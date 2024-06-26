@@ -51,6 +51,8 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
     currentPage,
     pageSize,
     timeRange,
+    tags: [],
+    sort: '',
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

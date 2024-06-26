@@ -1,22 +1,27 @@
-import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
-  teamProductivityPerformance,
+  createAlgoliaResponse,
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithFiltering,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
+import {
+  performanceByDocumentType,
+  teamProductivityResponse,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
-  TeamProductivityAlgoliaResponse,
+  SortTeamProductivity,
+  SortUserProductivity,
   TimeRangeOption,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
-  ProductivityListOptions,
 } from '../api';
 
 jest.mock('../../../config');
@@ -41,13 +46,24 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultOptions: ProductivityListOptions = {
-  pageSize: null,
-  currentPage: null,
-  timeRange: '30d',
-  sort: 'user_asc',
-  tags: [],
-};
+const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserProductivity> =
+  {
+    pageSize: null,
+    currentPage: null,
+    timeRange: '30d',
+    documentCategory: 'all',
+    sort: 'user_asc',
+    tags: [],
+  };
+
+const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity> =
+  {
+    pageSize: null,
+    currentPage: null,
+    timeRange: '30d',
+    sort: 'team_asc',
+    tags: [],
+  };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
@@ -67,17 +83,6 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
   asapPublicOutput: 2,
   ratio: '0.50',
 };
-const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
-  id: '1',
-  objectID: '1-team-productivity-30d',
-  name: 'Test Team',
-  isInactive: false,
-  Article: 1,
-  Bioinformatics: 2,
-  Dataset: 3,
-  'Lab Resource': 4,
-  Protocol: 5,
-};
 
 describe('getUserProductivity', () => {
   beforeEach(() => {
@@ -96,7 +101,7 @@ describe('getUserProductivity', () => {
   it('returns successfully fetched user productivity', async () => {
     const userProductivity = await getUserProductivity(
       algoliaSearchClient,
-      defaultOptions,
+      defaultUserOptions,
     );
     expect(userProductivity).toEqual(
       expect.objectContaining({
@@ -120,7 +125,7 @@ describe('getUserProductivity', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns user productivity for $range', async ({ timeRange }) => {
     await getUserProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       timeRange,
     });
 
@@ -135,7 +140,7 @@ describe('getUserProductivity', () => {
 
   it('should pass the search query to Algolia', async () => {
     await getUserProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(
@@ -164,7 +169,7 @@ describe('getTeamProductivity', () => {
 
   it('returns successfully fetched team productivity', async () => {
     const teamProductivity = await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       sort: 'team_asc',
     });
     expect(teamProductivity).toEqual(
@@ -189,7 +194,7 @@ describe('getTeamProductivity', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns team productivity for $range', async ({ timeRange }) => {
     await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       timeRange,
       sort: 'team_asc',
     });
@@ -198,14 +203,14 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });
 
   it('should pass the search query to Algolia', async () => {
     await getTeamProductivity(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(
@@ -224,7 +229,7 @@ describe('getTeamProductivityPerformance', () => {
     search.mockResolvedValue(
       createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
         {
-          ...teamProductivityPerformance,
+          ...performanceByDocumentType,
           objectID: '12',
           __meta: { type: 'team-productivity-performance', range: '30d' },
         },
@@ -233,13 +238,10 @@ describe('getTeamProductivityPerformance', () => {
   });
 
   it('returns successfully fetched team productivity performance', async () => {
-    const result = await getTeamProductivityPerformance(
-      algoliaSearchClient,
-      '30d',
-    );
-    expect(result).toEqual(
-      expect.objectContaining(teamProductivityPerformance),
-    );
+    const result = await getTeamProductivityPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+    });
+    expect(result).toEqual(expect.objectContaining(performanceByDocumentType));
   });
 
   it.each`
@@ -252,13 +254,13 @@ describe('getTeamProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getTeamProductivityPerformance(algoliaSearchClient, timeRange);
+      await getTeamProductivityPerformance(algoliaSearchClient, { timeRange });
 
       expect(search).toHaveBeenCalledWith(
         ['team-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `__meta.range:"${timeRange}"`,
+          filters: `(__meta.range:"${timeRange}")`,
         }),
       );
     },
@@ -285,11 +287,10 @@ describe('getUserProductivityPerformance', () => {
   });
 
   it('returns successfully fetched user productivity performance', async () => {
-    const result = await getUserProductivityPerformance(
-      algoliaSearchClient,
-      '30d',
-      'all',
-    );
+    const result = await getUserProductivityPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+      documentCategory: 'all',
+    });
     expect(result).toEqual(
       expect.objectContaining(userProductivityPerformance),
     );
@@ -305,11 +306,10 @@ describe('getUserProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getUserProductivityPerformance(
-        algoliaSearchClient,
+      await getUserProductivityPerformance(algoliaSearchClient, {
         timeRange,
-        'all',
-      );
+        documentCategory: 'all',
+      });
 
       expect(search).toHaveBeenCalledWith(
         ['user-productivity-performance'],

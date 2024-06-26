@@ -17,6 +17,7 @@ import {
   TeamListItemResponse,
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
+  TeamCollaborationPerformance,
   TeamProductivityResponse,
   TimeRangeOption,
   TutorialsResponse,
@@ -32,6 +33,7 @@ import {
 import { SearchIndex } from 'algoliasearch';
 import {
   TEAM_COLLABORATION,
+  TEAM_COLLABORATION_PERFORMANCE,
   TEAM_LEADERSHIP,
   TEAM_PRODUCTIVITY,
   TEAM_PRODUCTIVITY_PERFORMANCE,
@@ -120,12 +122,15 @@ export type EntityResponses = {
   };
   [ANALYTICS]: {
     [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipAlgoliaResponse;
+
     [TEAM_PRODUCTIVITY]: TeamProductivityAlgoliaResponse;
     [USER_PRODUCTIVITY]: UserProductivityAlgoliaResponse;
-    [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
     [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
+    [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
+
     [TEAM_COLLABORATION]: TeamCollaborationResponse;
     [USER_COLLABORATION]: UserCollaborationResponse;
+    [TEAM_COLLABORATION_PERFORMANCE]: TeamCollaborationPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;

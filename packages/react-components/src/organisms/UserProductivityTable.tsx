@@ -8,7 +8,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { CaptionCard, CaptionItem, PageControls } from '..';
+import { PageControls, PerformanceCard } from '..';
 
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
@@ -188,16 +188,7 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
 
   return (
     <>
-      <CaptionCard>
-        <>
-          <CaptionItem label="ASAP Output" {...performance.asapOutput} />
-          <CaptionItem
-            label="ASAP Public Output"
-            {...performance.asapPublicOutput}
-          />
-          <CaptionItem label="Ratio" {...performance.ratio} />
-        </>
-      </CaptionCard>
+      <PerformanceCard performance={performance} type="by-output" />
       <Card padding={false}>
         <div css={container}>
           <div css={[rowStyles, gridTitleStyles]}>

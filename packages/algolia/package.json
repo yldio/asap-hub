@@ -25,6 +25,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
+    "@types/jest": "29.5.12",
     "@types/node": "20.10.5",
     "@types/prettier": "2.7.3"
   }

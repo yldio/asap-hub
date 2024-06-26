@@ -72,7 +72,7 @@ export const processTeamCollaborationPerformance = async (
         withinTeam: teamPerformanceByDocumentType(
           hits.map((hit) => hit.outputsCoProducedWithin),
         ),
-        accrossTeam: teamPerformanceByDocumentType(
+        acrossTeam: teamPerformanceByDocumentType(
           hits.map((hit) => hit.outputsCoProducedAcross.byDocumentType),
         ),
         __meta: {

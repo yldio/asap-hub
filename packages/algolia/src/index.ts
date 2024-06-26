@@ -14,6 +14,8 @@ export {
 } from './no-token-client';
 export { gp2 };
 
+export * from './fixtures';
+
 export type AlgoliaClient<App extends Apps> =
   | AlgoliaSearchClient<App>
   | NoTokenAlgoliaClient<App>;

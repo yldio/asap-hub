@@ -2,6 +2,8 @@ import type {
   AlgoliaSearchClient,
   ClientSearchResponse,
 } from '@asap-hub/algolia';
+import { createAlgoliaResponse } from '@asap-hub/algolia';
+
 import { createWorkingGroupResponse } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
@@ -10,7 +12,6 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { getWorkingGroup, getWorkingGroups } from '../api';
 import { createResearchOutput } from '../../teams/api';
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 describe('getWorkingGroup', () => {
   it('makes an authorized GET request for the working group id', async () => {

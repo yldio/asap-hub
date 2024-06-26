@@ -16,12 +16,19 @@ export type UserProductivityPerformance = {
   ratio: PerformanceMetrics;
 };
 
-export type TeamProductivityPerformance = {
+export type PerformanceMetricByDocumentType = {
   article: PerformanceMetrics;
   bioinformatics: PerformanceMetrics;
   dataset: PerformanceMetrics;
   labResource: PerformanceMetrics;
   protocol: PerformanceMetrics;
+};
+
+export type TeamProductivityPerformance = PerformanceMetricByDocumentType;
+
+export type TeamCollaborationPerformance = {
+  withinTeam: PerformanceMetricByDocumentType;
+  acrossTeam: PerformanceMetricByDocumentType;
 };
 
 export type SortLeadershipAndMembership =

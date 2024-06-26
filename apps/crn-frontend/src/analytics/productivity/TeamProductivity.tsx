@@ -36,7 +36,7 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
     timeRange,
   });
 
-  const performance = useTeamProductivityPerformance(timeRange);
+  const performance = useTeamProductivityPerformance({ timeRange });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

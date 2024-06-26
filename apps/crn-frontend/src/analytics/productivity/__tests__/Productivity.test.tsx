@@ -1,11 +1,15 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithFiltering,
+} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
-  teamProductivityPerformance,
+  performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
+  SortTeamProductivity,
   DocumentCategoryOption,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
@@ -26,7 +30,6 @@ import {
   getTeamProductivityPerformance,
   getUserProductivity,
   getUserProductivityPerformance,
-  ProductivityListOptions,
 } from '../api';
 import Productivity from '../Productivity';
 
@@ -74,9 +77,7 @@ const mockGetUserProductivityPerformance =
     typeof getUserProductivityPerformance
   >;
 
-mockGetTeamProductivityPerformance.mockResolvedValue(
-  teamProductivityPerformance,
-);
+mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(
   userProductivityPerformance,
 );
@@ -101,13 +102,22 @@ beforeEach(() => {
   mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
 });
 
-const defaultOptions: ProductivityListOptions = {
-  pageSize: 10,
-  currentPage: 0,
-  timeRange: '30d',
-  sort: 'team_asc',
-  tags: [],
-};
+const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserProductivity> =
+  {
+    pageSize: 10,
+    currentPage: 0,
+    timeRange: '30d',
+    sort: 'team_asc',
+    tags: [],
+  };
+const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity> =
+  {
+    pageSize: 10,
+    currentPage: 0,
+    timeRange: '30d',
+    sort: 'team_asc',
+    tags: [],
+  };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
@@ -166,7 +176,7 @@ const renderPage = async (path: string) => {
 
 describe('user productivity', () => {
   const userOptions = {
-    ...defaultOptions,
+    ...defaultUserOptions,
     documentCategory: 'all' as DocumentCategoryOption,
     sort: 'user_asc' as SortUserProductivity,
   };
@@ -287,10 +297,13 @@ describe('team productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), defaultOptions)
+      .calledWith(expect.anything(), defaultTeamOptions)
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), { ...defaultOptions, timeRange: '90d' })
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        timeRange: '90d',
+      })
       .mockResolvedValue({
         items: [
           {

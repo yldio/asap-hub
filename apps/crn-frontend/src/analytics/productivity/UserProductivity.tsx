@@ -37,10 +37,10 @@ const UserProductivity: React.FC<UserProductivityProps> = ({
     documentCategory,
   });
 
-  const performance = useUserProductivityPerformance(
+  const performance = useUserProductivityPerformance({
     timeRange,
     documentCategory,
-  );
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

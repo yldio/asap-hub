@@ -120,7 +120,7 @@ describe('processTeamCollaborationPerformance', () => {
     expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
       {
         __meta: { range: 'all', type: 'team-collaboration-performance' },
-        accrossTeam: {
+        acrossTeam: {
           article: {
             aboveAverageMax: 50,
             aboveAverageMin: 43,

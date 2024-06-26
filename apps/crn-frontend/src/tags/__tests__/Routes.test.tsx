@@ -1,4 +1,5 @@
 import {
+  createAlgoliaResponse,
   AlgoliaSearchClient,
   CRNTagSearchEntitiesListArray,
   EMPTY_ALGOLIA_FACET_HITS,
@@ -17,7 +18,6 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useAlgolia } from '../../hooks/algolia';
 

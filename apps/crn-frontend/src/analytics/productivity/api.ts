@@ -1,100 +1,35 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import {
+  getMetric,
+  getPerformanceForMetric,
+  TEAM_PRODUCTIVITY,
+  TEAM_PRODUCTIVITY_PERFORMANCE,
+  USER_PRODUCTIVITY,
+  USER_PRODUCTIVITY_PERFORMANCE,
+} from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   SortTeamProductivity,
   SortUserProductivity,
-  TimeRangeOption,
   UserProductivityPerformance,
-  DocumentCategoryOption,
 } from '@asap-hub/model';
-import { AnalyticsSearchOptions } from '../leadership/api';
 
-export type ProductivityListOptions = Pick<
-  AnalyticsSearchOptions,
-  'currentPage' | 'pageSize' | 'tags'
-> & {
-  timeRange: TimeRangeOption;
-  documentCategory?: DocumentCategoryOption;
-  sort: SortUserProductivity | SortTeamProductivity;
-};
+export const getUserProductivity = getMetric<
+  ListUserProductivityAlgoliaResponse,
+  SortUserProductivity
+>(USER_PRODUCTIVITY);
 
-export const getUserProductivity = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  options: ProductivityListOptions,
-): Promise<ListUserProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange, documentCategory, tags } = options;
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const documentCategoryFilter = `__meta.documentCategory:"${
-    documentCategory || 'all'
-  }"`;
-  const filter = `(${rangeFilter}) AND (${documentCategoryFilter})`;
-  const result = await algoliaClient.search(['user-productivity'], '', {
-    tagFilters: [tags],
-    filters: filter,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
-};
+export const getTeamProductivity = getMetric<
+  ListTeamProductivityAlgoliaResponse,
+  SortTeamProductivity
+>(TEAM_PRODUCTIVITY);
 
-export const getUserProductivityPerformance = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  timeRange: TimeRangeOption,
-  documentCategory: DocumentCategoryOption,
-): Promise<UserProductivityPerformance | undefined> => {
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const documentCategoryFilter = `__meta.documentCategory:"${
-    documentCategory || 'all'
-  }"`;
-  const filter = `(${rangeFilter}) AND (${documentCategoryFilter})`;
-  const result = await algoliaClient.search(
-    ['user-productivity-performance'],
-    '',
-    {
-      filters: filter,
-    },
+export const getUserProductivityPerformance =
+  getPerformanceForMetric<UserProductivityPerformance>(
+    USER_PRODUCTIVITY_PERFORMANCE,
   );
-  return result.hits[0];
-};
-
-export const getTeamProductivityPerformance = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  timeRange: TimeRangeOption,
-): Promise<TeamProductivityPerformance | undefined> => {
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const result = await algoliaClient.search(
-    ['team-productivity-performance'],
-    '',
-    {
-      filters: rangeFilter,
-    },
+export const getTeamProductivityPerformance =
+  getPerformanceForMetric<TeamProductivityPerformance>(
+    TEAM_PRODUCTIVITY_PERFORMANCE,
   );
-  return result.hits[0];
-};
-
-export const getTeamProductivity = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-  options: ProductivityListOptions,
-): Promise<ListTeamProductivityAlgoliaResponse | undefined> => {
-  const { currentPage, pageSize, timeRange, tags } = options;
-  const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
-  const result = await algoliaClient.search(['team-productivity'], '', {
-    tagFilters: [tags],
-    filters: rangeFilter,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
-};

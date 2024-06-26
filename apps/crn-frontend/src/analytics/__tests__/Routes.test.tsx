@@ -1,6 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
-  teamProductivityPerformance,
+  performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import { disable, enable } from '@asap-hub/flags';
@@ -65,9 +65,7 @@ const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
 
-mockGetTeamProductivityPerformance.mockResolvedValue(
-  teamProductivityPerformance,
-);
+mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(
   userProductivityPerformance,
 );

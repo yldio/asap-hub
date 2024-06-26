@@ -97,7 +97,6 @@ const renderPage = async () => {
               <TeamProductivity
                 sort="team_asc"
                 setSort={mockSetSort}
-                type="all"
                 tags={[]}
               />
             </MemoryRouter>

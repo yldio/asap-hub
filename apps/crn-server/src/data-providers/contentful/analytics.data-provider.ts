@@ -90,7 +90,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: teamsCollection?.total || 0,
-      items: getTeamProductivityItems(teamsCollection, filter?.timeRange, filter?.outputType),
+      items: getTeamProductivityItems(
+        teamsCollection,
+        filter?.timeRange,
+        filter?.outputType,
+      ),
     };
   }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {

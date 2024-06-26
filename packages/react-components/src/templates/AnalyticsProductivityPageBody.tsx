@@ -18,12 +18,11 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
   label: metricOptions[value as MetricOption],
 }));
 
-type TypeOption = 'public' | 'all';
-
 type ProductivityAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
   | 'timeRange'
   | 'documentCategory'
+  | 'outputType'
   | 'currentPage'
   | 'tags'
   | 'loadTags'
@@ -31,8 +30,6 @@ type ProductivityAnalyticsProps = Pick<
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
-  type: TypeOption;
-  setType: (option: TypeOption) => void;
   children: React.ReactNode;
   exportResults: () => Promise<void>;
 };
@@ -45,17 +42,12 @@ const tableHeaderStyles = css({
   paddingBottom: rem(24),
 });
 
-const metricTypeStyles = css({
-  width: rem(300),
-});
-
 const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
-  type,
-  setType,
   timeRange,
   documentCategory,
+  outputType,
   tags,
   setTags,
   loadTags,
@@ -83,34 +75,13 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
       currentPage={currentPage}
       timeRange={timeRange}
       documentCategory={documentCategory}
+      outputType={outputType}
       metricOption={metric}
       tags={tags}
       loadTags={loadTags}
       setTags={setTags}
       href={analytics({}).productivity({}).metric({ metric }).$}
       exportResults={exportResults}
-      metricSubcontrols={
-        metric === 'team' && (
-          <div css={metricTypeStyles}>
-            <Subtitle>Type:</Subtitle>
-            <Dropdown
-              options={
-                [
-                  { label: 'ASAP Output', value: 'all' },
-                  { label: 'ASAP Public Output', value: 'public' },
-                ] as {
-                  value: TypeOption;
-                  label: string;
-                }[]
-              }
-              value={type}
-              onChange={setType}
-              name="type"
-              required
-            />
-          </div>
-        )
-      }
     />
     {children}
   </article>

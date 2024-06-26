@@ -1,5 +1,4 @@
 import {
-  OutputTypeOption,
   SortTeamProductivity,
   teamProductivityInitialSortingDirection,
   TeamProductivitySortingDirection,
@@ -15,17 +14,15 @@ import {
 interface TeamProductivityProps {
   sort: SortTeamProductivity;
   setSort: Dispatch<SetStateAction<SortTeamProductivity>>;
-  type: OutputTypeOption;
   tags: string[];
 }
 const TeamProductivity: React.FC<TeamProductivityProps> = ({
   sort,
   setSort,
-  type,
   tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, outputType } = useAnalytics();
   const [sortingDirection, setSortingDirection] =
     useState<TeamProductivitySortingDirection>(
       teamProductivityInitialSortingDirection,
@@ -37,10 +34,10 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
     sort,
     tags,
     timeRange,
-    outputType: type,
+    outputType,
   });
 
-  const performance = useTeamProductivityPerformance({ timeRange });
+  const performance = useTeamProductivityPerformance({ timeRange, outputType });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

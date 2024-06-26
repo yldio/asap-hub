@@ -22,7 +22,7 @@ export type AnalyticsSearchOptionsWithFiltering<Sort = string> =
 
 export type AnalyticsPerformanceOptions = Pick<
   AnalyticsSearchOptionsWithFiltering,
-  'timeRange' | 'documentCategory'
+  'timeRange' | 'documentCategory' | 'outputType'
 >;
 
 export const getPerformanceForMetric =
@@ -31,14 +31,16 @@ export const getPerformanceForMetric =
     algoliaClient: AlgoliaClient<'analytics'>,
     options: AnalyticsPerformanceOptions,
   ): Promise<T | undefined> => {
-    const { timeRange, documentCategory } = options;
+    const { timeRange, documentCategory, outputType } = options;
     const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
     const documentCategoryFilter = `__meta.documentCategory:"${
       documentCategory || 'all'
     }"`;
-    const filters = documentCategory
-      ? `(${rangeFilter}) AND (${documentCategoryFilter})`
-      : `(${rangeFilter})`;
+    const outputTypeFilter = `__meta.outputType:"${outputType || 'all'}"`;
+    const filters = `(${rangeFilter})${
+      documentCategory ? ` AND (${documentCategoryFilter})` : ''
+    }${options.outputType ? ` AND (${outputTypeFilter})` : ''}`;
+
     const result = await algoliaClient.search(
       [key as AnalyticPerformanceType],
       '',
@@ -64,7 +66,9 @@ export const getMetric =
     const outputTypeFilter = `__meta.outputType:"${
       options.outputType || 'all'
     }"`;
-    const filters = `(${rangeFilter})${documentCategory ? ` AND (${documentCategoryFilter})` : ''}${options.outputType ? ` AND (${outputTypeFilter})` : ''}`;
+    const filters = `(${rangeFilter})${
+      documentCategory ? ` AND (${documentCategoryFilter})` : ''
+    }${options.outputType ? ` AND (${outputTypeFilter})` : ''}`;
 
     const result = await algoliaClient.search([key], '', {
       tagFilters: [tags],

@@ -29,13 +29,13 @@ it('renders the related events card', async () => {
 it('should render message when there is no match', async () => {
   const loadOptions = jest.fn();
   loadOptions.mockResolvedValue([]);
-  const { getByLabelText, queryByText } = render(
+  const { getByRole, queryByText } = render(
     <ResearchOutputRelatedEventsCard
       {...props}
       getRelatedEventSuggestions={loadOptions}
     />,
   );
-  userEvent.click(getByLabelText(/Hub Events/i));
+  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByText(/no related events match/i)).toBeInTheDocument();
 });
@@ -50,14 +50,14 @@ it('Can select an option', async () => {
   ];
   const mockOnChange = jest.fn();
 
-  const { getByLabelText, queryByText, getByText } = render(
+  const { getByRole, queryByText, getByText } = render(
     <ResearchOutputRelatedEventsCard
       {...props}
       getRelatedEventSuggestions={jest.fn().mockResolvedValue(result)}
       onChangeRelatedEvents={mockOnChange}
     />,
   );
-  userEvent.click(getByLabelText(/Hub Events/i));
+  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   userEvent.click(getByText('Event 1'));
   expect(mockOnChange).toHaveBeenCalledWith(result);

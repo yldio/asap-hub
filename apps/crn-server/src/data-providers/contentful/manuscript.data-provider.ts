@@ -5,6 +5,7 @@ import {
   FetchManuscriptByIdQueryVariables,
   FETCH_MANUSCRIPT_BY_ID,
   getLinkEntities,
+  getLinkEntity,
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
@@ -17,6 +18,7 @@ import {
   manuscriptTypes,
   ManuscriptVersion,
 } from '@asap-hub/model';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { ManuscriptDataProvider } from '../types';
 
@@ -52,6 +54,7 @@ export class ManuscriptContentfulDataProvider
 
     const {
       teamId,
+      userId,
       versions: [version],
       ...plainFields
     } = input;
@@ -63,7 +66,10 @@ export class ManuscriptContentfulDataProvider
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
-        fields: addLocaleToFields(version),
+        fields: addLocaleToFields({
+          ...version,
+          createdBy: getLinkEntity(userId),
+        }),
       },
     );
 
@@ -109,6 +115,52 @@ export const parseGraphqlManuscriptVersion = (
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,
       otherDetails: version?.otherDetails,
+      acknowledgedGrantNumberDetails:
+        version?.acknowledgedGrantNumber === 'No'
+          ? version?.acknowledgedGrantNumberDetails
+          : undefined,
+      asapAffiliationIncludedDetails:
+        version?.asapAffiliationIncluded === 'No'
+          ? version?.asapAffiliationIncludedDetails
+          : undefined,
+      manuscriptLicenseDetails:
+        version?.manuscriptLicense === 'No'
+          ? version?.manuscriptLicenseDetails
+          : undefined,
+      datasetsDepositedDetails:
+        version?.datasetsDeposited === 'No'
+          ? version?.datasetsDepositedDetails
+          : undefined,
+      codeDepositedDetails:
+        version?.codeDeposited === 'No'
+          ? version?.codeDepositedDetails
+          : undefined,
+      protocolsDepositedDetails:
+        version?.protocolsDeposited === 'No'
+          ? version?.protocolsDepositedDetails
+          : undefined,
+      labMaterialsRegisteredDetails:
+        version?.labMaterialsRegistered === 'No'
+          ? version?.labMaterialsRegisteredDetails
+          : undefined,
+      createdBy: {
+        id: version?.createdBy?.sys.id,
+        firstName: version?.createdBy?.firstName || '',
+        lastName: version?.createdBy?.lastName || '',
+        displayName: parseUserDisplayName(
+          version?.createdBy?.firstName || '',
+          version?.createdBy?.lastName || '',
+          undefined,
+          version?.createdBy?.nickname || '',
+        ),
+        avatarUrl: version?.createdBy?.avatar?.url || undefined,
+        alumniSinceDate: version?.createdBy?.alumniSinceDate || undefined,
+        teams: version?.createdBy?.teamsCollection?.items.map((teamItem) => ({
+          id: teamItem?.team?.sys.id,
+          name: teamItem?.team?.displayName,
+        })),
+      },
+      publishedAt: version?.sys.publishedAt,
     }))
     .filter(
       (version) =>

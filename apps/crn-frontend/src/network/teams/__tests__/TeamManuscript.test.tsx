@@ -8,6 +8,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -105,6 +106,14 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
+
   const submitButton = screen.getByRole('button', { name: /Submit/i });
   userEvent.click(submitButton);
 
@@ -118,6 +127,20 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             lifecycle: 'Typeset proof',
             type: 'Original Research',
             requestingApcCoverage: 'Already submitted',
+            acknowledgedGrantNumber: 'Yes',
+            asapAffiliationIncluded: 'Yes',
+            manuscriptLicense: 'Yes',
+            datasetsDeposited: 'Yes',
+            codeDeposited: 'Yes',
+            protocolsDeposited: 'Yes',
+            labMaterialsRegistered: 'Yes',
+            acknowledgedGrantNumberDetails: '',
+            asapAffiliationIncludedDetails: '',
+            manuscriptLicenseDetails: '',
+            datasetsDepositedDetails: '',
+            codeDepositedDetails: '',
+            protocolsDepositedDetails: '',
+            labMaterialsRegisteredDetails: '',
           },
         ],
       },

@@ -3389,15 +3389,87 @@ export enum LabsOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersions = Entry & {
+  acknowledgedGrantNumber?: Maybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails?: Maybe<Scalars['String']>;
+  asapAffiliationIncluded?: Maybe<Scalars['String']>;
+  asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
+  codeDeposited?: Maybe<Scalars['String']>;
+  codeDepositedDetails?: Maybe<Scalars['String']>;
   contentfulMetadata: ContentfulMetadata;
+  createdBy?: Maybe<Users>;
+  datasetsDeposited?: Maybe<Scalars['String']>;
+  datasetsDepositedDetails?: Maybe<Scalars['String']>;
+  labMaterialsRegistered?: Maybe<Scalars['String']>;
+  labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
   lifecycle?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
+  manuscriptLicense?: Maybe<Scalars['String']>;
+  manuscriptLicenseDetails?: Maybe<Scalars['String']>;
   otherDetails?: Maybe<Scalars['String']>;
   preprintDoi?: Maybe<Scalars['String']>;
+  protocolsDeposited?: Maybe<Scalars['String']>;
+  protocolsDepositedDetails?: Maybe<Scalars['String']>;
   publicationDoi?: Maybe<Scalars['String']>;
   requestingApcCoverage?: Maybe<Scalars['String']>;
   sys: Sys;
   type?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAcknowledgedGrantNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAcknowledgedGrantNumberDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsCodeDepositedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsCodeDepositedDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsCreatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsDatasetsDepositedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsDatasetsDepositedDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsLabMaterialsRegisteredArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsLabMaterialsRegisteredDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3411,12 +3483,32 @@ export type ManuscriptVersionsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsManuscriptLicenseArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsManuscriptLicenseDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsOtherDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsPreprintDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsProtocolsDepositedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsProtocolsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3445,7 +3537,103 @@ export type ManuscriptVersionsCollection = {
 export type ManuscriptVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
+  acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumberDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  acknowledgedGrantNumber_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncludedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  asapAffiliationIncluded_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  codeDeposited?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  codeDeposited_contains?: InputMaybe<Scalars['String']>;
+  codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDeposited_not?: InputMaybe<Scalars['String']>;
+  codeDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  codeDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  createdBy?: InputMaybe<CfUsersNestedFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDeposited?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  datasetsDeposited_not?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  labMaterialsRegistered?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegisteredDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  labMaterialsRegistered_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   lifecycle?: InputMaybe<Scalars['String']>;
   lifecycle_contains?: InputMaybe<Scalars['String']>;
   lifecycle_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3453,6 +3641,24 @@ export type ManuscriptVersionsFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptLicense?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicenseDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptLicense_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   otherDetails?: InputMaybe<Scalars['String']>;
   otherDetails_contains?: InputMaybe<Scalars['String']>;
   otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3467,6 +3673,24 @@ export type ManuscriptVersionsFilter = {
   preprintDoi_not?: InputMaybe<Scalars['String']>;
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  protocolsDeposited?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  protocolsDeposited_not?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   publicationDoi?: InputMaybe<Scalars['String']>;
   publicationDoi_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3531,12 +3755,40 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 export enum ManuscriptVersionsOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
   RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
@@ -3674,12 +3926,40 @@ export type ManuscriptsVersionsCollection = {
 };
 
 export enum ManuscriptsVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
   PublicationDoiDesc = 'publicationDoi_DESC',
   RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
@@ -8283,6 +8563,7 @@ export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
+  manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
@@ -8323,6 +8604,16 @@ export type UsersLinkingCollectionsInterestGroupLeadersCollectionArgs = {
     Array<
       InputMaybe<UsersLinkingCollectionsInterestGroupLeadersCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsManuscriptVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsManuscriptVersionsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -8403,6 +8694,57 @@ export enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
+  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
 }
 
 export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
@@ -9691,7 +10033,102 @@ export type CfLabsNestedFilter = {
 export type CfManuscriptVersionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
+  acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumberDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  acknowledgedGrantNumber_not?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_not_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumber_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncludedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
+  asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  asapAffiliationIncluded_not?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_not_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncluded_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  codeDeposited?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  codeDeposited_contains?: InputMaybe<Scalars['String']>;
+  codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  codeDeposited_not?: InputMaybe<Scalars['String']>;
+  codeDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  codeDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDeposited?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  datasetsDeposited_not?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  datasetsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  labMaterialsRegistered?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegisteredDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
+  labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  labMaterialsRegistered_not?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_not_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegistered_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   lifecycle?: InputMaybe<Scalars['String']>;
   lifecycle_contains?: InputMaybe<Scalars['String']>;
   lifecycle_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9699,6 +10136,24 @@ export type CfManuscriptVersionsNestedFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptLicense?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicenseDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
+  manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptLicense_not?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_not_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicense_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   otherDetails?: InputMaybe<Scalars['String']>;
   otherDetails_contains?: InputMaybe<Scalars['String']>;
   otherDetails_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9713,6 +10168,24 @@ export type CfManuscriptVersionsNestedFilter = {
   preprintDoi_not?: InputMaybe<Scalars['String']>;
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  protocolsDeposited?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDepositedDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
+  protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  protocolsDeposited_not?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_not_contains?: InputMaybe<Scalars['String']>;
+  protocolsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   publicationDoi?: InputMaybe<Scalars['String']>;
   publicationDoi_contains?: InputMaybe<Scalars['String']>;
   publicationDoi_exists?: InputMaybe<Scalars['Boolean']>;
@@ -14795,7 +15268,41 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           | 'publicationDoi'
           | 'requestingApcCoverage'
           | 'otherDetails'
-        > & { sys: Pick<Sys, 'id'> }
+          | 'acknowledgedGrantNumber'
+          | 'acknowledgedGrantNumberDetails'
+          | 'asapAffiliationIncluded'
+          | 'asapAffiliationIncludedDetails'
+          | 'manuscriptLicense'
+          | 'manuscriptLicenseDetails'
+          | 'datasetsDeposited'
+          | 'datasetsDepositedDetails'
+          | 'codeDeposited'
+          | 'codeDepositedDetails'
+          | 'protocolsDeposited'
+          | 'protocolsDepositedDetails'
+          | 'labMaterialsRegistered'
+          | 'labMaterialsRegisteredDetails'
+        > & {
+          sys: Pick<Sys, 'id' | 'publishedAt'>;
+          createdBy?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+            > & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    team?: Maybe<
+                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }>
+                >;
+              }>;
+            }
+          >;
+        }
       >
     >;
   }>;
@@ -14823,7 +15330,41 @@ export type FetchManuscriptByIdQuery = {
               | 'publicationDoi'
               | 'requestingApcCoverage'
               | 'otherDetails'
-            > & { sys: Pick<Sys, 'id'> }
+              | 'acknowledgedGrantNumber'
+              | 'acknowledgedGrantNumberDetails'
+              | 'asapAffiliationIncluded'
+              | 'asapAffiliationIncludedDetails'
+              | 'manuscriptLicense'
+              | 'manuscriptLicenseDetails'
+              | 'datasetsDeposited'
+              | 'datasetsDepositedDetails'
+              | 'codeDeposited'
+              | 'codeDepositedDetails'
+              | 'protocolsDeposited'
+              | 'protocolsDepositedDetails'
+              | 'labMaterialsRegistered'
+              | 'labMaterialsRegisteredDetails'
+            > & {
+              sys: Pick<Sys, 'id' | 'publishedAt'>;
+              createdBy?: Maybe<
+                Pick<
+                  Users,
+                  'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<{
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                      }>
+                    >;
+                  }>;
+                }
+              >;
+            }
           >
         >;
       }>;
@@ -16325,7 +16866,46 @@ export type FetchTeamByIdQuery = {
                         | 'publicationDoi'
                         | 'requestingApcCoverage'
                         | 'otherDetails'
-                      > & { sys: Pick<Sys, 'id'> }
+                        | 'acknowledgedGrantNumber'
+                        | 'acknowledgedGrantNumberDetails'
+                        | 'asapAffiliationIncluded'
+                        | 'asapAffiliationIncludedDetails'
+                        | 'manuscriptLicense'
+                        | 'manuscriptLicenseDetails'
+                        | 'datasetsDeposited'
+                        | 'datasetsDepositedDetails'
+                        | 'codeDeposited'
+                        | 'codeDepositedDetails'
+                        | 'protocolsDeposited'
+                        | 'protocolsDepositedDetails'
+                        | 'labMaterialsRegistered'
+                        | 'labMaterialsRegisteredDetails'
+                      > & {
+                        sys: Pick<Sys, 'id' | 'publishedAt'>;
+                        createdBy?: Maybe<
+                          Pick<
+                            Users,
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<{
+                                  team?: Maybe<
+                                    Pick<Teams, 'displayName'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                }>
+                              >;
+                            }>;
+                          }
+                        >;
+                      }
                     >
                   >;
                 }>;
@@ -19720,6 +20300,10 @@ export const ManuscriptsContentFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
                           ],
                         },
                       },
@@ -19743,6 +20327,197 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'otherDetails' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'acknowledgedGrantNumber',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'acknowledgedGrantNumberDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'asapAffiliationIncluded',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'asapAffiliationIncludedDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptLicense' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'manuscriptLicenseDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'datasetsDeposited' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'datasetsDepositedDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'codeDeposited' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'codeDepositedDetails' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'protocolsDeposited' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'protocolsDepositedDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'labMaterialsRegistered' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'labMaterialsRegisteredDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '3' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

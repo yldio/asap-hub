@@ -1,7 +1,9 @@
 import { FetchManuscriptByIdQuery } from '@asap-hub/contentful';
+import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptPostRequest,
   ManuscriptResponse,
 } from '@asap-hub/model';
 
@@ -15,6 +17,8 @@ export const getManuscriptDataObject = (
     {
       lifecycle: 'Preprint, version 1',
       type: 'Original Research',
+      createdBy: manuscriptAuthor,
+      publishedAt: '2020-09-23T20:45:22.000Z',
     },
   ],
   ...data,
@@ -40,18 +44,51 @@ export const getContentfulGraphqlManuscript = (
   ...props,
 });
 
-export const getContentfulGraphqlManuscriptVersions = () => ({
+export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
+  NonNullable<
+    NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+  >['versionsCollection']
+> = () => ({
   items: [
     {
-      sys: { id: 'version-1' },
+      sys: { id: 'version-1', publishedAt: '2020-09-23T20:45:22.000Z' },
       type: 'Original Research',
       lifecycle: 'Preprint, version 1',
+      createdBy: {
+        sys: {
+          id: manuscriptAuthor.id,
+        },
+        firstName: manuscriptAuthor.firstName,
+        lastName: manuscriptAuthor.lastName,
+        nickname: 'Tim',
+        alumniSinceDate: manuscriptAuthor.alumniSinceDate,
+        avatar: { url: manuscriptAuthor.avatarUrl },
+        teamsCollection: {
+          items: [
+            {
+              team: {
+                sys: {
+                  id: manuscriptAuthor.teams[0]!.id,
+                },
+                displayName: manuscriptAuthor.teams[0]!.name,
+              },
+            },
+          ],
+        },
+      },
     },
   ],
 });
 
+export const getManuscriptPostBody = (): ManuscriptPostRequest => {
+  const { title, teamId, versions } = getManuscriptDataObject();
+
+  const { createdBy: _, publishedAt: __, ...version } = versions[0]!;
+  return { title, teamId, versions: [version] };
+};
+
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
   const { title, teamId, versions } = getManuscriptDataObject();
 
-  return { title, teamId, versions };
+  return { title, teamId, versions, userId: 'user-id-0' };
 };

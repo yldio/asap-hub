@@ -2,13 +2,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
-
 import userEvent, { specialChars } from '@testing-library/user-event';
 import {
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptType,
   manuscriptTypeLifecycles,
+  QuickCheck,
+  QuickCheckDetails,
+  quickCheckQuestions,
 } from '@asap-hub/model';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -24,6 +26,13 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
   onSuccess: jest.fn(),
   teamId,
+  acknowledgedGrantNumber: 'Yes',
+  asapAffiliationIncluded: 'Yes',
+  manuscriptLicense: 'Yes',
+  datasetsDeposited: 'Yes',
+  codeDeposited: 'Yes',
+  protocolsDeposited: 'Yes',
+  labMaterialsRegistered: 'Yes',
 };
 
 it('renders the form', async () => {
@@ -60,12 +69,172 @@ it('data is sent on form submission', async () => {
         {
           type: 'Original Research',
           lifecycle: 'Draft manuscript (prior to preprint submission)',
+          acknowledgedGrantNumber: 'Yes',
+          asapAffiliationIncluded: 'Yes',
+          manuscriptLicense: undefined,
+          datasetsDeposited: 'Yes',
+          codeDeposited: 'Yes',
+          protocolsDeposited: 'Yes',
+          labMaterialsRegistered: 'Yes',
+
+          acknowledgedGrantNumberDetails: '',
+          asapAffiliationIncludedDetails: '',
+          manuscriptLicenseDetails: '',
+          datasetsDepositedDetails: '',
+          codeDepositedDetails: '',
+          protocolsDepositedDetails: '',
+          labMaterialsRegisteredDetails: '',
         },
       ],
       teamId,
     });
   });
 });
+
+test.each`
+  field                        | fieldDetails
+  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
+  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
+  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
+  ${'codeDeposited'}           | ${'codeDepositedDetails'}
+  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
+  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+`(
+  'should sent $fieldDetails value if $field is No',
+  async ({
+    field,
+    fieldDetails,
+  }: {
+    field: QuickCheck;
+    fieldDetails: QuickCheckDetails;
+  }) => {
+    const onSave = jest.fn();
+    const props = {
+      ...defaultProps,
+      [field]: 'No',
+      [fieldDetails]: 'Explanation',
+    };
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...props}
+          title="manuscript title"
+          type="Original Research"
+          publicationDoi="10.0777"
+          lifecycle="Publication"
+          onSave={onSave}
+        />
+      </StaticRouter>,
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+
+    const payload = {
+      title: 'manuscript title',
+      versions: [
+        {
+          type: 'Original Research',
+          lifecycle: 'Publication',
+          publicationDoi: '10.0777',
+          requestingApcCoverage: 'Already submitted',
+          acknowledgedGrantNumber: 'Yes',
+          asapAffiliationIncluded: 'Yes',
+          manuscriptLicense: 'Yes',
+          datasetsDeposited: 'Yes',
+          codeDeposited: 'Yes',
+          protocolsDeposited: 'Yes',
+          labMaterialsRegistered: 'Yes',
+
+          acknowledgedGrantNumberDetails: '',
+          asapAffiliationIncludedDetails: '',
+          manuscriptLicenseDetails: '',
+          datasetsDepositedDetails: '',
+          codeDepositedDetails: '',
+          protocolsDepositedDetails: '',
+          labMaterialsRegisteredDetails: '',
+        },
+      ],
+      teamId,
+    };
+    payload.versions[0]![field] = 'No';
+    payload.versions[0]![fieldDetails] = 'Explanation';
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(payload);
+    });
+  },
+);
+
+test.each`
+  field                        | fieldDetails
+  ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
+  ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+  ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
+  ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
+  ${'codeDeposited'}           | ${'codeDepositedDetails'}
+  ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
+  ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+`(
+  'should sent $fieldDetails as empty string if $field is Yes',
+  async ({
+    field,
+    fieldDetails,
+  }: {
+    field: QuickCheck;
+    fieldDetails: QuickCheckDetails;
+  }) => {
+    const onSave = jest.fn();
+    const props = {
+      ...defaultProps,
+      [field]: 'Yes',
+      [fieldDetails]: 'Explanation',
+    };
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...props}
+          title="manuscript title"
+          type="Original Research"
+          publicationDoi="10.0777"
+          lifecycle="Publication"
+          onSave={onSave}
+        />
+      </StaticRouter>,
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith({
+        title: 'manuscript title',
+        versions: [
+          {
+            type: 'Original Research',
+            lifecycle: 'Publication',
+            publicationDoi: '10.0777',
+            requestingApcCoverage: 'Already submitted',
+            acknowledgedGrantNumber: 'Yes',
+            asapAffiliationIncluded: 'Yes',
+            manuscriptLicense: 'Yes',
+            datasetsDeposited: 'Yes',
+            codeDeposited: 'Yes',
+            protocolsDeposited: 'Yes',
+            labMaterialsRegistered: 'Yes',
+
+            acknowledgedGrantNumberDetails: '',
+            asapAffiliationIncludedDetails: '',
+            manuscriptLicenseDetails: '',
+            datasetsDepositedDetails: '',
+            codeDepositedDetails: '',
+            protocolsDepositedDetails: '',
+            labMaterialsRegisteredDetails: '',
+          },
+        ],
+        teamId,
+      });
+    });
+  },
+);
 
 it('does not display the lifecycle select box until type is selected', async () => {
   render(
@@ -298,6 +467,10 @@ describe('preprintDoi', () => {
 });
 
 describe('renders the necessary fields', () => {
+  const getQuickCheckQuestion = (field: QuickCheck) =>
+    quickCheckQuestions.find((quickCheck) => quickCheck.field === field)
+      ?.question;
+
   const fieldInputMapping = {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
@@ -305,6 +478,22 @@ describe('renders the necessary fields', () => {
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',
+
+    acknowledgedGrantNumber: getQuickCheckQuestion('acknowledgedGrantNumber'),
+    asapAffiliationIncluded: getQuickCheckQuestion('asapAffiliationIncluded'),
+    manuscriptLicense: getQuickCheckQuestion('manuscriptLicense'),
+    datasetsDeposited: getQuickCheckQuestion('datasetsDeposited'),
+    codeDeposited: getQuickCheckQuestion('codeDeposited'),
+    protocolsDeposited: getQuickCheckQuestion('protocolsDeposited'),
+    labMaterialsRegistered: getQuickCheckQuestion('labMaterialsRegistered'),
+
+    acknowledgedGrantNumberDetails: 'Please provide details',
+    asapAffiliationIncludedDetails: 'Please provide details',
+    manuscriptLicenseDetails: 'Please provide details',
+    datasetsDepositedDetails: 'Please provide details',
+    codeDepositedDetails: 'Please provide details',
+    protocolsDepositedDetails: 'Please provide details',
+    labMaterialsRegisteredDetails: 'Please provide details',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(
@@ -328,7 +517,7 @@ describe('renders the necessary fields', () => {
           manuscriptFormFieldsMapping[manuscriptType][
             manuscriptLifecycle
           ].forEach((field) => {
-            expect(getByText(fieldInputMapping[field])).toBeVisible();
+            expect(getByText(fieldInputMapping[field] as string)).toBeVisible();
           });
         },
       );

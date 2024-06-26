@@ -55,6 +55,7 @@ export { default as TagList } from './TagList';
 export { default as TeamCollaborationRow } from './TeamCollaborationRow';
 export { default as ToastCard } from './ToastCard';
 export { default as UserAvatarList } from './UserAvatarList';
+export { default as UserCommentHeader } from './UserCommentHeader';
 export { default as UserMenuButton } from './UserMenuButton';
 export { default as UserNavigationAssociationSection } from './UserNavigationAssociationSection';
 export { default as UserProfilePersonalText } from './UserProfilePersonalText';

@@ -11,13 +11,14 @@ import {
 import {
   SortTeamProductivity,
   DocumentCategoryOption,
+  OutputTypeOption,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -282,6 +283,11 @@ describe('user productivity', () => {
 });
 
 describe('team productivity', () => {
+  const userOptions = {
+    ...defaultOptions,
+    outputType: 'all' as OutputTypeOption,
+    sort: 'user_asc' as SortUserProductivity,
+  };
   it('renders with team data', async () => {
     const label = 'Team Productivity';
 
@@ -322,7 +328,9 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
@@ -342,7 +350,7 @@ describe('team productivity', () => {
     expect(screen.queryByText('60')).not.toBeInTheDocument();
   });
 
-  it('renders data for different types', async () => {
+  it('renders data for different output types', async () => {
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
@@ -368,22 +376,31 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const typeDropdown = screen.getByLabelText('type');
-    userEvent.type(typeDropdown, 'ASAP Public');
-    userEvent.type(typeDropdown, specialChars.enter);
-    typeDropdown.blur();
-
+    const categoryButton = screen.getByRole('button', {
+      name: /ASAP Output chevron down/i,
+    });
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
 
-    expect(mockGetTeamProductivity).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({ ...defaultTeamOptions, outputType: 'public' }),
+    expect(mockGetTeamProductivity).toHaveBeenCalledWith(expect.anything(), {
+      ...defaultOptions,
+      outputType: 'public',
+    });
+
+    expect(screen.getByText('60')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/All/));
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
 
-    expect(screen.queryByText('50')).not.toBeInTheDocument();
-    expect(screen.getByText('60')).toBeVisible();
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
   });
 });
 

@@ -253,10 +253,12 @@ describe('getTeamProductivityPerformance', () => {
   });
 
   it('returns successfully fetched team productivity performance', async () => {
-    const result = await getTeamProductivityPerformance(algoliaSearchClient, {
-      timeRange: '30d',
-    });
-    expect(result).toEqual(expect.objectContaining(performanceByDocumentType));
+    const result = await getTeamProductivityPerformance(
+      algoliaSearchClient, { timeRange: '30d', outputType: 'all' },
+    );
+    expect(result).toEqual(
+      expect.objectContaining(teamProductivityPerformance),
+    );
   });
 
   it.each`
@@ -269,13 +271,16 @@ describe('getTeamProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getTeamProductivityPerformance(algoliaSearchClient, { timeRange });
+      await getTeamProductivityPerformance(
+        algoliaSearchClient,
+        { timeRange, outputType: 'all' },
+      );
 
       expect(search).toHaveBeenCalledWith(
         ['team-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `(__meta.range:"${timeRange}")`,
+          filters: `(__meta.range:"${timeRange}") AND (__meta.outputType:"all")`,
         }),
       );
     },

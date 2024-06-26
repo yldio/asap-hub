@@ -1,9 +1,10 @@
 import { AnalyticsData, EntityResponses } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
+  documentCategories,
+  FilterAnalyticsOptions,
   ListResponse,
   TeamProductivityResponse,
-  TimeRangeOption,
   timeRanges,
   UserProductivityResponse,
   UserProductivityTeam,
@@ -32,19 +33,36 @@ export const exportAnalyticsData = async (
   await file.write('[\n');
   metric === 'team-leadership'
     ? await exportData(metric, file)
-    : await exportDataForRanges(metric, file);
+    : await exportDataWithFilters(metric, file);
 
   await file.write(']');
 };
 
-const exportDataForRanges = async (
+const exportDataWithFilters = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {
-  for (let i = 0; i < timeRanges.length; i += 1) {
-    await exportData(metric, file, timeRanges[i]);
-    if (i != timeRanges.length - 1) {
-      await file.write(',');
+  if (metric === 'user-productivity') {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      for (let j = 0; j < documentCategories.length; j += 1) {
+        await exportData(metric, file, {
+          timeRange: timeRanges[i],
+          documentCategory: documentCategories[j],
+        });
+        if (j != documentCategories.length - 1) {
+          await file.write(',');
+        }
+      }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
+    }
+  } else {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      await exportData(metric, file, { timeRange: timeRanges[i] });
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
     }
   }
 };
@@ -52,7 +70,7 @@ const exportDataForRanges = async (
 const exportData = async (
   metric: Metric,
   file: FileHandle,
-  range?: TimeRangeOption,
+  filter?: FilterAnalyticsOptions,
 ): Promise<void> => {
   const analyticsController = new AnalyticsController(
     getAnalyticsDataProvider(),
@@ -72,13 +90,16 @@ const exportData = async (
       records = await analyticsController.fetchTeamProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: range,
+        filter: { timeRange: filter?.timeRange },
       });
     } else if (metric === 'user-productivity') {
       records = await analyticsController.fetchUserProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: range,
+        filter: {
+          timeRange: filter?.timeRange,
+          documentCategory: filter?.documentCategory,
+        },
       });
     } else if (metric === 'team-collaboration') {
       records = await analyticsController.fetchTeamCollaboration({
@@ -102,7 +123,10 @@ const exportData = async (
       await file.write(
         JSON.stringify(
           records.items.map((record) =>
-            transformRecords(record, metric, range),
+            transformRecords(record, metric, {
+              timeRange: filter?.timeRange,
+              documentCategory: filter?.documentCategory,
+            }),
           ),
           null,
           2,
@@ -119,15 +143,18 @@ const exportData = async (
 const transformRecords = (
   record: AnalyticsData,
   type: Metric,
-  range?: TimeRangeOption,
+  filter?: FilterAnalyticsOptions,
 ): EntityResponses['analytics'][keyof EntityResponses['analytics']] => {
   const payload = {
     ...record,
     _tags: getRecordTags(record, type),
-    objectID: `${record.id}-${type}${range ? '-' + range : ''}`,
+    objectID: `${record.id}-${type}${formatField(
+      filter?.timeRange,
+    )}${formatField(filter?.documentCategory)}`,
     __meta: {
       type,
-      range,
+      range: filter?.timeRange,
+      documentCategory: filter?.documentCategory,
     },
   };
 
@@ -163,3 +190,5 @@ const getUserTeamData = (teams: UserProductivityTeam[]) =>
   teams.length > 1
     ? { team: 'Multiple Teams', role: 'Multiple Roles' }
     : { team: teams[0]?.team ?? 'No team', role: teams[0]?.role ?? 'No role' };
+
+const formatField = (field: string | undefined) => (field ? '-' + field : '');

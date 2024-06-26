@@ -10,6 +10,7 @@ import {
 } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
+  DocumentCategoryOption,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
@@ -97,6 +98,8 @@ beforeEach(() => {
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
+  mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
+  mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
 });
 
 const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> =
@@ -118,7 +121,7 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithRange<SortTeamProductivity> 
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-user-productivity-30d',
+  objectID: '1-user-productivity-30d-all',
   name: 'Test User',
   isAlumni: false,
   teams: [
@@ -174,11 +177,10 @@ const renderPage = async (path: string) => {
 describe('user productivity', () => {
   const userOptions = {
     ...defaultUserOptions,
+    documentCategory: 'all' as DocumentCategoryOption,
     sort: 'user_asc' as SortUserProductivity,
   };
   it('renders with user data', async () => {
-    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
@@ -186,7 +188,6 @@ describe('user productivity', () => {
   });
 
   it('renders data for different time ranges', async () => {
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     when(mockGetUserProductivity)
       .calledWith(expect.anything(), userOptions)
       .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
@@ -196,7 +197,7 @@ describe('user productivity', () => {
         items: [
           {
             ...userProductivityResponse,
-            objectID: '1-user-productivity-90d',
+            objectID: '1-user-productivity-90d-all',
             asapOutput: 600,
           },
         ],
@@ -209,7 +210,9 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
@@ -228,14 +231,59 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
   });
+
+  it('renders data for different document categories', async () => {
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), userOptions)
+      .mockResolvedValue({ items: [userProductivityResponse], total: 1 });
+    when(mockGetUserProductivity)
+      .calledWith(expect.anything(), {
+        ...userOptions,
+        documentCategory: 'article',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...userProductivityResponse,
+            objectID: '1-user-productivity-30d-article',
+            asapOutput: 50,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    const categoryButton = screen.getByRole('button', {
+      name: /all chevron down/i,
+    });
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/Article/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('200')).not.toBeInTheDocument();
+
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/All/));
+    await waitFor(() =>
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+  });
 });
 
 describe('team productivity', () => {
   it('renders with team data', async () => {
     const label = 'Team Productivity';
-
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
-    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
@@ -300,7 +348,6 @@ describe('search', () => {
     return within(searchContainer).getByRole('textbox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );

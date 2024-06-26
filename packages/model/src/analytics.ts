@@ -83,10 +83,25 @@ export const timeRanges = [
   'all',
 ] as const;
 
+export const documentCategories = [
+  'all',
+  'article',
+  'bioinformatics',
+  'dataset',
+  'lab-resource',
+  'protocol',
+] as const;
+
 export type TimeRangeOption = (typeof timeRanges)[number];
+export type DocumentCategoryOption = (typeof documentCategories)[number];
+
+export type FilterAnalyticsOptions = {
+  timeRange?: TimeRangeOption;
+  documentCategory?: DocumentCategoryOption;
+};
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
-  filter?: TimeRangeOption;
+  filter?: FilterAnalyticsOptions;
 };
 
 export type AnalyticsTeamLeadershipDataObject = Pick<

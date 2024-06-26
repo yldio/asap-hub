@@ -20,7 +20,12 @@ const metricOptionList = Object.keys(metricOptions).map((value) => ({
 
 type ProductivityAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange' | 'currentPage' | 'tags' | 'loadTags' | 'setTags'
+  | 'timeRange'
+  | 'documentCategory'
+  | 'currentPage'
+  | 'tags'
+  | 'loadTags'
+  | 'setTags'
 > & {
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
@@ -40,6 +45,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
   metric,
   setMetric,
   timeRange,
+  documentCategory,
   tags,
   setTags,
   loadTags,
@@ -66,6 +72,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
     <AnalyticsControls
       currentPage={currentPage}
       timeRange={timeRange}
+      documentCategory={documentCategory}
       metricOption={metric}
       tags={tags}
       loadTags={loadTags}

@@ -132,7 +132,7 @@ describe('getUserProductivity', () => {
       ['user-productivity'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
       }),
     );
   });
@@ -276,7 +276,11 @@ describe('getUserProductivityPerformance', () => {
         {
           ...userProductivityPerformance,
           objectID: '1',
-          __meta: { type: 'user-productivity-performance', range: '30d' },
+          __meta: {
+            type: 'user-productivity-performance',
+            range: '30d',
+            documentCategory: 'all',
+          },
         },
       ]),
     );
@@ -286,6 +290,7 @@ describe('getUserProductivityPerformance', () => {
     const result = await getUserProductivityPerformance(
       algoliaSearchClient,
       '30d',
+      'all',
     );
     expect(result).toEqual(
       expect.objectContaining(userProductivityPerformance),
@@ -302,13 +307,17 @@ describe('getUserProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getUserProductivityPerformance(algoliaSearchClient, timeRange);
+      await getUserProductivityPerformance(
+        algoliaSearchClient,
+        timeRange,
+        'all',
+      );
 
       expect(search).toHaveBeenCalledWith(
         ['user-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `__meta.range:"${timeRange}"`,
+          filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
         }),
       );
     },

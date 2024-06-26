@@ -1,11 +1,14 @@
-import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import {
+  createAlgoliaResponse,
+  AlgoliaSearchClient,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getUserCollaboration,
   CollaborationListOptions,

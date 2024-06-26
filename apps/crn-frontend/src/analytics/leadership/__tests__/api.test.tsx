@@ -1,8 +1,11 @@
 import nock from 'nock';
-import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import {
+  createAlgoliaResponse,
+  AlgoliaSearchClient,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
 import { AnalyticsTeamLeadershipResponse } from '@asap-hub/model';
 import { AnalyticsSearchOptions, getAnalyticsLeadership } from '../api';
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 

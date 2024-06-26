@@ -202,7 +202,7 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
       }),
     );
   });
@@ -237,10 +237,9 @@ describe('getTeamProductivityPerformance', () => {
   });
 
   it('returns successfully fetched team productivity performance', async () => {
-    const result = await getTeamProductivityPerformance(
-      algoliaSearchClient,
-      '30d',
-    );
+    const result = await getTeamProductivityPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+    });
     expect(result).toEqual(expect.objectContaining(performanceByDocumentType));
   });
 
@@ -254,13 +253,13 @@ describe('getTeamProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getTeamProductivityPerformance(algoliaSearchClient, timeRange);
+      await getTeamProductivityPerformance(algoliaSearchClient, { timeRange });
 
       expect(search).toHaveBeenCalledWith(
         ['team-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `__meta.range:"${timeRange}"`,
+          filters: `(__meta.range:"${timeRange}") AND (__meta.documentCategory:"all")`,
         }),
       );
     },
@@ -287,11 +286,10 @@ describe('getUserProductivityPerformance', () => {
   });
 
   it('returns successfully fetched user productivity performance', async () => {
-    const result = await getUserProductivityPerformance(
-      algoliaSearchClient,
-      '30d',
-      'all',
-    );
+    const result = await getUserProductivityPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+      documentCategory: 'all',
+    });
     expect(result).toEqual(
       expect.objectContaining(userProductivityPerformance),
     );
@@ -307,11 +305,10 @@ describe('getUserProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getUserProductivityPerformance(
-        algoliaSearchClient,
+      await getUserProductivityPerformance(algoliaSearchClient, {
         timeRange,
-        'all',
-      );
+        documentCategory: 'all',
+      });
 
       expect(search).toHaveBeenCalledWith(
         ['user-productivity-performance'],

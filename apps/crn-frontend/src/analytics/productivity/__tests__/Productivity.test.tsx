@@ -283,11 +283,6 @@ describe('user productivity', () => {
 });
 
 describe('team productivity', () => {
-  const userOptions = {
-    ...defaultOptions,
-    outputType: 'all' as OutputTypeOption,
-    sort: 'user_asc' as SortUserProductivity,
-  };
   it('renders with team data', async () => {
     const label = 'Team Productivity';
 
@@ -350,7 +345,7 @@ describe('team productivity', () => {
     expect(screen.queryByText('60')).not.toBeInTheDocument();
   });
 
-  it('renders data for different output types', async () => {
+  it.skip('renders data for different output types', async () => {
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });

@@ -1,7 +1,7 @@
 import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
-  AnalyticsSearchOptionsWithRange,
+  AnalyticsSearchOptionsWithFiltering,
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import {
@@ -46,7 +46,7 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> =
+const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserProductivity> =
   {
     pageSize: null,
     currentPage: null,
@@ -56,7 +56,7 @@ const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> 
     tags: [],
   };
 
-const defaultTeamOptions: AnalyticsSearchOptionsWithRange<SortTeamProductivity> =
+const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity> =
   {
     pageSize: null,
     currentPage: null,

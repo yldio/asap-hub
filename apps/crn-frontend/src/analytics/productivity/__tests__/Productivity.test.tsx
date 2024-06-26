@@ -1,6 +1,6 @@
 import {
   AlgoliaSearchClient,
-  AnalyticsSearchOptionsWithRange,
+  AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -102,7 +102,7 @@ beforeEach(() => {
   mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
 });
 
-const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> =
+const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserProductivity> =
   {
     pageSize: 10,
     currentPage: 0,
@@ -110,7 +110,7 @@ const defaultUserOptions: AnalyticsSearchOptionsWithRange<SortUserProductivity> 
     sort: 'team_asc',
     tags: [],
   };
-const defaultTeamOptions: AnalyticsSearchOptionsWithRange<SortTeamProductivity> =
+const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity> =
   {
     pageSize: 10,
     currentPage: 0,

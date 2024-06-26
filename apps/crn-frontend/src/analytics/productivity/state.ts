@@ -1,4 +1,4 @@
-import { AnalyticsSearchOptionsWithRange } from '@asap-hub/algolia';
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
@@ -27,7 +27,7 @@ import {
 
 const analyticsUserProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithRange<SortUserProductivity>
+  AnalyticsSearchOptionsWithFiltering<SortUserProductivity>
 >({
   key: 'analyticsUserProductivityIndex',
   default: undefined,
@@ -43,7 +43,7 @@ export const analyticsUserProductivityListState = atomFamily<
 
 export const analyticsUserProductivityState = selectorFamily<
   ListUserProductivityAlgoliaResponse | Error | undefined,
-  AnalyticsSearchOptionsWithRange<SortUserProductivity>
+  AnalyticsSearchOptionsWithFiltering<SortUserProductivity>
 >({
   key: 'userProductivity',
   get:
@@ -87,7 +87,7 @@ export const analyticsUserProductivityState = selectorFamily<
 });
 
 export const useAnalyticsUserProductivity = (
-  options: AnalyticsSearchOptionsWithRange<SortUserProductivity>,
+  options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
 ) => {
   const indexName =
     options.sort === 'user_asc'
@@ -133,7 +133,7 @@ export const useTeamProductivityPerformance =
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
+  AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>
 >({
   key: 'analyticsTeamProductivityIndex',
   default: undefined,
@@ -149,7 +149,7 @@ export const analyticsTeamProductivityListState = atomFamily<
 
 export const analyticsTeamProductivityState = selectorFamily<
   ListTeamProductivityAlgoliaResponse | Error | undefined,
-  AnalyticsSearchOptionsWithRange<SortTeamProductivity>
+  AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>
 >({
   key: 'teamProductivity',
   get:
@@ -193,7 +193,7 @@ export const analyticsTeamProductivityState = selectorFamily<
 });
 
 export const useAnalyticsTeamProductivity = (
-  options: AnalyticsSearchOptionsWithRange<SortTeamProductivity>,
+  options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
 ) => {
   const indexName =
     options.sort === 'team_asc'

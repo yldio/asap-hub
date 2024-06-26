@@ -14,7 +14,7 @@ import {
   TEAM_PRODUCTIVITY_PERFORMANCE,
   TEAM_PRODUCTIVITY,
   createAlgoliaResponse,
-  getMetricWithRange,
+  getMetric,
 } from '../../src';
 
 type Search = () => Promise<
@@ -76,7 +76,7 @@ describe('getPerformanceForMetric', () => {
   });
 });
 
-describe('getMetricWithRange', () => {
+describe('getMetric', () => {
   const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
@@ -95,7 +95,7 @@ describe('getMetricWithRange', () => {
     );
   });
   it('creates a metric api function', async () => {
-    const get = getMetricWithRange<
+    const get = getMetric<
       ListTeamProductivityAlgoliaResponse,
       SortTeamProductivity
     >(TEAM_PRODUCTIVITY);
@@ -116,7 +116,7 @@ describe('getMetricWithRange', () => {
   });
 
   it('handles documentCategory', async () => {
-    const get = getMetricWithRange<
+    const get = getMetric<
       ListTeamProductivityAlgoliaResponse,
       SortTeamProductivity
     >(TEAM_PRODUCTIVITY);

@@ -8,7 +8,7 @@ export type AnalyticsSearchOptions = {
   tags: string[];
 };
 
-export type AnalyticsSearchOptionsWithRange<Sort = string> =
+export type AnalyticsSearchOptionsWithFiltering<Sort = string> =
   AnalyticsSearchOptions & {
     timeRange: TimeRangeOption;
     sort: Sort;
@@ -16,7 +16,7 @@ export type AnalyticsSearchOptionsWithRange<Sort = string> =
   };
 
 export type AnalyticsPerformanceOptions = Pick<
-  AnalyticsSearchOptionsWithRange,
+  AnalyticsSearchOptionsWithFiltering,
   'timeRange' | 'documentCategory'
 >;
 
@@ -35,7 +35,7 @@ export const getPerformanceForMetric =
       ? `(${rangeFilter}) AND (${documentCategoryFilter})`
       : `(${rangeFilter})`;
     const result = await algoliaClient.search(
-      [key as AnalyticPerformanceType as 'team-leadership'],
+      [key as AnalyticPerformanceType],
       '',
       {
         filters,
@@ -44,11 +44,11 @@ export const getPerformanceForMetric =
     return result.hits[0] as T | undefined;
   };
 
-export const getMetricWithRange =
+export const getMetric =
   <T, Sort = string>(key: AnalyticType) =>
   async (
     algoliaClient: AlgoliaClient<'analytics'>,
-    options: AnalyticsSearchOptionsWithRange<Sort>,
+    options: AnalyticsSearchOptionsWithFiltering<Sort>,
   ): Promise<T | undefined> => {
     const { currentPage, pageSize, timeRange, tags, documentCategory } =
       options;
@@ -60,16 +60,12 @@ export const getMetricWithRange =
       ? `(${rangeFilter}) AND (${documentCategoryFilter})`
       : `(${rangeFilter})`;
 
-    const result = await algoliaClient.search(
-      [key as AnalyticType as 'user-productivity'],
-      '',
-      {
-        tagFilters: [tags],
-        filters,
-        page: currentPage ?? undefined,
-        hitsPerPage: pageSize ?? undefined,
-      },
-    );
+    const result = await algoliaClient.search([key], '', {
+      tagFilters: [tags],
+      filters,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    });
     return {
       items: result.hits,
       total: result.nbHits,

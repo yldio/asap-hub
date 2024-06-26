@@ -14,12 +14,12 @@ const types = [
   USER_PRODUCTIVITY,
   TEAM_COLLABORATION,
   USER_COLLABORATION,
-];
+] as const;
 export type AnalyticType = (typeof types)[number];
 
 const performanceTypes = [
   USER_PRODUCTIVITY_PERFORMANCE,
   TEAM_PRODUCTIVITY_PERFORMANCE,
   TEAM_COLLABORATION_PERFORMANCE,
-];
+] as const;
 export type AnalyticPerformanceType = (typeof performanceTypes)[number];

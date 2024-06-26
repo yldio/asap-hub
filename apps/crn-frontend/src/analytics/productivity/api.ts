@@ -1,5 +1,5 @@
 import {
-  getMetricWithRange,
+  getMetric,
   getPerformanceForMetric,
   TEAM_PRODUCTIVITY,
   TEAM_PRODUCTIVITY_PERFORMANCE,
@@ -15,12 +15,12 @@ import {
   UserProductivityPerformance,
 } from '@asap-hub/model';
 
-export const getUserProductivity = getMetricWithRange<
+export const getUserProductivity = getMetric<
   ListUserProductivityAlgoliaResponse,
   SortUserProductivity
 >(USER_PRODUCTIVITY);
 
-export const getTeamProductivity = getMetricWithRange<
+export const getTeamProductivity = getMetric<
   ListTeamProductivityAlgoliaResponse,
   SortTeamProductivity
 >(TEAM_PRODUCTIVITY);

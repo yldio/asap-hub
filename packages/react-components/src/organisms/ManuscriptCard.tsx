@@ -150,7 +150,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
               </div>
               {quickCheckQuestions.map(({ field, question }) =>
                 version[`${field}Details`]?.length ? (
-                  <div css={quickCheckStyles}>
+                  <div css={quickCheckStyles} key={field}>
                     <Subtitle>{question}</Subtitle>
                     <UserCommentHeader
                       {...version.createdBy}

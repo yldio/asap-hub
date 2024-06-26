@@ -86,3 +86,18 @@ it('emits value changes', () => {
   userEvent.click(getByLabelText('Gatwick'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
+
+it('renders the validation message', () => {
+  render(
+    <LabeledRadioButtonGroup
+      options={[
+        { value: 'LHR', label: 'Heathrow' },
+        { value: 'LGW', label: 'Gatwick' },
+      ]}
+      value={''}
+      validationMessage="Please select an option"
+    />,
+  );
+
+  expect(screen.getByText(/Please select an option/i)).toBeVisible();
+});

@@ -1,5 +1,6 @@
 export * from './auth';
 export * from './analytics';
+export * from './algolia';
 export * from './calendars';
 export * from './dashboard';
 export * from './discover';

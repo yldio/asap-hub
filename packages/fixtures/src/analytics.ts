@@ -2,8 +2,20 @@ import {
   UserProductivityPerformance,
   PerformanceMetricByDocumentType,
   TeamCollaborationPerformance,
+  TeamProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 
+export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-team-productivity-30d',
+  name: 'Test Team',
+  isInactive: false,
+  Article: 1,
+  Bioinformatics: 2,
+  Dataset: 3,
+  'Lab Resource': 4,
+  Protocol: 5,
+};
 export const userProductivityPerformance: UserProductivityPerformance = {
   asapOutput: {
     belowAverageMin: 0,

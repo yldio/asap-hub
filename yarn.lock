@@ -264,6 +264,7 @@ __metadata:
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.23.8
+    "@types/jest": 29.5.12
     "@types/node": 20.10.5
     "@types/prettier": 2.7.3
     algoliasearch: 4.22.1
@@ -1193,6 +1194,7 @@ __metadata:
   resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
   dependencies:
     "@algolia/client-search": 4.22.1
+    "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.23.8

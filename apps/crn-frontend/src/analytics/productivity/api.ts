@@ -1,4 +1,11 @@
-import { getMetricWithRange, getPerformanceForMetric } from '@asap-hub/algolia';
+import {
+  getMetricWithRange,
+  getPerformanceForMetric,
+  TEAM_PRODUCTIVITY,
+  TEAM_PRODUCTIVITY_PERFORMANCE,
+  USER_PRODUCTIVITY,
+  USER_PRODUCTIVITY_PERFORMANCE,
+} from '@asap-hub/algolia';
 import {
   ListTeamProductivityAlgoliaResponse,
   ListUserProductivityAlgoliaResponse,
@@ -11,18 +18,18 @@ import {
 export const getUserProductivity = getMetricWithRange<
   ListUserProductivityAlgoliaResponse,
   SortUserProductivity
->('user-productivity');
+>(USER_PRODUCTIVITY);
 
 export const getTeamProductivity = getMetricWithRange<
   ListTeamProductivityAlgoliaResponse,
   SortTeamProductivity
->('team-productivity');
+>(TEAM_PRODUCTIVITY);
 
 export const getUserProductivityPerformance =
   getPerformanceForMetric<UserProductivityPerformance>(
-    'user-productivity-performance',
+    USER_PRODUCTIVITY_PERFORMANCE,
   );
 export const getTeamProductivityPerformance =
   getPerformanceForMetric<TeamProductivityPerformance>(
-    'team-productivity-performance',
+    TEAM_PRODUCTIVITY_PERFORMANCE,
   );

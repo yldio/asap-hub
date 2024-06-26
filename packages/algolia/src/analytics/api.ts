@@ -18,7 +18,7 @@ export const getPerformanceForMetric =
   <T>(key: AnalyticPerformanceType) =>
   async (
     algoliaClient: AlgoliaClient<'analytics'>,
-    timeRange: TimeRangeOption,
+    timeRange?: TimeRangeOption,
   ): Promise<T | undefined> => {
     const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
     const result = await algoliaClient.search(

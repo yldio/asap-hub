@@ -4,7 +4,9 @@ import {
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import {
+  createAlgoliaResponse,
   performanceByDocumentType,
+  teamProductivityResponse,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
@@ -16,7 +18,6 @@ import {
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -81,17 +82,6 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
   asapOutput: 1,
   asapPublicOutput: 2,
   ratio: '0.50',
-};
-const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
-  id: '1',
-  objectID: '1-team-productivity-30d',
-  name: 'Test Team',
-  isInactive: false,
-  Article: 1,
-  Bioinformatics: 2,
-  Dataset: 3,
-  'Lab Resource': 4,
-  Protocol: 5,
 };
 
 describe('getUserProductivity', () => {

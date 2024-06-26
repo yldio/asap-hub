@@ -92,7 +92,7 @@ export const useAnalyticsUserProductivity = (
   const indexName =
     options.sort === 'user_asc'
       ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort?.replace('user_', '')}`;
+      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
 
   const algoliaClient = useAnalyticsAlgolia(indexName);
 

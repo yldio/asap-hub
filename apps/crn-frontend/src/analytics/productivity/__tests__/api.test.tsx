@@ -1,10 +1,10 @@
 import {
+  createAlgoliaResponse,
   AlgoliaSearchClient,
   AnalyticsSearchOptionsWithRange,
   ClientSearchResponse,
 } from '@asap-hub/algolia';
 import {
-  createAlgoliaResponse,
   performanceByDocumentType,
   teamProductivityResponse,
   userProductivityPerformance,
@@ -12,7 +12,6 @@ import {
 import {
   SortTeamProductivity,
   SortUserProductivity,
-  TeamProductivityAlgoliaResponse,
   TimeRangeOption,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';

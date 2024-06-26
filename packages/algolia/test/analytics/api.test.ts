@@ -1,5 +1,4 @@
 import {
-  createAlgoliaResponse,
   performanceByDocumentType,
   teamProductivityResponse,
 } from '@asap-hub/fixtures';
@@ -16,7 +15,7 @@ import {
   TEAM_PRODUCTIVITY_PERFORMANCE,
   TEAM_PRODUCTIVITY,
 } from '../..';
-import { getMetricWithRange } from '../../src';
+import { createAlgoliaResponse, getMetricWithRange } from '../../src';
 
 type Search = () => Promise<
   ClientSearchResponse<
@@ -29,8 +28,6 @@ const search: jest.MockedFunction<Search> = jest.fn();
 
 const algoliaSearchClient = {
   search,
-  _index: '',
-  _reverseEventsIndex: '',
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
 describe('getPerformanceForMetric ', () => {
@@ -64,10 +61,6 @@ describe('getMetricWithRange', () => {
   });
 
   it('creates a metric api function', async () => {
-    const get = getMetricWithRange<
-      ListTeamProductivityAlgoliaResponse,
-      SortTeamProductivity
-    >(TEAM_PRODUCTIVITY);
     search.mockResolvedValue(
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
@@ -76,6 +69,12 @@ describe('getMetricWithRange', () => {
         },
       ]),
     );
+
+    const get = getMetricWithRange<
+      ListTeamProductivityAlgoliaResponse,
+      SortTeamProductivity
+    >(TEAM_PRODUCTIVITY);
+
     await get(
       { ...algoliaSearchClient, _index: '' },
       {

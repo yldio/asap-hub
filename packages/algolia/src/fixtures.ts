@@ -1,4 +1,4 @@
-import { Apps, ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
+import { Apps, ClientSearchResponse, EntityResponses } from '.';
 
 export const createAlgoliaResponse = <
   App extends Apps,

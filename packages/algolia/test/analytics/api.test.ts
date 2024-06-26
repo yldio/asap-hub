@@ -14,8 +14,9 @@ import {
   getPerformanceForMetric,
   TEAM_PRODUCTIVITY_PERFORMANCE,
   TEAM_PRODUCTIVITY,
-} from '../..';
-import { createAlgoliaResponse, getMetricWithRange } from '../../src';
+  createAlgoliaResponse,
+  getMetricWithRange,
+} from '../../src';
 
 type Search = () => Promise<
   ClientSearchResponse<
@@ -35,7 +36,7 @@ describe('getPerformanceForMetric ', () => {
     search.mockReset();
   });
 
-  it('creates a performance metric api function', async () => {
+  it('a creates a performance metric api function', async () => {
     const get = getPerformanceForMetric<TeamProductivityPerformance>(
       TEAM_PRODUCTIVITY_PERFORMANCE,
     );

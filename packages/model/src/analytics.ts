@@ -28,7 +28,7 @@ export type TeamProductivityPerformance = PerformanceMetricByDocumentType;
 
 export type TeamCollaborationPerformance = {
   withinTeam: PerformanceMetricByDocumentType;
-  accrossTeam: PerformanceMetricByDocumentType;
+  acrossTeam: PerformanceMetricByDocumentType;
 };
 
 export type SortLeadershipAndMembership =

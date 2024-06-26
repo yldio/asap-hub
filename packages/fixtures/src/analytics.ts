@@ -87,5 +87,5 @@ export const performanceByDocumentType: PerformanceMetricByDocumentType = {
 
 export const teamCollaborationPerformance: TeamCollaborationPerformance = {
   withinTeam: performanceByDocumentType,
-  accrossTeam: performanceByDocumentType,
+  acrossTeam: performanceByDocumentType,
 };

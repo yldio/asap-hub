@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { TimeRangeOption } from '@asap-hub/model';
+import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 
 import { dropdownChevronIcon } from '../icons';
@@ -33,7 +33,7 @@ const containerStyles = css({
   },
 });
 
-const viewContainerStyles = css({
+const selectContainerStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(15),
@@ -53,11 +53,25 @@ const viewContainerStyles = css({
   },
 });
 
+const searchSelectContainerStyles = css({
+  display: 'flex',
+  gap: rem(33),
+  paddingBottom: rem(24),
+});
+
+const categoryContainerStyles = css({
+  '> div': {
+    height: '100%',
+    '> button': {
+      alignItems: 'center',
+    },
+  },
+});
+
 const searchContainerStyles = css({
   display: 'flex',
-  gap: rem(18),
+  gap: rem(15),
   alignItems: 'center',
-  paddingBottom: rem(24),
 });
 
 const searchStyles = css({
@@ -83,6 +97,15 @@ const timeRangeOptions: Record<TimeRangeOption, string> = {
   'last-year': 'Last 12 months',
   all: 'Since Hub Launch (2020)',
 };
+const documentCategoryOptions: Record<DocumentCategoryOption, string> = {
+  all: 'All',
+  article: 'Article',
+  bioinformatics: 'Bioinformatics',
+  dataset: 'Dataset',
+  'lab-resource': 'Lab Resource',
+  protocol: 'Protocol',
+};
+
 const searchTexts = {
   user: {
     label: 'Users & Teams',
@@ -94,8 +117,28 @@ const searchTexts = {
   },
 };
 
+const generateLink = (
+  href?: string,
+  currentPage?: number,
+  tagsQueryString?: string,
+  timeRange?: string,
+  documentCategory?: string,
+) =>
+  `${href}?range=${timeRange}${
+    documentCategory ? `&documentCategory=${documentCategory}` : ''
+  }&currentPage=${currentPage}${tagsQueryString}`;
+
+const updateSearchParams = (): URLSearchParams => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.delete('range');
+  searchParams.delete('currentPage');
+  searchParams.delete('documentCategory');
+  return searchParams;
+};
+
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
+  readonly documentCategory?: DocumentCategoryOption;
   // metric is optional for now since we haven't added search to the collaboration page
   readonly metricOption?: MetricOption;
   readonly tags: string[];
@@ -107,6 +150,7 @@ interface AnalyticsControlsProps {
 }
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
+  documentCategory,
   metricOption,
   tags,
   setTags = noop,
@@ -115,37 +159,68 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   currentPage,
   href,
 }) => {
-  const searchParams = new URLSearchParams(window.location.search);
-  searchParams.delete('range');
-  searchParams.delete('currentPage');
+  const searchParams = updateSearchParams();
   const tagsQueryString = searchParams.has('tag')
     ? `&${searchParams.toString()}`
     : '';
   return (
     <>
       {metricOption && (
-        <div css={searchContainerStyles}>
-          <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
-          <span role="search" css={searchStyles}>
-            <MultiSelect
-              noMargin
-              leftIndicator={searchIcon}
-              noOptionsMessage={() => 'No results found'}
-              loadOptions={loadTags}
-              onChange={(items) => setTags(items.map(({ value }) => value))}
-              values={tags.map((tag) => ({
-                label: tag,
-                value: tag,
-              }))}
-              key={`${tags.join('')},${metricOption}`}
-              placeholder={searchTexts[metricOption].placeholder}
-            />
-          </span>
+        <div css={searchSelectContainerStyles}>
+          <div css={[searchContainerStyles, searchStyles]}>
+            <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
+            <span role="search" css={searchStyles}>
+              <MultiSelect
+                noMargin
+                leftIndicator={searchIcon}
+                noOptionsMessage={() => 'No results found'}
+                loadOptions={loadTags}
+                onChange={(items) => setTags(items.map(({ value }) => value))}
+                values={tags.map((tag) => ({
+                  label: tag,
+                  value: tag,
+                }))}
+                key={`${tags.join('')},${metricOption}`}
+                placeholder={searchTexts[metricOption].placeholder}
+              />
+            </span>
+          </div>
+          {documentCategory && (
+            <div css={[selectContainerStyles, categoryContainerStyles]}>
+              <strong>Document Category:</strong>
+              <DropdownButton
+                noMargin
+                buttonChildren={() => (
+                  <>
+                    <span css={{ marginRight: rem(8) }}>
+                      {documentCategoryOptions[documentCategory]}
+                    </span>
+                    {dropdownChevronIcon}
+                  </>
+                )}
+              >
+                {Object.keys(documentCategoryOptions).map((key) => ({
+                  item: (
+                    <>
+                      {documentCategoryOptions[key as DocumentCategoryOption]}
+                    </>
+                  ),
+                  href: generateLink(
+                    href,
+                    currentPage,
+                    tagsQueryString,
+                    timeRange,
+                    key,
+                  ),
+                }))}
+              </DropdownButton>
+            </div>
+          )}
         </div>
       )}
       <span css={containerStyles}>
         {timeRange && (
-          <span css={viewContainerStyles}>
+          <span css={selectContainerStyles}>
             <strong>View:</strong>
             <DropdownButton
               noMargin
@@ -160,7 +235,13 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
             >
               {Object.keys(timeRangeOptions).map((key) => ({
                 item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-                href: `${href}?range=${key}&currentPage=${currentPage}${tagsQueryString}`,
+                href: generateLink(
+                  href,
+                  currentPage,
+                  tagsQueryString,
+                  key,
+                  documentCategory,
+                ),
               }))}
             </DropdownButton>
           </span>

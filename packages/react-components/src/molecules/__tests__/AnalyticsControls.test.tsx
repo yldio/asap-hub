@@ -33,6 +33,26 @@ describe('AnalyticsControls', () => {
     expect(getByRole('search')).toBeVisible();
   });
 
+  it('conditionally renders document category selector', () => {
+    const { getByRole, getByText, queryByRole, queryByText, rerender } = render(
+      <AnalyticsControls {...defaultProps} />,
+    );
+
+    expect(queryByRole('button', { name: /all chevron down/i })).toBeNull();
+    expect(queryByText(/document category:/i)).not.toBeInTheDocument();
+
+    rerender(
+      <AnalyticsControls
+        {...defaultProps}
+        metricOption={'user'}
+        documentCategory="all"
+      />,
+    );
+
+    expect(getByRole('button', { name: /all chevron down/i })).toBeVisible();
+    expect(getByText(/document category:/i)).toBeVisible();
+  });
+
   it('renders export csv button if exportResults is provided', () => {
     const { rerender, queryByText, getByText } = render(
       <AnalyticsControls {...defaultProps} />,

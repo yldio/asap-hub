@@ -85,9 +85,6 @@ describe('getMetricWithRange', () => {
 
   beforeEach(() => {
     search.mockReset();
-  });
-
-  it('creates a metric api function', async () => {
     search.mockResolvedValue(
       createAlgoliaResponse<'analytics', 'team-productivity'>([
         {
@@ -96,7 +93,8 @@ describe('getMetricWithRange', () => {
         },
       ]),
     );
-
+  });
+  it('creates a metric api function', async () => {
     const get = getMetricWithRange<
       ListTeamProductivityAlgoliaResponse,
       SortTeamProductivity
@@ -105,6 +103,28 @@ describe('getMetricWithRange', () => {
     await get(algoliaSearchClient, {
       pageSize: null,
       currentPage: null,
+      timeRange: '30d',
+      sort: 'team_asc',
+      tags: [],
+    });
+    expect(search).toHaveBeenCalledWith(['team-productivity'], '', {
+      filters: '(__meta.range:"30d")',
+      hitsPerPage: undefined,
+      page: undefined,
+      tagFilters: [[]],
+    });
+  });
+
+  it('handles documentCategory', async () => {
+    const get = getMetricWithRange<
+      ListTeamProductivityAlgoliaResponse,
+      SortTeamProductivity
+    >(TEAM_PRODUCTIVITY);
+
+    await get(algoliaSearchClient, {
+      pageSize: null,
+      currentPage: null,
+      documentCategory: 'all',
       timeRange: '30d',
       sort: 'team_asc',
       tags: [],

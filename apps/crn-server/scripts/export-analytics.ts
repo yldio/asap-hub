@@ -50,21 +50,27 @@ const exportDataWithFilters = async (
           timeRange: timeRanges[i],
           documentCategory: documentCategories[j],
         });
-        if (i != outputTypes.length - 1 && j != timeRanges.length - 1) {
+        if (j != documentCategories.length - 1) {
           await file.write(',');
         }
       }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
     }
   } else if (metric === 'team-productivity') {
-    for (let i = 0; i < outputTypes.length; i += 1) {
-      for (let j = 0; j < timeRanges.length; j += 1) {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      for (let j = 0; j < outputTypes.length; j += 1) {
         await exportData(metric, file, {
-          timeRange: timeRanges[j],
-          outputType: outputTypes[i],
+          timeRange: timeRanges[i],
+          outputType: outputTypes[j],
         });
-        if (i != outputTypes.length - 1 && j != timeRanges.length - 1) {
+        if (j != outputTypes.length - 1) {
           await file.write(',');
         }
+      }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
       }
     }
   } else {
@@ -164,7 +170,9 @@ const transformRecords = (
     _tags: getRecordTags(record, type),
     objectID: `${record.id}-${type}${formatField(
       filter?.timeRange,
-    )}${formatField(filter?.documentCategory)}`,
+    )}${formatField(filter?.documentCategory)}${formatField(
+      filter?.outputType,
+    )}`,
     __meta: {
       type,
       range: filter?.timeRange,

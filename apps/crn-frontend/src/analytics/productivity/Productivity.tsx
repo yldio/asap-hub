@@ -53,10 +53,10 @@ const Productivity = () => {
     tags,
     sort: userSort,
   });
-  const userPerformance = useUserProductivityPerformance(
+  const userPerformance = useUserProductivityPerformance({
     timeRange,
     documentCategory,
-  );
+  });
 
   const { client: teamClient } = useAnalyticsTeamProductivity({
     currentPage,
@@ -65,7 +65,7 @@ const Productivity = () => {
     tags,
     sort: teamSort,
   });
-  const teamPerformance = useTeamProductivityPerformance(timeRange);
+  const teamPerformance = useTeamProductivityPerformance({ timeRange });
 
   const exportResults = () => {
     if (metric === 'user') {

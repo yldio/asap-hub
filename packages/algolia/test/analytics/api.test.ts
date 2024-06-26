@@ -7,7 +7,6 @@ import {
   SortTeamProductivity,
   TeamProductivityPerformance,
 } from '@asap-hub/model';
-import { beforeEach } from 'node:test';
 import {
   AlgoliaSearchClient,
   ClientSearchResponse,
@@ -24,23 +23,16 @@ type Search = () => Promise<
     typeof TEAM_PRODUCTIVITY | typeof TEAM_PRODUCTIVITY_PERFORMANCE
   >
 >;
+describe('getPerformanceForMetric', () => {
+  const search: jest.MockedFunction<Search> = jest.fn();
 
-const search: jest.MockedFunction<Search> = jest.fn();
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const algoliaSearchClient = {
-  search,
-} as unknown as AlgoliaSearchClient<'analytics'>;
-
-describe('getPerformanceForMetric ', () => {
   beforeEach(() => {
     search.mockReset();
-  });
-
-  it('a creates a performance metric api function', async () => {
-    const get = getPerformanceForMetric<TeamProductivityPerformance>(
-      TEAM_PRODUCTIVITY_PERFORMANCE,
-    );
-    search.mockResolvedValue(
+    search.mockResolvedValueOnce(
       createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
         {
           ...performanceByDocumentType,
@@ -49,14 +41,48 @@ describe('getPerformanceForMetric ', () => {
         },
       ]),
     );
+  });
+
+  it('a creates a performance metric api function', async () => {
+    const get = getPerformanceForMetric<TeamProductivityPerformance>(
+      TEAM_PRODUCTIVITY_PERFORMANCE,
+    );
     await get(algoliaSearchClient, { timeRange: '30d' });
-    expect(search).toHaveBeenCalledWith(['team-productivity-performance'], '', {
-      filters: '(__meta.range:"30d") AND (__meta.documentCategory:"all")',
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity-performance'],
+      '',
+      expect.objectContaining({
+        filters: '(__meta.range:"30d")',
+      }),
+    );
+  });
+
+  it('handles documentCategory', async () => {
+    const get = getPerformanceForMetric<TeamProductivityPerformance>(
+      TEAM_PRODUCTIVITY_PERFORMANCE,
+    );
+
+    await get(algoliaSearchClient, {
+      timeRange: '30d',
+      documentCategory: 'all',
     });
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity-performance'],
+      '',
+      expect.objectContaining({
+        filters: '(__meta.range:"30d") AND (__meta.documentCategory:"all")',
+      }),
+    );
   });
 });
 
 describe('getMetricWithRange', () => {
+  const search: jest.MockedFunction<Search> = jest.fn();
+
+  const algoliaSearchClient = {
+    search,
+  } as unknown as AlgoliaSearchClient<'analytics'>;
+
   beforeEach(() => {
     search.mockReset();
   });

@@ -49,9 +49,9 @@ describe('getPerformanceForMetric ', () => {
         },
       ]),
     );
-    await get(algoliaSearchClient);
+    await get(algoliaSearchClient, { timeRange: '30d' });
     expect(search).toHaveBeenCalledWith(['team-productivity-performance'], '', {
-      filters: '__meta.range:"30d"',
+      filters: '(__meta.range:"30d") AND (__meta.documentCategory:"all")',
     });
   });
 });
@@ -76,18 +76,15 @@ describe('getMetricWithRange', () => {
       SortTeamProductivity
     >(TEAM_PRODUCTIVITY);
 
-    await get(
-      { ...algoliaSearchClient, _index: '' },
-      {
-        pageSize: null,
-        currentPage: null,
-        timeRange: '30d',
-        sort: 'team_asc',
-        tags: [],
-      },
-    );
+    await get(algoliaSearchClient, {
+      pageSize: null,
+      currentPage: null,
+      timeRange: '30d',
+      sort: 'team_asc',
+      tags: [],
+    });
     expect(search).toHaveBeenCalledWith(['team-productivity'], '', {
-      filters: '__meta.range:"30d"',
+      filters: '(__meta.range:"30d") AND (__meta.documentCategory:"all")',
       hitsPerPage: undefined,
       page: undefined,
       tagFilters: [[]],

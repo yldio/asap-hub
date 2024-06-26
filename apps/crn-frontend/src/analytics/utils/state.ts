@@ -1,31 +1,28 @@
 import { atomFamily, RecoilState, useRecoilState } from 'recoil';
-import { TimeRangeOption } from '@asap-hub/model';
-import { AlgoliaClient } from '@asap-hub/algolia';
+import { AlgoliaClient, AnalyticsPerformanceOptions } from '@asap-hub/algolia';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 export const makePerformanceState = <T>(key: string) =>
-  atomFamily<T | undefined, string>({
+  atomFamily<T | undefined, AnalyticsPerformanceOptions>({
     key,
     default: undefined,
   });
 
-// useTeamCollaborationPerformance
-
 export const makePerformanceHook =
   <T>(
-    state: (p: TimeRangeOption) => RecoilState<T | undefined>,
+    state: (p: AnalyticsPerformanceOptions) => RecoilState<T | undefined>,
     get: (
       client: AlgoliaClient<'analytics'>,
-      p: TimeRangeOption,
+      options: AnalyticsPerformanceOptions,
     ) => Promise<T | undefined>,
   ) =>
-  (timeRange: TimeRangeOption) => {
+  (options: AnalyticsPerformanceOptions) => {
     const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
-    const [performance, setPerformance] = useRecoilState(state(timeRange));
+    const [performance, setPerformance] = useRecoilState(state(options));
     if (performance === undefined) {
-      throw get(algoliaClient.client, timeRange)
+      throw get(algoliaClient.client, options)
         .then(setPerformance)
         .catch(setPerformance);
     }

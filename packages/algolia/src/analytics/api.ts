@@ -1,4 +1,4 @@
-import { TimeRangeOption } from '@asap-hub/model';
+import { TimeRangeOption, DocumentCategoryOption } from '@asap-hub/model';
 import { AlgoliaClient } from '..';
 import { AnalyticPerformanceType, AnalyticType } from './types';
 
@@ -12,20 +12,32 @@ export type AnalyticsSearchOptionsWithRange<Sort = string> =
   AnalyticsSearchOptions & {
     timeRange: TimeRangeOption;
     sort: Sort;
+    documentCategory?: DocumentCategoryOption;
   };
+
+export type AnalyticsPerformanceOptions = Pick<
+  AnalyticsSearchOptionsWithRange,
+  'timeRange' | 'documentCategory'
+>;
 
 export const getPerformanceForMetric =
   <T>(key: AnalyticPerformanceType) =>
   async (
     algoliaClient: AlgoliaClient<'analytics'>,
-    timeRange?: TimeRangeOption,
+    options: AnalyticsPerformanceOptions,
   ): Promise<T | undefined> => {
+    const { timeRange, documentCategory } = options;
     const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+    const documentCategoryFilter = `__meta.documentCategory:"${
+      documentCategory || 'all'
+    }"`;
+    const filters = `(${rangeFilter}) AND (${documentCategoryFilter})`;
+
     const result = await algoliaClient.search(
       [key as AnalyticPerformanceType as 'team-leadership'],
       '',
       {
-        filters: rangeFilter,
+        filters,
       },
     );
     return result.hits[0] as T | undefined;
@@ -37,14 +49,19 @@ export const getMetricWithRange =
     algoliaClient: AlgoliaClient<'analytics'>,
     options: AnalyticsSearchOptionsWithRange<Sort>,
   ): Promise<T | undefined> => {
-    const { currentPage, pageSize, timeRange, tags } = options;
+    const { currentPage, pageSize, timeRange, tags, documentCategory } =
+      options;
     const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+    const documentCategoryFilter = `__meta.documentCategory:"${
+      documentCategory || 'all'
+    }"`;
+    const filters = `(${rangeFilter}) AND (${documentCategoryFilter})`;
     const result = await algoliaClient.search(
       [key as AnalyticType as 'user-productivity'],
       '',
       {
         tagFilters: [tags],
-        filters: rangeFilter,
+        filters,
         page: currentPage ?? undefined,
         hitsPerPage: pageSize ?? undefined,
       },

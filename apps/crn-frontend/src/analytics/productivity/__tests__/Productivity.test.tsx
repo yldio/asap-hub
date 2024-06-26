@@ -11,7 +11,6 @@ import {
 import {
   SortTeamProductivity,
   DocumentCategoryOption,
-  OutputTypeOption,
   SortUserProductivity,
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,

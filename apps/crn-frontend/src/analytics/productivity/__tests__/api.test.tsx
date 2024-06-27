@@ -9,6 +9,7 @@ import {
   teamProductivityResponse,
   userProductivityPerformance,
   userProductivityResponse,
+  teamProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
@@ -61,6 +62,7 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivi
     pageSize: null,
     currentPage: null,
     timeRange: '30d',
+    outputType: 'all',
     sort: 'team_asc',
     tags: [],
   };
@@ -184,7 +186,7 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}" AND __meta.outputType:"all"`,
+        filters: `(__meta.range:"${timeRange}") AND (__meta.outputType:"all")`,
       }),
     );
   });
@@ -199,7 +201,7 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"30d" AND __meta.outputType:"public"`,
+        filters: `(__meta.range:"30d") AND (__meta.outputType:"public")`,
       }),
     );
   });
@@ -238,16 +240,9 @@ describe('getTeamProductivityPerformance', () => {
       timeRange: '30d',
       outputType: 'all',
     });
+
     expect(result).toEqual(
-      expect.objectContaining({
-        items: [
-          {
-            ...userProductivityResponse,
-            __meta: { type: 'user-productivity', range: '30d' },
-          },
-        ],
-        total: 1,
-      }),
+      expect.objectContaining(teamProductivityPerformance),
     );
   });
 

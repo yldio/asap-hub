@@ -104,7 +104,6 @@ export type FilterAnalyticsOptions = {
   outputType?: OutputTypeOption;
 };
 
-
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: FilterAnalyticsOptions;
 };

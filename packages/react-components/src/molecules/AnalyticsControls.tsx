@@ -76,14 +76,6 @@ const searchContainerStyles = css({
   display: 'flex',
   gap: rem(15),
   alignItems: 'center',
-  paddingBottom: rem(24),
-  '& > div': {
-    display: 'flex',
-    gap: rem(18),
-  },
-  '& > div:nth-of-type(1)': {
-    flexGrow: 1,
-  },
 });
 
 const searchStyles = css({
@@ -140,9 +132,12 @@ const generateLink = (
   tagsQueryString?: string,
   timeRange?: string,
   documentCategory?: string,
+  outputType?: string
 ) =>
   `${href}?range=${timeRange}${
     documentCategory ? `&documentCategory=${documentCategory}` : ''
+  }${
+    outputType ? `&outputType=${outputType}` : ''
   }&currentPage=${currentPage}${tagsQueryString}`;
 
 const updateSearchParams = (): URLSearchParams => {
@@ -256,7 +251,8 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                     currentPage,
                     tagsQueryString,
                     timeRange,
-                    key,
+                    undefined,
+                    key
                   ),
                 }))}
               </DropdownButton>

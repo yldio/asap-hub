@@ -114,7 +114,7 @@ const Productivity = () => {
     <AnalyticsProductivityPageBody
       metric={metric}
       setMetric={setMetric}
-      outputType={outputType}
+      outputType={metric === 'team' ? outputType : undefined}
       timeRange={timeRange}
       documentCategory={metric === 'user' ? documentCategory : undefined}
       currentPage={currentPage}

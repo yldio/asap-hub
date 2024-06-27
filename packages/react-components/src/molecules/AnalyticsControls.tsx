@@ -145,6 +145,7 @@ const updateSearchParams = (): URLSearchParams => {
   searchParams.delete('range');
   searchParams.delete('currentPage');
   searchParams.delete('documentCategory');
+  searchParams.delete('outputType');
   return searchParams;
 };
 

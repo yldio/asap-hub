@@ -132,7 +132,7 @@ const generateLink = (
   tagsQueryString?: string,
   timeRange?: string,
   documentCategory?: string,
-  outputType?: string
+  outputType?: string,
 ) =>
   `${href}?range=${timeRange}${
     documentCategory ? `&documentCategory=${documentCategory}` : ''
@@ -252,7 +252,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                     tagsQueryString,
                     timeRange,
                     undefined,
-                    key
+                    key,
                   ),
                 }))}
               </DropdownButton>

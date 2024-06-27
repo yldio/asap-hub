@@ -282,11 +282,6 @@ describe('user productivity', () => {
 });
 
 describe('team productivity', () => {
-  const teamOptions = {
-    ...defaultUserOptions,
-    outputType: 'all',
-    sort: 'user_asc',
-  };
   it('renders with team data', async () => {
     const label = 'Team Productivity';
 
@@ -302,7 +297,10 @@ describe('team productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'all',
+      })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
@@ -349,9 +347,12 @@ describe('team productivity', () => {
     expect(screen.queryByText('60')).not.toBeInTheDocument();
   });
 
-  it.skip('renders data for different output types', async () => {
+  it('renders data for different output types', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), { ...defaultTeamOptions, outputType: 'all' })
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'all',
+      })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
@@ -375,25 +376,20 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const categoryButton = screen.getByRole('button', {
+    const outputTypeButton = screen.getByRole('button', {
       name: /ASAP Output chevron down/i,
     });
-    userEvent.click(categoryButton);
+    userEvent.click(outputTypeButton);
     userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
 
-    expect(mockGetTeamProductivity).toHaveBeenCalledWith(expect.anything(), {
-      ...teamOptions,
-      outputType: 'public',
-    });
-
     expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/All/));
+    userEvent.click(outputTypeButton);
+    userEvent.click(screen.getByText(/ASAP Output/));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );

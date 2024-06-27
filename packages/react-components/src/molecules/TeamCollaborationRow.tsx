@@ -114,18 +114,29 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
           </Link>
           {rowItem.isInactive && <InactiveBadgeIcon />}
         </p>
-        <p>{getPerformanceIcon(rowItem.Article, performance.article)}</p>
         <p>
+          {rowItem.Article}{' '}
+          {getPerformanceIcon(rowItem.Article, performance.article)}
+        </p>
+        <p>
+          {rowItem.Bioinformatics}{' '}
           {getPerformanceIcon(
             rowItem.Bioinformatics,
             performance.bioinformatics,
           )}
         </p>
-        <p>{getPerformanceIcon(rowItem.Dataset, performance.dataset)}</p>
         <p>
+          {rowItem.Dataset}{' '}
+          {getPerformanceIcon(rowItem.Dataset, performance.dataset)}
+        </p>
+        <p>
+          {rowItem['Lab Resource']}{' '}
           {getPerformanceIcon(rowItem['Lab Resource'], performance.labResource)}
         </p>
-        <p>{getPerformanceIcon(rowItem.Protocol, performance.protocol)}</p>
+        <p>
+          {rowItem.Protocol}{' '}
+          {getPerformanceIcon(rowItem.Protocol, performance.protocol)}
+        </p>
       </div>
       {rowItem.collaborationByTeam.length > 0 &&
         expanded &&

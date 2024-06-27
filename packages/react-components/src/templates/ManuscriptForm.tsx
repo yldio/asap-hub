@@ -610,14 +610,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           name={`versions.0.${field}Details`}
                           control={control}
                           rules={{
-                            required: 'Please select an option',
+                            required: 'Please enter the details.',
                           }}
-                          render={({ field: { value, onChange } }) => (
+                          render={({
+                            field: { value, onChange },
+                            fieldState: { error },
+                          }) => (
                             <LabeledTextField
                               title="Please provide details"
                               subtitle="(required)"
                               description="The reason you provide must be accepted by the Open Science team."
                               value={value || ''}
+                              customValidationMessage={error?.message}
                               onChange={onChange}
                               enabled={!isSubmitting}
                             />

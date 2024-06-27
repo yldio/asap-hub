@@ -236,6 +236,51 @@ test.each`
   },
 );
 
+it('displays an error message when user selects no in a quick check and does not provide details', async () => {
+  const onSave = jest.fn();
+  const props = {
+    ...defaultProps,
+    acknowledgedGrantNumber: 'No',
+    acknowledgedGrantNumberDetails: undefined,
+  };
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...props}
+        title="manuscript title"
+        type="Original Research"
+        publicationDoi="10.0777"
+        lifecycle="Publication"
+        onSave={onSave}
+      />
+    </StaticRouter>,
+  );
+  expect(
+    screen.queryByText(/Please enter the details./i),
+  ).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+
+  await waitFor(() => {
+    expect(
+      screen.getAllByText(/Please enter the details./i).length,
+    ).toBeGreaterThan(0);
+  });
+
+  userEvent.type(
+    screen.getByLabelText(/Please provide details/i),
+    'Some details',
+  );
+
+  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+
+  await waitFor(() => {
+    expect(
+      screen.queryByText(/Please enter the details./i),
+    ).not.toBeInTheDocument();
+  });
+});
+
 it('does not display the lifecycle select box until type is selected', async () => {
   render(
     <StaticRouter>

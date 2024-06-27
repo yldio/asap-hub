@@ -92,6 +92,8 @@ export const documentCategories = [
   'protocol',
 ] as const;
 
+export const outputTypes = ['public', 'all'] as const;
+
 export type TimeRangeOption = (typeof timeRanges)[number];
 export type DocumentCategoryOption = (typeof documentCategories)[number];
 export type OutputTypeOption = (typeof outputTypes)[number];
@@ -102,7 +104,6 @@ export type FilterAnalyticsOptions = {
   outputType?: OutputTypeOption;
 };
 
-export const outputTypes = ['public', 'all'] as const;
 
 export type FetchAnalyticsOptions = FetchPaginationOptions & {
   filter?: FilterAnalyticsOptions;

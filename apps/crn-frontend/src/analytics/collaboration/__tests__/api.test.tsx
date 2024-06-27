@@ -149,7 +149,7 @@ describe('getUserCollaboration', () => {
       ['user-collaboration'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });
@@ -198,7 +198,7 @@ describe('getTeamCollaboration', () => {
       ['team-collaboration'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });

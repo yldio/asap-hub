@@ -3,6 +3,7 @@ import {
   PerformanceMetricByDocumentType,
   TeamCollaborationPerformance,
   TeamProductivityAlgoliaResponse,
+  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 
 export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
@@ -16,6 +17,26 @@ export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   'Lab Resource': 4,
   Protocol: 5,
 };
+
+export const userProductivityResponse: UserProductivityAlgoliaResponse = {
+  id: '1',
+  objectID: '1-user-productivity-30d',
+  name: 'Test User',
+  isAlumni: false,
+  teams: [
+    {
+      id: '1',
+      team: 'Team A',
+      isTeamInactive: false,
+      isUserInactiveOnTeam: false,
+      role: 'Collaborating PI',
+    },
+  ],
+  asapOutput: 1,
+  asapPublicOutput: 2,
+  ratio: '0.50',
+};
+
 export const userProductivityPerformance: UserProductivityPerformance = {
   asapOutput: {
     belowAverageMin: 0,

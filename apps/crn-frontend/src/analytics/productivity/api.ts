@@ -1,4 +1,5 @@
 import {
+  AnalyticsSearchOptions,
   getMetric,
   getPerformanceForMetric,
   TEAM_PRODUCTIVITY,
@@ -15,6 +16,7 @@ import {
   UserProductivityPerformance,
   DocumentCategoryOption,
   OutputTypeOption,
+  TimeRangeOption,
 } from '@asap-hub/model';
 
 export const getUserProductivity = getMetric<

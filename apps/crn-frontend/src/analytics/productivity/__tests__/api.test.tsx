@@ -8,12 +8,12 @@ import {
   performanceByDocumentType,
   teamProductivityResponse,
   userProductivityPerformance,
+  userProductivityResponse,
 } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
   SortUserProductivity,
   TimeRangeOption,
-  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
@@ -64,25 +64,6 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivi
     sort: 'team_asc',
     tags: [],
   };
-
-const userProductivityResponse: UserProductivityAlgoliaResponse = {
-  id: '1',
-  objectID: '1-user-productivity-30d',
-  name: 'Test User',
-  isAlumni: false,
-  teams: [
-    {
-      id: '1',
-      team: 'Team A',
-      isTeamInactive: false,
-      isUserInactiveOnTeam: false,
-      role: 'Collaborating PI',
-    },
-  ],
-  asapOutput: 1,
-  asapPublicOutput: 2,
-  ratio: '0.50',
-};
 
 describe('getUserProductivity', () => {
   beforeEach(() => {
@@ -253,11 +234,20 @@ describe('getTeamProductivityPerformance', () => {
   });
 
   it('returns successfully fetched team productivity performance', async () => {
-    const result = await getTeamProductivityPerformance(
-      algoliaSearchClient, { timeRange: '30d', outputType: 'all' },
-    );
+    const result = await getTeamProductivityPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+      outputType: 'all',
+    });
     expect(result).toEqual(
-      expect.objectContaining(teamProductivityPerformance),
+      expect.objectContaining({
+        items: [
+          {
+            ...userProductivityResponse,
+            __meta: { type: 'user-productivity', range: '30d' },
+          },
+        ],
+        total: 1,
+      }),
     );
   });
 
@@ -271,10 +261,10 @@ describe('getTeamProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getTeamProductivityPerformance(
-        algoliaSearchClient,
-        { timeRange, outputType: 'all' },
-      );
+      await getTeamProductivityPerformance(algoliaSearchClient, {
+        timeRange,
+        outputType: 'all',
+      });
 
       expect(search).toHaveBeenCalledWith(
         ['team-productivity-performance'],

@@ -4,7 +4,6 @@ import {
   ListUserProductivityAlgoliaResponse,
   SortTeamProductivity,
   SortUserProductivity,
-  OutputTypeOption,
   TeamProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   UserProductivityAlgoliaResponse,

@@ -66,7 +66,10 @@ const Productivity = () => {
     tags,
     sort: teamSort,
   });
-  const teamPerformance = useTeamProductivityPerformance(timeRange, outputType);
+  const teamPerformance = useTeamProductivityPerformance({
+    timeRange,
+    outputType,
+  });
 
   const exportResults = () => {
     if (metric === 'user') {

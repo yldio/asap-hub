@@ -282,6 +282,11 @@ describe('user productivity', () => {
 });
 
 describe('team productivity', () => {
+  const teamOptions = {
+    ...defaultUserOptions,
+    outputType: 'all',
+    sort: 'user_asc',
+  };
   it('renders with team data', async () => {
     const label = 'Team Productivity';
 
@@ -380,7 +385,7 @@ describe('team productivity', () => {
     );
 
     expect(mockGetTeamProductivity).toHaveBeenCalledWith(expect.anything(), {
-      ...defaultOptions,
+      ...teamOptions,
       outputType: 'public',
     });
 

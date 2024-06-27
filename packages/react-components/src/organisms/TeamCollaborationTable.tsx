@@ -112,7 +112,11 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
           <span css={titleStyles}>Protocols</span>
         </div>
         {data.map((row) => (
-          <TeamCollaborationRow rowItem={row} key={row.id} />
+          <TeamCollaborationRow
+            rowItem={row}
+            key={row.id}
+            performance={performance}
+          />
         ))}
       </div>
     </Card>

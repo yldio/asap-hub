@@ -1,3 +1,4 @@
+import { PerformanceMetricByDocumentType } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { neutral200, steel } from '../colors';
 import { plusRectIcon, minusRectIcon, InactiveBadgeIcon } from '../icons';
 import { TeamCollaborationMetric } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
+import { getPerformanceIcon } from '../utils';
 
 const rowStyles = css({
   display: 'grid',
@@ -83,9 +85,11 @@ const rowContainerStyles = css({
 
 interface TeamCollaborationProps {
   rowItem: TeamCollaborationMetric;
+  performance: PerformanceMetricByDocumentType;
 }
 const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
   rowItem,
+  performance,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const canExpand = !!rowItem.collaborationByTeam.length;
@@ -110,11 +114,18 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
           </Link>
           {rowItem.isInactive && <InactiveBadgeIcon />}
         </p>
-        <p>{rowItem.Article}</p>
-        <p>{rowItem.Bioinformatics}</p>
-        <p>{rowItem.Dataset}</p>
-        <p>{rowItem['Lab Resource']}</p>
-        <p>{rowItem.Protocol}</p>
+        <p>{getPerformanceIcon(rowItem.Article, performance.article)}</p>
+        <p>
+          {getPerformanceIcon(
+            rowItem.Bioinformatics,
+            performance.bioinformatics,
+          )}
+        </p>
+        <p>{getPerformanceIcon(rowItem.Dataset, performance.dataset)}</p>
+        <p>
+          {getPerformanceIcon(rowItem['Lab Resource'], performance.labResource)}
+        </p>
+        <p>{getPerformanceIcon(rowItem.Protocol, performance.protocol)}</p>
       </div>
       {rowItem.collaborationByTeam.length > 0 &&
         expanded &&

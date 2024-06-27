@@ -1,3 +1,4 @@
+import { PerformanceMetricByDocumentType } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -8,6 +9,7 @@ import { neutral200, steel } from '../colors';
 import { plusRectIcon, minusRectIcon, InactiveBadgeIcon } from '../icons';
 import { TeamCollaborationMetric } from '../organisms';
 import { rem, tabletScreen } from '../pixels';
+import { getPerformanceIcon } from '../utils';
 
 const rowStyles = css({
   display: 'grid',
@@ -27,6 +29,12 @@ const rowStyles = css({
     paddingBottom: rem(15),
     borderBottom: `1px solid ${steel.rgb}`,
   },
+});
+
+const rowValueStyles = css({
+  display: 'flex',
+  gap: rem(6),
+  fontWeight: 400,
 });
 
 const iconStyles = css({
@@ -83,9 +91,11 @@ const rowContainerStyles = css({
 
 interface TeamCollaborationProps {
   rowItem: TeamCollaborationMetric;
+  performance: PerformanceMetricByDocumentType;
 }
 const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
   rowItem,
+  performance,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const canExpand = !!rowItem.collaborationByTeam.length;
@@ -110,11 +120,29 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
           </Link>
           {rowItem.isInactive && <InactiveBadgeIcon />}
         </p>
-        <p>{rowItem.Article}</p>
-        <p>{rowItem.Bioinformatics}</p>
-        <p>{rowItem.Dataset}</p>
-        <p>{rowItem['Lab Resource']}</p>
-        <p>{rowItem.Protocol}</p>
+        <p css={rowValueStyles}>
+          {rowItem.Article}{' '}
+          {getPerformanceIcon(rowItem.Article, performance.article)}
+        </p>
+        <p css={rowValueStyles}>
+          {rowItem.Bioinformatics}{' '}
+          {getPerformanceIcon(
+            rowItem.Bioinformatics,
+            performance.bioinformatics,
+          )}
+        </p>
+        <p css={rowValueStyles}>
+          {rowItem.Dataset}{' '}
+          {getPerformanceIcon(rowItem.Dataset, performance.dataset)}
+        </p>
+        <p css={rowValueStyles}>
+          {rowItem['Lab Resource']}{' '}
+          {getPerformanceIcon(rowItem['Lab Resource'], performance.labResource)}
+        </p>
+        <p css={rowValueStyles}>
+          {rowItem.Protocol}{' '}
+          {getPerformanceIcon(rowItem.Protocol, performance.protocol)}
+        </p>
       </div>
       {rowItem.collaborationByTeam.length > 0 &&
         expanded &&

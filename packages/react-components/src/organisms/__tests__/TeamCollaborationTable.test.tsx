@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
+import { performanceByDocumentType } from '@asap-hub/fixtures';
 import TeamCollaborationTable, {
   CollaborationType,
   TeamCollaborationMetric,
@@ -41,7 +42,11 @@ describe('TeamCollaborationTable', () => {
       { ...teamCollaboration, type: 'within-team' as CollaborationType },
     ];
     const { getByText } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        data={data}
+        performance={performanceByDocumentType}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Test Team')).toBeInTheDocument();
   });
@@ -54,7 +59,11 @@ describe('TeamCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        data={data}
+        performance={performanceByDocumentType}
+        {...pageControlsProps}
+      />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -66,7 +75,11 @@ describe('TeamCollaborationTable', () => {
       },
     ];
     const { getByRole, getByText, queryByText } = render(
-      <TeamCollaborationTable data={data} {...pageControlsProps} />,
+      <TeamCollaborationTable
+        data={data}
+        performance={performanceByDocumentType}
+        {...pageControlsProps}
+      />,
     );
     expect(queryByText('Other Team')).not.toBeInTheDocument();
     fireEvent.click(getByRole('button'));

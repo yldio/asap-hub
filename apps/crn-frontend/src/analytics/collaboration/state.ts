@@ -1,7 +1,9 @@
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   TeamCollaborationAlgoliaResponse,
+  TeamCollaborationPerformance,
   UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { useEffect } from 'react';
@@ -14,15 +16,16 @@ import {
 } from 'recoil';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
-  CollaborationListOptions,
   getUserCollaboration,
   getTeamCollaboration,
+  getTeamCollaborationPerformance,
 } from './api';
 
 const analyticsUserCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithFiltering
 >({
   key: 'analyticsUserCollaborationIndex',
   default: undefined,
@@ -38,7 +41,7 @@ export const analyticsUserCollaborationListState = atomFamily<
 
 export const analyticsUserCollaborationState = selectorFamily<
   ListUserCollaborationAlgoliaResponse | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithFiltering
 >({
   key: 'userCollaboration',
   get:
@@ -85,7 +88,7 @@ export const analyticsUserCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsUserCollaboration = (
-  options: CollaborationListOptions,
+  options: AnalyticsSearchOptionsWithFiltering,
 ) => {
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [userCollaboration, setUserCollaboration] = useRecoilState(
@@ -113,7 +116,7 @@ export const useAnalyticsUserCollaboration = (
 
 export const analyticsTeamCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithFiltering
 >({
   key: 'analyticsTeamCollaborationIndex',
   default: undefined,
@@ -129,7 +132,7 @@ export const analyticsTeamCollaborationListState = atomFamily<
 
 export const analyticsTeamCollaborationState = selectorFamily<
   ListTeamCollaborationAlgoliaResponse | Error | undefined,
-  CollaborationListOptions
+  AnalyticsSearchOptionsWithFiltering
 >({
   key: 'teamCollaboration',
   get:
@@ -176,7 +179,7 @@ export const analyticsTeamCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsTeamCollaboration = (
-  options: CollaborationListOptions,
+  options: AnalyticsSearchOptionsWithFiltering,
 ) => {
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
@@ -201,3 +204,14 @@ export const useAnalyticsTeamCollaboration = (
   }
   return teamCollaboration;
 };
+
+export const teamCollaborationPerformanceState =
+  makePerformanceState<TeamCollaborationPerformance>(
+    'analyticsTeamCollaborationPerformance',
+  );
+
+export const useTeamCollaborationPerformance =
+  makePerformanceHook<TeamCollaborationPerformance>(
+    teamCollaborationPerformanceState,
+    getTeamCollaborationPerformance,
+  );

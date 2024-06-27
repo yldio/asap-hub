@@ -4,7 +4,10 @@ import {
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
-import { useAnalyticsTeamCollaboration } from './state';
+import {
+  useAnalyticsTeamCollaboration,
+  useTeamCollaborationPerformance,
+} from './state';
 import { CollaborationProps } from './UserCollaboration';
 
 const getDataForType = (
@@ -39,7 +42,11 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
     currentPage,
     pageSize,
     timeRange,
+    tags: [],
+    sort: '',
   });
+
+  const performance = useTeamCollaborationPerformance({ timeRange });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
@@ -49,6 +56,9 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}
+      performance={
+        type === 'within-team' ? performance.withinTeam : performance.acrossTeam
+      }
     />
   );
 };

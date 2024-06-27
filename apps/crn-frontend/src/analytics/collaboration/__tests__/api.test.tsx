@@ -2,6 +2,7 @@ import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
   ClientSearchResponse,
+  AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
@@ -9,11 +10,7 @@ import {
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import {
-  getUserCollaboration,
-  CollaborationListOptions,
-  getTeamCollaboration,
-} from '../api';
+import { getUserCollaboration, getTeamCollaboration } from '../api';
 
 jest.mock('../../../config');
 
@@ -39,10 +36,12 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultOptions: CollaborationListOptions = {
+const defaultOptions: AnalyticsSearchOptionsWithFiltering = {
   pageSize: 10,
   currentPage: 0,
   timeRange: '30d',
+  tags: [],
+  sort: '',
 };
 
 const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
@@ -150,7 +149,7 @@ describe('getUserCollaboration', () => {
       ['user-collaboration'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });
@@ -199,7 +198,7 @@ describe('getTeamCollaboration', () => {
       ['team-collaboration'],
       '',
       expect.objectContaining({
-        filters: `__meta.range:"${timeRange}"`,
+        filters: `(__meta.range:"${timeRange}")`,
       }),
     );
   });

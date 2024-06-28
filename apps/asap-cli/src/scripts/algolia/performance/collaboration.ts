@@ -60,10 +60,10 @@ export const processUserCollaborationPerformance = async (
     await index.saveObject(
       {
         withinTeam: getBellCurveMetrics(
-          flatHits.map((hit) => hit['outputsCoAuthoredWithinTeam']),
+          flatHits.map((hit) => hit.outputsCoAuthoredWithinTeam),
         ),
         acrossTeam: getBellCurveMetrics(
-          flatHits.map((hit) => hit['outputsCoAuthoredAcrossTeams']),
+          flatHits.map((hit) => hit.outputsCoAuthoredAcrossTeams),
         ),
         __meta: {
           range,

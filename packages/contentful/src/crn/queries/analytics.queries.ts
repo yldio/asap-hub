@@ -13,7 +13,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
         displayName
         inactiveSince
         linkedFrom {
-          interestGroupsCollection(limit: 10) {
+          interestGroupsCollection(limit: 50) {
             items {
               sys {
                 id
@@ -21,7 +21,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
               active
             }
           }
-          teamMembershipCollection(limit: 20) {
+          teamMembershipCollection(limit: 100) {
             items {
               inactiveSinceDate
               linkedFrom {
@@ -29,7 +29,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                   items {
                     alumniSinceDate
                     linkedFrom {
-                      interestGroupLeadersCollection(limit: 3) {
+                      interestGroupLeadersCollection(limit: 50) {
                         items {
                           inactiveSinceDate
                           role
@@ -45,7 +45,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                           }
                         }
                       }
-                      workingGroupMembersCollection(limit: 3) {
+                      workingGroupMembersCollection(limit: 50) {
                         items {
                           inactiveSinceDate
                           linkedFrom {
@@ -60,7 +60,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                           }
                         }
                       }
-                      workingGroupLeadersCollection(limit: 3) {
+                      workingGroupLeadersCollection(limit: 50) {
                         items {
                           inactiveSinceDate
                           role
@@ -100,7 +100,7 @@ export const FETCH_USER_PRODUCTIVITY = gql`
         lastName
         nickname
         alumniSinceDate
-        teamsCollection(limit: 3) {
+        teamsCollection(limit: 20) {
           items {
             team {
               sys {
@@ -114,13 +114,13 @@ export const FETCH_USER_PRODUCTIVITY = gql`
           }
         }
         linkedFrom {
-          researchOutputsCollection(limit: 20) {
+          researchOutputsCollection(limit: 100) {
             items {
               addedDate
               createdDate
               sharingStatus
               documentType
-              authorsCollection(limit: 10) {
+              authorsCollection(limit: 20) {
                 items {
                   __typename
                   ... on Users {
@@ -149,7 +149,7 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
         displayName
         inactiveSince
         linkedFrom {
-          researchOutputsCollection(limit: 1000) {
+          researchOutputsCollection(limit: 2000) {
             items {
               addedDate
               createdDate
@@ -175,14 +175,14 @@ export const FETCH_USER_COLLABORATION = gql`
         lastName
         nickname
         alumniSinceDate
-        labsCollection(limit: 3) {
+        labsCollection(limit: 10) {
           items {
             sys {
               id
             }
           }
         }
-        teamsCollection(limit: 3) {
+        teamsCollection(limit: 10) {
           items {
             team {
               sys {
@@ -196,7 +196,7 @@ export const FETCH_USER_COLLABORATION = gql`
           }
         }
         linkedFrom {
-          researchOutputsCollection(limit: 20) {
+          researchOutputsCollection(limit: 200) {
             items {
               addedDate
               sharingStatus
@@ -207,14 +207,14 @@ export const FETCH_USER_COLLABORATION = gql`
                     sys {
                       id
                     }
-                    labsCollection(limit: 3) {
+                    labsCollection(limit: 10) {
                       items {
                         sys {
                           id
                         }
                       }
                     }
-                    teamsCollection(limit: 3) {
+                    teamsCollection(limit: 10) {
                       items {
                         team {
                           sys {
@@ -245,15 +245,15 @@ export const FETCH_TEAM_COLLABORATION = gql`
         displayName
         inactiveSince
         linkedFrom {
-          researchOutputsCollection(limit: 850) {
+          researchOutputsCollection(limit: 2000) {
             items {
               addedDate
               createdDate
               documentType
-              labsCollection(limit: 2) {
+              labsCollection(limit: 10) {
                 total
               }
-              teamsCollection(limit: 20) {
+              teamsCollection(limit: 30) {
                 items {
                   sys {
                     id

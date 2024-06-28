@@ -405,6 +405,102 @@ describe('fetchTeamProductivity', () => {
     });
   });
 
+  test('Should only count the research outputs with the sharing status Public when the public output type filter is applied', async () => {
+    const graphqlResponse = getTeamProductivityQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Network Only',
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Public',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Public',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Network Only',
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamProductivity({
+      filter: {
+        outputType: 'public',
+      },
+    });
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        {
+          ...getTeamProductivityDataObject(),
+          Article: 1,
+          Bioinformatics: 1,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+      ],
+    });
+  });
+
+  test('Should count research outputs with all sharing statuses output type filter of "all" is applied', async () => {
+    const graphqlResponse = getTeamProductivityQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Network Only',
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Public',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Public',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Network Only',
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamProductivity({
+      filter: {
+        outputType: 'all',
+      },
+    });
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        {
+          ...getTeamProductivityDataObject(),
+          Article: 2,
+          Bioinformatics: 2,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+      ],
+    });
+  });
+
   test('Should return the number of research outputs published in the last month', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(
       getTeamProductivityQuery(),

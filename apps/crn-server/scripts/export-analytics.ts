@@ -4,6 +4,7 @@ import {
   documentCategories,
   FilterAnalyticsOptions,
   ListResponse,
+  outputTypes,
   TeamProductivityResponse,
   timeRanges,
   UserProductivityResponse,
@@ -57,6 +58,21 @@ const exportDataWithFilters = async (
         await file.write(',');
       }
     }
+  } else if (metric === 'team-productivity') {
+    for (let i = 0; i < timeRanges.length; i += 1) {
+      for (let j = 0; j < outputTypes.length; j += 1) {
+        await exportData(metric, file, {
+          timeRange: timeRanges[i],
+          outputType: outputTypes[j],
+        });
+        if (j != outputTypes.length - 1) {
+          await file.write(',');
+        }
+      }
+      if (i != timeRanges.length - 1) {
+        await file.write(',');
+      }
+    }
   } else {
     for (let i = 0; i < timeRanges.length; i += 1) {
       await exportData(metric, file, { timeRange: timeRanges[i] });
@@ -90,7 +106,10 @@ const exportData = async (
       records = await analyticsController.fetchTeamProductivity({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
-        filter: { timeRange: filter?.timeRange },
+        filter: {
+          timeRange: filter?.timeRange,
+          outputType: filter?.outputType,
+        },
       });
     } else if (metric === 'user-productivity') {
       records = await analyticsController.fetchUserProductivity({
@@ -126,6 +145,7 @@ const exportData = async (
             transformRecords(record, metric, {
               timeRange: filter?.timeRange,
               documentCategory: filter?.documentCategory,
+              outputType: filter?.outputType,
             }),
           ),
           null,
@@ -150,11 +170,14 @@ const transformRecords = (
     _tags: getRecordTags(record, type),
     objectID: `${record.id}-${type}${formatField(
       filter?.timeRange,
-    )}${formatField(filter?.documentCategory)}`,
+    )}${formatField(filter?.documentCategory)}${formatField(
+      filter?.outputType,
+    )}`,
     __meta: {
       type,
       range: filter?.timeRange,
       documentCategory: filter?.documentCategory,
+      outputType: filter?.outputType,
     },
   };
 

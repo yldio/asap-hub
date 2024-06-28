@@ -22,7 +22,7 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
   tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, outputType } = useAnalytics();
   const [sortingDirection, setSortingDirection] =
     useState<TeamProductivitySortingDirection>(
       teamProductivityInitialSortingDirection,
@@ -34,9 +34,10 @@ const TeamProductivity: React.FC<TeamProductivityProps> = ({
     sort,
     tags,
     timeRange,
+    outputType,
   });
 
-  const performance = useTeamProductivityPerformance({ timeRange });
+  const performance = useTeamProductivityPerformance({ timeRange, outputType });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

@@ -120,9 +120,13 @@ describe('Analytics controller', () => {
     });
 
     test('Should call the data provider with the correct options', async () => {
-      const options: FetchPaginationOptions = {
+      const options: FetchAnalyticsOptions = {
         take: 10,
         skip: 5,
+        filter: {
+          timeRange: '30d',
+          outputType: 'public',
+        },
       };
       await analyticsController.fetchTeamProductivity(options);
 

@@ -154,6 +154,7 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
               addedDate
               createdDate
               documentType
+              sharingStatus
             }
           }
         }

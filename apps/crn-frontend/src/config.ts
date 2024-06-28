@@ -6,8 +6,7 @@ export const ALGOLIA_APP_ID =
 export const ALGOLIA_INDEX =
   import.meta.env.VITE_APP_CRN_ALGOLIA_INDEX || 'asap-hub_dev';
 export const ANALYTICS_ALGOLIA_INDEX =
-  import.meta.env.VITE_APP_CRN_ANALYTICS_ALGOLIA_INDEX ||
-  'asap-hub-analytics_dev';
+  import.meta.env.VITE_APP_CRN_ANALYTICS_ALGOLIA_INDEX || 'crn-analytics_dev';
 export const SENTRY_DSN = import.meta.env.VITE_APP_CRN_SENTRY_DSN;
 export const ENVIRONMENT = import.meta.env.VITE_APP_ENVIRONMENT || 'local';
 export const RELEASE = import.meta.env.VITE_APP_RELEASE;

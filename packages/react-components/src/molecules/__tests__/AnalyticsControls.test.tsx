@@ -53,6 +53,26 @@ describe('AnalyticsControls', () => {
     expect(getByText(/document category:/i)).toBeVisible();
   });
 
+  it('conditionally renders output type selector', () => {
+    const { getByRole, getByText, queryByRole, queryByText, rerender } = render(
+      <AnalyticsControls {...defaultProps} />,
+    );
+
+    expect(queryByRole('button', { name: /output chevron down/i })).toBeNull();
+    expect(queryByText(/type:/i)).not.toBeInTheDocument();
+
+    rerender(
+      <AnalyticsControls
+        {...defaultProps}
+        metricOption={'team'}
+        outputType="all"
+      />,
+    );
+
+    expect(getByRole('button', { name: /output chevron down/i })).toBeVisible();
+    expect(getByText(/type:/i)).toBeVisible();
+  });
+
   it('renders export csv button if exportResults is provided', () => {
     const { rerender, queryByText, getByText } = render(
       <AnalyticsControls {...defaultProps} />,

@@ -12,7 +12,8 @@
     "searchable(_tags)",
     "__meta.type",
     "__meta.range",
-    "__meta.documentCategory"
+    "__meta.documentCategory",
+    "__meta.outputType"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

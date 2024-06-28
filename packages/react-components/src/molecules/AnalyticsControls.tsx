@@ -1,5 +1,9 @@
 import { css } from '@emotion/react';
-import { DocumentCategoryOption, TimeRangeOption } from '@asap-hub/model';
+import {
+  DocumentCategoryOption,
+  OutputTypeOption,
+  TimeRangeOption,
+} from '@asap-hub/model';
 import { ComponentProps } from 'react';
 
 import { dropdownChevronIcon } from '../icons';
@@ -59,7 +63,7 @@ const searchSelectContainerStyles = css({
   paddingBottom: rem(24),
 });
 
-const categoryContainerStyles = css({
+const filterContainerStyles = css({
   '> div': {
     height: '100%',
     '> button': {
@@ -106,6 +110,11 @@ const documentCategoryOptions: Record<DocumentCategoryOption, string> = {
   protocol: 'Protocol',
 };
 
+const outputTypeOptions: Record<OutputTypeOption, string> = {
+  all: 'ASAP Output',
+  public: 'ASAP Public Output',
+};
+
 const searchTexts = {
   user: {
     label: 'Users & Teams',
@@ -123,9 +132,12 @@ const generateLink = (
   tagsQueryString?: string,
   timeRange?: string,
   documentCategory?: string,
+  outputType?: string,
 ) =>
   `${href}?range=${timeRange}${
     documentCategory ? `&documentCategory=${documentCategory}` : ''
+  }${
+    outputType ? `&outputType=${outputType}` : ''
   }&currentPage=${currentPage}${tagsQueryString}`;
 
 const updateSearchParams = (): URLSearchParams => {
@@ -133,12 +145,14 @@ const updateSearchParams = (): URLSearchParams => {
   searchParams.delete('range');
   searchParams.delete('currentPage');
   searchParams.delete('documentCategory');
+  searchParams.delete('outputType');
   return searchParams;
 };
 
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
+  readonly outputType?: OutputTypeOption;
   // metric is optional for now since we haven't added search to the collaboration page
   readonly metricOption?: MetricOption;
   readonly tags: string[];
@@ -151,6 +165,7 @@ interface AnalyticsControlsProps {
 const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
   timeRange,
   documentCategory,
+  outputType,
   metricOption,
   tags,
   setTags = noop,
@@ -186,7 +201,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
             </span>
           </div>
           {documentCategory && (
-            <div css={[selectContainerStyles, categoryContainerStyles]}>
+            <div css={[selectContainerStyles, filterContainerStyles]}>
               <strong>Document Category:</strong>
               <DropdownButton
                 noMargin
@@ -210,6 +225,34 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                     currentPage,
                     tagsQueryString,
                     timeRange,
+                    key,
+                  ),
+                }))}
+              </DropdownButton>
+            </div>
+          )}
+          {outputType && (
+            <div css={[selectContainerStyles, filterContainerStyles]}>
+              <Subtitle>Type:</Subtitle>
+              <DropdownButton
+                noMargin
+                buttonChildren={() => (
+                  <>
+                    <span css={{ marginRight: rem(8) }}>
+                      {outputTypeOptions[outputType]}
+                    </span>
+                    {dropdownChevronIcon}
+                  </>
+                )}
+              >
+                {Object.keys(outputTypeOptions).map((key) => ({
+                  item: <>{outputTypeOptions[key as OutputTypeOption]}</>,
+                  href: generateLink(
+                    href,
+                    currentPage,
+                    tagsQueryString,
+                    timeRange,
+                    undefined,
                     key,
                   ),
                 }))}

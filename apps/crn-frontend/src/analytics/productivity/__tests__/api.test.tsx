@@ -8,12 +8,13 @@ import {
   performanceByDocumentType,
   teamProductivityResponse,
   userProductivityPerformance,
+  userProductivityResponse,
+  teamProductivityPerformance,
 } from '@asap-hub/fixtures';
 import {
   SortTeamProductivity,
   SortUserProductivity,
   TimeRangeOption,
-  UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import nock from 'nock';
 
@@ -61,28 +62,10 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivi
     pageSize: null,
     currentPage: null,
     timeRange: '30d',
+    outputType: 'all',
     sort: 'team_asc',
     tags: [],
   };
-
-const userProductivityResponse: UserProductivityAlgoliaResponse = {
-  id: '1',
-  objectID: '1-user-productivity-30d',
-  name: 'Test User',
-  isAlumni: false,
-  teams: [
-    {
-      id: '1',
-      team: 'Team A',
-      isTeamInactive: false,
-      isUserInactiveOnTeam: false,
-      role: 'Collaborating PI',
-    },
-  ],
-  asapOutput: 1,
-  asapPublicOutput: 2,
-  ratio: '0.50',
-};
 
 describe('getUserProductivity', () => {
   beforeEach(() => {
@@ -203,7 +186,22 @@ describe('getTeamProductivity', () => {
       ['team-productivity'],
       '',
       expect.objectContaining({
-        filters: `(__meta.range:"${timeRange}")`,
+        filters: `(__meta.range:"${timeRange}") AND (__meta.outputType:"all")`,
+      }),
+    );
+  });
+
+  it('returns team productivity for a specific output type', async () => {
+    await getTeamProductivity(algoliaSearchClient, {
+      ...defaultTeamOptions,
+      outputType: 'public',
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['team-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `(__meta.range:"30d") AND (__meta.outputType:"public")`,
       }),
     );
   });
@@ -240,8 +238,12 @@ describe('getTeamProductivityPerformance', () => {
   it('returns successfully fetched team productivity performance', async () => {
     const result = await getTeamProductivityPerformance(algoliaSearchClient, {
       timeRange: '30d',
+      outputType: 'all',
     });
-    expect(result).toEqual(expect.objectContaining(performanceByDocumentType));
+
+    expect(result).toEqual(
+      expect.objectContaining(teamProductivityPerformance),
+    );
   });
 
   it.each`
@@ -254,13 +256,16 @@ describe('getTeamProductivityPerformance', () => {
   `(
     'returns team productivity performance for $range',
     async ({ timeRange }: { timeRange: TimeRangeOption }) => {
-      await getTeamProductivityPerformance(algoliaSearchClient, { timeRange });
+      await getTeamProductivityPerformance(algoliaSearchClient, {
+        timeRange,
+        outputType: 'all',
+      });
 
       expect(search).toHaveBeenCalledWith(
         ['team-productivity-performance'],
         '',
         expect.objectContaining({
-          filters: `(__meta.range:"${timeRange}")`,
+          filters: `(__meta.range:"${timeRange}") AND (__meta.outputType:"all")`,
         }),
       );
     },

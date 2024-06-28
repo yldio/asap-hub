@@ -297,12 +297,16 @@ describe('team productivity', () => {
 
   it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
-      .calledWith(expect.anything(), defaultTeamOptions)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'all',
+      })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
         timeRange: '90d',
+        outputType: 'all',
       })
       .mockResolvedValue({
         items: [
@@ -321,7 +325,9 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
-    const rangeButton = screen.getByRole('button', { name: /chevron down/i });
+    const rangeButton = screen.getByRole('button', {
+      name: /last 30 days chevron down/i,
+    });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
@@ -333,6 +339,57 @@ describe('team productivity', () => {
 
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 30 days/));
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
+  });
+
+  it('renders data for different output types', async () => {
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'all',
+      })
+      .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
+    when(mockGetTeamProductivity)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'public',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...teamProductivityResponse,
+            objectID: '1-team-productivity-public',
+            Article: 60,
+          },
+        ],
+        total: 1,
+      });
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('60')).not.toBeInTheDocument();
+
+    const outputTypeButton = screen.getByRole('button', {
+      name: /ASAP Output chevron down/i,
+    });
+    userEvent.click(outputTypeButton);
+    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await waitFor(() =>
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    );
+
+    expect(screen.getByText('60')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    userEvent.click(outputTypeButton);
+    userEvent.click(screen.getByText(/ASAP Output/));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );

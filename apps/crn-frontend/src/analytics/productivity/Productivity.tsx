@@ -35,7 +35,7 @@ const Productivity = () => {
       analytics({}).productivity({}).metric({ metric: newMetric }).$,
     );
 
-  const { timeRange, documentCategory } = useAnalytics();
+  const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
 
@@ -62,10 +62,14 @@ const Productivity = () => {
     currentPage,
     pageSize,
     timeRange,
+    outputType,
     tags,
     sort: teamSort,
   });
-  const teamPerformance = useTeamProductivityPerformance({ timeRange });
+  const teamPerformance = useTeamProductivityPerformance({
+    timeRange,
+    outputType,
+  });
 
   const exportResults = () => {
     if (metric === 'user') {
@@ -110,6 +114,7 @@ const Productivity = () => {
     <AnalyticsProductivityPageBody
       metric={metric}
       setMetric={setMetric}
+      outputType={metric === 'team' ? outputType : undefined}
       timeRange={timeRange}
       documentCategory={metric === 'user' ? documentCategory : undefined}
       currentPage={currentPage}

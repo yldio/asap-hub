@@ -119,7 +119,7 @@ jobs:
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.crn-analytics-algolia-index }}_${{ github.run_id }}_temp'
       - name: Process Productivity Performance
-        if: ${{ inputs.metric == 'all' || inputs.metric == 'team-productivity' || inputs.metric == 'user-productivity' || inputs.metric == 'team-collaboration' }}
+        if: ${{ inputs.metric == 'all' || inputs.metric == 'team-productivity' || inputs.metric == 'user-productivity' || inputs.metric == 'team-collaboration' || inputs.metric == 'user-collaboration'}}
         run: yarn algolia:process-performance -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -m $METRIC
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}

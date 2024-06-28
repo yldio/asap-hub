@@ -7,7 +7,10 @@ import {
   processTeamProductivityPerformance,
   processUserProductivityPerformance,
 } from './performance/productivity';
-import { processTeamCollaborationPerformance } from './performance/collaboration';
+import {
+  processTeamCollaborationPerformance,
+  processUserCollaborationPerformance,
+} from './performance/collaboration';
 
 type RoundingType = 'ceil' | 'floor';
 
@@ -130,5 +133,9 @@ export const processProductivityPerformance = async ({
 
   if (metric === 'all' || metric === 'team-collaboration') {
     await processTeamCollaborationPerformance(index);
+  }
+
+  if (metric === 'all' || metric === 'user-collaboration') {
+    await processUserCollaborationPerformance(index);
   }
 };

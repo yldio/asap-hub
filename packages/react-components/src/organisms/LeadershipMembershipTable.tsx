@@ -5,7 +5,11 @@ import { ComponentProps } from 'react';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
-import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import { perRem, tabletScreen } from '../pixels';
 import LeadershipPageBody from '../templates/AnalyticsLeadershipPageBody';
 
@@ -244,6 +248,7 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
               <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
                 {row.name}
               </Link>
+              {row.inactiveSince && <InactiveBadgeIcon />}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>
               Currently in a leadership role

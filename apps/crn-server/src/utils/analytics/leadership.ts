@@ -43,6 +43,7 @@ export const getTeamLeadershipItem = (team: Team) => {
   return {
     id: team.sys.id,
     displayName: team.displayName || '',
+    inactiveSince: team.inactiveSince,
     _tags: team.displayName ? [team.displayName] : [],
     interestGroupLeadershipRoleCount: team.inactiveSince
       ? 0

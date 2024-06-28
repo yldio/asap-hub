@@ -4,8 +4,9 @@ import {
   processTeamCollaborationPerformance,
   processUserCollaborationPerformance,
 } from '../collaboration';
-describe('processTeamCollaborationPerformance', () => {
-  it('should process team collaboration performance', async () => {
+
+describe('processUserCollaborationPerformance', () => {
+  it('should process user collaboration performance', async () => {
     const mockIndex = {
       search: jest
         .fn()

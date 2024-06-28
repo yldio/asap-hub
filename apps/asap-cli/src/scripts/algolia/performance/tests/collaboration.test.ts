@@ -1,6 +1,101 @@
 import { timeRanges } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
-import { processTeamCollaborationPerformance } from '../collaboration';
+import {
+  processTeamCollaborationPerformance,
+  processUserCollaborationPerformance,
+} from '../collaboration';
+
+describe('processUserCollaborationPerformance', () => {
+  it('should process user collaboration performance', async () => {
+    const mockIndex = {
+      search: jest
+        .fn()
+        .mockResolvedValueOnce({
+          hits: [
+            { objectID: 'old-performance-1' },
+            { objectID: 'old-performance-2' },
+            { objectID: 'old-performance-3' },
+          ],
+        })
+        .mockResolvedValue({
+          hits: [
+            {
+              teams: [
+                {
+                  outputsCoAuthoredAcrossTeams: 1,
+                  outputsCoAuthoredWithinTeam: 2,
+                },
+                {
+                  outputsCoAuthoredAcrossTeams: 4,
+                  outputsCoAuthoredWithinTeam: 6,
+                },
+              ],
+            },
+            {
+              teams: [
+                {
+                  outputsCoAuthoredAcrossTeams: 3,
+                  outputsCoAuthoredWithinTeam: 14,
+                },
+              ],
+            },
+            {
+              teams: [
+                {
+                  outputsCoAuthoredAcrossTeams: 2,
+                  outputsCoAuthoredWithinTeam: 0,
+                },
+              ],
+            },
+          ],
+        }),
+      deleteObjects: jest.fn(),
+      saveObject: jest.fn().mockResolvedValue({}),
+    } as unknown as SearchIndex;
+
+    await processUserCollaborationPerformance(mockIndex);
+
+    expect(mockIndex.deleteObjects).toHaveBeenCalledWith([
+      'old-performance-1',
+      'old-performance-2',
+      'old-performance-3',
+    ]);
+
+    timeRanges.forEach((range) => {
+      expect(mockIndex.search).toHaveBeenCalledWith('', {
+        filters: `__meta.range:"${range}" AND (__meta.type:"user-collaboration")`,
+        attributesToRetrieve: ['teams'],
+        page: expect.any(Number),
+        hitsPerPage: 50,
+      });
+    });
+
+    // one for each time range
+    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
+    expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
+      {
+        __meta: { range: 'all', type: 'user-collaboration-performance' },
+        acrossTeam: {
+          aboveAverageMax: 4,
+          aboveAverageMin: 4,
+          averageMax: 3,
+          averageMin: 2,
+          belowAverageMax: 1,
+          belowAverageMin: 1,
+        },
+        withinTeam: {
+          aboveAverageMax: 14,
+          aboveAverageMin: 11,
+          averageMax: 10,
+          averageMin: 1,
+          belowAverageMax: 0,
+          belowAverageMin: 0,
+        },
+      },
+      { autoGenerateObjectIDIfNotExist: true },
+    );
+  });
+});
 
 describe('processTeamCollaborationPerformance', () => {
   it('should process team collaboration performance', async () => {

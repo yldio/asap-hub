@@ -27,6 +27,54 @@ type TeamCollaborationHit = Hit & {
   outputsCoProducedWithin: DocumentMetric;
 };
 
+type UserTeam = {
+  outputsCoAuthoredAcrossTeams: number;
+  outputsCoAuthoredWithinTeam: number;
+};
+type UserCollaborationHit = Hit & {
+  teams: UserTeam[];
+};
+
+export const processUserCollaborationPerformance = async (
+  index: SearchIndex,
+) => {
+  const type = 'user-collaboration' as const;
+
+  await deletePreviousObjects(index, type);
+
+  timeRanges.forEach(async (range) => {
+    const getPaginatedHits = (page: number) =>
+      index.search<UserCollaborationHit>('', {
+        filters: `__meta.range:"${range}" AND (__meta.type:"${type}")`,
+        attributesToRetrieve: ['teams'],
+        page,
+        hitsPerPage: 50,
+      });
+
+    const hits = await getAllHits<UserCollaborationHit>(getPaginatedHits);
+    const flatHits = hits.reduce(
+      (items: UserTeam[], item) => [...items, ...item.teams],
+      [],
+    );
+
+    await index.saveObject(
+      {
+        withinTeam: getBellCurveMetrics(
+          flatHits.map((hit) => hit.outputsCoAuthoredWithinTeam),
+        ),
+        acrossTeam: getBellCurveMetrics(
+          flatHits.map((hit) => hit.outputsCoAuthoredAcrossTeams),
+        ),
+        __meta: {
+          range,
+          type: `${type}-performance`,
+        },
+      },
+      { autoGenerateObjectIDIfNotExist: true },
+    );
+  });
+};
+
 export const processTeamCollaborationPerformance = async (
   index: SearchIndex,
 ) => {

@@ -18,6 +18,7 @@ import { useAnalyticsLeadership } from './state';
 type MetricResponse = {
   id: string;
   displayName: string;
+  inactiveSince?: string;
   workingGroupLeadershipRoleCount: number;
   workingGroupPreviousLeadershipRoleCount: number;
   workingGroupMemberCount: number;
@@ -37,6 +38,7 @@ const getDataForMetric = (
     return data.map((row) => ({
       id: row.id,
       name: row.displayName,
+      inactiveSince: row.inactiveSince,
       leadershipRoleCount: row.workingGroupLeadershipRoleCount,
       previousLeadershipRoleCount: row.workingGroupPreviousLeadershipRoleCount,
       memberCount: row.workingGroupMemberCount,
@@ -46,6 +48,7 @@ const getDataForMetric = (
   return data.map((row) => ({
     id: row.id,
     name: row.displayName,
+    inactiveSince: row.inactiveSince,
     leadershipRoleCount: row.interestGroupLeadershipRoleCount,
     previousLeadershipRoleCount: row.interestGroupPreviousLeadershipRoleCount,
     memberCount: row.interestGroupMemberCount,

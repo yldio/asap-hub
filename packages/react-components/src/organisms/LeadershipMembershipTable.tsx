@@ -66,6 +66,11 @@ const titleStyles = css({
   gap: `${8 / perRem}em`,
 });
 
+const teamNameStyles = css({
+  display: 'flex',
+  gap: `${3 / perRem}em`,
+});
+
 const buttonStyles = css({
   width: `${24 / perRem}em`,
   margin: 0,
@@ -244,7 +249,7 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
         {data.map((row) => (
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>
+            <p css={teamNameStyles}>
               <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
                 {row.name}
               </Link>

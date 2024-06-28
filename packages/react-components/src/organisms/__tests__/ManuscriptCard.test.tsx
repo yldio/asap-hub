@@ -7,6 +7,78 @@ import ManuscriptCard from '../ManuscriptCard';
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
 };
+
+it('displays quick checks when present', () => {
+  const { getByText, queryByText, getByRole, rerender, getAllByText } = render(
+    <ManuscriptCard {...props} />,
+  );
+  userEvent.click(getByRole('button'));
+  expect(
+    queryByText(
+      /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
+    ),
+  ).not.toBeInTheDocument();
+
+  rerender(
+    <ManuscriptCard
+      {...props}
+      versions={[
+        {
+          ...props.versions[0]!,
+          asapAffiliationIncludedDetails:
+            "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.",
+          codeDepositedDetails:
+            "This hasn't been done due to time constraints, pending review, and ensuring proper documentation.",
+          createdBy: {
+            id: 'user-1',
+            firstName: 'Joe',
+            lastName: 'Doe',
+            displayName: 'Joe Doe',
+            teams: [
+              {
+                id: 'team-a',
+                name: 'Team A',
+              },
+            ],
+          },
+          publishedAt: '2024-06-21T11:06:58.899Z',
+        },
+      ]}
+    />,
+  );
+
+  expect(
+    getByText(
+      /Included ASAP as an affiliation within the author list for all ASAP-affiliated authors/i,
+    ),
+  ).toBeVisible();
+  expect(
+    getByText(
+      /Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations./i,
+    ),
+  ).toBeVisible();
+
+  expect(
+    getByText(/Deposited all newly generated code and analysis scripts/i),
+  ).toBeVisible();
+  expect(
+    getByText(
+      /This hasn't been done due to time constraints, pending review, and ensuring proper documentation./i,
+    ),
+  ).toBeVisible();
+
+  expect(getAllByText('Joe Doe').length).toEqual(2);
+  expect(getAllByText('Team A').length).toEqual(2);
+  expect(getAllByText('21st June 2024').length).toEqual(2);
+
+  expect(getAllByText('Joe Doe')[0]!.closest('a')!.href!).toContain(
+    '/network/users/user-1',
+  );
+  expect(getAllByText('Team A')[0]!.closest('a')!.href!).toContain(
+    '/network/teams/team-a',
+  );
+});
+
 it('displays Additional Information section when present', () => {
   const { getByRole, queryByRole, rerender } = render(
     <ManuscriptCard {...props} />,

@@ -71,6 +71,7 @@ interface CardProps {
   readonly shadow?: boolean;
   readonly strokeColor?: string;
   readonly strokeSize?: number;
+  readonly title?: string;
   readonly overrideStyles?: SerializedStyles;
 
   readonly children: React.ReactNode;
@@ -84,8 +85,10 @@ const Card: React.FC<CardProps> = ({
   strokeColor = colors.cerulean.rgb,
   strokeSize = borderRadius,
   overrideStyles,
+  title,
 }) => (
   <section
+    aria-label={title}
     css={[
       themes.light,
       containerStyles,

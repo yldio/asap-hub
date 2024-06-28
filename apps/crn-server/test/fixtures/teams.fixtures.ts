@@ -5,6 +5,7 @@ import {
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
   FetchTeamByIdQuery,
 } from '@asap-hub/contentful';
+import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
   ListTeamResponse,
   TeamDataObject,
@@ -24,11 +25,15 @@ export const getContentfulGraphql = (teamById = false) => ({
     teamById ? getContentfulGraphqlTeamById() : getContentfulGraphqlTeam(),
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
+  UsersTeamsCollection: () => getUsersTeamsCollection(),
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
   ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
   ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
 });
 
+export const getUsersTeamsCollection = () => ({
+  items: [{ team: { sys: { id: 'team-id-0' }, displayName: 'Team A' } }],
+});
 export const getContentfulGraphqlTeamById = (): NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
 > => ({
@@ -204,6 +209,8 @@ export const getTeamDataObject = (): TeamDataObject => ({
         {
           lifecycle: 'Preprint, version 1',
           type: 'Original Research',
+          createdBy: manuscriptAuthor,
+          publishedAt: '2020-09-23T20:45:22.000Z',
         },
       ],
     },
@@ -214,6 +221,8 @@ export const getTeamDataObject = (): TeamDataObject => ({
         {
           lifecycle: 'Preprint, version 1',
           type: 'Original Research',
+          createdBy: manuscriptAuthor,
+          publishedAt: '2020-09-23T20:45:22.000Z',
         },
       ],
     },

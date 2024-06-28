@@ -64,14 +64,14 @@ describe('Related Research Multiselect', () => {
       },
     ]);
 
-    const { getByText, getByLabelText, queryByText } = render(
+    const { getByText, getByRole, queryByText } = render(
       <ResearchOutputRelatedResearchCard
         {...props}
         getRelatedResearchSuggestions={loadOptions}
         onChangeRelatedResearch={mockOnChange}
       />,
     );
-    userEvent.click(getByLabelText(/related/i));
+    userEvent.click(getByRole('textbox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -89,13 +89,13 @@ describe('Related Research Multiselect', () => {
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();
     loadOptions.mockResolvedValue([]);
-    const { getByLabelText, queryByText } = render(
+    const { queryByText, getByRole } = render(
       <ResearchOutputRelatedResearchCard
         {...props}
         getRelatedResearchSuggestions={loadOptions}
       />,
     );
-    userEvent.click(getByLabelText(/related/i));
+    userEvent.click(getByRole('textbox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

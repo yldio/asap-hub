@@ -8,6 +8,8 @@ import {
   manuscriptTypeLifecycles,
   manuscriptTypes,
   ManuscriptVersion,
+  QuestionChecksOption,
+  quickCheckQuestions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import React, { useEffect } from 'react';
@@ -70,7 +72,10 @@ const apcCoverageLifecycles = [
 ];
 
 type OptionalVersionFields = Array<
-  keyof Omit<ManuscriptVersion, 'type' | 'lifecycle'>
+  keyof Omit<
+    ManuscriptVersion,
+    'type' | 'lifecycle' | 'createdBy' | 'publishedAt'
+  >
 >;
 
 type DefaultFieldValueMapping = Record<
@@ -83,6 +88,14 @@ const optionalVersionFields: OptionalVersionFields = [
   'publicationDoi',
   'requestingApcCoverage',
   'otherDetails',
+
+  'acknowledgedGrantNumber',
+  'asapAffiliationIncluded',
+  'manuscriptLicense',
+  'datasetsDeposited',
+  'codeDeposited',
+  'protocolsDeposited',
+  'labMaterialsRegistered',
 ];
 
 const getFieldsToReset = (
@@ -126,7 +139,10 @@ const setDefaultFieldValues = (
   return fieldDefaultValueMap;
 };
 
-type ManuscriptFormProps = Omit<ManuscriptVersion, 'type' | 'lifecycle'> &
+type ManuscriptFormProps = Omit<
+  ManuscriptVersion,
+  'type' | 'lifecycle' | 'createdBy' | 'publishedAt'
+> &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
@@ -149,6 +165,20 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   preprintDoi,
   publicationDoi,
   otherDetails,
+  acknowledgedGrantNumber,
+  asapAffiliationIncluded,
+  manuscriptLicense,
+  datasetsDeposited,
+  codeDeposited,
+  protocolsDeposited,
+  labMaterialsRegistered,
+  acknowledgedGrantNumberDetails,
+  asapAffiliationIncludedDetails,
+  manuscriptLicenseDetails,
+  datasetsDepositedDetails,
+  codeDepositedDetails,
+  protocolsDepositedDetails,
+  labMaterialsRegisteredDetails,
 }) => {
   const history = useHistory();
 
@@ -164,6 +194,20 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           requestingApcCoverage: requestingApcCoverage || '',
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
+          acknowledgedGrantNumber: acknowledgedGrantNumber || '',
+          asapAffiliationIncluded: asapAffiliationIncluded || '',
+          manuscriptLicense: manuscriptLicense || '',
+          datasetsDeposited: datasetsDeposited || '',
+          codeDeposited: codeDeposited || '',
+          protocolsDeposited: protocolsDeposited || '',
+          labMaterialsRegistered: labMaterialsRegistered || '',
+          acknowledgedGrantNumberDetails: acknowledgedGrantNumberDetails || '',
+          asapAffiliationIncludedDetails: asapAffiliationIncludedDetails || '',
+          manuscriptLicenseDetails: manuscriptLicenseDetails || '',
+          datasetsDepositedDetails: datasetsDepositedDetails || '',
+          codeDepositedDetails: codeDepositedDetails || '',
+          protocolsDepositedDetails: protocolsDepositedDetails || '',
+          labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
         },
       ],
     },
@@ -229,6 +273,46 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           otherDetails: versionData?.otherDetails || undefined,
           requestingApcCoverage:
             versionData?.requestingApcCoverage || undefined,
+
+          acknowledgedGrantNumber:
+            versionData.acknowledgedGrantNumber || undefined,
+          asapAffiliationIncluded:
+            versionData.asapAffiliationIncluded || undefined,
+          manuscriptLicense: versionData.manuscriptLicense || undefined,
+          datasetsDeposited: versionData.datasetsDeposited || undefined,
+          codeDeposited: versionData.codeDeposited || undefined,
+          protocolsDeposited: versionData.protocolsDeposited || undefined,
+          labMaterialsRegistered:
+            versionData.labMaterialsRegistered || undefined,
+
+          acknowledgedGrantNumberDetails:
+            versionData?.acknowledgedGrantNumber === 'No'
+              ? versionData.acknowledgedGrantNumberDetails
+              : '',
+          asapAffiliationIncludedDetails:
+            versionData?.asapAffiliationIncluded === 'No'
+              ? versionData.asapAffiliationIncludedDetails
+              : '',
+          manuscriptLicenseDetails:
+            versionData?.manuscriptLicense === 'No'
+              ? versionData.manuscriptLicenseDetails
+              : '',
+          datasetsDepositedDetails:
+            versionData?.datasetsDeposited === 'No'
+              ? versionData.datasetsDepositedDetails
+              : '',
+          codeDepositedDetails:
+            versionData?.codeDeposited === 'No'
+              ? versionData.codeDepositedDetails
+              : '',
+          protocolsDepositedDetails:
+            versionData?.protocolsDeposited === 'No'
+              ? versionData.protocolsDepositedDetails
+              : '',
+          labMaterialsRegisteredDetails:
+            versionData?.labMaterialsRegistered === 'No'
+              ? versionData.labMaterialsRegisteredDetails
+              : '',
         },
       ],
     });
@@ -478,6 +562,77 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               )}
           </FormCard>
 
+          {watchType && watchLifecycle && (
+            <FormCard
+              key="quick-checks"
+              title="Quick Checks"
+              description="Before you submit your manuscript, please confirm that you have met the following requirements."
+            >
+              {quickCheckQuestions.map(
+                ({ field, question }) =>
+                  manuscriptFormFieldsMapping[watchType][
+                    watchLifecycle
+                  ].includes(field) && (
+                    <div key={field}>
+                      <Controller
+                        name={`versions.0.${field}`}
+                        control={control}
+                        rules={{
+                          required: 'Please select an option.',
+                        }}
+                        render={({
+                          field: { value, onChange },
+                          fieldState: { error },
+                        }) => (
+                          <LabeledRadioButtonGroup<QuestionChecksOption | ''>
+                            title={question}
+                            subtitle="(required)"
+                            options={[
+                              {
+                                value: 'Yes',
+                                label: 'Yes',
+                                disabled: isSubmitting,
+                              },
+                              {
+                                value: 'No',
+                                label: 'No',
+                                disabled: isSubmitting,
+                              },
+                            ]}
+                            value={value as QuestionChecksOption}
+                            onChange={onChange}
+                            validationMessage={error?.message ?? ''}
+                          />
+                        )}
+                      />
+                      {watch(`versions.0.${field}`) === 'No' && (
+                        <Controller
+                          name={`versions.0.${field}Details`}
+                          control={control}
+                          rules={{
+                            required: 'Please enter the details.',
+                          }}
+                          render={({
+                            field: { value, onChange },
+                            fieldState: { error },
+                          }) => (
+                            <LabeledTextField
+                              title="Please provide details"
+                              subtitle="(required)"
+                              description="The reason you provide must be accepted by the Open Science team."
+                              value={value || ''}
+                              customValidationMessage={error?.message}
+                              onChange={onChange}
+                              enabled={!isSubmitting}
+                            />
+                          )}
+                        />
+                      )}
+                    </div>
+                  ),
+              )}
+            </FormCard>
+          )}
           <div css={buttonsOuterContainerStyles}>
             <div css={buttonsInnerContainerStyles}>
               <Button

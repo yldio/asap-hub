@@ -3,6 +3,7 @@ import {
   Environment,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
+import { QuickCheck, QuickCheckDetails } from '@asap-hub/model';
 import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
 
@@ -12,7 +13,9 @@ import {
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
+  getManuscriptPostBody,
 } from '../../fixtures/manuscript.fixtures';
+import { getUsersTeamsCollection } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -29,6 +32,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
+      UsersTeamsCollection: () => getUsersTeamsCollection(),
       Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsVersionsCollection: () =>
         getContentfulGraphqlManuscriptVersions(),
@@ -60,6 +64,70 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       expect(result).toMatchObject(getManuscriptDataObject());
     });
+
+    test.each`
+      field                        | fieldDetails
+      ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
+      ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+      ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
+      ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
+      ${'codeDeposited'}           | ${'codeDepositedDetails'}
+      ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
+      ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+    `(
+      'should return $fieldDetails value if $field is No',
+      async ({
+        field,
+        fieldDetails,
+      }: {
+        field: QuickCheck;
+        fieldDetails: QuickCheckDetails;
+      }) => {
+        const manuscript = getContentfulGraphqlManuscript();
+        manuscript.versionsCollection!.items[0]![field] = 'No';
+        manuscript.versionsCollection!.items[0]![fieldDetails] = 'Explanation';
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+
+        expect(result!.versions[0]![fieldDetails]).toEqual('Explanation');
+      },
+    );
+
+    test.each`
+      field                        | fieldDetails
+      ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
+      ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+      ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
+      ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
+      ${'codeDeposited'}           | ${'codeDepositedDetails'}
+      ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
+      ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+    `(
+      'should return $fieldDetails as undefined if $field is Yes',
+      async ({
+        field,
+        fieldDetails,
+      }: {
+        field: QuickCheck;
+        fieldDetails: QuickCheckDetails;
+      }) => {
+        const manuscript = getContentfulGraphqlManuscript();
+        manuscript.versionsCollection!.items[0]![field] = 'Yes';
+        manuscript.versionsCollection!.items[0]![fieldDetails] = 'Explanation';
+
+        contentfulGraphqlClientMock.request.mockResolvedValue({
+          manuscripts: manuscript,
+        });
+
+        const result = await manuscriptDataProvider.fetchById('1');
+
+        expect(result!.versions[0]![fieldDetails]).toBeUndefined();
+      },
+    );
 
     test('should default null values to empty strings and arrays', async () => {
       const manuscript = getContentfulGraphqlManuscript();
@@ -140,10 +208,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           publish,
         } as unknown as Entry);
 
-      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
-      const result = await manuscriptDataProvider.create(
-        manuscriptCreateDataObject,
-      );
+      const manuscriptCreateDataObject = getManuscriptPostBody();
+      const result = await manuscriptDataProvider.create({
+        ...manuscriptCreateDataObject,
+        userId: 'user-id-0',
+      });
 
       expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
         1,
@@ -155,6 +224,15 @@ describe('Manuscripts Contentful Data Provider', () => {
             },
             lifecycle: {
               'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
+            },
+            createdBy: {
+              'en-US': {
+                sys: {
+                  id: 'user-id-0',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
             },
           },
         },

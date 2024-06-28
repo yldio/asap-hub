@@ -12,6 +12,7 @@ export const manuscriptContentQueryFragment = gql`
       items {
         sys {
           id
+          publishedAt
         }
         type
         lifecycle
@@ -19,6 +20,42 @@ export const manuscriptContentQueryFragment = gql`
         publicationDoi
         requestingApcCoverage
         otherDetails
+        acknowledgedGrantNumber
+        acknowledgedGrantNumberDetails
+        asapAffiliationIncluded
+        asapAffiliationIncludedDetails
+        manuscriptLicense
+        manuscriptLicenseDetails
+        datasetsDeposited
+        datasetsDepositedDetails
+        codeDeposited
+        codeDepositedDetails
+        protocolsDeposited
+        protocolsDepositedDetails
+        labMaterialsRegistered
+        labMaterialsRegisteredDetails
+        createdBy {
+          sys {
+            id
+          }
+          firstName
+          nickname
+          lastName
+          alumniSinceDate
+          avatar {
+            url
+          }
+          teamsCollection(limit: 3) {
+            items {
+              team {
+                sys {
+                  id
+                }
+                displayName
+              }
+            }
+          }
+        }
       }
     }
   }

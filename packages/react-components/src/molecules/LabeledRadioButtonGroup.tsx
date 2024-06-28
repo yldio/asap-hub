@@ -6,11 +6,13 @@ import { Option } from '../select';
 import { noop } from '../utils';
 import { LabeledRadioButton } from '.';
 import { mobileScreen, perRem } from '../pixels';
+import { validationMessageStyles } from '../form';
 
 export type LabeledRadioButtonGroupProps<V extends string> = {
   readonly title?: string;
   readonly subtitle?: string;
   readonly options: ReadonlyArray<Option<V>>;
+  readonly validationMessage?: string;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -41,6 +43,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
   value,
   onChange = noop,
   tooltipText,
+  validationMessage,
 }: LabeledRadioButtonGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
   return (
@@ -64,6 +67,9 @@ export default function LabeledRadioButtonGroup<V extends string>({
           />
         ))}
       </div>
+      {validationMessage && (
+        <div css={validationMessageStyles}>{validationMessage}</div>
+      )}
     </fieldset>
   );
 }

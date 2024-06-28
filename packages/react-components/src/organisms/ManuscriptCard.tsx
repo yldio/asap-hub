@@ -1,4 +1,9 @@
-import { ManuscriptVersion, TeamManuscript } from '@asap-hub/model';
+import {
+  ManuscriptVersion,
+  quickCheckQuestions,
+  TeamManuscript,
+} from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import {
@@ -14,6 +19,7 @@ import {
   lead,
 } from '..';
 import { paddingStyles } from '../card';
+import { UserCommentHeader } from '../molecules';
 import { mobileScreen, perRem, rem } from '../pixels';
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'>;
@@ -66,6 +72,13 @@ const toastContentStyles = css({
 const dividerStyles = css({
   display: 'block',
   margin: `${rem(21)} 0`,
+});
+
+const quickCheckStyles = css({
+  marginTop: rem(24),
+  gap: rem(12),
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 const additionalInformationListStyles = css({
@@ -135,6 +148,28 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                 <Pill accent="gray">{version.type}</Pill>
                 <Pill accent="gray">{version.lifecycle}</Pill>
               </div>
+              {quickCheckQuestions.map(({ field, question }) =>
+                version[`${field}Details`]?.length ? (
+                  <div css={quickCheckStyles} key={field}>
+                    <Subtitle>{question}</Subtitle>
+                    <UserCommentHeader
+                      {...version.createdBy}
+                      userHref={
+                        version.createdBy.id &&
+                        network({})
+                          .users({})
+                          .user({ userId: version.createdBy.id }).$
+                      }
+                      teams={version.createdBy.teams.map((team) => ({
+                        href: network({}).teams({}).team({ teamId: team.id }).$,
+                        name: team.name,
+                      }))}
+                      date={version.publishedAt}
+                    />
+                    <span>{version[`${field}Details`]}</span>
+                  </div>
+                ) : null,
+              )}
               {hasAdditionalInfo(version) && (
                 <div>
                   <span css={dividerStyles}>

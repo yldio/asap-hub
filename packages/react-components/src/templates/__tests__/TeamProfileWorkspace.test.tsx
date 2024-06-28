@@ -96,6 +96,16 @@ describe('compliance section', () => {
             {
               type: 'Original Research',
               lifecycle: 'Draft manuscript (prior to preprint submission)',
+              createdBy: {
+                displayName: 'John Doe',
+                firstName: 'John',
+                lastName: 'Doe',
+                id: 'john-doe',
+                teams: [{ id: 'alessi', name: 'Alessi' }],
+                avatarUrl: '',
+                alumniSinceDate: undefined,
+              },
+              publishedAt: '2020-12-10T20:36:54Z',
             },
           ],
         },
@@ -106,6 +116,16 @@ describe('compliance section', () => {
             {
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint, version 1',
+              createdBy: {
+                displayName: 'Jane Doe',
+                firstName: 'Jane',
+                lastName: 'Doe',
+                id: 'jane-doe',
+                teams: [{ id: 'de-camilli', name: 'De Camilli' }],
+                avatarUrl: '',
+                alumniSinceDate: undefined,
+              },
+              publishedAt: '2020-12-10T20:36:54Z',
             },
           ],
         },

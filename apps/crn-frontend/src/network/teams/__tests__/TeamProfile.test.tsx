@@ -17,6 +17,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -202,6 +203,13 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.type(lifecycleTextbox, 'Typeset proof');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
 
   userEvent.click(submitButton);
 

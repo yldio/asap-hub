@@ -7,6 +7,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
   getManuscriptCreateDataObject,
+  getManuscriptPostBody,
   getManuscriptResponse,
 } from '../fixtures/manuscript.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
@@ -97,7 +98,7 @@ describe('/manuscripts/ route', () => {
 
     test('Should return 403 when not allowed to create a manuscript because user does not belong to the team', async () => {
       const createManuscriptRequest: ManuscriptPostRequest = {
-        ...getManuscriptCreateDataObject(),
+        ...getManuscriptPostBody(),
         teamId: 'team-3',
       };
 
@@ -121,7 +122,6 @@ describe('/manuscripts/ route', () => {
         .post('/manuscripts')
         .send(createManuscriptRequest)
         .set('Accept', 'application/json');
-
       expect(response.status).toEqual(403);
     });
 
@@ -129,7 +129,7 @@ describe('/manuscripts/ route', () => {
       const teamId = 'team-1';
 
       const createManuscriptRequest: ManuscriptPostRequest = {
-        ...getManuscriptCreateDataObject(),
+        ...getManuscriptPostBody(),
         teamId,
       };
 
@@ -152,9 +152,10 @@ describe('/manuscripts/ route', () => {
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(201);
-      expect(manuscriptControllerMock.create).toHaveBeenCalledWith(
-        createManuscriptRequest,
-      );
+      expect(manuscriptControllerMock.create).toHaveBeenCalledWith({
+        ...createManuscriptRequest,
+        userId: 'user-id-0',
+      });
 
       expect(response.body).toEqual(manuscriptResponse);
     });

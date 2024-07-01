@@ -80,5 +80,5 @@ jobs:
       - uses: ./.github/actions/slack/
         with:
           message: Rollback last Contentful migration failed
-          webhook: ${{ env.SLACK_WEBHOOK }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
           status: failure

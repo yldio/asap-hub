@@ -56,5 +56,5 @@ jobs:
       - uses: ./.github/actions/slack/
         with:
           message: GP2 Algolia Prod Sync
-          webhook: ${{ env.SLACK_WEBHOOK }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
           status: failure

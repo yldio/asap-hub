@@ -58,5 +58,5 @@ jobs:
       - uses: ./.github/actions/slack/
         with:
           message: CRN Algolia Prod Sync
-          webhook: ${{ env.SLACK_WEBHOOK }}
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
           status: failure

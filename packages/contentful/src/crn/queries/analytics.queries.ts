@@ -29,7 +29,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                   items {
                     alumniSinceDate
                     linkedFrom {
-                      interestGroupLeadersCollection(limit: 50) {
+                      interestGroupLeadersCollection(limit: 10) {
                         items {
                           inactiveSinceDate
                           role
@@ -45,7 +45,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                           }
                         }
                       }
-                      workingGroupMembersCollection(limit: 50) {
+                      workingGroupMembersCollection(limit: 10) {
                         items {
                           inactiveSinceDate
                           linkedFrom {
@@ -60,7 +60,7 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
                           }
                         }
                       }
-                      workingGroupLeadersCollection(limit: 50) {
+                      workingGroupLeadersCollection(limit: 10) {
                         items {
                           inactiveSinceDate
                           role

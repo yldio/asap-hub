@@ -245,15 +245,15 @@ export const FETCH_TEAM_COLLABORATION = gql`
         displayName
         inactiveSince
         linkedFrom {
-          researchOutputsCollection(limit: 2000) {
+          researchOutputsCollection(limit: 850) {
             items {
               addedDate
               createdDate
               documentType
-              labsCollection(limit: 10) {
+              labsCollection(limit: 2) {
                 total
               }
-              teamsCollection(limit: 30) {
+              teamsCollection(limit: 20) {
                 items {
                   sys {
                     id

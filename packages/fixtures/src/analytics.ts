@@ -5,6 +5,7 @@ import {
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
   TeamProductivityPerformance,
+  UserCollaborationPerformance,
 } from '@asap-hub/model';
 
 export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
@@ -153,4 +154,23 @@ export const performanceByDocumentType: PerformanceMetricByDocumentType = {
 export const teamCollaborationPerformance: TeamCollaborationPerformance = {
   withinTeam: performanceByDocumentType,
   acrossTeam: performanceByDocumentType,
+};
+
+export const userCollaborationPerformance: UserCollaborationPerformance = {
+  withinTeam: {
+    belowAverageMin: 0,
+    belowAverageMax: 2,
+    averageMin: 3,
+    averageMax: 5,
+    aboveAverageMin: 6,
+    aboveAverageMax: 8,
+  },
+  acrossTeam: {
+    belowAverageMin: 0,
+    belowAverageMax: 0,
+    averageMin: 1,
+    averageMax: 2,
+    aboveAverageMin: 3,
+    aboveAverageMax: 3,
+  },
 };

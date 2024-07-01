@@ -1,5 +1,8 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { teamCollaborationPerformance } from '@asap-hub/fixtures';
+import {
+  teamCollaborationPerformance,
+  userCollaborationPerformance,
+} from '@asap-hub/fixtures';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
@@ -16,6 +19,7 @@ import {
   getUserCollaboration,
   getTeamCollaboration,
   getTeamCollaborationPerformance,
+  getUserCollaborationPerformance,
 } from '../api';
 import Collaboration from '../Collaboration';
 
@@ -39,6 +43,14 @@ const mockGetTeamCollaborationPerformance =
   >;
 mockGetTeamCollaborationPerformance.mockResolvedValue(
   teamCollaborationPerformance,
+);
+
+const mockGetUserCollaborationPerformance =
+  getUserCollaborationPerformance as jest.MockedFunction<
+    typeof getUserCollaborationPerformance
+  >;
+mockGetUserCollaborationPerformance.mockResolvedValue(
+  userCollaborationPerformance,
 );
 
 const userData: ListUserCollaborationAlgoliaResponse = {

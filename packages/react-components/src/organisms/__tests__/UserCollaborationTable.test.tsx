@@ -25,10 +25,23 @@ describe('UserCollaborationTable', () => {
     teams: [userTeam],
   };
 
+  const performance = {
+    belowAverageMin: 1,
+    belowAverageMax: 1,
+    averageMin: 1,
+    averageMax: 1,
+    aboveAverageMin: 1,
+    aboveAverageMax: 1,
+  };
+
   it('renders data', () => {
     const data = [user];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Test User')).toBeInTheDocument();
   });
@@ -41,7 +54,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByTitle('Alumni Member')).toBeInTheDocument();
   });
@@ -54,7 +71,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -68,7 +89,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByRole } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByRole('link', { name: 'User A' })).toBeInTheDocument();
     expect(getByRole('link', { name: 'Team A' })).toBeInTheDocument();
@@ -85,7 +110,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Multiple teams')).toBeInTheDocument();
   });
@@ -101,7 +130,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Multiple roles')).toBeInTheDocument();
   });
@@ -117,7 +150,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('Multiple values')).toBeInTheDocument();
   });
@@ -130,7 +167,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('No team')).toBeInTheDocument();
   });
@@ -143,7 +184,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('No role')).toBeInTheDocument();
   });
@@ -156,7 +201,11 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable data={data} {...pageControlsProps} />,
+      <UserCollaborationTable
+        data={data}
+        performance={performance}
+        {...pageControlsProps}
+      />,
     );
     expect(getByText('No values')).toBeInTheDocument();
   });

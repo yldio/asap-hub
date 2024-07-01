@@ -1,8 +1,8 @@
-import { TeamRole } from '@asap-hub/model';
+import { PerformanceMetrics, TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { PageControls } from '..';
+import { CaptionCard, CaptionItem, PageControls } from '..';
 
 import { Card, Link, Paragraph } from '../atoms';
 import { borderRadius } from '../card';
@@ -10,6 +10,7 @@ import { charcoal, neutral200, steel } from '../colors';
 import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
 import HoverTable from '../molecules/HoverTable';
 import { rem, tabletScreen } from '../pixels';
+import { getPerformanceIcon } from '../utils';
 
 const container = css({
   display: 'grid',
@@ -78,6 +79,12 @@ const pageControlsStyles = css({
   justifySelf: 'center',
   paddingTop: rem(36),
   paddingBottom: rem(36),
+});
+
+const rowValueStyles = css({
+  display: 'flex',
+  gap: rem(6),
+  fontWeight: 400,
 });
 
 type Team = {
@@ -157,13 +164,21 @@ const displayRoles = (items: UserCollaborationMetric['teams']) => {
   );
 };
 
-const displayOutputsCount = (items: UserCollaborationMetric['teams']) => {
+const displayOutputsCount = (
+  items: UserCollaborationMetric['teams'],
+  performance: PerformanceMetrics,
+) => {
   if (items.length === 0) {
     return `No values`;
   }
   if (items.length === 1) {
     const team = items[0] as Team;
-    return team.outputsCoAuthored;
+    return (
+      <span css={rowValueStyles}>
+        {team.outputsCoAuthored}{' '}
+        {getPerformanceIcon(team.outputsCoAuthored, performance)}
+      </span>
+    );
   }
   return (
     <>
@@ -174,13 +189,21 @@ const displayOutputsCount = (items: UserCollaborationMetric['teams']) => {
 
 type UserCollaborationTableProps = ComponentProps<typeof PageControls> & {
   data: UserCollaborationMetric[];
+  performance: PerformanceMetrics;
 };
 
 const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
   data,
+  performance,
   ...pageControlProps
 }) => (
   <>
+    <CaptionCard>
+      <>
+        <CaptionItem label="Outputs Co-Authored" {...performance} />
+      </>
+    </CaptionCard>
+
     <Card padding={false}>
       <div css={container}>
         <div css={[rowStyles, gridTitleStyles]}>
@@ -203,7 +226,7 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
             <span css={[titleStyles, rowTitleStyles]}>Role</span>
             <p>{displayRoles(row.teams)}</p>
             <span css={[titleStyles, rowTitleStyles]}>Outputs Co-Authored</span>
-            <p>{displayOutputsCount(row.teams)}</p>
+            <p>{displayOutputsCount(row.teams, performance)}</p>
           </div>
         ))}
       </div>

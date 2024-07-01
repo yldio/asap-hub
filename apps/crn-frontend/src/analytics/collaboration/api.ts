@@ -4,12 +4,14 @@ import {
   TEAM_COLLABORATION_PERFORMANCE,
   USER_COLLABORATION,
   TEAM_COLLABORATION,
+  USER_COLLABORATION_PERFORMANCE,
 } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   TeamCollaborationPerformance,
+  UserCollaborationPerformance,
   TimeRangeOption,
 } from '@asap-hub/model';
 
@@ -29,4 +31,9 @@ export const getTeamCollaboration =
 export const getTeamCollaborationPerformance =
   getPerformanceForMetric<TeamCollaborationPerformance>(
     TEAM_COLLABORATION_PERFORMANCE,
+  );
+
+export const getUserCollaborationPerformance =
+  getPerformanceForMetric<UserCollaborationPerformance>(
+    USER_COLLABORATION_PERFORMANCE,
   );

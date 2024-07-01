@@ -33,3 +33,16 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [sync-crn-analytics-algolia]
+    if: ${{ failure()}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: CRN Algolia Prod Sync
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

@@ -175,14 +175,14 @@ export const FETCH_USER_COLLABORATION = gql`
         lastName
         nickname
         alumniSinceDate
-        labsCollection(limit: 10) {
+        labsCollection(limit: 5) {
           items {
             sys {
               id
             }
           }
         }
-        teamsCollection(limit: 10) {
+        teamsCollection(limit: 5) {
           items {
             team {
               sys {
@@ -200,21 +200,21 @@ export const FETCH_USER_COLLABORATION = gql`
             items {
               addedDate
               sharingStatus
-              authorsCollection(limit: 10) {
+              authorsCollection(limit: 6) {
                 items {
                   __typename
                   ... on Users {
                     sys {
                       id
                     }
-                    labsCollection(limit: 10) {
+                    labsCollection(limit: 3) {
                       items {
                         sys {
                           id
                         }
                       }
                     }
-                    teamsCollection(limit: 10) {
+                    teamsCollection(limit: 5) {
                       items {
                         team {
                           sys {

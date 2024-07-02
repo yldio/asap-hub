@@ -1,6 +1,10 @@
 import { DateTime } from 'luxon';
 // import { events, network, sharedResearch } from '@asap-hub/routing';
-import { eventRoutes, networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
+import {
+  eventRoutes,
+  networkRoutes,
+  sharedResearchRoutes,
+} from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
@@ -41,7 +45,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({researchOutputId: reminder.data.researchOutputId}),
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: reminder.data.researchOutputId,
+            }),
             // href: sharedResearch({}).researchOutput({
             //   researchOutputId: reminder.data.researchOutputId,
             // }).$,
@@ -61,7 +67,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({researchOutputId: reminder.data.researchOutputId}),
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: reminder.data.researchOutputId,
+            }),
             // href: sharedResearch({}).researchOutput({
             //   researchOutputId: reminder.data.researchOutputId,
             // }).$,
@@ -76,7 +84,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({researchOutputId: reminder.data.researchOutputId}),
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: reminder.data.researchOutputId,
+            }),
             // href: sharedResearch({}).researchOutput({
             //   researchOutputId: reminder.data.researchOutputId,
             // }).$,
@@ -91,7 +101,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({researchOutputId: reminder.data.researchOutputId}),
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: reminder.data.researchOutputId,
+            }),
             // href: sharedResearch({}).researchOutput({
             //   researchOutputId: reminder.data.researchOutputId,
             // }).$,
@@ -106,7 +118,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({researchOutputId: reminder.data.researchOutputId}),
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+              researchOutputId: reminder.data.researchOutputId,
+            }),
             // href: sharedResearch({}).researchOutput({
             //   researchOutputId: reminder.data.researchOutputId,
             // }).$,
@@ -125,7 +139,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: eventRoutes.DEFAULT.DETAILS.buildPath({eventId: reminder.data.eventId}),
+            href: eventRoutes.DEFAULT.DETAILS.buildPath({
+              eventId: reminder.data.eventId,
+            }),
             // href: events({}).event({
             //   eventId: reminder.data.eventId,
             // }).$,
@@ -142,9 +158,13 @@ export default class ReminderController {
           //   : events({}).event({
           //       eventId: reminder.data.eventId,
           //     }).$;
-          const href = reminder.data.pmId 
-                ? networkRoutes.DEFAULT.USERS.DETAILS.buildPath({id: reminder.data.pmId })
-                : eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: reminder.data.eventId});
+          const href = reminder.data.pmId
+            ? networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                id: reminder.data.pmId,
+              })
+            : eventRoutes.DEFAULT.DETAILS.buildPath({
+                eventId: reminder.data.eventId,
+              });
           return {
             id: reminder.id,
             entity: reminder.entity,
@@ -188,7 +208,9 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: eventRoutes.DEFAULT.DETAILS.buildPath({eventId: reminder.data.eventId}),
+            href: eventRoutes.DEFAULT.DETAILS.buildPath({
+              eventId: reminder.data.eventId,
+            }),
             // href: events({}).event({
             //   eventId: reminder.data.eventId,
             // }).$,
@@ -199,7 +221,9 @@ export default class ReminderController {
         return {
           id: reminder.id,
           entity: reminder.entity,
-          href: eventRoutes.DEFAULT.DETAILS.buildPath({eventId: reminder.data.eventId}),
+          href: eventRoutes.DEFAULT.DETAILS.buildPath({
+            eventId: reminder.data.eventId,
+          }),
           // href: events({}).event({
           //   eventId: reminder.data.eventId,
           // }).$,

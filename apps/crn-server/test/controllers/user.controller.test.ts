@@ -288,7 +288,7 @@ describe('Users controller', () => {
       );
       expect(assetDataProviderMock.create).toHaveBeenCalledWith({
         id: 'user-id',
-        avatar: Buffer.from('avatar'),
+        content: Buffer.from('avatar'),
         contentType: 'image/jpeg',
       });
       expect(userDataProviderMock.fetchById).toHaveBeenCalledWith('user-id');

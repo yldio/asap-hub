@@ -19,15 +19,13 @@ describe('Assets data provider', () => {
   beforeEach(() => {
     environmentMock.createAssetFromFiles.mockResolvedValueOnce({
       processForAllLocales: processMock,
+      sys: {
+        id: '123',
+      },
     } as unknown as Asset);
     processMock.mockResolvedValueOnce({
       publish: publishMock,
     } as unknown as Asset);
-    publishMock.mockResolvedValueOnce({
-      sys: {
-        id: '123',
-      },
-    });
   });
 
   describe('Fetch', () => {
@@ -46,7 +44,7 @@ describe('Assets data provider', () => {
     test('uploads, processes and publishes an asset', async () => {
       await assetsDataProvider.create({
         id: 'abc',
-        avatar: Buffer.from('file buffer'),
+        content: Buffer.from('file buffer'),
         contentType: 'image/jpeg',
       });
       expect(environmentMock.createAssetFromFiles).toHaveBeenCalledWith({
@@ -64,6 +62,18 @@ describe('Assets data provider', () => {
       });
       expect(processMock).toHaveBeenCalled();
       expect(publishMock).toHaveBeenCalled();
+    });
+
+    test('does not publish the asset publish option is set to false', async () => {
+      await assetsDataProvider.create({
+        id: 'abc',
+        content: Buffer.from('file buffer'),
+        contentType: 'image/jpeg',
+        publish: false,
+      });
+      expect(environmentMock.createAssetFromFiles).toHaveBeenCalled();
+      expect(processMock).toHaveBeenCalled();
+      expect(publishMock).not.toHaveBeenCalled();
     });
   });
 });

@@ -5,6 +5,7 @@ import {
   TeamCollaborationAlgoliaResponse,
   TeamCollaborationPerformance,
   UserCollaborationAlgoliaResponse,
+  UserCollaborationPerformance,
 } from '@asap-hub/model';
 import { useEffect } from 'react';
 import {
@@ -21,6 +22,7 @@ import {
   getUserCollaboration,
   getTeamCollaboration,
   getTeamCollaborationPerformance,
+  getUserCollaborationPerformance,
 } from './api';
 
 const analyticsUserCollaborationIndexState = atomFamily<
@@ -214,4 +216,15 @@ export const useTeamCollaborationPerformance =
   makePerformanceHook<TeamCollaborationPerformance>(
     teamCollaborationPerformanceState,
     getTeamCollaborationPerformance,
+  );
+
+export const userCollaborationPerformanceState =
+  makePerformanceState<UserCollaborationPerformance>(
+    'analyticsUserCollaborationPerformance',
+  );
+
+export const useUserCollaborationPerformance =
+  makePerformanceHook<UserCollaborationPerformance>(
+    userCollaborationPerformanceState,
+    getUserCollaborationPerformance,
   );

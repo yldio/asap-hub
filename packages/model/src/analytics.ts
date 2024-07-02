@@ -31,6 +31,11 @@ export type TeamCollaborationPerformance = {
   acrossTeam: PerformanceMetricByDocumentType;
 };
 
+export type UserCollaborationPerformance = {
+  withinTeam: PerformanceMetrics;
+  acrossTeam: PerformanceMetrics;
+};
+
 export type SortLeadershipAndMembership =
   | 'team_asc'
   | 'team_desc'

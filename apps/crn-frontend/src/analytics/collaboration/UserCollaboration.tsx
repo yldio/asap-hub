@@ -1,10 +1,16 @@
-import { UserCollaborationResponse } from '@asap-hub/model';
+import {
+  UserCollaborationPerformance,
+  UserCollaborationResponse,
+} from '@asap-hub/model';
 import {
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
-import { useAnalyticsUserCollaboration } from './state';
+import {
+  useAnalyticsUserCollaboration,
+  useUserCollaborationPerformance,
+} from './state';
 
 const getDataForType = (
   data: UserCollaborationResponse[],
@@ -37,6 +43,15 @@ const getDataForType = (
     })),
   }));
 };
+const getPerformanceForType = (
+  performance: UserCollaborationPerformance,
+  type: 'within-team' | 'across-teams',
+) => {
+  if (type === 'within-team') {
+    return performance.withinTeam;
+  }
+  return performance.acrossTeam;
+};
 
 export type CollaborationProps = {
   type: 'within-team' | 'across-teams';
@@ -55,11 +70,14 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
     sort: '',
   });
 
+  const performance = useUserCollaborationPerformance({ timeRange });
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (
     <UserCollaborationTable
       data={getDataForType(data, type)}
+      performance={getPerformanceForType(performance, type)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}

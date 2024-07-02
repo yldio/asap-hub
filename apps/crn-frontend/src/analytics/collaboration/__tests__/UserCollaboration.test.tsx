@@ -2,15 +2,24 @@ import {
   ListUserCollaborationAlgoliaResponse,
   UserCollaborationResponse,
 } from '@asap-hub/model';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { render, waitFor } from '@testing-library/react';
+import { userCollaborationPerformance } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { getUserCollaboration } from '../api';
+import { getUserCollaboration, getUserCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsUserCollaborationState } from '../state';
 import UserCollaboration from '../UserCollaboration';
+
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'analytics'>),
+}));
 
 jest.mock('../api');
 
@@ -21,6 +30,14 @@ afterEach(() => {
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
+
+const mockGetUserCollaborationPerformance =
+  getUserCollaborationPerformance as jest.MockedFunction<
+    typeof getUserCollaborationPerformance
+  >;
+mockGetUserCollaborationPerformance.mockResolvedValue(
+  userCollaborationPerformance,
+);
 
 const userTeam: UserCollaborationResponse['teams'][number] = {
   id: '1',

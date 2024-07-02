@@ -29,6 +29,7 @@ import {
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
+  UserCollaborationPerformance,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -38,6 +39,7 @@ import {
   TEAM_PRODUCTIVITY,
   TEAM_PRODUCTIVITY_PERFORMANCE,
   USER_COLLABORATION,
+  USER_COLLABORATION_PERFORMANCE,
   USER_PRODUCTIVITY,
   USER_PRODUCTIVITY_PERFORMANCE,
 } from './analytics';
@@ -131,6 +133,7 @@ export type EntityResponses = {
     [TEAM_COLLABORATION]: TeamCollaborationResponse;
     [USER_COLLABORATION]: UserCollaborationResponse;
     [TEAM_COLLABORATION_PERFORMANCE]: TeamCollaborationPerformance;
+    [USER_COLLABORATION_PERFORMANCE]: UserCollaborationPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;

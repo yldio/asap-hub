@@ -116,9 +116,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
-                interestGroupId: id,
-              }),
+              // TODO: fix this
+              href: '',
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"

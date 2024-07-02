@@ -33,7 +33,6 @@ const AnalyticsRoutes = () => {
   }, []);
 
   // const { pathname: path } = useLocation();
-  console.log(analytics.DEFAULT.$.LEADERSHIP.relativePath);
 
   return (
     <Routes>

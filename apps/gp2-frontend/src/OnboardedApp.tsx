@@ -1,10 +1,10 @@
 import { Layout } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { gp2 as gp2Route } from '@asap-hub/routing';
+import { dashboardRoutes, gp2 as gp2Route } from '@asap-hub/routing';
 
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from './Frame';
 import { useUserById } from './users/state';
 
@@ -49,7 +49,7 @@ const News = lazy(loadNews);
 const Tags = lazy(loadTags);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
-  const { path } = useMatch();
+  // const { path } = useMatch();
 
   const user = useCurrentUserGP2();
 
@@ -74,52 +74,78 @@ const OnboardedApp: FC<Record<string, never>> = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
       <Routes>
-        <Route exact path={path}>
-          <Frame title="Dashboard">
-            <Dashboard />
-          </Frame>
-        </Route>
-        <Route path={usersRoute.template}>
-          <Frame title="Users">
-            <Users />
-          </Frame>
-        </Route>
-        <Route path={workingGroupsRoute.template}>
-          <Frame title="Working Groups">
-            <WorkingGroups />
-          </Frame>
-        </Route>
-        <Route path={projectsRoute.template}>
-          <Frame title="Projects">
-            <Projects />
-          </Frame>
-        </Route>
-        <Route path={eventsRoute.template}>
-          <Frame title="Events">
-            <Events />
-          </Frame>
-        </Route>
-        <Route path={outputsRoute.template}>
-          <Frame title="Outputs">
-            <Outputs />
-          </Frame>
-        </Route>
-        <Route path={newsRoute.template}>
-          <Frame title="News">
-            <News />
-          </Frame>
-        </Route>
-        <Route path={tagsRoute.template}>
-          <Frame title="Tags">
-            <Tags />
-          </Frame>
-        </Route>
-
-        <Route>
-          <Frame title="Not Found">
-            <NotFoundPage />
-          </Frame>
-        </Route>
+        <Route
+          path={dashboardRoutes.DEFAULT.path}
+          element={
+            <Frame title="Dashboard">
+              <Dashboard />
+            </Frame>
+          }
+        />
+        <Route
+          path={usersRoute.DEFAULT.path}
+          element={
+            <Frame title="Users">
+              <Users />
+            </Frame>
+          }
+        />
+        <Route
+          path={workingGroupsRoute.DEFAULT.path}
+          element={
+            <Frame title="Working Groups">
+              <WorkingGroups />
+            </Frame>
+          }
+        />
+        <Route
+          path={projectsRoute.DEFAULT.path}
+          element={
+            <Frame title="Projects">
+              <Projects />
+            </Frame>
+          }
+        />
+        <Route
+          path={eventsRoute.DEFAULT.path}
+          element={
+            <Frame title="Events">
+              <Events />
+            </Frame>
+          }
+        />
+        <Route
+          path={outputsRoute.DEFAULT.path}
+          element={
+            <Frame title="Outputs">
+              <Outputs />
+            </Frame>
+          }
+        />
+        <Route
+          path={newsRoute.DEFAULT.path}
+          element={
+            <Frame title="News">
+              <News />
+            </Frame>
+          }
+        />
+        <Route
+          path={tagsRoute.path}
+          element={
+            <Frame title="Tags">
+              <Tags />
+            </Frame>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Frame title="Not Found">
+              <NotFoundPage />
+            </Frame>
+          }
+        />
       </Routes>
     </Layout>
   );

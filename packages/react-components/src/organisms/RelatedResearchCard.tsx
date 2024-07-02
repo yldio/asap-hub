@@ -170,7 +170,9 @@ const RelatedResearchCard = <
                       ? sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
                           researchOutputId: id,
                         })
-                      : gp2Routing.outputs({}).output({ outputId: id }).$
+                      : gp2Routing.outputs.DEFAULT.DETAILS.buildPath({
+                          outputId: id,
+                        })
                   }
                 >
                   {outputTitle}
@@ -222,12 +224,12 @@ const RelatedResearchCard = <
                       ellipsed
                       href={
                         output.entity?.type === 'WorkingGroups'
-                          ? gp2Routing.workingGroups({}).workingGroup({
+                          ? gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
                               workingGroupId: output.entity.id,
-                            }).$
-                          : gp2Routing.projects({}).project({
+                            })
+                          : gp2Routing.projects.DEFAULT.DETAILS.buildPath({
                               projectId: output.entity.id,
-                            }).$
+                            })
                       }
                     >
                       {output.entity.title}

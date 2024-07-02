@@ -6,7 +6,9 @@ import PageNotifications from './PageNotifications';
 
 const { rem } = pixels;
 
-export type OutputFormPageProps = ComponentProps<React.FC> & {
+export type OutputFormPageProps = ComponentProps<
+  React.FC<React.PropsWithChildren>
+> & {
   message?: string;
 };
 

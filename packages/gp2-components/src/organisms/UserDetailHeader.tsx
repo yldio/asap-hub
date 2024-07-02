@@ -19,22 +19,26 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
   ...headerProps
 }) => {
   const { isEnabled } = useFlags();
-  const route = gp2Routing.users({}).user({ userId: id });
+  const route = gp2Routing.users.DEFAULT.DETAILS;
   return (
     <header css={detailHeaderStyles}>
       <UserDetailHeaderCard {...headerProps} id={id} />
       <TabNav>
-        <TabLink href={route.overview({}).$}>Overview</TabLink>
-        <TabLink href={route.outputs({}).$}>
+        <TabLink href={route.OVERVIEW.buildPath({ userId: id })}>
+          Overview
+        </TabLink>
+        <TabLink href={route.OUTPUTS.buildPath({ userId: id })}>
           Shared Outputs ({outputsTotal})
         </TabLink>
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.upcoming({}).$}>
+          <TabLink href={route.UPCOMING.buildPath({ userId: id })}>
             Upcoming Events ({upcomingTotal})
           </TabLink>
         )}
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+          <TabLink href={route.PAST.buildPath({ userId: id })}>
+            Past Events ({pastTotal})
+          </TabLink>
         )}
       </TabNav>
     </header>

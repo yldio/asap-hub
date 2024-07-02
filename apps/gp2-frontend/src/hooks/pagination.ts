@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 
 export const PAGE_SIZE = 10;
 
 export const usePaginationParams = () => {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const pageSize = PAGE_SIZE;
@@ -12,8 +12,15 @@ export const usePaginationParams = () => {
   const resetPaginationSearchParams = new URLSearchParams(searchParams);
   resetPaginationSearchParams.delete('currentPage');
 
+  // const resetPagination = () => {
+  //   history.replace({ search: resetPaginationSearchParams.toString() });
+  // };
+
   const resetPagination = () => {
-    history.replace({ search: resetPaginationSearchParams.toString() });
+    navigate(
+      { search: resetPaginationSearchParams.toString() },
+      { replace: true },
+    );
   };
 
   return {
@@ -24,7 +31,7 @@ export const usePaginationParams = () => {
 };
 
 export const usePagination = (numberOfItems: number, pageSize: number) => {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
 
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
@@ -32,21 +39,43 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
   const numberOfPages = Math.max(currentPage, lastAllowedPage) + 1;
 
   const renderPageHref = (page: number) => {
-    const newSearchParams = new URLSearchParams(history.location.search);
+    const { pathname } = useLocation();
+    const [newSearchParams] = useSearchParams();
+    // const newSearchParams = new URLSearchParams(history.location.search);
 
     if (page === currentPage) return '';
     if (page === 0) newSearchParams.delete('currentPage');
     else newSearchParams.set('currentPage', String(page));
 
     const newParams = newSearchParams.toString();
-    return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
+    return `${newParams.length ? '?' : pathname}${newParams}`;
   };
 
+  // const renderPageHref = (page: number) => {
+  //   const newSearchParams = new URLSearchParams(history.location.search);
+
+  //   if (page === currentPage) return '';
+  //   if (page === 0) newSearchParams.delete('currentPage');
+  //   else newSearchParams.set('currentPage', String(page));
+
+  //   const newParams = newSearchParams.toString();
+  //   return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
+  // };
+
+  // useEffect(() => {
+  //   if (numberOfItems && currentPage > lastAllowedPage)
+  //     history.replace({
+  //       search: renderPageHref(lastAllowedPage),
+  //     });
+  // });
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
-      history.replace({
-        search: renderPageHref(lastAllowedPage),
-      });
+      navigate(
+        {
+          search: renderPageHref(lastAllowedPage),
+        },
+        { replace: true },
+      );
   });
 
   return {

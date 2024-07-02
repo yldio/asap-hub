@@ -86,7 +86,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       <ul css={listStyles}>
         <li>
           <NavigationLink
-            href={usersRoutes({}).user({ userId }).$}
+            href={usersRoutes.DEFAULT.DETAILS.buildPath({ userId })}
             icon={userIcon}
           >
             My Profile
@@ -101,7 +101,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
               .map(({ id, title }) => (
                 <li key={`user-menu-project-${id}`}>
                   <NavigationLink
-                    href={projectsRoute({}).project({ projectId: id }).$}
+                    href={projectsRoute.DEFAULT.DETAILS.buildPath({
+                      projectId: id,
+                    })}
                     icon={projectIcon}
                   >
                     My project: {title}
@@ -111,9 +113,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             {workingGroups.map(({ id, title }) => (
               <li key={`user-menu-working-group-${id}`}>
                 <NavigationLink
-                  href={
-                    workingGroupRoute({}).workingGroup({ workingGroupId: id }).$
-                  }
+                  href={workingGroupRoute.DEFAULT.DETAILS.buildPath({
+                    workingGroupId: id,
+                  })}
                   icon={workingGroupIcon}
                 >
                   My working group: {title}

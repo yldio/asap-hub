@@ -1,5 +1,5 @@
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
-import { gp2, useRouteParams } from '@asap-hub/routing';
+import { gp2 } from '@asap-hub/routing';
 
 import {
   EventSpeakers,
@@ -7,11 +7,12 @@ import {
   getIconForDocumentType,
   getSourceIcon,
 } from '@asap-hub/gp2-components';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { useEventById } from './state';
 import Frame from '../Frame';
 
 const Event: React.FC = () => {
-  const { eventId } = useRouteParams(gp2.events({}).event);
+  const { eventId } = useTypedParams(gp2.events.DEFAULT.DETAILS);
   const event = useEventById(eventId);
 
   if (event) {

@@ -32,7 +32,8 @@
     "@babel/runtime-corejs3": "7.23.8",
     "core-js": "3.34.0",
     "date-fns": "2.30.0",
-    "emotion-normalize": "11.0.1"
+    "emotion-normalize": "11.0.1",
+    "react-router-prompt": "^0.7.0"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",

@@ -29,12 +29,16 @@ const EventsPage: React.FC<React.PropsWithChildren> = ({ children }) => {
         <div css={navStyles}>
           <TabNav>
             {isEnabled('DISPLAY_EVENTS') && (
-              <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
+              <TabLink href={gp2.events.DEFAULT.UPCOMING.buildPath({})}>
+                Upcoming
+              </TabLink>
             )}
             {isEnabled('DISPLAY_EVENTS') && (
-              <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
+              <TabLink href={gp2.events.DEFAULT.PAST.buildPath({})}>
+                Past
+              </TabLink>
             )}
-            <TabLink href={gp2.events({}).calendar({}).$}>
+            <TabLink href={gp2.events.DEFAULT.CALENDAR.buildPath({})}>
               Subscribe to Calendars
             </TabLink>
           </TabNav>

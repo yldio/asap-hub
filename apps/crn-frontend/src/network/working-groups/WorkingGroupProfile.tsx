@@ -111,7 +111,6 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     workingGroupId,
   });
 
-  console.log(networkRoutes);
   if (workingGroup) {
     const workingGroupDetailsRoutes =
       networkRoutes.DEFAULT.$.WORKING_GROUPS.$.DETAILS.$;

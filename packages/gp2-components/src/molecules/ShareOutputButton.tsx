@@ -25,10 +25,17 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
   entityType,
   id,
 }) => {
-  const route =
+  const generateHref = (documentType: gp2.OutputDocumentTypeParameter) =>
     entityType === 'workingGroup'
-      ? gp2.workingGroups({}).workingGroup({ workingGroupId: id })
-      : gp2.projects({}).project({ projectId: id });
+      ? gp2.workingGroups.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath({
+          outputDocumentType: documentType,
+          workingGroupId: id,
+        })
+      : gp2.projects.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath({
+          outputDocumentType: documentType,
+          projectId: id,
+        });
+
   return (
     <DropdownButton
       noMargin
@@ -41,37 +48,27 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
     >
       {{
         item: <>{outputArticleIcon} Article</>,
-        href: route.createOutput({ outputDocumentType: 'article' }).$,
+        href: generateHref('article'),
       }}
       {{
         item: <>{outputCodeSoftwareIcon} Code/Software</>,
-        href: route.createOutput({
-          outputDocumentType: 'code-software',
-        }).$,
+        href: generateHref('code-software'),
       }}
       {{
         item: <>{outputDatasetIcon} Dataset</>,
-        href: route.createOutput({
-          outputDocumentType: 'dataset',
-        }).$,
+        href: generateHref('dataset'),
       }}
       {{
         item: <>{outputFormIcon} Form</>,
-        href: route.createOutput({
-          outputDocumentType: 'procedural-form',
-        }).$,
+        href: generateHref('procedural-form'),
       }}
       {{
         item: <>{outputGP2ReportsIcon} GP2 Reports</>,
-        href: route.createOutput({
-          outputDocumentType: 'gp2-reports',
-        }).$,
+        href: generateHref('gp2-reports'),
       }}
       {{
         item: <>{outputTrainingMarerialsIcon} Training Materials</>,
-        href: route.createOutput({
-          outputDocumentType: 'training-materials',
-        }).$,
+        href: generateHref('training-materials'),
       }}
     </DropdownButton>
   );

@@ -129,7 +129,9 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               id,
             }),
           )}
-          userRoute={gp2Routing.users({}).user}
+          userRoute={(params: { id: string }) =>
+            gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: params.id })
+          }
           overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>

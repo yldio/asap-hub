@@ -107,7 +107,7 @@ export default class UserController {
   ): Promise<UserResponse> {
     const assetId = await this.assetDataProvider.create({
       id,
-      avatar,
+      content: avatar,
       contentType,
     });
     return this.update(id, { avatar: assetId });

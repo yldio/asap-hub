@@ -18,7 +18,12 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     throw new Error('Method not implemented.');
   }
 
-  async create({ id, avatar, contentType }: AssetCreateData): Promise<string> {
+  async create({
+    id,
+    content: avatar,
+    contentType,
+    publish = true,
+  }: AssetCreateData): Promise<string> {
     const fileName = `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();
@@ -34,8 +39,11 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
       }) as AssetFileProp['fields'],
     });
     const processed = await asset.processForAllLocales();
-    const published = await processed.publish();
 
-    return published.sys.id;
+    if (publish) {
+      await processed.publish();
+    }
+
+    return asset.sys.id;
   }
 }

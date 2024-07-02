@@ -69,11 +69,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       opportunitiesAvailable={opportunitiesAvailable}
     />
     <LinkHeadline
-      href={
-        gp2Routing.projects({}).project({
-          projectId: id,
-        }).$
-      }
+      href={gp2Routing.projects.DEFAULT.DETAILS.buildPath({
+        projectId: id,
+      })}
       level={3}
     >
       {title}

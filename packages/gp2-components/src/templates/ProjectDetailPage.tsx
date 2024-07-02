@@ -8,10 +8,9 @@ type ProjectDetailPageProps = ComponentProps<typeof ProjectDetailHeader>;
 
 const { rem } = pixels;
 
-const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
-  children,
-  ...headerProps
-}) => (
+const ProjectDetailPage: React.FC<
+  React.PropsWithChildren<ProjectDetailPageProps>
+> = ({ children, ...headerProps }) => (
   <article css={layoutContentStyles}>
     <ProjectDetailHeader {...headerProps} />
     <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>

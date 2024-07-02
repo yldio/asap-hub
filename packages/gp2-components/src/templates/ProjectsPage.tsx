@@ -1,7 +1,7 @@
 import { layoutContentStyles, mainStyles } from '../layout';
 import ProjectsHeader from '../organisms/ProjectsHeader';
 
-const ProjectsPage: React.FC = ({ children }) => (
+const ProjectsPage: React.FC<React.PropsWithChildren> = ({ children }) => (
   <article css={layoutContentStyles}>
     <ProjectsHeader />
     <main css={mainStyles}>{children}</main>

@@ -13,13 +13,18 @@ export const leadershipToCSV =
     const metricPrefix =
       metric === 'working-group' ? 'workingGroup' : 'interestGroup';
     return {
-      team: data.displayName,
-      currentlyInALeadershipRole:
+      Team: data.displayName,
+      'Team Status': data.inactiveSince ? 'Inactive' : 'Active',
+      'Inactive Since': data.inactiveSince
+        ? data.inactiveSince.split('T')[0]
+        : '',
+      'Currently in a leadership role':
         data[`${metricPrefix}LeadershipRoleCount`].toString(),
-      previouslyInALeadershipRole:
+      'Previously in a leadership role':
         data[`${metricPrefix}PreviousLeadershipRoleCount`].toString(),
-      currentlyAMember: data[`${metricPrefix}MemberCount`].toString(),
-      previouslyAMember: data[`${metricPrefix}PreviousMemberCount`].toString(),
+      'Currently a member': data[`${metricPrefix}MemberCount`].toString(),
+      'Previously a member':
+        data[`${metricPrefix}PreviousMemberCount`].toString(),
     };
   };
 

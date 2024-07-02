@@ -1,18 +1,22 @@
 import { initialSortingDirection } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentProps } from 'react';
 import LeadershipMembershipTable from '../LeadershipMembershipTable';
 
-const data = [
-  {
-    name: 'Test Team',
-    id: '1',
-    leadershipRoleCount: 1,
-    previousLeadershipRoleCount: 2,
-    memberCount: 3,
-    previousMemberCount: 4,
-  },
-];
+type DataItem = ComponentProps<
+  typeof LeadershipMembershipTable
+>['data'][number];
+
+const dataItem: DataItem = {
+  name: 'Test Team',
+  id: '1',
+  leadershipRoleCount: 1,
+  previousLeadershipRoleCount: 2,
+  memberCount: 3,
+  previousMemberCount: 4,
+};
+const data: DataItem[] = [dataItem];
 
 describe('LeadershipMembershipTable', () => {
   it('renders data', () => {
@@ -27,6 +31,34 @@ describe('LeadershipMembershipTable', () => {
       />,
     );
     expect(getByText('Test Team')).toBeInTheDocument();
+  });
+
+  it('renders team inactive badge', () => {
+    const { getByTitle, queryByTitle, rerender } = render(
+      <LeadershipMembershipTable
+        data={[{ ...dataItem, inactiveSince: '2022-09-30T09:00:00Z' }]}
+        metric={'working-group'}
+        sort="team_asc"
+        setSort={jest.fn()}
+        sortingDirection={initialSortingDirection}
+        setSortingDirection={jest.fn()}
+      />,
+    );
+
+    expect(getByTitle('Inactive Team')).toBeInTheDocument();
+
+    rerender(
+      <LeadershipMembershipTable
+        data={[{ ...dataItem, inactiveSince: undefined }]}
+        metric={'working-group'}
+        sort="team_asc"
+        setSort={jest.fn()}
+        sortingDirection={initialSortingDirection}
+        setSortingDirection={jest.fn()}
+      />,
+    );
+
+    expect(queryByTitle('Inactive Team')).not.toBeInTheDocument();
   });
 
   it.each`

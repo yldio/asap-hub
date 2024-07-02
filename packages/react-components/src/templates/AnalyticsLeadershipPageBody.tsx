@@ -20,6 +20,7 @@ type MetricOption = 'working-group' | 'interest-group';
 type MetricData = {
   id: string;
   name: string;
+  inactiveSince?: string;
   leadershipRoleCount: number;
   previousLeadershipRoleCount: number;
   memberCount: number;

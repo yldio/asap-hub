@@ -110,7 +110,7 @@ export type FetchAnalyticsOptions = FetchPaginationOptions & {
 
 export type AnalyticsTeamLeadershipDataObject = Pick<
   TeamResponse,
-  'id' | 'displayName'
+  'id' | 'displayName' | 'inactiveSince'
 > & {
   // Working Groups
   workingGroupLeadershipRoleCount: number;

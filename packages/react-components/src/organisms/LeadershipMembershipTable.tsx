@@ -5,7 +5,11 @@ import { ComponentProps } from 'react';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
-import { AlphabeticalSortingIcon, NumericalSortingIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import { perRem, tabletScreen } from '../pixels';
 import LeadershipPageBody from '../templates/AnalyticsLeadershipPageBody';
 
@@ -60,6 +64,11 @@ const titleStyles = css({
   fontWeight: 'bold',
   color: charcoal.rgb,
   gap: `${8 / perRem}em`,
+});
+
+const teamNameStyles = css({
+  display: 'flex',
+  gap: `${3 / perRem}em`,
 });
 
 const buttonStyles = css({
@@ -240,10 +249,11 @@ const LeadershipMembershipTable: React.FC<LeadershipMembershipTableProps> = ({
         {data.map((row) => (
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>
+            <p css={teamNameStyles}>
               <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
                 {row.name}
               </Link>
+              {row.inactiveSince && <InactiveBadgeIcon />}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>
               Currently in a leadership role

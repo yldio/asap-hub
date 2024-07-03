@@ -3,6 +3,8 @@ import {
   timeRanges,
   TeamOutputDocumentType,
   PerformanceMetrics,
+  outputTypes,
+  documentCategories,
 } from '@asap-hub/model';
 
 import {
@@ -43,35 +45,38 @@ export const processUserCollaborationPerformance = async (
   await deletePreviousObjects(index, type);
 
   timeRanges.forEach(async (range) => {
-    const getPaginatedHits = (page: number) =>
-      index.search<UserCollaborationHit>('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"${type}")`,
-        attributesToRetrieve: ['teams'],
-        page,
-        hitsPerPage: 50,
-      });
+    documentCategories.forEach(async (documentCategory) => {
+      const getPaginatedHits = (page: number) =>
+        index.search<UserCollaborationHit>('', {
+          filters: `__meta.range:"${range}" AND __meta.documentCategory:"${documentCategory}" AND __meta.type:"${type}"`,
+          attributesToRetrieve: ['teams'],
+          page,
+          hitsPerPage: 50,
+        });
 
-    const hits = await getAllHits<UserCollaborationHit>(getPaginatedHits);
-    const flatHits = hits.reduce(
-      (items: UserTeam[], item) => [...items, ...item.teams],
-      [],
-    );
+      const hits = await getAllHits<UserCollaborationHit>(getPaginatedHits);
+      const flatHits = hits.reduce(
+        (items: UserTeam[], item) => [...items, ...item.teams],
+        [],
+      );
 
-    await index.saveObject(
-      {
-        withinTeam: getBellCurveMetrics(
-          flatHits.map((hit) => hit.outputsCoAuthoredWithinTeam),
-        ),
-        acrossTeam: getBellCurveMetrics(
-          flatHits.map((hit) => hit.outputsCoAuthoredAcrossTeams),
-        ),
-        __meta: {
-          range,
-          type: `${type}-performance`,
+      await index.saveObject(
+        {
+          withinTeam: getBellCurveMetrics(
+            flatHits.map((hit) => hit.outputsCoAuthoredWithinTeam),
+          ),
+          acrossTeam: getBellCurveMetrics(
+            flatHits.map((hit) => hit.outputsCoAuthoredAcrossTeams),
+          ),
+          __meta: {
+            range,
+            type: `${type}-performance`,
+            documentCategory,
+          },
         },
-      },
-      { autoGenerateObjectIDIfNotExist: true },
-    );
+        { autoGenerateObjectIDIfNotExist: true },
+      );
+    });
   });
 };
 
@@ -83,52 +88,55 @@ export const processTeamCollaborationPerformance = async (
   await deletePreviousObjects(index, type);
 
   timeRanges.forEach(async (range) => {
-    const getPaginatedHits = (page: number) =>
-      index.search<TeamCollaborationHit>('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"${type}")`,
-        attributesToRetrieve: [
-          'outputsCoProducedAcross',
-          'outputsCoProducedWithin',
-        ],
-        page,
-        hitsPerPage: 50,
-      });
+    outputTypes.forEach(async (outputType) => {
+      const getPaginatedHits = (page: number) =>
+        index.search<TeamCollaborationHit>('', {
+          filters: `__meta.range:"${range}" AND __meta.outputType:"${outputType}" AND __meta.type:"${type}"`,
+          attributesToRetrieve: [
+            'outputsCoProducedAcross',
+            'outputsCoProducedWithin',
+          ],
+          page,
+          hitsPerPage: 50,
+        });
 
-    const hits = await getAllHits<TeamCollaborationHit>(getPaginatedHits);
+      const hits = await getAllHits<TeamCollaborationHit>(getPaginatedHits);
 
-    const fields = [
-      { name: 'Article', documentType: 'article' },
-      { name: 'Bioinformatics', documentType: 'bioinformatics' },
-      { name: 'Dataset', documentType: 'dataset' },
-      { name: 'Lab Resource', documentType: 'labResource' },
-      { name: 'Protocol', documentType: 'protocol' },
-    ];
+      const fields = [
+        { name: 'Article', documentType: 'article' },
+        { name: 'Bioinformatics', documentType: 'bioinformatics' },
+        { name: 'Dataset', documentType: 'dataset' },
+        { name: 'Lab Resource', documentType: 'labResource' },
+        { name: 'Protocol', documentType: 'protocol' },
+      ];
 
-    const teamPerformanceByDocumentType = (rawMetrics: DocumentMetric[]) =>
-      fields.reduce(
-        (metrics, { name, documentType }) => ({
-          ...metrics,
-          [documentType]: getBellCurveMetrics(
-            rawMetrics.map((item) => item[name as TeamOutputDocumentType]),
+      const teamPerformanceByDocumentType = (rawMetrics: DocumentMetric[]) =>
+        fields.reduce(
+          (metrics, { name, documentType }) => ({
+            ...metrics,
+            [documentType]: getBellCurveMetrics(
+              rawMetrics.map((item) => item[name as TeamOutputDocumentType]),
+            ),
+          }),
+          {} as Record<string, PerformanceMetrics>,
+        );
+
+      await index.saveObject(
+        {
+          withinTeam: teamPerformanceByDocumentType(
+            hits.map((hit) => hit.outputsCoProducedWithin),
           ),
-        }),
-        {} as Record<string, PerformanceMetrics>,
-      );
-
-    await index.saveObject(
-      {
-        withinTeam: teamPerformanceByDocumentType(
-          hits.map((hit) => hit.outputsCoProducedWithin),
-        ),
-        acrossTeam: teamPerformanceByDocumentType(
-          hits.map((hit) => hit.outputsCoProducedAcross.byDocumentType),
-        ),
-        __meta: {
-          range,
-          type: `${type}-performance`,
+          acrossTeam: teamPerformanceByDocumentType(
+            hits.map((hit) => hit.outputsCoProducedAcross.byDocumentType),
+          ),
+          __meta: {
+            range,
+            type: `${type}-performance`,
+            outputType,
+          },
         },
-      },
-      { autoGenerateObjectIDIfNotExist: true },
-    );
+        { autoGenerateObjectIDIfNotExist: true },
+      );
+    });
   });
 };

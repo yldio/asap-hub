@@ -5,6 +5,7 @@ import {
 } from '@asap-hub/contentful';
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import {
+  generateUserCollaborationOutputByDocType,
   getResearchOutputTeamCollaboration,
   getTeamCollaborationDataObject,
   getTeamCollaborationQuery,
@@ -91,6 +92,46 @@ describe('user collaboration', () => {
         ],
       ]);
     });
+  });
+
+  describe('document category filter', () => {
+    it.each`
+      filter              | result
+      ${'article'}        | ${{ outputsCoAuthoredWithinTeam: 1 }}
+      ${'bioinformatics'} | ${{ outputsCoAuthoredWithinTeam: 1 }}
+      ${'dataset'}        | ${{ outputsCoAuthoredWithinTeam: 1 }}
+      ${'lab-resource'}   | ${{ outputsCoAuthoredWithinTeam: 1 }}
+      ${'protocol'}       | ${{ outputsCoAuthoredWithinTeam: 1 }}
+      ${'all'}            | ${{ outputsCoAuthoredWithinTeam: 5 }}
+    `(
+      'filters outputs by document category when filter $filter is provided',
+      async ({ filter, result }) => {
+        const graphqlResponse = getUserCollaborationQuery();
+        graphqlResponse.usersCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+          [
+            generateUserCollaborationOutputByDocType('Article'),
+            generateUserCollaborationOutputByDocType('Bioinformatics'),
+            generateUserCollaborationOutputByDocType('Dataset'),
+            generateUserCollaborationOutputByDocType('Lab Resource'),
+            generateUserCollaborationOutputByDocType('Protocol'),
+          ];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          graphqlResponse,
+        );
+
+        const response = await analyticsDataProvider.fetchUserCollaboration({
+          take: 1,
+          filter: {
+            documentCategory: filter,
+          },
+        });
+
+        expect(response.items[0]?.teams[0]).toEqual(
+          expect.objectContaining(result),
+        );
+      },
+    );
   });
 });
 
@@ -256,6 +297,131 @@ describe('team collaboration', () => {
       ],
     });
   });
+
+  test('Should only count research outputs with the sharing status Public when the public output type filter is applied', async () => {
+    const graphqlResponse = getTeamCollaborationQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Network Only',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Public',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Public',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Network Only',
+          labsCollection: {
+            total: 3,
+          },
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamCollaboration({
+      take: 1,
+      filter: {
+        outputType: 'public',
+      },
+    });
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        expect.objectContaining({
+          outputsCoProducedWithin: {
+            Article: 1,
+            Bioinformatics: 1,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 0,
+          },
+        }),
+      ],
+    });
+  });
+
+  test('Should count research outputs with all sharing statuses output type filter of "all" is applied', async () => {
+    const graphqlResponse = getTeamCollaborationQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Network Only',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          sharingStatus: 'Public',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Public',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          sharingStatus: 'Network Only',
+          labsCollection: {
+            total: 3,
+          },
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamCollaboration({
+      take: 1,
+      filter: {
+        outputType: 'all',
+      },
+    });
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        expect.objectContaining({
+          outputsCoProducedWithin: {
+            Article: 2,
+            Bioinformatics: 2,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 0,
+          },
+        }),
+      ],
+    });
+  });
+
   describe('within team', () => {
     test('Should return a count of 2 if client has two outputs of the same document type with multiple labs', async () => {
       const graphqlResponse = getTeamCollaborationQuery();

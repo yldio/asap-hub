@@ -11443,7 +11443,7 @@ export type FetchUserCollaborationQuery = {
               researchOutputsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<ResearchOutputs, 'addedDate' | 'sharingStatus'> & {
+                    Pick<ResearchOutputs, 'addedDate' | 'documentType'> & {
                       authorsCollection?: Maybe<{
                         items: Array<
                           Maybe<
@@ -11494,7 +11494,10 @@ export type FetchTeamCollaborationQuery = {
                   Maybe<
                     Pick<
                       ResearchOutputs,
-                      'addedDate' | 'createdDate' | 'documentType'
+                      | 'addedDate'
+                      | 'createdDate'
+                      | 'documentType'
+                      | 'sharingStatus'
                     > & {
                       labsCollection?: Maybe<
                         Pick<ResearchOutputsLabsCollection, 'total'>
@@ -25578,7 +25581,7 @@ export const FetchUserCollaborationDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
-                                            value: 'sharingStatus',
+                                            value: 'documentType',
                                           },
                                         },
                                         {
@@ -25956,6 +25959,13 @@ export const FetchTeamCollaborationDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'documentType',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'sharingStatus',
                                           },
                                         },
                                         {

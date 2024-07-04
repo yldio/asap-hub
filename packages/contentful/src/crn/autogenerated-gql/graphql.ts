@@ -296,6 +296,7 @@ export type AssetLinkingCollections = {
   eventsCollection?: Maybe<EventsCollection>;
   iconCollection?: Maybe<IconCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
   newsCollection?: Maybe<NewsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   usersCollection?: Maybe<UsersCollection>;
@@ -323,6 +324,13 @@ export type AssetLinkingCollectionsIconCollectionArgs = {
 };
 
 export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsManuscriptVersionsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3435,6 +3443,7 @@ export type ManuscriptVersions = Entry &
     labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
     lifecycle?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
+    manuscriptFile?: Maybe<Asset>;
     manuscriptLicense?: Maybe<Scalars['String']>;
     manuscriptLicenseDetails?: Maybe<Scalars['String']>;
     otherDetails?: Maybe<Scalars['String']>;
@@ -3512,6 +3521,12 @@ export type ManuscriptVersionsLifecycleArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsManuscriptFileArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3673,6 +3688,7 @@ export type ManuscriptVersionsFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
@@ -10200,6 +10216,7 @@ export type CfManuscriptVersionsNestedFilter = {
   lifecycle_not?: InputMaybe<Scalars['String']>;
   lifecycle_not_contains?: InputMaybe<Scalars['String']>;
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;

@@ -179,6 +179,7 @@ type AssetLinkingCollections {
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
   iconCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): IconCollection
   interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
   tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TutorialsCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
@@ -2487,6 +2488,7 @@ type ManuscriptVersions implements Entry & _Node {
   labMaterialsRegisteredDetails(locale: String): String
   lifecycle(locale: String): String
   linkedFrom(allowedLocales: [String]): ManuscriptVersionsLinkingCollections
+  manuscriptFile(locale: String, preview: Boolean): Asset
   manuscriptLicense(locale: String): String
   manuscriptLicenseDetails(locale: String): String
   otherDetails(locale: String): String
@@ -2589,6 +2591,7 @@ input ManuscriptVersionsFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  manuscriptFile_exists: Boolean
   manuscriptLicense: String
   manuscriptLicenseDetails: String
   manuscriptLicenseDetails_contains: String
@@ -7017,6 +7020,7 @@ input cfManuscriptVersionsNestedFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  manuscriptFile_exists: Boolean
   manuscriptLicense: String
   manuscriptLicenseDetails: String
   manuscriptLicenseDetails_contains: String

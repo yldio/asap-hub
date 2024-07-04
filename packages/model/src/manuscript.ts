@@ -64,6 +64,7 @@ export type ManuscriptVersion = {
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
   otherDetails?: string;
+  manuscriptFileId?: string;
 
   acknowledgedGrantNumber?: string;
   asapAffiliationIncluded?: string;
@@ -255,6 +256,7 @@ export type ManuscriptPostRequest = Pick<
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    manuscriptFileId?: ManuscriptVersion['manuscriptFileId'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -301,6 +303,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               nullable: true,
             },
             otherDetails: { type: 'string', nullable: true },
+            manuscriptFileId: { type: 'string', nullable: true },
             acknowledgedGrantNumber: { type: 'string', nullable: true },
             asapAffiliationIncluded: { type: 'string', nullable: true },
             manuscriptLicense: { type: 'string', nullable: true },

@@ -16,9 +16,13 @@ const loadCollaboration = () =>
     /* webpackChunkName: "collaboration" */ './collaboration/Collaboration'
   );
 
+const loadEngagement = () =>
+  import(/* webpackChunkName: "engagement" */ './engagement/Engagement');
+
 const LeadershipBody = lazy(loadLeadership);
 const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
+const EngagementBody = lazy(loadEngagement);
 
 const Routes = () => {
   useEffect(() => {
@@ -80,6 +84,16 @@ const Routes = () => {
           </Switch>
         </Route>
       )}
+      {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+        <Route path={path + analytics({}).engagement.template}>
+          <AnalyticsPage>
+            <Frame title="Engagement">
+              <EngagementBody />
+            </Frame>
+          </AnalyticsPage>
+        </Route>
+      )}
+
       <Route path={path + analytics({}).leadership.template}>
         <Switch>
           <Route

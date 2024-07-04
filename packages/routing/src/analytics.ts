@@ -13,8 +13,10 @@ const leadership = route('/leadership', {}, { metric });
 
 const productivity = route('/productivity', {}, { metric });
 
+const engagement = route('/engagement', {}, {});
+
 export default route(
   '/analytics',
   {},
-  { collaboration, leadership, productivity },
+  { collaboration, leadership, productivity, engagement },
 );

@@ -6,7 +6,12 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
-import { LeadershipIcon, ProductivityIcon, TeamIcon } from '../icons';
+import {
+  EngagementIcon,
+  LeadershipIcon,
+  ProductivityIcon,
+  TeamIcon,
+} from '../icons';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,
@@ -39,6 +44,11 @@ const AnalyticsPageHeader: React.FC = () => (
         {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
           <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
             Collaboration
+          </TabLink>
+        )}
+        {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+            Engagement
           </TabLink>
         )}
         <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>

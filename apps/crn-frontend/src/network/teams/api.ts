@@ -201,3 +201,28 @@ export const getManuscript = async (
   }
   return resp.json();
 };
+
+export const uploadManuscriptFile = async (
+  manuscriptId: string,
+  file: File,
+  authorization: string,
+): Promise<void> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/manuscript-file`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+    body: formData,
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to upload manuscript file with id ${manuscriptId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  return resp.json();
+}

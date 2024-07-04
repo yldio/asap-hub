@@ -29,6 +29,12 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
     pushFromHere(path);
   };
 
+  const handleFileUpload = async (file: File): Promise<string> => {
+    // some upload here
+
+    return 'url';
+  };
+
   return (
     <FormProvider {...form}>
       <Frame title="Create Manuscript">
@@ -37,6 +43,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
           onSuccess={onSuccess}
           onSave={createManuscript}
           teamId={teamId}
+          handleFileUpload={handleFileUpload}
         />
       </Frame>
     </FormProvider>

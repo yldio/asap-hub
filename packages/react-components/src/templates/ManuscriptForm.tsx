@@ -20,6 +20,7 @@ import {
   LabeledDropdown,
   LabeledRadioButtonGroup,
   LabeledTextField,
+  LabeledFileField,
 } from '..';
 import { Button } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -151,12 +152,14 @@ type ManuscriptFormProps = Omit<
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onSuccess: () => void;
+    handleFileUpload: (file: File) => Promise<string>;
     teamId: string;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onSave,
   onSuccess,
+  handleFileUpload,
   teamId,
   title,
   type,
@@ -220,6 +223,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     getValues,
     watch,
     setValue,
+    setError,
     reset,
   } = methods;
 
@@ -560,6 +564,46 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               )}
+
+            {watchType && (
+              <Controller
+                name="versions.0.manuscriptFileId"
+                control={control}
+                rules={{
+                  required: 'Please select a manuscript file.',
+                }}
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <LabeledFileField
+                    title="Upload the main manuscript file"
+                    subtitle="(required)"
+                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
+                    onUpload={(fileId) => {
+                      setValue('versions.0.manuscriptFileId', fileId);
+                    }}
+                    handleFileUpload={handleFileUpload}
+                    value={value}
+                    customValidationMessage={error?.message}
+                    customValidation={(file: File) => {
+                      const acceptedFormats = ['pdf'];
+                      const fileExtension = file.name
+                        .split('.')
+                        .pop()
+                        ?.toLowerCase();
+
+                      if (!fileExtension || !acceptedFormats.includes(fileExtension)) {
+                        setError('versions.0.manuscriptFileId', {
+                          type: 'custom',
+                          message: `Please upload a PDF file.`,
+                        });
+                        return false;
+                      }
+                      return true
+                    }}
+                    enabled={!isSubmitting}
+                  />
+                )}
+              />
+            )}
           </FormCard>
 
           {watchType && watchLifecycle && (

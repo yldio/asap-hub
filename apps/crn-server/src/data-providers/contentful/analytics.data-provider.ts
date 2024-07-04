@@ -1,6 +1,10 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
   FetchAnalyticsTeamLeadershipQueryVariables,
+  FetchEngagementQuery,
+  FetchEngagementQueryVariables,
+  FetchTeamCollaborationQuery,
+  FetchTeamCollaborationQueryVariables,
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables,
   FetchUserCollaborationQuery,
@@ -8,19 +12,19 @@ import {
   FetchUserProductivityQuery,
   FetchUserProductivityQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
-  FETCH_TEAM_PRODUCTIVITY,
+  FETCH_ENGAGEMENT,
   FETCH_TEAM_COLLABORATION,
+  FETCH_TEAM_PRODUCTIVITY,
   FETCH_USER_COLLABORATION,
   FETCH_USER_PRODUCTIVITY,
   GraphQLClient,
-  FetchTeamCollaborationQuery,
-  FetchTeamCollaborationQueryVariables,
 } from '@asap-hub/contentful';
 import {
   FetchAnalyticsOptions,
   FetchPaginationOptions,
   FilterAnalyticsOptions,
   ListAnalyticsTeamLeadershipDataObject,
+  ListEngagementDataObject,
   ListTeamCollaborationDataObject,
   ListTeamProductivityDataObject,
   ListUserProductivityDataObject,
@@ -33,15 +37,16 @@ import {
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import {
-  getUserCollaborationItems,
   getTeamCollaborationItems,
+  getUserCollaborationItems,
 } from '../../utils/analytics/collaboration';
 import {
   getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
-  isTeamOutputDocumentType,
   getFilterOutputBySharingStatus,
+  isTeamOutputDocumentType,
 } from '../../utils/analytics/common';
+import { getEngagementItems } from '../../utils/analytics/engagement';
 import { getTeamLeadershipItems } from '../../utils/analytics/leadership';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
 
@@ -151,6 +156,34 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
     return {
       total: collection.total,
       items: getTeamCollaborationItems(collection, filter?.timeRange),
+    };
+  }
+
+  async fetchEngagement(
+    options: FetchAnalyticsOptions,
+  ): Promise<ListEngagementDataObject> {
+    const { take = 10, skip = 0, filter } = options;
+    let collection: FetchEngagementQuery['teamsCollection'] = {
+      total: 0,
+      items: [],
+    };
+
+    for (let i = 0; i < take / 5; i += 1) {
+      const { teamsCollection } = await this.contentfulClient.request<
+        FetchEngagementQuery,
+        FetchEngagementQueryVariables
+      >(FETCH_ENGAGEMENT, { limit: 5, skip: skip + 5 * i });
+      if (teamsCollection && teamsCollection.items) {
+        collection = {
+          total: teamsCollection.total,
+          items: [...collection.items, ...teamsCollection.items],
+        };
+      }
+    }
+
+    return {
+      total: collection?.total || 0,
+      items: getEngagementItems(collection, filter?.timeRange),
     };
   }
 }

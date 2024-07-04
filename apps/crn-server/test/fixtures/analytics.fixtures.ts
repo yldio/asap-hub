@@ -1,5 +1,6 @@
 import {
   FetchAnalyticsTeamLeadershipQuery,
+  FetchEngagementQuery,
   FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
   FetchUserCollaborationQuery,
@@ -8,8 +9,10 @@ import {
 import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
+  EngagementResponse,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
+  ListEngagementResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityDataObject,
   ListTeamProductivityResponse,
@@ -20,12 +23,14 @@ import {
   TeamCollaborationResponse,
   TeamProductivityDataObject,
   TeamProductivityResponse,
+  TeamRole,
   UserCollaborationDataObject,
   UserCollaborationResponse,
   UserProductivityDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
 import { getTeamDataObject } from './teams.fixtures';
+import type { EventSpeakersCollectionItem } from '../../src/utils/analytics/engagement';
 
 export const getAnalyticsTeamLeadershipDataObject =
   (): AnalyticsTeamLeadershipDataObject => {
@@ -589,3 +594,122 @@ export const getListTeamCollaborationResponse =
     total: 1,
     items: [getTeamCollaborationResponse()],
   });
+
+type EngagementUser = NonNullable<
+  NonNullable<EventSpeakersCollectionItem>
+>['user'];
+
+type MakeUserProps = {
+  userId?: string;
+  teams?: { id: string; role: TeamRole }[];
+};
+export const makeUser = ({
+  userId = 'user-id-1',
+  teams = [{ id: 'team-id-1', role: 'Project Manager' }],
+}: MakeUserProps): EngagementUser => ({
+  __typename: 'Users',
+  sys: { id: userId },
+  teamsCollection: {
+    items: teams.map((team) => ({
+      role: team.role,
+      team: { sys: { id: team.id } },
+    })),
+  },
+});
+
+type EngagementEvent = NonNullable<
+  NonNullable<NonNullable<EventSpeakersCollectionItem>>['linkedFrom']
+>['eventsCollection'];
+
+type MakeEventProps = {
+  eventId?: string;
+  endDate?: string;
+};
+export const makeEvent = ({
+  eventId = 'event-1',
+  endDate = '2024-07-11T13:00:00.000Z',
+}: MakeEventProps): EngagementEvent => ({
+  items: [{ sys: { id: eventId }, endDate }],
+});
+
+export const getEngagementQuery = (): FetchEngagementQuery => ({
+  teamsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'team-id-0',
+        },
+        displayName: 'Team A',
+        inactiveSince: null,
+        linkedFrom: {
+          teamMembershipCollection: {
+            total: 4,
+          },
+          eventSpeakersCollection: {
+            items: [
+              {
+                user: makeUser({
+                  userId: 'user-1',
+                  teams: [
+                    { id: 'team-id-0', role: 'Project Manager' },
+                    { id: 'team-id-2', role: 'Key Personnel' },
+                  ],
+                }),
+                linkedFrom: {
+                  eventsCollection: makeEvent({
+                    eventId: 'event-1',
+                    endDate: '2024-06-11T13:00:00.000Z',
+                  }),
+                },
+              },
+              {
+                user: makeUser({
+                  userId: 'user-2',
+                  teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+                }),
+                linkedFrom: {
+                  eventsCollection: makeEvent({
+                    eventId: 'event-1',
+                    endDate: '2024-06-11T13:00:00.000Z',
+                  }),
+                },
+              },
+              {
+                user: makeUser({
+                  userId: 'user-1',
+                  teams: [
+                    { id: 'team-id-0', role: 'Project Manager' },
+                    { id: 'team-id-2', role: 'Key Personnel' },
+                  ],
+                }),
+                linkedFrom: {
+                  eventsCollection: makeEvent({
+                    eventId: 'event-2',
+                    endDate: '2024-05-28T00:00:00.000Z',
+                  }),
+                },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  },
+});
+
+export const getEngagementResponse: () => EngagementResponse = () => ({
+  id: 'team-id-0',
+  inactiveSince: null,
+  members: 4,
+  name: 'Team A',
+  events: 2,
+  totalSpeakers: 3,
+  uniqueSpeakersAllRoles: 2,
+  uniqueSpeakersKeyPersonnel: 1,
+});
+
+export const getListEngagementResponse = (): ListEngagementResponse => ({
+  total: 1,
+  items: [getEngagementResponse()],
+});

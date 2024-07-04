@@ -7,6 +7,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
   getListAnalyticsTeamLeadershipResponse,
+  getListEngagementResponse,
   getListTeamCollaborationResponse,
   getListTeamProductivityResponse,
   getListUserCollaborationResponse,
@@ -283,6 +284,53 @@ describe('/analytics/ route', () => {
       expect(
         analyticsControllerMock.fetchTeamCollaboration,
       ).toHaveBeenCalledWith({
+        take: 15,
+        skip: 5,
+      } satisfies FetchPaginationOptions);
+    });
+  });
+
+  describe('GET /analytics/engagement', () => {
+    test('Should return 200 when no results are found', async () => {
+      analyticsControllerMock.fetchEngagement.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+      const response = await supertest(app).get('/analytics/engagement');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should return 500 when an error occurs', async () => {
+      analyticsControllerMock.fetchEngagement.mockRejectedValueOnce(
+        new Error('Test error'),
+      );
+      const response = await supertest(app).get('/analytics/engagement');
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Should return the response from the controller', async () => {
+      analyticsControllerMock.fetchEngagement.mockResolvedValueOnce(
+        getListEngagementResponse(),
+      );
+      const response = await supertest(app).get('/analytics/engagement');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getListEngagementResponse());
+    });
+
+    test('Should call the controller with the correct parameters', async () => {
+      await supertest(app).get('/analytics/engagement').query({
+        take: 15,
+        skip: 5,
+      });
+
+      expect(analyticsControllerMock.fetchEngagement).toHaveBeenCalledWith({
         take: 15,
         skip: 5,
       } satisfies FetchPaginationOptions);

@@ -7,6 +7,7 @@ import AnalyticsController from '../../src/controllers/analytics.controller';
 import {
   getListAnalyticsTeamLeadershipDataObject,
   getListAnalyticsTeamLeadershipResponse,
+  getListEngagementResponse,
   getListTeamCollaborationResponse,
   getListTeamProductivityDataObject,
   getListTeamProductivityResponse,
@@ -203,6 +204,41 @@ describe('Analytics controller', () => {
       expect(
         analyticsDataProviderMock.fetchTeamCollaboration,
       ).toHaveBeenCalledWith(options);
+    });
+  });
+
+  describe('fetchEngagement method', () => {
+    test('Should return an empty result when the data provider returns an empty list', async () => {
+      analyticsDataProviderMock.fetchEngagement.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+
+      const result = await analyticsController.fetchEngagement({});
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return the engagement data', async () => {
+      analyticsDataProviderMock.fetchEngagement.mockResolvedValue(
+        getListEngagementResponse(),
+      );
+
+      const result = await analyticsController.fetchEngagement({});
+
+      expect(result).toEqual(getListEngagementResponse());
+    });
+
+    test('Should call the data provider with the correct options', async () => {
+      const options: FetchPaginationOptions = {
+        take: 10,
+        skip: 5,
+      };
+      await analyticsController.fetchEngagement(options);
+
+      expect(analyticsDataProviderMock.fetchEngagement).toHaveBeenCalledWith(
+        options,
+      );
     });
   });
 });

@@ -22,7 +22,9 @@ import { getContentfulGraphqlManuscriptVersions } from './manuscript.fixtures';
 
 export const getContentfulGraphql = (teamById = false) => ({
   Teams: () =>
-    teamById ? getContentfulGraphqlTeamById() : getContentfulGraphqlTeam(),
+    teamById
+      ? { ...getContentfulGraphqlTeamById(), linkedFrom: () => {} }
+      : getContentfulGraphqlTeam(),
   TeamMembershipCollection: () => getContentfulGraphqlTeamMemberships(),
   Users: () => getContentfulGraphqlTeamMembers(),
   UsersTeamsCollection: () => getUsersTeamsCollection(),

@@ -28,13 +28,14 @@ describe('Tutorials data provider', () => {
           items: [graphqlTutorialResponse],
         };
       },
-      Tutorials: () => graphqlTutorialResponse,
-      TutorialsCollection: () => {
-        return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
-      },
-      RelatedTutorialsCollection: () => {
-        return graphqlTutorialResponse.relatedTutorialsCollection;
-      },
+      Tutorials: () => ({
+        ...graphqlTutorialResponse,
+        relatedTutorialsCollection: () =>
+          graphqlTutorialResponse.relatedTutorialsCollection,
+        linkedFrom: () => graphqlTutorialResponse.linkedFrom,
+      }),
+      TutorialsCollection: () =>
+        graphqlTutorialResponse.linkedFrom?.tutorialsCollection,
     });
 
   const dataProviderWithMockServer: TutorialDataProvider =

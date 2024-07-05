@@ -24,6 +24,13 @@ const teamId = '42';
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: '123',
+      filename: 'test.pdf',
+      url: 'http://example.com/test.pdf',
+    }),
+  ),
   onSuccess: jest.fn(),
   teamId,
   acknowledgedGrantNumber: 'Yes',
@@ -520,6 +527,7 @@ describe('renders the necessary fields', () => {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
+    manuscriptFile: 'Upload the main manuscript file',
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',

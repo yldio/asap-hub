@@ -225,4 +225,21 @@ describe('/manuscripts/ route', () => {
       });
     });
   });
+
+  describe('POST /manuscripts/manuscript-file', () => {
+    const manuscriptResponse = getManuscriptResponse();
+
+    test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .post('/manuscripts/manuscript-file')
+        .send()
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(403);
+    });
 });

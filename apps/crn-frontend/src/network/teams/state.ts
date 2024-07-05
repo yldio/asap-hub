@@ -6,6 +6,7 @@ import {
   TeamListItemResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
+  ManuscriptFileResponse,
 } from '@asap-hub/model';
 import {
   atom,
@@ -20,7 +21,13 @@ import {
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import { createManuscript, getTeam, getTeams, patchTeam } from './api';
+import {
+  createManuscript,
+  getTeam,
+  getTeams,
+  patchTeam,
+  uploadManuscriptFile,
+} from './api';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -171,4 +178,10 @@ export const usePostManuscript = () => {
     setManuscriptItem(manuscript);
     return manuscript;
   };
+};
+
+export const useUploadManuscriptFile = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return (file: File) => uploadManuscriptFile(file, authorization);
 };

@@ -46,5 +46,23 @@ export const manuscriptRouteFactory = (
     res.status(201).json(manuscript);
   });
 
+  manuscriptRoutes.post('/manuscripts/manuscript-file', async (req, res) => {
+    const { body } = req;
+    console.log(body);
+
+    // const userBelongsToTeam = loggedInUser?.teams.some(
+    //   (team) => team.id === createRequest.teamId,
+    // );
+
+    // if (!loggedInUser || !userBelongsToTeam) throw Boom.forbidden();
+
+    // const manuscript = await manuscriptController.create({
+    //   ...createRequest,
+    //   userId: loggedInUser.id,
+    // });
+
+    res.status(201).json({});
+  });
+
   return manuscriptRoutes;
 };

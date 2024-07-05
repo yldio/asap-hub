@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import { ComponentProps, useRef } from 'react';
-import { Button, Label, Paragraph } from '../atoms';
+import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
+import { validationMessageStyles } from '../form';
 import { plusIcon } from '../icons';
 import { perRem } from '../pixels';
 
@@ -35,16 +36,29 @@ const iconStyles = css({
   marginRight: `${8 / perRem}em`,
 });
 
+const uploadedButtonTagStyles = css({
+  display: 'inline-block',
+  paddingBottom: `${15 / perRem}em`,
+});
+
+const fileSelectionContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+type FileUploadResponse = { id: string; url: string; filename: string };
+
 type LabeledFileFieldProps = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
-  readonly value?: string;
-  readonly onUpload?: (fileId: string) => void;
+  readonly placeholder?: string;
+  readonly currentFile?: FileUploadResponse;
+  readonly onRemove?: () => void;
   readonly customValidationMessage?: string;
   readonly customValidation?: (file: File) => boolean;
-  readonly handleFileUpload?: (file: File) => Promise<string>;
+  readonly handleFileUpload: (file: File) => Promise<void>;
 } & Pick<ComponentProps<typeof Button>, 'enabled'>;
 
 const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
@@ -52,68 +66,60 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   subtitle,
   description,
   hint,
-  value,
-  onUpload,
+  placeholder,
+  currentFile,
+  onRemove,
   enabled,
-  customValidation,
   customValidationMessage,
   handleFileUpload,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (customValidation && !customValidation(file)) {
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        return;
-      }
-
-      let fileUrl: string | undefined;
-
-      if (handleFileUpload) {
-        fileUrl = await handleFileUpload(file);
-      }
-
-      if (onUpload) {
-        onUpload(fileUrl || file.name);
-      }
+      await handleFileUpload(file);
     }
   };
+  console.log(currentFile);
   return (
     <div css={containerStyles}>
+      <input
+        onChange={handleFileChange}
+        multiple={false}
+        ref={fileInputRef!}
+        type="file"
+        aria-label={placeholder}
+        hidden
+      />
       <Label
-        forContent={(id) =>
-          (!value && (
-            <>
-              <div css={buttonContainerStyles}>
-                <Button
-                  primary
-                  enabled={enabled}
-                  noMargin
-                  id={id}
-                  preventDefault={false}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <>
-                    <div css={iconStyles}>{plusIcon}</div> Add File
-                  </>
-                </Button>
-                {customValidationMessage}
-                <input
-                  onChange={handleFileChange}
-                  multiple={false}
-                  ref={fileInputRef!}
-                  type="file"
-                  hidden
-                />
+        forContent={(id) => (
+          <div css={fileSelectionContainerStyles}>
+            {currentFile && (
+              <div css={uploadedButtonTagStyles}>
+                <Tag key={currentFile.id} onRemove={onRemove}>
+                  {currentFile.filename}
+                </Tag>
               </div>
-            </>
-          )) || <span>"{value}"</span>
-        }
+            )}
+            <div css={buttonContainerStyles}>
+              <Button
+                primary
+                enabled={!!enabled && !currentFile}
+                noMargin
+                id={id}
+                preventDefault={false}
+                onClick={() => !currentFile && fileInputRef.current?.click()}
+              >
+                <>
+                  <div css={iconStyles}>{plusIcon}</div> Add File
+                </>
+              </Button>
+            </div>
+          </div>
+        )}
       >
         <Paragraph>
           <strong>{title}</strong>
@@ -122,6 +128,9 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           <span css={[descriptionStyles]}>{description}</span>
         </Paragraph>
       </Label>
+      {customValidationMessage && (
+        <div css={validationMessageStyles}>{customValidationMessage}</div>
+      )}
       <div css={hintStyles}>{hint}</div>
     </div>
   );

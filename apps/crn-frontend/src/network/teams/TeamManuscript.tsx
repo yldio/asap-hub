@@ -7,7 +7,11 @@ import {
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
-import { refreshTeamState, usePostManuscript } from './state';
+import {
+  refreshTeamState,
+  usePostManuscript,
+  useUploadManuscriptFile,
+} from './state';
 import { useManuscriptToast } from './useManuscriptToast';
 
 type TeamManuscriptProps = {
@@ -19,6 +23,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const { setShowSuccessBanner } = useManuscriptToast();
   const form = useForm();
   const createManuscript = usePostManuscript();
+  const handleFileUpload = useUploadManuscriptFile();
 
   const pushFromHere = usePushFromHere();
 
@@ -27,12 +32,6 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
     setShowSuccessBanner(true);
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);
-  };
-
-  const handleFileUpload = async (file: File): Promise<string> => {
-    // some upload here
-
-    return 'url';
   };
 
   return (

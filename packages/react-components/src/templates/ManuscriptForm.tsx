@@ -1,5 +1,6 @@
 import {
   ApcCoverageOption,
+  ManuscriptFileResponse,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptPostRequest,
@@ -152,7 +153,7 @@ type ManuscriptFormProps = Omit<
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onSuccess: () => void;
-    handleFileUpload: (file: File) => Promise<string>;
+    handleFileUpload: (file: File) => Promise<ManuscriptFileResponse>;
     teamId: string;
   };
 
@@ -223,7 +224,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     getValues,
     watch,
     setValue,
-    setError,
     reset,
   } = methods;
 
@@ -256,6 +256,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             {
               ...getValues().versions[0],
               ...fieldDefaultValueMap,
+              manuscriptFile: undefined,
             },
           ],
         },
@@ -567,7 +568,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
             {watchType && (
               <Controller
-                name="versions.0.manuscriptFileId"
+                name="versions.0.manuscriptFile"
                 control={control}
                 rules={{
                   required: 'Please select a manuscript file.',
@@ -577,28 +578,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     title="Upload the main manuscript file"
                     subtitle="(required)"
                     description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
-                    onUpload={(fileId) => {
-                      setValue('versions.0.manuscriptFileId', fileId);
+                    placeholder="Upload Manuscript File"
+                    onRemove={() => {
+                      setValue('versions.0.manuscriptFile', undefined, {
+                        shouldValidate: true,
+                      });
                     }}
-                    handleFileUpload={handleFileUpload}
-                    value={value}
-                    customValidationMessage={error?.message}
-                    customValidation={(file: File) => {
-                      const acceptedFormats = ['pdf'];
-                      const fileExtension = file.name
-                        .split('.')
-                        .pop()
-                        ?.toLowerCase();
+                    handleFileUpload={async (file) => {
+                      const uploadedFile = await handleFileUpload(file);
 
-                      if (!fileExtension || !acceptedFormats.includes(fileExtension)) {
-                        setError('versions.0.manuscriptFileId', {
-                          type: 'custom',
-                          message: `Please upload a PDF file.`,
-                        });
-                        return false;
-                      }
-                      return true
+                      setValue('versions.0.manuscriptFile', uploadedFile, {
+                        shouldValidate: true,
+                      });
                     }}
+                    currentFile={value}
+                    customValidationMessage={error?.message}
                     enabled={!isSubmitting}
                   />
                 )}

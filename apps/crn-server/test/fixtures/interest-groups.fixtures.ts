@@ -180,11 +180,21 @@ export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
 });
 
 export const getContentfulGraphql = () => {
+  const graphqlInterestGroup = getContentfulGraphqlInterestGroup();
+  const graphqlLeader = getContentfulGraphQLLeader();
   return {
     InterestGroupsCollection: () => ({ total: 1, items: [{}] }),
-    InterestGroups: () => getContentfulGraphqlInterestGroup(),
-    Users: () => getContentfulGraphQLLeader(),
+    InterestGroups: () => ({
+      ...graphqlInterestGroup,
+      leadersCollection: () => graphqlInterestGroup.leadersCollection,
+      teamsCollection: () => graphqlInterestGroup.teamsCollection,
+    }),
+    Users: () => ({
+      ...graphqlLeader,
+      teamsCollection: () => graphqlLeader.teamsCollection,
+    }),
     Teams: () => getContentfulGraphqlTeam(),
+    TeamsCollection: () => graphqlLeader.teamsCollection,
   };
 };
 

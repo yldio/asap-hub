@@ -28,9 +28,13 @@ describe('Calendars data provider', () => {
     contentfulRestClientMock,
   );
 
+  const contentfulGraphqlCalendar = getContentfulGraphqlCalendar();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Calendars: () => getContentfulGraphqlCalendar(),
+      Calendars: () => ({
+        ...contentfulGraphqlCalendar,
+        linkedFrom: () => contentfulGraphqlCalendar.linkedFrom,
+      }),
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
       InterestGroups: () => getContentfulGraphqlInterestGroup(),
     });

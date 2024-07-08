@@ -38,11 +38,16 @@ describe('Research Outputs Data Provider', () => {
     contentfulRestClientMock,
   );
 
+  const researchOutputGraphqlResponse =
+    getContentfulResearchOutputGraphqlResponse();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      ResearchOutputs: () => {
-        return getContentfulResearchOutputGraphqlResponse();
-      },
+      ResearchOutputs: () => ({
+        ...researchOutputGraphqlResponse,
+        relatedResearchCollection: () =>
+          researchOutputGraphqlResponse.relatedResearchCollection,
+        linkedFrom: () => researchOutputGraphqlResponse.linkedFrom,
+      }),
       ResearchOutputsCollection: () => {
         return {
           total: 1,

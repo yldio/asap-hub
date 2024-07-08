@@ -31,9 +31,15 @@ describe('fetchUserProductivity', () => {
     jest.useRealTimers();
   });
 
+  const graphqlUser = getContentfulGraphqlUser();
+
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Users: () => getContentfulGraphqlUser(),
+      Users: () => ({
+        ...graphqlUser,
+        linkedFrom: () => graphqlUser.linkedFrom,
+        teamsCollection: () => graphqlUser.teamsCollection,
+      }),
       ResearchOutputs: () => ({
         addedDate: '2023-09-03T03:00:00.000Z',
         sharingStatus: 'Network Only',
@@ -284,11 +290,13 @@ describe('fetchTeamProductivity', () => {
   afterAll(() => {
     jest.useRealTimers();
   });
-
+  const graphqlTeam = getContentfulGraphqlTeam();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
-      Users: () => getContentfulGraphqlUser(),
-      Teams: () => getContentfulGraphqlTeam(),
+      Teams: () => ({
+        ...graphqlTeam,
+        linkedFrom: () => graphqlTeam.linkedFrom,
+      }),
       ResearchOutputs: () => getResearchOutputTeamProductivity()[0],
     });
 

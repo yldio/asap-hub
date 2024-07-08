@@ -3,7 +3,8 @@ schema {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
-type Announcements implements Entry {
+type Announcements implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   deadline(locale: String): DateTime
   description(locale: String): String
@@ -207,7 +208,8 @@ enum AssetOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars)"""
-type Calendars implements Entry {
+type Calendars implements Entry & _Node {
+  _id: ID!
   color(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   googleApiMetadata(locale: String): JSON
@@ -383,7 +385,7 @@ input ContentfulMetadataTagsFilter {
 
 """
 Represents a tag entity for finding and organizing content easily.
-    Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
+      Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
 """
 type ContentfulTag {
   id: String
@@ -391,7 +393,8 @@ type ContentfulTag {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard)"""
-type Dashboard implements Entry {
+type Dashboard implements Entry & _Node {
+  _id: ID!
   announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): DashboardAnnouncementsCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
@@ -521,7 +524,8 @@ scalar DateTime
 scalar Dimension
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover)"""
-type Discover implements Entry {
+type Discover implements Entry & _Node {
+  _id: ID!
   aboutUs(locale: String): DiscoverAboutUs
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): DiscoverLinkingCollections
@@ -800,7 +804,8 @@ enum EntryOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/eventSpeakers)"""
-type EventSpeakers implements Entry {
+type EventSpeakers implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
@@ -908,7 +913,8 @@ input EventSpeakersUserFilter {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events)"""
-type Events implements Entry {
+type Events implements Entry & _Node {
+  _id: ID!
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
@@ -1393,7 +1399,8 @@ type EventsVideoRecordingResourcesInline implements ResourceLink {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors)"""
-type ExternalAuthors implements Entry {
+type ExternalAuthors implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ExternalAuthorsLinkingCollections
   name(locale: String): String
@@ -1539,7 +1546,8 @@ enum ExternalAuthorsOrder {
 }
 
 """Team's external tools [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalTools)"""
-type ExternalTools implements Entry {
+type ExternalTools implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   linkedFrom(allowedLocales: [String]): ExternalToolsLinkingCollections
@@ -1623,7 +1631,8 @@ enum ExternalToolsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections)"""
-type GuideCollections implements Entry {
+type GuideCollections implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   guidesCollection(limit: Int = 100, locale: String, order: [GuideCollectionsGuidesCollectionOrder], preview: Boolean, skip: Int = 0, where: GuidesFilter): GuideCollectionsGuidesCollection
   linkedFrom(allowedLocales: [String]): GuideCollectionsLinkingCollections
@@ -1692,7 +1701,8 @@ enum GuideCollectionsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideContent)"""
-type GuideContent implements Entry {
+type GuideContent implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkText(locale: String): String
   linkUrl(locale: String): String
@@ -1780,7 +1790,8 @@ enum GuideContentOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guides)"""
-type Guides implements Entry {
+type Guides implements Entry & _Node {
+  _id: ID!
   contentCollection(limit: Int = 100, locale: String, order: [GuidesContentCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideContentFilter): GuidesContentCollection
   contentfulMetadata: ContentfulMetadata!
   icon(locale: String, preview: Boolean, where: IconFilter): Icon
@@ -1873,7 +1884,8 @@ enum GuidesOrder {
 scalar HexColor
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/icon)"""
-type Icon implements Entry {
+type Icon implements Entry & _Node {
+  _id: ID!
   asset(locale: String, preview: Boolean): Asset
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): IconLinkingCollections
@@ -2030,7 +2042,8 @@ input ImageTransformOptions {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders)"""
-type InterestGroupLeaders implements Entry {
+type InterestGroupLeaders implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): InterestGroupLeadersLinkingCollections
@@ -2113,7 +2126,8 @@ enum InterestGroupLeadersOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups)"""
-type InterestGroups implements Entry {
+type InterestGroups implements Entry & _Node {
+  _id: ID!
   active(locale: String): Boolean
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
@@ -2290,7 +2304,8 @@ enum InterestGroupsTeamsCollectionOrder {
 scalar JSON
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/labs)"""
-type Labs implements Entry {
+type Labs implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): LabsLinkingCollections
   name(locale: String): String
@@ -2456,7 +2471,8 @@ enum LabsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions)"""
-type ManuscriptVersions implements Entry {
+type ManuscriptVersions implements Entry & _Node {
+  _id: ID!
   acknowledgedGrantNumber(locale: String): String
   acknowledgedGrantNumberDetails(locale: String): String
   asapAffiliationIncluded(locale: String): String
@@ -2709,7 +2725,8 @@ enum ManuscriptVersionsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
-type Manuscripts implements Entry {
+type Manuscripts implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   sys: Sys!
@@ -2843,7 +2860,8 @@ enum ManuscriptsVersionsCollectionOrder {
 }
 
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media)"""
-type Media implements Entry {
+type Media implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MediaLinkingCollections
   sys: Sys!
@@ -2889,7 +2907,8 @@ enum MediaOrder {
 }
 
 """Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
-type Migration implements Entry {
+type Migration implements Entry & _Node {
+  _id: ID!
   contentTypeId(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MigrationLinkingCollections
@@ -2937,7 +2956,8 @@ enum MigrationOrder {
 }
 
 """ASAP Hub News [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
-type News implements Entry {
+type News implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   frequency(locale: String): String
   link(locale: String): String
@@ -3114,7 +3134,8 @@ type NewsTextResourcesInline implements ResourceLink {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages)"""
-type Pages implements Entry {
+type Pages implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   link(locale: String): String
   linkText(locale: String): String
@@ -3326,7 +3347,8 @@ type Query {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions)"""
-type ResearchOutputVersions implements Entry {
+type ResearchOutputVersions implements Entry & _Node {
+  _id: ID!
   addedDate(locale: String): DateTime
   contentfulMetadata: ContentfulMetadata!
   documentType(locale: String): String
@@ -3460,7 +3482,8 @@ enum ResearchOutputVersionsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs)"""
-type ResearchOutputs implements Entry {
+type ResearchOutputs implements Entry & _Node {
+  _id: ID!
   accession(locale: String): String
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
@@ -4145,7 +4168,8 @@ enum ResearchOutputsVersionsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags)"""
-type ResearchTags implements Entry {
+type ResearchTags implements Entry & _Node {
+  _id: ID!
   category(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ResearchTagsLinkingCollections
@@ -4545,7 +4569,8 @@ input SysFilter {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership)"""
-type TeamMembership implements Entry {
+type TeamMembership implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): TeamMembershipLinkingCollections
@@ -4680,7 +4705,8 @@ enum TeamMembershipOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams)"""
-type Teams implements Entry {
+type Teams implements Entry & _Node {
+  _id: ID!
   applicationNumber(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   displayName(locale: String): String
@@ -4973,7 +4999,8 @@ enum TeamsToolsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials)"""
-type Tutorials implements Entry {
+type Tutorials implements Entry & _Node {
+  _id: ID!
   addedDate(locale: String): DateTime
   asapFunded(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: TutorialsAuthorsFilter): TutorialsAuthorsCollection
@@ -5371,7 +5398,8 @@ type TutorialsTextResourcesInline implements ResourceLink {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
-type Users implements Entry {
+type Users implements Entry & _Node {
+  _id: ID!
   activeCampaignCreatedAt(locale: String): DateTime
   activeCampaignId(locale: String): String
   adminNotes(locale: String): String
@@ -6063,7 +6091,8 @@ enum UsersTeamsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables)"""
-type WorkingGroupDeliverables implements Entry {
+type WorkingGroupDeliverables implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupDeliverablesLinkingCollections
@@ -6137,7 +6166,8 @@ enum WorkingGroupDeliverablesOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders)"""
-type WorkingGroupLeaders implements Entry {
+type WorkingGroupLeaders implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): WorkingGroupLeadersLinkingCollections
@@ -6228,7 +6258,8 @@ enum WorkingGroupLeadersOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers)"""
-type WorkingGroupMembers implements Entry {
+type WorkingGroupMembers implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): WorkingGroupMembersLinkingCollections
@@ -6299,7 +6330,8 @@ enum WorkingGroupMembersOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups)"""
-type WorkingGroups implements Entry {
+type WorkingGroups implements Entry & _Node {
+  _id: ID!
   calendars(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   complete(locale: String): Boolean
   contentfulMetadata: ContentfulMetadata!

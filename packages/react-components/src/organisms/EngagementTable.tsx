@@ -84,52 +84,50 @@ type EngagementTableProps = {
   data: EngagementData[];
 };
 
-const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => {
-  return (
-    <>
-      <Card padding={false}>
-        <div css={container}>
-          <div css={[rowStyles, gridTitleStyles]}>
-            <span css={titleStyles}>Team</span>
-            <span css={titleStyles}>Members</span>
-            <span css={titleStyles}>Presentations</span>
-            <span css={titleStyles}>Total Speakers</span>
-            <span css={titleStyles}>Unique Speakers: All Roles</span>
-            <span css={titleStyles}>Unique Speakers: Key Personnel</span>
-          </div>
-          {data.map((row) => (
-            <div key={row.id} css={[rowStyles]}>
-              <span css={[titleStyles, rowTitleStyles]}>Team</span>
-              <p css={iconStyles}>
-                <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
-                  {row.name}
-                </Link>
-
-                {row.isInactive && <InactiveBadgeIcon />}
-              </p>
-              <span css={[titleStyles, rowTitleStyles]}>Members</span>
-              <p css={rowValueStyles}>{row.memberCount} </p>
-              <span css={[titleStyles, rowTitleStyles]}>Presentations</span>
-              <p css={rowValueStyles}>{row.presentationCount} </p>
-
-              <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
-              <p css={rowValueStyles}>{row.totalSpeakerCount} </p>
-
-              <span css={[titleStyles, rowTitleStyles]}>
-                Unique Speakers: All Roles
-              </span>
-              <p css={rowValueStyles}>{row.uniqueAllRolesCount} </p>
-
-              <span css={[titleStyles, rowTitleStyles]}>
-                Unique Speakers: Key Personnel
-              </span>
-              <p css={rowValueStyles}>{row.uniqueKeyPersonnelCount} </p>
-            </div>
-          ))}
+const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
+  <>
+    <Card padding={false}>
+      <div css={container}>
+        <div css={[rowStyles, gridTitleStyles]}>
+          <span css={titleStyles}>Team</span>
+          <span css={titleStyles}>Members</span>
+          <span css={titleStyles}>Presentations</span>
+          <span css={titleStyles}>Total Speakers</span>
+          <span css={titleStyles}>Unique Speakers: All Roles</span>
+          <span css={titleStyles}>Unique Speakers: Key Personnel</span>
         </div>
-      </Card>
-    </>
-  );
-};
+        {data.map((row) => (
+          <div key={row.id} css={[rowStyles]}>
+            <span css={[titleStyles, rowTitleStyles]}>Team</span>
+            <p css={iconStyles}>
+              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+                {row.name}
+              </Link>
+
+              {row.isInactive && <InactiveBadgeIcon />}
+            </p>
+            <span css={[titleStyles, rowTitleStyles]}>Members</span>
+            <p css={rowValueStyles}>{row.memberCount} </p>
+            <span css={[titleStyles, rowTitleStyles]}>Presentations</span>
+            <p css={rowValueStyles}>{row.presentationCount} </p>
+
+            <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
+            <p css={rowValueStyles}>{row.totalSpeakerCount} </p>
+
+            <span css={[titleStyles, rowTitleStyles]}>
+              Unique Speakers: All Roles
+            </span>
+            <p css={rowValueStyles}>{row.uniqueAllRolesCount} </p>
+
+            <span css={[titleStyles, rowTitleStyles]}>
+              Unique Speakers: Key Personnel
+            </span>
+            <p css={rowValueStyles}>{row.uniqueKeyPersonnelCount} </p>
+          </div>
+        ))}
+      </div>
+    </Card>
+  </>
+);
 
 export default EngagementTable;

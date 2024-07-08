@@ -1,0 +1,450 @@
+import { getEngagementItems } from '../../../src/utils/analytics/engagement';
+import {
+  getEngagementQuery,
+  makeEvent,
+  makeUser,
+} from '../../fixtures/analytics.fixtures';
+
+describe('getEngagementItems', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+
+    jest.setSystemTime(new Date('2024-07-14T03:00:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  describe('Events', () => {
+    it('does not count the same event twice', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.events).toEqual(1);
+    });
+
+    it('returns the correct number of events', () => {
+      const user1 = makeUser({
+        userId: 'user-1',
+        teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+      });
+      const user2 = makeUser({
+        userId: 'user-2',
+        teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+      });
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-05-23T18:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-3',
+                endDate: '2024-05-15T10:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.events).toEqual(3);
+    });
+  });
+
+  describe('Total Speakers', () => {
+    it('does not count external users', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: {
+              __typename: 'ExternalAuthors',
+            },
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.totalSpeakers).toEqual(0);
+    });
+
+    it('does not count user who does not belong to the team being analyzed', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.sys.id = 'team-analyzed-id';
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [
+                { id: 'not-the-team-analyzed-id-1', role: 'Project Manager' },
+                { id: 'not-the-team-analyzed-id-2', role: 'Key Personnel' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.totalSpeakers).toEqual(0);
+    });
+
+    it('returns the correct number of total speakers', () => {
+      const user1 = makeUser({
+        userId: 'user-1',
+        teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+      });
+      const user2 = makeUser({
+        userId: 'user-2',
+        teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+      });
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-05-23T18:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-3',
+                endDate: '2024-05-15T10:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.totalSpeakers).toEqual(4);
+    });
+  });
+
+  describe('Unique Speakers', () => {
+    it('does not count external users', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: {
+              __typename: 'ExternalAuthors',
+            },
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(0);
+      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+    });
+
+    it('does not count user who does not belong to the team being analyzed', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.sys.id = 'team-analyzed-id';
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [
+                { id: 'not-the-team-analyzed-id-1', role: 'Project Manager' },
+                { id: 'not-the-team-analyzed-id-2', role: 'Key Personnel' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(0);
+      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+    });
+
+    it('returns uniqueSpeakersKeyPersonnel as zero when none of the speakers is a Key Personnel in the team', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [
+                { id: 'team-id-0', role: 'Project Manager' },
+                { id: 'team-id-2', role: 'Key Personnel' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [
+                { id: 'team-id-0', role: 'ASAP Staff' },
+                { id: 'team-id-2', role: 'Key Personnel' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-3',
+              teams: [
+                { id: 'team-id-0', role: 'Collaborating PI' },
+                { id: 'team-id-2', role: 'Key Personnel' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(3);
+      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+    });
+
+    it('returns the correct number of unique speakers', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(2);
+      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(1);
+    });
+  });
+
+  describe('Time range', () => {
+    it('counts only events within last 30d', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [
+                { id: 'team-id-0', role: 'Key Personnel' },
+                { id: 'team-id-1', role: 'Collaborating PI' },
+              ],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-06-15T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      expect(getEngagementItems(engagementQuery, '30d')).toEqual([
+        {
+          id: 'team-id-0',
+          inactiveSince: null,
+          members: 4,
+          name: 'Team A',
+          events: 1,
+          totalSpeakers: 1,
+          uniqueSpeakersAllRoles: 1,
+          uniqueSpeakersKeyPersonnel: 0,
+        },
+      ]);
+    });
+
+    it('counts only events within current year', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [{ id: 'team-id-0', role: 'ASAP Staff' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2023-06-15T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      expect(getEngagementItems(engagementQuery, 'current-year')).toEqual([
+        {
+          id: 'team-id-0',
+          inactiveSince: null,
+          members: 4,
+          name: 'Team A',
+          events: 1,
+          totalSpeakers: 1,
+          uniqueSpeakersAllRoles: 1,
+          uniqueSpeakersKeyPersonnel: 1,
+        },
+      ]);
+    });
+  });
+});

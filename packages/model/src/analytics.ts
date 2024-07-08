@@ -331,3 +331,17 @@ export type ListTeamCollaborationResponse =
   ListResponse<TeamCollaborationResponse>;
 export type ListTeamCollaborationAlgoliaResponse =
   ListResponse<TeamCollaborationAlgoliaResponse>;
+
+export type EngagementDataObject = {
+  id: string;
+  name: string;
+  inactiveSince: string | null;
+  members: number;
+  events: number;
+  totalSpeakers: number;
+  uniqueSpeakersAllRoles: number;
+  uniqueSpeakersKeyPersonnel: number;
+};
+export type ListEngagementDataObject = ListResponse<EngagementDataObject>;
+export type EngagementResponse = EngagementDataObject;
+export type ListEngagementResponse = ListResponse<EngagementResponse>;

@@ -1,5 +1,6 @@
 import {
   ListAnalyticsTeamLeadershipResponse,
+  ListEngagementResponse,
   ListTeamCollaborationResponse,
   ListTeamProductivityResponse,
   ListUserCollaborationResponse,
@@ -68,6 +69,17 @@ export const analyticsRouteFactory = (
       const parameters = req.query;
       const query = validateFetchAnalyticsOptions(parameters);
       const result = await analyticsController.fetchTeamCollaboration(query);
+
+      res.json(result);
+    },
+  );
+
+  analyticsRoutes.get(
+    '/engagement',
+    async (req, res: Response<ListEngagementResponse>) => {
+      const parameters = req.query;
+      const query = validateFetchAnalyticsOptions(parameters);
+      const result = await analyticsController.fetchEngagement(query);
 
       res.json(result);
     },

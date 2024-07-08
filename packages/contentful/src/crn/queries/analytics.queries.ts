@@ -269,3 +269,55 @@ export const FETCH_TEAM_COLLABORATION = gql`
     }
   }
 `;
+
+export const FETCH_ENGAGEMENT = gql`
+  query FetchEngagement($limit: Int, $skip: Int) {
+    teamsCollection(order: displayName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        displayName
+        inactiveSince
+        linkedFrom {
+          teamMembershipCollection(limit: 1) {
+            total
+          }
+          eventSpeakersCollection(limit: 100) {
+            items {
+              linkedFrom {
+                eventsCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    endDate
+                  }
+                }
+              }
+              user {
+                __typename
+                ... on Users {
+                  sys {
+                    id
+                  }
+                  teamsCollection(limit: 3) {
+                    items {
+                      team {
+                        sys {
+                          id
+                        }
+                      }
+                      role
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

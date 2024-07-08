@@ -298,7 +298,7 @@ describe('team collaboration', () => {
     });
   });
 
-  test('Should only count research outputs with the sharing status Public when the public output type filter is applied', async () => {
+  test('Should only count research outputs with the "Public" sharing status when the "public" output type filter is applied', async () => {
     const graphqlResponse = getTeamCollaborationQuery();
     graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
       [
@@ -360,7 +360,7 @@ describe('team collaboration', () => {
     });
   });
 
-  test('Should count research outputs with all sharing statuses output type filter of "all" is applied', async () => {
+  test('Should count research outputs with all sharing statuses when the "all" output type filter is applied', async () => {
     const graphqlResponse = getTeamCollaborationQuery();
     graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
       [

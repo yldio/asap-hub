@@ -3,6 +3,7 @@ import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
+  ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
 } from '@asap-hub/model';
@@ -27,6 +28,12 @@ export const getManuscriptDataObject = (
 export const getManuscriptResponse = (
   data: Partial<ManuscriptDataObject> = {},
 ): ManuscriptResponse => getManuscriptDataObject(data);
+
+export const getManuscriptFileResponse = (): ManuscriptFileResponse => ({
+  filename: 'manuscript.pdf',
+  url: 'https://example.com/manuscript.pdf',
+  id: 'file-id',
+});
 
 export const getContentfulGraphqlManuscript = (
   props: Partial<

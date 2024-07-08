@@ -1,6 +1,7 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   ManuscriptCreateDataObject,
+  ManuscriptFileResponse,
   ManuscriptResponse,
 } from '@asap-hub/model';
 
@@ -31,4 +32,16 @@ export default class ManuscriptController {
 
     return this.fetchById(manuscriptId);
   }
+
+  async createFile({
+    filename,
+    content,
+    contentType,
+  }: ManuscruptFileCreateDataObject): Promise<ManuscriptFileResponse> {}
 }
+
+export type ManuscruptFileCreateDataObject = {
+  filename: string;
+  content: Buffer;
+  contentType: string;
+};

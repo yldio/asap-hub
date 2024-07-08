@@ -1,12 +1,15 @@
-import { ManuscriptResponse } from '@asap-hub/model';
+import { ManuscriptFileResponse, ManuscriptResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
+import multer from 'multer';
 
 import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateManuscriptParameters,
   validateManuscriptPostRequestParameters,
 } from '../validation/manuscript.validation';
+
+const upload = multer();
 
 export const manuscriptRouteFactory = (
   manuscriptController: ManuscriptController,
@@ -28,6 +31,26 @@ export const manuscriptRouteFactory = (
     },
   );
 
+  manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
+    '/manuscripts/manuscript-file',
+    upload.single('file') as any,
+    async (req, res) => {
+      const { file } = req;
+
+      if (!file || file.mimetype !== 'application/pdf') {
+        throw Boom.badRequest('No file provided');
+      }
+
+      const manuscript = await manuscriptController.createFile({
+        content: file.buffer,
+        contentType: file.mimetype,
+        filename: file.originalname,
+      });
+
+      res.status(201).json(manuscript);
+    },
+  );
+
   manuscriptRoutes.post('/manuscripts', async (req, res) => {
     const { body, loggedInUser } = req;
     const createRequest = validateManuscriptPostRequestParameters(body);
@@ -44,24 +67,6 @@ export const manuscriptRouteFactory = (
     });
 
     res.status(201).json(manuscript);
-  });
-
-  manuscriptRoutes.post('/manuscripts/manuscript-file', async (req, res) => {
-    const { body } = req;
-    console.log(body);
-
-    // const userBelongsToTeam = loggedInUser?.teams.some(
-    //   (team) => team.id === createRequest.teamId,
-    // );
-
-    // if (!loggedInUser || !userBelongsToTeam) throw Boom.forbidden();
-
-    // const manuscript = await manuscriptController.create({
-    //   ...createRequest,
-    //   userId: loggedInUser.id,
-    // });
-
-    res.status(201).json({});
   });
 
   return manuscriptRoutes;

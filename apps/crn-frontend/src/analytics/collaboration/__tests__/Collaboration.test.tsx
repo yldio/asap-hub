@@ -9,10 +9,12 @@ import {
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
+import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
@@ -66,8 +68,8 @@ const userData: ListUserCollaborationAlgoliaResponse = {
           team: 'Team A',
           role: 'Key Personnel',
           isTeamInactive: false,
-          outputsCoAuthoredWithinTeam: 1,
-          outputsCoAuthoredAcrossTeams: 2,
+          outputsCoAuthoredWithinTeam: 300,
+          outputsCoAuthoredAcrossTeams: 400,
         },
       ],
       objectID: '1',
@@ -99,7 +101,7 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
       isInactive: false,
       name: 'Team 1',
       outputsCoProducedWithin: {
-        Article: 1,
+        Article: 100,
         Bioinformatics: 0,
         Dataset: 0,
         'Lab Resource': 0,
@@ -158,50 +160,165 @@ const renderPage = async (metric: string = 'user') => {
   return result;
 };
 
-it('renders with user data', async () => {
-  mockGetUserCollaboration.mockResolvedValue(userData);
-  await renderPage();
+describe('user collaboration', () => {
+  it('renders with user data', async () => {
+    mockGetUserCollaboration.mockResolvedValue(userData);
+    await renderPage();
 
-  expect(screen.getByText('User Co-Production')).toBeVisible();
-  expect(screen.queryByText('Team Co-Production')).not.toBeInTheDocument();
+    expect(screen.getByText('User Co-Production')).toBeVisible();
+    expect(screen.queryByText('Team Co-Production')).not.toBeInTheDocument();
 
-  expect(screen.getByText('Co-Production Within Team by User')).toBeVisible();
-  expect(
-    screen.queryByText('Co-Production Across Teams by User'),
-  ).not.toBeInTheDocument();
+    expect(screen.getByText('Co-Production Within Team by User')).toBeVisible();
+    expect(
+      screen.queryByText('Co-Production Across Teams by User'),
+    ).not.toBeInTheDocument();
 
-  const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('textbox', { hidden: false });
 
-  userEvent.click(input[1]!);
-  userEvent.click(screen.getByText('Across Teams'));
+    userEvent.click(input[1]!);
+    userEvent.click(screen.getByText('Across Teams'));
 
-  expect(screen.getByText('Co-Production Across Teams by User')).toBeVisible();
-  expect(
-    screen.queryByText('Co-Production Within Team by User'),
-  ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('Co-Production Across Teams by User'),
+    ).toBeVisible();
+    expect(
+      screen.queryByText('Co-Production Within Team by User'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders data for different document categories', async () => {
+    const defaultUserOptions: AnalyticsSearchOptionsWithFiltering = {
+      sort: '',
+      pageSize: 10,
+      currentPage: 0,
+      timeRange: '30d',
+      documentCategory: 'all',
+      tags: [],
+    };
+
+    when(mockGetUserCollaboration)
+      .calledWith(expect.anything(), defaultUserOptions)
+      .mockResolvedValue(userData);
+    when(mockGetUserCollaboration)
+      .calledWith(expect.anything(), {
+        ...defaultUserOptions,
+        documentCategory: 'article',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...userData.items[0]!,
+            objectID: '1-user-collaboration-30d-article',
+            teams: [
+              {
+                ...userData.items[0]!.teams[0]!,
+                outputsCoAuthoredWithinTeam: 100,
+              },
+            ],
+          },
+        ],
+        total: 1,
+      });
+    await renderPage();
+
+    expect(screen.getByText('300')).toBeVisible();
+    expect(screen.queryByText('100')).not.toBeInTheDocument();
+
+    const categoryButton = screen.getByRole('button', {
+      name: /all chevron down/i,
+    });
+    userEvent.click(categoryButton);
+    userEvent.click(screen.getByText(/Article/));
+    await waitFor(() =>
+      expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
+    );
+
+    expect(screen.getByText('100')).toBeVisible();
+    expect(screen.queryByText('300')).not.toBeInTheDocument();
+  });
 });
 
-it('renders with team data', async () => {
-  mockGetTeamCollaboration.mockResolvedValue(teamData);
-  await renderPage('team');
+describe('team collaboration', () => {
+  it('renders with team data', async () => {
+    mockGetTeamCollaboration.mockResolvedValue(teamData);
+    await renderPage('team');
 
-  expect(screen.getByText('Team Co-Production')).toBeVisible();
-  expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+    expect(screen.getByText('Team Co-Production')).toBeVisible();
+    expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
 
-  expect(screen.getByText('Co-Production Within Teams by Team')).toBeVisible();
-  expect(
-    screen.queryByText('Co-Production Across Teams by Team'),
-  ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('Co-Production Within Teams by Team'),
+    ).toBeVisible();
+    expect(
+      screen.queryByText('Co-Production Across Teams by Team'),
+    ).not.toBeInTheDocument();
 
-  const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('textbox', { hidden: false });
 
-  userEvent.click(input[1]!);
-  userEvent.click(screen.getByText('Across Teams'));
+    userEvent.click(input[1]!);
+    userEvent.click(screen.getByText('Across Teams'));
 
-  expect(screen.getByText('Co-Production Across Teams by Team')).toBeVisible();
-  expect(
-    screen.queryByText('Co-Production Within Teams by Team'),
-  ).not.toBeInTheDocument();
+    expect(
+      screen.getByText('Co-Production Across Teams by Team'),
+    ).toBeVisible();
+    expect(
+      screen.queryByText('Co-Production Within Teams by Team'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders data for different output types', async () => {
+    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering = {
+      pageSize: 10,
+      currentPage: 0,
+      timeRange: '30d',
+      outputType: 'all',
+      sort: '',
+      tags: [],
+    };
+    when(mockGetTeamCollaboration)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'all',
+      })
+      .mockResolvedValue(teamData);
+    when(mockGetTeamCollaboration)
+      .calledWith(expect.anything(), {
+        ...defaultTeamOptions,
+        outputType: 'public',
+      })
+      .mockResolvedValue({
+        items: [
+          {
+            ...teamData.items[0]!,
+            objectID: '1-team-collaboration-30d-public',
+            outputsCoProducedWithin: {
+              Article: 50,
+              Bioinformatics: 0,
+              Dataset: 0,
+              'Lab Resource': 0,
+              Protocol: 1,
+            },
+          },
+        ],
+        total: 1,
+      });
+    await renderPage('team');
+
+    expect(screen.getByText('100')).toBeVisible();
+    expect(screen.queryByText('50')).not.toBeInTheDocument();
+
+    const outputTypeButton = screen.getByRole('button', {
+      name: /ASAP Output chevron down/i,
+    });
+    userEvent.click(outputTypeButton);
+    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await waitFor(() =>
+      expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
+    );
+
+    expect(screen.getByText('50')).toBeVisible();
+    expect(screen.queryByText('100')).not.toBeInTheDocument();
+  });
 });
 
 it('navigates between user and team collaboration pages', async () => {

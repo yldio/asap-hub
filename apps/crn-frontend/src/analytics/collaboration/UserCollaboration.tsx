@@ -60,17 +60,21 @@ export type CollaborationProps = {
 const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory } = useAnalytics();
 
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,
     pageSize,
     timeRange,
+    documentCategory,
     tags: [],
     sort: '',
   });
 
-  const performance = useUserCollaborationPerformance({ timeRange });
+  const performance = useUserCollaborationPerformance({
+    timeRange,
+    documentCategory,
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

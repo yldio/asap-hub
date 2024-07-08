@@ -70,10 +70,10 @@ const iconStyles = css({
   gap: rem(3),
 });
 
-type EngagementData = {
+export type EngagementData = {
   id: string;
   name: string;
-  isInactive: string;
+  isInactive: boolean;
   memberCount: number;
   presentationCount: number;
   totalSpeakerCount: number;

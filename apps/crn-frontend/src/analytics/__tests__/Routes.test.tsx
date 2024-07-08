@@ -285,3 +285,14 @@ describe('Collaboration', () => {
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });
+
+describe('Engagement', () => {
+  it('renders the Engagement tab', async () => {
+    await renderPage(analytics({}).engagement({}).$);
+    expect(
+      await screen.findByText(/Analytics/i, {
+        selector: 'h1',
+      }),
+    ).toBeVisible();
+  });
+});

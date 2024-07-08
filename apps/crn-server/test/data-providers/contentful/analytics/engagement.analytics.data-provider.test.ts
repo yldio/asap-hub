@@ -142,7 +142,7 @@ describe('fetchEngagement', () => {
     });
   });
 
-  test('Should return the number of research outputs published in the last month', async () => {
+  test('Should return the number of events published in the last month', async () => {
     contentfulGraphqlClientMock.request
       .mockResolvedValueOnce(getEngagementQuery())
       .mockResolvedValueOnce({});

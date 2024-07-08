@@ -34,30 +34,28 @@ const Routes = () => {
 
   return (
     <Switch>
-      {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
-        <Route path={path + analytics({}).productivity.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).productivity.template +
-                analytics({}).productivity({}).metric.template
-              }
-            >
-              <AnalyticsPage>
-                <Frame title="Resource & Data Sharing">
-                  <ProductivityBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
-            />
-          </Switch>
-        </Route>
-      )}
-      {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+      <Route path={path + analytics({}).productivity.template}>
+        <Switch>
+          <Route
+            exact
+            path={
+              path +
+              analytics({}).productivity.template +
+              analytics({}).productivity({}).metric.template
+            }
+          >
+            <AnalyticsPage>
+              <Frame title="Resource & Data Sharing">
+                <ProductivityBody />
+              </Frame>
+            </AnalyticsPage>
+          </Route>
+          <Redirect
+            to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
+          />
+        </Switch>
+      </Route>
+      {isEnabled('DISPLAY_ANALYTICS_BETA') && (
         <Route path={path + analytics({}).collaboration.template}>
           <Switch>
             <Route
@@ -84,7 +82,7 @@ const Routes = () => {
           </Switch>
         </Route>
       )}
-      {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+      {isEnabled('DISPLAY_ANALYTICS_BETA') && (
         <Route path={path + analytics({}).engagement.template}>
           <AnalyticsPage>
             <Frame title="Engagement">
@@ -93,7 +91,6 @@ const Routes = () => {
           </AnalyticsPage>
         </Route>
       )}
-
       <Route path={path + analytics({}).leadership.template}>
         <Switch>
           <Route
@@ -117,13 +114,7 @@ const Routes = () => {
           />
         </Switch>
       </Route>
-      {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') ? (
-        <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />
-      ) : (
-        <Redirect
-          to={analytics({}).leadership({ metric: 'working-group' }).$}
-        />
-      )}
+      <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />)
     </Switch>
   );
 };

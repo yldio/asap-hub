@@ -3,7 +3,6 @@ import {
   performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
-import { disable, enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import {
   render,
@@ -104,8 +103,6 @@ describe('Analytics page', () => {
   });
 
   it('redirects to user productivity page when flag is true', async () => {
-    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
-
     mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
@@ -113,18 +110,6 @@ describe('Analytics page', () => {
 
     expect(
       await screen.findByText(/User Productivity/i, {
-        selector: 'h3',
-      }),
-    ).toBeVisible();
-  });
-
-  it('redirects to working group page when productivity flag is false', async () => {
-    disable('DISPLAY_ANALYTICS_PRODUCTIVITY');
-    mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });
-    await renderPage(analytics({}).$);
-
-    expect(
-      await screen.findByText(/Working Group Leadership & Membership/i, {
         selector: 'h3',
       }),
     ).toBeVisible();
@@ -145,7 +130,6 @@ describe('Productivity', () => {
   });
 
   it('renders error message when the team response is not a 2XX', async () => {
-    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
     mockGetTeamProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
@@ -159,7 +143,6 @@ describe('Productivity', () => {
   });
 
   it('renders error message when the team performance response is not a 2XX', async () => {
-    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
     mockGetTeamProductivityPerformance.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );
@@ -175,7 +158,6 @@ describe('Productivity', () => {
   });
 
   it('renders error message when user response is not a 2XX', async () => {
-    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
     mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
@@ -190,7 +172,6 @@ describe('Productivity', () => {
   });
 
   it('renders error message when the user performance response is not a 2XX', async () => {
-    enable('DISPLAY_ANALYTICS_PRODUCTIVITY');
     mockGetUserProductivityPerformance.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );

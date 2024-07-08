@@ -33,20 +33,18 @@ const AnalyticsPageHeader: React.FC = () => (
         </Paragraph>
       </div>
       <TabNav>
-        {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
-          <TabLink
-            href={analytics({}).productivity({}).$}
-            Icon={ProductivityIcon}
-          >
-            Resource & Data Sharing
-          </TabLink>
-        )}
-        {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+        <TabLink
+          href={analytics({}).productivity({}).$}
+          Icon={ProductivityIcon}
+        >
+          Resource & Data Sharing
+        </TabLink>
+        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
           <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
             Collaboration
           </TabLink>
         )}
-        {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
           <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
             Engagement
           </TabLink>

@@ -1,7 +1,6 @@
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
-import { InactiveBadgeIcon, PageControls } from '..';
+import { InactiveBadgeIcon } from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
@@ -71,12 +70,6 @@ const iconStyles = css({
   gap: rem(3),
 });
 
-const pageControlsStyles = css({
-  justifySelf: 'center',
-  paddingTop: rem(36),
-  paddingBottom: rem(36),
-});
-
 type EngagementData = {
   id: string;
   name: string;
@@ -87,14 +80,11 @@ type EngagementData = {
   uniqueAllRolesCount: number;
   uniqueKeyPersonnelCount: number;
 };
-type EngagementTableProps = ComponentProps<typeof PageControls> & {
+type EngagementTableProps = {
   data: EngagementData[];
 };
 
-const EngagementTable: React.FC<EngagementTableProps> = ({
-  data,
-  ...pageControlProps
-}) => {
+const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => {
   return (
     <>
       <Card padding={false}>
@@ -138,9 +128,6 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
           ))}
         </div>
       </Card>
-      <section css={pageControlsStyles}>
-        <PageControls {...pageControlProps} />
-      </section>
     </>
   );
 };

@@ -205,6 +205,7 @@ export {
   AnalyticsCollaborationPageBody,
   AnalyticsProductivityPageBody,
   AnalyticsLeadershipPageBody,
+  AnalyticsEngagementPageBody,
   AnalyticsPageHeader,
   BasicLayout,
   BiographyModal,

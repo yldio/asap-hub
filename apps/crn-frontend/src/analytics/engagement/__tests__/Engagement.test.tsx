@@ -1,14 +1,15 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ListEngagementResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import Engagement from '../Engagement';
 import { getEngagement } from '../api';
-import { ListEngagementResponse } from '@asap-hub/model';
+import Engagement from '../Engagement';
+import { analyticsEngagementState } from '../state';
 
 jest.mock('../api');
 mockConsoleError();
@@ -28,7 +29,7 @@ const data: ListEngagementResponse = {
       name: 'Test Team',
       inactiveSince: null,
       memberCount: 1,
-      eventCount: 2,
+      eventCount: 4,
       totalSpeakerCount: 3,
       uniqueAllRolesCount: 3,
       uniqueKeyPersonnelCount: 2,
@@ -38,7 +39,16 @@ const data: ListEngagementResponse = {
 
 const renderPage = async (path: string) => {
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          analyticsEngagementState({
+            currentPage: 0,
+            pageSize: 10,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -47,7 +57,6 @@ const renderPage = async (path: string) => {
                 <Engagement />
               </Route>
             </MemoryRouter>
-            ,
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -69,5 +78,9 @@ describe('Engagement', () => {
 
     expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
     expect(screen.getByText('Test Team')).toBeInTheDocument();
+    expect(screen.getAllByText('1')).toHaveLength(2); // one of the 1s is pagination
+    expect(screen.getAllByText('2')).toHaveLength(1);
+    expect(screen.getAllByText('3')).toHaveLength(2);
+    expect(screen.getAllByText('4')).toHaveLength(1);
   });
 });

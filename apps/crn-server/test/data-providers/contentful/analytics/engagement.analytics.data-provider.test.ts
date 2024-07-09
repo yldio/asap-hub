@@ -134,9 +134,9 @@ describe('fetchEngagement', () => {
           inactiveSince: null,
           members: 4,
           events: 0,
-          totalSpeakers: 0,
-          uniqueSpeakersAllRoles: 0,
-          uniqueSpeakersKeyPersonnel: 0,
+          totalSpeakerCount: 0,
+          uniqueAllRolesCount: 0,
+          uniqueKeyPersonnelCount: 0,
         },
       ],
     });

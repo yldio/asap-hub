@@ -336,11 +336,11 @@ export type EngagementDataObject = {
   id: string;
   name: string;
   inactiveSince: string | null;
-  members: number;
-  events: number;
-  totalSpeakers: number;
-  uniqueSpeakersAllRoles: number;
-  uniqueSpeakersKeyPersonnel: number;
+  memberCount: number;
+  eventCount: number;
+  totalSpeakerCount: number;
+  uniqueAllRolesCount: number;
+  uniqueKeyPersonnelCount: number;
 };
 export type ListEngagementDataObject = ListResponse<EngagementDataObject>;
 export type EngagementResponse = EngagementDataObject;

@@ -75,7 +75,7 @@ export type EngagementData = {
   name: string;
   isInactive: boolean;
   memberCount: number;
-  presentationCount: number;
+  eventCount: number;
   totalSpeakerCount: number;
   uniqueAllRolesCount: number;
   uniqueKeyPersonnelCount: number;
@@ -91,7 +91,7 @@ const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
         <div css={[rowStyles, gridTitleStyles]}>
           <span css={titleStyles}>Team</span>
           <span css={titleStyles}>Members</span>
-          <span css={titleStyles}>Presentations</span>
+          <span css={titleStyles}>Events</span>
           <span css={titleStyles}>Total Speakers</span>
           <span css={titleStyles}>Unique Speakers: All Roles</span>
           <span css={titleStyles}>Unique Speakers: Key Personnel</span>
@@ -108,8 +108,8 @@ const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Members</span>
             <p css={rowValueStyles}>{row.memberCount} </p>
-            <span css={[titleStyles, rowTitleStyles]}>Presentations</span>
-            <p css={rowValueStyles}>{row.presentationCount} </p>
+            <span css={[titleStyles, rowTitleStyles]}>Events</span>
+            <p css={rowValueStyles}>{row.eventCount} </p>
 
             <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
             <p css={rowValueStyles}>{row.totalSpeakerCount} </p>

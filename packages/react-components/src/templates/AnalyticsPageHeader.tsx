@@ -44,14 +44,14 @@ const AnalyticsPageHeader: React.FC = () => (
             Collaboration
           </TabLink>
         )}
+        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
+          Leadership & Membership
+        </TabLink>
         {isEnabled('DISPLAY_ANALYTICS_BETA') && (
           <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
             Engagement
           </TabLink>
         )}
-        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
-          Leadership & Membership
-        </TabLink>
       </TabNav>
     </div>
   </header>

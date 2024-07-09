@@ -8,7 +8,7 @@ describe('AnalyticsEngagementPageBody', () => {
     currentPageIndex: 0,
     renderPageHref: () => '',
   };
-  it('renders', () => {
+  it('renders the page title', () => {
     const { getByText } = render(<AnalyticsEngagementPageBody {...props} />);
 
     expect(getByText('Representation of Presenters')).toBeInTheDocument();

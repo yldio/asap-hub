@@ -19,6 +19,7 @@ import {
   getTeamCollaboration,
   getUserCollaboration,
 } from '../collaboration/api';
+import { getEngagement } from '../engagement/api';
 import { getAnalyticsLeadership } from '../leadership/api';
 import {
   getTeamProductivity,
@@ -31,6 +32,7 @@ import Analytics from '../Routes';
 jest.mock('../leadership/api');
 jest.mock('../productivity/api');
 jest.mock('../collaboration/api');
+jest.mock('../engagement/api');
 
 mockConsoleError();
 afterEach(() => {
@@ -62,6 +64,10 @@ const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
 >;
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
+>;
+
+const mockGetEngagement = getEngagement as jest.MockedFunction<
+  typeof getEngagement
 >;
 
 mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
@@ -275,5 +281,17 @@ describe('Engagement', () => {
         selector: 'h1',
       }),
     ).toBeVisible();
+  });
+
+  it('renders error message when the engagement response is not a 2XX', async () => {
+    mockGetEngagement.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+    await renderPage(analytics({}).engagement({}).$);
+
+    await waitFor(() => {
+      expect(mockGetEngagement).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

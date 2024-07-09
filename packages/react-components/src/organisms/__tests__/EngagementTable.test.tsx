@@ -19,7 +19,7 @@ describe('EngagementTable', () => {
     name: 'Test Team',
     isInactive: false,
     memberCount: 1,
-    presentationCount: 2,
+    eventCount: 2,
     totalSpeakerCount: 3,
     uniqueAllRolesCount: 3,
     uniqueKeyPersonnelCount: 2,

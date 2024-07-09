@@ -5,7 +5,11 @@ import {
   Environment,
 } from '@asap-hub/contentful';
 import { ListResponse } from '@asap-hub/model';
-import { AssetDataProvider, AssetCreateData } from '../types';
+import {
+  AssetDataProvider,
+  AssetCreateData,
+  AssetCreateDataObject,
+} from '../types';
 
 export class AssetContentfulDataProvider implements AssetDataProvider {
   constructor(private getRestClient: () => Promise<Environment>) {}
@@ -20,21 +24,24 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
 
   async create({
     id,
-    content: avatar,
+    title,
+    description,
+    content,
     contentType,
+    filename,
     publish = true,
-  }: AssetCreateData): Promise<string> {
-    const fileName = `${id}.${mime.extension(contentType)}`;
+  }: AssetCreateData): Promise<AssetCreateDataObject> {
+    const assetFilename = filename ?? `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();
     const asset = await environment.createAssetFromFiles({
       fields: addLocaleToFields({
-        title: 'Avatar',
-        description: 'Avatar',
+        title,
+        description,
         file: {
           contentType,
-          fileName,
-          file: avatar,
+          fileName: assetFilename,
+          file: content,
         },
       }) as AssetFileProp['fields'],
     });
@@ -44,6 +51,10 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
       await processed.publish();
     }
 
-    return asset.sys.id;
+    return {
+      id: asset.sys.id,
+      filename: asset.fields.file['en-US']?.fileName || assetFilename,
+      url: asset.fields.file['en-US']?.url || '',
+    };
   }
 }

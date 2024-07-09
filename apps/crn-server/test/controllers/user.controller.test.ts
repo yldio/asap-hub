@@ -1,6 +1,10 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
 import Users from '../../src/controllers/user.controller';
+import {
+  AssetCreateData,
+  AssetDataProvider,
+} from '../../src/data-providers/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   getUserDataObject,
@@ -11,7 +15,8 @@ import {
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Users controller', () => {
-  const assetDataProviderMock = getDataProviderMock();
+  const assetDataProviderMock: jest.Mocked<AssetDataProvider> =
+    getDataProviderMock();
   const userDataProviderMock = getDataProviderMock();
   const researchTagDataProviderMock = getDataProviderMock();
   const userController = new Users(
@@ -269,7 +274,11 @@ describe('Users controller', () => {
     beforeEach(nock.cleanAll);
 
     test('should return 200 when syncs asset and updates users profile', async () => {
-      assetDataProviderMock.create.mockResolvedValueOnce('42');
+      assetDataProviderMock.create.mockResolvedValueOnce({
+        id: '42',
+        filename: 'test.png',
+        url: '',
+      });
       userDataProviderMock.fetchById.mockResolvedValueOnce(getUserDataObject());
       const result = await userController.updateAvatar(
         'user-id',
@@ -288,9 +297,11 @@ describe('Users controller', () => {
       );
       expect(assetDataProviderMock.create).toHaveBeenCalledWith({
         id: 'user-id',
+        title: 'Avatar',
+        description: 'Avatar',
         content: Buffer.from('avatar'),
         contentType: 'image/jpeg',
-      });
+      } satisfies AssetCreateData);
       expect(userDataProviderMock.fetchById).toHaveBeenCalledWith('user-id');
     });
   });

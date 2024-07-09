@@ -17,6 +17,41 @@ describe('getEngagementItems', () => {
   });
 
   describe('Events', () => {
+    it('filters undefined events', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+            }),
+            linkedFrom: {
+              eventsCollection: {
+                items: [],
+              },
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.eventCount).toEqual(1);
+    });
+
     it('does not count the same event twice', () => {
       const engagementQuery = getEngagementQuery().teamsCollection;
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {

@@ -7,7 +7,7 @@ import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -132,9 +132,10 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
 };
 
 const renderPage = async (metric: string = 'user') => {
-  const path = analytics({})
-    .collaboration({})
-    .collaborationPath({ metric, type: 'within-team' }).$;
+  const path = analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+    metric,
+    type: 'within-team',
+  });
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">

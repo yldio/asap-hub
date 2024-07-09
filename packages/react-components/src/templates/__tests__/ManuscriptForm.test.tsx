@@ -411,7 +411,7 @@ it('displays error message when manuscript title is bigger than 256 characters',
 
   const input = screen.getByRole('textbox', {
     name: /Title of Manuscript/i,
-  });  
+  });
   await userEvent.type(
     input,
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",

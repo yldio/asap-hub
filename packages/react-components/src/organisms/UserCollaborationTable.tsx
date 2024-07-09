@@ -131,12 +131,20 @@ const displayTeams = (items: UserCollaborationMetric['teams']) => {
   }
   if (items.length === 1) {
     return items[0] && !items[0].isTeamInactive ? (
-      <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+      <Link
+        href={networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+          teamId: team.id,
+        })}
+      >
         {team.team}
       </Link>
     ) : (
       <span css={iconStyles}>
-        <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+        <Link
+          href={networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+            teamId: team.id,
+          })}
+        >
           {team.team}
         </Link>
         <InactiveBadgeIcon />

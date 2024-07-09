@@ -14,7 +14,7 @@ import { route, string } from 'react-router-typesafe-routes/dom';
 
 // const productivity = route('/productivity', {}, { metric });
 
-const engagement = route('/engagement', {}, {});
+// const engagement = route('/engagement', {}, {});
 
 // export default route(
 //   '/analytics',
@@ -56,6 +56,7 @@ export const analyticsRoutes = {
           }),
         },
       ),
+      ENGAGEMENT: route('engagement'),
     },
   ),
 };

@@ -5,7 +5,7 @@ import {
   UserProductivityResponse,
   UserProductivitySortingDirection,
 } from '@asap-hub/model';
-import { networkRoutes } from '@asap-hub/routing';
+import { networkRoutes as network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, PerformanceCard } from '..';
@@ -126,12 +126,14 @@ const displayTeams = (items: UserProductivityResponse['teams']) => {
   }
   if (items.length === 1) {
     return team && !team.isTeamInactive ? (
-      <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+      <Link href={network.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: team.id })}>
         {team.team}
       </Link>
     ) : (
       <span css={iconStyles}>
-        <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+        <Link
+          href={network.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: team.id })}
+        >
           {team.team}
         </Link>
         <InactiveBadgeIcon />
@@ -348,10 +350,10 @@ const UserProductivityTable: React.FC<UserProductivityTableProps> = ({
               <span css={[titleStyles, rowTitleStyles]}>User</span>
               <p css={iconStyles}>
                 <Link
-                href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
-                  id: row.id,
-                })}
-              >
+                  href={network.DEFAULT.USERS.DETAILS.buildPath({
+                    id: row.id,
+                  })}
+                >
                   {row.name}
                 </Link>
                 {row.isAlumni && alumniBadgeIcon}

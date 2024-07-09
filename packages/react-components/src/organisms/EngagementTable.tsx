@@ -1,4 +1,4 @@
-import { network } from '@asap-hub/routing';
+import { networkRoutes as network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { InactiveBadgeIcon } from '..';
 import { Card, Link } from '../atoms';
@@ -100,7 +100,11 @@ const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Team</span>
             <p css={iconStyles}>
-              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+              <Link
+                href={network.DEFAULT.TEAMS.DETAILS.buildPath({
+                  teamId: row.id,
+                })}
+              >
                 {row.name}
               </Link>
 

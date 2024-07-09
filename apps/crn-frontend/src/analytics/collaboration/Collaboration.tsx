@@ -1,5 +1,5 @@
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
-import { analyticsRoutes } from '@asap-hub/routing';
+// import { analyticsRoutes } from '@asap-hub/routing';
 // import { useHistory, useParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 

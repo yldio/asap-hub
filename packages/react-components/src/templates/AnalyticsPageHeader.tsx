@@ -54,7 +54,10 @@ const AnalyticsPageHeader: React.FC = () => (
           Leadership & Membership
         </TabLink>
         {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+          <TabLink
+            href={analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({})}
+            Icon={EngagementIcon}
+          >
             Engagement
           </TabLink>
         )}

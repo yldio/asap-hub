@@ -32,7 +32,8 @@ export const usePaginationParams = () => {
 
 export const usePagination = (numberOfItems: number, pageSize: number) => {
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(useLocation().search);
+  // const searchParams = new URLSearchParams(useLocation().search);
+  const [searchParams] = useSearchParams();
 
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const lastAllowedPage = Math.max(0, Math.ceil(numberOfItems / pageSize) - 1);
@@ -40,14 +41,16 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
 
   const renderPageHref = (page: number) => {
     const { pathname } = useLocation();
-    const [newSearchParams] = useSearchParams();
     // const newSearchParams = new URLSearchParams(history.location.search);
 
     if (page === currentPage) return '';
-    if (page === 0) newSearchParams.delete('currentPage');
-    else newSearchParams.set('currentPage', String(page));
+    // if (page === 0) newSearchParams.delete('currentPage');
+    // else newSearchParams.set('currentPage', String(page));
+    if (page === 0) searchParams.delete('currentPage');
+    else searchParams.set('currentPage', String(page));
 
-    const newParams = newSearchParams.toString();
+    // const newParams = newSearchParams.toString();
+    const newParams = searchParams.toString();
     return `${newParams.length ? '?' : pathname}${newParams}`;
   };
 

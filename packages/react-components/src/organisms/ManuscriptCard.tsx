@@ -3,7 +3,7 @@ import {
   quickCheckQuestions,
   TeamManuscript,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes as network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import {
@@ -156,12 +156,14 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                       {...version.createdBy}
                       userHref={
                         version.createdBy.id &&
-                        network({})
-                          .users({})
-                          .user({ userId: version.createdBy.id }).$
+                        network.DEFAULT.USERS.DETAILS.buildPath({
+                          id: version.createdBy.id,
+                        })
                       }
                       teams={version.createdBy.teams.map((team) => ({
-                        href: network({}).teams({}).team({ teamId: team.id }).$,
+                        href: network.DEFAULT.TEAMS.DETAILS.buildPath({
+                          teamId: team.id,
+                        }),
                         name: team.name,
                       }))}
                       date={version.publishedAt}

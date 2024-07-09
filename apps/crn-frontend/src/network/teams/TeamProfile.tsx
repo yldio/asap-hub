@@ -130,9 +130,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
         <ManuscriptToastProvider>
           <Routes>
             <Route
-              path={
-                teamDetailsRoutes.WORKSPACE.$.CREATE_MANUSCRIPT.relativePath
-              }
+              path={teamDetailsRoutes.WORKSPACE.CREATE_MANUSCRIPT.relativePath}
               element={
                 <Frame title="Create Manuscript">
                   <TeamManuscript teamId={teamId} />

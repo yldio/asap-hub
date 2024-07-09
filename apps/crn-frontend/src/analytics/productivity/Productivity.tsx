@@ -6,7 +6,6 @@ import {
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
-import { analyticsRoutes } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
 // import { useHistory, useParams } from 'react-router-dom';

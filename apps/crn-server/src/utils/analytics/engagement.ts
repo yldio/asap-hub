@@ -50,12 +50,12 @@ export const getEngagementItems = (
     const memberCount: number = (
       teamItem.linkedFrom?.teamMembershipCollection?.items || []
     ).reduce(
-      (memberCount, membership: Membership | null) =>
+      (count, membership: Membership | null) =>
         membership &&
         membership.linkedFrom?.usersCollection?.items[0]?.onboarded &&
         membership.role
-          ? memberCount + 1
-          : memberCount,
+          ? count + 1
+          : count,
       0,
     );
 

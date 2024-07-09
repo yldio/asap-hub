@@ -38,7 +38,7 @@ describe('EngagementTable', () => {
     const data = [
       {
         ...engagementData,
-        isInactive: true,
+        inactiveSince: '2022-10-24T11:00:00Z',
       },
     ];
     const { getByTitle } = render(

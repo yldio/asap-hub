@@ -302,7 +302,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.labController || new LabController(labDataProvider);
   const manuscriptController =
     libs.manuscriptController ||
-    new ManuscriptController(manuscriptDataProvider);
+    new ManuscriptController(manuscriptDataProvider, assetDataProvider);
   const workingGroupsController =
     libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);

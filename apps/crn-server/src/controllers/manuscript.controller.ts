@@ -5,10 +5,16 @@ import {
   ManuscriptResponse,
 } from '@asap-hub/model';
 
-import { ManuscriptDataProvider } from '../data-providers/types';
+import {
+  AssetDataProvider,
+  ManuscriptDataProvider,
+} from '../data-providers/types';
 
 export default class ManuscriptController {
-  constructor(private manuscriptDataProvider: ManuscriptDataProvider) {}
+  constructor(
+    private manuscriptDataProvider: ManuscriptDataProvider,
+    private assetDataProvider: AssetDataProvider,
+  ) {}
 
   async fetchById(manuscriptId: string): Promise<ManuscriptResponse> {
     const manuscript =
@@ -37,7 +43,19 @@ export default class ManuscriptController {
     filename,
     content,
     contentType,
-  }: ManuscruptFileCreateDataObject): Promise<ManuscriptFileResponse> {}
+  }: ManuscruptFileCreateDataObject): Promise<ManuscriptFileResponse> {
+    const manuscriptFileAsset = await this.assetDataProvider.create({
+      id: '',
+      title: 'Manuscript File',
+      description: 'Manuscript File',
+      content,
+      contentType,
+      filename,
+      publish: false,
+    });
+
+    return manuscriptFileAsset;
+  }
 }
 
 export type ManuscruptFileCreateDataObject = {

@@ -153,7 +153,10 @@ type ManuscriptFormProps = Omit<
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onSuccess: () => void;
-    handleFileUpload: (file: File) => Promise<ManuscriptFileResponse>;
+    handleFileUpload: (
+      file: File,
+      handleError: (errorMessage: string) => void,
+    ) => Promise<ManuscriptFileResponse | undefined>;
     teamId: string;
   };
 
@@ -224,6 +227,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     getValues,
     watch,
     setValue,
+    setError,
     reset,
   } = methods;
 
@@ -585,7 +589,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       });
                     }}
                     handleFileUpload={async (file) => {
-                      const uploadedFile = await handleFileUpload(file);
+                      const uploadedFile = await handleFileUpload(
+                        file,
+                        (validationErrorMessage) => {
+                          setError('versions.0.manuscriptFile', {
+                            type: 'custom',
+                            message: validationErrorMessage,
+                          });
+                        },
+                      );
+
+                      if (!uploadedFile) return;
 
                       setValue('versions.0.manuscriptFile', uploadedFile, {
                         shouldValidate: true,

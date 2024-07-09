@@ -183,5 +183,6 @@ export const usePostManuscript = () => {
 export const useUploadManuscriptFile = () => {
   const authorization = useRecoilValue(authorizationState);
 
-  return (file: File) => uploadManuscriptFile(file, authorization);
+  return (file: File, handleError: (errorMessage: string) => void) =>
+    uploadManuscriptFile(file, authorization, handleError);
 };

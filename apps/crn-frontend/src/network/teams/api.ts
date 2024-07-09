@@ -206,10 +206,10 @@ export const getManuscript = async (
 export const uploadManuscriptFile = async (
   file: File,
   authorization: string,
-): Promise<ManuscriptFileResponse> => {
+  handleError: (errorMessage: string) => void,
+): Promise<ManuscriptFileResponse | undefined> => {
   const formData = new FormData();
   formData.append('file', file);
-
 
   const resp = await fetch(`${API_BASE_URL}/manuscripts/manuscript-file`, {
     method: 'POST',
@@ -221,6 +221,10 @@ export const uploadManuscriptFile = async (
   });
 
   if (!resp.ok) {
+    if (resp.status === 400 && handleError) {
+      handleError((await resp.json()).message);
+      return;
+    }
     throw new Error(
       `Failed to upload manuscript file. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );

@@ -38,7 +38,7 @@ export const manuscriptRouteFactory = (
       const { file } = req;
 
       if (!file || file.mimetype !== 'application/pdf') {
-        throw Boom.badRequest('No file provided');
+        throw Boom.badRequest('No file provided or file is not a PDF.');
       }
 
       const manuscript = await manuscriptController.createFile({

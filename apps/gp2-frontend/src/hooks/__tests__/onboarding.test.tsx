@@ -26,7 +26,7 @@ const wrapper =
   (
     { user }: { user?: gp2Model.UserResponse },
     step: string = gp2.onboarding({}).coreDetails({}).$,
-  ): React.FC =>
+  ): React.FC<React.PropsWithChildren<unknown>> =>
   ({ children }) => (
     <RecoilRoot>
       <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>

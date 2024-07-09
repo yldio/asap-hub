@@ -1,4 +1,4 @@
-import { Component, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem, mobileScreen } from '../pixels';
@@ -56,7 +56,7 @@ const toastContentStyles = css({
 
 type Type = 'alert' | 'attachment' | 'live' | 'info';
 
-const iconMap: Record<Type, ReactNode | Component> = {
+const iconMap: Record<Type, ReactNode> = {
   alert: errorIcon,
   attachment: paperClipIcon,
   live: clockIcon,

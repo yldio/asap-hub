@@ -88,7 +88,7 @@ const EventPage = <
   getSourceIcon,
   tableTitles,
   ...props
-}: EventPageProps<T>) => (
+}: React.PropsWithChildren<EventPageProps<T>>) => (
   <div
     css={({ components }) => [
       containerStyles,

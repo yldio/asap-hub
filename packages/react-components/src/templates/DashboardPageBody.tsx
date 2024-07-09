@@ -1,11 +1,11 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import {
-  network,
-  news as newsRoute,
-  sharedResearch,
-  dashboard,
-  events as eventsRoute,
+  networkRoutes,
+  newsRoutes,
+  sharedResearchRoutes,
+  dashboardRoutes,
+  eventRoutes,
 } from '@asap-hub/routing';
 import {
   TeamRole,
@@ -115,7 +115,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Accordion
               items={guideAccordion}
               info={{
-                href: dashboard({}).dismissGettingStarted({}).$,
+                href: dashboardRoutes.DEFAULT.DISMISS_GETTING_STARTED.buildPath(
+                  {},
+                ),
                 hrefText: 'Don’t Show Again',
                 text: 'Want to remove this section?',
               }}
@@ -151,7 +153,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
         {upcomingEvents && upcomingEvents.length > 3 && (
           <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Link href={eventsRoute({}).upcoming({}).$}>View All →</Link>
+            <Link href={eventRoutes.DEFAULT.UPCOMING.path}>View All →</Link>
           </p>
         )}
       </div>
@@ -162,7 +164,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
         <PastEventsDashboardCard events={pastEvents} />
         <p css={viewAllStyles} data-testid="view-past-events">
-          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
+          <Link href={eventRoutes.DEFAULT.PAST.path}>View All →</Link>
         </p>
       </div>
       <div>
@@ -176,7 +178,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         />
         {recentSharedOutputs && recentSharedOutputs.total > 5 && (
           <p css={viewAllStyles} data-testid="view-recent-shared-outputs">
-            <Link href={sharedResearch({}).$}>View All →</Link>
+            <Link href={sharedResearchRoutes.DEFAULT.LIST.buildPath({})}>
+              View All →
+            </Link>
           </p>
         )}
       </div>
@@ -187,7 +191,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
         <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
         <p css={viewAllStyles}>
-          <Link href={network({}).users({}).$}>View All →</Link>
+          <Link href={networkRoutes.DEFAULT.USERS.buildPath({})}>
+            View All →
+          </Link>
         </p>
       </div>
       {news.length ? (
@@ -199,7 +205,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             subtitle="Explore the latest shared research and learn more about them."
           />
           <p css={viewAllStyles}>
-            <Link href={newsRoute({}).$}>View All →</Link>
+            <Link href={newsRoutes.DEFAULT.LIST.buildPath({})}>View All →</Link>
           </p>
         </div>
       ) : null}

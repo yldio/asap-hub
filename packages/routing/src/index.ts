@@ -1,21 +1,21 @@
 import { parse } from 'qs';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { RouteNode } from 'typesafe-routes';
 import * as gp2 from './gp2';
 
-export { default as about } from './about';
-export { default as analytics } from './analytics';
-export { default as discover } from './discover';
-export { default as events } from './events';
+export * from './about';
+export * from './analytics';
+export * from './discover';
 export { default as logout } from './logout';
-export { default as network } from './network';
+export * from './network';
 export type { OutputDocumentTypeParameter } from './network';
-export { default as news } from './news';
-export { default as sharedResearch } from './shared-research';
+export * from './news';
+export * from './shared-research';
+export * from './events';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
-export { default as tags } from './tags';
-export { default as dashboard } from './dashboard';
+export * from './tags';
+export * from './dashboard';
 
 export type { RouteNode };
 export { gp2 };
@@ -25,7 +25,7 @@ export { gp2 };
 export const useRouteParams = <R extends RouteNode<string, any, any>>(
   route: R,
 ): ReturnType<R['parseParams']> => {
-  const { search } = useLocation();
+  const [search] = useSearchParams();
   return route.parseParams({
     ...useParams(),
     ...parse(search, { ignoreQueryPrefix: true }),

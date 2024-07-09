@@ -65,13 +65,13 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={users({}).$} icon={userIcon}>
+        <NavigationLink href={users.DEFAULT.LIST.buildPath({})} icon={userIcon}>
           People
         </NavigationLink>
       </li>
       <li>
         <NavigationLink
-          href={workingGroups({}).$}
+          href={workingGroups.DEFAULT.buildPath({})}
           icon={workingGroupIcon}
           enabled={true}
         >
@@ -79,22 +79,31 @@ const MainNavigation: React.FC = () => (
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={projects({}).$} icon={projectIcon}>
+        <NavigationLink
+          href={projects.DEFAULT.LIST.buildPath({})}
+          icon={projectIcon}
+        >
           Projects
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={outputs({}).$} icon={outputsIcon}>
+        <NavigationLink
+          href={outputs.DEFAULT.LIST.buildPath({})}
+          icon={outputsIcon}
+        >
           Outputs
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={events({}).$} icon={eventsIcon}>
+        <NavigationLink href={events.DEFAULT.buildPath({})} icon={eventsIcon}>
           Events
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={newsList({}).$} icon={newsIcon}>
+        <NavigationLink
+          href={newsList.DEFAULT.LIST.buildPath({})}
+          icon={newsIcon}
+        >
           News
         </NavigationLink>
       </li>

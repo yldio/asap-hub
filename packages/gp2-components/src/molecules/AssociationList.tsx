@@ -112,17 +112,19 @@ const AssociationList: FC<AssociationListProps> = ({
           <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <Indicator type={type} />}
             {type === 'Project' && (
-              <Link href={gp2Routing.projects({}).project({ projectId: id }).$}>
+              <Link
+                href={gp2Routing.projects.DEFAULT.DETAILS.buildPath({
+                  projectId: id,
+                })}
+              >
                 {title}
               </Link>
             )}
             {type === 'Working Group' && (
               <Link
-                href={
-                  gp2Routing
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: id }).$
-                }
+                href={gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
+                  workingGroupId: id,
+                })}
               >
                 {title}
               </Link>

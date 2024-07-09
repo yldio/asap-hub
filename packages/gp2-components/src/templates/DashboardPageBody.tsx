@@ -21,7 +21,7 @@ import {
 import { css } from '@emotion/react';
 import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
@@ -104,7 +104,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   totalOutputs,
 }) => {
   const { isEnabled } = useFlags();
-  const history = useHistory();
+  const navigate = useNavigate();
   const latestNews = news.items[0];
   return (
     <>
@@ -196,9 +196,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-upcoming-events"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).upcoming({}).$,
-                })
+                // history.push({
+                //   pathname: gp2Routes.events({}).upcoming({}).$,
+                // })
+                navigate(gp2Routes.events.DEFAULT.UPCOMING.buildPath({}))
               }
             >
               View All
@@ -217,9 +218,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-past-events"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).past({}).$,
-                })
+                // history.push({
+                //   pathname: gp2Routes.events({}).past({}).$,
+                // })
+                navigate(gp2Routes.events.DEFAULT.PAST.buildPath({}))
               }
             >
               View All
@@ -236,7 +238,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           outputs={recentOutputs}
           getIconForDocumentType={getIconForDocumentType}
           getSharedOutputHref={(id: string) =>
-            gp2Routes.outputs({}).output({ outputId: id }).$
+            //gp2Routes.outputs({}).output({ outputId: id }).$
+            gp2Routes.outputs.DEFAULT.DETAILS.buildPath({ outputId: id })
           }
           tableTitles={['Output', 'Type of Output', 'Date']}
         />
@@ -245,9 +248,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <Button
               data-testid="view-outputs"
               onClick={() =>
-                history.push({
-                  pathname: gp2Routes.outputs({}).$,
-                })
+                // history.push({
+                //   pathname: gp2Routes.outputs({}).$,
+                // })
+                navigate(gp2Routes.outputs.DEFAULT.LIST.buildPath({}))
               }
             >
               View All
@@ -273,9 +277,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <Button
             data-testid="view-users"
             onClick={() =>
-              history.push({
-                pathname: gp2Routes.users({}).$,
-              })
+              // history.push({
+              //   pathname: gp2Routes.users({}).$,
+              // })
+              navigate(gp2Routes.users.DEFAULT.LIST.buildPath({}))
             }
           >
             View All
@@ -290,7 +295,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </Paragraph>
           <div css={[contentCardsStyles, columnContainer, { gap: rem(32) }]}>
             <NewsCard {...latestNews} key={latestNews.id} type="News" />
-            <Link buttonStyle noMargin href={gp2Routes.newsList({}).$}>
+            <Link
+              buttonStyle
+              noMargin
+              href={gp2Routes.newsList.DEFAULT.LIST.buildPath({})}
+            >
               View All
             </Link>
           </div>

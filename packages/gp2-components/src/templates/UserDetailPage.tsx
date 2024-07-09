@@ -8,10 +8,9 @@ type UserDetailPageProps = ComponentProps<typeof UserDetailHeader>;
 
 const { rem } = pixels;
 
-const UserDetailPage: React.FC<UserDetailPageProps> = ({
-  children,
-  ...headerProps
-}) => (
+const UserDetailPage: React.FC<
+  React.PropsWithChildren<UserDetailPageProps>
+> = ({ children, ...headerProps }) => (
   <article css={layoutContentStyles}>
     <UserDetailHeader {...headerProps} />
     <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>

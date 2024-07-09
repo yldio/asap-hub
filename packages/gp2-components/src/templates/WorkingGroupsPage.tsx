@@ -10,19 +10,23 @@ const navStyles = css({
   marginTop: rem(32),
 });
 
-const WorkingGroupsPage: React.FC = ({ children }) => (
+const WorkingGroupsPage: React.FC<React.PropsWithChildren> = ({ children }) => (
   <article css={layoutContentStyles}>
     <WorkingGroupsHeader>
       <div css={navStyles}>
         <TabNav>
-          <TabLink href={gp2.workingGroups({}).operational({}).$}>
+          <TabLink href={gp2.workingGroups.DEFAULT.OPERATIONAL.buildPath({})}>
             Operational
           </TabLink>
-          <TabLink href={gp2.workingGroups({}).support({}).$}>Support</TabLink>
-          <TabLink href={gp2.workingGroups({}).complexDisease({}).$}>
+          <TabLink href={gp2.workingGroups.DEFAULT.SUPPORT.buildPath({})}>
+            Support
+          </TabLink>
+          <TabLink
+            href={gp2.workingGroups.DEFAULT.COMPLEX_DISEASE.buildPath({})}
+          >
             Complex Disease
           </TabLink>
-          <TabLink href={gp2.workingGroups({}).monogenic({}).$}>
+          <TabLink href={gp2.workingGroups.DEFAULT.MONOGENIC.buildPath({})}>
             Monogenic
           </TabLink>
         </TabNav>

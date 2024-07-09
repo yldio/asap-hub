@@ -8,8 +8,13 @@ import {
   useNotificationContext,
 } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
+import { Route, Routes, useMatch } from 'react-router-dom';
+import {
+  RecoilRoot,
+  useRecoilSnapshot,
+  useRecoilState,
+  useResetRecoilState,
+} from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';
 import NotificationMessages from './NotificationMessages';
@@ -28,7 +33,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     Auth0<gp2Auth.User> | undefined
   >(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
-  const { path } = useRouteMatch();
+  // const { path } = useMatch();
 
   useEffect(() => {
     setAuth0(auth0);
@@ -70,16 +75,18 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <OnboardedApp />
   ) : (
     <BasicLayout>
-      <Switch>
+      <Routes>
         <Route path={path}>
           <Onboarding />
         </Route>
-        <Route>
-          <Frame title="Not Found">
-            <NotFoundPage />
-          </Frame>
-        </Route>
-      </Switch>
+        <Route
+          element={
+            <Frame title="Not Found">
+              <NotFoundPage />
+            </Frame>
+          }
+        />
+      </Routes>
     </BasicLayout>
   );
 };

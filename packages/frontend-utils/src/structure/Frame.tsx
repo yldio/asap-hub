@@ -15,6 +15,7 @@ type FrameProps = {
 };
 
 type FrameBoundaryProps = {
+  children: ReactNode;
   title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
   boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
   fallback?: ComponentProps<typeof Suspense>['fallback'];
@@ -30,12 +31,12 @@ const Frame = ({ fallback, children, title }: FrameProps) => (
   </Titled>
 );
 
-const DefaultFrame: React.FC<FrameBoundaryProps> = ({
+const DefaultFrame = ({
   children,
   title,
   boundaryProps,
   fallback = <Loading />,
-}) => (
+}: FrameBoundaryProps) => (
   <ErrorBoundary {...boundaryProps}>
     <Frame title={title} fallback={fallback}>
       {children}
@@ -44,7 +45,7 @@ const DefaultFrame: React.FC<FrameBoundaryProps> = ({
 );
 
 export const SearchFrame: React.FC<
-  Omit<FrameBoundaryProps, 'boundaryProps'>
+  React.PropsWithChildren<Omit<FrameBoundaryProps, 'boundaryProps'>>
 > = ({ children, title, fallback = <Loading /> }) => (
   <ErrorBoundary
     title={'Something went wrong'}

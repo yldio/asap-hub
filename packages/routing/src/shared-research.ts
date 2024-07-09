@@ -1,32 +1,64 @@
-import { booleanParser, route, stringParser } from 'typesafe-routes';
+import { boolean, route, string } from 'react-router-typesafe-routes/dom';
 
-const editResearchOutput = route(
-  '/edit',
-  { researchOutputId: stringParser },
-  {},
-);
+const editResearchOutput = route('edit');
 
-const versionResearchOutput = route(
-  '/version',
-  { researchOutputId: stringParser },
-  {},
-);
+const versionResearchOutput = route('version');
 
-const researchOutputPublished = route(
-  '/publishedNow',
-  { researchOutputId: stringParser },
-  {},
-);
+const publishResearchOutput = route('publishedNow');
 
-const researchOutput = route(
-  '/:researchOutputId&:draftCreated?',
-  {
-    researchOutputId: stringParser,
-    draftCreated: booleanParser,
-  },
-  { editResearchOutput, researchOutputPublished, versionResearchOutput },
-);
+export const sharedResearchRoutes = {
+  DEFAULT: route(
+    'shared-research/*',
+    {},
+    {
+      LIST: route(''),
+      DETAILS: route(
+        ':researchOutputId/*',
+        {
+          params: {
+            researchOutputId: string().defined(),
+          },
+          searchParams: {
+            draftCreated: boolean().defined(),
+          },
+        },
+        {
+          EDIT_RESEARCH_OUTPUT: editResearchOutput,
+          VERSION_RESEARCH_OUTPUT: versionResearchOutput,
+          PUBLISH_RESEARCH_OUTPUT: publishResearchOutput,
+        },
+      ),
+    },
+  ),
+};
 
-const sharedResearch = route('/shared-research', {}, { researchOutput });
+// const editResearchOutput = route(
+//   '/edit',
+//   { researchOutputId: stringParser },
+//   {},
+// );
 
-export default sharedResearch;
+// const versionResearchOutput = route(
+//   '/version',
+//   { researchOutputId: stringParser },
+//   {},
+// );
+
+// const researchOutputPublished = route(
+//   '/publishedNow',
+//   { researchOutputId: stringParser },
+//   {},
+// );
+
+// const researchOutput = route(
+//   '/:researchOutputId&:draftCreated?',
+//   {
+//     researchOutputId: stringParser,
+//     draftCreated: booleanParser,
+//   },
+//   { editResearchOutput, researchOutputPublished, versionResearchOutput },
+// );
+
+// const sharedResearch = route('/shared-research', {}, { researchOutput });
+
+// export default sharedResearch;

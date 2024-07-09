@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt } from 'react-router-dom';
+import ReactRouterPrompt from 'react-router-prompt';
 
 import { paddingStyles } from '../card';
 import { Modal, ModalEditHeader } from '../molecules';
@@ -82,10 +82,18 @@ const EditModal: React.FC<EditModalProps> = ({
     (status === 'initial' && dirty);
   return (
     <Modal padding={false}>
-      <Prompt
-        when={prompt}
-        message="Are you sure you want to leave the dialog? Unsaved changes will be lost."
-      />
+      <ReactRouterPrompt when={prompt}>
+        {({ isActive, onConfirm, onCancel }) => (
+          <div css={css({ display: isActive ? 'block' : 'none' })}>
+            <p>
+              "Are you sure you want to leave the dialog? Unsaved changes will
+              be lost."
+            </p>
+            <button onClick={onCancel}>Cancel</button>
+            <button onClick={onConfirm}>Ok</button>
+          </div>
+        )}
+      </ReactRouterPrompt>
       {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes

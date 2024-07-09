@@ -79,7 +79,7 @@ const UserCard: React.FC<UserCardProps> = ({
   projects,
   tags = [],
 }) => {
-  const userHref = gp2Routing.users({}).user({ userId: id }).$;
+  const userHref = gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: id });
 
   return (
     <Card>

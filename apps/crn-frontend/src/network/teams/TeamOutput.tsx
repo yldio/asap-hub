@@ -14,11 +14,7 @@ import {
   usePrevious,
 } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
-import {
-  network,
-  OutputDocumentTypeParameter,
-  useRouteParams,
-} from '@asap-hub/routing';
+import { networkRoutes, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import React, {
   ComponentProps,
   ReactNode,
@@ -26,6 +22,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
+
 import { useTeamById } from './state';
 import {
   handleError,
@@ -41,11 +39,10 @@ import {
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
-const useParamOutputDocumentType = (
-  teamId: string,
-): OutputDocumentTypeParameter => {
-  const route = network({}).teams({}).team({ teamId }).createOutput;
-  const { outputDocumentType } = useRouteParams(route);
+const useParamOutputDocumentType = (): OutputDocumentTypeParameter => {
+  const route = networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT;
+  const { outputDocumentType } = useTypedParams(route);
+
   return outputDocumentType;
 };
 
@@ -63,7 +60,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   descriptionUnchangedWarning,
   versionAction,
 }) => {
-  const paramOutputDocumentType = useParamOutputDocumentType(teamId);
+  const paramOutputDocumentType = useParamOutputDocumentType();
   const documentType =
     researchOutputData?.documentType ||
     paramOutputDocumentTypeToResearchOutputDocumentType(

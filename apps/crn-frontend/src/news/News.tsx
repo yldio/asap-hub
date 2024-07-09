@@ -1,13 +1,13 @@
-import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
-import { news as newsRoute, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
-
+import { NewsDetailsPage, NotFoundPage } from '@asap-hub/react-components';
+import { newsRoutes } from '@asap-hub/routing';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { useNewsById } from './state';
 
 const News: React.FC<Record<string, never>> = () => {
-  const { articleId } = useRouteParams(newsRoute({}).article);
+  const { id } = useTypedParams(newsRoutes.DEFAULT.DETAILS);
 
-  const news = useNewsById(articleId);
+  const news = useNewsById(id);
 
   if (news) {
     const props = {

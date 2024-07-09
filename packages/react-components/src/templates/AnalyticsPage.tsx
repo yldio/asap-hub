@@ -23,7 +23,9 @@ const pageDesktopStyles = css({
 
 type AnalyticsPageProps = ComponentProps<typeof AnalyticsPageHeader>;
 
-const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ children }) => (
+const AnalyticsPage: React.FC<React.PropsWithChildren<AnalyticsPageProps>> = ({
+  children,
+}) => (
   <article>
     <div css={pageDesktopStyles}>
       <AnalyticsPageHeader />

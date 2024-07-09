@@ -1,6 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 import { UserProfileContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
@@ -204,7 +204,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   upcomingEventsCount,
   pastEventsCount,
 }) => {
-  const tabRoutes = network({}).users({}).user({ userId: id });
+  const tabRoutes = networkRoutes.DEFAULT.USERS.DETAILS;
   const { isOwnProfile } = useContext(UserProfileContext);
 
   return (
@@ -255,7 +255,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
               jobTitle={jobTitle}
               teams={teams}
               labs={labs}
-              userActiveTeamsRoute={tabRoutes.research({}).$}
+              userActiveTeamsRoute={tabRoutes.RESEARCH.path}
             />
           </div>
           <div css={avatarContainer}>
@@ -354,18 +354,22 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         </div>
         <div css={tabNavStyles}>
           <TabNav>
-            <TabLink href={tabRoutes.research({}).$}>Research</TabLink>
-            <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
-            <TabLink href={tabRoutes.outputs({}).$}>
+            <TabLink href={tabRoutes.RESEARCH.buildPath({ id })}>
+              Research
+            </TabLink>
+            <TabLink href={tabRoutes.ABOUT.buildPath({ id })}>
+              Background
+            </TabLink>
+            <TabLink href={tabRoutes.OUTPUTS.buildPath({ id })}>
               Shared Outputs
               {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
             </TabLink>
-            <TabLink href={tabRoutes.upcoming({}).$}>
+            <TabLink href={tabRoutes.UPCOMING.buildPath({ id })}>
               Upcoming Events
               {upcomingEventsCount !== undefined && ` (${upcomingEventsCount})`}
             </TabLink>
 
-            <TabLink href={tabRoutes.past({}).$}>
+            <TabLink href={tabRoutes.PAST.buildPath({ id })}>
               Past Events
               {pastEventsCount !== undefined && ` (${pastEventsCount})`}
             </TabLink>

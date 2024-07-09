@@ -49,14 +49,14 @@ export const OutputDropdownWrapper: React.FC<OutputDropdownWrapperProps> = ({
     outputDocumentType: gp2Routing.OutputDocumentTypeParameter,
   ) =>
     (association as gp2Model.UserProject).status !== undefined
-      ? gp2Routing
-          .projects({})
-          .project({ projectId: association.id })
-          .createOutput({ outputDocumentType }).$
-      : gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: association.id })
-          .createOutput({ outputDocumentType }).$;
+      ? gp2Routing.projects.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath({
+          projectId: association.id,
+          outputDocumentType,
+        })
+      : gp2Routing.workingGroups.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath({
+          workingGroupId: association.id,
+          outputDocumentType,
+        });
 
   const dropdownOptions = (selectedAssociation: Association) => [
     {

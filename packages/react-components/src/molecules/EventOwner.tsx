@@ -1,5 +1,5 @@
 import { EventResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Link } from '../atoms';
@@ -41,9 +41,11 @@ const EventOwner: React.FC<
     {interestGroup ? (
       <Link
         href={
-          network({})
-            .interestGroups({})
-            .interestGroup({ interestGroupId: interestGroup.id }).$
+          // TODO: fix this
+          networkRoutes.DEFAULT.path
+          // network({})
+          //   .interestGroups({})
+          //   .interestGroup({ interestGroupId: interestGroup.id }).$
         }
       >
         <span css={iconStyles}>
@@ -59,9 +61,11 @@ const EventOwner: React.FC<
     ) : workingGroup ? (
       <Link
         href={
-          network({})
-            .workingGroups({})
-            .workingGroup({ workingGroupId: workingGroup.id }).$
+          // TODO: fix this
+          networkRoutes.DEFAULT.path
+          // network({})
+          //   .workingGroups({})
+          //   .workingGroup({ workingGroupId: workingGroup.id }).$
         }
       >
         <span css={iconStyles}>

@@ -1,9 +1,15 @@
 import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+} from 'react-router-dom';
 
 const loadProductivity = () =>
   import(/* webpackChunkName: "productivity" */ './productivity/Productivity');
@@ -24,13 +30,13 @@ const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
 
-const Routes = () => {
+const AnalyticsRoutes = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  const { path } = useRouteMatch();
+  // const { pathname: path } = useLocation();
 
   return (
     <Switch>
@@ -71,15 +77,25 @@ const Routes = () => {
                   <CollaborationBody />
                 </Frame>
               </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .collaboration({})
-                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
-              }
-            />
-          </Switch>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to={
+                  analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+                    metric: 'user',
+                    type: 'within-team',
+                  })
+                  // analytics({}).collaboration({}).collaborationPath({
+                  //   metric: 'user',
+                  //   type: 'within-team',
+                  // }).$
+                }
+              />
+            }
+          />
         </Route>
       )}
       {isEnabled('DISPLAY_ANALYTICS_BETA') && (
@@ -106,17 +122,27 @@ const Routes = () => {
                 <LeadershipBody />
               </Frame>
             </AnalyticsPage>
-          </Route>
-          <Redirect
-            to={
-              analytics({}).leadership({}).metric({ metric: 'working-group' }).$
-            }
-          />
-        </Switch>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={
+                analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
+                  metric: 'working-group',
+                })
+                // analytics({})
+                //   .leadership({})
+                //   .metric({ metric: 'working-group' }).$
+              }
+            />
+          }
+        />
       </Route>
       <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />)
     </Switch>
   );
 };
 
-export default Routes;
+export default AnalyticsRoutes;

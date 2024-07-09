@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 
 import { Link, Paragraph } from '../atoms';
@@ -41,7 +41,7 @@ const hoverStyles = css({
   },
 });
 
-const UtilityBar: FC = ({ children }) => (
+const UtilityBar: FC<PropsWithChildren> = ({ children }) => (
   <div css={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
     <div css={headerStyles}>
       <Paragraph>

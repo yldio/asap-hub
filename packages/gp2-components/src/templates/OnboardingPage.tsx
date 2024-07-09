@@ -23,11 +23,9 @@ const containerStyles = css({
   )} 0`,
 });
 
-const OnboardingPage: React.FC<OnboardingPageProps> = ({
-  children,
-  steps,
-  ...footerProps
-}) => (
+const OnboardingPage: React.FC<
+  React.PropsWithChildren<OnboardingPageProps>
+> = ({ children, steps, ...footerProps }) => (
   <article css={layoutContentStyles}>
     <OnboardingPageHeader steps={steps} />
     <main css={containerStyles}>{children}</main>

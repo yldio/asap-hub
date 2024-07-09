@@ -1,6 +1,14 @@
-import { route, stringParser } from 'typesafe-routes';
+import { route, string } from 'react-router-typesafe-routes/dom';
 
-const article = route('/:articleId', { articleId: stringParser }, {});
-const news = route('/news', {}, { article });
-
-export default news;
+export const newsRoutes = {
+  DEFAULT: route(
+    'news/*',
+    {},
+    {
+      LIST: route(''),
+      DETAILS: route(':id', {
+        params: { id: string().defined() },
+      }),
+    },
+  ),
+};

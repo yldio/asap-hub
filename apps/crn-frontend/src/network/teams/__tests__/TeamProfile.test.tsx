@@ -22,7 +22,7 @@ import {
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import {
@@ -89,7 +89,7 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
+            <Router navigator={history}>
               <Route
                 path={
                   network.template +

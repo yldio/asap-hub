@@ -10,10 +10,10 @@ import {
 } from '@asap-hub/model';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import {
@@ -271,27 +271,35 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
-  const isCreatingTeamArticle = useRouteMatch(
-    network({})
-      .teams({})
-      .team({
-        teamId: teams[0]?.value || '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
+  const isCreatingTeamArticle = true;
 
-  const isCreatingWorkingGroupArticle = useRouteMatch(
-    network({})
-      .workingGroups({})
-      .workingGroup({
-        workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-      })
-      .createOutput({
-        outputDocumentType: 'article',
-      }).$,
-  );
+  // useMatch(
+  //   // TODO: fix this
+  //   networkRoutes.DEFAULT.path,
+  //   // network({})
+  //   //   .teams({})
+  //   //   .team({
+  //   //     teamId: teams[0]?.value || '',
+  //   //   })
+  //   //   .createOutput({
+  //   //     outputDocumentType: 'article',
+  //   //   }).$,
+  // );
+
+  const isCreatingWorkingGroupArticle = false;
+
+  // useMatch(
+  //   // TODO: fix this
+  //   networkRoutes.DEFAULT.path,
+  //   // network({})
+  //   //   .workingGroups({})
+  //   //   .workingGroup({
+  //   //     workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
+  //   //   })
+  //   //   .createOutput({
+  //   //     outputDocumentType: 'article',
+  //   //   }).$,
+  // );
 
   const isCreatingOutput =
     isCreatingTeamArticle || isCreatingWorkingGroupArticle;
@@ -399,15 +407,20 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               setRemotePayload(currentPayload);
               if (researchOutput) {
                 const { id } = researchOutput;
-                const savePath = sharedResearch({}).researchOutput({
-                  researchOutputId: id,
-                  draftCreated: draftSave && !researchOutputData?.id,
-                }).$;
-                const publishPath = sharedResearch({})
-                  .researchOutput({
+                const savePath = sharedResearchRoutes.DEFAULT.DETAILS.buildPath(
+                  {
                     researchOutputId: id,
-                  })
-                  .researchOutputPublished({}).$;
+                  },
+                  {
+                    draftCreated: draftSave && !researchOutputData?.id,
+                  },
+                );
+                const publishPath =
+                  sharedResearchRoutes.DEFAULT.DETAILS.PUBLISH_RESEARCH_OUTPUT.buildPath(
+                    {
+                      researchOutputId: id,
+                    },
+                  );
                 setRedirectOnSave(
                   (!published || versionAction === 'create') && !draftSave
                     ? publishPath

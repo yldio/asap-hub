@@ -20,7 +20,9 @@ const projectFilters = [
   { label: gp2Model.traineeProject, value: gp2Model.traineeProject },
 ];
 
-const ProjectPageList: React.FC<ProjectPageListProps> = ({
+const ProjectPageList: React.FC<
+  React.PropsWithChildren<ProjectPageListProps>
+> = ({
   children,
   filters,
   onChangeFilter,

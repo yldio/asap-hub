@@ -1,11 +1,11 @@
-import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-
 import { Frame } from '@asap-hub/frontend-utils';
 import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network, useRouteParams } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
+import { FC, lazy, useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
+import { v4 as uuid } from 'uuid';
 
 import { usePaginationParams } from '../../hooks';
 import {
@@ -43,8 +43,11 @@ type TeamProfileProps = {
 };
 
 const DuplicateOutput: FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useTypedParams(
+    networkRoutes.DEFAULT.TEAMS.DETAILS.DUPLICATE_OUTPUT,
+  );
   const output = useResearchOutputById(id);
+
   if (output && output.teams[0]?.id) {
     return (
       <TeamOutput
@@ -64,11 +67,10 @@ const DuplicateOutput: FC = () => {
 };
 
 const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
-  const route = network({}).teams({}).team;
+  const route = networkRoutes.DEFAULT.TEAMS.DETAILS;
+  const { teamId } = useTypedParams(route);
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 
-  const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
 
   useEffect(() => {
@@ -111,25 +113,14 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   });
 
   if (team) {
-    const {
-      about,
-      createOutput,
-      duplicateOutput,
-      outputs,
-      past,
-      upcoming,
-      workspace,
-      draftOutputs,
-    } = route({
-      teamId,
-    });
+    const teamDetailsRoutes = networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$;
     const paths = {
-      about: path + about.template,
-      outputs: path + outputs.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
-      workspace: path + workspace.template,
-      draftOutputs: path + draftOutputs.template,
+      about: teamDetailsRoutes.ABOUT.relativePath,
+      outputs: teamDetailsRoutes.OUTPUTS.relativePath,
+      past: teamDetailsRoutes.PAST.relativePath,
+      upcoming: teamDetailsRoutes.UPCOMING.relativePath,
+      workspace: teamDetailsRoutes.WORKSPACE.relativePath,
+      draftOutputs: teamDetailsRoutes.DRAFT_OUTPUTS.relativePath,
     };
 
     return (
@@ -137,67 +128,87 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
         <ManuscriptToastProvider>
-          <Switch>
+          <Routes>
             <Route
-              path={workspace({}).$ + workspace({}).createManuscript.template}
-            >
-              <Frame title="Create Manuscript">
-                <TeamManuscript teamId={teamId} />
-              </Frame>
-            </Route>
-            {canShareResearchOutput && (
-              <Route path={path + createOutput.template}>
-                <Frame title="Share Output">
-                  <TeamOutput teamId={teamId} />
+              path={
+                teamDetailsRoutes.WORKSPACE.$.CREATE_MANUSCRIPT.relativePath
+              }
+              element={
+                <Frame title="Create Manuscript">
+                  <TeamManuscript teamId={teamId} />
                 </Frame>
-              </Route>
+              }
+            />
+
+            {canShareResearchOutput && (
+              <Route
+                path={teamDetailsRoutes.CREATE_OUTPUT.relativePath}
+                element={
+                  <Frame title="Share Output">
+                    <TeamOutput teamId={teamId} />
+                  </Frame>
+                }
+              />
             )}
             {canDuplicateResearchOutput && (
-              <Route path={path + duplicateOutput.template}>
-                <Frame title="Duplicate Output">
-                  <DuplicateOutput />
-                </Frame>
-              </Route>
-            )}
-            <TeamProfilePage
-              {...team}
-              teamListElementId={teamListElementId}
-              upcomingEventsCount={upcomingEvents?.total || 0}
-              pastEventsCount={pastEvents?.total || 0}
-              teamOutputsCount={teamOutputsResult.total}
-              teamDraftOutputsCount={
-                canShareResearchOutput ? outputDraftResults.total : undefined
-              }
-            >
-              <ProfileSwitch
-                About={() => (
-                  <About teamListElementId={teamListElementId} team={team} />
-                )}
-                currentTime={currentTime}
-                displayName={team.displayName}
-                eventConstraint={{ teamId }}
-                isActive={!team?.inactiveSince}
-                Outputs={
-                  <Outputs
-                    userAssociationMember={canShareResearchOutput}
-                    team={team}
-                  />
+              <Route
+                path={teamDetailsRoutes.DUPLICATE_OUTPUT.path}
+                element={
+                  <Frame title="Duplicate Output">
+                    <DuplicateOutput />
+                  </Frame>
                 }
-                DraftOutputs={
-                  <Outputs
-                    team={team}
-                    draftOutputs
-                    userAssociationMember={canShareResearchOutput}
-                  />
-                }
-                paths={paths}
-                type="team"
-                Workspace={() => (
-                  <Workspace team={{ ...team, tools: team.tools ?? [] }} />
-                )}
               />
-            </TeamProfilePage>
-          </Switch>
+            )}
+            <Route
+              path="*"
+              element={
+                <TeamProfilePage
+                  {...team}
+                  teamListElementId={teamListElementId}
+                  upcomingEventsCount={upcomingEvents?.total || 0}
+                  pastEventsCount={pastEvents?.total || 0}
+                  teamOutputsCount={teamOutputsResult.total}
+                  teamDraftOutputsCount={
+                    canShareResearchOutput
+                      ? outputDraftResults.total
+                      : undefined
+                  }
+                >
+                  <ProfileSwitch
+                    About={() => (
+                      <About
+                        teamListElementId={teamListElementId}
+                        team={team}
+                      />
+                    )}
+                    currentTime={currentTime}
+                    displayName={team.displayName}
+                    eventConstraint={{ teamId }}
+                    isActive={!team?.inactiveSince}
+                    Outputs={
+                      <Outputs
+                        userAssociationMember={canShareResearchOutput}
+                        team={team}
+                      />
+                    }
+                    DraftOutputs={
+                      <Outputs
+                        team={team}
+                        draftOutputs
+                        userAssociationMember={canShareResearchOutput}
+                      />
+                    }
+                    paths={paths}
+                    type="team"
+                    Workspace={() => (
+                      <Workspace team={{ ...team, tools: team.tools ?? [] }} />
+                    )}
+                  />
+                </TeamProfilePage>
+              }
+            />
+          </Routes>
         </ManuscriptToastProvider>
       </ResearchOutputPermissionsContext.Provider>
     );

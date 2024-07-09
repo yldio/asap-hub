@@ -52,11 +52,9 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
             ) : (
               <Link
                 underlined
-                href={
-                  gp2Routing.workingGroups({}).workingGroup({
-                    workingGroupId,
-                  }).$
-                }
+                href={gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
+                  workingGroupId,
+                })}
               >
                 {title}
               </Link>

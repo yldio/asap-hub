@@ -5,7 +5,7 @@ import {
   TeamProductivityResponse,
   TeamProductivitySortingDirection,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls, PerformanceCard } from '..';

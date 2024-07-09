@@ -1,7 +1,7 @@
 import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
 import ResearchOutputFormSharingCard, {
@@ -131,7 +131,7 @@ it.each`
     screen.getByRole('group', { name: group }),
   ).getAllByRole('radio')[1];
 
-  userEvent.click(groupInput!);
+  await userEvent.click(groupInput!);
 
   expect(onChangeFn).toHaveBeenCalled();
 });
@@ -148,8 +148,8 @@ it('triggers an on change for type', async () => {
   );
 
   const type = screen.getByLabelText(/type/i);
-  userEvent.type(type, 'Preprint');
-  userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, 'Preprint');
+  await userEvent.type(type, '{enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
@@ -166,8 +166,8 @@ it('triggers an on change for subtype', async () => {
   );
 
   const type = screen.getByLabelText(/subtype/i);
-  userEvent.type(type, 'Metabolite');
-  userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, 'Metabolite');
+  await userEvent.type(type, '{enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
 });
@@ -180,7 +180,7 @@ it('shows the custom no options message for type', async () => {
     />,
   );
 
-  userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
+  await userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
 
   expect(
     screen.getByText('Sorry, no types match asdflkjasdflkj'),
@@ -210,7 +210,7 @@ it('triggers an on change for date published', async () => {
     />,
   );
 
-  userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
+  await userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
 });
 
@@ -223,7 +223,7 @@ it('shows the custom error message for a date in the future', async () => {
     />,
   );
   screen.getByLabelText(/Date Published/i).click();
-  userEvent.tab();
+  await userEvent.tab();
 
   expect(
     screen.getByText(/publish date cannot be greater than today/i),
@@ -253,7 +253,7 @@ it('displays server side validation error for link and calls clears function whe
     ),
   ).toBeVisible();
 
-  userEvent.type(screen.getByLabelText(/URL/i), 'a');
+  await userEvent.type(screen.getByLabelText(/URL/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/link');
 });
 
@@ -280,7 +280,7 @@ it('displays server side validation error for title and calls clears function wh
     ),
   ).toBeVisible();
 
-  userEvent.type(screen.getByLabelText(/title/i), 'a');
+  await userEvent.type(screen.getByLabelText(/title/i), 'a');
   expect(mockClearError).toHaveBeenCalledWith('/title');
 });
 

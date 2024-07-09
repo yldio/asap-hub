@@ -15,7 +15,10 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
 const makeWrapper =
-  (userId = id, currentUserId = userId): FC<Record<string, never>> =>
+  (
+    userId = id,
+    currentUserId = userId,
+  ): FC<React.PropsWithChildren<Record<string, never>>> =>
   ({ children }) => (
     <RecoilRoot>
       <Suspense fallback="loading">

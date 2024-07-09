@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import formatDistance from 'date-fns/formatDistance';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { InterestGroupResponse, InterestGroupTools } from '@asap-hub/model';
 
 import { paper, lead, steel } from '../colors';
@@ -104,9 +104,10 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   calendarId,
   contactEmails,
 }) => {
-  const route = network({})
-    .interestGroups({})
-    .interestGroup({ interestGroupId: id });
+  const route = networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS; //TODO: fix this
+  // network({})
+  //   .interestGroups({})
+  //   .interestGroup({ interestGroupId: id });
 
   return (
     <header>
@@ -194,17 +195,31 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
           </div>
         </div>
         <TabNav>
-          <TabLink href={route.about({}).$}>About</TabLink>
-          {active && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
+          <TabLink href={route.ABOUT.buildPath({ interestGroupId: id })}>
+            About
+          </TabLink>
+          {active && (
+            <TabLink href={route.CALENDAR.buildPath({ interestGroupId: id })}>
+              Calendar
+            </TabLink>
+          )}
           {active && (
             <TabLink
-              href={route.upcoming({}).$ + queryParamString(searchQuery)}
+              href={
+                route.UPCOMING.buildPath({ interestGroupId: id }) +
+                queryParamString(searchQuery)
+              }
             >
               Upcoming Events ({upcomingEventsCount})
             </TabLink>
           )}
 
-          <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
+          <TabLink
+            href={
+              route.PAST.buildPath({ interestGroupId: id }) +
+              queryParamString(searchQuery)
+            }
+          >
             Past Events ({pastEventsCount})
           </TabLink>
         </TabNav>

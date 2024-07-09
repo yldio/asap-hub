@@ -45,11 +45,9 @@ const UserProjects: React.FC<UserProjectsProps> = ({
             ) : (
               <Link
                 underlined
-                href={
-                  gp2Routing.projects({}).project({
-                    projectId: project.id,
-                  }).$
-                }
+                href={gp2Routing.projects.DEFAULT.DETAILS.buildPath({
+                  projectId: project.id,
+                })}
               >
                 {project.title}
               </Link>

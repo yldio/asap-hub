@@ -1,5 +1,9 @@
 import { EventResponse, gp2 } from '@asap-hub/model';
-import { gp2 as gp2Routing, network, sharedResearch } from '@asap-hub/routing';
+import {
+  gp2 as gp2Routing,
+  networkRoutes,
+  sharedResearchRoutes,
+} from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { useState } from 'react';
@@ -163,10 +167,12 @@ const RelatedResearchCard = <
                   ellipsed
                   href={
                     'teams' in output
-                      ? sharedResearch({}).researchOutput({
+                      ? sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
                           researchOutputId: id,
-                        }).$
-                      : gp2Routing.outputs({}).output({ outputId: id }).$
+                        })
+                      : gp2Routing.outputs.DEFAULT.DETAILS.buildPath({
+                          outputId: id,
+                        })
                   }
                 >
                   {outputTitle}
@@ -179,9 +185,11 @@ const RelatedResearchCard = <
                     <Link
                       ellipsed
                       href={
-                        network({}).workingGroups({}).workingGroup({
-                          workingGroupId: output.workingGroups[0].id,
-                        }).$
+                        // TODO: fix this
+                        networkRoutes.DEFAULT.path
+                        // network({}).workingGroups({}).workingGroup({
+                        //   workingGroupId: output.workingGroups[0].id,
+                        // }).$
                       }
                     >
                       {output.workingGroups[0].title}
@@ -193,9 +201,11 @@ const RelatedResearchCard = <
                       <Link
                         ellipsed
                         href={
-                          network({}).teams({}).team({
-                            teamId: output.teams[0].id,
-                          }).$
+                          // TODO: fix this
+                          networkRoutes.DEFAULT.path
+                          // network({}).teams({}).team({
+                          //   teamId: output.teams[0].id,
+                          // }).$
                         }
                       >
                         {output.teams[0].displayName}
@@ -214,12 +224,12 @@ const RelatedResearchCard = <
                       ellipsed
                       href={
                         output.entity?.type === 'WorkingGroups'
-                          ? gp2Routing.workingGroups({}).workingGroup({
+                          ? gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
                               workingGroupId: output.entity.id,
-                            }).$
-                          : gp2Routing.projects({}).project({
+                            })
+                          : gp2Routing.projects.DEFAULT.DETAILS.buildPath({
                               projectId: output.entity.id,
-                            }).$
+                            })
                       }
                     >
                       {output.entity.title}

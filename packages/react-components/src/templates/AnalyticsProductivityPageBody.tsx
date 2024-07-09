@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { rem } from '../pixels';

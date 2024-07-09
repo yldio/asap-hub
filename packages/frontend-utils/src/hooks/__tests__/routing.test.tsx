@@ -1,18 +1,18 @@
 import { render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
-import { Router, Route } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import { Route, Router, Routes } from 'react-router-dom';
+import { LastLocationProvider } from 'react-router-dom-last-location';
 
 import { useBackHref } from '../routing';
 
 describe('useBackHref', () => {
   let history: History;
   beforeEach(() => {
-    history = createBrowserHistory();
+    history = createBrowserHistory({});
   });
 
-  const wrapper: React.FC = ({ children }) => (
-    <Router history={history}>
+  const wrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
+    <Router location={history.location} navigator={history}>
       <LastLocationProvider>{children}</LastLocationProvider>
     </Router>
   );
@@ -26,16 +26,18 @@ describe('useBackHref', () => {
     expect(container).toHaveTextContent('null');
   });
 
-  it('returns the last location at the time the component was mounted', () => {
+  it('returns the last location at the time the component was mounted', async () => {
     const { container } = render(
-      <Route path="/comp">
-        <ShowBackHref />
-      </Route>,
+      <Routes location={'/comp'}>
+        <Route path="/comp" element={<ShowBackHref />} />
+      </Routes>,
       { wrapper },
     );
+
     history.push('/last?q#f');
     history.push('/comp');
     history.push('/comp/child');
+
     expect(container).toHaveTextContent('/last?q#f');
   });
 });

@@ -2,18 +2,18 @@ import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
-  about,
-  analytics,
-  dashboard,
-  discover,
-  events,
-  network,
-  news,
-  sharedResearch,
-  tags,
+  aboutRoutes,
+  analyticsRoutes,
+  dashboardRoutes,
+  discoverRoutes,
+  eventRoutes,
+  networkRoutes,
+  newsRoutes,
+  sharedResearchRoutes,
+  tagRoutes,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';
@@ -60,7 +60,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   }, [auth0, setAuth0, resetAuth0]);
 
   useEffect(() => {
-    // order by the likelyhood of user navigating there
+    // order by the likelihood of user navigating there
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadDashboard()
       .then(loadNews)
@@ -88,99 +88,134 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           onboardable={onboardable}
           canViewAnalytics={canViewAnalytics}
           onboardModalHref={
-            tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
+            // TODO: fix this
+            networkRoutes.DEFAULT.path
+            // tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
           }
-          userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+          userProfileHref={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+            id: user.id,
+          })}
           firstName={user.firstName}
           lastName={user.lastName}
           displayName={user.displayName}
           avatarUrl={user.avatarUrl}
           teams={user.teams.map(({ id, displayName = '' }) => ({
             name: displayName,
-            href: network({}).teams({}).team({ teamId: id }).$,
+            href: networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: id }),
           }))}
           workingGroups={user.workingGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: network({})
-                .workingGroups({})
-                .workingGroup({ workingGroupId: id }).$,
+              href: networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+                workingGroupId: id,
+              }),
             }),
           )}
           interestGroups={user.interestGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: network({})
-                .interestGroups({})
-                .interestGroup({ interestGroupId: id }).$,
+              // TODO: fix this
+              href: '',
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"
         >
           <CheckOnboarded>
-            <Switch>
+            <Routes>
               <Route
-                exact
-                path={[
-                  dashboard.template,
-                  dashboard({}).dismissGettingStarted({}).$,
-                ]}
-              >
-                <Frame title="Dashboard">
-                  <Dashboard />
-                </Frame>
-              </Route>
-              <Route path={discover.template}>
-                <Frame title="Guides & Tutorials">
-                  <Discover />
-                </Frame>
-              </Route>
-              <Route path={about.template}>
-                <Frame title="About ASAP">
-                  <About />
-                </Frame>
-              </Route>
-              {canViewAnalytics && (
-                <Route path={analytics.template}>
-                  <Frame title="Analytics">
-                    <Analytics />
+                path={dashboardRoutes.DEFAULT.path}
+                element={
+                  <Frame title="Dashboard">
+                    <Dashboard />
                   </Frame>
-                </Route>
-              )}
-              <Route path={news.template}>
-                <Frame title="News">
-                  <News />
-                </Frame>
-              </Route>
-              <Route path={network.template}>
-                <Frame title={null}>
-                  <Network />
-                </Frame>
-              </Route>
-              <Route path={sharedResearch.template}>
-                <Frame title="Shared Research">
-                  <SharedResearch />
-                </Frame>
-              </Route>
-              <Route path={events.template}>
-                <Frame title={null}>
-                  <Events />
-                </Frame>
-              </Route>
-              <Route path={tags.template}>
-                <Frame title="Tags">
-                  <Tags />
-                </Frame>
-              </Route>
+                }
+              />
+              <Route
+                path={dashboardRoutes.DEFAULT.DISMISS_GETTING_STARTED.path}
+                element={
+                  <Frame title="Dashboard">
+                    <Dashboard />
+                  </Frame>
+                }
+              />
+              <Route
+                path={discoverRoutes.DEFAULT.path}
+                element={
+                  <Frame title="Guides & Tutorials">
+                    <Discover />
+                  </Frame>
+                }
+              />
 
-              <Route>
-                <Frame title="Not Found">
-                  <NotFoundPage />
-                </Frame>
-              </Route>
-            </Switch>
+              <Route
+                path={aboutRoutes.path}
+                element={
+                  <Frame title="About ASAP">
+                    <About />
+                  </Frame>
+                }
+              />
+              {canViewAnalytics && (
+                <Route
+                  path={analyticsRoutes.DEFAULT.path}
+                  element={
+                    <Frame title="Analytics">
+                      <Analytics />
+                    </Frame>
+                  }
+                />
+              )}
+              <Route
+                path={newsRoutes.DEFAULT.path}
+                element={
+                  <Frame title="News">
+                    <News />
+                  </Frame>
+                }
+              />
+              <Route
+                path={networkRoutes.DEFAULT.path}
+                element={
+                  <Frame title={null}>
+                    <Network />
+                  </Frame>
+                }
+              />
+              <Route
+                path={sharedResearchRoutes.DEFAULT.path}
+                element={
+                  <Frame title="Shared Research">
+                    <SharedResearch />
+                  </Frame>
+                }
+              />
+              <Route
+                path={eventRoutes.DEFAULT.path}
+                element={
+                  <Frame title={null}>
+                    <Events />
+                  </Frame>
+                }
+              />
+              <Route
+                path={tagRoutes.path}
+                element={
+                  <Frame title="Tags">
+                    <Tags />
+                  </Frame>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <Frame title="Not Found">
+                    <NotFoundPage />
+                  </Frame>
+                }
+              />
+            </Routes>
           </CheckOnboarded>
         </Layout>
       )}

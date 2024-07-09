@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { render, act, waitFor } from '@testing-library/react';
 import {
   createCalendarResponse,
@@ -30,7 +31,7 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC = ({ children }) => (
+const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
   <RecoilRoot
     initializeState={({ set }) => set(refreshEventState(id), Math.random())}
   >

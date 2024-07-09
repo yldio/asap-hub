@@ -116,7 +116,8 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   pastTotal,
 }) => {
   const { isEnabled } = useFlags();
-  const route = gp2Routing.projects({}).project({ projectId: id });
+  // const route = gp2Routing.projects({}).project({ projectId: id });
+  const route = gp2Routing.projects.DEFAULT.DETAILS;
   const isExternalOpportunityLink = (link: string) =>
     new URL(link).origin !== window.location.origin;
   return (
@@ -189,20 +190,26 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         </div>
       </CardWithBackground>
       <TabNav>
-        <TabLink href={route.overview({}).$}>Overview</TabLink>
+        <TabLink href={route.OVERVIEW.buildPath({ projectId: id })}>
+          Overview
+        </TabLink>
         {isProjectMember && (
-          <TabLink href={route.workspace({}).$}>Workspace</TabLink>
+          <TabLink href={route.WORKSPACE.buildPath({ projectId: id })}>
+            Workspace
+          </TabLink>
         )}
-        <TabLink href={route.outputs({}).$}>
+        <TabLink href={route.OUTPUTS.buildPath({ projectId: id })}>
           Shared Outputs ({outputsTotal})
         </TabLink>
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.upcoming({}).$}>
+          <TabLink href={route.UPCOMING.buildPath({ projectId: id })}>
             Upcoming Events ({upcomingTotal})
           </TabLink>
         )}
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+          <TabLink href={route.PAST.buildPath({ projectId: id })}>
+            Past Events ({pastTotal})
+          </TabLink>
         )}
       </TabNav>
     </header>

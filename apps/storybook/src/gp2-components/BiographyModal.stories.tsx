@@ -1,6 +1,6 @@
 import { BiographyModal } from '@asap-hub/gp2-components';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { text } from '../knobs';
 

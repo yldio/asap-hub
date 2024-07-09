@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
@@ -37,7 +37,7 @@ const TeamCard: React.FC<TeamListItemResponse> = ({
   memberCount,
   labCount,
 }) => {
-  const href = network({}).teams({}).team({ teamId: id }).$;
+  const href = networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({ teamId: id });
 
   const footer = (
     <div css={footerStyles}>

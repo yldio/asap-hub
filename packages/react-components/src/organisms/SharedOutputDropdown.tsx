@@ -7,7 +7,7 @@ import {
   WorkingGroupMembership,
   gp2 as gp2Model,
 } from '@asap-hub/model';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import { networkRoutes, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   getUserRole,
   hasShareResearchOutputPermission,
@@ -180,14 +180,23 @@ export const SharedOutputDropdownWrapper: React.FC<
     association: Association,
     outputDocumentType: OutputDocumentTypeParameter,
   ) =>
+    // TODO: fix this
+    // networkRoutes.DEFAULT.path;
     isWGMembership(association)
-      ? network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId: association.id })
-          .createOutput({ outputDocumentType }).$
-      : network({}).teams({}).team({ teamId: association.id }).createOutput({
+      ? networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+          workingGroupId: association.id,
           outputDocumentType,
-        }).$;
+        })
+      : // .workingGroups({})
+        // .workingGroup({ workingGroupId: association.id })
+        // .createOutput({ outputDocumentType }).$
+        networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath({
+          teamId: association.id,
+          outputDocumentType,
+        });
+  // network({}).teams({}).team({ teamId: association.id }).createOutput({
+  //     outputDocumentType,
+  //   }).$;
 
   const dropdownOptions = (selectedAssociation: Association) => [
     {

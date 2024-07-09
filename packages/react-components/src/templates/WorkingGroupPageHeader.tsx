@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { formatDistance } from 'date-fns';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { WorkingGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { useContext } from 'react';
 
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -173,9 +173,7 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
     ResearchOutputPermissionsContext,
   );
 
-  const route = network({})
-    .workingGroups({})
-    .workingGroup({ workingGroupId: id });
+  const route = networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS;
 
   return (
     <header css={containerStyles}>
@@ -189,10 +187,12 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         <UserAvatarList
           members={[...leaders, ...members].map((member) => member.user)}
           fullListRoute={`${
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .about({}).$
+            networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.ABOUT.path
+
+            // network({})
+            //   .workingGroups({})
+            //   .workingGroup({ workingGroupId: id })
+            //   .about({}).$
           }#${membersListElementId}`}
         />
         {pointOfContact && !complete && (
@@ -230,39 +230,49 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
             >
               {{
                 item: <>{article} Article</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
                   outputDocumentType: 'article',
-                }).$,
+                }),
               }}
               {{
                 item: <>{bioinformatics} Bioinformatics</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
                   outputDocumentType: 'bioinformatics',
-                }).$,
+                }),
               }}
               {{
                 item: <>{crnReportIcon} CRN Report</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
+
                   outputDocumentType: 'report',
-                }).$,
+                }),
               }}
               {{
                 item: <>{dataset} Dataset</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
+
                   outputDocumentType: 'dataset',
-                }).$,
+                }),
               }}
               {{
                 item: <>{labResource} Lab Resource</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
+
                   outputDocumentType: 'lab-resource',
-                }).$,
+                }),
               }}
               {{
                 item: <>{protocol} Protocol</>,
-                href: route.createOutput({
+                href: route.CREATE_OUTPUT.buildPath({
+                  workingGroupId: id,
+
                   outputDocumentType: 'protocol',
-                }).$,
+                }),
               }}
             </DropdownButton>
           </div>
@@ -291,46 +301,25 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
         </div>
       </div>
       <TabNav>
-        <TabLink
-          href={
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .about({}).$
-          }
-        >
-          About
-        </TabLink>
-        {!complete && <TabLink href={route.calendar({}).$}>Calendar</TabLink>}
-        <TabLink
-          href={
-            network({})
-              .workingGroups({})
-              .workingGroup({ workingGroupId: id })
-              .outputs({}).$
-          }
-        >
+        <TabLink href={route.$.ABOUT.relativePath}>About</TabLink>
+        {!complete && (
+          <TabLink href={route.$.CALENDAR.relativePath}>Calendar</TabLink>
+        )}
+        <TabLink href={route.$.OUTPUTS.relativePath}>
           Outputs ({workingGroupsOutputsCount})
         </TabLink>
         {workingGroupsDraftOutputsCount !== undefined && (
-          <TabLink
-            href={
-              network({})
-                .workingGroups({})
-                .workingGroup({ workingGroupId: id })
-                .draftOutputs({}).$
-            }
-          >
+          <TabLink href={route.$.DRAFT_OUTPUTS.relativePath}>
             Draft Outputs ({workingGroupsDraftOutputsCount})
           </TabLink>
         )}
 
         {!complete && (
-          <TabLink href={route.upcoming({}).$}>
+          <TabLink href={route.$.UPCOMING.relativePath}>
             Upcoming Events {`(${upcomingEventsCount})`}
           </TabLink>
         )}
-        <TabLink href={route.past({}).$}>
+        <TabLink href={route.$.PAST.relativePath}>
           Past Events {`(${pastEventsCount})`}
         </TabLink>
       </TabNav>

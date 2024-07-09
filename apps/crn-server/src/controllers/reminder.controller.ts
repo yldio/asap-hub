@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon';
-import { events, network, sharedResearch } from '@asap-hub/routing';
+// import { events, network, sharedResearch } from '@asap-hub/routing';
+import {
+  eventRoutes,
+  networkRoutes,
+  sharedResearchRoutes,
+} from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
@@ -40,9 +45,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearch({}).researchOutput({
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
               researchOutputId: reminder.data.researchOutputId,
-            }).$,
+            }),
+            // href: sharedResearch({}).researchOutput({
+            //   researchOutputId: reminder.data.researchOutputId,
+            // }).$,
             description: `${capitalizeFirstLetter(
               reminder.data.associationType,
             )} **${reminder.data.associationName}** published a new ${
@@ -59,9 +67,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearch({}).researchOutput({
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
               researchOutputId: reminder.data.researchOutputId,
-            }).$,
+            }),
+            // href: sharedResearch({}).researchOutput({
+            //   researchOutputId: reminder.data.researchOutputId,
+            // }).$,
             description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
@@ -73,9 +84,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearch({}).researchOutput({
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
               researchOutputId: reminder.data.researchOutputId,
-            }).$,
+            }),
+            // href: sharedResearch({}).researchOutput({
+            //   researchOutputId: reminder.data.researchOutputId,
+            // }).$,
             description: `**${reminder.data.createdBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** created a draft ${reminder.data.associationType} output: ${reminder.data.title}.`,
           };
         }
@@ -87,9 +101,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearch({}).researchOutput({
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
               researchOutputId: reminder.data.researchOutputId,
-            }).$,
+            }),
+            // href: sharedResearch({}).researchOutput({
+            //   researchOutputId: reminder.data.researchOutputId,
+            // }).$,
             description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
@@ -101,9 +118,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: sharedResearch({}).researchOutput({
+            href: sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
               researchOutputId: reminder.data.researchOutputId,
-            }).$,
+            }),
+            // href: sharedResearch({}).researchOutput({
+            //   researchOutputId: reminder.data.researchOutputId,
+            // }).$,
             description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** switched to draft a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
@@ -119,9 +139,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: events({}).event({
+            href: eventRoutes.DEFAULT.DETAILS.buildPath({
               eventId: reminder.data.eventId,
-            }).$,
+            }),
+            // href: events({}).event({
+            //   eventId: reminder.data.eventId,
+            // }).$,
             description: `Today there is the ${reminder.data.title} event happening at ${startTime}.`,
           };
         }
@@ -130,11 +153,18 @@ export default class ReminderController {
           reminder.entity === 'Event' &&
           reminder.type === 'Share Presentation'
         ) {
+          // const href = reminder.data.pmId
+          //   ? network({}).users({}).user({ userId: reminder.data.pmId }).$
+          //   : events({}).event({
+          //       eventId: reminder.data.eventId,
+          //     }).$;
           const href = reminder.data.pmId
-            ? network({}).users({}).user({ userId: reminder.data.pmId }).$
-            : events({}).event({
+            ? networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                id: reminder.data.pmId,
+              })
+            : eventRoutes.DEFAULT.DETAILS.buildPath({
                 eventId: reminder.data.eventId,
-              }).$;
+              });
           return {
             id: reminder.id,
             entity: reminder.entity,
@@ -178,9 +208,12 @@ export default class ReminderController {
           return {
             id: reminder.id,
             entity: reminder.entity,
-            href: events({}).event({
+            href: eventRoutes.DEFAULT.DETAILS.buildPath({
               eventId: reminder.data.eventId,
-            }).$,
+            }),
+            // href: events({}).event({
+            //   eventId: reminder.data.eventId,
+            // }).$,
             description,
           };
         }
@@ -188,9 +221,12 @@ export default class ReminderController {
         return {
           id: reminder.id,
           entity: reminder.entity,
-          href: events({}).event({
+          href: eventRoutes.DEFAULT.DETAILS.buildPath({
             eventId: reminder.data.eventId,
-          }).$,
+          }),
+          // href: events({}).event({
+          //   eventId: reminder.data.eventId,
+          // }).$,
           description: `${reminder.data.title} event is happening now! Click here to join the meeting!`,
         };
       }),

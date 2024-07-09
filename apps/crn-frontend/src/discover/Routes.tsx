@@ -3,9 +3,9 @@ import {
   SearchFrame,
 } from '@asap-hub/frontend-utils';
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
-import { discover } from '@asap-hub/routing';
+import { discoverRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>
@@ -30,30 +30,25 @@ const Discover: FC<Record<string, never>> = () => {
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
-  const { path } = useRouteMatch();
   const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
 
   return (
-    <Switch>
+    <Routes>
       <Route
-        path={
-          path +
-          discover({}).tutorials.template +
-          discover({}).tutorials({}).tutorial.template
-        }
-      >
-        <Frame title={null}>
-          <TutorialPage />
-        </Frame>
-      </Route>
-      <DiscoverPage>
-        <Switch>
-          <Route exact path={path + discover({}).guides.template}>
-            <Frame title="Guides">
+        path={discoverRoutes.DEFAULT.$.GUIDES.relativePath}
+        element={
+          <Frame title="Guides">
+            <DiscoverPage>
               <Guides />
-            </Frame>
-          </Route>
-          <Route exact path={path + discover({}).tutorials.template}>
+            </DiscoverPage>
+          </Frame>
+        }
+      />
+
+      <Route
+        path={discoverRoutes.DEFAULT.$.TUTORIALS.relativePath}
+        element={
+          <DiscoverPage>
             <TutorialsPage
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
@@ -62,11 +57,25 @@ const Discover: FC<Record<string, never>> = () => {
                 <TutorialList searchQuery={debouncedSearchQuery} />
               </SearchFrame>
             </TutorialsPage>
-          </Route>
-          <Redirect to={discover({}).guides({}).$} />
-        </Switch>
-      </DiscoverPage>
-    </Switch>
+          </DiscoverPage>
+        }
+      />
+
+      <Route
+        path={discoverRoutes.DEFAULT.$.TUTORIALS.DETAILS.relativePath}
+        element={
+          <Frame title={null}>
+            <TutorialPage />
+          </Frame>
+        }
+      />
+
+      {/* TODO: Check if this is right */}
+      <Route
+        path="*"
+        element={<Navigate to={discoverRoutes.DEFAULT.$.GUIDES.relativePath} />}
+      />
+    </Routes>
   );
 };
 

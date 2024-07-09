@@ -1,5 +1,5 @@
 import { PerformanceMetricByDocumentType } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
@@ -115,7 +115,13 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
         )}
 
         <p css={iconStyles}>
-          <Link href={network({}).teams({}).team({ teamId: rowItem.id }).$}>
+          <Link
+            href={
+              // TODO: fix this
+              networkRoutes.DEFAULT.path
+              // network({}).teams({}).team({ teamId: rowItem.id }).$
+            }
+          >
             {rowItem.name}
           </Link>
           {rowItem.isInactive && <InactiveBadgeIcon />}
@@ -149,7 +155,13 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
         rowItem.collaborationByTeam.map((team) => (
           <div key={team.id} css={[collapsedRowStyles]}>
             <p css={iconStyles}>
-              <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+              <Link
+                href={
+                  // TODO: fix this
+                  networkRoutes.DEFAULT.path
+                  // network({}).teams({}).team({ teamId: team.id }).$
+                }
+              >
                 {team.name}
               </Link>
               {team.isInactive && <InactiveBadgeIcon />}

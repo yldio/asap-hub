@@ -1,7 +1,22 @@
-import { route, stringParser } from 'typesafe-routes';
+import { route, string } from 'react-router-typesafe-routes/dom';
 
-const tutorial = route('/:tutorialId', { tutorialId: stringParser }, {});
-const tutorials = route('/tutorials', {}, { tutorial });
-const guides = route('/guides', {}, {});
-
-export default route('/guides-tutorials', {}, { tutorials, guides });
+export const discoverRoutes = {
+  DEFAULT: route(
+    'guides-tutorials/*',
+    {},
+    {
+      LIST: route(''),
+      GUIDES: route('guides'),
+      TUTORIALS: route(
+        'tutorials/*',
+        {},
+        {
+          LIST: route(''),
+          DETAILS: route(':id', {
+            params: { id: string().defined() },
+          }),
+        },
+      ),
+    },
+  ),
+};

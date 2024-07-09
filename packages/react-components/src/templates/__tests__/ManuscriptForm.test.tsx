@@ -1,8 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
-import { createMemoryHistory, History } from 'history';
-import userEvent, { specialChars } from '@testing-library/user-event';
 import {
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
@@ -12,15 +9,22 @@ import {
   QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
+import userEvent, { specialChars } from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
+
 import ManuscriptForm from '../ManuscriptForm';
 
-let history!: History;
+const mockedUseNavigate = jest.fn();
 
-beforeEach(() => {
-  history = createMemoryHistory();
-});
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUseNavigate,
+}));
 
 const teamId = '42';
+
+beforeEach(jest.clearAllMocks);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
@@ -37,7 +41,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -50,7 +54,7 @@ it('renders the form', async () => {
 it('data is sent on form submission', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
@@ -116,7 +120,7 @@ test.each`
       [fieldDetails]: 'Explanation',
     };
     render(
-      <StaticRouter>
+      <StaticRouter location="">
         <ManuscriptForm
           {...props}
           title="manuscript title"
@@ -190,7 +194,7 @@ test.each`
       [fieldDetails]: 'Explanation',
     };
     render(
-      <StaticRouter>
+      <StaticRouter location="">
         <ManuscriptForm
           {...props}
           title="manuscript title"
@@ -244,7 +248,7 @@ it('displays an error message when user selects no in a quick check and does not
     acknowledgedGrantNumberDetails: undefined,
   };
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...props}
         title="manuscript title"
@@ -283,7 +287,7 @@ it('displays an error message when user selects no in a quick check and does not
 
 it('does not display the lifecycle select box until type is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -291,13 +295,16 @@ it('does not display the lifecycle select box until type is selected', async () 
     screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
   ).not.toBeInTheDocument();
 
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'Original');
-  userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
+  fireEvent.keyDown(
+    screen.getByRole('combobox', {
+      name: /Type of Manuscript/i,
+    }),
+    { key: 'ArrowDown' },
+  );
+  fireEvent.click(await screen.findByText('Original Research'));
 
   expect(
-    screen.getByRole('textbox', {
+    screen.getByRole('combobox', {
       name: /Where is the manuscript in the life cycle/i,
     }),
   ).toBeInTheDocument();
@@ -310,15 +317,18 @@ it.each(manuscriptTypeLifecyclesFlat)(
   'displays $lifecycle lifecycle option for when $type type is selected',
   async ({ lifecycle, type }) => {
     render(
-      <StaticRouter>
+      <StaticRouter location="">
         <ManuscriptForm {...defaultProps} type={type} lifecycle="" />
       </StaticRouter>,
     );
 
-    const lifecycleTextbox = screen.getByRole('textbox', {
-      name: /Where is the manuscript in the life cycle/i,
-    });
-    userEvent.click(lifecycleTextbox);
+    fireEvent.keyDown(
+      screen.getByRole('combobox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+      { key: 'ArrowDown' },
+    );
+    fireEvent.click(await screen.findByText(lifecycle));
 
     expect(screen.getByText(lifecycle)).toBeVisible();
   },
@@ -326,15 +336,14 @@ it.each(manuscriptTypeLifecyclesFlat)(
 
 it('displays error message when manuscript title is missing', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
-
   const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -343,69 +352,74 @@ it('displays error message when manuscript title is missing', async () => {
     screen.getAllByText(/Please enter a title/i).length,
   ).toBeGreaterThanOrEqual(1);
 
-  userEvent.type(input, 'title');
+  await userEvent.type(input, 'title');
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
   });
-  expect(screen.queryByText(/Please enter a title/i)).toBeNull();
+  await waitFor(() => {
+    expect(screen.queryByText(/Please enter a title/i)).not.toBeInTheDocument();
+  });
 });
 
 it('displays error message when no type was found', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
 
-  const textbox = screen.getByRole('textbox', { name: /Type of Manuscript/i });
-  userEvent.type(textbox, 'invalid type');
+  const textbox = screen.getByRole('combobox', { name: /Type of Manuscript/i });
+  fireEvent.change(textbox, { target: { value: 'invalid type' } });
 
   expect(screen.getByText(/Sorry, no types match/i)).toBeVisible();
 });
 
 it('displays error message when no lifecycle was found', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
 
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
+  fireEvent.keyDown(
+    screen.getByRole('combobox', {
+      name: /Type of Manuscript/i,
+    }),
+    { key: 'ArrowDown' },
+  );
+  fireEvent.click(await screen.findByText('Original Research'));
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'invalid lifecycle');
+  fireEvent.change(lifecycleTextbox, {
+    target: { value: 'invalid lifecycle' },
+  });
 
   expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
 });
 
 it('displays error message when manuscript title is bigger than 256 characters', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} />
     </StaticRouter>,
   );
 
   const input = screen.getByRole('textbox', {
     name: /Title of Manuscript/i,
-  });
-  userEvent.type(
+  });  
+  await userEvent.type(
     input,
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
   );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -415,10 +429,9 @@ it('displays error message when manuscript title is bigger than 256 characters',
     screen.getAllByText(/This title cannot exceed 256 characters./i).length,
   ).toBeGreaterThanOrEqual(1);
 });
-
 it('displays error message when other details is bigger than 256 characters', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...defaultProps}
         title="Manuscript"
@@ -438,7 +451,7 @@ it('displays error message when other details is bigger than 256 characters', as
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -452,7 +465,7 @@ it('displays error message when other details is bigger than 256 characters', as
 it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
@@ -493,7 +506,7 @@ describe('preprintDoi', () => {
     'preprintDoi is $status when lifecycle is $lifecycle',
     async ({ lifecycle, status }) => {
       render(
-        <StaticRouter>
+        <StaticRouter location="">
           <ManuscriptForm
             {...defaultProps}
             type="Original Research"
@@ -550,7 +563,7 @@ describe('renders the necessary fields', () => {
         (lifecycle) => {
           const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
           const { getByText } = render(
-            <StaticRouter>
+            <StaticRouter location="">
               <ManuscriptForm
                 {...defaultProps}
                 type={manuscriptType}
@@ -573,7 +586,7 @@ describe('renders the necessary fields', () => {
 it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
@@ -647,7 +660,7 @@ it('resets form fields to default values when no longer visible', async () => {
 
 it('maintains values provided when lifecycle changes but field is still visible', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="">
       <ManuscriptForm {...defaultProps} title="manuscript title" />
     </StaticRouter>,
   );
@@ -701,14 +714,14 @@ it('maintains values provided when lifecycle changes but field is still visible'
 it('does not submit when required values are missing', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ManuscriptForm {...defaultProps} onSave={onSave} />
     </StaticRouter>,
   );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
@@ -720,22 +733,16 @@ it('does not submit when required values are missing', async () => {
   expect(onSave).not.toHaveBeenCalled();
 });
 
-it('should go back when cancel button is clicked', () => {
-  const { getByText } = render(
-    <Router history={history}>
-      <Route path="/form">
-        <ManuscriptForm {...defaultProps} />
-      </Route>
-    </Router>,
-    { wrapper: MemoryRouter },
+it('should go back when cancel button is clicked', async () => {
+  render(
+    <MemoryRouter>
+      <ManuscriptForm {...defaultProps} />
+    </MemoryRouter>,
   );
 
-  history.push('/another-url');
-  history.push('/form');
+  const cancelButton = screen.getByText(/cancel/i);
+  await userEvent.click(cancelButton);
 
-  const cancelButton = getByText(/cancel/i);
-  expect(cancelButton).toBeInTheDocument();
-  userEvent.click(cancelButton);
-
-  expect(history.location.pathname).toBe('/another-url');
+  expect(mockedUseNavigate).toHaveBeenCalledTimes(1);
+  expect(mockedUseNavigate).toHaveBeenCalledWith(-1);
 });

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import { Anchor, Avatar } from '../atoms';
@@ -56,7 +56,11 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
         .slice(0, MAX_USER_AVATARS)
         .map(({ id: userId, avatarUrl, firstName, lastName }, i) => (
           <li key={userId} css={[listItemStyles, { left: `-${i * 3}px` }]}>
-            <Anchor href={network({}).users({}).user({ userId }).$}>
+            <Anchor
+              href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                id: userId,
+              })}
+            >
               <Avatar
                 firstName={firstName}
                 lastName={lastName}

@@ -1,4 +1,6 @@
 import failOnConsole from 'jest-fail-on-console';
+import { TextEncoder, TextDecoder } from 'util';
+
 failOnConsole({
   silenceMessage: (msg, method, context) =>
     /Recoil: Spent [0-9]{1,2}\.[0-9]+ms computing a cache key/.test(
@@ -6,12 +8,14 @@ failOnConsole({
     ),
 });
 
+Object.assign(global, { TextDecoder, TextEncoder });
+
 if (typeof document === 'object') {
   // jest-dom adds custom jest matchers for asserting on DOM nodes.
   // allows you to do things like:
   // expect(element).toHaveTextContent(/react/i)
   // learn more: https://github.com/testing-library/jest-dom
-  require('@testing-library/jest-dom/extend-expect');
+  require('@testing-library/jest-dom');
 
   // emotion CSS matchers
   const { matchers } = require('@emotion/jest');

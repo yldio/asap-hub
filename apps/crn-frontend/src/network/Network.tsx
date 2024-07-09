@@ -1,8 +1,8 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
@@ -56,7 +56,6 @@ const Network: FC<Record<string, never>> = () => {
       .then(loadWorkingGroupProfile);
   }, []);
 
-  const { path } = useRouteMatch();
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -67,111 +66,115 @@ const Network: FC<Record<string, never>> = () => {
 
   const [currentTime] = useState(new Date());
   return (
-    <Switch>
-      <Route exact path={path + network({}).users.template}>
-        <NetworkPage
-          page="users"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="People">
-            <UserList filters={filters} searchQuery={debouncedSearchQuery} />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+    <Routes>
       <Route
-        path={
-          path +
-          network({}).users.template +
-          network({}).users({}).user.template
+        path={networkRoutes.DEFAULT.$.USERS.relativePath}
+        element={
+          <NetworkPage
+            page="users"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="People">
+              <UserList filters={filters} searchQuery={debouncedSearchQuery} />
+            </SearchFrame>
+          </NetworkPage>
         }
-      >
-        <Frame title="User Profile">
-          <UserProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).teams.template}>
-        <NetworkPage
-          page="teams"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="Teams">
-            <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
       <Route
-        path={
-          path +
-          network({}).teams.template +
-          network({}).teams({}).team.template
+        path={networkRoutes.DEFAULT.$.USERS.DETAILS.relativePath}
+        element={
+          <Frame title="User Profile">
+            <UserProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Team Profile">
-          <TeamProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).interestGroups.template}>
-        <NetworkPage
-          page="interest-groups"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="Interest Groups">
-            <InterestGroupList
-              filters={filters}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
+
       <Route
-        path={
-          path +
-          network({}).interestGroups.template +
-          network({}).interestGroups({}).interestGroup.template
+        path={networkRoutes.DEFAULT.$.TEAMS.relativePath}
+        element={
+          <NetworkPage
+            page="teams"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="Teams">
+              <TeamList filters={filters} searchQuery={debouncedSearchQuery} />
+            </SearchFrame>
+          </NetworkPage>
         }
-      >
-        <Frame title="Interest Group Profile">
-          <InterestGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Route exact path={path + network({}).workingGroups.template}>
-        <NetworkPage
-          page="working-groups"
-          searchQuery={searchQuery}
-          onChangeSearchQuery={setSearchQuery}
-          filters={filters}
-          onChangeFilter={toggleFilter}
-        >
-          <SearchFrame title="Working Groups">
-            <WorkingGroupList
-              filters={filters}
-              searchQuery={debouncedSearchQuery}
-            />
-          </SearchFrame>
-        </NetworkPage>
-      </Route>
+      />
       <Route
-        path={
-          path +
-          network({}).workingGroups.template +
-          network({}).workingGroups({}).workingGroup.template
+        path={networkRoutes.DEFAULT.$.TEAMS.DETAILS.relativePath}
+        element={
+          <Frame title="Team Profile">
+            <TeamProfile currentTime={currentTime} />
+          </Frame>
         }
-      >
-        <Frame title="Working Group Profile">
-          <WorkingGroupProfile currentTime={currentTime} />
-        </Frame>
-      </Route>
-      <Redirect to={network({}).users({}).$} />
-    </Switch>
+      />
+      <Route
+        path={networkRoutes.DEFAULT.$.INTEREST_GROUPS.relativePath}
+        element={
+          <NetworkPage
+            page="interest-groups"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="Interest Groups">
+              <InterestGroupList
+                filters={filters}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </NetworkPage>
+        }
+      />
+      <Route
+        path={networkRoutes.DEFAULT.$.INTEREST_GROUPS.DETAILS.relativePath}
+        element={
+          <Frame title="Interest Group Profile">
+            <InterestGroupProfile currentTime={currentTime} />
+          </Frame>
+        }
+      />
+      <Route
+        path={networkRoutes.DEFAULT.$.WORKING_GROUPS.relativePath}
+        element={
+          <NetworkPage
+            page="working-groups"
+            searchQuery={searchQuery}
+            onChangeSearchQuery={setSearchQuery}
+            filters={filters}
+            onChangeFilter={toggleFilter}
+          >
+            <SearchFrame title="Working Groups">
+              <WorkingGroupList
+                filters={filters}
+                searchQuery={debouncedSearchQuery}
+              />
+            </SearchFrame>
+          </NetworkPage>
+        }
+      />
+      <Route
+        path={networkRoutes.DEFAULT.$.WORKING_GROUPS.DETAILS.relativePath}
+        element={
+          <Frame title="Working Group Profile">
+            <WorkingGroupProfile currentTime={currentTime} />
+          </Frame>
+        }
+      />
+      <Route
+        path="*"
+        element={<Navigate to={networkRoutes.DEFAULT.USERS.buildPath({})} />}
+      />
+    </Routes>
   );
 };
 

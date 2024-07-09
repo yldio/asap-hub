@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { isEnabled } from '@asap-hub/flags';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
@@ -34,17 +34,23 @@ const AnalyticsPageHeader: React.FC = () => (
       </div>
       <TabNav>
         <TabLink
-          href={analytics({}).productivity({}).$}
+          href={analyticsRoutes.DEFAULT.PRODUCTIVITY.buildPath({})}
           Icon={ProductivityIcon}
         >
           Resource & Data Sharing
         </TabLink>
         {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-          <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
+          <TabLink
+            href={analyticsRoutes.DEFAULT.COLLABORATION.buildPath({})}
+            Icon={TeamIcon}
+          >
             Collaboration
           </TabLink>
         )}
-        <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
+        <TabLink
+          href={analyticsRoutes.DEFAULT.LEADERSHIP.buildPath({})}
+          Icon={LeadershipIcon}
+        >
           Leadership & Membership
         </TabLink>
         {isEnabled('DISPLAY_ANALYTICS_BETA') && (

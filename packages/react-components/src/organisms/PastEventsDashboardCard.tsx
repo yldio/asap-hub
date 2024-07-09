@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
-import { events as eventsRoute } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 
 import { Card, Link, MaterialAvailability } from '../atoms';
 import { charcoal, lead, steel } from '../colors';
@@ -67,7 +67,10 @@ const PastEventsDashboardCard: React.FC<PastEventsDashboardCardProps> = ({
         ({ id, title, startDate, notes, presentation, videoRecording }) => (
           <div key={id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>Event</span>
-            <Link ellipsed href={eventsRoute({}).event({ eventId: id }).$}>
+            <Link
+              ellipsed
+              href={eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id })}
+            >
               {title}
             </Link>
             <span css={[titleStyles, rowTitleStyles]}>Meeting Materials</span>

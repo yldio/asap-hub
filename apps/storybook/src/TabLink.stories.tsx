@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { TabLink } from '@asap-hub/react-components';
 
 import { text } from './knobs';

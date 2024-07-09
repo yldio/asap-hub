@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import {
   render,
   screen,

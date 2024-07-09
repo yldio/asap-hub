@@ -1,7 +1,8 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import ReactRouterPrompt from 'react-router-prompt';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt, useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { usePushFromHere } from '@asap-hub/react-components';
 
 const styles = css({
@@ -37,7 +38,7 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const pushFromHere = usePushFromHere();
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
@@ -105,7 +106,7 @@ const Form = <T extends void | Record<string, unknown>>({
 
   return (
     <>
-      <Prompt
+      <ReactRouterPrompt
         when={
           status === 'isSaving' ||
           status === 'hasError' ||

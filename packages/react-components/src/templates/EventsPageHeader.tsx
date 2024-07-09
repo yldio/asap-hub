@@ -1,4 +1,4 @@
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { Display, Paragraph, TabLink } from '../atoms';
@@ -39,14 +39,22 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
         </Paragraph>
         <TabNav>
           <TabLink
-            href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
+            href={
+              eventRoutes.DEFAULT.UPCOMING.buildPath({}) +
+              queryParamString(searchQuery)
+            }
           >
             Upcoming Events
           </TabLink>
-          <TabLink href={events({}).past({}).$ + queryParamString(searchQuery)}>
+          <TabLink
+            href={
+              eventRoutes.DEFAULT.PAST.buildPath({}) +
+              queryParamString(searchQuery)
+            }
+          >
             Past Events
           </TabLink>
-          <TabLink href={events({}).calendar({}).$}>
+          <TabLink href={eventRoutes.DEFAULT.CALENDAR.buildPath({})}>
             Subscribe to Calendars
           </TabLink>
         </TabNav>

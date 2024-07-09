@@ -2,6 +2,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+
 import { network } from '@asap-hub/routing';
 import {
   render,
@@ -31,6 +32,11 @@ const history = createMemoryHistory({
 });
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
+  uploadManuscriptFile: jest.fn().mockResolvedValue({
+    filename: 'manuscript.pdf',
+    url: 'https://example.com/manuscript.pdf',
+    id: 'file-id',
+  }),
 }));
 
 beforeEach(() => {
@@ -105,6 +111,13 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.type(lifecycleTextbox, 'Typeset proof');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  userEvent.upload(uploadInput, testFile);
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 

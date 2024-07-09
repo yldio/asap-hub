@@ -6,7 +6,6 @@ import {
   TeamListItemResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
-  ManuscriptFileResponse,
 } from '@asap-hub/model';
 import {
   atom,

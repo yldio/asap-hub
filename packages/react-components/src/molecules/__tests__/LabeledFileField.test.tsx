@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { LabeledFileField } from '../..';
@@ -39,7 +39,7 @@ it('renders a file tag and a disabled button when a file is selected', () => {
   expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
 });
 
-it('calls handleFileUpload when a file is selected', () => {
+it('calls handleFileUpload when a file is selected', async () => {
   render(
     <LabeledFileField
       title="Title"
@@ -54,5 +54,8 @@ it('calls handleFileUpload when a file is selected', () => {
   const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
 
   userEvent.upload(uploadInput, testFile);
-  expect(handleFileUploadMock).toHaveBeenCalledWith(testFile);
+
+  await waitFor(() =>
+    expect(handleFileUploadMock).toHaveBeenCalledWith(testFile),
+  );
 });

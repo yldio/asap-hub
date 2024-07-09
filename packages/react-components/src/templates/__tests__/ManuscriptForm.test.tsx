@@ -63,6 +63,11 @@ it('data is sent on form submission', async () => {
         title="manuscript title"
         type="Original Research"
         lifecycle="Draft manuscript (prior to preprint submission)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -76,6 +81,11 @@ it('data is sent on form submission', async () => {
         {
           type: 'Original Research',
           lifecycle: 'Draft manuscript (prior to preprint submission)',
+          manuscriptFile: {
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: undefined,
@@ -130,6 +140,11 @@ test.each`
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -143,6 +158,7 @@ test.each`
         {
           type: 'Original Research',
           lifecycle: 'Publication',
+          manuscriptFile: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
           acknowledgedGrantNumber: 'Yes',
@@ -204,6 +220,11 @@ test.each`
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -218,6 +239,7 @@ test.each`
           {
             type: 'Original Research',
             lifecycle: 'Publication',
+            manuscriptFile: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
@@ -258,6 +280,11 @@ it('displays an error message when user selects no in a quick check and does not
         type="Original Research"
         publicationDoi="10.0777"
         lifecycle="Publication"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -465,6 +492,11 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
         title="manuscript title"
         type="Original Research"
         lifecycle="Typeset proof"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -479,6 +511,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
         expect.objectContaining({
           type: 'Original Research',
           lifecycle: 'Typeset proof',
+          manuscriptFile: expect.anything(),
           requestingApcCoverage: 'Already submitted',
         }),
       ],
@@ -603,6 +636,13 @@ it('resets form fields to default values when no longer visible', async () => {
   userEvent.type(lifecycleTextbox, 'Publication');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  userEvent.upload(uploadInput, testFile);
 
   const preprintDoi = '10.4444/test';
   const publicationDoi = '10.4467/test';

@@ -23,17 +23,6 @@ export const getEngagementItems = (
       keyPersonnel: new Set(),
     };
 
-    if (teamItem.sys.id === '463705c4-e70b-470c-918d-b0ceb84a3415') {
-      console.log(
-        '**',
-        JSON.stringify(
-          teamItem.linkedFrom?.eventSpeakersCollection?.items,
-          null,
-          2,
-        ),
-      );
-    }
-
     cleanArray(teamItem.linkedFrom?.eventSpeakersCollection?.items)
       .filter(getFilterEventByRange(rangeKey))
       .forEach((eventSpeakerItem) => {
@@ -71,10 +60,6 @@ export const getEngagementItems = (
           : count,
       0,
     );
-
-    if (teamItem.sys.id === '463705c4-e70b-470c-918d-b0ceb84a3415') {
-      console.log('\n\n\n\n** events', events, events.size);
-    }
 
     return {
       id: teamItem.sys.id,

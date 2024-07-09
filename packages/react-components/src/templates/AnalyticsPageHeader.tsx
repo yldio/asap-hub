@@ -6,7 +6,12 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import TabNav from '../molecules/TabNav';
-import { LeadershipIcon, ProductivityIcon, TeamIcon } from '../icons';
+import {
+  EngagementIcon,
+  LeadershipIcon,
+  ProductivityIcon,
+  TeamIcon,
+} from '../icons';
 
 const visualHeaderStyles = css({
   padding: `${defaultPageLayoutPaddingStyle} 0`,
@@ -28,15 +33,13 @@ const AnalyticsPageHeader: React.FC = () => (
         </Paragraph>
       </div>
       <TabNav>
-        {isEnabled('DISPLAY_ANALYTICS_PRODUCTIVITY') && (
-          <TabLink
-            href={analytics({}).productivity({}).$}
-            Icon={ProductivityIcon}
-          >
-            Resource & Data Sharing
-          </TabLink>
-        )}
-        {isEnabled('DISPLAY_ANALYTICS_COLLABORATION') && (
+        <TabLink
+          href={analytics({}).productivity({}).$}
+          Icon={ProductivityIcon}
+        >
+          Resource & Data Sharing
+        </TabLink>
+        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
           <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
             Collaboration
           </TabLink>
@@ -44,6 +47,11 @@ const AnalyticsPageHeader: React.FC = () => (
         <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
           Leadership & Membership
         </TabLink>
+        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
+          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+            Engagement
+          </TabLink>
+        )}
       </TabNav>
     </div>
   </header>

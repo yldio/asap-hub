@@ -11,6 +11,7 @@ export { default as DashboardUpcomingEvents } from './DashboardUpcomingEvents';
 export { default as DeliverablesCard } from './DeliverablesCard';
 export { default as EditModal } from './EditModal';
 export { default as EditUserModal } from './EditUserModal';
+export { default as EngagementTable } from './EngagementTable';
 export { default as EntityCard } from './EntityCard';
 export { default as EventAbout } from './EventAbout';
 export { default as EventCard } from './EventCard';

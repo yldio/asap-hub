@@ -1,4 +1,5 @@
 import {
+  Asset,
   Entry,
   Environment,
   getContentfulGraphqlClientMockServer,
@@ -193,6 +194,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     test('can create a manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';
+      const manuscriptCreateDataObject = getManuscriptPostBody();
       const publish = jest.fn();
 
       when(environmentMock.createEntry)
@@ -207,8 +209,14 @@ describe('Manuscripts Contentful Data Provider', () => {
           sys: { id: manuscriptId },
           publish,
         } as unknown as Entry);
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
 
-      const manuscriptCreateDataObject = getManuscriptPostBody();
       const result = await manuscriptDataProvider.create({
         ...manuscriptCreateDataObject,
         userId: 'user-id-0',
@@ -275,6 +283,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         },
       });
+      expect(assetMock.publish).toHaveBeenCalled();
       expect(publish).toHaveBeenCalled();
       expect(result).toEqual(manuscriptId);
     });

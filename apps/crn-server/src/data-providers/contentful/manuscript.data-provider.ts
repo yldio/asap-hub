@@ -64,6 +64,11 @@ export class ManuscriptContentfulDataProvider
       throw new Error('No versions provided');
     }
 
+    const manuscriptFileAsset = await environment.getAsset(
+      version.manuscriptFile.id,
+    );
+    await manuscriptFileAsset.publish();
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {

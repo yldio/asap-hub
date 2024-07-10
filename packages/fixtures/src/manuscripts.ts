@@ -28,6 +28,11 @@ export const createManuscriptResponse = (
       type: 'Original Research',
       createdBy: manuscriptAuthor,
       publishedAt: '2020-12-10T20:36:54Z',
+      manuscriptFile: {
+        id: `file-id-${itemIndex}`,
+        url: `https://example.com/manuscript_${itemIndex}.pdf`,
+        filename: `manuscript_${itemIndex}.pdf`,
+      },
     },
   ],
 });

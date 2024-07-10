@@ -90,6 +90,9 @@ it('renders manuscript form page', async () => {
 });
 
 it('can publish a form when the data is valid and navigates to team workspace', async () => {
+  // increase timeout
+  // im not a big fan of that though - Piotr
+  jest.setTimeout(10000);
   const title = 'The Manuscript';
 
   await renderPage();

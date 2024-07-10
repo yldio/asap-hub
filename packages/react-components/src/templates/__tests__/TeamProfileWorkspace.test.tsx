@@ -96,6 +96,11 @@ describe('compliance section', () => {
             {
               type: 'Original Research',
               lifecycle: 'Draft manuscript (prior to preprint submission)',
+              manuscriptFile: {
+                url: 'http://example.com/file.pdf',
+                filename: 'file.pdf',
+                id: 'file-id',
+              },
               createdBy: {
                 displayName: 'John Doe',
                 firstName: 'John',
@@ -116,6 +121,11 @@ describe('compliance section', () => {
             {
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint, version 1',
+              manuscriptFile: {
+                url: 'http://example.com/file.pdf',
+                filename: 'file.pdf',
+                id: 'file-id',
+              },
               createdBy: {
                 displayName: 'Jane Doe',
                 firstName: 'Jane',

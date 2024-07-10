@@ -203,6 +203,11 @@ describe('/manuscripts/ route', () => {
         createManuscriptRequest.versions.push({
           lifecycle: 'Preprint, version 2',
           type: 'Original Research',
+          manuscriptFile: {
+            url: 'http://example.com/file.pdf',
+            filename: 'file.pdf',
+            id: 'file-id',
+          },
         });
 
         const response = await supertest(app)

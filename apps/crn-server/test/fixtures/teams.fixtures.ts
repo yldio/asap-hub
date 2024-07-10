@@ -214,7 +214,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
-            id: 'file-id-1',
+            id: 'file-id',
             url: 'https://example.com/manuscript.pdf',
             filename: 'manuscript.pdf',
           },
@@ -231,7 +231,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
-            id: 'file-id-2',
+            id: 'file-id',
             url: 'https://example.com/manuscript.pdf',
             filename: 'manuscript.pdf',
           },

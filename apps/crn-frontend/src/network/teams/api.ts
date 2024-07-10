@@ -223,7 +223,7 @@ export const uploadManuscriptFile = async (
   if (!resp.ok) {
     if (resp.status === 400 && handleError) {
       handleError((await resp.json()).message);
-      return;
+      return undefined;
     }
     throw new Error(
       `Failed to upload manuscript file. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

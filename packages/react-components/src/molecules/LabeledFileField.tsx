@@ -92,7 +92,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
       <input
         onChange={handleFileChange}
         multiple={false}
-        ref={fileInputRef!}
+        ref={fileInputRef}
         type="file"
         aria-label={placeholder}
         hidden

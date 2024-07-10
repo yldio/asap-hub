@@ -57,6 +57,12 @@ export const apcCoverageOptions = ['Yes', 'No', 'Already submitted'] as const;
 
 export type ApcCoverageOption = (typeof apcCoverageOptions)[number];
 
+export type ManuscriptFileResponse = {
+  id: string;
+  filename: string;
+  url: string;
+};
+
 type ManuscriptFile = ManuscriptFileResponse;
 
 export type ManuscriptVersion = {
@@ -246,12 +252,6 @@ export type ManuscriptDataObject = {
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;
-
-export type ManuscriptFileResponse = {
-  id: string;
-  filename: string;
-  url: string;
-};
 
 export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,

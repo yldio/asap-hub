@@ -1,6 +1,6 @@
 import { ManuscriptFileResponse, ManuscriptResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
-import { Response, Router } from 'express';
+import { RequestHandler, Response, Router } from 'express';
 import multer from 'multer';
 
 import ManuscriptController from '../controllers/manuscript.controller';
@@ -33,7 +33,13 @@ export const manuscriptRouteFactory = (
 
   manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
     '/manuscripts/manuscript-file',
-    upload.single('file') as any,
+    upload.single('file') as RequestHandler<
+      unknown,
+      ManuscriptFileResponse,
+      unknown,
+      unknown,
+      Record<string, unknown>
+    >,
     async (req, res) => {
       const { file } = req;
 

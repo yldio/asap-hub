@@ -211,11 +211,14 @@ const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
       tag = (record as AnalyticsTeamLeadershipResponse).displayName;
       return tag ? [tag] : [];
     case 'user-productivity' || 'user-collaboration':
-      const { name, teams } = record as UserProductivityResponse | UserCollaborationResponse;
+      const { name, teams } = record as
+        | UserProductivityResponse
+        | UserCollaborationResponse;
       const teamNames = teams.map((team) => team.team);
       return name ? [name].concat(teamNames) : teamNames;
     case 'team-productivity' || 'team-collaboration':
-      tag = (record as TeamProductivityResponse | TeamCollaborationResponse).name;
+      tag = (record as TeamProductivityResponse | TeamCollaborationResponse)
+        .name;
       return tag ? [tag] : [];
     default:
       return [];

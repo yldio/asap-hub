@@ -8,13 +8,16 @@ import {
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithFiltering,
+} from '@asap-hub/algolia';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
@@ -24,8 +27,12 @@ import {
   getUserCollaborationPerformance,
 } from '../api';
 import Collaboration from '../Collaboration';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
 jest.mock('../api');
+jest.mock('../../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
 mockConsoleError();
 
 afterEach(() => {
@@ -54,6 +61,13 @@ const mockGetUserCollaborationPerformance =
 mockGetUserCollaborationPerformance.mockResolvedValue(
   userCollaborationPerformance,
 );
+
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['searchForTagValues']
+>;
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
+>;
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
@@ -336,4 +350,34 @@ it('navigates between user and team collaboration pages', async () => {
   );
   expect(screen.getByText('Team Co-Production')).toBeVisible();
   expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+});
+
+describe('search', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+  it('allows typing in search queries', async () => {
+    const mockAlgoliaClient = {
+      searchForTagValues: mockSearchForTagValues,
+    };
+
+    mockUseAnalyticsAlgolia.mockReturnValue({
+      client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+    });
+    mockGetUserCollaboration.mockResolvedValue({ items: [], total: 0 });
+
+    await renderPage();
+    const searchBox = getSearchBox();
+
+    userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['user-collaboration'],
+        'test123',
+        {},
+      ),
+    );
+  });
 });

@@ -9,6 +9,9 @@ describe('AnalyticsCollaborationPageBody', () => {
     metric: 'user',
     type: 'within-team',
     timeRange: '30d',
+    tags: [],
+    setTags: jest.fn(),
+    loadTags: jest.fn().mockResolvedValue([]),
     currentPage: 2,
     children: <span>table</span>,
   };

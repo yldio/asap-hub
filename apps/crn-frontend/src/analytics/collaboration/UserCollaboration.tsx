@@ -55,9 +55,10 @@ const getPerformanceForType = (
 
 export type CollaborationProps = {
   type: 'within-team' | 'across-teams';
+  tags: string[];
 };
 
-const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
+const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { timeRange, documentCategory } = useAnalytics();
@@ -67,7 +68,7 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type }) => {
     pageSize,
     timeRange,
     documentCategory,
-    tags: [],
+    tags,
     sort: '',
   });
 

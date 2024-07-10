@@ -193,6 +193,20 @@ describe('getUserCollaboration', () => {
       );
     },
   );
+
+  it('should pass the search query to Algolia', async () => {
+    await getUserCollaboration(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['user-collaboration'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
+    );
+  });
 });
 
 describe('getTeamCollaboration', () => {
@@ -264,6 +278,20 @@ describe('getTeamCollaboration', () => {
       );
     },
   );
+
+  it('should pass the search query to Algolia', async () => {
+    await getTeamCollaboration(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['team-collaboration'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
+    );
+  });
 });
 
 describe('getUserCollaborationPerformance', () => {

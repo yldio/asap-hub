@@ -124,7 +124,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection?.total || 0,
-      items: getUserCollaborationItems(collection, filter?.timeRange),
+      items: getUserCollaborationItems(
+        collection,
+        filter?.timeRange,
+        filter?.documentCategory,
+      ),
     };
   }
 
@@ -155,7 +159,11 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
 
     return {
       total: collection.total,
-      items: getTeamCollaborationItems(collection, filter?.timeRange),
+      items: getTeamCollaborationItems(
+        collection,
+        filter?.timeRange,
+        filter?.outputType,
+      ),
     };
   }
 

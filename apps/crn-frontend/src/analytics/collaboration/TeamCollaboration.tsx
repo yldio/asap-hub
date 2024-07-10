@@ -36,17 +36,21 @@ const getDataForType = (
 
 const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, outputType } = useAnalytics();
 
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,
     pageSize,
     timeRange,
+    outputType,
     tags: [],
     sort: '',
   });
 
-  const performance = useTeamCollaborationPerformance({ timeRange });
+  const performance = useTeamCollaborationPerformance({
+    timeRange,
+    outputType,
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

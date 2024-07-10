@@ -19,6 +19,7 @@ import {
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  ResearchOutputDocumentType,
   TeamCollaborationDataObject,
   TeamCollaborationResponse,
   TeamProductivityDataObject,
@@ -403,6 +404,66 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
 
+type UserCollaborationOutputType = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchUserCollaborationQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'][number];
+
+export const generateUserCollaborationOutputByDocType = (
+  documentType: ResearchOutputDocumentType,
+): UserCollaborationOutputType => ({
+  addedDate: '2023-09-08T03:00:00.000Z',
+  documentType: documentType,
+  authorsCollection: {
+    items: [
+      {
+        __typename: 'Users',
+        sys: {
+          id: 'user-1',
+        },
+      },
+      {
+        __typename: 'Users',
+        sys: {
+          id: 'user-2',
+        },
+        teamsCollection: {
+          items: [
+            {
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+            {
+              team: {
+                sys: {
+                  id: 'team-2',
+                },
+              },
+            },
+          ],
+        },
+        labsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'lab-2',
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+
 export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
   usersCollection: {
     total: 1,
@@ -442,6 +503,15 @@ export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
                 },
                 displayName: 'Team De Camilli',
                 inactiveSince: null,
+              },
+            },
+          ],
+        },
+        labsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'lab-1',
               },
             },
           ],

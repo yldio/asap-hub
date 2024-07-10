@@ -64,6 +64,7 @@ const searchSelectContainerStyles = css({
 });
 
 const filterContainerStyles = css({
+  marginLeft: 'auto',
   '> div': {
     height: '100%',
     '> button': {
@@ -180,8 +181,8 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
     : '';
   return (
     <>
-      {metricOption && (
-        <div css={searchSelectContainerStyles}>
+      <div css={searchSelectContainerStyles}>
+        {metricOption && (
           <div css={[searchContainerStyles, searchStyles]}>
             <Subtitle>{searchTexts[metricOption].label}:</Subtitle>
             <span role="search" css={searchStyles}>
@@ -200,67 +201,65 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
               />
             </span>
           </div>
-          {documentCategory && (
-            <div css={[selectContainerStyles, filterContainerStyles]}>
-              <strong>Document Category:</strong>
-              <DropdownButton
-                noMargin
-                buttonChildren={() => (
-                  <>
-                    <span css={{ marginRight: rem(8) }}>
-                      {documentCategoryOptions[documentCategory]}
-                    </span>
-                    {dropdownChevronIcon}
-                  </>
-                )}
-              >
-                {Object.keys(documentCategoryOptions).map((key) => ({
-                  item: (
-                    <>
-                      {documentCategoryOptions[key as DocumentCategoryOption]}
-                    </>
-                  ),
-                  href: generateLink(
-                    href,
-                    currentPage,
-                    tagsQueryString,
-                    timeRange,
-                    key,
-                  ),
-                }))}
-              </DropdownButton>
-            </div>
-          )}
-          {outputType && (
-            <div css={[selectContainerStyles, filterContainerStyles]}>
-              <Subtitle>Type:</Subtitle>
-              <DropdownButton
-                noMargin
-                buttonChildren={() => (
-                  <>
-                    <span css={{ marginRight: rem(8) }}>
-                      {outputTypeOptions[outputType]}
-                    </span>
-                    {dropdownChevronIcon}
-                  </>
-                )}
-              >
-                {Object.keys(outputTypeOptions).map((key) => ({
-                  item: <>{outputTypeOptions[key as OutputTypeOption]}</>,
-                  href: generateLink(
-                    href,
-                    currentPage,
-                    tagsQueryString,
-                    timeRange,
-                    undefined,
-                    key,
-                  ),
-                }))}
-              </DropdownButton>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+        {documentCategory && (
+          <div css={[selectContainerStyles, filterContainerStyles]}>
+            <strong>Document Category:</strong>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={{ marginRight: rem(8) }}>
+                    {documentCategoryOptions[documentCategory]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(documentCategoryOptions).map((key) => ({
+                item: (
+                  <>{documentCategoryOptions[key as DocumentCategoryOption]}</>
+                ),
+                href: generateLink(
+                  href,
+                  currentPage,
+                  tagsQueryString,
+                  timeRange,
+                  key,
+                ),
+              }))}
+            </DropdownButton>
+          </div>
+        )}
+        {outputType && (
+          <div css={[selectContainerStyles, filterContainerStyles]}>
+            <Subtitle>Type:</Subtitle>
+            <DropdownButton
+              noMargin
+              buttonChildren={() => (
+                <>
+                  <span css={{ marginRight: rem(8) }}>
+                    {outputTypeOptions[outputType]}
+                  </span>
+                  {dropdownChevronIcon}
+                </>
+              )}
+            >
+              {Object.keys(outputTypeOptions).map((key) => ({
+                item: <>{outputTypeOptions[key as OutputTypeOption]}</>,
+                href: generateLink(
+                  href,
+                  currentPage,
+                  tagsQueryString,
+                  timeRange,
+                  undefined,
+                  key,
+                ),
+              }))}
+            </DropdownButton>
+          </div>
+        )}
+      </div>
       <span css={containerStyles}>
         {timeRange && (
           <span css={selectContainerStyles}>

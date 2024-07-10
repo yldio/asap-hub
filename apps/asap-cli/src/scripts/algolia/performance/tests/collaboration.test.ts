@@ -1,4 +1,4 @@
-import { timeRanges } from '@asap-hub/model';
+import { documentCategories, outputTypes, timeRanges } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
   processTeamCollaborationPerformance,
@@ -62,19 +62,25 @@ describe('processUserCollaborationPerformance', () => {
     ]);
 
     timeRanges.forEach((range) => {
-      expect(mockIndex.search).toHaveBeenCalledWith('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"user-collaboration")`,
-        attributesToRetrieve: ['teams'],
-        page: expect.any(Number),
-        hitsPerPage: 50,
+      documentCategories.forEach((documentCategory) => {
+        expect(mockIndex.search).toHaveBeenCalledWith('', {
+          filters: `__meta.range:"${range}" AND __meta.documentCategory:"${documentCategory}" AND __meta.type:"user-collaboration"`,
+          attributesToRetrieve: ['teams'],
+          page: expect.any(Number),
+          hitsPerPage: 50,
+        });
       });
     });
 
-    // one for each time range
-    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
+    // one for each time range and document category combination
+    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(30);
     expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
       {
-        __meta: { range: 'all', type: 'user-collaboration-performance' },
+        __meta: {
+          range: 'all',
+          type: 'user-collaboration-performance',
+          documentCategory: 'protocol',
+        },
         acrossTeam: {
           aboveAverageMax: 4,
           aboveAverageMin: 4,
@@ -199,22 +205,122 @@ describe('processTeamCollaborationPerformance', () => {
     ]);
 
     timeRanges.forEach((range) => {
-      expect(mockIndex.search).toHaveBeenCalledWith('', {
-        filters: `__meta.range:"${range}" AND (__meta.type:"team-collaboration")`,
-        attributesToRetrieve: [
-          'outputsCoProducedAcross',
-          'outputsCoProducedWithin',
-        ],
-        page: expect.any(Number),
-        hitsPerPage: 50,
+      outputTypes.forEach((outputType) => {
+        expect(mockIndex.search).toHaveBeenCalledWith('', {
+          filters: `__meta.range:"${range}" AND __meta.outputType:"${outputType}" AND __meta.type:"team-collaboration"`,
+          attributesToRetrieve: [
+            'outputsCoProducedAcross',
+            'outputsCoProducedWithin',
+          ],
+          page: expect.any(Number),
+          hitsPerPage: 50,
+        });
       });
     });
 
-    // one for each time range
-    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
-    expect(await mockIndex.saveObject).toHaveBeenLastCalledWith(
+    // one for each time range and output type combination
+    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(10);
+    expect(await mockIndex.saveObject).toHaveBeenCalledWith(
       {
-        __meta: { range: 'all', type: 'team-collaboration-performance' },
+        __meta: {
+          range: 'all',
+          type: 'team-collaboration-performance',
+          outputType: 'public',
+        },
+        acrossTeam: {
+          article: {
+            aboveAverageMax: 50,
+            aboveAverageMin: 43,
+            averageMax: 42,
+            averageMin: 7,
+            belowAverageMax: 6,
+            belowAverageMin: 0,
+          },
+          bioinformatics: {
+            aboveAverageMax: 10,
+            aboveAverageMin: 9,
+            averageMax: 8,
+            averageMin: 3,
+            belowAverageMax: 2,
+            belowAverageMin: 1,
+          },
+          dataset: {
+            aboveAverageMax: 30,
+            aboveAverageMin: 23,
+            averageMax: 22,
+            averageMin: 1,
+            belowAverageMax: 0,
+            belowAverageMin: 3,
+          },
+          labResource: {
+            aboveAverageMax: 20,
+            aboveAverageMin: 18,
+            averageMax: 17,
+            averageMin: 5,
+            belowAverageMax: 4,
+            belowAverageMin: 4,
+          },
+          protocol: {
+            aboveAverageMax: 19,
+            aboveAverageMin: 18,
+            averageMax: 17,
+            averageMin: 4,
+            belowAverageMax: 3,
+            belowAverageMin: 0,
+          },
+        },
+        withinTeam: {
+          article: {
+            aboveAverageMax: 20,
+            aboveAverageMin: 20,
+            averageMax: 19,
+            averageMin: 3,
+            belowAverageMax: 2,
+            belowAverageMin: 0,
+          },
+          bioinformatics: {
+            aboveAverageMax: 10,
+            aboveAverageMin: 9,
+            averageMax: 8,
+            averageMin: 3,
+            belowAverageMax: 2,
+            belowAverageMin: 1,
+          },
+          dataset: {
+            aboveAverageMax: 30,
+            aboveAverageMin: 24,
+            averageMax: 23,
+            averageMin: 3,
+            belowAverageMax: 2,
+            belowAverageMin: 4,
+          },
+          labResource: {
+            aboveAverageMax: 20,
+            aboveAverageMin: 18,
+            averageMax: 17,
+            averageMin: 5,
+            belowAverageMax: 4,
+            belowAverageMin: 4,
+          },
+          protocol: {
+            aboveAverageMax: 14,
+            aboveAverageMin: 14,
+            averageMax: 13,
+            averageMin: 4,
+            belowAverageMax: 3,
+            belowAverageMin: 0,
+          },
+        },
+      },
+      { autoGenerateObjectIDIfNotExist: true },
+    );
+    expect(await mockIndex.saveObject).toHaveBeenCalledWith(
+      {
+        __meta: {
+          range: 'all',
+          type: 'team-collaboration-performance',
+          outputType: 'all',
+        },
         acrossTeam: {
           article: {
             aboveAverageMax: 50,

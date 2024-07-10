@@ -12,7 +12,7 @@ const Collaboration = () => {
     metric: 'user' | 'team';
     type: 'within-team' | 'across-teams';
   }>();
-  const { timeRange } = useAnalytics();
+  const { timeRange, documentCategory, outputType } = useAnalytics();
   const { currentPage } = usePaginationParams();
 
   const setMetric = (newMetric: 'user' | 'team') =>
@@ -35,6 +35,8 @@ const Collaboration = () => {
       setMetric={setMetric}
       setType={setType}
       timeRange={timeRange}
+      outputType={metric === 'team' ? outputType : undefined}
+      documentCategory={metric === 'user' ? documentCategory : undefined}
       currentPage={currentPage}
     >
       {metric === 'user' ? (

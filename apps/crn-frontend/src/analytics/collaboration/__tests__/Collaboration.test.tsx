@@ -174,9 +174,20 @@ const renderPage = async (metric: string = 'user') => {
   return result;
 };
 
+beforeEach(() => {
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+  mockGetUserCollaboration.mockResolvedValue(userData);
+  mockGetTeamCollaboration.mockResolvedValue(teamData);
+});
+
 describe('user collaboration', () => {
   it('renders with user data', async () => {
-    mockGetUserCollaboration.mockResolvedValue(userData);
     await renderPage();
 
     expect(screen.getByText('User Co-Production')).toBeVisible();
@@ -210,9 +221,6 @@ describe('user collaboration', () => {
       tags: [],
     };
 
-    when(mockGetUserCollaboration)
-      .calledWith(expect.anything(), defaultUserOptions)
-      .mockResolvedValue(userData);
     when(mockGetUserCollaboration)
       .calledWith(expect.anything(), {
         ...defaultUserOptions,
@@ -254,7 +262,6 @@ describe('user collaboration', () => {
 
 describe('team collaboration', () => {
   it('renders with team data', async () => {
-    mockGetTeamCollaboration.mockResolvedValue(teamData);
     await renderPage('team');
 
     expect(screen.getByText('Team Co-Production')).toBeVisible();
@@ -289,12 +296,7 @@ describe('team collaboration', () => {
       sort: '',
       tags: [],
     };
-    when(mockGetTeamCollaboration)
-      .calledWith(expect.anything(), {
-        ...defaultTeamOptions,
-        outputType: 'all',
-      })
-      .mockResolvedValue(teamData);
+
     when(mockGetTeamCollaboration)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
@@ -336,9 +338,6 @@ describe('team collaboration', () => {
 });
 
 it('navigates between user and team collaboration pages', async () => {
-  mockGetUserCollaboration.mockResolvedValue(userData);
-  mockGetTeamCollaboration.mockResolvedValue(teamData);
-
   await renderPage();
   const input = screen.getAllByRole('textbox', { hidden: false });
 
@@ -365,7 +364,6 @@ describe('search', () => {
     mockUseAnalyticsAlgolia.mockReturnValue({
       client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
     });
-    mockGetUserCollaboration.mockResolvedValue({ items: [], total: 0 });
 
     await renderPage();
     const searchBox = getSearchBox();

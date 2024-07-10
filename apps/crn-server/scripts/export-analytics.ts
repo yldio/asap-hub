@@ -206,19 +206,28 @@ const transformRecords = (
 
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
   let tag = '';
+  let teamNames = [];
   switch (type) {
     case 'team-leadership':
       tag = (record as AnalyticsTeamLeadershipResponse).displayName;
       return tag ? [tag] : [];
-    case 'user-productivity' || 'user-collaboration':
-      const { name, teams } = record as
-        | UserProductivityResponse
-        | UserCollaborationResponse;
-      const teamNames = teams.map((team) => team.team);
-      return name ? [name].concat(teamNames) : teamNames;
-    case 'team-productivity' || 'team-collaboration':
-      tag = (record as TeamProductivityResponse | TeamCollaborationResponse)
-        .name;
+    case 'user-productivity':
+      const userProductivityResponse = record as UserProductivityResponse;
+      teamNames = userProductivityResponse.teams.map((team) => team.team);
+      return userProductivityResponse.name
+        ? [userProductivityResponse.name].concat(teamNames)
+        : teamNames;
+    case 'user-collaboration':
+      const userCollaborationResponse = record as UserCollaborationResponse;
+      teamNames = userCollaborationResponse.teams.map((team) => team.team);
+      return userCollaborationResponse.name
+        ? [userCollaborationResponse.name].concat(teamNames)
+        : teamNames;
+    case 'team-productivity':
+      tag = (record as TeamProductivityResponse).name;
+      return tag ? [tag] : [];
+    case 'team-collaboration':
+      tag = (record as TeamCollaborationResponse).name;
       return tag ? [tag] : [];
     default:
       return [];

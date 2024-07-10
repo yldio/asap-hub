@@ -143,11 +143,12 @@ const setDefaultFieldValues = (
 
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
-  'type' | 'lifecycle' | 'createdBy' | 'publishedAt'
+  'type' | 'lifecycle' | 'manuscriptFile' | 'createdBy' | 'publishedAt'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
+    manuscriptFile?: ManuscriptFileResponse;
 
     onSave: (
       output: ManuscriptPostRequest,
@@ -231,6 +232,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     setValue,
     setError,
     reset,
+    resetField,
   } = methods;
 
   const watchType = watch('versions.0.type');
@@ -586,9 +588,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
                     placeholder="Upload Manuscript File"
                     onRemove={() => {
-                      setValue('versions.0.manuscriptFile', undefined, {
-                        shouldValidate: true,
-                      });
+                      resetField('versions.0.manuscriptFile');
                     }}
                     handleFileUpload={async (file) => {
                       const uploadedFile = await handleFileUpload(

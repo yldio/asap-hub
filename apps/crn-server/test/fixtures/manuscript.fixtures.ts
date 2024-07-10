@@ -20,6 +20,11 @@ export const getManuscriptDataObject = (
       type: 'Original Research',
       createdBy: manuscriptAuthor,
       publishedAt: '2020-09-23T20:45:22.000Z',
+      manuscriptFile: {
+        filename: 'manuscript.pdf',
+        url: 'https://example.com/manuscript.pdf',
+        id: 'file-id',
+      },
     },
   ],
   ...data,
@@ -61,6 +66,11 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
       sys: { id: 'version-1', publishedAt: '2020-09-23T20:45:22.000Z' },
       type: 'Original Research',
       lifecycle: 'Preprint, version 1',
+      manuscriptFile: {
+        sys: { id: 'file-id' },
+        fileName: 'manuscript.pdf',
+        url: 'https://example.com/manuscript.pdf',
+      },
       createdBy: {
         sys: {
           id: manuscriptAuthor.id,

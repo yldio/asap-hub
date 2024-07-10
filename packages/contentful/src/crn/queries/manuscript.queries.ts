@@ -16,6 +16,13 @@ export const manuscriptContentQueryFragment = gql`
         }
         type
         lifecycle
+        manuscriptFile {
+          sys {
+            id
+          }
+          fileName
+          url
+        }
         preprintDoi
         publicationDoi
         requestingApcCoverage

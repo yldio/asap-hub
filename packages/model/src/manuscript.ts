@@ -66,7 +66,7 @@ export type ManuscriptVersion = {
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
   otherDetails?: string;
-  manuscriptFile?: ManuscriptFile;
+  manuscriptFile: ManuscriptFile;
 
   acknowledgedGrantNumber?: string;
   asapAffiliationIncluded?: string;
@@ -264,7 +264,7 @@ export type ManuscriptPostRequest = Pick<
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
-    manuscriptFile?: ManuscriptVersion['manuscriptFile'];
+    manuscriptFile: ManuscriptVersion['manuscriptFile'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];

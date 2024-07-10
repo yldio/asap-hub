@@ -15422,6 +15422,9 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           | 'labMaterialsRegisteredDetails'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt'>;
+          manuscriptFile?: Maybe<
+            Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+          >;
           createdBy?: Maybe<
             Pick<
               Users,
@@ -15484,6 +15487,9 @@ export type FetchManuscriptByIdQuery = {
               | 'labMaterialsRegisteredDetails'
             > & {
               sys: Pick<Sys, 'id' | 'publishedAt'>;
+              manuscriptFile?: Maybe<
+                Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+              >;
               createdBy?: Maybe<
                 Pick<
                   Users,
@@ -17020,6 +17026,11 @@ export type FetchTeamByIdQuery = {
                         | 'labMaterialsRegisteredDetails'
                       > & {
                         sys: Pick<Sys, 'id' | 'publishedAt'>;
+                        manuscriptFile?: Maybe<
+                          Pick<Asset, 'fileName' | 'url'> & {
+                            sys: Pick<Sys, 'id'>;
+                          }
+                        >;
                         createdBy?: Maybe<
                           Pick<
                             Users,
@@ -20449,6 +20460,36 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'lifecycle' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptFile' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'fileName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

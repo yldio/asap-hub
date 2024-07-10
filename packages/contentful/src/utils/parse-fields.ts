@@ -44,6 +44,16 @@ export function getLinkEntity(id: string, version: boolean = false): unknown {
   };
 }
 
+export function getLinkAsset(id: string): Link<'Asset'> {
+  return {
+    sys: {
+      type: 'Link',
+      linkType: 'Asset',
+      id,
+    },
+  };
+}
+
 export const getLinkEntities = <Version extends boolean>(
   entities: string[],
   version?: Version,

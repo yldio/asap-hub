@@ -225,6 +225,15 @@ describe('Manuscripts Contentful Data Provider', () => {
             lifecycle: {
               'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
             },
+            manuscriptFile: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: 'file-id',
+                },
+              },
+            },
             createdBy: {
               'en-US': {
                 sys: {

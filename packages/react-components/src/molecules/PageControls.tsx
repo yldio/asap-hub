@@ -102,6 +102,7 @@ function* optimizeGaps(pageNumbers: PageNumber[]) {
   }
 
   yield pageNumbers[0]!;
+
   for (const [prev, curr] of aperture(2, pageNumbers)) {
     // No point in leaving a gap of 1 if we can just render the number instead of the ellipsis
     if (prev.index + 1 === curr.index - 1) {

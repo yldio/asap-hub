@@ -18,6 +18,7 @@ import {
   Link,
   lead,
 } from '..';
+import { downloadIcon, linkIcon } from '../icons';
 import { paddingStyles } from '../card';
 import { UserCommentHeader } from '../molecules';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -106,6 +107,18 @@ const additionalInformationValueStyles = css({
   },
 });
 
+const fileContainerStyles = css({
+  display: 'flex',
+  gap: rem(12),
+  alignItems: 'center',
+});
+
+const downloadButtonStyles = css({
+  marginLeft: 'auto',
+  flexGrow: 0,
+  alignSelf: 'center',
+});
+
 const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.preprintDoi ||
   version.publicationDoi ||
@@ -147,6 +160,27 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
               >
                 <Pill accent="gray">{version.type}</Pill>
                 <Pill accent="gray">{version.lifecycle}</Pill>
+              </div>
+              <div>
+                <Divider />
+
+                <div css={fileContainerStyles}>
+                  {linkIcon}
+                  <Subtitle>{version.manuscriptFile.filename}</Subtitle>
+                  <div css={css(downloadButtonStyles)}>
+                    <Link
+                      href={version.manuscriptFile.url}
+                      primary
+                      noMargin
+                      small
+                      buttonStyle
+                    >
+                      {downloadIcon} Download
+                    </Link>
+                  </div>
+                </div>
+
+                <Divider />
               </div>
               {quickCheckQuestions.map(({ field, question }) =>
                 version[`${field}Details`]?.length ? (

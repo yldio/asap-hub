@@ -222,6 +222,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
       userEvent.click(button);
     });
 
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
   userEvent.click(submitButton);
 
   await waitFor(() => {

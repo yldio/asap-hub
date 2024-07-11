@@ -7,6 +7,10 @@ const handleFileUploadMock: jest.MockedFunction<
   ComponentProps<typeof LabeledFileField>['handleFileUpload']
 > = jest.fn();
 
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
 it('renders a labeled button when no file is selected', () => {
   render(
     <LabeledFileField
@@ -58,4 +62,42 @@ it('calls handleFileUpload when a file is selected', async () => {
   await waitFor(() =>
     expect(handleFileUploadMock).toHaveBeenCalledWith(testFile),
   );
+});
+
+it('calls the onRemove function when the remove button is clicked and allows for resubmitting a new file', async () => {
+  const onRemoveMock = jest.fn();
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      onRemove={onRemoveMock}
+      placeholder="Upload Manuscript File"
+      currentFile={{
+        filename: 'file.txt',
+        url: 'http://example.com/file.txt',
+        id: '123',
+      }}
+    ></LabeledFileField>,
+  );
+
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(
+    /Upload Manuscript File/i,
+  ) as HTMLInputElement;
+
+  userEvent.upload(uploadInput, testFile);
+
+  expect(handleFileUploadMock).toHaveBeenCalledTimes(1);
+
+  screen.getByRole('button', { name: /cross/i }).click();
+  expect(onRemoveMock).toHaveBeenCalled();
+
+  const differentFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  userEvent.upload(uploadInput, differentFile);
+  expect(handleFileUploadMock).toHaveBeenCalledTimes(2);
 });

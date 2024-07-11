@@ -13,7 +13,7 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -222,6 +222,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       ],
     },
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const {
     handleSubmit,
@@ -591,6 +592,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       resetField('versions.0.manuscriptFile');
                     }}
                     handleFileUpload={async (file) => {
+                      setIsUploading(true);
                       const uploadedFile = await handleFileUpload(
                         file,
                         (validationErrorMessage) => {
@@ -600,6 +602,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           });
                         },
                       );
+                      setIsUploading(false);
 
                       if (!uploadedFile) return;
 
@@ -609,7 +612,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }}
                     currentFile={value}
                     customValidationMessage={error?.message}
-                    enabled={!isSubmitting}
+                    enabled={!isSubmitting && !isUploading}
                   />
                 )}
               />
@@ -700,7 +703,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 submit
-                enabled={!isSubmitting}
+                enabled={!isSubmitting && !isUploading}
                 preventDefault={false}
               >
                 Submit

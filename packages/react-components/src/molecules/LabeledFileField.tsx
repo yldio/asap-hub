@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useRef, useState } from 'react';
+import { ComponentProps, useRef } from 'react';
 import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
 import { validationMessageStyles } from '../form';
@@ -74,17 +74,21 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   handleFileUpload,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // add loading state for the button
-  const [loading, setLoading] = useState(false);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setLoading(true);
       await handleFileUpload(file);
-      setLoading(false);
+    }
+  };
+  const handleRemove = () => {
+    if (onRemove) {
+      onRemove();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
   return (
@@ -102,7 +106,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           <div css={fileSelectionContainerStyles}>
             {currentFile && (
               <div css={uploadedButtonTagStyles}>
-                <Tag key={currentFile.id} onRemove={onRemove}>
+                <Tag key={currentFile.id} onRemove={handleRemove}>
                   {currentFile.filename}
                 </Tag>
               </div>
@@ -110,7 +114,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
             <div css={buttonContainerStyles}>
               <Button
                 primary
-                enabled={!!enabled && !currentFile && !loading}
+                enabled={!!enabled && !currentFile}
                 noMargin
                 id={id}
                 preventDefault={false}

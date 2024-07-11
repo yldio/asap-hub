@@ -90,9 +90,6 @@ it('renders manuscript form page', async () => {
 });
 
 it('can publish a form when the data is valid and navigates to team workspace', async () => {
-  // increase timeout
-  // im not a big fan of that though - Piotr
-  jest.setTimeout(10000);
   const title = 'The Manuscript';
 
   await renderPage();
@@ -122,6 +119,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   userEvent.upload(uploadInput, testFile);
 
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
+
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
 
   within(quickChecks)
@@ -130,7 +133,6 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       userEvent.click(button);
     });
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
   userEvent.click(submitButton);
 
   await waitFor(() => {
@@ -142,6 +144,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
           {
             lifecycle: 'Typeset proof',
             type: 'Original Research',
+            manuscriptFile: {
+              filename: 'manuscript.pdf',
+              url: 'https://example.com/manuscript.pdf',
+              id: 'file-id',
+            },
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',

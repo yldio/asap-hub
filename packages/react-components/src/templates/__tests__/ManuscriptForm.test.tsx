@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -610,8 +610,7 @@ describe('renders the necessary fields', () => {
     },
   );
 });
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('resets form fields to default values when no longer visible', async () => {
+it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
     <StaticRouter>
@@ -637,13 +636,6 @@ it.skip('resets form fields to default values when no longer visible', async () 
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
-  const testFile = new File(['file content'], 'file.txt', {
-    type: 'text/plain',
-  });
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
-
-  userEvent.upload(uploadInput, testFile);
-
   const preprintDoi = '10.4444/test';
   const publicationDoi = '10.4467/test';
 
@@ -659,6 +651,14 @@ it.skip('resets form fields to default values when no longer visible', async () 
 
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
+
+  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
+
+  within(quickChecks)
+    .getAllByText('Yes')
+    .forEach((button) => {
+      userEvent.click(button);
+    });
 
   userEvent.type(
     lifecycleTextbox,
@@ -678,7 +678,21 @@ it.skip('resets form fields to default values when no longer visible', async () 
     }),
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  userEvent.upload(uploadInput, testFile);
+
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
+
+  expect(submitButton).toBeEnabled();
+
+  userEvent.click(submitButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',

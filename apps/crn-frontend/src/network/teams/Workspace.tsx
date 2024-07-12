@@ -10,6 +10,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
 import { usePatchTeamById } from './state';
+import { useEligibilityReason } from './useEligibilityReason';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -17,6 +18,7 @@ interface WorkspaceProps {
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
   const { path } = useRouteMatch();
+  const { setEligibilityReasons } = useEligibilityReason();
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
@@ -27,6 +29,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
       <Route path={path}>
         <TeamProfileWorkspace
           {...team}
+          setEligibilityReasons={setEligibilityReasons}
           tools={team.tools}
           onDeleteTool={
             deleting

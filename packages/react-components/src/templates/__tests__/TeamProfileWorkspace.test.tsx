@@ -8,7 +8,9 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import { ComponentProps } from 'react';
+import { Route, Router } from 'react-router-dom';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -16,6 +18,7 @@ beforeEach(jest.clearAllMocks);
 
 const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
+  setEligibilityReasons: jest.fn(),
   tools: [],
 };
 it('renders the team workspace page', () => {
@@ -147,6 +150,62 @@ describe('compliance section', () => {
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(
       'Draft manuscript (prior to preprint submission)',
+    );
+  });
+
+  it('renders eligibility modal when user clicks on Share Manuscript', () => {
+    const { container, getByRole } = render(
+      <TeamProfileWorkspace {...team} tools={[]} />,
+    );
+
+    expect(container).not.toHaveTextContent(
+      'Do you need to submit a manuscript?',
+    );
+
+    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+
+    expect(container).toHaveTextContent('Do you need to submit a manuscript?');
+  });
+
+  it('hides the eligibility modal when user clicks on Cancel', () => {
+    const { container, getByRole } = render(
+      <TeamProfileWorkspace {...team} tools={[]} />,
+    );
+
+    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+
+    expect(container).toHaveTextContent('Do you need to submit a manuscript?');
+
+    userEvent.click(getByRole('button', { name: /cancel/i }));
+
+    expect(container).not.toHaveTextContent(
+      'Do you need to submit a manuscript?',
+    );
+  });
+
+  it('redirects to manuscript form when user finishes to fill eligibility modal', () => {
+    const history = createMemoryHistory({});
+    const { getByRole } = render(
+      <Router history={history}>
+        <Route path="">
+          <TeamProfileWorkspace {...team} tools={[]} />
+        </Route>
+      </Router>,
+    );
+
+    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+
+    userEvent.click(screen.getByText(/Yes/i));
+
+    userEvent.click(
+      screen.getByText(
+        'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+      ),
+    );
+    userEvent.click(screen.getByText(/Continue/i));
+
+    expect(history.location.pathname).toBe(
+      '/network/teams/t0/workspace/create-manuscript',
     );
   });
 });

@@ -248,6 +248,7 @@ export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,
   'title' | 'teamId'
 > & {
+  eligibilityReasons: string[];
   versions: {
     type: ManuscriptVersion['type'] | '';
     lifecycle: ManuscriptVersion['lifecycle'] | '';
@@ -284,6 +285,11 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
     properties: {
       title: { type: 'string' },
       teamId: { type: 'string' },
+      eligibilityReasons: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 0,
+      },
       versions: {
         type: 'array',
         maxItems: 1,
@@ -383,5 +389,37 @@ export const quickCheckQuestions: QuickCheckQuestions[] = [
   {
     field: 'labMaterialsRegistered',
     question: 'Registered all newly generated lab materials',
+  },
+];
+
+export const asapFundingReason = [
+  'projects',
+  'method-or-resource',
+  'pivot',
+  'leadership',
+] as const;
+
+export type ASAPFundingReason = (typeof asapFundingReason)[number];
+
+export const asapFundingReasons = [
+  {
+    field: 'projects',
+    reason:
+      'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'method-or-resource',
+    reason:
+      'The manuscript describes a method or resource that enables the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'pivot',
+    reason:
+      'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'leadership',
+    reason:
+      'The manuscript is a thought leadership piece (review, communication, letter) pertaining to knowledge gaps in the field that the ASAP-funded proposal was addressing.',
   },
 ];

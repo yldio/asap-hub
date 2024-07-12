@@ -146,6 +146,7 @@ type ManuscriptFormProps = Omit<
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
+    eligibilityReasons: Set<string>;
 
     onSave: (
       output: ManuscriptPostRequest,
@@ -161,6 +162,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   title,
   type,
   lifecycle,
+  eligibilityReasons,
   requestingApcCoverage,
   preprintDoi,
   publicationDoi,
@@ -265,6 +267,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     await onSave({
       ...data,
       teamId,
+      eligibilityReasons: [...eligibilityReasons],
       versions: [
         {
           ...versionData,

@@ -11,6 +11,7 @@ const checkboxStyles = ({
   primary900 = pine,
 }: Theme['colors'] = {}) =>
   css({
+    flexShrink: 0,
     boxSizing: 'border-box',
     width: `${24 / perRem}em`,
     height: `${24 / perRem}em`,

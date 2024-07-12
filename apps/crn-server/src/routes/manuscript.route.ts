@@ -33,13 +33,7 @@ export const manuscriptRouteFactory = (
 
   manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
     '/manuscripts/manuscript-file',
-    upload.single('file') as RequestHandler<
-      unknown,
-      ManuscriptFileResponse,
-      unknown,
-      unknown,
-      Record<string, unknown>
-    >,
+    upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
     async (req, res) => {
       const { file } = req;
 

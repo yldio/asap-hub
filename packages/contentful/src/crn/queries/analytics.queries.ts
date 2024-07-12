@@ -282,8 +282,17 @@ export const FETCH_ENGAGEMENT = gql`
         displayName
         inactiveSince
         linkedFrom {
-          teamMembershipCollection(limit: 1) {
-            total
+          teamMembershipCollection(limit: 100) {
+            items {
+              role
+              linkedFrom {
+                usersCollection(limit: 1) {
+                  items {
+                    onboarded
+                  }
+                }
+              }
+            }
           }
           eventSpeakersCollection(limit: 100) {
             items {

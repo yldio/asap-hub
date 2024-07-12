@@ -3,12 +3,20 @@ import { EngagementDataObject, TimeRangeOption } from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
 import { getRangeFilterParams } from './common';
 
+type Membership = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<FetchEngagementQuery['teamsCollection']>['items'][number]
+    >['linkedFrom']
+  >['teamMembershipCollection']
+>['items'][number];
+
 export const getEngagementItems = (
   teamCollection: FetchEngagementQuery['teamsCollection'],
   rangeKey?: TimeRangeOption,
 ): EngagementDataObject[] =>
   cleanArray(teamCollection?.items).map((teamItem) => {
-    let totalSpeakers = 0;
+    let totalSpeakerCount = 0;
     const events = new Set();
     const uniqueSpeakers = {
       allRoles: new Set(),
@@ -18,9 +26,11 @@ export const getEngagementItems = (
     cleanArray(teamItem.linkedFrom?.eventSpeakersCollection?.items)
       .filter(getFilterEventByRange(rangeKey))
       .forEach((eventSpeakerItem) => {
-        events.add(
-          eventSpeakerItem.linkedFrom?.eventsCollection?.items[0]?.sys.id,
-        );
+        const eventId =
+          eventSpeakerItem.linkedFrom?.eventsCollection?.items[0]?.sys.id;
+        if (eventId) {
+          events.add(eventId);
+        }
 
         if (eventSpeakerItem.user?.__typename === 'Users') {
           const userRole = cleanArray(
@@ -30,7 +40,7 @@ export const getEngagementItems = (
           const userId = eventSpeakerItem.user.sys.id;
 
           if (userRole) {
-            totalSpeakers += 1;
+            totalSpeakerCount += 1;
             uniqueSpeakers.allRoles.add(userId);
             if (userRole === 'Key Personnel') {
               uniqueSpeakers.keyPersonnel.add(userId);
@@ -39,15 +49,27 @@ export const getEngagementItems = (
         }
       });
 
+    const memberCount: number = (
+      teamItem.linkedFrom?.teamMembershipCollection?.items || []
+    ).reduce(
+      (count, membership: Membership | null) =>
+        membership &&
+        membership.linkedFrom?.usersCollection?.items[0]?.onboarded &&
+        membership.role
+          ? count + 1
+          : count,
+      0,
+    );
+
     return {
       id: teamItem.sys.id,
       name: teamItem.displayName || '',
       inactiveSince: teamItem.inactiveSince,
-      members: teamItem.linkedFrom?.teamMembershipCollection?.total || 0,
-      events: events.size || 0,
-      totalSpeakers,
-      uniqueSpeakersAllRoles: uniqueSpeakers.allRoles.size,
-      uniqueSpeakersKeyPersonnel: uniqueSpeakers.keyPersonnel.size,
+      memberCount,
+      eventCount: events.size || 0,
+      totalSpeakerCount,
+      uniqueAllRolesCount: uniqueSpeakers.allRoles.size,
+      uniqueKeyPersonnelCount: uniqueSpeakers.keyPersonnel.size,
     };
   });
 

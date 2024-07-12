@@ -17,6 +17,41 @@ describe('getEngagementItems', () => {
   });
 
   describe('Events', () => {
+    it('filters undefined events', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+            }),
+            linkedFrom: {
+              eventsCollection: {
+                items: [],
+              },
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.eventCount).toEqual(1);
+    });
+
     it('does not count the same event twice', () => {
       const engagementQuery = getEngagementQuery().teamsCollection;
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
@@ -50,7 +85,7 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.events).toEqual(1);
+      expect(result[0]!.eventCount).toEqual(1);
     });
 
     it('returns the correct number of events', () => {
@@ -106,7 +141,37 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.events).toEqual(3);
+      expect(result[0]!.eventCount).toEqual(3);
+    });
+  });
+
+  describe('Members', () => {
+    it('only counts onboarded members', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.memberCount).toEqual(4);
+    });
+
+    it('does not count membership without role', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0]!.role =
+        null;
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.memberCount).toEqual(3);
+    });
+
+    it('does not count membership equal to null', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.teamMembershipCollection!.items[0] =
+        null;
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.memberCount).toEqual(3);
     });
   });
 
@@ -131,7 +196,7 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.totalSpeakers).toEqual(0);
+      expect(result[0]!.totalSpeakerCount).toEqual(0);
     });
 
     it('does not count user who does not belong to the team being analyzed', () => {
@@ -159,7 +224,7 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.totalSpeakers).toEqual(0);
+      expect(result[0]!.totalSpeakerCount).toEqual(0);
     });
 
     it('returns the correct number of total speakers', () => {
@@ -215,7 +280,7 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.totalSpeakers).toEqual(4);
+      expect(result[0]!.totalSpeakerCount).toEqual(4);
     });
   });
 
@@ -240,8 +305,8 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(0);
-      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+      expect(result[0]!.uniqueAllRolesCount).toEqual(0);
+      expect(result[0]!.uniqueKeyPersonnelCount).toEqual(0);
     });
 
     it('does not count user who does not belong to the team being analyzed', () => {
@@ -269,11 +334,11 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(0);
-      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+      expect(result[0]!.uniqueAllRolesCount).toEqual(0);
+      expect(result[0]!.uniqueKeyPersonnelCount).toEqual(0);
     });
 
-    it('returns uniqueSpeakersKeyPersonnel as zero when none of the speakers is a Key Personnel in the team', () => {
+    it('returns uniqueKeyPersonnelCount as zero when none of the speakers is a Key Personnel in the team', () => {
       const engagementQuery = getEngagementQuery().teamsCollection;
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
         items: [
@@ -327,8 +392,8 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(3);
-      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(0);
+      expect(result[0]!.uniqueAllRolesCount).toEqual(3);
+      expect(result[0]!.uniqueKeyPersonnelCount).toEqual(0);
     });
 
     it('returns the correct number of unique speakers', () => {
@@ -336,8 +401,8 @@ describe('getEngagementItems', () => {
 
       const result = getEngagementItems(engagementQuery, 'all');
 
-      expect(result[0]!.uniqueSpeakersAllRoles).toEqual(2);
-      expect(result[0]!.uniqueSpeakersKeyPersonnel).toEqual(1);
+      expect(result[0]!.uniqueAllRolesCount).toEqual(2);
+      expect(result[0]!.uniqueKeyPersonnelCount).toEqual(1);
     });
   });
 
@@ -392,12 +457,12 @@ describe('getEngagementItems', () => {
         {
           id: 'team-id-0',
           inactiveSince: null,
-          members: 4,
+          memberCount: 4,
           name: 'Team A',
-          events: 1,
-          totalSpeakers: 1,
-          uniqueSpeakersAllRoles: 1,
-          uniqueSpeakersKeyPersonnel: 0,
+          eventCount: 1,
+          totalSpeakerCount: 1,
+          uniqueAllRolesCount: 1,
+          uniqueKeyPersonnelCount: 0,
         },
       ]);
     });
@@ -437,12 +502,12 @@ describe('getEngagementItems', () => {
         {
           id: 'team-id-0',
           inactiveSince: null,
-          members: 4,
+          memberCount: 4,
           name: 'Team A',
-          events: 1,
-          totalSpeakers: 1,
-          uniqueSpeakersAllRoles: 1,
-          uniqueSpeakersKeyPersonnel: 1,
+          eventCount: 1,
+          totalSpeakerCount: 1,
+          uniqueAllRolesCount: 1,
+          uniqueKeyPersonnelCount: 1,
         },
       ]);
     });

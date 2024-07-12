@@ -687,6 +687,26 @@ export const makeUser = ({
   },
 });
 
+type MakeTeamMembershipProps = {
+  role?: TeamRole;
+  onboarded?: boolean;
+};
+export const makeTeamMembership = ({
+  role = 'Key Personnel',
+  onboarded = true,
+}: MakeTeamMembershipProps) => ({
+  role,
+  linkedFrom: {
+    usersCollection: {
+      items: [
+        {
+          onboarded,
+        },
+      ],
+    },
+  },
+});
+
 type EngagementEvent = NonNullable<
   NonNullable<NonNullable<EventSpeakersCollectionItem>>['linkedFrom']
 >['eventsCollection'];
@@ -714,7 +734,13 @@ export const getEngagementQuery = (): FetchEngagementQuery => ({
         inactiveSince: null,
         linkedFrom: {
           teamMembershipCollection: {
-            total: 4,
+            items: [
+              makeTeamMembership({ role: 'Key Personnel' }),
+              makeTeamMembership({ role: 'Project Manager' }),
+              makeTeamMembership({ role: 'Collaborating PI' }),
+              makeTeamMembership({ role: 'Co-PI (Core Leadership)' }),
+              makeTeamMembership({ role: 'Key Personnel', onboarded: false }),
+            ],
           },
           eventSpeakersCollection: {
             items: [
@@ -771,12 +797,12 @@ export const getEngagementQuery = (): FetchEngagementQuery => ({
 export const getEngagementResponse: () => EngagementResponse = () => ({
   id: 'team-id-0',
   inactiveSince: null,
-  members: 4,
+  memberCount: 4,
   name: 'Team A',
-  events: 2,
-  totalSpeakers: 3,
-  uniqueSpeakersAllRoles: 2,
-  uniqueSpeakersKeyPersonnel: 1,
+  eventCount: 2,
+  totalSpeakerCount: 3,
+  uniqueAllRolesCount: 2,
+  uniqueKeyPersonnelCount: 1,
 });
 
 export const getListEngagementResponse = (): ListEngagementResponse => ({

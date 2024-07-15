@@ -1,3 +1,4 @@
+import { EngagementResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { InactiveBadgeIcon } from '..';
@@ -70,18 +71,8 @@ const iconStyles = css({
   gap: rem(3),
 });
 
-export type EngagementData = {
-  id: string;
-  name: string;
-  isInactive: boolean;
-  memberCount: number;
-  eventCount: number;
-  totalSpeakerCount: number;
-  uniqueAllRolesCount: number;
-  uniqueKeyPersonnelCount: number;
-};
 type EngagementTableProps = {
-  data: EngagementData[];
+  data: EngagementResponse[];
 };
 
 const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
@@ -104,7 +95,7 @@ const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
                 {row.name}
               </Link>
 
-              {row.isInactive && <InactiveBadgeIcon />}
+              {row.inactiveSince && <InactiveBadgeIcon />}
             </p>
             <span css={[titleStyles, rowTitleStyles]}>Members</span>
             <p css={rowValueStyles}>{row.memberCount} </p>

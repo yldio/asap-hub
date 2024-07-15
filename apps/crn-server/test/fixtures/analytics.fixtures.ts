@@ -19,6 +19,7 @@ import {
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
+  ResearchOutputDocumentType,
   TeamCollaborationDataObject,
   TeamCollaborationResponse,
   TeamProductivityDataObject,
@@ -403,6 +404,66 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
 
+type UserCollaborationOutputType = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchUserCollaborationQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'][number];
+
+export const generateUserCollaborationOutputByDocType = (
+  documentType: ResearchOutputDocumentType,
+): UserCollaborationOutputType => ({
+  addedDate: '2023-09-08T03:00:00.000Z',
+  documentType: documentType,
+  authorsCollection: {
+    items: [
+      {
+        __typename: 'Users',
+        sys: {
+          id: 'user-1',
+        },
+      },
+      {
+        __typename: 'Users',
+        sys: {
+          id: 'user-2',
+        },
+        teamsCollection: {
+          items: [
+            {
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+            {
+              team: {
+                sys: {
+                  id: 'team-2',
+                },
+              },
+            },
+          ],
+        },
+        labsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'lab-2',
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+});
+
 export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
   usersCollection: {
     total: 1,
@@ -442,6 +503,15 @@ export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
                 },
                 displayName: 'Team De Camilli',
                 inactiveSince: null,
+              },
+            },
+          ],
+        },
+        labsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'lab-1',
               },
             },
           ],
@@ -617,6 +687,26 @@ export const makeUser = ({
   },
 });
 
+type MakeTeamMembershipProps = {
+  role?: TeamRole;
+  onboarded?: boolean;
+};
+export const makeTeamMembership = ({
+  role = 'Key Personnel',
+  onboarded = true,
+}: MakeTeamMembershipProps) => ({
+  role,
+  linkedFrom: {
+    usersCollection: {
+      items: [
+        {
+          onboarded,
+        },
+      ],
+    },
+  },
+});
+
 type EngagementEvent = NonNullable<
   NonNullable<NonNullable<EventSpeakersCollectionItem>>['linkedFrom']
 >['eventsCollection'];
@@ -644,7 +734,13 @@ export const getEngagementQuery = (): FetchEngagementQuery => ({
         inactiveSince: null,
         linkedFrom: {
           teamMembershipCollection: {
-            total: 4,
+            items: [
+              makeTeamMembership({ role: 'Key Personnel' }),
+              makeTeamMembership({ role: 'Project Manager' }),
+              makeTeamMembership({ role: 'Collaborating PI' }),
+              makeTeamMembership({ role: 'Co-PI (Core Leadership)' }),
+              makeTeamMembership({ role: 'Key Personnel', onboarded: false }),
+            ],
           },
           eventSpeakersCollection: {
             items: [
@@ -701,12 +797,12 @@ export const getEngagementQuery = (): FetchEngagementQuery => ({
 export const getEngagementResponse: () => EngagementResponse = () => ({
   id: 'team-id-0',
   inactiveSince: null,
-  members: 4,
+  memberCount: 4,
   name: 'Team A',
-  events: 2,
-  totalSpeakers: 3,
-  uniqueSpeakersAllRoles: 2,
-  uniqueSpeakersKeyPersonnel: 1,
+  eventCount: 2,
+  totalSpeakerCount: 3,
+  uniqueAllRolesCount: 2,
+  uniqueKeyPersonnelCount: 1,
 });
 
 export const getListEngagementResponse = (): ListEngagementResponse => ({

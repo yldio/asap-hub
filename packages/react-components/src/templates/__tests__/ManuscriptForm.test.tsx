@@ -33,6 +33,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   ),
   onSuccess: jest.fn(),
   teamId,
+  eligibilityReasons: new Set(),
   acknowledgedGrantNumber: 'Yes',
   asapAffiliationIncluded: 'Yes',
   manuscriptLicense: 'Yes',
@@ -77,6 +78,7 @@ it('data is sent on form submission', async () => {
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         {
           type: 'Original Research',
@@ -154,6 +156,7 @@ test.each`
 
     const payload = {
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         {
           type: 'Original Research',
@@ -235,6 +238,7 @@ test.each`
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith({
         title: 'manuscript title',
+        eligibilityReasons: [],
         versions: [
           {
             type: 'Original Research',
@@ -506,6 +510,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       teamId,
       versions: [
         expect.objectContaining({
@@ -690,6 +695,7 @@ it.only('resets form fields to default values when no longer visible', async () 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         expect.objectContaining({
           preprintDoi: undefined,

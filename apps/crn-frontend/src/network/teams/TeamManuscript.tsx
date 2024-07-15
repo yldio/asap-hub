@@ -12,6 +12,7 @@ import {
   usePostManuscript,
   useUploadManuscriptFile,
 } from './state';
+import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 
 type TeamManuscriptProps = {
@@ -20,6 +21,7 @@ type TeamManuscriptProps = {
 const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
 
+  const { eligibilityReasons } = useEligibilityReason();
   const { setShowSuccessBanner } = useManuscriptToast();
   const form = useForm();
   const createManuscript = usePostManuscript();
@@ -43,6 +45,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
           onSave={createManuscript}
           teamId={teamId}
           handleFileUpload={handleFileUpload}
+          eligibilityReasons={eligibilityReasons}
         />
       </Frame>
     </FormProvider>

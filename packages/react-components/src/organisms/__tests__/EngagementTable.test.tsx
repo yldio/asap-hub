@@ -1,6 +1,7 @@
-import { ComponentProps } from 'react';
+import { EngagementResponse } from '@asap-hub/model';
 import { render } from '@testing-library/react';
-import EngagementTable, { EngagementData } from '../EngagementTable';
+import { ComponentProps } from 'react';
+import EngagementTable from '../EngagementTable';
 
 describe('EngagementTable', () => {
   const pageControlsProps = {
@@ -14,10 +15,10 @@ describe('EngagementTable', () => {
     data: [],
   };
 
-  const engagementData: EngagementData = {
+  const engagementData: EngagementResponse = {
     id: '1',
     name: 'Test Team',
-    isInactive: false,
+    inactiveSince: null,
     memberCount: 1,
     eventCount: 2,
     totalSpeakerCount: 3,
@@ -37,7 +38,7 @@ describe('EngagementTable', () => {
     const data = [
       {
         ...engagementData,
-        isInactive: true,
+        inactiveSince: '2022-10-24T11:00:00Z',
       },
     ];
     const { getByTitle } = render(

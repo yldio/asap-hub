@@ -38,6 +38,7 @@ export default function CheckboxGroup<V extends string>({
             </Caption>
           ) : (
             <LabeledCheckbox
+              wrapLabel={false}
               groupName={groupName.current}
               title={option.label}
               enabled={option.enabled}

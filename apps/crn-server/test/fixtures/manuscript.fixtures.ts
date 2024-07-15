@@ -101,11 +101,17 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
   const { title, teamId, versions } = getManuscriptDataObject();
 
   const { createdBy: _, publishedAt: __, ...version } = versions[0]!;
-  return { title, teamId, versions: [version] };
+  return { title, teamId, eligibilityReasons: [], versions: [version] };
 };
 
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
   const { title, teamId, versions } = getManuscriptDataObject();
 
-  return { title, teamId, versions, userId: 'user-id-0' };
+  return {
+    title,
+    teamId,
+    eligibilityReasons: [],
+    versions,
+    userId: 'user-id-0',
+  };
 };

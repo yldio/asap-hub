@@ -134,6 +134,21 @@ describe('getUserProductivity', () => {
       }),
     );
   });
+
+  it('returns user productivity for a specific document category', async () => {
+    await getUserProductivity(algoliaSearchClient, {
+      ...defaultUserOptions,
+      documentCategory: 'article',
+    });
+
+    expect(search).toHaveBeenCalledWith(
+      ['user-productivity'],
+      '',
+      expect.objectContaining({
+        filters: `(__meta.range:"30d") AND (__meta.documentCategory:"article")`,
+      }),
+    );
+  });
 });
 
 describe('getTeamProductivity', () => {

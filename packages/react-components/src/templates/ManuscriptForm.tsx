@@ -149,7 +149,7 @@ type ManuscriptFormProps = Omit<
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
-
+    eligibilityReasons: Set<string>;
     onSave: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
@@ -170,6 +170,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   type,
   lifecycle,
   manuscriptFile,
+  eligibilityReasons,
   requestingApcCoverage,
   preprintDoi,
   publicationDoi,
@@ -279,6 +280,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     await onSave({
       ...data,
       teamId,
+      eligibilityReasons: [...eligibilityReasons],
       versions: [
         {
           ...versionData,

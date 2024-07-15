@@ -270,6 +270,9 @@ describe('Manuscripts Contentful Data Provider', () => {
               },
             ],
           },
+          eligibilityReasons: {
+            'en-US': [],
+          },
           versions: {
             'en-US': [
               {

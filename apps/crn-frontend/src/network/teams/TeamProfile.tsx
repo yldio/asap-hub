@@ -21,6 +21,7 @@ import ProfileSwitch from '../ProfileSwitch';
 import { ManuscriptToastProvider } from './ManuscriptToastProvider';
 import { useTeamById } from './state';
 import TeamManuscript from './TeamManuscript';
+import { EligibilityReasonProvider } from './EligibilityReasonProvider';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -137,67 +138,69 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
         <ManuscriptToastProvider>
-          <Switch>
-            <Route
-              path={workspace({}).$ + workspace({}).createManuscript.template}
-            >
-              <Frame title="Create Manuscript">
-                <TeamManuscript teamId={teamId} />
-              </Frame>
-            </Route>
-            {canShareResearchOutput && (
-              <Route path={path + createOutput.template}>
-                <Frame title="Share Output">
-                  <TeamOutput teamId={teamId} />
+          <EligibilityReasonProvider>
+            <Switch>
+              <Route
+                path={workspace({}).$ + workspace({}).createManuscript.template}
+              >
+                <Frame title="Create Manuscript">
+                  <TeamManuscript teamId={teamId} />
                 </Frame>
               </Route>
-            )}
-            {canDuplicateResearchOutput && (
-              <Route path={path + duplicateOutput.template}>
-                <Frame title="Duplicate Output">
-                  <DuplicateOutput />
-                </Frame>
-              </Route>
-            )}
-            <TeamProfilePage
-              {...team}
-              teamListElementId={teamListElementId}
-              upcomingEventsCount={upcomingEvents?.total || 0}
-              pastEventsCount={pastEvents?.total || 0}
-              teamOutputsCount={teamOutputsResult.total}
-              teamDraftOutputsCount={
-                canShareResearchOutput ? outputDraftResults.total : undefined
-              }
-            >
-              <ProfileSwitch
-                About={() => (
-                  <About teamListElementId={teamListElementId} team={team} />
-                )}
-                currentTime={currentTime}
-                displayName={team.displayName}
-                eventConstraint={{ teamId }}
-                isActive={!team?.inactiveSince}
-                Outputs={
-                  <Outputs
-                    userAssociationMember={canShareResearchOutput}
-                    team={team}
-                  />
+              {canShareResearchOutput && (
+                <Route path={path + createOutput.template}>
+                  <Frame title="Share Output">
+                    <TeamOutput teamId={teamId} />
+                  </Frame>
+                </Route>
+              )}
+              {canDuplicateResearchOutput && (
+                <Route path={path + duplicateOutput.template}>
+                  <Frame title="Duplicate Output">
+                    <DuplicateOutput />
+                  </Frame>
+                </Route>
+              )}
+              <TeamProfilePage
+                {...team}
+                teamListElementId={teamListElementId}
+                upcomingEventsCount={upcomingEvents?.total || 0}
+                pastEventsCount={pastEvents?.total || 0}
+                teamOutputsCount={teamOutputsResult.total}
+                teamDraftOutputsCount={
+                  canShareResearchOutput ? outputDraftResults.total : undefined
                 }
-                DraftOutputs={
-                  <Outputs
-                    team={team}
-                    draftOutputs
-                    userAssociationMember={canShareResearchOutput}
-                  />
-                }
-                paths={paths}
-                type="team"
-                Workspace={() => (
-                  <Workspace team={{ ...team, tools: team.tools ?? [] }} />
-                )}
-              />
-            </TeamProfilePage>
-          </Switch>
+              >
+                <ProfileSwitch
+                  About={() => (
+                    <About teamListElementId={teamListElementId} team={team} />
+                  )}
+                  currentTime={currentTime}
+                  displayName={team.displayName}
+                  eventConstraint={{ teamId }}
+                  isActive={!team?.inactiveSince}
+                  Outputs={
+                    <Outputs
+                      userAssociationMember={canShareResearchOutput}
+                      team={team}
+                    />
+                  }
+                  DraftOutputs={
+                    <Outputs
+                      team={team}
+                      draftOutputs
+                      userAssociationMember={canShareResearchOutput}
+                    />
+                  }
+                  paths={paths}
+                  type="team"
+                  Workspace={() => (
+                    <Workspace team={{ ...team, tools: team.tools ?? [] }} />
+                  )}
+                />
+              </TeamProfilePage>
+            </Switch>
+          </EligibilityReasonProvider>
         </ManuscriptToastProvider>
       </ResearchOutputPermissionsContext.Provider>
     );

@@ -2,12 +2,22 @@ import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import { Caption, Card, Display, Headline2, Link, Paragraph } from '../atoms';
+import {
+  Button,
+  Caption,
+  Card,
+  Display,
+  Headline2,
+  Link,
+  Paragraph,
+} from '../atoms';
 import { formatDateAndTime } from '../date';
 import { plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
-import { ToolCard } from '../organisms';
+import { EligibilityModal, ToolCard } from '../organisms';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, perRem, rem } from '../pixels';
 
@@ -57,6 +67,7 @@ type TeamProfileWorkspaceProps = Readonly<
 > & {
   readonly tools: ReadonlyArray<TeamTool>;
   readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
+  readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
 };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -66,7 +77,11 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   manuscripts,
   tools,
   onDeleteTool,
+  setEligibilityReasons,
 }) => {
+  const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
+  const history = useHistory();
+
   const toolsRoute = network({})
     .teams({})
     .team({ teamId: id })
@@ -79,30 +94,52 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
     .workspace({})
     .createManuscript({}).$;
 
+  const handleShareManuscript = () => {
+    setDisplayEligibilityModal(true);
+  };
+
+  const handleGoToManuscriptForm = () => {
+    history.push(manuscriptRoute);
+  };
+
   return (
     <div css={containerStyles}>
       {isEnabled('DISPLAY_MANUSCRIPTS') && (
-        <Card>
-          <div css={complianceContainerStyles}>
-            <div css={complianceHeaderStyles}>
-              <Display styleAsHeading={3}>Compliance</Display>
-              <div css={css(manuscriptButtonStyles)}>
-                <Link href={manuscriptRoute} primary noMargin small buttonStyle>
-                  {plusIcon} Share Manuscript
-                </Link>
+        <>
+          {displayEligibilityModal && (
+            <EligibilityModal
+              onDismiss={() => setDisplayEligibilityModal(false)}
+              onGoToManuscriptForm={handleGoToManuscriptForm}
+              setEligibilityReasons={setEligibilityReasons}
+            />
+          )}
+          <Card>
+            <div css={complianceContainerStyles}>
+              <div css={complianceHeaderStyles}>
+                <Display styleAsHeading={3}>Compliance</Display>
+                <div css={css(manuscriptButtonStyles)}>
+                  <Button
+                    onClick={handleShareManuscript}
+                    primary
+                    noMargin
+                    small
+                  >
+                    {plusIcon} Share Manuscript
+                  </Button>
+                </div>
               </div>
+              <Paragraph accent="lead">
+                This directory contains all manuscripts with their compliance
+                reports.
+              </Paragraph>
             </div>
-            <Paragraph accent="lead">
-              This directory contains all manuscripts with their compliance
-              reports.
-            </Paragraph>
-          </div>
-          {manuscripts.map((manuscript) => (
-            <div key={manuscript.id}>
-              <ManuscriptCard {...manuscript} />
-            </div>
-          ))}
-        </Card>
+            {manuscripts.map((manuscript) => (
+              <div key={manuscript.id}>
+                <ManuscriptCard {...manuscript} />
+              </div>
+            ))}
+          </Card>
+        </>
       )}
 
       <Card>

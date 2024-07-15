@@ -258,6 +258,7 @@ describe('Manuscript', () => {
     const payload: ManuscriptPostRequest = {
       title: 'The Manuscript',
       teamId: '42',
+      eligibilityReasons: [],
       versions: [
         {
           lifecycle: 'Publication',

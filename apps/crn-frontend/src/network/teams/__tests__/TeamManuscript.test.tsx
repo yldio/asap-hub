@@ -18,6 +18,7 @@ import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript } from '../api';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
@@ -66,7 +67,9 @@ const renderPage = async (
             <Router history={history}>
               <Route path={path}>
                 <ManuscriptToastProvider>
-                  <TeamManuscript teamId={teamId} />
+                  <EligibilityReasonProvider>
+                    <TeamManuscript teamId={teamId} />
+                  </EligibilityReasonProvider>
                 </ManuscriptToastProvider>
               </Route>
             </Router>
@@ -140,6 +143,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       {
         title,
         teamId,
+        eligibilityReasons: [],
         versions: [
           {
             lifecycle: 'Typeset proof',

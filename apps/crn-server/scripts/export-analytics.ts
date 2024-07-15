@@ -43,7 +43,7 @@ const exportDataWithFilters = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {
-  if (metric === 'user-productivity') {
+  if (metric === 'user-productivity' || metric === 'user-collaboration') {
     for (let i = 0; i < timeRanges.length; i += 1) {
       for (let j = 0; j < documentCategories.length; j += 1) {
         await exportData(metric, file, {
@@ -58,7 +58,10 @@ const exportDataWithFilters = async (
         await file.write(',');
       }
     }
-  } else if (metric === 'team-productivity') {
+  } else if (
+    metric === 'team-productivity' ||
+    metric === 'team-collaboration'
+  ) {
     for (let i = 0; i < timeRanges.length; i += 1) {
       for (let j = 0; j < outputTypes.length; j += 1) {
         await exportData(metric, file, {
@@ -124,11 +127,19 @@ const exportData = async (
       records = await analyticsController.fetchTeamCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        filter: {
+          timeRange: filter?.timeRange,
+          outputType: filter?.outputType,
+        },
       });
     } else {
       records = await analyticsController.fetchUserCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        filter: {
+          timeRange: filter?.timeRange,
+          documentCategory: filter?.documentCategory,
+        },
       });
     }
 

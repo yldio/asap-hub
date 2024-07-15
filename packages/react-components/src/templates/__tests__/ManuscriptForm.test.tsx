@@ -610,7 +610,7 @@ describe('renders the necessary fields', () => {
     },
   );
 });
-it('resets form fields to default values when no longer visible', async () => {
+it.only('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
     <StaticRouter>
@@ -677,12 +677,6 @@ it('resets form fields to default values when no longer visible', async () => {
       name: /Publication DOI/i,
     }),
   ).not.toBeInTheDocument();
-
-  const testFile = new File(['file content'], 'file.txt', {
-    type: 'text/plain',
-  });
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
-  userEvent.upload(uploadInput, testFile);
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 

@@ -615,7 +615,7 @@ describe('renders the necessary fields', () => {
     },
   );
 });
-it.only('resets form fields to default values when no longer visible', async () => {
+it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
     <StaticRouter>

@@ -14,16 +14,19 @@ const disabledStyles = css({
 
 type LabeledCheckboxProps = {
   readonly title: React.ReactNode;
+  readonly wrapLabel?: boolean;
 } & Exclude<ComponentProps<typeof Checkbox>, 'id'>;
 
 const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
   title,
   enabled = true,
+  wrapLabel = true,
   ...checkboxProps
 }) => (
   <div css={[containerStyles, enabled || disabledStyles]}>
     <Label
       trailing
+      wrapLabel={wrapLabel}
       forContent={(id) => (
         <Checkbox {...checkboxProps} enabled={enabled} id={id} />
       )}

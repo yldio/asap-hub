@@ -4,8 +4,15 @@ import { v4 as uuidV4 } from 'uuid';
 
 const containerStyles = css({
   display: 'flex',
-  flexWrap: 'wrap',
   alignItems: 'center',
+});
+
+const wrapStyles = css({
+  flexWrap: 'wrap',
+});
+
+const noWrapStyles = css({
+  flexWrap: 'nowrap',
 });
 
 /*
@@ -17,17 +24,19 @@ interface LabelProps {
   readonly forContent: (id: string) => React.ReactNode;
   readonly trailing?: boolean;
   readonly title?: string;
+  readonly wrapLabel?: boolean;
 }
 const Label: React.FC<LabelProps> = ({
   children,
   forContent,
   trailing = false,
+  wrapLabel = true,
   title,
 }) => {
   const contentId = useRef(uuidV4());
   return (
     <div
-      css={containerStyles}
+      css={[containerStyles, wrapLabel ? wrapStyles : noWrapStyles]}
       title={title}
       data-testid={`label-${contentId.current}`}
     >

@@ -9,6 +9,7 @@ export default {
 export const Normal = () => (
   <TeamProfileWorkspace
     {...createTeamResponse()}
+    setEligibilityReasons={() => {}}
     tools={[
       {
         name: 'My Tool',

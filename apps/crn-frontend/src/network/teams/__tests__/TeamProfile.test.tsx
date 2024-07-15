@@ -33,6 +33,7 @@ import {
 import { refreshResearchOutputState } from '../../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput, getTeam } from '../api';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
@@ -98,7 +99,9 @@ const renderPage = async (
                 }
               >
                 <ManuscriptToastProvider>
-                  <TeamProfile currentTime={currentTime} />
+                  <EligibilityReasonProvider>
+                    <TeamProfile currentTime={currentTime} />
+                  </EligibilityReasonProvider>
                 </ManuscriptToastProvider>
               </Route>
             </Router>
@@ -179,6 +182,14 @@ it('displays manuscript success toast message and user can dismiss toast', async
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
   userEvent.click(screen.getByText(/Share Manuscript/i));
+  userEvent.click(screen.getByText(/Yes/i));
+
+  userEvent.click(
+    screen.getByText(
+      'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+    ),
+  );
+  userEvent.click(screen.getByText(/Continue/i));
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 

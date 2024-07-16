@@ -1,21 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { LabeledFileField } from '../..';
 
 const handleFileUploadMock: jest.MockedFunction<
   ComponentProps<typeof LabeledFileField>['handleFileUpload']
 > = jest.fn();
 
-const clickMock = jest.fn();
-
 beforeEach(() => {
   jest.resetAllMocks();
-  jest.spyOn(React, 'useRef').mockReturnValue({
-    current: {
-      click: clickMock,
-    },
-  });
 });
 
 it('renders a labeled button when no file is selected', () => {
@@ -25,7 +18,7 @@ it('renders a labeled button when no file is selected', () => {
       subtitle="Subtitle"
       description="Description"
       handleFileUpload={handleFileUploadMock}
-    ></LabeledFileField>,
+    />,
   );
   expect(screen.getByLabelText(/Title/i)).toBeVisible();
   expect(screen.getByLabelText(/Subtitle/i)).toBeVisible();
@@ -44,7 +37,7 @@ it('renders a file tag and a disabled button when a file is selected', () => {
         url: 'http://example.com/file.txt',
         id: '123',
       }}
-    ></LabeledFileField>,
+    />,
   );
   expect(screen.getByText('file.txt')).toBeVisible();
   expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
@@ -57,7 +50,7 @@ it('calls handleFileUpload when a file is selected', async () => {
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
       placeholder="Upload Manuscript File"
-    ></LabeledFileField>,
+    />,
   );
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
@@ -85,7 +78,7 @@ it('calls the onRemove function when the remove button is clicked and allows for
         url: 'http://example.com/file.txt',
         id: '123',
       }}
-    ></LabeledFileField>,
+    />,
   );
 
   const testFile = new File(['file content'], 'file.txt', {
@@ -110,18 +103,27 @@ it('calls the onRemove function when the remove button is clicked and allows for
 });
 
 it('trigger file upload when clicking on the add file button', async () => {
+  const onRemoveMock = jest.fn();
   render(
     <LabeledFileField
       title="Title"
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
       placeholder="Upload Manuscript File"
-    ></LabeledFileField>,
+      onRemove={onRemoveMock}
+      enabled
+    />,
   );
 
-  const button = screen.getByRole('button', { name: /add file/i });
+  const addFileButton = screen.getByRole('button', { name: /add file/i });
 
-  button.click();
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  uploadInput.click = jest.fn();
 
-  expect(clickMock).toHaveBeenCalledTimes(1);
+  expect(addFileButton).toBeInTheDocument();
+  await waitFor(() => {
+    userEvent.click(addFileButton);
+  });
+
+  expect(uploadInput.click).toHaveBeenCalled();
 });

@@ -8,13 +8,16 @@ import {
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithFiltering,
+} from '@asap-hub/algolia';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
@@ -24,8 +27,12 @@ import {
   getUserCollaborationPerformance,
 } from '../api';
 import Collaboration from '../Collaboration';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
 jest.mock('../api');
+jest.mock('../../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
 mockConsoleError();
 
 afterEach(() => {
@@ -54,6 +61,13 @@ const mockGetUserCollaborationPerformance =
 mockGetUserCollaborationPerformance.mockResolvedValue(
   userCollaborationPerformance,
 );
+
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['searchForTagValues']
+>;
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
+>;
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
@@ -160,9 +174,20 @@ const renderPage = async (metric: string = 'user') => {
   return result;
 };
 
+beforeEach(() => {
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+  mockGetUserCollaboration.mockResolvedValue(userData);
+  mockGetTeamCollaboration.mockResolvedValue(teamData);
+});
+
 describe('user collaboration', () => {
   it('renders with user data', async () => {
-    mockGetUserCollaboration.mockResolvedValue(userData);
     await renderPage();
 
     expect(screen.getByText('User Co-Production')).toBeVisible();
@@ -196,9 +221,6 @@ describe('user collaboration', () => {
       tags: [],
     };
 
-    when(mockGetUserCollaboration)
-      .calledWith(expect.anything(), defaultUserOptions)
-      .mockResolvedValue(userData);
     when(mockGetUserCollaboration)
       .calledWith(expect.anything(), {
         ...defaultUserOptions,
@@ -240,7 +262,6 @@ describe('user collaboration', () => {
 
 describe('team collaboration', () => {
   it('renders with team data', async () => {
-    mockGetTeamCollaboration.mockResolvedValue(teamData);
     await renderPage('team');
 
     expect(screen.getByText('Team Co-Production')).toBeVisible();
@@ -275,12 +296,7 @@ describe('team collaboration', () => {
       sort: '',
       tags: [],
     };
-    when(mockGetTeamCollaboration)
-      .calledWith(expect.anything(), {
-        ...defaultTeamOptions,
-        outputType: 'all',
-      })
-      .mockResolvedValue(teamData);
+
     when(mockGetTeamCollaboration)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
@@ -322,9 +338,6 @@ describe('team collaboration', () => {
 });
 
 it('navigates between user and team collaboration pages', async () => {
-  mockGetUserCollaboration.mockResolvedValue(userData);
-  mockGetTeamCollaboration.mockResolvedValue(teamData);
-
   await renderPage();
   const input = screen.getAllByRole('textbox', { hidden: false });
 
@@ -336,4 +349,33 @@ it('navigates between user and team collaboration pages', async () => {
   );
   expect(screen.getByText('Team Co-Production')).toBeVisible();
   expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
+});
+
+describe('search', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+  };
+  it('allows typing in search queries', async () => {
+    const mockAlgoliaClient = {
+      searchForTagValues: mockSearchForTagValues,
+    };
+
+    mockUseAnalyticsAlgolia.mockReturnValue({
+      client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+    });
+
+    await renderPage();
+    const searchBox = getSearchBox();
+
+    userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+    await waitFor(() =>
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['user-collaboration'],
+        'test123',
+        {},
+      ),
+    );
+  });
 });

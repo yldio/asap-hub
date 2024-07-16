@@ -34,7 +34,7 @@ const getDataForType = (
   }));
 };
 
-const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
+const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
 
@@ -43,7 +43,7 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
     pageSize,
     timeRange,
     outputType,
-    tags: [],
+    tags,
     sort: '',
   });
 

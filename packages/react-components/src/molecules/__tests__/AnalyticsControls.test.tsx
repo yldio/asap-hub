@@ -7,8 +7,6 @@ describe('AnalyticsControls', () => {
   const defaultProps: ComponentProps<typeof AnalyticsControls> = {
     currentPage: 0,
     tags: [],
-    setTags: jest.fn(),
-    loadTags: jest.fn().mockResolvedValue([]),
   };
 
   it('renders range selection dropdown if time range provided', () => {

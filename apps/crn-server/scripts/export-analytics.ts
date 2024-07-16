@@ -5,8 +5,10 @@ import {
   FilterAnalyticsOptions,
   ListResponse,
   outputTypes,
+  TeamCollaborationResponse,
   TeamProductivityResponse,
   timeRanges,
+  UserCollaborationResponse,
   UserProductivityResponse,
   UserProductivityTeam,
 } from '@asap-hub/model';
@@ -202,19 +204,36 @@ const transformRecords = (
   return payload;
 };
 
+const formatTags = (
+  metricOption: 'user' | 'team',
+  name: string,
+  teamNames: string[],
+): string[] => {
+  if (metricOption === 'user')
+    return name ? [name].concat(teamNames) : teamNames;
+  return name ? [name] : [];
+};
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
-  let tag = '';
+  let teamNames = [];
   switch (type) {
     case 'team-leadership':
-      tag = (record as AnalyticsTeamLeadershipResponse).displayName;
-      return tag ? [tag] : [];
+      return formatTags(
+        'team',
+        (record as AnalyticsTeamLeadershipResponse).displayName,
+        [],
+      );
     case 'user-productivity':
-      const { name, teams } = record as UserProductivityResponse;
-      const teamNames = teams.map((team) => team.team);
-      return name ? [name].concat(teamNames) : teamNames;
+      const userProductivityResponse = record as UserProductivityResponse;
+      teamNames = userProductivityResponse.teams.map((team) => team.team);
+      return formatTags('user', userProductivityResponse.name, teamNames);
+    case 'user-collaboration':
+      const userCollaborationResponse = record as UserCollaborationResponse;
+      teamNames = userCollaborationResponse.teams.map((team) => team.team);
+      return formatTags('user', userCollaborationResponse.name, teamNames);
     case 'team-productivity':
-      tag = (record as TeamProductivityResponse).name;
-      return tag ? [tag] : [];
+      return formatTags('team', (record as TeamProductivityResponse).name, []);
+    case 'team-collaboration':
+      return formatTags('team', (record as TeamCollaborationResponse).name, []);
     default:
       return [];
   }

@@ -87,7 +87,7 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <UserCollaboration type="within-team" />
+              <UserCollaboration type="within-team" tags={[]} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

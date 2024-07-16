@@ -55,7 +55,13 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
 
 type CollaborationAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  'timeRange' | 'documentCategory' | 'outputType' | 'currentPage'
+  | 'timeRange'
+  | 'documentCategory'
+  | 'outputType'
+  | 'currentPage'
+  | 'tags'
+  | 'loadTags'
+  | 'setTags'
 > & {
   metric: MetricOption;
   type: TypeOption;
@@ -80,6 +86,9 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   timeRange,
   documentCategory,
   outputType,
+  tags,
+  setTags,
+  loadTags,
   currentPage,
   children,
 }) => {
@@ -110,7 +119,10 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
       </div>
       <AnalyticsControls
         currentPage={currentPage}
-        tags={[]}
+        tags={tags}
+        loadTags={loadTags}
+        setTags={setTags}
+        metricOption={metric}
         timeRange={timeRange}
         documentCategory={documentCategory}
         outputType={outputType}

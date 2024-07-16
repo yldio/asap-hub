@@ -623,6 +623,10 @@ it('resets form fields to default values when no longer visible', async () => {
         {...defaultProps}
         title="manuscript title"
         onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
           url: 'https://test-url',
@@ -632,35 +636,9 @@ it('resets form fields to default values when no longer visible', async () => {
     </StaticRouter>,
   );
 
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
-
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
-
-  const preprintDoi = '10.4444/test';
-  const publicationDoi = '10.4467/test';
-
-  const preprintDoiTextbox = screen.getByRole('textbox', {
-    name: /Preprint DOI/i,
-  });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
-
-  const publicationDoiTextbox = screen.getByRole('textbox', {
-    name: /Publication DOI/i,
-  });
-  userEvent.type(publicationDoiTextbox, publicationDoi);
-
-  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
-  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
   userEvent.type(
     lifecycleTextbox,

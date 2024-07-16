@@ -1,14 +1,21 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { LabeledFileField } from '../..';
 
 const handleFileUploadMock: jest.MockedFunction<
   ComponentProps<typeof LabeledFileField>['handleFileUpload']
 > = jest.fn();
 
+const clickMock = jest.fn();
+
 beforeEach(() => {
   jest.resetAllMocks();
+  jest.spyOn(React, 'useRef').mockReturnValue({
+    current: {
+      click: clickMock,
+    },
+  });
 });
 
 it('renders a labeled button when no file is selected', () => {
@@ -100,4 +107,21 @@ it('calls the onRemove function when the remove button is clicked and allows for
   });
   userEvent.upload(uploadInput, differentFile);
   expect(handleFileUploadMock).toHaveBeenCalledTimes(2);
+});
+
+it('trigger file upload when clicking on the add file button', async () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      placeholder="Upload Manuscript File"
+    ></LabeledFileField>,
+  );
+
+  const button = screen.getByRole('button', { name: /add file/i });
+
+  button.click();
+
+  expect(clickMock).toHaveBeenCalledTimes(1);
 });

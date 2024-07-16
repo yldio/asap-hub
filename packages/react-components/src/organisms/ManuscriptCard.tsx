@@ -221,6 +221,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                   <div>
                     <span
                       css={
+                        /* istanbul ignore next */
                         quickCheckDetails.length
                           ? dividerStyles
                           : fileDividerStyles

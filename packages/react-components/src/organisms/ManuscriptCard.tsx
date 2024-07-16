@@ -180,7 +180,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                   </div>
                 </div>
 
-                <Divider />
+                {quickCheckQuestions.length > 0 && <Divider />}
               </div>
               {quickCheckQuestions.map(({ field, question }) =>
                 version[`${field}Details`]?.length ? (

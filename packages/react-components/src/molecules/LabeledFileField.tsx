@@ -114,15 +114,14 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
             <div css={buttonContainerStyles}>
               <Button
                 primary
+                small
                 enabled={!!enabled && !currentFile}
                 noMargin
                 id={id}
                 preventDefault={false}
                 onClick={() => !currentFile && fileInputRef.current?.click()}
               >
-                <>
-                  <div css={iconStyles}>{plusIcon}</div> Add File
-                </>
+                <div css={iconStyles}>{plusIcon}</div> Add File
               </Button>
             </div>
           </div>

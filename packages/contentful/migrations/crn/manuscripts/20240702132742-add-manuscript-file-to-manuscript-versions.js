@@ -1,4 +1,4 @@
-module.exports.description = '<Put your description here>';
+module.exports.description = 'Add manuscript file to manuscript versions';
 
 module.exports.up = (migration) => {
   const manuscriptVersions = migration.editContentType('manuscriptVersions');
@@ -21,5 +21,5 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const manuscriptVersions = migration.editContentType('manuscriptFile');
-  manuscriptVersions.deleteField('createdBy');
+  manuscriptVersions.deleteField('manuscriptFile');
 };

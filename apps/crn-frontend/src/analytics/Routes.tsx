@@ -3,11 +3,7 @@ import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import {
-  Navigate,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const loadProductivity = () =>
   import(/* webpackChunkName: "productivity" */ './productivity/Productivity');

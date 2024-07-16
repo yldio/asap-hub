@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { viewParam, listViewValue } from '@asap-hub/routing';
+import history from '../history';
 
 export const CARD_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
@@ -45,14 +46,15 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
   const numberOfPages = Math.max(currentPage, lastAllowedPage) + 1;
 
   const renderPageHref = (page: number) => {
-    const { pathname } = useLocation();
+    // const { pathname } = useLocation();
+    const newSearchParams = new URLSearchParams(history.location.search);
 
     if (page === currentPage) return '';
-    if (page === 0) searchParams.delete('currentPage');
-    else searchParams.set('currentPage', String(page));
+    if (page === 0) newSearchParams.delete('currentPage');
+    else newSearchParams.set('currentPage', String(page));
 
-    const newParams = searchParams.toString();
-    return `${newParams.length ? '?' : pathname}${newParams}`;
+    const newParams = newSearchParams.toString();
+    return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
   };
 
   useEffect(() => {

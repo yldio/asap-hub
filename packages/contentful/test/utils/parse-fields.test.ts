@@ -3,6 +3,7 @@ import {
   addLocaleToFields,
   createLink,
   getBulkPayload,
+  getLinkAsset,
   getLinkEntities,
   getLinkEntity,
   updateEntryFields,
@@ -68,6 +69,19 @@ describe('getLinkEntity', () => {
         linkType: 'Entry',
         id,
         version: 1,
+      },
+    });
+  });
+});
+
+describe('getLinkAsset', () => {
+  test('passing an id', () => {
+    const id = '42';
+    expect(getLinkAsset(id)).toEqual({
+      sys: {
+        type: 'Link',
+        linkType: 'Asset',
+        id,
       },
     });
   });

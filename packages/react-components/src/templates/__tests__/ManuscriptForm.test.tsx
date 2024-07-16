@@ -770,3 +770,40 @@ it('should go back when cancel button is clicked', () => {
 
   expect(history.location.pathname).toBe('/another-url');
 });
+
+it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+
+  const testFile = new File(['file content'], 'test.pdf', {
+    type: 'application/pdf',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(() => {
+    userEvent.upload(uploadInput, testFile);
+  });
+
+  expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+
+  const removeFileButton = screen.getByRole('button', { name: /cross/i });
+  expect(removeFileButton).toBeInTheDocument();
+
+  await waitFor(() => {
+    userEvent.click(removeFileButton);
+  });
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+});

@@ -20,6 +20,6 @@ module.exports.up = (migration) => {
 };
 
 module.exports.down = (migration) => {
-  const manuscriptVersions = migration.editContentType('manuscriptFile');
+  const manuscriptVersions = migration.editContentType('manuscriptVersions');
   manuscriptVersions.deleteField('manuscriptFile');
 };

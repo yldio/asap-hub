@@ -100,7 +100,7 @@ describe('Assets data provider', () => {
       expect(publishMock).toHaveBeenCalled();
     });
 
-    test('does not publish the asset publish option is set to false', async () => {
+    test('does not publish the asset if publish option is set to false', async () => {
       await assetsDataProvider.create({
         id: 'abc',
         title: 'test title',

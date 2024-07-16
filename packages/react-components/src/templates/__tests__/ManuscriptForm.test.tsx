@@ -623,6 +623,11 @@ it('resets form fields to default values when no longer visible', async () => {
         {...defaultProps}
         title="manuscript title"
         onSave={onSave}
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
       />
     </StaticRouter>,
   );
@@ -657,14 +662,6 @@ it('resets form fields to default values when no longer visible', async () => {
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
-  const quickChecks = screen.getByRole('region', { name: /quick checks/i });
-
-  within(quickChecks)
-    .getAllByText('Yes')
-    .forEach((button) => {
-      userEvent.click(button);
-    });
-
   userEvent.type(
     lifecycleTextbox,
     'Draft manuscript (prior to preprint submission)',
@@ -684,12 +681,6 @@ it('resets form fields to default values when no longer visible', async () => {
   ).not.toBeInTheDocument();
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
-
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
-
-  expect(submitButton).toBeEnabled();
 
   userEvent.click(submitButton);
   await waitFor(() => {

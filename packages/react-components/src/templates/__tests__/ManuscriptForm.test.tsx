@@ -807,3 +807,49 @@ it('should upload and remove file when user clicks on upload manuscript file and
 
   expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
 });
+
+it('should show error when file upload fails', async () => {
+  const handleFileUpload: jest.MockedFunction<
+    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+  > = jest.fn();
+
+  const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+  const mockError = 'No file provided or file is not a PDF.';
+
+  handleFileUpload.mockImplementation(
+    (file: File, handleError: (errorMessage: string) => void) => {
+      if (file === mockFile) {
+        return Promise.reject(new Error(mockError)).catch((error) => {
+          handleError(error.message);
+          return undefined;
+        });
+      }
+      return Promise.resolve({
+        id: '123',
+        filename: 'test.pdf',
+        url: 'http://example.com/test.pdf',
+      });
+    },
+  );
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        handleFileUpload={handleFileUpload}
+      />
+    </StaticRouter>,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(async () => {
+    userEvent.upload(uploadInput, mockFile);
+  });
+
+  expect(screen.getByText(mockError)).toBeInTheDocument();
+});

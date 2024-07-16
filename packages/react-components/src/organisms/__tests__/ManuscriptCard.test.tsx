@@ -117,7 +117,7 @@ it('renders a divider between fields in Additional Information section and files
   );
 
   userEvent.click(getByRole('button'));
-  expect(queryAllByRole('separator').length).toEqual(6);
+  expect(queryAllByRole('separator').length).toEqual(5);
 });
 
 it.each`

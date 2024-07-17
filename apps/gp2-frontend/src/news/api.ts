@@ -26,6 +26,7 @@ export type NewsListOptions = GetListOptions & gp2.FetchNewsFilter;
 export const getAlgoliaNews = async (
   client: AlgoliaClient<'gp2'>,
   options: NewsListOptions,
+  descending = true,
 ) =>
   client
     .search(
@@ -36,7 +37,7 @@ export const getAlgoliaNews = async (
         hitsPerPage: options.pageSize ?? 10,
         filters: getAllFilters(options.filters),
       },
-      true,
+      descending,
     )
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);

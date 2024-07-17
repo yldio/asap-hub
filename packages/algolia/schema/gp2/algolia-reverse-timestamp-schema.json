@@ -1,8 +1,9 @@
 {
   "customRanking": [
     "desc(endDateTimestamp)",
-    "asc(addedDate)",
-    "asc(createdDate)"
+    "desc(addedDate)",
+    "desc(createdDate)",
+    "desc(created)"
   ],
   "attributesForFaceting": [
     "__meta.type",

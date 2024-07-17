@@ -1,7 +1,13 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Router,
+  Routes,
+  RouterProvider,
+  createMemoryRouter,
+} from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import {
@@ -28,7 +34,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -51,26 +57,39 @@ const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   },
   getRelatedResearchSuggestions: jest.fn(),
   getRelatedEventSuggestions: jest.fn(),
+  serverValidationErrors: [],
+  clearServerValidationError: jest.fn(),
+  urlRequired: false,
+  getLabSuggestions: jest.fn(),
+  getAuthorSuggestions: jest.fn(),
+  getTeamSuggestions: jest.fn(),
+  authorsRequired: false,
 };
 
 jest.setTimeout(60000);
 
-it('sets authors to required', () => {
-  render(
-    <MemoryRouter>
-      <ResearchOutputForm {...defaultProps} authorsRequired={false} />
-    </MemoryRouter>,
-  );
+const renderForm = (
+  additionalProps: Partial<ComponentProps<typeof ResearchOutputForm>>,
+) => {
+  const routes = [
+    {
+      path: '/',
+      element: <ResearchOutputForm {...defaultProps} {...additionalProps} />,
+    },
+  ];
+  const router = createMemoryRouter(routes);
+  render(<RouterProvider router={router} />);
+};
+
+it.only('sets authors to required', () => {
+  renderForm({ authorsRequired: false });
+
   expect(
-    screen.getByRole('textbox', { name: 'Authors (optional)' }),
+    screen.getByRole('combobox', { name: 'Authors (optional)' }),
   ).toBeVisible();
-  render(
-    <MemoryRouter>
-      <ResearchOutputForm {...defaultProps} authorsRequired={true} />
-    </MemoryRouter>,
-  );
+  renderForm({ authorsRequired: true });
   expect(
-    screen.getByRole('textbox', { name: 'Authors (required)' }),
+    screen.getByRole('combobox', { name: 'Authors (required)' }),
   ).toBeVisible();
 });
 
@@ -825,9 +844,10 @@ describe('on submit', () => {
   it('should disable "No" and "Not Sure" options', async () => {
     history = createMemoryHistory({
       initialEntries: [
-        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
+        networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath({
+          teamId: 'TEAMID',
           outputDocumentType: 'article',
-        }).$,
+        }),
       ],
     });
     await setupForm({

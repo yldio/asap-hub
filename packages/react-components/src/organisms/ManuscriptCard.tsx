@@ -18,6 +18,7 @@ import {
   Link,
   lead,
 } from '..';
+import { downloadIcon, linkIcon } from '../icons';
 import { paddingStyles } from '../card';
 import { UserCommentHeader } from '../molecules';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -69,13 +70,18 @@ const toastContentStyles = css({
   paddingTop: rem(15),
 });
 
+const fileDividerStyles = css({
+  display: 'block',
+  margin: `${rem(4)} 0`,
+});
+
 const dividerStyles = css({
   display: 'block',
   margin: `${rem(21)} 0`,
 });
 
 const quickCheckStyles = css({
-  marginTop: rem(24),
+  marginTop: rem(16),
   gap: rem(12),
   display: 'flex',
   flexDirection: 'column',
@@ -104,6 +110,18 @@ const additionalInformationValueStyles = css({
     marginTop: `${rem(12)}`,
     textAlign: 'inherit',
   },
+});
+
+const fileContainerStyles = css({
+  display: 'flex',
+  gap: rem(12),
+  alignItems: 'center',
+});
+
+const downloadButtonStyles = css({
+  marginLeft: 'auto',
+  flexGrow: 0,
+  alignSelf: 'center',
 });
 
 const hasAdditionalInfo = (version: ManuscriptVersion) =>
@@ -135,21 +153,51 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
 
       {expanded && (
         <div>
-          {versions.map((version, index) => (
-            <div key={index} css={[paddingStyles, toastContentStyles]}>
-              <span css={toastHeaderStyles}>
-                <span css={[iconStyles]}>{article}</span>
-                <Subtitle noMargin>Manuscript</Subtitle>
-              </span>
-              <div
-                style={{ display: 'flex', gap: rem(10), marginTop: rem(15) }}
-                key={index}
-              >
-                <Pill accent="gray">{version.type}</Pill>
-                <Pill accent="gray">{version.lifecycle}</Pill>
-              </div>
-              {quickCheckQuestions.map(({ field, question }) =>
-                version[`${field}Details`]?.length ? (
+          {versions.map((version, index) => {
+            const quickCheckDetails = quickCheckQuestions.filter(
+              ({ field }) => version[`${field}Details`]?.length,
+            );
+            return (
+              <div key={index} css={[paddingStyles, toastContentStyles]}>
+                <span css={toastHeaderStyles}>
+                  <span css={[iconStyles]}>{article}</span>
+                  <Subtitle noMargin>Manuscript</Subtitle>
+                </span>
+                <div
+                  style={{ display: 'flex', gap: rem(10), marginTop: rem(15) }}
+                  key={index}
+                >
+                  <Pill accent="gray">{version.type}</Pill>
+                  <Pill accent="gray">{version.lifecycle}</Pill>
+                </div>
+                <div>
+                  <span css={fileDividerStyles}>
+                    <Divider />
+                  </span>
+
+                  <div css={fileContainerStyles}>
+                    {linkIcon}
+                    <Subtitle>{version.manuscriptFile.filename}</Subtitle>
+                    <div css={css(downloadButtonStyles)}>
+                      <Link
+                        href={version.manuscriptFile.url}
+                        primary
+                        noMargin
+                        small
+                        buttonStyle
+                      >
+                        {downloadIcon} Download
+                      </Link>
+                    </div>
+                  </div>
+
+                  {quickCheckDetails.length > 0 && (
+                    <span css={fileDividerStyles}>
+                      <Divider />
+                    </span>
+                  )}
+                </div>
+                {quickCheckDetails.map(({ field, question }) => (
                   <div css={quickCheckStyles} key={field}>
                     <Subtitle>{question}</Subtitle>
                     <UserCommentHeader
@@ -168,87 +216,94 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                     />
                     <span>{version[`${field}Details`]}</span>
                   </div>
-                ) : null,
-              )}
-              {hasAdditionalInfo(version) && (
-                <div>
-                  <span css={dividerStyles}>
-                    <Divider />
-                  </span>
-                  <span
-                    css={{
-                      fontStyle: 'italic',
-                      marginBottom: rem(12),
-                      display: 'block',
-                    }}
-                  >
-                    <Subtitle>Additional Information</Subtitle>
-                  </span>
+                ))}
+                {hasAdditionalInfo(version) && (
+                  <div>
+                    <span
+                      css={
+                        /* istanbul ignore next */
+                        quickCheckDetails.length
+                          ? dividerStyles
+                          : fileDividerStyles
+                      }
+                    >
+                      <Divider />
+                    </span>
+                    <span
+                      css={{
+                        fontStyle: 'italic',
+                        marginBottom: rem(12),
+                        display: 'block',
+                      }}
+                    >
+                      <Subtitle>Additional Information</Subtitle>
+                    </span>
 
-                  <ol css={additionalInformationListStyles}>
-                    {version.preprintDoi && (
-                      <li css={additionalInformationEntryStyles}>
-                        <strong>Preprint DOI</strong>
-                        <span css={additionalInformationValueStyles}>
-                          <Link
-                            href={new URL(
-                              `https://doi.org/${version.preprintDoi}`,
-                            ).toString()}
-                          >
-                            {version.preprintDoi}
-                          </Link>
-                        </span>
-                      </li>
-                    )}
-
-                    {version.publicationDoi && (
-                      <>
-                        {version.preprintDoi && <Divider />}
+                    <ol css={additionalInformationListStyles}>
+                      {version.preprintDoi && (
                         <li css={additionalInformationEntryStyles}>
-                          <strong>Publication DOI</strong>
+                          <strong>Preprint DOI</strong>
                           <span css={additionalInformationValueStyles}>
                             <Link
                               href={new URL(
-                                `https://doi.org/${version.publicationDoi}`,
+                                `https://doi.org/${version.preprintDoi}`,
                               ).toString()}
                             >
-                              {version.publicationDoi}
+                              {version.preprintDoi}
                             </Link>
                           </span>
                         </li>
-                      </>
-                    )}
-                    {version.requestingApcCoverage && (
-                      <>
-                        {(version.preprintDoi || version.publicationDoi) && (
-                          <Divider />
-                        )}
-                        <li css={additionalInformationEntryStyles}>
-                          <strong>Requesting APC Coverage?</strong>
-                          <span css={additionalInformationValueStyles}>
-                            {version.requestingApcCoverage}
-                          </span>
-                        </li>
-                      </>
-                    )}
-                    {version.otherDetails && (
-                      <>
-                        {(version.preprintDoi ||
-                          version.publicationDoi ||
-                          version.requestingApcCoverage) && <Divider />}
-                        <li css={additionalInformationEntryStyles}>
-                          <strong>Other details</strong>
-                          <span css={additionalInformationValueStyles}>
-                            {version.otherDetails}
-                          </span>
-                        </li>
-                      </>
-                    )}
-                  </ol>
-                </div>
-              )}
-            </div>
-          ))}
+                      )}
+
+                      {version.publicationDoi && (
+                        <>
+                          {version.preprintDoi && <Divider />}
+                          <li css={additionalInformationEntryStyles}>
+                            <strong>Publication DOI</strong>
+                            <span css={additionalInformationValueStyles}>
+                              <Link
+                                href={new URL(
+                                  `https://doi.org/${version.publicationDoi}`,
+                                ).toString()}
+                              >
+                                {version.publicationDoi}
+                              </Link>
+                            </span>
+                          </li>
+                        </>
+                      )}
+                      {version.requestingApcCoverage && (
+                        <>
+                          {(version.preprintDoi || version.publicationDoi) && (
+                            <Divider />
+                          )}
+                          <li css={additionalInformationEntryStyles}>
+                            <strong>Requesting APC Coverage?</strong>
+                            <span css={additionalInformationValueStyles}>
+                              {version.requestingApcCoverage}
+                            </span>
+                          </li>
+                        </>
+                      )}
+                      {version.otherDetails && (
+                        <>
+                          {(version.preprintDoi ||
+                            version.publicationDoi ||
+                            version.requestingApcCoverage) && <Divider />}
+                          <li css={additionalInformationEntryStyles}>
+                            <strong>Other details</strong>
+                            <span css={additionalInformationValueStyles}>
+                              {version.otherDetails}
+                            </span>
+                          </li>
+                        </>
+                      )}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

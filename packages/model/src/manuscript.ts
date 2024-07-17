@@ -57,6 +57,14 @@ export const apcCoverageOptions = ['Yes', 'No', 'Already submitted'] as const;
 
 export type ApcCoverageOption = (typeof apcCoverageOptions)[number];
 
+export type ManuscriptFileResponse = {
+  id: string;
+  filename: string;
+  url: string;
+};
+
+type ManuscriptFile = ManuscriptFileResponse;
+
 export type ManuscriptVersion = {
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
@@ -64,6 +72,7 @@ export type ManuscriptVersion = {
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
   otherDetails?: string;
+  manuscriptFile: ManuscriptFile;
 
   acknowledgedGrantNumber?: string;
   asapAffiliationIncluded?: string;
@@ -256,6 +265,7 @@ export type ManuscriptPostRequest = Pick<
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    manuscriptFile: ManuscriptVersion['manuscriptFile'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -307,6 +317,16 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               nullable: true,
             },
             otherDetails: { type: 'string', nullable: true },
+            manuscriptFile: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                filename: { type: 'string', nullable: true },
+                url: { type: 'string', nullable: true },
+              },
+              nullable: true,
+              required: ['id'],
+            },
             acknowledgedGrantNumber: { type: 'string', nullable: true },
             asapAffiliationIncluded: { type: 'string', nullable: true },
             manuscriptLicense: { type: 'string', nullable: true },

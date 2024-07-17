@@ -213,6 +213,11 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
+          manuscriptFile: {
+            id: 'file-id',
+            url: 'https://example.com/manuscript.pdf',
+            filename: 'manuscript.pdf',
+          },
         },
       ],
     },
@@ -225,6 +230,11 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
+          manuscriptFile: {
+            id: 'file-id',
+            url: 'https://example.com/manuscript.pdf',
+            filename: 'manuscript.pdf',
+          },
         },
       ],
     },

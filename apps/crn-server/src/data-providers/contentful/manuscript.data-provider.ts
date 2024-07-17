@@ -4,6 +4,7 @@ import {
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
   FETCH_MANUSCRIPT_BY_ID,
+  getLinkAsset,
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
@@ -63,11 +64,17 @@ export class ManuscriptContentfulDataProvider
       throw new Error('No versions provided');
     }
 
+    const manuscriptFileAsset = await environment.getAsset(
+      version.manuscriptFile.id,
+    );
+    await manuscriptFileAsset.publish();
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
         fields: addLocaleToFields({
           ...version,
+          manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           createdBy: getLinkEntity(userId),
         }),
       },
@@ -111,6 +118,11 @@ export const parseGraphqlManuscriptVersion = (
     .map((version) => ({
       type: version?.type,
       lifecycle: version?.lifecycle,
+      manuscriptFile: {
+        url: version?.manuscriptFile?.url,
+        filename: version?.manuscriptFile?.fileName,
+        id: version?.manuscriptFile?.sys.id,
+      },
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,

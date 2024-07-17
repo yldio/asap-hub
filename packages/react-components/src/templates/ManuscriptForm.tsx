@@ -1,5 +1,6 @@
 import {
   ApcCoverageOption,
+  ManuscriptFileResponse,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptPostRequest,
@@ -12,7 +13,7 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
@@ -20,6 +21,7 @@ import {
   LabeledDropdown,
   LabeledRadioButtonGroup,
   LabeledTextField,
+  LabeledFileField,
 } from '..';
 import { Button } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -141,27 +143,33 @@ const setDefaultFieldValues = (
 
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
-  'type' | 'lifecycle' | 'createdBy' | 'publishedAt'
+  'type' | 'lifecycle' | 'manuscriptFile' | 'createdBy' | 'publishedAt'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
+    manuscriptFile?: ManuscriptFileResponse;
     eligibilityReasons: Set<string>;
-
     onSave: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
     onSuccess: () => void;
+    handleFileUpload: (
+      file: File,
+      handleError: (errorMessage: string) => void,
+    ) => Promise<ManuscriptFileResponse | undefined>;
     teamId: string;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onSave,
   onSuccess,
+  handleFileUpload,
   teamId,
   title,
   type,
   lifecycle,
+  manuscriptFile,
   eligibilityReasons,
   requestingApcCoverage,
   preprintDoi,
@@ -196,6 +204,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           requestingApcCoverage: requestingApcCoverage || '',
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
+          manuscriptFile: manuscriptFile || undefined,
           acknowledgedGrantNumber: acknowledgedGrantNumber || '',
           asapAffiliationIncluded: asapAffiliationIncluded || '',
           manuscriptLicense: manuscriptLicense || '',
@@ -214,6 +223,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       ],
     },
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const {
     handleSubmit,
@@ -222,7 +232,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     getValues,
     watch,
     setValue,
+    setError,
     reset,
+    resetField,
   } = methods;
 
   const watchType = watch('versions.0.type');
@@ -254,6 +266,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             {
               ...getValues().versions[0],
               ...fieldDefaultValueMap,
+              manuscriptFile: undefined,
             },
           ],
         },
@@ -563,6 +576,49 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               )}
+
+            {watchType && (
+              <Controller
+                name="versions.0.manuscriptFile"
+                control={control}
+                rules={{
+                  required: 'Please select a manuscript file.',
+                }}
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <LabeledFileField
+                    title="Upload the main manuscript file"
+                    subtitle="(required)"
+                    description="The main manuscript must be submitted as a single PDF file and should contain all primary and supplemental text, methods, and figures."
+                    placeholder="Upload Manuscript File"
+                    onRemove={() => {
+                      resetField('versions.0.manuscriptFile');
+                    }}
+                    handleFileUpload={async (file) => {
+                      setIsUploading(true);
+                      const uploadedFile = await handleFileUpload(
+                        file,
+                        (validationErrorMessage) => {
+                          setError('versions.0.manuscriptFile', {
+                            type: 'custom',
+                            message: validationErrorMessage,
+                          });
+                        },
+                      );
+                      setIsUploading(false);
+
+                      if (!uploadedFile) return;
+
+                      setValue('versions.0.manuscriptFile', uploadedFile, {
+                        shouldValidate: true,
+                      });
+                    }}
+                    currentFile={value}
+                    customValidationMessage={error?.message}
+                    enabled={!isSubmitting && !isUploading}
+                  />
+                )}
+              />
+            )}
           </FormCard>
 
           {watchType && watchLifecycle && (
@@ -649,7 +705,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 submit
-                enabled={!isSubmitting}
+                enabled={!isSubmitting && !isUploading}
                 preventDefault={false}
               >
                 Submit

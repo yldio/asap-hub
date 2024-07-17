@@ -30,6 +30,7 @@ export { default as LabeledCheckbox } from './LabeledCheckbox';
 export { default as LabeledCheckboxGroup } from './LabeledCheckboxGroup';
 export { default as LabeledDateField } from './LabeledDateField';
 export { default as LabeledDropdown } from './LabeledDropdown';
+export { default as LabeledFileField } from './LabeledFileField';
 export { default as LabeledMultiSelect } from './LabeledMultiSelect';
 export { default as LabeledPasswordField } from './LabeledPasswordField';
 export { default as LabeledRadioButton } from './LabeledRadioButton';

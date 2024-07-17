@@ -100,7 +100,7 @@ it('displays Additional Information section when present', () => {
   ).toBeVisible();
 });
 
-it('renders a divider between fields in Additional Information section', () => {
+it('renders a divider between fields in Additional Information section and files section', () => {
   const { getByRole, queryAllByRole } = render(
     <ManuscriptCard
       {...props}
@@ -117,7 +117,7 @@ it('renders a divider between fields in Additional Information section', () => {
   );
 
   userEvent.click(getByRole('button'));
-  expect(queryAllByRole('separator').length).toEqual(4);
+  expect(queryAllByRole('separator').length).toEqual(5);
 });
 
 it.each`
@@ -175,5 +175,30 @@ it('builds the correct href for doi fields', () => {
   expect(getByText(publicationDoiValue)?.closest('a')).toHaveAttribute(
     'href',
     expectedPublicationLink,
+  );
+});
+
+it('renders manuscript main file details and download link', () => {
+  const { getByText, getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      versions={[
+        {
+          ...props.versions[0]!,
+          manuscriptFile: {
+            filename: 'manuscript_file.pdf',
+            url: 'https://example.com/main-file.pdf',
+            id: 'file-1',
+          },
+        },
+      ]}
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText('manuscript_file.pdf')).toBeVisible();
+  expect(getByText('Download').closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com/main-file.pdf',
   );
 });

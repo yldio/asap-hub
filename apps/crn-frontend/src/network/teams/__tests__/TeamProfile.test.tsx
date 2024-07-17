@@ -43,6 +43,11 @@ jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
   createResearchOutput: jest.fn(),
+  uploadManuscriptFile: jest.fn().mockResolvedValue({
+    filename: 'manuscript.pdf',
+    url: 'https://example.com/manuscript.pdf',
+    id: 'file-id',
+  }),
   createManuscript: jest
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),
@@ -215,6 +220,12 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  userEvent.upload(uploadInput, testFile);
+
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   within(quickChecks)
     .getAllByText('Yes')
@@ -222,6 +233,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
       userEvent.click(button);
     });
 
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
   userEvent.click(submitButton);
 
   await waitFor(() => {

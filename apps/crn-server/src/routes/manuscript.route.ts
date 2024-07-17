@@ -1,12 +1,15 @@
-import { ManuscriptResponse } from '@asap-hub/model';
+import { ManuscriptFileResponse, ManuscriptResponse } from '@asap-hub/model';
 import Boom from '@hapi/boom';
-import { Response, Router } from 'express';
+import { RequestHandler, Response, Router } from 'express';
+import multer from 'multer';
 
 import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateManuscriptParameters,
   validateManuscriptPostRequestParameters,
 } from '../validation/manuscript.validation';
+
+const upload = multer();
 
 export const manuscriptRouteFactory = (
   manuscriptController: ManuscriptController,
@@ -25,6 +28,26 @@ export const manuscriptRouteFactory = (
       const result = await manuscriptController.fetchById(manuscriptId);
 
       res.json(result);
+    },
+  );
+
+  manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
+    '/manuscripts/manuscript-file',
+    upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
+    async (req, res) => {
+      const { file } = req;
+
+      if (!file || file.mimetype !== 'application/pdf') {
+        throw Boom.badRequest('No file provided or file is not a PDF.');
+      }
+
+      const manuscript = await manuscriptController.createFile({
+        content: file.buffer,
+        contentType: file.mimetype,
+        filename: file.originalname,
+      });
+
+      res.status(201).json(manuscript);
     },
   );
 

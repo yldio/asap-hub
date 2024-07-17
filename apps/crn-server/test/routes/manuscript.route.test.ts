@@ -7,6 +7,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import {
   getManuscriptCreateDataObject,
+  getManuscriptFileResponse,
   getManuscriptPostBody,
   getManuscriptResponse,
 } from '../fixtures/manuscript.fixtures';
@@ -202,6 +203,11 @@ describe('/manuscripts/ route', () => {
         createManuscriptRequest.versions.push({
           lifecycle: 'Preprint, version 2',
           type: 'Original Research',
+          manuscriptFile: {
+            url: 'http://example.com/file.pdf',
+            filename: 'file.pdf',
+            id: 'file-id',
+          },
         });
 
         const response = await supertest(app)
@@ -223,6 +229,71 @@ describe('/manuscripts/ route', () => {
 
         expect(response.status).toEqual(400);
       });
+    });
+  });
+
+  describe('POST /manuscripts/manuscript-file', () => {
+    const manuscriptFileResponse = getManuscriptFileResponse();
+
+    test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .post('/manuscripts/manuscript-file')
+        .attach('file', Buffer.from('file content'), {
+          filename: 'file.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return a 201 and pass input to the controller', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: true,
+      });
+      manuscriptControllerMock.createFile.mockResolvedValueOnce(
+        manuscriptFileResponse,
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts/manuscript-file')
+        .attach('file', Buffer.from('file content'), {
+          filename: 'file.pdf',
+          contentType: 'application/pdf',
+        });
+
+      expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
+        filename: 'file.pdf',
+        content: expect.any(Buffer),
+        contentType: 'application/pdf',
+      });
+
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual(manuscriptFileResponse);
+    });
+
+    test('Should return 400 if the file is missing', async () => {
+      const response = await supertest(app).post(
+        '/manuscripts/manuscript-file',
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return 400 if the file mime type is not pdf', async () => {
+      const response = await supertest(app)
+        .post('/manuscripts/manuscript-file')
+        .attach('file', Buffer.from('file content'), {
+          filename: 'file.pdf',
+          contentType: 'application/json',
+        });
+
+      expect(response.status).toBe(400);
     });
   });
 });

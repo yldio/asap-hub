@@ -24,6 +24,13 @@ const teamId = '42';
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: '123',
+      filename: 'test.pdf',
+      url: 'http://example.com/test.pdf',
+    }),
+  ),
   onSuccess: jest.fn(),
   teamId,
   eligibilityReasons: new Set(),
@@ -57,6 +64,11 @@ it('data is sent on form submission', async () => {
         title="manuscript title"
         type="Original Research"
         lifecycle="Draft manuscript (prior to preprint submission)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -71,6 +83,11 @@ it('data is sent on form submission', async () => {
         {
           type: 'Original Research',
           lifecycle: 'Draft manuscript (prior to preprint submission)',
+          manuscriptFile: {
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: undefined,
@@ -125,6 +142,11 @@ test.each`
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -139,6 +161,7 @@ test.each`
         {
           type: 'Original Research',
           lifecycle: 'Publication',
+          manuscriptFile: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
           acknowledgedGrantNumber: 'Yes',
@@ -200,6 +223,11 @@ test.each`
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -215,6 +243,7 @@ test.each`
           {
             type: 'Original Research',
             lifecycle: 'Publication',
+            manuscriptFile: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
@@ -255,6 +284,11 @@ it('displays an error message when user selects no in a quick check and does not
         type="Original Research"
         publicationDoi="10.0777"
         lifecycle="Publication"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -462,6 +496,11 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
         title="manuscript title"
         type="Original Research"
         lifecycle="Typeset proof"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -477,6 +516,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
         expect.objectContaining({
           type: 'Original Research',
           lifecycle: 'Typeset proof',
+          manuscriptFile: expect.anything(),
           requestingApcCoverage: 'Already submitted',
         }),
       ],
@@ -525,6 +565,7 @@ describe('renders the necessary fields', () => {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
+    manuscriptFile: 'Upload the main manuscript file',
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',
@@ -574,7 +615,6 @@ describe('renders the necessary fields', () => {
     },
   );
 });
-
 it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
@@ -583,39 +623,22 @@ it('resets form fields to default values when no longer visible', async () => {
         {...defaultProps}
         title="manuscript title"
         onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
       />
     </StaticRouter>,
   );
 
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
-  typeTextbox.blur();
-
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
-  lifecycleTextbox.blur();
-
-  const preprintDoi = '10.4444/test';
-  const publicationDoi = '10.4467/test';
-
-  const preprintDoiTextbox = screen.getByRole('textbox', {
-    name: /Preprint DOI/i,
-  });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
-
-  const publicationDoiTextbox = screen.getByRole('textbox', {
-    name: /Publication DOI/i,
-  });
-  userEvent.type(publicationDoiTextbox, publicationDoi);
-
-  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
-  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
   userEvent.type(
     lifecycleTextbox,
@@ -635,7 +658,9 @@ it('resets form fields to default values when no longer visible', async () => {
     }),
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(submitButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -744,4 +769,87 @@ it('should go back when cancel button is clicked', () => {
   userEvent.click(cancelButton);
 
   expect(history.location.pathname).toBe('/another-url');
+});
+
+it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+
+  const testFile = new File(['file content'], 'test.pdf', {
+    type: 'application/pdf',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(() => {
+    userEvent.upload(uploadInput, testFile);
+  });
+
+  expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+
+  const removeFileButton = screen.getByRole('button', { name: /cross/i });
+  expect(removeFileButton).toBeInTheDocument();
+
+  await waitFor(() => {
+    userEvent.click(removeFileButton);
+  });
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+});
+
+it('should show error when file upload fails', async () => {
+  const handleFileUpload: jest.MockedFunction<
+    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+  > = jest.fn();
+
+  const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+  const mockError = 'No file provided or file is not a PDF.';
+
+  handleFileUpload.mockImplementation(
+    (file: File, handleError: (errorMessage: string) => void) => {
+      if (file === mockFile) {
+        return Promise.reject(new Error(mockError)).catch((error) => {
+          handleError(error.message);
+          return undefined;
+        });
+      }
+      return Promise.resolve({
+        id: '123',
+        filename: 'test.pdf',
+        url: 'http://example.com/test.pdf',
+      });
+    },
+  );
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        handleFileUpload={handleFileUpload}
+      />
+    </StaticRouter>,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(async () => {
+    userEvent.upload(uploadInput, mockFile);
+  });
+
+  expect(screen.getByText(mockError)).toBeInTheDocument();
 });

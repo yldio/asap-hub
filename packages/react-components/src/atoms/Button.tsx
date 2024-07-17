@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from '@emotion/react';
+import { InputHTMLAttributes } from 'react';
 
 import { getButtonChildren, getButtonStyles } from '../button';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
@@ -47,7 +48,7 @@ type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly children?: React.ReactNode;
   readonly overrideStyles?: SerializedStyles;
   readonly onClick?: () => void;
-};
+} & Pick<InputHTMLAttributes<HTMLInputElement>, 'id'>;
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
   primary = false,
@@ -59,12 +60,14 @@ const Button: React.FC<ButtonProps> = ({
   noMargin,
   theme = defaultThemeVariant,
   submit = primary,
+  id,
   children,
   onClick = noop,
   overrideStyles,
   ...props
 }) => (
   <button
+    id={id}
     type={submit ? 'submit' : 'button'}
     disabled={!enabled}
     onClick={(event) => {

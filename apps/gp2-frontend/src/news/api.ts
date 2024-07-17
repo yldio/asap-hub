@@ -28,11 +28,16 @@ export const getAlgoliaNews = async (
   options: NewsListOptions,
 ) =>
   client
-    .search(['news'], options.searchQuery, {
-      page: options.currentPage ?? 0,
-      hitsPerPage: options.pageSize ?? 10,
-      filters: getAllFilters(options.filters),
-    })
+    .search(
+      ['news'],
+      options.searchQuery,
+      {
+        page: options.currentPage ?? 0,
+        hitsPerPage: options.pageSize ?? 10,
+        filters: getAllFilters(options.filters),
+      },
+      true,
+    )
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });

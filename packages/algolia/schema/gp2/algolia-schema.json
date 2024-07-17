@@ -74,7 +74,8 @@
   "customRanking": [
     "asc(endDateTimestamp)",
     "desc(addedDate)",
-    "desc(createdDate)"
+    "desc(createdDate)",
+    "desc(created)"
   ],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",

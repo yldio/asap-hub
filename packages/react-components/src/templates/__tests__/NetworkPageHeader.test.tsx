@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
@@ -19,7 +19,7 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.TEAMS.path]}>
       <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
@@ -28,7 +28,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).users({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.USERS.path]}>
       <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
@@ -37,7 +37,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.INTEREST_GROUPS.path]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
@@ -46,7 +46,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter an interest group, keyword, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.WORKING_GROUPS.path]}>
       <NetworkPageHeader {...props} page="working-groups" />
     </MemoryRouter>,
   );
@@ -57,28 +57,28 @@ it('alters the search placeholder based on the tab', () => {
 
 it('shows the filter in all the tabs (teams, groups, working-groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.TEAMS.path]}>
       <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
   expect(queryByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.INTEREST_GROUPS.path]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.WORKING_GROUPS.path]}>
       <NetworkPageHeader {...props} page="working-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).users({}).$]}>
+    <MemoryRouter initialEntries={[networkRoutes.DEFAULT.USERS.path]}>
       <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
@@ -87,7 +87,7 @@ it('shows the filter in all the tabs (teams, groups, working-groups and users)',
 
 it('highlights the current tab', () => {
   const { getByText, rerender } = render(
-    <StaticRouter key="teams" location={network({}).teams({}).$}>
+    <StaticRouter key="teams" location={networkRoutes.DEFAULT.TEAMS.path}>
       <NetworkPageHeader {...props} page="teams" />
     </StaticRouter>,
   );
@@ -105,7 +105,7 @@ it('highlights the current tab', () => {
   ).not.toBe('bold');
 
   rerender(
-    <StaticRouter key="users" location={network({}).users({}).$}>
+    <StaticRouter key="users" location={networkRoutes.DEFAULT.USERS.path}>
       <NetworkPageHeader {...props} page="users" />
     </StaticRouter>,
   );

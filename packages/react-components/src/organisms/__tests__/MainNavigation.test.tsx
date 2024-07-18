@@ -1,6 +1,6 @@
 import { StaticRouter } from 'react-router-dom/server';
 import { render } from '@testing-library/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import MainNavigation from '../MainNavigation';
@@ -43,7 +43,7 @@ describe('a navigation item', () => {
     ).toBeFalsy();
 
     rerender(
-      <StaticRouter key={2} location={network({}).$}>
+      <StaticRouter key={2} location={networkRoutes.DEFAULT.path}>
         <MainNavigation userOnboarded={true} />
       </StaticRouter>,
     );
@@ -65,7 +65,10 @@ describe('a navigation item', () => {
     ).toBeFalsy();
 
     rerender(
-      <StaticRouter key={2} location={network({}).interestGroups({}).$}>
+      <StaticRouter
+        key={2}
+        location={networkRoutes.DEFAULT.INTEREST_GROUPS.path}
+      >
         <MainNavigation userOnboarded={true} />
       </StaticRouter>,
     );

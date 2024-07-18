@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import UserProfileHeader from '../UserProfileHeader';
 
@@ -244,7 +244,9 @@ it('renders the navigation for active and inactive groups', () => {
 it('displays number of upcoming events', () => {
   render(
     <StaticRouter
-      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
+      location={networkRoutes.DEFAULT.USERS.DETAILS.UPCOMING.buildPath({
+        id: '1',
+      })}
     >
       <UserProfileHeader {...boilerplateProps} upcomingEventsCount={10} />
     </StaticRouter>,
@@ -255,7 +257,9 @@ it('displays number of upcoming events', () => {
 it('displays number of past events', () => {
   render(
     <StaticRouter
-      location={network({}).users({}).user({ userId: '1' }).upcoming({}).$}
+      location={networkRoutes.DEFAULT.USERS.DETAILS.UPCOMING.buildPath({
+        id: '1',
+      })}
     >
       <UserProfileHeader {...boilerplateProps} pastEventsCount={9} />
     </StaticRouter>,

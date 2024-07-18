@@ -1,7 +1,7 @@
 import { css, useTheme } from '@emotion/react';
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react';
-import Select, { ControlProps, OptionTypeBase } from 'react-select';
-import { v4 as uuidV4 } from 'uuid';
+import Select, { ControlProps } from 'react-select';
+// import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
 import { Option, reactSelectStyles } from '../select';
@@ -13,9 +13,7 @@ const containerStyles = css({
 });
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const CrossIcon: FC = () => dropdownCrossIcon;
-const ClearIndicator = ({
-  innerProps,
-}: Pick<ControlProps<OptionTypeBase, false>, 'innerProps'>) => (
+const ClearIndicator = ({ innerProps }: Pick<ControlProps, 'innerProps'>) => (
   <span {...innerProps}>
     <CrossIcon />
   </span>
@@ -83,21 +81,22 @@ export default function Dropdown<V extends string>({
   const theme = useTheme();
   return (
     <div css={containerStyles}>
-      <Select<OptionTypeBase>
+      <Select
         placeholder={placeholder}
         inputId={id}
         isClearable={!required}
         isDisabled={!enabled}
         options={validOptions}
         onChange={(option) => {
-          onChange(option?.value);
+          onChange((option as { value: V })?.value);
         }}
         value={selectValue || null}
         components={{ DropdownIndicator, ClearIndicator }}
         styles={reactSelectStyles(theme, !!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
-        autoComplete={uuidV4()}
+        // TODO: fix this
+        // autoComplete={uuidV4()}
         onBlur={checkValidation}
         aria-label={name}
       />

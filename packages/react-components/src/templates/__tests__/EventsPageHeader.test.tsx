@@ -1,4 +1,4 @@
-import { events, searchQueryParam } from '@asap-hub/routing';
+import { eventRoutes, searchQueryParam } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom/server';
 import EventsPageHeader from '../EventsPageHeader';
@@ -19,7 +19,7 @@ it('renders the navigation', () => {
 
 it('preserves search query when navigating', () => {
   const { getByText } = render(
-    <StaticRouter location={events({}).upcoming({}).$}>
+    <StaticRouter location={eventRoutes.DEFAULT.UPCOMING.path}>
       <EventsPageHeader searchQuery="searchterm" />
     </StaticRouter>,
   );

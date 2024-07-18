@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
-import { network, searchQueryParam } from '@asap-hub/routing';
+import { networkRoutes, searchQueryParam } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
 import userEvent from '@testing-library/user-event';
@@ -127,12 +127,9 @@ it('renders the navigation for active and inactive groups', () => {
 it('preserves the search query when navigating', () => {
   render(
     <StaticRouter
-      location={
-        network({})
-          .interestGroups({})
-          .interestGroup({ interestGroupId: '42' })
-          .upcoming({}).$
-      }
+      location={networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.UPCOMING.buildPath(
+        { interestGroupId: '42' },
+      )}
     >
       <InterestGroupProfileHeader {...props} searchQuery="searchterm" />
     </StaticRouter>,
@@ -147,12 +144,9 @@ it('preserves the search query when navigating', () => {
 it('displays number of upcoming events', () => {
   render(
     <StaticRouter
-      location={
-        network({})
-          .interestGroups({})
-          .interestGroup({ interestGroupId: '42' })
-          .upcoming({}).$
-      }
+      location={networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.UPCOMING.buildPath(
+        { interestGroupId: '42' },
+      )}
     >
       <InterestGroupProfileHeader {...props} upcomingEventsCount={10} />
     </StaticRouter>,
@@ -163,12 +157,9 @@ it('displays number of upcoming events', () => {
 it('displays number of past events', () => {
   render(
     <StaticRouter
-      location={
-        network({})
-          .interestGroups({})
-          .interestGroup({ interestGroupId: '42' })
-          .upcoming({}).$
-      }
+      location={networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.UPCOMING.buildPath(
+        { interestGroupId: '42' },
+      )}
     >
       <InterestGroupProfileHeader {...props} pastEventsCount={12} />
     </StaticRouter>,

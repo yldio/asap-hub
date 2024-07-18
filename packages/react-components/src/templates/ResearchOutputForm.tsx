@@ -278,34 +278,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       teamId: teams[0]?.value || '',
       outputDocumentType: 'article',
     }),
-
-    // network({})
-    //   .teams({})
-    //   .team({
-    //     teamId: teams[0]?.value || '',
-    //   })
-    //   .createOutput({
-    //     outputDocumentType: 'article',
-    //   }).$,
   );
 
   const isCreatingWorkingGroupArticle = false;
 
   useMatch(
     //   // TODO: fix this
-    //   networkRoutes.DEFAULT.path,
     networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
       workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
       outputDocumentType: 'article',
     }),
-    //   // network({})
-    //   //   .workingGroups({})
-    //   //   .workingGroup({
-    //   //     workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
-    //   //   })
-    //   //   .createOutput({
-    //   //     outputDocumentType: 'article',
-    //   //   }).$,
   );
 
   const isCreatingOutput =

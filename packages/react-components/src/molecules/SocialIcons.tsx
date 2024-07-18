@@ -47,7 +47,17 @@ const SocialIconLink: React.FC<{
     </Link>
   ) : null;
 
-type SocialIconsProps = UserResponse['social'];
+type SocialIconsProps = {
+  website1?: string;
+  website2?: string;
+  linkedIn?: string;
+  orcid?: string;
+  researcherId?: string;
+  twitter?: string;
+  github?: string;
+  googleScholar?: string;
+  researchGate?: string;
+};
 
 const SocialIcons: React.FC<SocialIconsProps> = ({
   github,

@@ -283,7 +283,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const isCreatingWorkingGroupArticle = false;
 
   useMatch(
-    //   // TODO: fix this
     networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
       workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
       outputDocumentType: 'article',

@@ -137,9 +137,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       <TabNav>
         <TabLink
           href={
-            // TODO: fix this
-            networkRoutes.DEFAULT.USERS.buildPath({})
-            // network({}).users({}).$ + queryParamString(searchQuery)
+            networkRoutes.DEFAULT.USERS.buildPath({}) +
+            queryParamString(searchQuery)
           }
           Icon={UserIcon}
         >
@@ -147,9 +146,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </TabLink>
         <TabLink
           href={
-            networkRoutes.DEFAULT.TEAMS.buildPath({})
-            // TODO: fix this
-            // network({}).teams({}).$ + queryParamString(searchQuery)
+            networkRoutes.DEFAULT.TEAMS.buildPath({}) +
+            queryParamString(searchQuery)
           }
           Icon={TeamIcon}
         >
@@ -157,10 +155,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </TabLink>
         <TabLink
           href={
-            // TODO: fix this
-            networkRoutes.DEFAULT.INTEREST_GROUPS.buildPath({})
-
-            // network({}).interestGroups({}).$ + queryParamString(searchQuery)
+            networkRoutes.DEFAULT.INTEREST_GROUPS.buildPath({}) +
+            queryParamString(searchQuery)
           }
           Icon={InterestGroupsIcon}
         >
@@ -168,9 +164,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </TabLink>
         <TabLink
           href={
-            // TODO: fix this
-            networkRoutes.DEFAULT.WORKING_GROUPS.buildPath({})
-            // network({}).workingGroups({}).$ + queryParamString(searchQuery)
+            networkRoutes.DEFAULT.WORKING_GROUPS.buildPath({}) +
+            queryParamString(searchQuery)
           }
           Icon={WorkingGroupsIcon}
         >

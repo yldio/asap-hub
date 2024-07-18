@@ -9,7 +9,7 @@ import {
   QuickCheckDetails,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 
@@ -599,14 +599,14 @@ it('resets form fields to default values when no longer visible', async () => {
     name: /Type of Manuscript/i,
   });
   userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, '{enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   userEvent.type(lifecycleTextbox, 'Publication');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   const preprintDoi = '10.4444/test';
@@ -629,7 +629,7 @@ it('resets form fields to default values when no longer visible', async () => {
     lifecycleTextbox,
     'Draft manuscript (prior to preprint submission)',
   );
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   expect(
@@ -669,14 +669,14 @@ it('maintains values provided when lifecycle changes but field is still visible'
     name: /Type of Manuscript/i,
   });
   userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, '{enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   userEvent.type(lifecycleTextbox, 'Publication');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   const preprintDoi = '10.4444/test';
@@ -696,7 +696,7 @@ it('maintains values provided when lifecycle changes but field is still visible'
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
   userEvent.type(lifecycleTextbox, 'Preprint, version 1');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{enter}');
   lifecycleTextbox.blur();
 
   expect(

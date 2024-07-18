@@ -13,7 +13,6 @@ import type {
   MultiValueGenericProps,
   Props,
   SelectInstance,
-  GroupBase,
 } from 'react-select';
 import Select, {
   ActionMeta,

@@ -25,12 +25,13 @@ import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 import { createIdentifierField } from '../../utils/research-output-form';
 import { fern, paper } from '../../colors';
 
-global['Request'] = jest.fn().mockImplementation(() => ({
-  signal: {
-    removeEventListener: () => {},
-    addEventListener: () => {},
-  },
-}));
+// TODO: fix
+// global['Request'] = jest.fn().mockImplementation(() => ({
+//   signal: {
+//     removeEventListener: () => {},
+//     addEventListener: () => {},
+//   },
+// }));
 
 const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),

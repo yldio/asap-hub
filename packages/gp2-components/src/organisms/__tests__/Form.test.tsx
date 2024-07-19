@@ -5,7 +5,6 @@ import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { Link, MemoryRouter, Route, Router } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 import { Button } from '@asap-hub/react-components';
 import Form from '../Form';
 
@@ -22,7 +21,7 @@ let getUserConfirmation!: jest.MockedFunction<
 let history!: History;
 beforeEach(() => {
   getUserConfirmation = jest.fn((_message, cb) => cb(true));
-  history = createMemoryHistory({ getUserConfirmation });
+  history = createMemoryHistory();
 });
 
 it('renders a form with given children', () => {
@@ -34,7 +33,7 @@ it('renders a form with given children', () => {
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <Router navigator={history}>
+    <Router navigator={history} location="/url">
       <Form {...props}>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -46,7 +45,7 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <Router navigator={history}>
+    <Router navigator={history} location="/url">
       <Form {...props} dirty>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -60,7 +59,7 @@ it('prompts when trying to leave after making edits', () => {
 describe('on cancel', () => {
   it('prompts after making edits', () => {
     const { getByText } = render(
-      <Router navigator={history}>
+      <Router navigator={history} location="/url">
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -80,7 +79,7 @@ describe('on cancel', () => {
   });
   it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
-      <Router navigator={history}>
+      <Router navigator={history} location="/url">
         <Form {...props} dirty>
           {({ onCancel }) => (
             <>
@@ -101,7 +100,7 @@ describe('on cancel', () => {
 
   it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
-      <Router navigator={history}>
+      <Router navigator={history} location="/url">
         <Route path="/form">
           <Form {...props} dirty>
             {({ onCancel }) => (
@@ -201,7 +200,7 @@ describe('when saving', () => {
             )}
           </Form>
         </NotificationContext.Provider>,
-        { wrapper: StaticRouter },
+        { wrapper: MemoryRouter },
       );
 
       userEvent.click(getByText(/^save/i));
@@ -226,7 +225,7 @@ describe('when saving', () => {
           rejectSave = reject;
         }),
       );
-      history = createMemoryHistory({ getUserConfirmation });
+      history = createMemoryHistory();
       result = render(
         <NotificationContext.Provider
           value={{
@@ -235,7 +234,7 @@ describe('when saving', () => {
             removeNotification: jest.fn(),
           }}
         >
-          <Router navigator={history}>
+          <Router navigator={history} location="/url">
             <Form {...props} dirty>
               {({ getWrappedOnSave, isSaving }) => (
                 <>
@@ -319,7 +318,7 @@ describe('when saving', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <Form {...props}>
                 {({ getWrappedOnSave, isSaving }) => (
                   <>
@@ -403,7 +402,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>
@@ -448,7 +447,7 @@ describe('when saving', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <Form {...props}>
             {({ setRedirectOnSave, isSaving, getWrappedOnSave }) => (
               <>

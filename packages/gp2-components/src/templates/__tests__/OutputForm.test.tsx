@@ -11,8 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, Router } from 'react-router-dom';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
@@ -160,7 +159,9 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router navigator={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -293,7 +294,9 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router navigator={history}>{children}</Router>
+            <Router navigator={history} location="/url">
+              {children}
+            </Router>
           </NotificationContext.Provider>
         ),
       },
@@ -352,7 +355,9 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <Router navigator={history} location="/url">
+              {children}
+            </Router>
           </NotificationContext.Provider>
         ),
       },
@@ -378,7 +383,7 @@ describe('OutputForm', () => {
         projects: [{ id: '1', title: 'a project' }],
         workingGroups: undefined,
       };
-      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+      render(<OutputForm {...output} />, { wrapper: MemoryRouter });
 
       expect(
         screen.getByRole('textbox', { name: /working groups/i }),
@@ -395,7 +400,7 @@ describe('OutputForm', () => {
     it('does not render cohort', () => {
       render(
         <OutputForm {...defaultProps} documentType="Training Materials" />,
-        { wrapper: StaticRouter },
+        { wrapper: MemoryRouter },
       );
 
       expect(
@@ -424,7 +429,9 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <Router navigator={history} location="/url">
+              {children}
+            </Router>
           </NotificationContext.Provider>
         ),
       });
@@ -455,7 +462,7 @@ describe('OutputForm', () => {
           versions={versions}
         />,
         {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         },
       );
 
@@ -521,7 +528,9 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -550,7 +559,7 @@ describe('OutputForm', () => {
   describe('Article', () => {
     it('renders type', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       });
       expect(screen.getByRole('textbox', { name: /^type/i })).toBeVisible();
     });
@@ -558,7 +567,7 @@ describe('OutputForm', () => {
       '%s does not render subtype',
       (type) => {
         render(<OutputForm {...defaultProps} documentType="Article" />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
         userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
         userEvent.click(screen.getByText(type));
@@ -569,7 +578,7 @@ describe('OutputForm', () => {
     );
     it.each<gp2.OutputType>(['Research'])('%s renders subtype', (type) => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       });
       userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText(type));
@@ -597,7 +606,9 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router navigator={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -638,7 +649,7 @@ describe('OutputForm', () => {
         'is not displayed when document type is $documentType',
         ({ documentType }) => {
           render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           });
 
           expect(
@@ -659,7 +670,7 @@ describe('OutputForm', () => {
         'is $gp2SupportedValue by default when document type is $documentType',
         ({ gp2SupportedValue, documentType }) => {
           render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           });
 
           const gp2Supported = screen.getByRole('group', {
@@ -686,7 +697,7 @@ describe('OutputForm', () => {
           render(
             <OutputForm {...defaultProps} documentType="Article" type={type} />,
             {
-              wrapper: StaticRouter,
+              wrapper: MemoryRouter,
             },
           );
 
@@ -705,7 +716,7 @@ describe('OutputForm', () => {
         render(
           <OutputForm {...defaultProps} type="Blog" documentType="Article" />,
           {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           },
         );
 
@@ -740,7 +751,7 @@ describe('OutputForm', () => {
         'is $sharingStatus by default when document type is $documentType',
         ({ sharingStatus, documentType }) => {
           render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           });
 
           const sharingStatusElement = screen.getByRole('group', {
@@ -758,7 +769,7 @@ describe('OutputForm', () => {
       'should not render identifier textbox when docType = %d',
       (type) => {
         render(<OutputForm {...defaultProps} documentType={type} />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
 
         expect(
@@ -788,7 +799,7 @@ describe('OutputForm', () => {
             tags={tags}
           />,
           {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           },
         );
 
@@ -849,33 +860,33 @@ describe('OutputForm', () => {
     describe('identifierType', () => {
       it('returns DOI when doi is present', () => {
         render(<OutputForm {...defaultProps} doi="123" />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
 
         expect(screen.getByDisplayValue(/doi/i)).toBeTruthy();
       });
       it('returns RRID when rrid is present', () => {
         render(<OutputForm {...defaultProps} rrid="123" />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
         expect(screen.getByDisplayValue(/rrid/i)).toBeTruthy();
       });
       it('returns Accession Number when accession is present', () => {
         render(<OutputForm {...defaultProps} accessionNumber="123" />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
         expect(screen.getByDisplayValue(/accession number/i)).toBeTruthy();
       });
       it('returns empty for create mode', () => {
         render(<OutputForm {...defaultProps} />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
 
         expect(screen.getByText(/choose an identifier.../i)).toBeVisible();
       });
       it('return none for edit mode', () => {
         render(<OutputForm {...defaultProps} title="Output Title" />, {
-          wrapper: StaticRouter,
+          wrapper: MemoryRouter,
         });
         expect(screen.getByDisplayValue(/none/i)).toBeTruthy();
       });
@@ -902,7 +913,7 @@ describe('OutputForm', () => {
             contributingCohorts={cohorts}
           />,
           {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           },
         );
 
@@ -952,7 +963,7 @@ describe('OutputForm', () => {
             workingGroups={workingGroups}
           />,
           {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           },
         );
 
@@ -1014,7 +1025,7 @@ describe('OutputForm', () => {
             projects={projects}
           />,
           {
-            wrapper: StaticRouter,
+            wrapper: MemoryRouter,
           },
         );
 
@@ -1061,7 +1072,7 @@ describe('OutputForm', () => {
   describe('Validation', () => {
     it('shows error message for missing value title', () => {
       render(<OutputForm {...defaultProps} />, {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       });
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
@@ -1069,7 +1080,7 @@ describe('OutputForm', () => {
     });
 
     it('shows the custom error message for a date in the future', async () => {
-      render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
+      render(<OutputForm {...defaultProps} />, { wrapper: MemoryRouter });
 
       const sharingStatus = screen.getByRole('group', {
         name: /sharing status?/i,
@@ -1149,7 +1160,9 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -1190,7 +1203,9 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -1233,7 +1248,9 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -1279,7 +1296,9 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <Router navigator={history} location="/url">
+                {children}
+              </Router>
             </NotificationContext.Provider>
           ),
         },
@@ -1343,7 +1362,9 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <Router navigator={createMemoryHistory()} location="/url">
+              {children}
+            </Router>
           ),
         },
       );
@@ -1375,7 +1396,9 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <Router navigator={createMemoryHistory()} location="/url">
+              {children}
+            </Router>
           ),
         },
       );

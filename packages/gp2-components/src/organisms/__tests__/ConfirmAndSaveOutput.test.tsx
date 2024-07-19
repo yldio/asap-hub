@@ -5,6 +5,7 @@ import { NotificationContext } from '@asap-hub/react-context';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
+import { ReactNode } from 'react';
 import { Router } from 'react-router-dom';
 
 import {
@@ -18,7 +19,7 @@ describe('ConfirmAndSaveOutput', () => {
   const history = createMemoryHistory();
   const shareOutput = jest.fn();
 
-  const wrapper: React.ComponentType = ({ children }) => (
+  const wrapper = ({ children }: { children: ReactNode }) => (
     <NotificationContext.Provider
       value={{
         notifications: [],
@@ -26,7 +27,9 @@ describe('ConfirmAndSaveOutput', () => {
         removeNotification: jest.fn(),
       }}
     >
-      <Router navigator={history}>{children}</Router>
+      <Router navigator={history} location="/url">
+        {children}
+      </Router>
     </NotificationContext.Provider>
   );
 

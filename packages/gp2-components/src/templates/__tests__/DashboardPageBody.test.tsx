@@ -253,7 +253,7 @@ describe('DashboardPageBody', () => {
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -332,7 +332,7 @@ describe('DashboardPageBody', () => {
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -395,7 +395,7 @@ describe('DashboardPageBody', () => {
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -476,7 +476,7 @@ describe('DashboardPageBody', () => {
       const history = createMemoryHistory();
       const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router navigator={history}>
+        <Router navigator={history} location="/url">
           <DashboardPageBody
             canPublish={true}
             reminders={[]}

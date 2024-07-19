@@ -101,7 +101,11 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    history.location.key ? history.goBack() : history.push('/');
+    if (window.history?.length && window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
@@ -112,8 +116,17 @@ const Form = <T extends void | Record<string, unknown>>({
           status === 'hasError' ||
           (status === 'initial' && dirty)
         }
-        message="Are you sure you want to leave? Unsaved changes will be lost."
-      />
+      >
+        {({ isActive, onConfirm, onCancel }) => (
+          <div css={css({ display: isActive ? 'block' : 'none' })}>
+            <p>
+              'Are you sure you want to leave? Unsaved changes will be lost.'
+            </p>
+            <button onClick={onCancel}>Cancel</button>
+            <button onClick={onConfirm}>Ok</button>
+          </div>
+        )}
+      </ReactRouterPrompt>
       <form ref={formRef} css={styles}>
         {children({
           onCancel,

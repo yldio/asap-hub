@@ -18,7 +18,7 @@ describe('BiographyModal', () => {
 
   const renderModal = (overrides: Partial<BiographyModalProps> = {}) =>
     render(
-      <StaticRouter>
+      <StaticRouter location="/url">
         <BiographyModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );

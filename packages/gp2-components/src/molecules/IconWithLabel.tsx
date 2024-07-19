@@ -1,10 +1,11 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 
 const { rem } = pixels;
 
 type IconWithLabelProps = {
-  readonly icon: JSX.Element | React.FC;
+  readonly icon: ReactNode; // JSX.Element | React.FC;
   readonly noMargin?: boolean;
 };
 

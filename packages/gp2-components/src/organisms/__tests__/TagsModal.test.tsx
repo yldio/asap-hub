@@ -20,7 +20,7 @@ describe('TagsModal', () => {
 
   const renderModal = (overrides: Partial<TagsModalProps> = {}) =>
     render(
-      <StaticRouter>
+      <StaticRouter location="/url">
         <TagsModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );

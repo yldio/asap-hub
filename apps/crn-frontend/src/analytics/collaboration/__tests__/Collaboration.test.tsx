@@ -161,10 +161,13 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
   ],
 };
 
-const renderPage = async (metric: string = 'user') => {
+const renderPage = async (
+  metric: string = 'user',
+  type: string = 'within-team',
+) => {
   const path = analytics({})
     .collaboration({})
-    .collaborationPath({ metric, type: 'within-team' }).$;
+    .collaborationPath({ metric, type: type }).$;
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -404,15 +407,18 @@ describe('csv export', () => {
     );
   });
 
-  it('exports analytics for teams', async () => {
-    await renderPage('team');
-    const input = screen.getAllByRole('textbox', { hidden: false })[0];
+  it.each(['within-team', 'across-teams'])(
+    'exports analytics for teams (%s)',
+    async (type) => {
+      await renderPage('team', type);
+      const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
-    input && userEvent.click(input);
-    userEvent.click(screen.getByText(/csv/i));
-    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-      expect.stringMatching(/collaboration_team_\d+\.csv/),
-      expect.anything(),
-    );
-  });
+      input && userEvent.click(input);
+      userEvent.click(screen.getByText(/csv/i));
+      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+        expect.stringMatching(/collaboration_team_\d+\.csv/),
+        expect.anything(),
+      );
+    },
+  );
 });

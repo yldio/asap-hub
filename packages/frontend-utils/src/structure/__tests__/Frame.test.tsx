@@ -59,7 +59,7 @@ describe('the suspense fallback', () => {
 
 describe('the document title', () => {
   it('is set', () => {
-    render(<Frame title="The Hub" />);
+    render(<Frame title="The Hub">test</Frame>);
     expect(document.title).toBe('The Hub');
   });
   it('is set even while suspended', () => {
@@ -74,7 +74,7 @@ describe('the document title', () => {
   it('can be nested', () => {
     render(
       <Frame title="The Hub">
-        <Frame title="A Page" />
+        <Frame title="A Page">test</Frame>
       </Frame>,
     );
     expect(document.title).toContain('The Hub');
@@ -84,7 +84,7 @@ describe('the document title', () => {
     render(
       <Frame title="The Hub">
         <Frame title={null}>
-          <Frame title="A Page" />
+          <Frame title="A Page">test</Frame>
         </Frame>
       </Frame>,
     );

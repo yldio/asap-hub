@@ -1,33 +1,18 @@
 import { css, useTheme } from '@emotion/react';
 import {
   ComponentProps,
-  MouseEventHandler,
   ReactElement,
   ReactNode,
   useCallback,
   useEffect,
   useRef,
 } from 'react';
-import type {
-  Options,
-  MultiValueGenericProps,
-  Props,
-  SelectInstance,
-} from 'react-select';
+import type { Options, Props, SelectInstance } from 'react-select';
 import Select, {
   ActionMeta,
   components as reactAsyncComponents,
-  MultiValueProps,
 } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import AsyncCreatableSelect from 'react-select/async-creatable';
-import {
-  SortableContainer,
-  SortableContainerProps,
-  SortableElement,
-  SortableHandle,
-  SortEndHandler,
-} from 'react-sortable-hoc';
 
 import { pixels } from '..';
 import { useValidation, validationMessageStyles } from '../form';
@@ -64,47 +49,6 @@ export type MultiSelectOptionsType = {
   label: string;
   value: string;
 };
-
-const SortableMultiValue = SortableElement(
-  (props: MultiValueProps<MultiSelectOptionsType>) => {
-    // this prevents the menu from being opened/closed when the user clicks
-    // on a value to begin dragging it. ideally, detecting a click (instead of
-    // a drag) would still focus the control and toggle the menu, but that
-    // requires some magic with refs that are out of scope for this example
-    const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    const innerProps = { ...props.innerProps, onMouseDown };
-    return (
-      <reactAsyncComponents.MultiValue {...props} innerProps={innerProps} />
-    );
-  },
-);
-
-const SortableMultiValueLabel = SortableHandle(
-  (props: MultiValueGenericProps<MultiSelectOptionsType>) => (
-    <reactAsyncComponents.MultiValueLabel {...props} />
-  ),
-);
-
-const SortableAsyncCreatableSelect = SortableContainer(AsyncCreatableSelect, {
-  withRef: true,
-}) as React.ComponentClass<
-  Props<MultiSelectOptionsType, true> & SortableContainerProps
->;
-
-const SortableAsyncSelect = SortableContainer(AsyncSelect, {
-  withRef: true,
-}) as React.ComponentClass<
-  Props<MultiSelectOptionsType, true> & SortableContainerProps
->;
-
-const SortableSelect = SortableContainer(Select, {
-  withRef: true,
-}) as React.ComponentClass<
-  Props<MultiSelectOptionsType, true> & SortableContainerProps
->;
 
 export const MultiValueRemove = (
   props: ComponentProps<typeof reactAsyncComponents.MultiValueRemove>,
@@ -203,34 +147,18 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     checkValidation();
   }, [values, checkValidation]);
 
-  let sortableProps: SortableContainerProps | undefined;
-
-  if (sortable) {
-    const onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
-      const newValue = arrayMove(values, oldIndex, newIndex);
-      onChange(newValue);
-    };
-
-    sortableProps = {
-      useDragHandle: true,
-      axis: 'xy',
-      onSortEnd,
-      // small fix for https://github.com/clauderic/react-sortable-hoc/pull/352:
-      getHelperDimensions: ({ node }) => node.getBoundingClientRect(),
-    };
-  }
-
-  const commonProps: Props<T, true> & Partial<SortableContainerProps> = {
-    ...sortableProps,
+  const commonProps: Props<T, true> = {
     inputId: id,
     isDisabled: !enabled,
     isMulti: true as const,
     placeholder,
     value: values,
     components: {
-      MultiValueRemove,
-      MultiValue: sortable ? SortableMultiValue : undefined,
-      MultiValueLabel: sortable ? SortableMultiValueLabel : undefined,
+      MultiValueRemove: reactAsyncComponents.MultiValueRemove,
+      MultiValue: sortable ? reactAsyncComponents.MultiValue : undefined,
+      MultiValueLabel: sortable
+        ? reactAsyncComponents.MultiValueLabel
+        : undefined,
       ...(leftIndicator
         ? {
             Control: (props) => (
@@ -246,9 +174,9 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     },
     noOptionsMessage,
     styles: reactMultiSelectStyles(theme, !!validationMessage),
-    ref: (ref: RefType<T>) => {
-      inputRef = ref;
-    },
+    // ref: (ref: RefType<T>) => {
+    //   inputRef = ref;
+    // },
     onFocus: checkValidation,
     onBlur: checkValidation,
     onChange: (options: Options<T>, actionMeta: ActionMeta<T>) => {
@@ -268,12 +196,8 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     }),
   };
 
-  const SelectComponent = sortable ? SortableSelect : Select;
-  const AsyncSelectComponent = sortable
-    ? creatable
-      ? SortableAsyncCreatableSelect
-      : SortableAsyncSelect
-    : AsyncSelect;
+  const SelectComponent = Select;
+  const AsyncSelectComponent = AsyncSelect;
 
   return (
     <div css={containerStyles(noMargin)} onContextMenu={handleOnContextMenu}>

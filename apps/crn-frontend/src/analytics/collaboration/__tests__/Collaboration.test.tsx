@@ -167,7 +167,7 @@ const renderPage = async (
 ) => {
   const path = analytics({})
     .collaboration({})
-    .collaborationPath({ metric, type: type }).$;
+    .collaborationPath({ metric, type }).$;
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">

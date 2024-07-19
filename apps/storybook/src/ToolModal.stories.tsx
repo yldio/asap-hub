@@ -9,7 +9,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ToolModal
       title={text('Title', 'Edit Tool')}
       name="Slack (#team-ferguson)"

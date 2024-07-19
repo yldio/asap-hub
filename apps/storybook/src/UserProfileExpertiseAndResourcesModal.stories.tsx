@@ -8,7 +8,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ExpertiseAndResourcesModal
       expertiseAndResourceDescription={text('Description', '')}
       tags={[]}

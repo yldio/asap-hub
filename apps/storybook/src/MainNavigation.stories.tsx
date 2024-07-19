@@ -1,11 +1,11 @@
 import { StaticRouter } from 'react-router-dom/server';
 import { MainNavigation } from '@asap-hub/react-components';
 import {
-  about,
-  discover,
-  network,
-  news,
-  sharedResearch,
+  aboutRoutes,
+  discoverRoutes,
+  networkRoutes,
+  newsRoutes,
+  sharedResearchRoutes,
 } from '@asap-hub/routing';
 
 import { select } from './knobs';
@@ -21,11 +21,11 @@ export const Normal = () => {
   const path = select(
     'Active Section',
     {
-      Network: network({}).$,
-      'Shared Research': sharedResearch({}).$,
-      News: news({}).$,
-      'Guides & Tutorials': discover({}).$,
-      'About ASAP': about({}).$,
+      Network: networkRoutes.DEFAULT.path,
+      'Shared Research': sharedResearchRoutes.DEFAULT.path,
+      News: newsRoutes.DEFAULT.path,
+      'Guides & Tutorials': discoverRoutes.DEFAULT.path,
+      'About ASAP': aboutRoutes.path,
       None: '/none',
     },
     'network',

@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
 import { chevronCircleLeftIcon, Link } from '..';
+import { ReactNode } from 'react';
 
 const iconStyles = css({
   display: 'inline-grid',
@@ -16,8 +17,9 @@ const containerStyles = css({
   padding: `${30 / perRem}em 0 `,
 });
 
-interface BackLinkProps {
+export interface BackLinkProps {
   readonly href: string;
+  children?: ReactNode;
 }
 const BackLink: React.FC<BackLinkProps> = ({ href }) => (
   <div css={containerStyles}>

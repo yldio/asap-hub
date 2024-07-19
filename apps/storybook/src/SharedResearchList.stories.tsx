@@ -27,12 +27,12 @@ const props = (): ComponentProps<typeof SharedResearchList> => {
 };
 
 export const CardView = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <SharedResearchList {...props()} isListView={false} />
   </StaticRouter>
 );
 export const ListView = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <SharedResearchList {...props()} isListView />
   </StaticRouter>
 );

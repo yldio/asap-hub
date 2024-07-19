@@ -45,7 +45,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
         path="completed"
         element={<PasswordResetEmailSentPage signInHref="/" />}
       />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

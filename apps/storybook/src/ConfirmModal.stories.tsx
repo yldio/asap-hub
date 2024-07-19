@@ -22,7 +22,7 @@ const props: ComponentProps<typeof ConfirmModal> = {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ConfirmModal {...props} />
   </StaticRouter>
 );

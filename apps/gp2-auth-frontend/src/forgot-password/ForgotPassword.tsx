@@ -6,9 +6,9 @@ import {
 import {
   useNavigate,
   Routes,
-  useMatch,
   Route,
-  Redirect,
+  Navigate,
+  useResolvedPath,
 } from 'react-router-dom';
 import {
   extractErrorMessage,
@@ -22,14 +22,14 @@ interface ForgotPasswordProps {
   readonly setEmail: (newEmail: string) => void;
 }
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
-  const history = useNavigate();
-  const { path } = useMatch();
+  const navigate = useNavigate();
+  const path = useResolvedPath('').pathname;
 
   const [error, setError] = useState<WebAuthError | Error>();
 
   return (
     <Routes>
-      <Route exact path={path}>
+      <Route path={path}>
         <ForgotPasswordPage
           email={email}
           onChangeEmail={(newEmail) => {
@@ -38,17 +38,17 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
           }}
           onSubmit={() => {
             sendPasswordResetLink(email)
-              .then(() => history.replace(`${path}/completed`))
+              .then(() => navigate(`${path}/completed`, { replace: true }))
               .catch(setError);
           }}
           customValidationMessage={error && extractErrorMessage(error).text}
-          onGoBack={() => history.goBack()}
+          onGoBack={() => navigate(-1)}
         />
       </Route>
-      <Route exact path={`${path}/completed`}>
+      <Route path={`${path}/completed`}>
         <PasswordResetEmailSentPage signInHref="/" />
       </Route>
-      <Redirect to="/" />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

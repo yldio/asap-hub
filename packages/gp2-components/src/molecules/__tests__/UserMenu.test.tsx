@@ -24,7 +24,7 @@ describe('UserMenu', () => {
     expect(profileLink).toBeVisible();
     expect(profileLink).toHaveAttribute(
       'href',
-      usersRoute({}).user({ userId: '1' }).$,
+      usersRoute.DEFAULT.DETAILS.buildPath({ userId: '1' }),
     );
     const logoutLink = screen.getByRole('link', { name: /log out/i });
     expect(logoutLink).toBeVisible();
@@ -80,7 +80,7 @@ describe('UserMenu', () => {
       screen.getByRole('link', { name: /the first project title/i }),
     ).toHaveAttribute(
       'href',
-      projectsRoute({}).project({ projectId: projects[0]!.id }).$,
+      projectsRoute.DEFAULT.DETAILS.buildPath({ projectId: projects[0]!.id }),
     );
 
     userEvent.click(
@@ -168,9 +168,9 @@ describe('UserMenu', () => {
       screen.getByRole('link', { name: /the first wg title/i }),
     ).toHaveAttribute(
       'href',
-      workingGroupsRoute({}).workingGroup({
+      workingGroupsRoute.DEFAULT.DETAILS.buildPath({
         workingGroupId: workingGroups[0]!.id,
-      }).$,
+      }),
     );
 
     userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));

@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { PageBanner } from '../organisms';
 import { mainStyles } from '../layout';
+import { ReactNode } from 'react';
 
 const props = (
   entityType: CreateOutputPageProps['entityType'],
@@ -15,6 +16,7 @@ const props = (
 type CreateOutputPageProps = {
   entityType: 'workingGroup' | 'project';
   documentType: gp2.OutputDocumentType;
+  children?: ReactNode;
 };
 
 export const EntityMappper: Record<

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import OnboardedTabLink from '../OnboardedTabLink';
 
 describe('OnboardedTabLink', () => {
@@ -9,7 +9,7 @@ describe('OnboardedTabLink', () => {
         Link Test
       </OnboardedTabLink>,
       {
-        wrapper: StaticRouter,
+        wrapper: MemoryRouter,
       },
     );
     const link = screen.getByRole('link', { name: /link test/i });
@@ -22,7 +22,7 @@ describe('OnboardedTabLink', () => {
       <OnboardedTabLink index={1} disabled href={'/test'}>
         Link Test
       </OnboardedTabLink>,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
     expect(
       screen.queryByRole('link', { name: /link test/i }),

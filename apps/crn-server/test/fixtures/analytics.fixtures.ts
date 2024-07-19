@@ -607,7 +607,7 @@ export const getTeamCollaborationQuery = (): FetchTeamCollaborationQuery => ({
 export const getUserCollaborationDataObject =
   (): UserCollaborationDataObject => ({
     id: 'user-1',
-    isAlumni: false,
+    alumniSince: undefined,
     name: 'User User',
     teams: [],
   });
@@ -615,7 +615,7 @@ export const getUserCollaborationDataObject =
 export const getTeamCollaborationDataObject =
   (): TeamCollaborationDataObject => ({
     id: 'team-id-0',
-    isInactive: false,
+    inactiveSince: undefined,
     name: 'Team A',
     outputsCoProducedWithin: {
       Article: 1,

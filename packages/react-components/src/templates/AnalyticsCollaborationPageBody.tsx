@@ -55,19 +55,20 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
 
 type CollaborationAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
-  | 'timeRange'
-  | 'documentCategory'
-  | 'outputType'
   | 'currentPage'
-  | 'tags'
+  | 'documentCategory'
   | 'loadTags'
+  | 'outputType'
   | 'setTags'
+  | 'tags'
+  | 'timeRange'
 > & {
+  children: React.ReactNode;
+  exportResults: () => Promise<void>;
   metric: MetricOption;
-  type: TypeOption;
   setMetric: (option: MetricOption) => void;
   setType: (option: TypeOption) => void;
-  children: React.ReactNode;
+  type: TypeOption;
 };
 
 const metricDropdownStyles = css({
@@ -79,18 +80,19 @@ const tableHeaderStyles = css({
 });
 
 const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
-  metric,
-  type,
-  setMetric,
-  setType,
-  timeRange,
-  documentCategory,
-  outputType,
-  tags,
-  setTags,
-  loadTags,
-  currentPage,
   children,
+  currentPage,
+  documentCategory,
+  exportResults,
+  loadTags,
+  metric,
+  outputType,
+  setMetric,
+  setTags,
+  setType,
+  tags,
+  timeRange,
+  type,
 }) => {
   const { header, description } = getPageHeaderDescription(metric, type);
   return (
@@ -119,16 +121,17 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
       </div>
       <AnalyticsControls
         currentPage={currentPage}
-        tags={tags}
-        loadTags={loadTags}
-        setTags={setTags}
-        metricOption={metric}
-        timeRange={timeRange}
         documentCategory={documentCategory}
-        outputType={outputType}
+        exportResults={exportResults}
         href={
           analytics({}).collaboration({}).collaborationPath({ metric, type }).$
         }
+        loadTags={loadTags}
+        metricOption={metric}
+        outputType={outputType}
+        setTags={setTags}
+        tags={tags}
+        timeRange={timeRange}
       />
       {children}
     </article>

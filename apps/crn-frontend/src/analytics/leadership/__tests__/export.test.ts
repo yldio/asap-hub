@@ -1,5 +1,6 @@
 import { Stringifier } from 'csv-stringify';
-import { leadershipToCSV, algoliaResultsToStream } from '../export';
+import { algoliaResultsToStream } from '../../utils/export';
+import { leadershipToCSV } from '../export';
 
 describe('leadershipToCSV', () => {
   it('handles basic data', () => {

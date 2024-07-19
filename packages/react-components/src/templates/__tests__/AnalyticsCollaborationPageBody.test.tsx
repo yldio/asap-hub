@@ -4,16 +4,17 @@ import { AnalyticsCollaborationPageBody } from '..';
 
 describe('AnalyticsCollaborationPageBody', () => {
   const props: ComponentProps<typeof AnalyticsCollaborationPageBody> = {
-    setMetric: () => null,
-    setType: () => null,
-    metric: 'user',
-    type: 'within-team',
-    timeRange: '30d',
-    tags: [],
-    setTags: jest.fn(),
-    loadTags: jest.fn().mockResolvedValue([]),
-    currentPage: 2,
     children: <span>table</span>,
+    currentPage: 2,
+    exportResults: () => Promise.resolve(),
+    loadTags: jest.fn().mockResolvedValue([]),
+    metric: 'user',
+    setMetric: () => null,
+    setTags: jest.fn(),
+    setType: () => null,
+    tags: [],
+    timeRange: '30d',
+    type: 'within-team',
   };
 
   describe('user tab', () => {

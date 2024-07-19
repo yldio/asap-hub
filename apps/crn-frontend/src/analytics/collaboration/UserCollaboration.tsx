@@ -20,12 +20,12 @@ const getDataForType = (
     return data.map((row) => ({
       id: row.id,
       name: row.name,
-      isAlumni: row.isAlumni,
+      isAlumni: !!row.alumniSince,
       teams: row.teams.map((team) => ({
         id: team.id,
         team: team.team,
         role: team.role,
-        isTeamInactive: team.isTeamInactive,
+        isTeamInactive: !!team.teamInactiveSince,
         outputsCoAuthored: team.outputsCoAuthoredWithinTeam,
       })),
     }));
@@ -33,12 +33,12 @@ const getDataForType = (
   return data.map((row) => ({
     id: row.id,
     name: row.name,
-    isAlumni: row.isAlumni,
+    isAlumni: !!row.alumniSince,
     teams: row.teams.map((team) => ({
       id: team.id,
       team: team.team,
       role: team.role,
-      isTeamInactive: team.isTeamInactive,
+      isTeamInactive: !!team.teamInactiveSince,
       outputsCoAuthored: team.outputsCoAuthoredAcrossTeams,
     })),
   }));
@@ -65,11 +65,11 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
 
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,
-    pageSize,
-    timeRange,
     documentCategory,
-    tags,
+    pageSize,
     sort: '',
+    tags,
+    timeRange,
   });
 
   const performance = useUserCollaborationPerformance({

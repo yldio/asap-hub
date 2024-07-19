@@ -64,12 +64,12 @@ const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
     {
       id: '1',
       name: 'Test User',
-      isAlumni: false,
+      alumniSince: undefined,
       teams: [
         {
           id: '1',
           team: 'Team A',
-          isTeamInactive: false,
+          teamInactiveSince: undefined,
           role: 'Collaborating PI',
           outputsCoAuthoredAcrossTeams: 1,
           outputsCoAuthoredWithinTeam: 2,
@@ -86,7 +86,7 @@ const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
     {
       id: '1',
       name: 'Team 1',
-      isInactive: false,
+      inactiveSince: undefined,
       outputsCoProducedWithin: {
         Article: 1,
         Bioinformatics: 0,

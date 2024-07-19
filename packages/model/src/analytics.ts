@@ -276,13 +276,14 @@ export type UserCollaborationTeam = {
   id: string;
   team: string;
   role?: TeamRole;
-  isTeamInactive: boolean;
+  teamInactiveSince?: string;
+  teamMembershipInactiveSince?: string;
   outputsCoAuthoredWithinTeam: number;
   outputsCoAuthoredAcrossTeams: number;
 };
 export type UserCollaborationDataObject = {
   id: string;
-  isAlumni: boolean;
+  alumniSince?: string;
   name: string;
   teams: UserCollaborationTeam[];
 };
@@ -317,7 +318,7 @@ export type TeamCollaborationAcrossOutputData = {
 export type TeamCollaborationDataObject = {
   id: string;
   name: string;
-  isInactive: boolean;
+  inactiveSince?: string;
   outputsCoProducedWithin: TeamCollaborationWithinOutputData;
   outputsCoProducedAcross: TeamCollaborationAcrossOutputData;
 };

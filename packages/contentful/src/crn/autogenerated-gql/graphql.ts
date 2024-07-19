@@ -3858,12 +3858,18 @@ export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
     title?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsEligibilityReasonsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsLinkedFromArgs = {
@@ -3906,6 +3912,16 @@ export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  eligibilityReasons_contains_all?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  eligibilityReasons_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  eligibilityReasons_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  eligibilityReasons_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;

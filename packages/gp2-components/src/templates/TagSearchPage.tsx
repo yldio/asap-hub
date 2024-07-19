@@ -11,7 +11,7 @@ const bannerProps = {
     'Search for all GP2 Hub areas that include selected tags (outputs, events, people, working groups and projects).',
 };
 
-const TagSearchPage: React.FC<{ children: ReactNode }> = ({ children }) => (
+const TagSearchPage: React.FC<{ children?: ReactNode }> = ({ children }) => (
   <div css={layoutContentStyles}>
     <PageBanner {...bannerProps}></PageBanner>
     <main css={mainStyles}>{children}</main>

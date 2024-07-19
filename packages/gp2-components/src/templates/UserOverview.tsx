@@ -1,7 +1,7 @@
+import { ComponentProps, ReactNode } from 'react';
 import { gp2 } from '@asap-hub/model';
 import { crossQuery, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
 import {
   UserBiography,
   UserContactInformation,
@@ -32,6 +32,8 @@ type UserOverviewProps = Pick<
     editFundingStreamsHref?: string;
     editTagsHref?: string;
     editQuestionsHref?: string;
+  } & {
+    children?: ReactNode;
   };
 
 const { rem } = pixels;

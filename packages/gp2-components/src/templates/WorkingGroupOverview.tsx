@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { gp2 } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -26,7 +27,9 @@ type WorkingGroupOverviewProps = Pick<
   | 'calendar'
   | 'milestones'
   | 'tags'
->;
+> & {
+  children?: ReactNode;
+};
 
 const { rem } = pixels;
 

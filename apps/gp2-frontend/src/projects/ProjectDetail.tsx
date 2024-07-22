@@ -84,18 +84,18 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const userRole = getUserRole(currentUser, 'Projects', projectId);
   const isAdministrator =
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
-  const projectRoute = projects.DEFAULT.$.DETAILS;
-  const createOutputRoute = projectRoute.$.CREATE_OUTPUT.relativePath;
-  const duplicateOutputRoute = projectRoute.$.DUPLICATE_OUTPUT.relativePath;
-  const workspaceRoute = projectRoute.$.WORKSPACE;
-  const editRoute = workspaceRoute.$.EDIT;
-  const add = isAdministrator ? workspaceRoute.$.ADD.relativePath : undefined;
+  const projectRoute = projects.DEFAULT.DETAILS;
+  const createOutputRoute = projectRoute.CREATE_OUTPUT.relativePath;
+  const duplicateOutputRoute = projectRoute.DUPLICATE_OUTPUT.relativePath;
+  const workspaceRoute = projectRoute.WORKSPACE;
+  const editRoute = workspaceRoute.EDIT;
+  const add = isAdministrator ? workspaceRoute.ADD.relativePath : undefined;
   const edit = isAdministrator ? editRoute.relativePath : undefined;
-  const overview = projectRoute.$.OVERVIEW.relativePath;
-  const outputs = projectRoute.$.OUTPUTS.relativePath;
+  const overview = projectRoute.OVERVIEW.relativePath;
+  const outputs = projectRoute.OUTPUTS.relativePath;
   const workspace = workspaceRoute.relativePath;
-  const upcoming = projectRoute.$.UPCOMING.relativePath;
-  const past = projectRoute.$.PAST.relativePath;
+  const upcoming = projectRoute.UPCOMING.relativePath;
+  const past = projectRoute.PAST.relativePath;
 
   const updateProjectResources = usePutProjectResources(projectId);
 
@@ -177,7 +177,6 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                               path={editRoute.$.RESOURCE.relativePath}
                               element={
                                 <EditResourceModal
-                                  route={editRoute.$.RESOURCE}
                                   resources={project.resources || []}
                                   backHref={workspace}
                                   updateResources={updateProjectResources}

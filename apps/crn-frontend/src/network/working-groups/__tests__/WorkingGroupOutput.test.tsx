@@ -12,14 +12,14 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import { networkRoutes, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -84,11 +84,11 @@ const mandatoryFields = async (
     name: /Select the type/i,
   });
   userEvent.type(typeInput, type);
-  userEvent.type(typeInput, specialChars.enter);
+  userEvent.type(typeInput, '{enter}');
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(identifier, 'DOI');
-  userEvent.type(identifier, specialChars.enter);
+  userEvent.type(identifier, '{enter}');
   userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
   userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
   userEvent.click(screen.getByText('Person A 3'));
@@ -145,10 +145,10 @@ const renderPage = async ({
   researchOutputData,
   history = createMemoryHistory({
     initialEntries: [
-      network({})
-        .workingGroups({})
-        .workingGroup({ workingGroupId })
-        .createOutput({ outputDocumentType }).$,
+      networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+        workingGroupId,
+        outputDocumentType,
+      }),
     ],
   }),
 }: {
@@ -160,12 +160,7 @@ const renderPage = async ({
   history?: History;
   versionAction?: 'create' | 'edit';
 } = {}) => {
-  const path =
-    network.template +
-    network({}).workingGroups.template +
-    network({}).workingGroups({}).workingGroup.template +
-    network({}).workingGroups({}).workingGroup({ workingGroupId }).createOutput
-      .template;
+  const path = networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.path;
 
   render(
     <RecoilRoot
@@ -176,7 +171,7 @@ const renderPage = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <Route path={path}>
                 <WorkingGroupOutput
                   workingGroupId={workingGroupId}
@@ -247,10 +242,10 @@ it('can submit a form when form data is valid', async () => {
 
   const history = createMemoryHistory({
     initialEntries: [
-      network({})
-        .workingGroups({})
-        .workingGroup({ workingGroupId })
-        .createOutput({ outputDocumentType }).$,
+      networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+        workingGroupId,
+        outputDocumentType,
+      }),
     ],
   });
 
@@ -324,10 +319,10 @@ it('can save draft when form data is valid', async () => {
 
   const history = createMemoryHistory({
     initialEntries: [
-      network({})
-        .workingGroups({})
-        .workingGroup({ workingGroupId })
-        .createOutput({ outputDocumentType }).$,
+      networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+        workingGroupId,
+        outputDocumentType,
+      }),
     ],
   });
 
@@ -491,10 +486,10 @@ it.each([
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId })
-          .createOutput({ outputDocumentType }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.CREATE_OUTPUT.buildPath({
+          workingGroupId,
+          outputDocumentType,
+        }),
       ],
     });
     await renderPage({

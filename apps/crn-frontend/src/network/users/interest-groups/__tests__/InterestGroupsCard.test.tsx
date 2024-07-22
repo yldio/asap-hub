@@ -1,12 +1,11 @@
-import { createElement, FC, Suspense } from 'react';
+import { createElement, FC, ReactNode, Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import {
   createListInterestGroupResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
-
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, MemoryRouterProps } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -24,8 +23,9 @@ mockConsoleError();
 
 const userId = 'u42';
 
-const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
+const wrapper: FC<MemoryRouterProps & { children?: ReactNode }> = ({
   children,
+  ...props
 }) => (
   <RecoilRoot
     initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
@@ -33,7 +33,7 @@ const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: '42' }}>
         <WhenReady>
-          <StaticRouter>{children}</StaticRouter>
+          <MemoryRouter {...props}>{children}</MemoryRouter>
         </WhenReady>
       </Auth0Provider>
     </Suspense>

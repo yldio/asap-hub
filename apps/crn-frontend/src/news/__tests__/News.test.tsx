@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { NewsResponse } from '@asap-hub/model';
-import { news } from '@asap-hub/routing';
+import { newsRoutes } from '@asap-hub/routing';
 
 import News from '../News';
 
@@ -34,10 +34,10 @@ const renderPage = async () => {
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                news({}).article({ articleId: newsOrEvent.id }).$,
+                newsRoutes.DEFAULT.DETAILS.buildPath({ id: newsOrEvent.id }),
               ]}
             >
-              <Route path={news.template + news({}).article.template}>
+              <Route path={newsRoutes.DEFAULT.DETAILS.path}>
                 <News />
               </Route>
             </MemoryRouter>

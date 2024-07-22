@@ -5,7 +5,7 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -78,7 +78,9 @@ const renderWorkingGroupProfile = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   history = createMemoryHistory({
     initialEntries: [
-      network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+        workingGroupId,
+      }),
     ],
   }),
   workingGroupOverrides = {},
@@ -98,14 +100,8 @@ const renderWorkingGroupProfile = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router navigator={history}>
-              <Route
-                path={
-                  network.template +
-                  network({}).workingGroups.template +
-                  network({}).workingGroups({}).workingGroup.template
-                }
-              >
+            <Router navigator={history} location="/url">
+              <Route path={networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.path}>
                 <WorkingGroupProfile currentTime={new Date()} />
               </Route>
             </Router>
@@ -139,7 +135,9 @@ describe('the share outputs page', () => {
   it('is rendered when user clicks share an output and chooses an option', async () => {
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+          workingGroupId,
+        }),
       ],
     });
 
@@ -171,7 +169,9 @@ describe('the share outputs page', () => {
   it('does not render the share button when a user does not have permission', async () => {
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+          workingGroupId,
+        }),
       ],
     });
 
@@ -191,7 +191,9 @@ describe('collaboration card', () => {
   it('is not rendered when user is the pm of the team', async () => {
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+          workingGroupId,
+        }),
       ],
     });
 
@@ -219,7 +221,9 @@ describe('collaboration card', () => {
   it('is not rendered when user is not the pm of the team but the working group is complete', async () => {
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+          workingGroupId,
+        }),
       ],
     });
 
@@ -241,7 +245,9 @@ describe('collaboration card', () => {
   it('is rendered when user is not the pm of the team', async () => {
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+          workingGroupId,
+        }),
       ],
     });
 
@@ -277,10 +283,12 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId: wgResponse.id })
-          .duplicateOutput({ id: researchOutput.id }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.DUPLICATE_OUTPUT.buildPath(
+          {
+            workingGroupId: wgResponse.id,
+            id: researchOutput.id,
+          },
+        ),
       ],
     });
     await renderWorkingGroupProfile(
@@ -320,10 +328,12 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId: wgResponse.id })
-          .duplicateOutput({ id: researchOutput.id }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.DUPLICATE_OUTPUT.buildPath(
+          {
+            workingGroupId: wgResponse.id,
+            id: researchOutput.id,
+          },
+        ),
       ],
     });
     await renderWorkingGroupProfile(
@@ -354,9 +364,9 @@ describe('Duplicate Output', () => {
 
     await waitFor(() => {
       expect(history.location.pathname).toEqual(
-        sharedResearch({}).researchOutput({
+        sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
           researchOutputId: researchOutput.id,
-        }).$,
+        }),
       );
       expect(screen.queryByText(/loading/i)).toBe(null);
     });
@@ -371,10 +381,12 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .workingGroups({})
-          .workingGroup({ workingGroupId: wgResponse.id })
-          .duplicateOutput({ id: 'fake' }).$,
+        networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.DUPLICATE_OUTPUT.buildPath(
+          {
+            workingGroupId: wgResponse.id,
+            id: 'fake',
+          },
+        ),
       ],
     });
     await renderWorkingGroupProfile(

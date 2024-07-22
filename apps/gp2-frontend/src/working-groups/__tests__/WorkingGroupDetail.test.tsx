@@ -54,15 +54,17 @@ const renderWorkingGroupDetail = async ({
             <MemoryRouter
               initialEntries={[
                 route ||
-                  gp2Routing
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: id }).$,
+                  gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
+                    workingGroupId: id,
+                  }),
               ]}
             >
               <Route
                 path={
-                  gp2Routing.workingGroups.template +
-                  gp2Routing.workingGroups({}).workingGroup.template
+                  gp2Routing.workingGroups.DEFAULT.DETAILS.path
+                  // TODO: cleanup
+                  // gp2Routing.workingGroups.template +
+                  // gp2Routing.workingGroups({}).workingGroup.template
                 }
               >
                 <WorkingGroupDetail currentTime={new Date()} />
@@ -174,10 +176,9 @@ describe('WorkingGroupDetail', () => {
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '23',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .workspace({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          workingGroupId: workingGroup.id,
+        }),
       });
       expect(
         screen.getByRole('heading', { name: /Workspace Resources/i }),
@@ -191,10 +192,9 @@ describe('WorkingGroupDetail', () => {
       await renderWorkingGroupDetail({
         id: workingGroup.id,
         userId: '11',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .workspace({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          workingGroupId: workingGroup.id,
+        }),
       });
       expect(
         screen.queryByRole('heading', { name: /Workspace Resources/i }),
@@ -223,10 +223,9 @@ describe('WorkingGroupDetail', () => {
     await renderWorkingGroupDetail({
       id: workingGroup.id,
       userId: '23',
-      route: gp2Routing
-        .workingGroups({})
-        .workingGroup({ workingGroupId: workingGroup.id })
-        .workspace({}).$,
+      route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+        workingGroupId: workingGroup.id,
+      }),
     });
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
@@ -248,11 +247,9 @@ describe('WorkingGroupDetail', () => {
         id: workingGroup.id,
         userId: '23',
         role,
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .workspace({})
-          .add({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.ADD.buildPath(
+          { workingGroupId: workingGroup.id },
+        ),
       });
       expect(
         screen.queryByRole('heading', { name: /Add resource/i }),
@@ -268,11 +265,9 @@ describe('WorkingGroupDetail', () => {
       id: workingGroup.id,
       userId: '23',
       role: 'Administrator',
-      route: gp2Routing
-        .workingGroups({})
-        .workingGroup({ workingGroupId: workingGroup.id })
-        .workspace({})
-        .add({}).$,
+      route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.ADD.buildPath({
+        workingGroupId: workingGroup.id,
+      }),
     });
     expect(
       screen.getByRole('heading', { name: /Add resource/i }),
@@ -289,10 +284,9 @@ describe('WorkingGroupDetail', () => {
         id: workingGroup.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .workspace({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          workingGroupId: workingGroup.id,
+        }),
       });
 
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
@@ -307,10 +301,9 @@ describe('WorkingGroupDetail', () => {
           id: workingGroup.id,
           userId: '23',
           role,
-          route: gp2Routing
-            .workingGroups({})
-            .workingGroup({ workingGroupId: workingGroup.id })
-            .workspace({}).$,
+          route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+            workingGroupId: workingGroup.id,
+          }),
         });
 
         expect(
@@ -332,10 +325,9 @@ describe('WorkingGroupDetail', () => {
         id: workingGroup.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .workspace({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          workingGroupId: workingGroup.id,
+        }),
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
@@ -379,10 +371,9 @@ describe('WorkingGroupDetail', () => {
         id: workingGroupResources.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroupResources.id })
-          .workspace({}).$,
+        route: gp2Routing.workingGroups.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          workingGroupId: workingGroup.id,
+        }),
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
@@ -463,10 +454,11 @@ describe('WorkingGroupDetail', () => {
         id: workingGroup.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .duplicateOutput({ outputId: output.id }).$,
+        route:
+          gp2Routing.workingGroups.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath({
+            workingGroupId: workingGroup.id,
+            outputId: output.id,
+          }),
       });
 
       expect(screen.getByLabelText(/Title/i)).toHaveValue(
@@ -484,10 +476,11 @@ describe('WorkingGroupDetail', () => {
         id: workingGroup.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .workingGroups({})
-          .workingGroup({ workingGroupId: workingGroup.id })
-          .duplicateOutput({ outputId: 'test-id' }).$,
+        route:
+          gp2Routing.workingGroups.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath({
+            workingGroupId: workingGroup.id,
+            outputId: 'test-id',
+          }),
       });
       expect(screen.getByText(/sorry.+page/i)).toBeVisible();
     });

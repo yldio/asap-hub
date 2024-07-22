@@ -34,13 +34,11 @@ const renderUserDetail = async (id: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
-              initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
+              initialEntries={[
+                gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: id }),
+              ]}
             >
-              <Route
-                path={
-                  gp2Routing.users.template + gp2Routing.users({}).user.template
-                }
-              >
+              <Route path={gp2Routing.users.DEFAULT.DETAILS.path}>
                 <UserDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>

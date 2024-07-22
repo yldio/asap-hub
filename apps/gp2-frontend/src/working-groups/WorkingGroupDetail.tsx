@@ -9,7 +9,7 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { FC, lazy, useEffect } from 'react';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
@@ -60,7 +60,6 @@ const DuplicateOutput: FC = () => {
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   // const { path } = useMatch();
-  // const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
 
   const { workingGroupId } = useTypedParams(workingGroups.DEFAULT.DETAILS);
   const workingGroup = useWorkingGroupById(workingGroupId);

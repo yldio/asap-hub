@@ -2,7 +2,7 @@ import { SearchFrame } from '@asap-hub/frontend-utils';
 import { SharedResearchPage } from '@asap-hub/react-components';
 import { sharedResearchRoutes } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { useSearch } from '../hooks';
 
@@ -22,7 +22,6 @@ const SharedResearch: FC<Record<string, never>> = () => {
     loadResearchOutputList().then(loadResearchOutput);
   }, []);
 
-  const { pathname: path } = useLocation();
   const {
     filters,
     searchQuery,

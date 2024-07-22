@@ -106,7 +106,7 @@ export const teamCollaborationWithinTeamToCSV =
     const dataByDocumentType = data.outputsCoProducedWithin;
     const performanceByDocumentType = performance.withinTeam;
 
-    const fieldPreffix = outputType == 'all' ? 'ASAP' : 'ASAP Public';
+    const fieldPreffix = outputType === 'all' ? 'ASAP' : 'ASAP Public';
     return {
       Team: data.name,
       'Team Status': data.inactiveSince ? 'Inactive' : 'Active',
@@ -150,7 +150,7 @@ export const teamCollaborationAcrossTeamToCSV =
       data.outputsCoProducedAcross;
     const performanceByDocumentType = performance.acrossTeam;
 
-    const fieldPreffix = outputType == 'all' ? 'ASAP' : 'ASAP Public';
+    const fieldPreffix = outputType === 'all' ? 'ASAP' : 'ASAP Public';
 
     const acrossTeamData = byTeam.reduce(
       (

@@ -191,45 +191,45 @@ export const teamCollaborationAcrossTeamToCSV =
         dataByDocumentType.Article,
         performanceByDocumentType.article,
       ),
-      'ASAP Output Article: No. of teams collaborated with':
+      'ASAP Article Output: No. of teams collaborated with':
         acrossTeamData.article,
-      'ASAP Output Article: Name of teams collaborated with':
+      'ASAP Article Output: Name of teams collaborated with':
         acrossTeamData.articleTeams.join(', '),
       'ASAP Bioinformatic Output: Value': dataByDocumentType.Bioinformatics,
       'ASAP Bioinformatic Output: Average': utils.getPerformanceText(
         dataByDocumentType.Bioinformatics,
         performanceByDocumentType.bioinformatics,
       ),
-      'ASAP Output Bioinformatics: No. of teams collaborated with':
+      'ASAP Bioinformatics Output: No. of teams collaborated with':
         acrossTeamData.bioinformatics,
-      'ASAP Output Bioinformatics: Name of teams collaborated with':
+      'ASAP Bioinformatics Output: Name of teams collaborated with':
         acrossTeamData.bioinformaticsTeams.join(', '),
       'ASAP Dataset Output: Value': dataByDocumentType.Dataset,
       'ASAP Dataset Output: Average': utils.getPerformanceText(
         dataByDocumentType.Dataset,
         performanceByDocumentType.dataset,
       ),
-      'ASAP Output Dataset: No. of teams collaborated with':
+      'ASAP Dataset Output: No. of teams collaborated with':
         acrossTeamData.dataset,
-      'ASAP Output Dataset: Name of teams collaborated with':
+      'ASAP Dataset Output: Name of teams collaborated with':
         acrossTeamData.datasetTeams.join(', '),
       'ASAP Lab Resource Output: Value': dataByDocumentType['Lab Resource'],
       'ASAP Lab Resource Output: Average': utils.getPerformanceText(
         dataByDocumentType['Lab Resource'],
         performanceByDocumentType.labResource,
       ),
-      'ASAP Output Lab Resource: No. of teams collaborated with':
+      'ASAP Lab Resource Output: No. of teams collaborated with':
         acrossTeamData.labResource,
-      'ASAP Output Lab Resource: Name of teams collaborated with':
+      'ASAP Lab Resource Output: Name of teams collaborated with':
         acrossTeamData.labResourceTeams.join(', '),
       'ASAP Protocol Output: Value': dataByDocumentType.Protocol,
       'ASAP Protocol Output: Average': utils.getPerformanceText(
         dataByDocumentType.Protocol,
         performanceByDocumentType.protocol,
       ),
-      'ASAP Output Protocol: No. of teams collaborated with':
+      'ASAP Protocol Output: No. of teams collaborated with':
         acrossTeamData.protocol,
-      'ASAP Output Protocol: Name of teams collaborated with':
+      'ASAP Protocol Output: Name of teams collaborated with':
         acrossTeamData.protocolTeams.join(', '),
     };
   };

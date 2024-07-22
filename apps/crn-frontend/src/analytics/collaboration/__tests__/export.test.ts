@@ -206,26 +206,26 @@ describe('teamCollaborationWithinTeamToCSV', () => {
       'Inactive Since': '',
       'ASAP Article Output: Value': 5,
       'ASAP Article Output: Average': 'Above',
-      'ASAP Output Article: No. of teams collaborated with': 2,
-      'ASAP Output Article: Name of teams collaborated with': 'Team B, Team C',
+      'ASAP Article Output: No. of teams collaborated with': 2,
+      'ASAP Article Output: Name of teams collaborated with': 'Team B, Team C',
       'ASAP Bioinformatic Output: Value': 5,
       'ASAP Bioinformatic Output: Average': 'Above',
-      'ASAP Output Bioinformatics: No. of teams collaborated with': 2,
-      'ASAP Output Bioinformatics: Name of teams collaborated with':
+      'ASAP Bioinformatics Output: No. of teams collaborated with': 2,
+      'ASAP Bioinformatics Output: Name of teams collaborated with':
         'Team B, Team C',
       'ASAP Dataset Output: Value': 5,
       'ASAP Dataset Output: Average': 'Above',
-      'ASAP Output Dataset: No. of teams collaborated with': 2,
-      'ASAP Output Dataset: Name of teams collaborated with': 'Team B, Team C',
+      'ASAP Dataset Output: No. of teams collaborated with': 2,
+      'ASAP Dataset Output: Name of teams collaborated with': 'Team B, Team C',
       'ASAP Lab Resource Output: Value': 5,
       'ASAP Lab Resource Output: Average': 'Above',
-      'ASAP Output Lab Resource: No. of teams collaborated with': 2,
-      'ASAP Output Lab Resource: Name of teams collaborated with':
+      'ASAP Lab Resource Output: No. of teams collaborated with': 2,
+      'ASAP Lab Resource Output: Name of teams collaborated with':
         'Team B, Team C',
       'ASAP Protocol Output: Value': 5,
       'ASAP Protocol Output: Average': 'Above',
-      'ASAP Output Protocol: No. of teams collaborated with': 2,
-      'ASAP Output Protocol: Name of teams collaborated with': 'Team B, Team C',
+      'ASAP Protocol Output: No. of teams collaborated with': 2,
+      'ASAP Protocol Output: Name of teams collaborated with': 'Team B, Team C',
     });
   });
 });

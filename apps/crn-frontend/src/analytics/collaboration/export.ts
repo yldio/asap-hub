@@ -1,4 +1,5 @@
 import {
+  DocumentCategoryOption,
   TeamCollaborationDataObject,
   TeamCollaborationPerformance,
   UserCollaborationDataObject,
@@ -6,10 +7,29 @@ import {
 } from '@asap-hub/model';
 import { utils } from '@asap-hub/react-components';
 
+const getOutputPrefix = (documentCategory: DocumentCategoryOption) => {
+  switch (documentCategory) {
+    case 'article':
+      return 'Article Outputs';
+    case 'bioinformatics':
+      return 'Bioinformatic Outputs';
+    case 'dataset':
+      return 'Dataset Outputs';
+    case 'lab-resource':
+      return 'Lab Resource Outputs';
+    case 'protocol':
+      return 'Protocol Outputs';
+    case 'all':
+    default:
+      return 'Outputs';
+  }
+};
+
 export const userCollaborationToCSV =
   (
     type: 'within-team' | 'across-teams',
     performance: UserCollaborationPerformance,
+    documentCategory: DocumentCategoryOption,
   ) =>
   (data: UserCollaborationDataObject) => ({
     User: data.name,
@@ -21,6 +41,8 @@ export const userCollaborationToCSV =
     ...[...new Array(3)].reduce((result, _, index) => {
       const teamSuffix = index === 0 ? 'A' : index === 1 ? 'B' : 'C';
 
+      const outputPrefix = getOutputPrefix(documentCategory);
+
       if (!data.teams[index]?.team) {
         return {
           ...result,
@@ -30,8 +52,8 @@ export const userCollaborationToCSV =
           [`Role ${teamSuffix}`]: '',
           [`User Team Status ${teamSuffix}`]: '',
           [`User Team Inactive Since ${teamSuffix}`]: '',
-          [`Outputs Co-Authored: Value ${teamSuffix}`]: '',
-          [`Outputs Co-Authored: Average ${teamSuffix}`]: '',
+          [`${outputPrefix} Co-Authored: Value ${teamSuffix}`]: '',
+          [`${outputPrefix} Co-Authored: Average ${teamSuffix}`]: '',
         };
       }
 
@@ -70,8 +92,8 @@ export const userCollaborationToCSV =
             : 'Active',
         [`User Team Inactive Since ${teamSuffix}`]:
           teamMembershipInactiveSince || '',
-        [`Outputs Co-Authored: Value ${teamSuffix}`]: value,
-        [`Outputs Co-Authored: Average ${teamSuffix}`]:
+        [`${outputPrefix} Co-Authored: Value ${teamSuffix}`]: value,
+        [`${outputPrefix} Co-Authored: Average ${teamSuffix}`]:
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           utils.getPerformanceText(value!, performanceValue),
       };
@@ -79,37 +101,42 @@ export const userCollaborationToCSV =
   });
 
 export const teamCollaborationWithinTeamToCSV =
-  (performance: TeamCollaborationPerformance) =>
+  (performance: TeamCollaborationPerformance, outputType: 'all' | 'public') =>
   (data: TeamCollaborationDataObject) => {
     const dataByDocumentType = data.outputsCoProducedWithin;
     const performanceByDocumentType = performance.withinTeam;
 
+    const fieldPreffix = outputType == 'all' ? 'ASAP' : 'ASAP Public';
     return {
       Team: data.name,
       'Team Status': data.inactiveSince ? 'Inactive' : 'Active',
       'Inactive Since': data.inactiveSince || '',
-      'ASAP Article Output: Value': dataByDocumentType.Article,
-      'ASAP Article Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Article Output: Value`]: dataByDocumentType.Article,
+      [`${fieldPreffix} Article Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Article,
         performanceByDocumentType.article,
       ),
-      'ASAP Bioinformatic Output: Value': dataByDocumentType.Bioinformatics,
-      'ASAP Bioinformatic Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Bioinformatic Output: Value`]:
         dataByDocumentType.Bioinformatics,
-        performanceByDocumentType.bioinformatics,
-      ),
-      'ASAP Dataset Output: Value': dataByDocumentType.Dataset,
-      'ASAP Dataset Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Bioinformatic Output: Average`]:
+        utils.getPerformanceText(
+          dataByDocumentType.Bioinformatics,
+          performanceByDocumentType.bioinformatics,
+        ),
+      [`${fieldPreffix} Dataset Output: Value`]: dataByDocumentType.Dataset,
+      [`${fieldPreffix} Dataset Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Dataset,
         performanceByDocumentType.dataset,
       ),
-      'ASAP Lab Resource Output: Value': dataByDocumentType['Lab Resource'],
-      'ASAP Lab Resource Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Lab Resource Output: Value`]:
         dataByDocumentType['Lab Resource'],
-        performanceByDocumentType.labResource,
-      ),
-      'ASAP Protocol Output: Value': dataByDocumentType.Protocol,
-      'ASAP Protocol Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Lab Resource Output: Average`]:
+        utils.getPerformanceText(
+          dataByDocumentType['Lab Resource'],
+          performanceByDocumentType.labResource,
+        ),
+      [`${fieldPreffix} Protocol Output: Value`]: dataByDocumentType.Protocol,
+      [`${fieldPreffix} Protocol Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Protocol,
         performanceByDocumentType.protocol,
       ),
@@ -117,11 +144,13 @@ export const teamCollaborationWithinTeamToCSV =
   };
 
 export const teamCollaborationAcrossTeamToCSV =
-  (performance: TeamCollaborationPerformance) =>
+  (performance: TeamCollaborationPerformance, outputType: 'all' | 'public') =>
   (data: TeamCollaborationDataObject) => {
     const { byDocumentType: dataByDocumentType, byTeam } =
       data.outputsCoProducedAcross;
     const performanceByDocumentType = performance.acrossTeam;
+
+    const fieldPreffix = outputType == 'all' ? 'ASAP' : 'ASAP Public';
 
     const acrossTeamData = byTeam.reduce(
       (
@@ -186,50 +215,54 @@ export const teamCollaborationAcrossTeamToCSV =
       Team: data.name,
       'Team Status': data.inactiveSince ? 'Inactive' : 'Active',
       'Inactive Since': data.inactiveSince || '',
-      'ASAP Article Output: Value': dataByDocumentType.Article,
-      'ASAP Article Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Article Output: Value`]: dataByDocumentType.Article,
+      [`${fieldPreffix} Article Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Article,
         performanceByDocumentType.article,
       ),
-      'ASAP Article Output: No. of teams collaborated with':
+      [`${fieldPreffix} Article Output: No. of teams collaborated with`]:
         acrossTeamData.article,
-      'ASAP Article Output: Name of teams collaborated with':
+      [`${fieldPreffix} Article Output: Name of teams collaborated with`]:
         acrossTeamData.articleTeams.join(', '),
-      'ASAP Bioinformatic Output: Value': dataByDocumentType.Bioinformatics,
-      'ASAP Bioinformatic Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Bioinformatic Output: Value`]:
         dataByDocumentType.Bioinformatics,
-        performanceByDocumentType.bioinformatics,
-      ),
-      'ASAP Bioinformatics Output: No. of teams collaborated with':
+      [`${fieldPreffix} Bioinformatic Output: Average`]:
+        utils.getPerformanceText(
+          dataByDocumentType.Bioinformatics,
+          performanceByDocumentType.bioinformatics,
+        ),
+      [`${fieldPreffix} Bioinformatics Output: No. of teams collaborated with`]:
         acrossTeamData.bioinformatics,
-      'ASAP Bioinformatics Output: Name of teams collaborated with':
+      [`${fieldPreffix} Bioinformatics Output: Name of teams collaborated with`]:
         acrossTeamData.bioinformaticsTeams.join(', '),
-      'ASAP Dataset Output: Value': dataByDocumentType.Dataset,
-      'ASAP Dataset Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Dataset Output: Value`]: dataByDocumentType.Dataset,
+      [`${fieldPreffix} Dataset Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Dataset,
         performanceByDocumentType.dataset,
       ),
-      'ASAP Dataset Output: No. of teams collaborated with':
+      [`${fieldPreffix} Dataset Output: No. of teams collaborated with`]:
         acrossTeamData.dataset,
-      'ASAP Dataset Output: Name of teams collaborated with':
+      [`${fieldPreffix} Dataset Output: Name of teams collaborated with`]:
         acrossTeamData.datasetTeams.join(', '),
-      'ASAP Lab Resource Output: Value': dataByDocumentType['Lab Resource'],
-      'ASAP Lab Resource Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Lab Resource Output: Value`]:
         dataByDocumentType['Lab Resource'],
-        performanceByDocumentType.labResource,
-      ),
-      'ASAP Lab Resource Output: No. of teams collaborated with':
+      [`${fieldPreffix} Lab Resource Output: Average`]:
+        utils.getPerformanceText(
+          dataByDocumentType['Lab Resource'],
+          performanceByDocumentType.labResource,
+        ),
+      [`${fieldPreffix} Lab Resource Output: No. of teams collaborated with`]:
         acrossTeamData.labResource,
-      'ASAP Lab Resource Output: Name of teams collaborated with':
+      [`${fieldPreffix} Lab Resource Output: Name of teams collaborated with`]:
         acrossTeamData.labResourceTeams.join(', '),
-      'ASAP Protocol Output: Value': dataByDocumentType.Protocol,
-      'ASAP Protocol Output: Average': utils.getPerformanceText(
+      [`${fieldPreffix} Protocol Output: Value`]: dataByDocumentType.Protocol,
+      [`${fieldPreffix} Protocol Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Protocol,
         performanceByDocumentType.protocol,
       ),
-      'ASAP Protocol Output: No. of teams collaborated with':
+      [`${fieldPreffix} Protocol Output: No. of teams collaborated with`]:
         acrossTeamData.protocol,
-      'ASAP Protocol Output: Name of teams collaborated with':
+      [`${fieldPreffix} Protocol Output: Name of teams collaborated with`]:
         acrossTeamData.protocolTeams.join(', '),
     };
   };

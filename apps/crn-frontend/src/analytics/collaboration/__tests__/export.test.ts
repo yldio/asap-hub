@@ -49,75 +49,111 @@ describe('userCollaborationToCSV', () => {
     acrossTeam: performanceMetric,
   };
 
-  it('exports within-team data', () => {
-    expect(userCollaborationToCSV('within-team', performance)(data)).toEqual({
-      User: 'Jane Doe',
-      'User Status': 'Active',
-      'Alumni Since': '',
+  it.each`
+    documentCategory    | prefix
+    ${'all'}            | ${'Outputs'}
+    ${'article'}        | ${'Article Outputs'}
+    ${'bioinformatics'} | ${'Bioinformatic Outputs'}
+    ${'dataset'}        | ${'Dataset Outputs'}
+    ${'lab-resource'}   | ${'Lab Resource Outputs'}
+    ${'protocol'}       | ${'Protocol Outputs'}
+    ${'not-valid'}      | ${'Outputs'}
+  `(
+    `exports within-team data when document category is $documentCategory`,
+    ({ documentCategory, prefix }) => {
+      expect(
+        userCollaborationToCSV(
+          'within-team',
+          performance,
+          documentCategory,
+        )(data),
+      ).toEqual({
+        User: 'Jane Doe',
+        'User Status': 'Active',
+        'Alumni Since': '',
 
-      'Team A': 'Test 1',
-      'Team Status A': 'Active',
-      'Team Inactive Since A': '',
-      'Role A': 'Key Personnel',
-      'User Team Status A': 'Inactive',
-      'User Team Inactive Since A': '2024-02-06T00:00:00.000-03:00',
-      'Outputs Co-Authored: Value A': 1,
-      'Outputs Co-Authored: Average A': 'Below',
+        'Team A': 'Test 1',
+        'Team Status A': 'Active',
+        'Team Inactive Since A': '',
+        'Role A': 'Key Personnel',
+        'User Team Status A': 'Inactive',
+        'User Team Inactive Since A': '2024-02-06T00:00:00.000-03:00',
+        [`${prefix} Co-Authored: Value A`]: 1,
+        [`${prefix} Co-Authored: Average A`]: 'Below',
 
-      'Team B': 'De Camilli',
-      'Team Status B': 'Inactive',
-      'Team Inactive Since B': '2024-02-15T00:00:00.000Z',
-      'Role B': 'Project Manager',
-      'User Team Status B': 'Inactive',
-      'User Team Inactive Since B': '',
-      'Outputs Co-Authored: Value B': 2,
-      'Outputs Co-Authored: Average B': 'Below',
+        'Team B': 'De Camilli',
+        'Team Status B': 'Inactive',
+        'Team Inactive Since B': '2024-02-15T00:00:00.000Z',
+        'Role B': 'Project Manager',
+        'User Team Status B': 'Inactive',
+        'User Team Inactive Since B': '',
+        [`${prefix} Co-Authored: Value B`]: 2,
+        [`${prefix} Co-Authored: Average B`]: 'Below',
 
-      'Team C': '',
-      'Team Status C': '',
-      'Team Inactive Since C': '',
-      'Role C': '',
-      'User Team Status C': '',
-      'User Team Inactive Since C': '',
-      'Outputs Co-Authored: Value C': '',
-      'Outputs Co-Authored: Average C': '',
-    });
-  });
+        'Team C': '',
+        'Team Status C': '',
+        'Team Inactive Since C': '',
+        'Role C': '',
+        'User Team Status C': '',
+        'User Team Inactive Since C': '',
+        [`${prefix} Co-Authored: Value C`]: '',
+        [`${prefix} Co-Authored: Average C`]: '',
+      });
+    },
+  );
 
-  it('exports across-teams data', () => {
-    expect(userCollaborationToCSV('across-teams', performance)(data)).toEqual({
-      User: 'Jane Doe',
-      'User Status': 'Active',
-      'Alumni Since': '',
+  it.each`
+    documentCategory    | prefix
+    ${'all'}            | ${'Outputs'}
+    ${'article'}        | ${'Article Outputs'}
+    ${'bioinformatics'} | ${'Bioinformatic Outputs'}
+    ${'dataset'}        | ${'Dataset Outputs'}
+    ${'lab-resource'}   | ${'Lab Resource Outputs'}
+    ${'protocol'}       | ${'Protocol Outputs'}
+    ${'not-valid'}      | ${'Outputs'}
+  `(
+    'exports across-teams data when document category is $documentCategory',
+    ({ documentCategory, prefix }) => {
+      expect(
+        userCollaborationToCSV(
+          'across-teams',
+          performance,
+          documentCategory,
+        )(data),
+      ).toEqual({
+        User: 'Jane Doe',
+        'User Status': 'Active',
+        'Alumni Since': '',
 
-      'Team A': 'Test 1',
-      'Team Status A': 'Active',
-      'Team Inactive Since A': '',
-      'Role A': 'Key Personnel',
-      'User Team Status A': 'Inactive',
-      'User Team Inactive Since A': '2024-02-06T00:00:00.000-03:00',
-      'Outputs Co-Authored: Value A': 0,
-      'Outputs Co-Authored: Average A': 'Below',
+        'Team A': 'Test 1',
+        'Team Status A': 'Active',
+        'Team Inactive Since A': '',
+        'Role A': 'Key Personnel',
+        'User Team Status A': 'Inactive',
+        'User Team Inactive Since A': '2024-02-06T00:00:00.000-03:00',
+        [`${prefix} Co-Authored: Value A`]: 0,
+        [`${prefix} Co-Authored: Average A`]: 'Below',
 
-      'Team B': 'De Camilli',
-      'Team Status B': 'Inactive',
-      'Team Inactive Since B': '2024-02-15T00:00:00.000Z',
-      'Role B': 'Project Manager',
-      'User Team Status B': 'Inactive',
-      'User Team Inactive Since B': '',
-      'Outputs Co-Authored: Value B': 1,
-      'Outputs Co-Authored: Average B': 'Below',
+        'Team B': 'De Camilli',
+        'Team Status B': 'Inactive',
+        'Team Inactive Since B': '2024-02-15T00:00:00.000Z',
+        'Role B': 'Project Manager',
+        'User Team Status B': 'Inactive',
+        'User Team Inactive Since B': '',
+        [`${prefix} Co-Authored: Value B`]: 1,
+        [`${prefix} Co-Authored: Average B`]: 'Below',
 
-      'Team C': '',
-      'Team Status C': '',
-      'Team Inactive Since C': '',
-      'Role C': '',
-      'User Team Status C': '',
-      'User Team Inactive Since C': '',
-      'Outputs Co-Authored: Value C': '',
-      'Outputs Co-Authored: Average C': '',
-    });
-  });
+        'Team C': '',
+        'Team Status C': '',
+        'Team Inactive Since C': '',
+        'Role C': '',
+        'User Team Status C': '',
+        'User Team Inactive Since C': '',
+        [`${prefix} Co-Authored: Value C`]: '',
+        [`${prefix} Co-Authored: Average C`]: '',
+      });
+    },
+  );
 });
 
 describe('teamCollaborationWithinTeamToCSV', () => {
@@ -181,51 +217,72 @@ describe('teamCollaborationWithinTeamToCSV', () => {
     },
   };
 
-  it('handles within-team data', () => {
-    expect(teamCollaborationWithinTeamToCSV(performance)(data)).toEqual({
-      Team: 'Team A',
-      'Team Status': 'Active',
-      'Inactive Since': '',
-      'ASAP Article Output: Value': 3,
-      'ASAP Article Output: Average': 'Average',
-      'ASAP Bioinformatic Output: Value': 3,
-      'ASAP Bioinformatic Output: Average': 'Average',
-      'ASAP Dataset Output: Value': 3,
-      'ASAP Dataset Output: Average': 'Average',
-      'ASAP Lab Resource Output: Value': 3,
-      'ASAP Lab Resource Output: Average': 'Average',
-      'ASAP Protocol Output: Value': 3,
-      'ASAP Protocol Output: Average': 'Average',
-    });
-  });
+  it.each`
+    outputType  | prefix
+    ${'public'} | ${'ASAP Public'}
+    ${'all'}    | ${'ASAP'}
+  `(
+    'handles within-team data when output type is $outputType',
+    ({ outputType, prefix }) => {
+      expect(
+        teamCollaborationWithinTeamToCSV(performance, outputType)(data),
+      ).toEqual({
+        Team: 'Team A',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        [`${prefix} Article Output: Value`]: 3,
+        [`${prefix} Article Output: Average`]: 'Average',
+        [`${prefix} Bioinformatic Output: Value`]: 3,
+        [`${prefix} Bioinformatic Output: Average`]: 'Average',
+        [`${prefix} Dataset Output: Value`]: 3,
+        [`${prefix} Dataset Output: Average`]: 'Average',
+        [`${prefix} Lab Resource Output: Value`]: 3,
+        [`${prefix} Lab Resource Output: Average`]: 'Average',
+        [`${prefix} Protocol Output: Value`]: 3,
+        [`${prefix} Protocol Output: Average`]: 'Average',
+      });
+    },
+  );
 
-  it('handles across-teams data', () => {
-    expect(teamCollaborationAcrossTeamToCSV(performance)(data)).toEqual({
-      Team: 'Team A',
-      'Team Status': 'Active',
-      'Inactive Since': '',
-      'ASAP Article Output: Value': 5,
-      'ASAP Article Output: Average': 'Above',
-      'ASAP Article Output: No. of teams collaborated with': 2,
-      'ASAP Article Output: Name of teams collaborated with': 'Team B, Team C',
-      'ASAP Bioinformatic Output: Value': 5,
-      'ASAP Bioinformatic Output: Average': 'Above',
-      'ASAP Bioinformatics Output: No. of teams collaborated with': 2,
-      'ASAP Bioinformatics Output: Name of teams collaborated with':
-        'Team B, Team C',
-      'ASAP Dataset Output: Value': 5,
-      'ASAP Dataset Output: Average': 'Above',
-      'ASAP Dataset Output: No. of teams collaborated with': 2,
-      'ASAP Dataset Output: Name of teams collaborated with': 'Team B, Team C',
-      'ASAP Lab Resource Output: Value': 5,
-      'ASAP Lab Resource Output: Average': 'Above',
-      'ASAP Lab Resource Output: No. of teams collaborated with': 2,
-      'ASAP Lab Resource Output: Name of teams collaborated with':
-        'Team B, Team C',
-      'ASAP Protocol Output: Value': 5,
-      'ASAP Protocol Output: Average': 'Above',
-      'ASAP Protocol Output: No. of teams collaborated with': 2,
-      'ASAP Protocol Output: Name of teams collaborated with': 'Team B, Team C',
-    });
-  });
+  it.each`
+    outputType  | prefix
+    ${'public'} | ${'ASAP Public'}
+    ${'all'}    | ${'ASAP'}
+  `(
+    'handles across-teams data when output type is $outputType',
+    ({ outputType, prefix }) => {
+      expect(
+        teamCollaborationAcrossTeamToCSV(performance, outputType)(data),
+      ).toEqual({
+        Team: 'Team A',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        [`${prefix} Article Output: Value`]: 5,
+        [`${prefix} Article Output: Average`]: 'Above',
+        [`${prefix} Article Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Article Output: Name of teams collaborated with`]:
+          'Team B, Team C',
+        [`${prefix} Bioinformatic Output: Value`]: 5,
+        [`${prefix} Bioinformatic Output: Average`]: 'Above',
+        [`${prefix} Bioinformatics Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Bioinformatics Output: Name of teams collaborated with`]:
+          'Team B, Team C',
+        [`${prefix} Dataset Output: Value`]: 5,
+        [`${prefix} Dataset Output: Average`]: 'Above',
+        [`${prefix} Dataset Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Dataset Output: Name of teams collaborated with`]:
+          'Team B, Team C',
+        [`${prefix} Lab Resource Output: Value`]: 5,
+        [`${prefix} Lab Resource Output: Average`]: 'Above',
+        [`${prefix} Lab Resource Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Lab Resource Output: Name of teams collaborated with`]:
+          'Team B, Team C',
+        [`${prefix} Protocol Output: Value`]: 5,
+        [`${prefix} Protocol Output: Average`]: 'Above',
+        [`${prefix} Protocol Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Protocol Output: Name of teams collaborated with`]:
+          'Team B, Team C',
+      });
+    },
+  );
 });

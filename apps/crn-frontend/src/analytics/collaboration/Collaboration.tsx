@@ -81,7 +81,7 @@ const Collaboration = () => {
             timeRange,
             ...paginationParams,
           }),
-        userCollaborationToCSV(type, userPerformance),
+        userCollaborationToCSV(type, userPerformance, documentCategory),
       );
     }
 
@@ -101,8 +101,8 @@ const Collaboration = () => {
           ...paginationParams,
         }),
       type === 'within-team'
-        ? teamCollaborationWithinTeamToCSV(teamPerformance)
-        : teamCollaborationAcrossTeamToCSV(teamPerformance),
+        ? teamCollaborationWithinTeamToCSV(teamPerformance, outputType)
+        : teamCollaborationAcrossTeamToCSV(teamPerformance, outputType),
     );
   };
 

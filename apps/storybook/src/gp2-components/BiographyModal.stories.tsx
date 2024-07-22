@@ -16,7 +16,7 @@ const props: ComponentProps<typeof BiographyModal> = {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <BiographyModal {...props} />
   </StaticRouter>
 );

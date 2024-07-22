@@ -1,6 +1,6 @@
 import { StaticRouter } from 'react-router-dom/server';
 import { NetworkPage } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { text, select } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -22,10 +22,10 @@ export const Normal = () => {
     'users',
   );
   const routes = {
-    users: network({}).users({}).$,
-    teams: network({}).teams({}).$,
-    'interest-groups': network({}).interestGroups({}).$,
-    'working-groups': network({}).workingGroups({}).$,
+    users: networkRoutes.DEFAULT.USERS.path,
+    teams: networkRoutes.DEFAULT.TEAMS.path,
+    'interest-groups': networkRoutes.DEFAULT.INTEREST_GROUPS.path,
+    'working-groups': networkRoutes.DEFAULT.WORKING_GROUPS.path,
   };
   return (
     <StaticRouter key={activeTab} location={routes[activeTab]}>

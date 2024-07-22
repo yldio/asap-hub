@@ -9,7 +9,7 @@ import {
   createDeliverables,
   createWorkingGroupLeaders,
 } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { boolean, select, number, text, array } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -24,10 +24,9 @@ export const Normal = () => {
 
   const activeTab = select('Active Tab', { about: 'about' }, 'about');
   const routes = {
-    about: network({})
-      .workingGroups({})
-      .workingGroup({ workingGroupId: 'id' })
-      .about({}).$,
+    about: networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.ABOUT.buildPath({
+      workingGroupId: 'id',
+    }),
   };
 
   const props: ComponentProps<typeof WorkingGroupPage> &

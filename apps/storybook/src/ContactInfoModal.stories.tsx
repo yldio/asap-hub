@@ -9,7 +9,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ContactInfoModal
       email="contact@example.com"
       fallbackEmail="me@example.com"

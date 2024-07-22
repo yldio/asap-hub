@@ -1,6 +1,6 @@
 import { InterestGroupProfilePage } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom/server';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { array, boolean, select, text } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -12,9 +12,8 @@ export default {
 };
 
 export const Normal = () => {
-  const route = network({})
-    .interestGroups({})
-    .interestGroup({ interestGroupId: '42' });
+  const route = networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS;
+  const routeParams = { interestGroupId: '42' };
   const activeTab = select(
     'Active Tab',
     {
@@ -26,10 +25,10 @@ export const Normal = () => {
     'about',
   );
   const routes = {
-    about: route.about({}).$,
-    calendar: route.calendar({}).$,
-    upcoming: route.upcoming({}).$,
-    past: route.past({}).$,
+    about: route.ABOUT.buildPath(routeParams),
+    calendar: route.CALENDAR.buildPath(routeParams),
+    upcoming: route.UPCOMING.buildPath(routeParams),
+    past: route.PAST.buildPath(routeParams),
   };
   return (
     <StaticRouter key={activeTab} location={routes[activeTab as 'about']}>

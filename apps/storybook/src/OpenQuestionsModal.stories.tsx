@@ -7,7 +7,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <OpenQuestionsModal questions={['Q1', 'Q2']} backHref="#" />
   </StaticRouter>
 );

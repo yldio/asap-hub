@@ -17,7 +17,7 @@ const props: ComponentProps<typeof KeyInformationModal> = {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <KeyInformationModal {...props} />
   </StaticRouter>
 );

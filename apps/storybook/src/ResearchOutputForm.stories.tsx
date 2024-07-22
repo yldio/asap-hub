@@ -118,13 +118,13 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ResearchOutputForm {...researchOutputFormProps} />
   </StaticRouter>
 );
 
 export const EditMode = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ResearchOutputForm
       {...researchOutputFormProps}
       researchOutputData={{

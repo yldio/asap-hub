@@ -1,11 +1,14 @@
-import { FC, ComponentType, Fragment } from 'react';
+import { FC, ComponentType, Fragment, ReactNode } from 'react';
 import { Decorator } from '@storybook/react';
 import { Flag } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
 
 import { boolean } from './knobs';
 
-const DisableFlag: FC<{ flag: Flag }> = ({ flag, children }) => {
+const DisableFlag: FC<{ flag: Flag; children: ReactNode }> = ({
+  flag,
+  children,
+}) => {
   const { isEnabled, disable, reset, enable } = useFlags();
   return (
     <FlagsContext.Provider

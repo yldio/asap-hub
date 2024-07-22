@@ -10,7 +10,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <RoleModal
       backHref="#"
       firstName={text('First name', 'John')}

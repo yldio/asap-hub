@@ -26,7 +26,7 @@ const props = (): ComponentProps<typeof PersonalInfoModal> => ({
 });
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <PersonalInfoModal {...props()} backHref="/wrong" />
   </StaticRouter>
 );

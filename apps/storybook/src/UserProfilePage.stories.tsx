@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { text, select, boolean, number } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -77,13 +77,15 @@ const propsEditable = (): ReturnType<typeof propsViewOnly> => ({
 export const Normal = () => {
   const props = boolean('Editable', false) ? propsEditable() : propsViewOnly();
 
-  const tabRoutes = network({}).users({}).user({ userId: props.id });
+  const tabRoutes = networkRoutes.DEFAULT.USERS.DETAILS;
+  const routeParams = { id: props.id };
+
   const tab = select(
     'Active Tab',
     {
-      About: tabRoutes.about({}).$,
-      Research: tabRoutes.research({}).$,
-      Outputs: tabRoutes.outputs({}).$,
+      About: tabRoutes.ABOUT.buildPath(routeParams),
+      Research: tabRoutes.RESEARCH.buildPath(routeParams),
+      Outputs: tabRoutes.OUTPUTS.buildPath(routeParams),
     },
     'About',
   );

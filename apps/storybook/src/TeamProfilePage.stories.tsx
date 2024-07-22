@@ -1,5 +1,5 @@
 import { TeamProfilePage } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { formatISO, subDays } from 'date-fns';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
@@ -98,18 +98,22 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
 });
 
 export const Normal = () => {
-  const route = network({}).teams({}).team({ teamId: props().id });
+  const route = networkRoutes.DEFAULT.TEAMS.DETAILS;
+  const routeParams = {
+    teamId: props().id,
+  };
+
   const tab = select(
     'Active Tab',
     {
-      About: route.about({}).$,
-      Outputs: route.outputs({}).$,
-      Workspace: route.workspace({}).$,
+      About: route.ABOUT.buildPath(routeParams),
+      Outputs: route.OUTPUTS.buildPath(routeParams),
+      Workspace: route.WORKSPACE.buildPath(routeParams),
     },
-    route.about({}).$,
+    route.ABOUT.buildPath(routeParams),
   );
   return (
-    <StaticRouter key={tab} location={route}>
+    <StaticRouter key={tab} location={route.buildPath(routeParams)}>
       <TeamProfilePage {...props()}>Page Content</TeamProfilePage>
     </StaticRouter>
   );

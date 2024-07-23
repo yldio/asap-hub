@@ -269,6 +269,36 @@ it('displays current team within the form', async () => {
   expect(screen.getByText('example team')).toBeVisible();
 });
 
+it('can generate short description when description is present', async () => {
+  const getShortDescriptionFromDescription = jest
+    .fn()
+    .mockResolvedValue('An interesting article');
+  const researchOutputData = {
+    ...createResearchOutputResponse(),
+    shortDescription: '',
+  };
+  render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...defaultProps}
+        researchOutputData={researchOutputData}
+        getShortDescriptionFromDescription={getShortDescriptionFromDescription}
+      />
+    </StaticRouter>,
+  );
+  expect(
+    screen.getByRole('textbox', { name: /short description/i }),
+  ).toHaveValue('');
+
+  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toHaveValue('An interesting article');
+  });
+});
+
 describe('on submit', () => {
   let history!: History;
   const id = '42';

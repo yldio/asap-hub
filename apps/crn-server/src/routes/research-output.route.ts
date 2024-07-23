@@ -1,10 +1,13 @@
 import {
   ListResearchOutputResponse,
+  OutputGenerateContentRequest,
+  OutputGenerateContentResponse,
   ResearchOutputResponse,
   ResearchOutputTeamResponse,
   ResearchOutputWorkingGroupResponse,
   UserResponse,
 } from '@asap-hub/model';
+import { validateOutputGenerateContentRequestParameters } from '@asap-hub/server-common';
 import {
   getUserRole,
   hasEditResearchOutputPermission,
@@ -89,6 +92,20 @@ export const researchOutputRouteFactory = (
       res.json(result);
     },
   );
+
+  researchOutputRoutes.post<
+    OutputGenerateContentRequest,
+    OutputGenerateContentResponse
+  >('/research-outputs/generate-content', async (req, res) => {
+    const { body } = req;
+    const generateRequest =
+      validateOutputGenerateContentRequestParameters(body);
+
+    const output =
+      await researchOutputController.generateContent(generateRequest);
+
+    res.status(200).json(output);
+  });
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body, loggedInUser } = req;

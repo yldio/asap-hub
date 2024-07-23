@@ -24,12 +24,17 @@ import {
 } from '../data-providers/types';
 import { fetchAll } from '../utils/fetch-all';
 import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
+import {
+  GenerativeContentDataProvider,
+  generativeContentDataProviderNoop,
+} from '../data-providers/contentful/generative-content.data-provider';
 
 export default class ResearchOutputController {
   constructor(
     private researchOutputDataProvider: ResearchOutputDataProvider,
     private researchTagDataProvider: ResearchTagDataProvider,
     private externalAuthorDataProvider: ExternalAuthorDataProvider,
+    private generativeContentDataProvider: GenerativeContentDataProvider = generativeContentDataProviderNoop,
   ) {}
 
   async fetchById(researchOutputId: string): Promise<ResearchOutputResponse> {
@@ -240,6 +245,25 @@ export default class ResearchOutputController {
     );
 
     return this.fetchById(id);
+  }
+
+  async generateContent(
+    data: Partial<Pick<ResearchOutputPostRequest, 'description'>>,
+  ): Promise<Partial<Pick<ResearchOutputResponse, 'shortDescription'>>> {
+    if (!data.description) {
+      return {
+        shortDescription: '',
+      };
+    }
+
+    const shortDescription =
+      await this.generativeContentDataProvider.summariseContent(
+        data.description,
+      );
+
+    return {
+      shortDescription,
+    };
   }
 
   private async validateResearchOutput(

@@ -3,6 +3,7 @@ import {
   FetchOptions,
   FetchPaginationOptions,
   gp2,
+  OutputGenerateContentRequest,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import Ajv, { JSONSchemaType, ValidateFunction } from 'ajv';
@@ -209,3 +210,24 @@ export const validateFetchAnalyticsOptions = validateInput(
     coerce: true,
   },
 );
+
+const outputGenerateContentRequestValidationSchema: JSONSchemaType<OutputGenerateContentRequest> =
+  {
+    type: 'object',
+    properties: {
+      description: {
+        type: 'string',
+        nullable: true,
+      },
+    },
+    required: [],
+    additionalProperties: false,
+  };
+
+export const validateOutputGenerateContentRequestParameters = validateInput<
+  OutputGenerateContentRequest,
+  true
+>(outputGenerateContentRequestValidationSchema, {
+  skipNull: true,
+  coerce: true,
+});

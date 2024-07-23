@@ -1,5 +1,4 @@
 import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
-import { OutputGenerateContentRequest } from '@asap-hub/model/src/gp2';
 import { validateInput } from '@asap-hub/server-common';
 import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
@@ -181,19 +180,6 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
     additionalProperties: false,
   };
 
-const outputGenerateContentRequestValidationSchema: JSONSchemaType<OutputGenerateContentRequest> =
-  {
-    type: 'object',
-    properties: {
-      description: {
-        type: 'string',
-        nullable: true,
-      },
-    },
-    required: [],
-    additionalProperties: false,
-  };
-
 export const validateOutputPostRequestParameters = validateInput(
   outputPostRequestValidationSchema,
   {
@@ -206,14 +192,6 @@ export const validateOutputPutRequestParameters = validateInput<
   gp2Model.OutputPutRequest,
   true
 >(outputPostRequestValidationSchema, {
-  skipNull: true,
-  coerce: true,
-});
-
-export const validateOutputGenerateContentRequestParameters = validateInput<
-  OutputGenerateContentRequest,
-  true
->(outputGenerateContentRequestValidationSchema, {
   skipNull: true,
   coerce: true,
 });

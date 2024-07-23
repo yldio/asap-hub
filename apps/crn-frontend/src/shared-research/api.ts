@@ -7,10 +7,10 @@ import {
 import {
   FetchResearchTagsOptions,
   ListResponse,
-  OutputGenerateContentRequest,
   OutputGenerateContentResponse,
   ResearchOutputDocumentType,
   researchOutputDocumentTypes,
+  ResearchOutputGenerateContentRequest,
   ResearchOutputPublishingEntities,
   ResearchOutputPublishingEntitiesValues,
   ResearchOutputResponse,
@@ -178,7 +178,7 @@ export const getResearchTags = async (
 };
 
 export const getGeneratedOutputContent = async (
-  output: OutputGenerateContentRequest,
+  output: ResearchOutputGenerateContentRequest,
   authorization: string,
 ): Promise<OutputGenerateContentResponse> => {
   const resp = await fetch(
@@ -198,7 +198,7 @@ export const getGeneratedOutputContent = async (
 
   if (!resp.ok) {
     throw new BackendError(
-      `Failed to generate content for output. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to generate content for research output. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );

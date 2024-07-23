@@ -248,9 +248,9 @@ export default class ResearchOutputController {
   }
 
   async generateContent(
-    data: Partial<Pick<ResearchOutputPostRequest, 'description'>>,
+    data: Partial<Pick<ResearchOutputPostRequest, 'descriptionMD'>>,
   ): Promise<Partial<Pick<ResearchOutputResponse, 'shortDescription'>>> {
-    if (!data.description) {
+    if (!data.descriptionMD) {
       return {
         shortDescription: '',
       };
@@ -258,7 +258,7 @@ export default class ResearchOutputController {
 
     const shortDescription =
       await this.generativeContentDataProvider.summariseContent(
-        data.description,
+        data.descriptionMD,
       );
 
     return {
@@ -468,7 +468,6 @@ export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
   updatedBy: string;
   createVersion?: boolean;
 };
-
 const mapResearchTags = (
   researchTags: ResearchTagDataObject[],
   category: ResearchTagCategory,

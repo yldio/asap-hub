@@ -113,12 +113,12 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
         ]);
       }, 1000);
     }),
-    getShortDescriptionFromDescription: () =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve('short description');
-        }, 1000);
-      }),
+  getShortDescriptionFromDescription: () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('short description');
+      }, 1000);
+    }),
   researchTags: [researchTagMethodResponse],
   published: boolean('Published', true),
 };

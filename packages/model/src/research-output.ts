@@ -382,8 +382,8 @@ export type OutputGenerateContentResponse = Partial<
   Pick<ResearchOutputResponse, 'shortDescription'>
 >;
 
-export type OutputGenerateContentRequest = Partial<
-  Pick<ResearchOutputPostRequest, 'description'>
+export type ResearchOutputGenerateContentRequest = Partial<
+  Pick<ResearchOutputPostRequest, 'descriptionMD'>
 >;
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';

@@ -170,8 +170,8 @@ export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
 export const useOutputGeneratedContent = () => {
   const authorization = useRecoilValue(authorizationState);
 
-  return (description: string): Promise<string> =>
-    getGeneratedOutputContent({ description }, authorization).then(
+  return (descriptionMD: string): Promise<string> =>
+    getGeneratedOutputContent({ descriptionMD }, authorization).then(
       (output) => output.shortDescription || '',
     );
 };

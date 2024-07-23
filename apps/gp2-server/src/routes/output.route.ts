@@ -1,15 +1,14 @@
 /* istanbul ignore file */
 import {
   gp2 as gp2Model,
-  OutputGenerateContentRequest,
   OutputGenerateContentResponse,
 } from '@asap-hub/model';
-import { validateOutputGenerateContentRequestParameters } from '@asap-hub/server-common';
 
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
 import OutputController from '../controllers/output.controller';
 import {
+  validateOutputGenerateContentRequestParameters,
   validateOutputParameters,
   validateOutputPostRequestParameters,
   validateOutputPutRequestParameters,
@@ -70,7 +69,7 @@ export const outputRouteFactory = (
   });
 
   outputRoutes.post<
-    OutputGenerateContentRequest,
+    gp2Model.OutputGenerateContentRequest,
     OutputGenerateContentResponse
   >('/outputs/generate-content', async (req, res) => {
     const { body } = req;

@@ -246,6 +246,10 @@ export type OutputPostRequest = {
 
 export type OutputPutRequest = OutputPostRequest;
 
+export type OutputGenerateContentRequest = Partial<
+  Pick<OutputPostRequest, 'description'>
+>;
+
 export type FetchOutputSearchFilter = {
   documentType?: OutputDocumentType[];
 };

@@ -1,4 +1,7 @@
-import { gp2 as gp2Model, OutputGenerateContentResponse } from '@asap-hub/model';
+import {
+  gp2 as gp2Model,
+  OutputGenerateContentResponse,
+} from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 
 export const getOutput = jest.fn(

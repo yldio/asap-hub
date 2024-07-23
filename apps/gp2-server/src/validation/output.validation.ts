@@ -195,3 +195,24 @@ export const validateOutputPutRequestParameters = validateInput<
   skipNull: true,
   coerce: true,
 });
+
+const outputGenerateContentRequestValidationSchema: JSONSchemaType<gp2Model.OutputGenerateContentRequest> =
+  {
+    type: 'object',
+    properties: {
+      description: {
+        type: 'string',
+        nullable: true,
+      },
+    },
+    required: [],
+    additionalProperties: false,
+  };
+
+export const validateOutputGenerateContentRequestParameters = validateInput<
+  gp2Model.OutputGenerateContentRequest,
+  true
+>(outputGenerateContentRequestValidationSchema, {
+  skipNull: true,
+  coerce: true,
+});

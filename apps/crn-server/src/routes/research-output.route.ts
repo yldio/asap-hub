@@ -1,13 +1,12 @@
 import {
   ListResearchOutputResponse,
-  OutputGenerateContentRequest,
+  ResearchOutputGenerateContentRequest,
   OutputGenerateContentResponse,
   ResearchOutputResponse,
   ResearchOutputTeamResponse,
   ResearchOutputWorkingGroupResponse,
   UserResponse,
 } from '@asap-hub/model';
-import { validateOutputGenerateContentRequestParameters } from '@asap-hub/server-common';
 import {
   getUserRole,
   hasEditResearchOutputPermission,
@@ -21,6 +20,7 @@ import {
   validateResearchOutputPostRequestParametersIdentifiers,
   validateResearchOutputPutRequestParameters,
   validateResearchOutputFetchOptions,
+  validateResearchOutputGenerateContentRequestParameters,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -94,12 +94,12 @@ export const researchOutputRouteFactory = (
   );
 
   researchOutputRoutes.post<
-    OutputGenerateContentRequest,
+    ResearchOutputGenerateContentRequest,
     OutputGenerateContentResponse
   >('/research-outputs/generate-content', async (req, res) => {
     const { body } = req;
     const generateRequest =
-      validateOutputGenerateContentRequestParameters(body);
+      validateResearchOutputGenerateContentRequestParameters(body);
 
     const output =
       await researchOutputController.generateContent(generateRequest);

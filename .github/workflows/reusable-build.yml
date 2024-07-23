@@ -40,6 +40,9 @@ on:
       CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
         description: 'CRN Contentful Webhook Authentication Token'
         required: true
+      CRN_OPENAI_API_KEY:
+        description: 'CRN OpenAI API Key'
+        required: true
       GP2_CONTENTFUL_ACCESS_TOKEN:
         description: 'GP2 Contentful Access Token'
         required: true

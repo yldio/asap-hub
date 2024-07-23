@@ -50,6 +50,7 @@ const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   },
   getRelatedResearchSuggestions: jest.fn(),
   getRelatedEventSuggestions: jest.fn(),
+  getShortDescriptionFromDescription: jest.fn(),
 };
 
 jest.setTimeout(60000);
@@ -124,6 +125,7 @@ it('pre populates the form with provided backend response', async () => {
     title: 'test title',
     link: 'https://test.com',
     descriptionMD: 'test description',
+    shortDescription: 'short description',
     type: 'Genetic Data - DNA' as ResearchOutputType,
     keywords: ['testAddedTag'],
     labs: [
@@ -145,6 +147,7 @@ it('pre populates the form with provided backend response', async () => {
   );
 
   expect(screen.getByText(researchOutputData.descriptionMD)).toBeVisible();
+  expect(screen.getByText(researchOutputData.shortDescription)).toBeVisible();
   expect(screen.getByDisplayValue(researchOutputData.title)).toBeVisible();
   expect(screen.getByText(researchOutputData.type!)).toBeVisible();
   expect(screen.getByText(researchOutputData.sharingStatus)).toBeVisible();
@@ -274,6 +277,7 @@ describe('on submit', () => {
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
+  const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
     history = createMemoryHistory();
@@ -282,6 +286,7 @@ describe('on submit', () => {
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
+    getShortDescriptionFromDescription.mockReturnValue('short description');
   });
 
   afterEach(() => {
@@ -295,6 +300,7 @@ describe('on submit', () => {
     title: 'example title',
     description: '',
     descriptionMD: 'example description',
+    shortDescription: 'short description',
     type: 'Preprint',
     labs: [],
     authors: [],
@@ -312,13 +318,14 @@ describe('on submit', () => {
   };
   type Data = Pick<
     ResearchOutputPostRequest,
-    'link' | 'title' | 'descriptionMD' | 'type'
+    'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
   >;
 
   const setupForm = async (
     {
       data = {
         descriptionMD: 'example description',
+        shortDescription: 'short description',
         title: 'example title',
         type: 'Preprint',
         link: 'http://example.com',
@@ -336,6 +343,7 @@ describe('on submit', () => {
     } = {
       data: {
         descriptionMD: 'example description',
+        shortDescription: 'short description',
         title: 'example title',
         type: 'Preprint',
         link: 'http://example.com',
@@ -359,6 +367,9 @@ describe('on submit', () => {
           getLabSuggestions={getLabSuggestions}
           getAuthorSuggestions={getAuthorSuggestions}
           getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
           researchTags={researchTags}
           {...propOverride}
         />
@@ -372,9 +383,16 @@ describe('on submit', () => {
       target: { value: data.title },
     });
 
-    fireEvent.change(screen.getByRole('textbox', { name: /description/i }), {
+    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
       target: { value: data.descriptionMD },
     });
+
+    fireEvent.change(
+      screen.getByRole('textbox', { name: /short description/i }),
+      {
+        target: { value: data.shortDescription },
+      },
+    );
 
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the type/i,
@@ -669,7 +687,7 @@ describe('on submit', () => {
     userEvent.click(organisms);
     userEvent.click(screen.getByText('Rat'));
 
-    expect(screen.getByText(/rat/i)).toBeInTheDocument();
+    expect(screen.getByText('Rat')).toBeInTheDocument();
     fireEvent.change(typeDropdown, {
       target: { value: 'Microscopy' },
     });
@@ -678,7 +696,7 @@ describe('on submit', () => {
     });
 
     await waitFor(() =>
-      expect(screen.queryByText(/rat/i)).not.toBeInTheDocument(),
+      expect(screen.queryByText('Rat')).not.toBeInTheDocument(),
     );
     expect(organisms).toBeInTheDocument();
   });

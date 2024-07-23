@@ -159,6 +159,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     ...researchOutputResponse,
     description: '<p>Text</p>',
     descriptionMD: 'Text MD',
+    shortDescription: 'MD text',
     link: 'http://a.link',
     type: 'Software',
     labs: labs.map(({ id }) => id),

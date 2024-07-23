@@ -162,6 +162,7 @@ describe('working group research output', () => {
     publishDate: undefined,
     description: '',
     descriptionMD: '',
+    shortDescription: '',
     type: 'Preprint',
     labs: ['lab1'],
     methods: [],

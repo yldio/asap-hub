@@ -88,6 +88,7 @@ describe('getResearchOutputPayload', () => {
       link: 'https://www.google.com',
       description: 'description',
       descriptionMD: 'description MD',
+      shortDescription: 'shortDescription',
       title: 'title',
       type: 'Preprint',
       authors: [{ value: 'a111', label: 'a111' }],
@@ -231,6 +232,7 @@ describe('transformResearchOutputResponseToRequest', () => {
         })),
       ),
       descriptionMD: researchOutputResponse.descriptionMD || '',
+      shortDescription: researchOutputResponse.shortDescription || '',
       labs: researchOutputResponse.labs.map(({ id }) => id),
       teams: researchOutputResponse.teams.map((team) => team.id),
       workingGroups: researchOutputResponse.workingGroups

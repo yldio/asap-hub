@@ -16,6 +16,7 @@ const researchOutputResponse: Omit<
   title: 'Output',
   description: 'description',
   descriptionMD: 'descriptionMD',
+  shortDescription: 'shortDescription',
   documentType: 'Grant Document',
   type: '3D Printing',
   authors: [

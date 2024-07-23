@@ -47,6 +47,7 @@ type ResearchOutputFormProps = Pick<
   | 'clearServerValidationError'
   | 'typeOptions'
   | 'urlRequired'
+  | 'getShortDescriptionFromDescription'
 > &
   Pick<
     ComponentProps<typeof ResearchOutputContributorsCard>,
@@ -165,6 +166,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getAuthorSuggestions = noop,
   getRelatedResearchSuggestions = noop,
   getRelatedEventSuggestions,
+  getShortDescriptionFromDescription,
   researchTags,
   serverValidationErrors,
   clearServerValidationError,
@@ -242,6 +244,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.descriptionMD ||
       richTextToMarkdown(researchOutputData?.description),
   );
+  const [shortDescription, setShortDescription] = useState<
+    ResearchOutputPostRequest['shortDescription']
+  >(researchOutputData?.shortDescription || '');
   const [
     dismissedDescriptionChangePrompt,
     setDismissedDescriptionChangePrompt,
@@ -356,6 +361,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     link,
     description: researchOutputData?.description || '',
     descriptionMD,
+    shortDescription,
     title,
     type,
     authors,
@@ -496,6 +502,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   isSaving={isSaving}
                   descriptionMD={descriptionMD}
                   onChangeDescription={setDescription}
+                  shortDescription={shortDescription}
+                  onChangeShortDescription={setShortDescription}
+                  getShortDescriptionFromDescription={
+                    getShortDescriptionFromDescription
+                  }
                   title={title}
                   onChangeTitle={setTitle}
                   link={link}

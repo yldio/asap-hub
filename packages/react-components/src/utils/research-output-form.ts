@@ -126,6 +126,7 @@ export type ResearchOutputPayload = {
   link: ResearchOutputPostRequest['link'];
   description: ResearchOutputPostRequest['description'];
   descriptionMD: ResearchOutputPostRequest['descriptionMD'];
+  shortDescription: ResearchOutputPostRequest['shortDescription'];
   title: ResearchOutputPostRequest['title'];
   type: ResearchOutputPostRequest['type'] | '';
   authors: NonNullable<
@@ -164,6 +165,7 @@ export const getPayload = ({
   link,
   description,
   descriptionMD,
+  shortDescription,
   title,
   type,
   authors,
@@ -189,6 +191,7 @@ export const getPayload = ({
   link: String(link).trim() === '' ? undefined : link,
   description,
   descriptionMD,
+  shortDescription,
   title,
   type: type as ResearchOutputPostRequest['type'],
   authors: getPostAuthors(authors),
@@ -220,6 +223,7 @@ export function transformResearchOutputResponseToRequest({
   link,
   description,
   descriptionMD,
+  shortDescription,
   title,
   type,
   usageNotes,
@@ -265,6 +269,7 @@ export function transformResearchOutputResponseToRequest({
       })),
     ),
     descriptionMD: descriptionMD || '',
+    shortDescription: shortDescription || '',
     labs: labs.map(({ id }) => id),
     teams: teams.map((team) => team.id),
     workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],

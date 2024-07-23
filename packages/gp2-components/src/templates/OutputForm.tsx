@@ -18,6 +18,7 @@ import {
   ResearchOutputRelatedEventsCard,
   ajvErrors,
   OutputVersions,
+  OutputShortDescriptionCard,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
@@ -35,7 +36,6 @@ import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField, getIconForDocumentType } from '../utils';
 import { ConfirmAndSaveOutput } from '../organisms/ConfirmAndSaveOutput';
 import { GetWrappedOnSave } from '../organisms/Form';
-import OutputShortDescriptionCard from '../organisms/OutputShortDescriptionCard';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;

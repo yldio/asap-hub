@@ -4,7 +4,11 @@ import {
   createSentryHeaders,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
-import { gp2 } from '@asap-hub/model';
+import {
+  gp2,
+  OutputGenerateContentRequest,
+  OutputGenerateContentResponse,
+} from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const getOutput = async (
@@ -149,9 +153,9 @@ export const updateOutput = async (
 };
 
 export const getGeneratedOutputContent = async (
-  output: gp2.OutputGenerateContentRequest,
+  output: OutputGenerateContentRequest,
   authorization: string,
-): Promise<gp2.OutputGenerateContentResponse> => {
+): Promise<OutputGenerateContentResponse> => {
   const resp = await fetch(`${API_BASE_URL}/outputs/generate-content`, {
     method: 'POST',
     headers: {

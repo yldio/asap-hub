@@ -194,6 +194,7 @@ export type ResearchOutputCoreObject = {
   addedDate?: string;
   asapFunded?: boolean;
   description?: string;
+  shortDescription?: string;
   descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
@@ -351,6 +352,7 @@ export type ResearchOutputPostRequest = {
   authors?: AuthorPostRequest[];
   description?: string;
   descriptionMD: string;
+  shortDescription: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];
@@ -375,6 +377,14 @@ export type ResearchOutputPostRequest = {
   published: boolean;
   relatedEvents: string[];
 };
+
+export type OutputGenerateContentResponse = Partial<
+  Pick<ResearchOutputResponse, 'shortDescription'>
+>;
+
+export type OutputGenerateContentRequest = Partial<
+  Pick<ResearchOutputPostRequest, 'description'>
+>;
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 

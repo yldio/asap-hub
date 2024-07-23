@@ -17,6 +17,7 @@ import assert from 'assert';
   'CONTENTFUL_SPACE_ID',
   'CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
   'HOSTNAME',
+  'OPENAI_API_KEY',
   'SES_REGION',
   'SLACK_WEBHOOK',
   'SLS_STAGE',
@@ -71,6 +72,7 @@ const awsAcmCertificateArn = process.env.AWS_ACM_CERTIFICATE_ARN!;
 const slackWebhook = process.env.SLACK_WEBHOOK!;
 const logLevel = process.env.LOG_LEVEL!;
 const s3SyncEnabled = process.env.S3_SYNC_ENABLED !== 'false';
+const openaiApiKey = process.env.OPENAI_API_KEY!;
 
 const algoliaIndex = process.env.ALGOLIA_INDEX
   ? process.env.ALGOLIA_INDEX
@@ -302,6 +304,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnApi,
         AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
+        OPENAI_API_KEY: openaiApiKey,
       },
     },
     auth0FetchByCode: {

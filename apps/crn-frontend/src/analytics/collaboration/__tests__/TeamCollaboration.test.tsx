@@ -42,7 +42,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
     {
       id: '1',
       name: 'Team One',
-      isInactive: false,
+      inactiveSince: undefined,
       outputsCoProducedWithin: {
         Article: 4,
         Bioinformatics: 5,
@@ -65,7 +65,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
     {
       id: '2',
       name: 'Team Two',
-      isInactive: false,
+      inactiveSince: undefined,
       outputsCoProducedWithin: {
         Article: 0,
         Bioinformatics: 0,

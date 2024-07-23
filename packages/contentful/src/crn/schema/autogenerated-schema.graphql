@@ -2731,6 +2731,7 @@ enum ManuscriptVersionsOrder {
 type Manuscripts implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
@@ -2749,6 +2750,10 @@ input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  eligibilityReasons_contains_all: [String]
+  eligibilityReasons_contains_none: [String]
+  eligibilityReasons_contains_some: [String]
+  eligibilityReasons_exists: Boolean
   sys: SysFilter
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean

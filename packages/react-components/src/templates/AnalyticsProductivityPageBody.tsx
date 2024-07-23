@@ -1,6 +1,6 @@
-import { ComponentProps } from 'react';
-import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { rem } from '../pixels';
@@ -73,15 +73,15 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
     </div>
     <AnalyticsControls
       currentPage={currentPage}
-      timeRange={timeRange}
       documentCategory={documentCategory}
-      outputType={outputType}
-      metricOption={metric}
-      tags={tags}
-      loadTags={loadTags}
-      setTags={setTags}
-      href={analytics({}).productivity({}).metric({ metric }).$}
       exportResults={exportResults}
+      href={analytics({}).productivity({}).metric({ metric }).$}
+      loadTags={loadTags}
+      metricOption={metric}
+      outputType={outputType}
+      setTags={setTags}
+      tags={tags}
+      timeRange={timeRange}
     />
     {children}
   </article>

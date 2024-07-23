@@ -2,6 +2,8 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   performanceByDocumentType,
   userProductivityPerformance,
+  userCollaborationPerformance,
+  teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
 import { analytics } from '@asap-hub/routing';
 import {
@@ -17,7 +19,9 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
   getTeamCollaboration,
+  getTeamCollaborationPerformance,
   getUserCollaboration,
+  getUserCollaborationPerformance,
 } from '../collaboration/api';
 import { getEngagement } from '../engagement/api';
 import { getAnalyticsLeadership } from '../leadership/api';
@@ -62,13 +66,31 @@ const mockGetUserProductivityPerformance =
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
+
+const mockGetUserCollaborationPerformance =
+  getUserCollaborationPerformance as jest.MockedFunction<
+    typeof getUserCollaborationPerformance
+  >;
+
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
 
+const mockGetTeamCollaborationPerformance =
+  getTeamCollaborationPerformance as jest.MockedFunction<
+    typeof getTeamCollaborationPerformance
+  >;
+
 const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
 >;
+
+mockGetUserCollaborationPerformance.mockResolvedValue(
+  userCollaborationPerformance,
+);
+mockGetTeamCollaborationPerformance.mockResolvedValue(
+  teamCollaborationPerformance,
+);
 
 mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(

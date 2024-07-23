@@ -166,7 +166,8 @@ export const getUserCollaborationItems = (
         id: team.team ? team.team.sys.id : '',
         team: team.team?.displayName ?? '',
         role: (team.role as TeamRole) ?? undefined,
-        isTeamInactive: !!team.inactiveSinceDate,
+        teamInactiveSince: team.team?.inactiveSince ?? undefined,
+        teamMembershipInactiveSince: team.inactiveSinceDate ?? undefined,
         outputsCoAuthoredAcrossTeams: acrossTeamCount,
         outputsCoAuthoredWithinTeam: withinTeamCount,
       };
@@ -180,7 +181,7 @@ export const getUserCollaborationItems = (
         undefined,
         user.nickname ?? '',
       ),
-      isAlumni: !!user.alumniSinceDate,
+      alumniSince: user.alumniSinceDate ?? undefined,
       teams,
     };
   });
@@ -302,7 +303,7 @@ export const getTeamCollaborationItems = (
     return {
       id: team.sys.id,
       name: team.displayName ?? '',
-      isInactive: !!team.inactiveSince,
+      inactiveSince: team.inactiveSince ?? undefined,
       outputsCoProducedAcross,
       outputsCoProducedWithin,
     };

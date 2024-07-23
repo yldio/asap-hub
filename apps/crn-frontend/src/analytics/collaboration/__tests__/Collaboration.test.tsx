@@ -1,34 +1,44 @@
+import {
+  AlgoliaSearchClient,
+  AnalyticsSearchOptionsWithFiltering,
+} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   teamCollaborationPerformance,
   userCollaborationPerformance,
 } from '@asap-hub/fixtures';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
+import { when } from 'jest-when';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import {
-  AlgoliaSearchClient,
-  AnalyticsSearchOptionsWithFiltering,
-} from '@asap-hub/algolia';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import {
-  getUserCollaboration,
   getTeamCollaboration,
   getTeamCollaborationPerformance,
+  getUserCollaboration,
   getUserCollaborationPerformance,
 } from '../api';
 import Collaboration from '../Collaboration';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../api');
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
@@ -38,6 +48,10 @@ mockConsoleError();
 afterEach(() => {
   jest.clearAllMocks();
 });
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
@@ -74,14 +88,14 @@ const userData: ListUserCollaborationAlgoliaResponse = {
   items: [
     {
       id: '1',
-      isAlumni: false,
+      alumniSince: undefined,
       name: 'User',
       teams: [
         {
           id: '1',
           team: 'Team A',
           role: 'Key Personnel',
-          isTeamInactive: false,
+          teamInactiveSince: undefined,
           outputsCoAuthoredWithinTeam: 300,
           outputsCoAuthoredAcrossTeams: 400,
         },
@@ -90,14 +104,14 @@ const userData: ListUserCollaborationAlgoliaResponse = {
     },
     {
       id: '2',
-      isAlumni: false,
+      alumniSince: undefined,
       name: 'User',
       teams: [
         {
           id: '1',
           team: 'Team A',
           role: 'Key Personnel',
-          isTeamInactive: true,
+          teamInactiveSince: undefined,
           outputsCoAuthoredWithinTeam: 2,
           outputsCoAuthoredAcrossTeams: 3,
         },
@@ -112,7 +126,7 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
   items: [
     {
       id: '1',
-      isInactive: false,
+      inactiveSince: undefined,
       name: 'Team 1',
       outputsCoProducedWithin: {
         Article: 100,
@@ -147,10 +161,13 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
   ],
 };
 
-const renderPage = async (metric: string = 'user') => {
+const renderPage = async (
+  metric: string = 'user',
+  type: string = 'within-team',
+) => {
   const path = analytics({})
     .collaboration({})
-    .collaborationPath({ metric, type: 'within-team' }).$;
+    .collaborationPath({ metric, type }).$;
   const result = render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -378,4 +395,30 @@ describe('search', () => {
       ),
     );
   });
+});
+
+describe('csv export', () => {
+  it('exports analytics for user', async () => {
+    await renderPage('user');
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/collaboration_user_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+
+  it.each(['within-team', 'across-teams'])(
+    'exports analytics for teams (%s)',
+    async (type) => {
+      await renderPage('team', type);
+      const input = screen.getAllByRole('textbox', { hidden: false })[0];
+
+      input && userEvent.click(input);
+      userEvent.click(screen.getByText(/csv/i));
+      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+        expect.stringMatching(/collaboration_team_\d+\.csv/),
+        expect.anything(),
+      );
+    },
+  );
 });

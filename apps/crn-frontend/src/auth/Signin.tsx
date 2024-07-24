@@ -1,14 +1,14 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
 
   const { pathname, search, hash } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const history = useNavigate();
+  const [params, setSearchParams] = useSearchParams();
 
   const getAuthFailureCode = (
     error: boolean,
@@ -36,13 +36,11 @@ const Signin: React.FC<Record<string, never>> = () => {
             searchParams.get('error_description'),
           )}
           onCloseAuthFailedToast={() => {
-            const newSearchParams = new URLSearchParams(
-              history.location.search,
-            );
+            const newSearchParams = new URLSearchParams(params);
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            history.replace({ search: newSearchParams.toString() });
+            setSearchParams(newSearchParams);
           }}
         />
       </UtilityBar>

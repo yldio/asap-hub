@@ -8,13 +8,8 @@ import {
   useNotificationContext,
 } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Routes, useMatch } from 'react-router-dom';
-import {
-  RecoilRoot,
-  useRecoilSnapshot,
-  useRecoilState,
-  useResetRecoilState,
-} from 'recoil';
+import { Route, Routes, useResolvedPath } from 'react-router-dom';
+import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';
 import NotificationMessages from './NotificationMessages';
@@ -33,7 +28,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     Auth0<gp2Auth.User> | undefined
   >(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
-  // const { path } = useMatch();
+  const path = useResolvedPath('').pathname;
 
   useEffect(() => {
     setAuth0(auth0);

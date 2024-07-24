@@ -1,7 +1,7 @@
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Route, Routes, useMatch } from 'react-router-dom';
+import { Route, Routes, useResolvedPath } from 'react-router-dom';
 import Frame from '../Frame';
 import Onboarding from './Onboarding';
 
@@ -29,7 +29,7 @@ const Preview = lazy(loadPreview);
 
 const { onboarding } = gp2;
 
-const Routes: React.FC<Record<string, never>> = () => {
+const OnboardingRoutes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWelcome()
@@ -39,11 +39,11 @@ const Routes: React.FC<Record<string, never>> = () => {
       .then(loadAdditionalDetails)
       .then(loadPreview);
   }, []);
-  const { path } = useMatch();
+  const path = useResolvedPath('').pathname;
 
   return (
     <Routes>
-      <Route exact path={path}>
+      <Route path={path}>
         <Welcome />
       </Route>
       <Frame title={null}>
@@ -67,8 +67,10 @@ const Routes: React.FC<Record<string, never>> = () => {
           </Frame>
         </Onboarding>
       </Frame>
-      <Route component={NotFoundPage} />
+      <Route>
+        <NotFoundPage />
+      </Route>
     </Routes>
   );
 };
-export default Routes;
+export default OnboardingRoutes;

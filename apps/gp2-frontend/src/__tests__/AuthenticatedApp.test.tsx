@@ -29,7 +29,7 @@ const renderAuthenticatedApp = (onboarded: boolean) =>
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{ onboarded }}>
-          <StaticRouter>
+          <StaticRouter location="/url">
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>

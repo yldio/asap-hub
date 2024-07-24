@@ -34,7 +34,7 @@ const renderAuthenticatedApp = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{ id }}>
           <WhenReady>
-            <StaticRouter>
+            <StaticRouter location="/url">
               <OnboardedApp />
             </StaticRouter>
           </WhenReady>

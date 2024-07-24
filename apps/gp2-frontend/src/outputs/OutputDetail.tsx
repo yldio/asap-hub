@@ -8,7 +8,7 @@ import {
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 

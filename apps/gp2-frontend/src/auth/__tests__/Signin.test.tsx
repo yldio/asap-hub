@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { JWK, JWT } from 'jose';
 import { useEffect } from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter, Router } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 
 import nock from 'nock';
@@ -74,7 +74,7 @@ afterEach(() => {
 });
 
 it('renders a button to signin', async () => {
-  const { getByRole } = render(<Signin />, { wrapper: StaticRouter });
+  const { getByRole } = render(<Signin />, { wrapper: MemoryRouter });
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);
 });
 
@@ -130,7 +130,7 @@ describe('after a failed flow', () => {
       ],
     });
     result = render(
-      <Router navigator={history}>
+      <Router navigator={history} location="/url">
         <Signin />
       </Router>,
     );

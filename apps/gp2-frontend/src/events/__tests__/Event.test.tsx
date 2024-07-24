@@ -8,7 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { gp2 } from '@asap-hub/fixtures';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 
 import Event from '../Event';
 import { getEvent } from '../api';
@@ -27,8 +27,10 @@ const renderEvent = async () => {
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <StaticRouter location={events({}).event({ eventId: id }).$}>
-              <Route path={events.template + events({}).event.template}>
+            <StaticRouter
+              location={eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id })}
+            >
+              <Route path={eventRoutes.DEFAULT.DETAILS.path}>
                 <Event />
               </Route>
             </StaticRouter>

@@ -40,16 +40,13 @@ const renderOutputDetail = async () => {
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                gp2Routing.outputs({}).output({ outputId: 'output-id' }).$,
+                gp2Routing.outputs.DEFAULT.DETAILS.buildPath({
+                  outputId: 'output-id',
+                }),
               ]}
               initialIndex={1}
             >
-              <Route
-                path={
-                  gp2Routing.outputs.template +
-                  gp2Routing.outputs({}).output.template
-                }
-              >
+              <Route path={gp2Routing.outputs.DEFAULT.DETAILS.path}>
                 <OutputDetail />
               </Route>
             </MemoryRouter>

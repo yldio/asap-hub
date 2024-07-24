@@ -1,6 +1,6 @@
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Frame from '../Frame';
 
 const Signin: React.FC<Record<string, never>> = () => {
@@ -8,7 +8,7 @@ const Signin: React.FC<Record<string, never>> = () => {
 
   const { pathname, search, hash } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const history = useNavigate();
+  const [params, setSearchParams] = useSearchParams();
 
   const values = {
     signup: {
@@ -42,13 +42,11 @@ const Signin: React.FC<Record<string, never>> = () => {
               : undefined
           }
           onCloseAuthFailedToast={() => {
-            const newSearchParams = new URLSearchParams(
-              history.location.search,
-            );
+            const newSearchParams = new URLSearchParams(params);
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            history.replace({ search: newSearchParams.toString() });
+            setSearchParams(newSearchParams);
           }}
           values={values}
         />

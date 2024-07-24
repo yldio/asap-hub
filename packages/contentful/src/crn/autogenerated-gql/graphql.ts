@@ -5553,6 +5553,7 @@ export type ResearchOutputs = Entry &
     relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
     rrid?: Maybe<Scalars['String']>;
     sharingStatus?: Maybe<Scalars['String']>;
+    shortDescription?: Maybe<Scalars['String']>;
     statusChangedAt?: Maybe<Scalars['DateTime']>;
     statusChangedBy?: Maybe<Users>;
     subtype?: Maybe<ResearchTags>;
@@ -5744,6 +5745,11 @@ export type ResearchOutputsRridArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsSharingStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -6053,6 +6059,13 @@ export type ResearchOutputsFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   statusChangedAt?: InputMaybe<Scalars['DateTime']>;
   statusChangedAt_exists?: InputMaybe<Scalars['Boolean']>;
   statusChangedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10777,6 +10790,13 @@ export type CfResearchOutputsNestedFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   statusChangedAt?: InputMaybe<Scalars['DateTime']>;
   statusChangedAt_exists?: InputMaybe<Scalars['Boolean']>;
   statusChangedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -16459,6 +16479,7 @@ export type ResearchOutputsContentFragment = Pick<
   ResearchOutputs,
   | 'title'
   | 'descriptionMd'
+  | 'shortDescription'
   | 'link'
   | 'addedDate'
   | 'createdDate'
@@ -16676,6 +16697,7 @@ export type FetchResearchOutputByIdQuery = {
       ResearchOutputs,
       | 'title'
       | 'descriptionMd'
+      | 'shortDescription'
       | 'link'
       | 'addedDate'
       | 'createdDate'
@@ -16917,6 +16939,7 @@ export type FetchResearchOutputsQuery = {
             ResearchOutputs,
             | 'title'
             | 'descriptionMd'
+            | 'shortDescription'
             | 'link'
             | 'addedDate'
             | 'createdDate'
@@ -21458,6 +21481,7 @@ export const ResearchOutputsContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'descriptionMd' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
           { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },

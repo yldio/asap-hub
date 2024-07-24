@@ -3621,6 +3621,7 @@ type ResearchOutputs implements Entry & _Node {
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
+  shortDescription(locale: String): String
   statusChangedAt(locale: String): DateTime
   statusChangedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   subtype(locale: String, preview: Boolean, where: ResearchTagsFilter): ResearchTags
@@ -3862,6 +3863,13 @@ input ResearchOutputsFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
   statusChangedAt: DateTime
   statusChangedAt_exists: Boolean
   statusChangedAt_gt: DateTime
@@ -7518,6 +7526,13 @@ input cfResearchOutputsNestedFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
   statusChangedAt: DateTime
   statusChangedAt_exists: Boolean
   statusChangedAt_gt: DateTime

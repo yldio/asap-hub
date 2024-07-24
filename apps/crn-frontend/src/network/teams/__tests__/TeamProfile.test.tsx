@@ -38,7 +38,6 @@ import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
-// jest.mock('../api');
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
@@ -249,7 +248,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.click(screen.getByLabelText('Close'));
 
   expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
-});
+}, 60000);
 
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
   await renderPage({

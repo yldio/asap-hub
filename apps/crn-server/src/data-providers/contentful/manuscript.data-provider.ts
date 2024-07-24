@@ -74,6 +74,8 @@ export class ManuscriptContentfulDataProvider
       {
         fields: addLocaleToFields({
           ...version,
+          teams: getLinkEntities(version.teams),
+          labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           createdBy: getLinkEntity(userId),
         }),
@@ -173,6 +175,15 @@ export const parseGraphqlManuscriptVersion = (
         })),
       },
       publishedAt: version?.sys.publishedAt,
+      teams: version?.teamsCollection?.items.map((teamItem) => ({
+        id: teamItem?.sys.id,
+        displayName: teamItem?.displayName,
+        inactiveSince: teamItem?.inactiveSince || undefined,
+      })),
+      labs: version?.labsCollection?.items.map((labItem) => ({
+        id: labItem?.sys.id,
+        name: labItem?.name,
+      })),
     }))
     .filter(
       (version) =>

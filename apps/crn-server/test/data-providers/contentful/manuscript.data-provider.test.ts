@@ -37,6 +37,10 @@ describe('Manuscripts Contentful Data Provider', () => {
       Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsVersionsCollection: () =>
         getContentfulGraphqlManuscriptVersions(),
+      ManuscriptVersionsTeamsCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]?.teamsCollection,
+      ManuscriptVersionsLabsCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]?.labsCollection,
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -241,6 +245,19 @@ describe('Manuscripts Contentful Data Provider', () => {
                   id: 'file-id',
                 },
               },
+            },
+            labs: { 'en-US': [] },
+            teams: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'team-1',
+
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
             },
             createdBy: {
               'en-US': {

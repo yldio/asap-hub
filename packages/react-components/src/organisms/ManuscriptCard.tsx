@@ -17,6 +17,7 @@ import {
   Divider,
   Link,
   lead,
+  AssociationList,
 } from '..';
 import { downloadIcon, linkIcon } from '../icons';
 import { paddingStyles } from '../card';
@@ -169,6 +170,29 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                 >
                   <Pill accent="gray">{version.type}</Pill>
                   <Pill accent="gray">{version.lifecycle}</Pill>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: rem(12),
+                    marginTop: rem(32),
+                    marginBottom: rem(16),
+                  }}
+                >
+                  <AssociationList
+                    type="Team"
+                    inline
+                    associations={version.teams}
+                  />
+                  <AssociationList
+                    type="Lab"
+                    inline
+                    associations={version.labs.map(({ name, id }) => ({
+                      displayName: name,
+                      id,
+                    }))}
+                  />
                 </div>
                 <div>
                   <span css={fileDividerStyles}>

@@ -268,6 +268,8 @@ describe('Manuscript', () => {
             filename: 'test-file',
             url: 'https://example.com/test-file',
           },
+          teams: ['42'],
+          labs: [],
         },
       ],
     };

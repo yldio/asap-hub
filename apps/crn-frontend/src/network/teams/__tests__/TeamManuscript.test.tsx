@@ -38,6 +38,11 @@ jest.mock('../api', () => ({
     url: 'https://example.com/manuscript.pdf',
     id: 'file-id',
   }),
+  getTeam: jest.fn().mockResolvedValue({ id: teamId, displayName: 'Team A' }),
+  getLabs: jest.fn().mockResolvedValue([{ id: 'lab-1', name: 'Lab 1' }]),
+  getTeams: jest
+    .fn()
+    .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
 }));
 
 beforeEach(() => {
@@ -168,6 +173,9 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             codeDepositedDetails: '',
             protocolsDepositedDetails: '',
             labMaterialsRegisteredDetails: '',
+
+            teams: ['42'],
+            labs: [],
           },
         ],
       },

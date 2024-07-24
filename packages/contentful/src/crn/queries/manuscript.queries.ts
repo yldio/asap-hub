@@ -41,6 +41,23 @@ export const manuscriptContentQueryFragment = gql`
         protocolsDepositedDetails
         labMaterialsRegistered
         labMaterialsRegisteredDetails
+        teamsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            displayName
+            inactiveSince
+          }
+        }
+        labsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         createdBy {
           sys {
             id

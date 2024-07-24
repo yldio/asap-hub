@@ -90,6 +90,9 @@ export type ManuscriptVersion = {
   protocolsDepositedDetails?: string;
   labMaterialsRegisteredDetails?: string;
 
+  teams: { displayName: string; id: string; inactiveSince?: string }[];
+  labs: { name: string; id: string }[];
+
   createdBy: Pick<
     UserResponse,
     | 'id'
@@ -282,6 +285,49 @@ export type ManuscriptPostRequest = Pick<
     codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
     protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
     labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
+
+    teams: string[];
+    labs?: string[];
+  }[];
+};
+
+type MultiselectOption = {
+  label: string;
+  value: string;
+  isFixed?: boolean;
+};
+
+export type ManuscriptFormData = Pick<
+  ManuscriptPostRequest,
+  'title' | 'teamId' | 'eligibilityReasons'
+> & {
+  versions: {
+    type: ManuscriptVersion['type'] | '';
+    lifecycle: ManuscriptVersion['lifecycle'] | '';
+    preprintDoi?: ManuscriptVersion['preprintDoi'];
+    publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
+    requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    manuscriptFile: ManuscriptVersion['manuscriptFile'];
+
+    acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
+    asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
+    manuscriptLicense?: ManuscriptVersion['manuscriptLicense'];
+    datasetsDeposited?: ManuscriptVersion['datasetsDeposited'];
+    codeDeposited?: ManuscriptVersion['codeDeposited'];
+    protocolsDeposited?: ManuscriptVersion['protocolsDeposited'];
+    labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
+
+    acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
+    asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
+    manuscriptLicenseDetails?: ManuscriptVersion['manuscriptLicenseDetails'];
+    datasetsDepositedDetails?: ManuscriptVersion['datasetsDepositedDetails'];
+    codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
+    protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
+    labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
+
+    teams: MultiselectOption[];
+    labs: MultiselectOption[];
   }[];
 };
 
@@ -341,6 +387,9 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
             codeDepositedDetails: { type: 'string', nullable: true },
             protocolsDepositedDetails: { type: 'string', nullable: true },
             labMaterialsRegisteredDetails: { type: 'string', nullable: true },
+
+            teams: { type: 'array', minItems: 1, items: { type: 'string' } },
+            labs: { type: 'array', nullable: true, items: { type: 'string' } },
           },
           required: ['type', 'lifecycle'],
           additionalProperties: false,

@@ -13,21 +13,19 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
-import { authorizationState } from './auth/state';
-import { useAlgolia } from './hooks/algolia';
+import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 import {
   createResearchOutput,
-  getLabs,
-  getTeams,
   updateTeamResearchOutput,
-} from './network/teams/api';
-import { getUsersAndExternalAuthors } from './network/users/api';
-import { getResearchTags, getResearchOutputs } from './shared-research/api';
+} from '../network/teams/api';
+import { getUsersAndExternalAuthors } from '../network/users/api';
+import { getResearchTags, getResearchOutputs } from '../shared-research/api';
 import {
   useInvalidateResearchOutputIndex,
   useSetResearchOutputItem,
-} from './shared-research/state';
-import { getEvents } from './events/api';
+} from '../shared-research/state';
+import { getEvents } from '../events/api';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
   data: OutputDocumentTypeParameter,
@@ -69,17 +67,6 @@ export const handleError =
     throw error;
   };
 
-export const useLabSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getLabs(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, name }) => ({ label: `${name} Lab`, value: id })),
-    );
-};
-
 export const useRelatedResearchSuggestions = (currentId?: string) => {
   const algoliaClient = useAlgolia();
   return (searchQuery: string) =>
@@ -116,20 +103,6 @@ export const useRelatedEventsSuggestions = () => {
         label: title,
         value: id,
         endDate,
-      })),
-    );
-};
-
-export const useTeamSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getTeams(
-      { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, displayName }) => ({
-        label: displayName,
-        value: id,
       })),
     );
 };

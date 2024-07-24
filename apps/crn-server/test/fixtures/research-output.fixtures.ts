@@ -278,6 +278,7 @@ export const getContentfulResearchOutputGraphqlResponse =
       },
     },
     descriptionMd: 'Text MD',
+    shortDescription: 'short description',
     usageNotes: 'Usage Notes',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',

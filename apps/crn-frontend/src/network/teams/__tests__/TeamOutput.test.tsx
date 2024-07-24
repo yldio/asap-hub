@@ -23,6 +23,7 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { getGeneratedOutputContent } from '../../../shared-research/api';
 import {
   createResearchOutput,
   getTeam,
@@ -132,6 +133,11 @@ const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 const mockUpdateResearchOutput =
   updateTeamResearchOutput as jest.MockedFunction<
     typeof updateTeamResearchOutput
+  >;
+
+const mockGetGeneratedOutputContent =
+  getGeneratedOutputContent as jest.MockedFunction<
+    typeof getGeneratedOutputContent
   >;
 
 interface RenderPageOptions {
@@ -464,6 +470,29 @@ it('can edit and publish a draft research output', async () => {
     }),
     expect.anything(),
   );
+});
+
+it('generates the short description based on the current description', async () => {
+  mockGetGeneratedOutputContent.mockResolvedValueOnce({
+    shortDescription: 'test generated short description 1',
+  });
+
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: {
+      ...baseResearchOutput,
+      descriptionMD: 'output description',
+    },
+  });
+
+  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toHaveValue('test generated short description 1');
+  });
 });
 
 it('will show server side validation error for link', async () => {

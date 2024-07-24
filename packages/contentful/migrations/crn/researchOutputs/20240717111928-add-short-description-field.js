@@ -26,7 +26,7 @@ module.exports.up = (migration) => {
     'singleLine',
     {},
   );
-  researchOutputs.moveField('shortDescription').afterField('description');
+  researchOutputs.moveField('shortDescription').afterField('descriptionMD');
 };
 
 module.exports.down = (migration) => {

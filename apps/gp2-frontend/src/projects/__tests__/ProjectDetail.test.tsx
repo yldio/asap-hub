@@ -51,15 +51,13 @@ const renderProjectDetail = async ({
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                route || gp2Routing.projects({}).project({ projectId: id }).$,
+                route ||
+                  gp2Routing.projects.DEFAULT.DETAILS.buildPath({
+                    projectId: id,
+                  }),
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.projects.template +
-                  gp2Routing.projects({}).project.template
-                }
-              >
+              <Route path={gp2Routing.projects.DEFAULT.DETAILS.path}>
                 <ProjectDetail currentTime={new Date()} />
               </Route>
             </MemoryRouter>
@@ -160,10 +158,9 @@ describe('ProjectDetail', () => {
       await renderProjectDetail({
         id: project.id,
         userId: '23',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .workspace({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          projectId: project.id,
+        }),
       });
       expect(
         screen.getByRole('heading', { name: /Workspace Resources/i }),
@@ -177,10 +174,9 @@ describe('ProjectDetail', () => {
       await renderProjectDetail({
         id: project.id,
         userId: '11',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .workspace({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          projectId: project.id,
+        }),
       });
       expect(
         screen.queryByRole('heading', { name: /Workspace Resources/i }),
@@ -209,10 +205,9 @@ describe('ProjectDetail', () => {
     await renderProjectDetail({
       id: project.id,
       userId: '23',
-      route: gp2Routing
-        .projects({})
-        .project({ projectId: project.id })
-        .workspace({}).$,
+      route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+        projectId: project.id,
+      }),
     });
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
@@ -234,11 +229,9 @@ describe('ProjectDetail', () => {
         id: project.id,
         userId: '23',
         role,
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .workspace({})
-          .add({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.ADD.buildPath({
+          projectId: project.id,
+        }),
       });
       expect(
         screen.queryByRole('heading', { name: /Add resource/i }),
@@ -254,11 +247,9 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
       role: 'Administrator',
-      route: gp2Routing
-        .projects({})
-        .project({ projectId: project.id })
-        .workspace({})
-        .add({}).$,
+      route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.ADD.buildPath({
+        projectId: project.id,
+      }),
     });
     expect(
       screen.getByRole('heading', { name: /Add resource/i }),
@@ -279,11 +270,9 @@ describe('ProjectDetail', () => {
       userId: '23',
       role: 'Trainee',
       projects: [project],
-      route: gp2Routing
-        .projects({})
-        .project({ projectId: project.id })
-        .workspace({})
-        .add({}).$,
+      route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.ADD.buildPath({
+        projectId: project.id,
+      }),
     });
     expect(
       screen.getByRole('heading', { name: /Add resource/i }),
@@ -300,10 +289,9 @@ describe('ProjectDetail', () => {
         id: project.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .workspace({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          projectId: project.id,
+        }),
       });
 
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
@@ -318,10 +306,9 @@ describe('ProjectDetail', () => {
           id: project.id,
           userId: '23',
           role,
-          route: gp2Routing
-            .projects({})
-            .project({ projectId: project.id })
-            .workspace({}).$,
+          route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+            projectId: project.id,
+          }),
         });
 
         expect(
@@ -343,10 +330,9 @@ describe('ProjectDetail', () => {
         id: project.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .workspace({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          projectId: project.id,
+        }),
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
@@ -390,10 +376,9 @@ describe('ProjectDetail', () => {
         id: projectResources.id,
         userId: '23',
         role: 'Administrator',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: projectResources.id })
-          .workspace({}).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.WORKSPACE.buildPath({
+          projectId: project.id,
+        }),
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
@@ -482,10 +467,10 @@ describe('ProjectDetail', () => {
       await renderProjectDetail({
         id: project.id,
         userId: '23',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .duplicateOutput({ outputId: output.id }).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath({
+          projectId: project.id,
+          outputId: output.id,
+        }),
         projects: [project],
       });
 
@@ -512,10 +497,10 @@ describe('ProjectDetail', () => {
       await renderProjectDetail({
         id: project.id,
         userId: '23',
-        route: gp2Routing
-          .projects({})
-          .project({ projectId: project.id })
-          .duplicateOutput({ outputId: 'test-id' }).$,
+        route: gp2Routing.projects.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath({
+          projectId: project.id,
+          outputId: 'test-id',
+        }),
         projects: [project],
       });
       expect(screen.getByText(/sorry.+page/i)).toBeVisible();

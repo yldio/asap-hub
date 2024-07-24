@@ -1,7 +1,7 @@
 import { TagSearchPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadTagSearch = () =>
@@ -14,8 +14,6 @@ const Tags: FC<Record<string, never>> = () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadTagSearch();
   }, []);
-  // const { path } = useMatch();
-  const { pathname: path } = useLocation();
 
   return (
     <Routes>

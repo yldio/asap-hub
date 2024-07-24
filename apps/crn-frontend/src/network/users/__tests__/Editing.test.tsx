@@ -1,10 +1,10 @@
-import { FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { getUserClaimKey } from '@asap-hub/react-context';
@@ -22,33 +22,36 @@ const mockGetInstitutions = getInstitutions as jest.MockedFunction<
 
 const id = '42';
 
-const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
-  children,
-}) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <RecoilRoot>
     <Suspense fallback="loading">
       <Auth0Provider user={{ id }}>{children}</Auth0Provider>
     </Suspense>
   </RecoilRoot>
 );
-const aboutRoute = network({}).users({}).user({ userId: id }).about;
-const aboutPath =
-  network.template +
-  network({}).users.template +
-  network({}).users({}).user.template +
-  aboutRoute.template;
-const { editPersonalInfo, editContactInfo, editOnboarded } = aboutRoute({});
+
+const aboutPath = networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.path;
+const editPersonalInfo =
+  networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_PERSONAL_INFO.buildPath({
+    id: id,
+  });
+const editContactInfo =
+  networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_CONTACT_INFO.buildPath({
+    id: id,
+  });
+const editOnboarded =
+  networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_ONBOARDED.buildPath({
+    id: id,
+  });
 
 beforeEach(() => jest.resetAllMocks());
 
 describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   it('goes back when closed', async () => {
     const { findByText, findByTitle } = render(
-      <MemoryRouter initialEntries={[route({}).$]}>
-        <Route path={aboutPath}>
-          <Route exact path={aboutPath}>
-            Profile
-          </Route>
+      <MemoryRouter initialEntries={[route]}>
+        <Route path={`${aboutPath}/*`}>
+          <Route path={aboutPath}>Profile</Route>
           <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
@@ -61,11 +64,9 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
 
   it('goes back when saved', async () => {
     const { findByText } = render(
-      <MemoryRouter initialEntries={[route({}).$]}>
-        <Route path={aboutPath}>
-          <Route exact path={aboutPath}>
-            Profile
-          </Route>
+      <MemoryRouter initialEntries={[route]}>
+        <Route path={`${aboutPath}/*`}>
+          <Route path={aboutPath}>Profile</Route>
           <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
@@ -99,7 +100,7 @@ describe('the personal info modal', () => {
     });
     const { findByDisplayValue, findByText } = render(
       <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+        <MemoryRouter initialEntries={[editPersonalInfo]}>
           <Route path={aboutPath}>
             <Editing
               user={{
@@ -130,7 +131,7 @@ describe('the personal info modal', () => {
       queryByDisplayValue,
     } = render(
       <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+        <MemoryRouter initialEntries={[editPersonalInfo]}>
           <Route path={aboutPath}>
             <Editing
               user={{
@@ -167,7 +168,7 @@ describe('the personal info modal', () => {
 describe('the contact info modal', () => {
   it('passes user data to contact info modal', async () => {
     const { findByDisplayValue } = render(
-      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+      <MemoryRouter initialEntries={[editContactInfo]}>
         <Route path={aboutPath}>
           <Editing
             user={{
@@ -184,7 +185,7 @@ describe('the contact info modal', () => {
   });
   it('uses the contact email as the email value', async () => {
     const { findByLabelText } = render(
-      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+      <MemoryRouter initialEntries={[editContactInfo]}>
         <Route path={aboutPath}>
           <Editing
             user={{
@@ -212,7 +213,7 @@ describe('the contact info modal', () => {
       queryByDisplayValue,
     } = render(
       <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
+        <MemoryRouter initialEntries={[`/profile${editContactInfo}`]}>
           <Route path="/profile">
             <Editing
               user={{
@@ -248,7 +249,7 @@ describe('the onboarded modal', () => {
   it('saves changes', async () => {
     const { findByText } = render(
       <Auth0Provider user={{ id, onboarded: false }}>
-        <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
+        <MemoryRouter initialEntries={[`/profile${editOnboarded}`]}>
           <Route path="/profile">
             <Editing
               user={{
@@ -280,10 +281,13 @@ describe('the onboarded modal', () => {
       id,
       onboarded: false,
     };
-    const ownProfileRoute = network({})
-      .users({})
-      .user({ userId: user.id })
-      .about({});
+    const ownProfileRoute = networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.buildPath(
+      { id: user.id },
+    );
+    const editRoute =
+      networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_ONBOARDED.buildPath({
+        id: user.id,
+      });
 
     const { findByText } = render(
       <Auth0Provider
@@ -299,9 +303,9 @@ describe('the onboarded modal', () => {
           },
         })}
       >
-        <MemoryRouter initialEntries={[ownProfileRoute.editOnboarded({}).$]}>
+        <MemoryRouter initialEntries={[editRoute]}>
           <CheckOnboarded>
-            <Route path={ownProfileRoute.$}>
+            <Route path={ownProfileRoute}>
               <Editing
                 user={{
                   ...createUserResponse(),
@@ -310,9 +314,7 @@ describe('the onboarded modal', () => {
                 backHref={aboutPath}
               />
             </Route>
-            <Route exact path={'/'}>
-              Homepage!
-            </Route>
+            <Route path={'/'}>Homepage!</Route>
           </CheckOnboarded>
         </MemoryRouter>
       </Auth0Provider>,

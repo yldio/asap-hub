@@ -181,7 +181,6 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
                               path={editRoute.$.RESOURCE.relativePath}
                               element={
                                 <EditResourceModal
-                                  route={editRoute.$.RESOURCE}
                                   resources={workingGroup.resources || []}
                                   backHref={resources}
                                   updateResources={updateWorkingGroupResources}

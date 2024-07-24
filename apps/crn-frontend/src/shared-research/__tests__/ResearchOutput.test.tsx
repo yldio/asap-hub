@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import {
   createResearchOutputResponse,
@@ -73,9 +73,13 @@ const defaultUser: User = {
   algoliaApiKey: 'algolia-mock-key',
 };
 
-const researchOutputRoute = sharedResearch({}).researchOutput({
+const researchOutputRoute = sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
   researchOutputId: id,
 });
+const editOutputRoute =
+  sharedResearchRoutes.DEFAULT.DETAILS.EDIT_RESEARCH_OUTPUT.buildPath({
+    researchOutputId: id,
+  });
 
 const renderComponent = async (path: string, user = defaultUser) => {
   const result = render(
@@ -90,12 +94,7 @@ const renderComponent = async (path: string, user = defaultUser) => {
             <MemoryRouter initialEntries={[path]} initialIndex={1}>
               <Routes>
                 <Route path="/prev">Previous Page</Route>
-                <Route
-                  path={
-                    sharedResearch.template +
-                    sharedResearch({}).researchOutput.template
-                  }
-                >
+                <Route path={sharedResearchRoutes.DEFAULT.DETAILS.path}>
                   <ResearchOutput />
                 </Route>
               </Routes>
@@ -125,7 +124,7 @@ describe('a grant document research output', () => {
       ],
       title: 'Grant Document title!',
     });
-    await renderComponent(researchOutputRoute.$);
+    await renderComponent(researchOutputRoute);
 
     expect(
       screen.getByRole('heading', { name: 'Grant Document title!' }),
@@ -144,7 +143,7 @@ describe('a grant document research output', () => {
       ],
     });
 
-    const { getByText } = await renderComponent(researchOutputRoute.$);
+    const { getByText } = await renderComponent(researchOutputRoute);
     expect(getByText('Team Sulzer, D')).toHaveAttribute(
       'href',
       expect.stringMatching(teams[0]!.id),
@@ -165,7 +164,7 @@ describe('a grant document research output', () => {
       published: true,
     });
 
-    await renderComponent(researchOutputRoute.editResearchOutput({}).$);
+    await renderComponent(editOutputRoute);
 
     expect(
       screen.getByRole('heading', { name: /Share bioinformatics/i }),
@@ -189,9 +188,7 @@ describe('a not-grant-document research output', () => {
         },
       ],
     });
-    const { getByRole, getByText } = await renderComponent(
-      researchOutputRoute.$,
-    );
+    const { getByRole, getByText } = await renderComponent(researchOutputRoute);
     expect(getByText(/Example Keyword/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Not-Grant-Document title!',
@@ -206,27 +203,24 @@ describe('a working group research output', () => {
       documentType: 'Article',
       workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
     });
-    const { getByRole } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      {
-        ...defaultUser,
-        role: 'Staff',
-        teams: [
-          {
-            id: 'any',
-            role: 'Key Personnel',
-          },
-        ],
-        workingGroups: [
-          {
-            id: 'wg1',
-            name: 'Example Working Group',
-            role: 'Chair',
-            active: true,
-          },
-        ],
-      },
-    );
+    const { getByRole } = await renderComponent(editOutputRoute, {
+      ...defaultUser,
+      role: 'Staff',
+      teams: [
+        {
+          id: 'any',
+          role: 'Key Personnel',
+        },
+      ],
+      workingGroups: [
+        {
+          id: 'wg1',
+          name: 'Example Working Group',
+          role: 'Chair',
+          active: true,
+        },
+      ],
+    });
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Share a Working Group Article',
     );
@@ -238,20 +232,17 @@ describe('a working group research output', () => {
       documentType: 'Article',
       workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
     });
-    const { getByRole } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      {
-        ...defaultUser,
-        workingGroups: [
-          {
-            id: 'wg0',
-            name: 'Example Working Group',
-            role: 'Project Manager',
-            active: true,
-          },
-        ],
-      },
-    );
+    const { getByRole } = await renderComponent(editOutputRoute, {
+      ...defaultUser,
+      workingGroups: [
+        {
+          id: 'wg0',
+          name: 'Example Working Group',
+          role: 'Project Manager',
+          active: true,
+        },
+      ],
+    });
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Share a Working Group Article',
     );
@@ -263,20 +254,17 @@ describe('a working group research output', () => {
       documentType: 'Article',
       workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
     });
-    const { getByText } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      {
-        ...defaultUser,
-        workingGroups: [
-          {
-            id: 'not-related-to-research-output',
-            name: 'Example Working Group',
-            role: 'Project Manager',
-            active: true,
-          },
-        ],
-      },
-    );
+    const { getByText } = await renderComponent(editOutputRoute, {
+      ...defaultUser,
+      workingGroups: [
+        {
+          id: 'not-related-to-research-output',
+          name: 'Example Working Group',
+          role: 'Project Manager',
+          active: true,
+        },
+      ],
+    });
     expect(getByText(/sorry.+page/i)).toBeVisible();
   });
 
@@ -286,27 +274,24 @@ describe('a working group research output', () => {
       documentType: 'Article',
       workingGroups: [{ title: 'Example Working Group', id: 'wg0' }],
     });
-    const { getByText } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-      {
-        ...defaultUser,
-        workingGroups: [
-          {
-            id: 'wg1',
-            name: 'Example Working Group',
-            role: 'Project Manager',
-            active: true,
-          },
-        ],
-      },
-    );
+    const { getByText } = await renderComponent(editOutputRoute, {
+      ...defaultUser,
+      workingGroups: [
+        {
+          id: 'wg1',
+          name: 'Example Working Group',
+          role: 'Project Manager',
+          active: true,
+        },
+      ],
+    });
     expect(getByText(/sorry.+page/i)).toBeVisible();
   });
 });
 
 it('renders the 404 page for a missing research output', async () => {
   mockGetResearchOutput.mockResolvedValue(undefined);
-  const { getByText } = await renderComponent(researchOutputRoute.$);
+  const { getByText } = await renderComponent(researchOutputRoute);
   expect(getByText(/sorry.+page/i)).toBeVisible();
 });
 
@@ -320,7 +305,7 @@ it('switches a draft research output to in review', async () => {
   });
 
   const { queryByText, getAllByText } = await renderComponent(
-    researchOutputRoute.$,
+    researchOutputRoute,
     {
       ...defaultUser,
       teams: [
@@ -366,7 +351,7 @@ it('switches a in review research output back to draft', async () => {
   });
 
   const { queryByText, getAllByText } = await renderComponent(
-    researchOutputRoute.$,
+    researchOutputRoute,
     {
       ...defaultUser,
       teams: [
@@ -413,7 +398,7 @@ it('publishes a research output', async () => {
   });
 
   const { queryByText, getByText } = await renderComponent(
-    researchOutputRoute.$,
+    researchOutputRoute,
     {
       ...defaultUser,
       teams: [

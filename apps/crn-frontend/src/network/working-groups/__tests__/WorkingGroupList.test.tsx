@@ -44,7 +44,9 @@ const renderWorkingGroupList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/working-groups/']}>
-              <Route path="/working-groups" component={WorkingGroupList} />
+              <Route path="/working-groups">
+                <WorkingGroupList filters={new Set()} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

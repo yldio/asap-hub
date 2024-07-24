@@ -6,15 +6,16 @@ import {
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
-import { init, reactRouterV5Instrumentation } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import * as Sentry from '@sentry/react';
 import { FC, lazy, useEffect } from 'react';
 import {
   Route,
   BrowserRouter as Router,
   Routes,
-  createBrowserRouter,
-  RouterProvider,
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
 } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-dom-last-location';
 import CheckAuth from './auth/CheckAuth';
@@ -23,16 +24,19 @@ import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
 import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
 import Frame from './Frame';
-import history from './history';
 
-init({
+Sentry.init({
   dsn: SENTRY_DSN,
   release: RELEASE,
   integrations: [
-    new Integrations.BrowserTracing({
-      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
-      routingInstrumentation: reactRouterV5Instrumentation(history),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
     }),
+    Sentry.replayIntegration(),
   ],
   environment: ENVIRONMENT,
   // Is recommended adjusting this value in production, or using tracesSampler
@@ -112,7 +116,7 @@ const App: FC<Record<string, never>> = () => {
                     }
                   />
                   <Route
-                    path={staticPages({}).terms.template}
+                    path={staticPages.DEFAULT.TERMS.path}
                     element={
                       <BasicLayout>
                         <Frame title={null}>
@@ -122,7 +126,7 @@ const App: FC<Record<string, never>> = () => {
                     }
                   />
                   <Route
-                    path={staticPages({}).privacyPolicy.template}
+                    path={staticPages.DEFAULT.PRIVACY_POLICY.path}
                     element={
                       <BasicLayout>
                         <Frame title={null}>

@@ -108,7 +108,7 @@ const App: FC<Record<string, never>> = () => {
                     }
                   />
                   <Route
-                    path={logout.template}
+                    path={logout.path}
                     element={
                       <Frame title="Logout">
                         <Logout />

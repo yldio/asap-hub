@@ -23,7 +23,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const pushFromHere = usePushFromHere();
 
   const onSuccess = () => {
-    const path = network({}).teams({}).team({ teamId }).workspace({}).$;
+    const path = networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.buildPath({
+      teamId,
+    });
     setShowSuccessBanner(true);
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);

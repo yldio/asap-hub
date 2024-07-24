@@ -1,11 +1,11 @@
-import { Route, useMatch } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
   ConfirmModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
@@ -18,14 +18,13 @@ interface EditingProps {
 }
 
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
-  const { path } = useMatch();
-  const route = network({}).users({}).user({ userId: user.id }).about({});
+  const route = networkRoutes.DEFAULT.USERS.DETAILS.ABOUT;
 
   const patchUser = usePatchUserById(user.id);
 
   return (
     <>
-      <Route exact path={path + route.editPersonalInfo.template}>
+      <Route path={route.EDIT_PERSONAL_INFO.path}>
         <Frame title="Edit Personal Information">
           <PersonalInfoModal
             {...user}
@@ -42,7 +41,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
           />
         </Frame>
       </Route>
-      <Route exact path={path + route.editContactInfo.template}>
+      <Route path={route.EDIT_CONTACT_INFO.path}>
         <Frame title="Edit Contact Information">
           <ContactInfoModal
             {...user}
@@ -53,7 +52,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
           />
         </Frame>
       </Route>
-      <Route exact path={path + route.editOnboarded.template}>
+      <Route path={route.EDIT_ONBOARDED.path}>
         <Frame title="Publish your profile">
           <ConfirmModal
             backHref={backHref}

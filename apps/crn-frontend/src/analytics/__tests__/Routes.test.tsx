@@ -3,7 +3,7 @@ import {
   performanceByDocumentType,
   userProductivityPerformance,
 } from '@asap-hub/fixtures';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -76,7 +76,7 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: path }]}>
-              <Route path={analytics.template}>
+              <Route path={analyticsRoutes.DEFAULT.path}>
                 <Analytics />
               </Route>
             </MemoryRouter>

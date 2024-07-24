@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { networkRoutes } from '@asap-hub/routing';
-import { Route, Routes, useMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
@@ -23,10 +23,8 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
 
   const { id } = useCurrentUserCRN() ?? {};
-  // const { path } = useMatch();
   const route = networkRoutes.DEFAULT.USERS.DETAILS;
-
-  // network({}).users({}).user({ userId: user.id }).research({});
+  const routeParams = { id: user.id };
 
   const patchUser = usePatchUserById(user.id);
 
@@ -62,19 +60,17 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         }
         editExpertiseAndResourcesHref={
           id === user.id
-            ? route.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.buildPath({
-                id: user.id,
-              })
+            ? route.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.buildPath(routeParams)
             : undefined
         }
         editQuestionsHref={
           id === user.id
-            ? route.RESEARCH.EDIT_QUESTIONS.buildPath({ id: user.id })
+            ? route.RESEARCH.EDIT_QUESTIONS.buildPath(routeParams)
             : undefined
         }
         editRoleHref={
           id === user.id
-            ? route.RESEARCH.EDIT_ROLE.buildPath({ id: user.id })
+            ? route.RESEARCH.EDIT_ROLE.buildPath(routeParams)
             : undefined
         }
         isOwnProfile={id === user.id}

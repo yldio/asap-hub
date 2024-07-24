@@ -15,7 +15,7 @@ import {
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
@@ -182,7 +182,7 @@ describe('user productivity', () => {
   };
   it('renders with user data', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
     expect(screen.getAllByText('User Productivity').length).toBe(2);
   });
@@ -204,7 +204,7 @@ describe('user productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     expect(screen.getByText('200')).toBeVisible();
@@ -252,7 +252,7 @@ describe('user productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     expect(screen.getByText('200')).toBeVisible();
@@ -286,7 +286,7 @@ describe('team productivity', () => {
     const label = 'Team Productivity';
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
     const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
     userEvent.click(input);
@@ -319,7 +319,7 @@ describe('team productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
 
     expect(screen.getByText('50')).toBeVisible();
@@ -370,7 +370,7 @@ describe('team productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
 
     expect(screen.getByText('50')).toBeVisible();
@@ -406,7 +406,7 @@ describe('search', () => {
   };
   it('allows typing in search queries', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     const searchBox = getSearchBox();
 
@@ -425,7 +425,7 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for user', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
     userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
@@ -436,7 +436,7 @@ describe('csv export', () => {
 
   it('exports analytics for teams', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     const input = screen.getAllByRole('textbox', { hidden: false })[0];
 

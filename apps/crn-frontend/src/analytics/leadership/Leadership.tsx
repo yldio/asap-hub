@@ -9,7 +9,7 @@ import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
 import { analyticsRoutes } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAnalyticsLeadership } from './api';
 import { algoliaResultsToStream, leadershipToCSV } from './export';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
@@ -57,12 +57,16 @@ const getDataForMetric = (
 };
 
 const Leadership: FC<Record<string, never>> = () => {
-  // const history = useHistory();
+  const navigate = useNavigate();
   const { metric } = useParams<{
     metric: 'working-group' | 'interest-group';
   }>();
   const setMetric = (newMetric: 'working-group' | 'interest-group') => {
-    // history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    navigate(
+      analyticsRoutes.DEFAULT.LEADERSHIP.METRIC.buildPath({
+        metric: newMetric,
+      }),
+    );
     setSort('team_asc');
     setSortingDirection(initialSortingDirection);
   };

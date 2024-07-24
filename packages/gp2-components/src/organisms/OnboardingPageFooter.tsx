@@ -49,7 +49,7 @@ const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
 }) => (
   <footer css={footerStyles}>
     <div css={signOutStyles}>
-      <Link fullWidth buttonStyle noMargin href={logout({}).$}>
+      <Link fullWidth buttonStyle noMargin href={logout.path}>
         Sign Out
       </Link>
     </div>

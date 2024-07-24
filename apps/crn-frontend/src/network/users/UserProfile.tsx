@@ -94,14 +94,14 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     > = {
       ...user,
 
-      editPersonalInfoHref: undefined,
-      // isOwnProfile && tabRoute
-      //   ? tabRoute({}).editPersonalInfo({}).$
-      //   : undefined,
-      editContactInfoHref: undefined,
-      // isOwnProfile && tabRoute
-      //   ? tabRoute({}).editContactInfo({}).$
-      //   : undefined,
+      editPersonalInfoHref:
+        isOwnProfile && tabRoute
+          ? tabRoute.EDIT_PERSONAL_INFO.buildPath({ id: user.id })
+          : undefined,
+      editContactInfoHref:
+        isOwnProfile && tabRoute
+          ? tabRoute.EDIT_CONTACT_INFO.buildPath({ id: user.id })
+          : undefined,
       onImageSelect:
         isOwnProfile && tabRoute
           ? (file: File) => {
@@ -191,10 +191,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                           noEventsComponent={
                             <NoEvents
                               past
-                              link={
-                                eventRoutes.DEFAULT.PAST.buildPath({})
-                                // events({}).past({}).$
-                              }
+                              link={eventRoutes.DEFAULT.PAST.buildPath({})}
                               type="member"
                             />
                           }
@@ -213,12 +210,12 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     }
                   />
                 </Routes>
-                {/* {isOwnProfile && tabRoute && (
+                {isOwnProfile && tabRoute && (
                   <Route
-                    path={path + tabRoute.template}
-                    element={<Editing user={user} backHref={tabRoute({}).$} />}
+                    path={tabRoute.path}
+                    element={<Editing user={user} backHref={tabRoute.path} />}
                   />
-                )} */}
+                )}
               </>
             }
           </UserProfilePage>

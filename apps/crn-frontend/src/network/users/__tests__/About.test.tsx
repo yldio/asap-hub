@@ -1,9 +1,9 @@
 import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
@@ -15,27 +15,19 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
 const makeWrapper =
-  (
-    userId = id,
-    currentUserId = userId,
-  ): FC<React.PropsWithChildren<Record<string, never>>> =>
-  ({ children }) => (
+  (userId = id, currentUserId = userId) =>
+  ({ children }: { children: ReactNode }) => (
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: currentUserId }}>
           <MemoryRouter
             initialEntries={[
-              network({}).users({}).user({ userId }).about({}).$,
+              networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.buildPath({
+                id: userId,
+              }),
             ]}
           >
-            <Route
-              path={
-                network.template +
-                network({}).users.template +
-                network({}).users({}).user.template +
-                network({}).users({}).user({ userId }).about.template
-              }
-            >
+            <Route path={networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.path}>
               {children}
             </Route>
           </MemoryRouter>

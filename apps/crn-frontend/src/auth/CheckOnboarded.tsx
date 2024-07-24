@@ -15,15 +15,17 @@ export const navigationPromptHandler = (
   const isNavigationBlocked =
     user && !user?.onboarded
       ? true
-      : // TODO: fix it
-        // ![
-        //     network({}).users({}).user({ userId: user.id }).about({}).$,
-        //     network({}).users({}).user({ userId: user.id }).research({}).$,
-        //     staticPages({}).terms({}).$,
-        //     staticPages({}).privacyPolicy({}).$,
-        //     logout({}).$,
-        //   ].find((route) => pathname === '/' || pathname.startsWith(route))
-        false;
+      : ![
+          networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.buildPath({
+            id: user?.id || '',
+          }),
+          networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath({
+            id: user?.id || '',
+          }),
+          staticPages.DEFAULT.TERMS.path,
+          staticPages.DEFAULT.PRIVACY_POLICY.path,
+          logout.path,
+        ].find((route) => pathname === '/' || pathname.startsWith(route));
 
   if (isNavigationBlocked) {
     window.alert('This link will be available when your profile is complete');

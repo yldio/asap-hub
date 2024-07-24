@@ -88,9 +88,9 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
           onboardable={onboardable}
           canViewAnalytics={canViewAnalytics}
           onboardModalHref={
-            // TODO: fix this
-            networkRoutes.DEFAULT.path
-            // tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
+            tabRoute
+              ? tabRoute.EDIT_ONBOARDED.buildPath({ id: user.id })
+              : undefined
           }
           userProfileHref={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
             id: user.id,

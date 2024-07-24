@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/fixtures';
 import { enable } from '@asap-hub/flags';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -19,10 +19,10 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import {
@@ -71,7 +71,7 @@ const renderPage = async (
   { teamId = teamResponse.id, currentTime = new Date() } = {},
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   history = createMemoryHistory({
-    initialEntries: [network({}).teams({}).team({ teamId }).$],
+    initialEntries: [networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({ teamId })],
   }),
 ) => {
   const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
@@ -89,19 +89,13 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router navigator={history}>
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template
-                }
-              >
+            <MemoryRouter>
+              <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.path}>
                 <ManuscriptToastProvider>
                   <TeamProfile currentTime={currentTime} />
                 </ManuscriptToastProvider>
               </Route>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -194,14 +188,14 @@ it('displays manuscript success toast message and user can dismiss toast', async
     name: /Type of Manuscript/i,
   });
   userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, '{ENTER}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, '{ENTER}');
   lifecycleTextbox.blur();
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });

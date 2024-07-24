@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import {
   createListResearchOutputResponse,
   createUserResponse,
@@ -83,20 +83,17 @@ const renderOutputs = async (
             <MemoryRouter
               initialEntries={[
                 {
-                  pathname: network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id })
-                    .outputs({}).$,
+                  pathname:
+                    networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.OUTPUTS.buildPath(
+                      { workingGroupId: workingGroup.id },
+                    ),
                 },
               ]}
             >
               <Route
-                path={
-                  network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id })
-                    .outputs({}).$
-                }
+                path={networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.OUTPUTS.buildPath(
+                  { workingGroupId: workingGroup.id },
+                )}
               >
                 <Outputs
                   userAssociationMember={userAssociationMember}

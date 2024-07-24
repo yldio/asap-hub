@@ -8,7 +8,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -64,7 +64,9 @@ beforeEach(() => {
 });
 
 const renderPage = async (
-  path = analytics({}).leadership({}).metric({ metric: 'working-group' }).$,
+  path = analyticsRoutes.DEFAULT.LEADERSHIP.METRIC.buildPath({
+    metric: 'working-group',
+  }),
 ) => {
   const result = render(
     <RecoilRoot

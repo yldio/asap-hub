@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -9,7 +9,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { TeamResponse } from '@asap-hub/model';
 import { createTeamResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 import { mockAlert } from '@asap-hub/dom-test-utils';
 
@@ -25,26 +25,19 @@ const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
 
-const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
-  children,
-}) => (
+const wrapper = ({ children }: { children?: ReactNode }) => (
   <RecoilRoot>
     <Suspense fallback="loading">
       <Auth0Provider user={{}}>
         <WhenReady>
           <MemoryRouter
             initialEntries={[
-              network({}).teams({}).team({ teamId: id }).workspace({}).$,
+              networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.buildPath({
+                teamId: id,
+              }),
             ]}
           >
-            <Route
-              path={
-                network.template +
-                network({}).teams.template +
-                network({}).teams({}).team.template +
-                network({}).teams({}).team({ teamId: id }).workspace.template
-              }
-            >
+            <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.path}>
               {children}
             </Route>
           </MemoryRouter>

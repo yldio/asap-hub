@@ -74,7 +74,7 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
     </Caption>
     <footer css={footerStyles}>
       <div css={buttonWrapperStyle}>
-        <Link fullWidth noMargin buttonStyle href={logout({}).$}>
+        <Link fullWidth noMargin buttonStyle href={logout.path}>
           Sign Out
         </Link>
       </div>

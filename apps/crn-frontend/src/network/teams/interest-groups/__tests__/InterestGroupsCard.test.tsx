@@ -1,6 +1,5 @@
-import { createElement, FC, Suspense } from 'react';
+import { createElement, ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter } from 'react-router-dom/server';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
@@ -11,6 +10,7 @@ import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
 import { getTeamInterestGroups } from '../api';
 import InterestGroupsCard from '../InterestGroupsCard';
 import { teamInterestGroupsState } from '../state';
+import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('../api');
 const mockGetTeamInterestGroups = getTeamInterestGroups as jest.MockedFunction<
@@ -21,16 +21,14 @@ mockConsoleError();
 
 const id = 't42';
 
-const wrapper: FC<React.PropsWithChildren<Record<string, never>>> = ({
-  children,
-}) => (
+const wrapper = ({ children }: { children: ReactNode }) => (
   <RecoilRoot
     initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
   >
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: 'u42' }}>
         <WhenReady>
-          <StaticRouter>{children}</StaticRouter>
+          <MemoryRouter>{children}</MemoryRouter>
         </WhenReady>
       </Auth0Provider>
     </Suspense>
@@ -98,8 +96,12 @@ it('links to the group', async () => {
 
 it('throws if the team does not exist', async () => {
   mockGetTeamInterestGroups.mockResolvedValue(undefined);
-  const errorWrapper: FC<React.PropsWithChildren<unknown>> = ({ children }) =>
-    createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
+  const errorWrapper = ({ children }: { children: ReactNode }) =>
+    createElement(
+      wrapper,
+      { children },
+      <ErrorBoundary>{children}</ErrorBoundary>,
+    );
   const { findByText } = render(<InterestGroupsCard id={id} />, {
     wrapper: errorWrapper,
   });

@@ -28,7 +28,7 @@ describe('UserMenu', () => {
     );
     const logoutLink = screen.getByRole('link', { name: /log out/i });
     expect(logoutLink).toBeVisible();
-    expect(logoutLink).toHaveAttribute('href', logout({}).$);
+    expect(logoutLink).toHaveAttribute('href', logout.path);
   });
 
   it('verifies the my profile button is clickable', () => {

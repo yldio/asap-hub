@@ -1,20 +1,21 @@
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { networkRoutes } from '@asap-hub/routing';
 import { relative } from 'path';
-import { useLocation } from 'react-router-dom';
+import { useResolvedPath } from 'react-router-dom';
 
 export const useCurrentUserProfileTabRoute = () => {
   const user = useCurrentUserCRN();
-  const { pathname } = useLocation();
+  const { pathname } = useResolvedPath('');
 
-  return undefined;
-  // if (!user) {
-  //   return undefined;
-  // }
-  // const route = networkRoutes.DEFAULT.USERS.DETAILS.buildPath;
-  // const tabRoutes = route({ id: user.id });
-  // return [tabRoutes.about, tabRoutes.research, tabRoutes.outputs].find(
-  //   (possibleTabRoute) =>
-  //     !relative(possibleTabRoute({}).$, pathname).startsWith('..'),
-  // );
+  if (!user) {
+    return undefined;
+  }
+  const route = networkRoutes.DEFAULT.USERS.DETAILS;
+  const routeParams = { id: user.id };
+  return [route.ABOUT, route.RESEARCH, route.OUTPUTS].find(
+    (possibleTabRoute) =>
+      !relative(possibleTabRoute.buildPath(routeParams), pathname).startsWith(
+        '..',
+      ),
+  );
 };

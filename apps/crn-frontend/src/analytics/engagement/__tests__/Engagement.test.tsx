@@ -1,4 +1,4 @@
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import Engagement from '../Engagement';
@@ -17,7 +17,7 @@ const renderPage = async (path: string) => {
 
 describe('Engagement', () => {
   it('renders', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.path);
     expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
   });
 });

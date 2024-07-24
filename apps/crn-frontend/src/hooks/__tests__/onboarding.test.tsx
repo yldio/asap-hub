@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/dom';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
 import { UserResponse } from '@asap-hub/model';
@@ -41,12 +41,9 @@ const wrapper =
         <WhenReady>
           <MemoryRouter
             initialEntries={[
-              network({})
-                .users({})
-                .user({
-                  userId: user?.id ?? '',
-                })
-                .research({}).$,
+              networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath({
+                id: user?.id ?? '',
+              }),
             ]}
           >
             {children}
@@ -132,27 +129,21 @@ describe('useOnboarding', () => {
           `/network/users/${user.id}/research/edit-personal-info`,
         );
         expect(role!.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editRole({}).$,
+          networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_ROLE.buildPath({
+            id: user.id,
+          }),
         );
-
         expect(questions!.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editQuestions({}).$,
+          networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_QUESTIONS.buildPath(
+            {
+              id: user.id,
+            },
+          ),
         );
-
         expect(bio!.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .about({})
-            .editBiography({}).$,
+          networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_BIOGRAPHY.buildPath({
+            id: user.id,
+          }),
         );
       });
     });

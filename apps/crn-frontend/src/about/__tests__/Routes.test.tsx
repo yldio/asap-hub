@@ -9,7 +9,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
-import { about } from '@asap-hub/routing';
+import { aboutRoutes } from '@asap-hub/routing';
 
 import About from '../Routes';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -36,7 +36,7 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/about']}>
-              <Route path={about.template}>
+              <Route path={aboutRoutes.path}>
                 <About />
               </Route>
             </MemoryRouter>

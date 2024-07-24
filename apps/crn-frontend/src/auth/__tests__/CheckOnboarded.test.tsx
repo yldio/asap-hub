@@ -1,6 +1,10 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network, sharedResearch, staticPages } from '@asap-hub/routing';
+import {
+  networkRoutes,
+  sharedResearchRoutes,
+  staticPages,
+} from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -17,19 +21,19 @@ const user = {
   algoliaApiKey: 'algolia-mock-key',
 };
 
-const ownProfilePath = network({})
-  .users({})
-  .user({ userId: user.id })
-  .research({}).$;
+const ownProfilePath = networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath({
+  id: user.id,
+});
 
-const teamPage = network({})
-  .teams({})
-  .team({ teamId: user.teams[0]!.id })
-  .about({}).$;
+const teamPage = networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.buildPath({
+  teamId: user.teams[0]!.id,
+});
 
-const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;
-const privacy = staticPages({}).privacyPolicy({}).$;
-const tos = staticPages({}).terms({}).$;
+const outputs = networkRoutes.DEFAULT.USERS.DETAILS.OUTPUTS.buildPath({
+  id: user.id,
+});
+const privacy = staticPages.DEFAULT.PRIVACY_POLICY.path;
+const tos = staticPages.DEFAULT.TERMS.path;
 
 beforeEach(() => {
   history = createBrowserHistory();
@@ -60,7 +64,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>text</CheckOnboarded>
             </Router>
           </WhenReady>
@@ -75,7 +79,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>
                 <Route path={ownProfilePath}>profile page</Route>
                 <Route path={teamPage}>team page</Route>
@@ -104,7 +108,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>
                 <Route path={ownProfilePath}>profile</Route>
               </CheckOnboarded>
@@ -119,15 +123,21 @@ describe('an authenticated user in onboarding', () => {
   });
 
   it("is not let through to someone else's profile", async () => {
-    const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
+    const foreignProfilePath = networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+      id: '1337',
+    });
     const { findByText } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>
                 <Route path={foreignProfilePath}>foreign profile</Route>
-                <Route path={network({}).users({}).user({ userId: user.id }).$}>
+                <Route
+                  path={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                    id: user.id,
+                  })}
+                >
                   own profile
                 </Route>
               </CheckOnboarded>
@@ -141,15 +151,19 @@ describe('an authenticated user in onboarding', () => {
     expect(await findByText('own profile')).toBeVisible();
   });
   it('is not let through to another page', async () => {
-    const anotherPagePath = sharedResearch({}).$;
+    const anotherPagePath = sharedResearchRoutes.DEFAULT.path;
     const { findByText } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>
                 <Route path={anotherPagePath}>another page</Route>
-                <Route path={network({}).users({}).user({ userId: user.id }).$}>
+                <Route
+                  path={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                    id: user.id,
+                  })}
+                >
                   own profile
                 </Route>
               </CheckOnboarded>
@@ -170,7 +184,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router navigator={history}>
+            <Router navigator={history} location="/url">
               <CheckOnboarded>
                 <Route path={teamPage}>team page</Route>
                 <Route path={ownProfilePath}>profile page</Route>

@@ -50,31 +50,29 @@ const staffSteps = (
 > => ({
   Details: {
     label: 'Details',
-    modalHref: profileTab({}).editPersonalInfo({}).$,
+    modalHref: profileTab.buildPath({ id: user.id }),
+    // TODO: fix
+    // EDIT_PERSONAL_INFO.buildPath({ id: user.id }),
   },
   Role: {
     label: 'Role',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .research({})
-      .editRole({}).$,
+    modalHref: networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_ROLE.buildPath(
+      { id: user.id },
+    ),
   },
   Expertise: {
     label: 'Expertise',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .research({})
-      .editExpertiseAndResources({}).$,
+    modalHref:
+      networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.buildPath(
+        { id: user.id },
+      ),
   },
   Biography: {
     label: 'Biography',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .about({})
-      .editBiography({}).$,
+    modalHref:
+      networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_BIOGRAPHY.buildPath({
+        id: user.id,
+      }),
   },
 });
 const defaultSteps = (
@@ -86,39 +84,36 @@ const defaultSteps = (
 > => ({
   Details: {
     label: 'Details',
-    modalHref: profileTab({}).editPersonalInfo({}).$,
+    modalHref: profileTab.buildPath({ id: user.id }),
+    // TODO: fix
+    // EDIT_PERSONAL_INFO.buildPath({ id: user.id }),
   },
   Role: {
     label: 'Role',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .research({})
-      .editRole({}).$,
+    modalHref: networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_ROLE.buildPath(
+      { id: user.id },
+    ),
   },
   Expertise: {
     label: 'Expertise',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .research({})
-      .editExpertiseAndResources({}).$,
+    modalHref:
+      networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_EXPERTISE_AND_RESOURCES.buildPath(
+        { id: user.id },
+      ),
   },
   Questions: {
     label: 'Questions',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .research({})
-      .editQuestions({}).$,
+    modalHref:
+      networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.EDIT_QUESTIONS.buildPath({
+        id: user.id,
+      }),
   },
   Biography: {
     label: 'Biography',
-    modalHref: network({})
-      .users({})
-      .user({ userId: user.id })
-      .about({})
-      .editBiography({}).$,
+    modalHref:
+      networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.EDIT_BIOGRAPHY.buildPath({
+        id: user.id,
+      }),
   },
 });
 

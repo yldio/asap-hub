@@ -13,7 +13,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createListTutorialsResponse } from '@asap-hub/fixtures';
 import { TutorialsResponse } from '@asap-hub/model';
-import { discover } from '@asap-hub/routing';
+import { discoverRoutes } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
@@ -38,7 +38,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={discover.template}>
+              <Route path={discoverRoutes.DEFAULT.path}>
                 <Routes />
               </Route>
             </MemoryRouter>
@@ -55,7 +55,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
 };
 
 it('redirects to the guides page when the index page accessed', async () => {
-  await renderDiscoverPage(discover({}).$);
+  await renderDiscoverPage(discoverRoutes.DEFAULT.path);
   expect(
     await screen.findByText(/Guides/i, {
       selector: 'h2',
@@ -64,7 +64,7 @@ it('redirects to the guides page when the index page accessed', async () => {
 });
 
 it('renders tutorials list page when the tutorials tab is selected', async () => {
-  await renderDiscoverPage(discover({}).$);
+  await renderDiscoverPage(discoverRoutes.DEFAULT.path);
 
   mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
 
@@ -93,7 +93,9 @@ it('allows search on tutorials list', async () => {
     })),
   });
 
-  const container = await renderDiscoverPage(discover({}).tutorials({}).$);
+  const container = await renderDiscoverPage(
+    discoverRoutes.DEFAULT.TUTORIALS.path,
+  );
 
   userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
@@ -137,7 +139,7 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
   });
   mockGetTutorialById.mockResolvedValue(tutorial);
 
-  await renderDiscoverPage(discover({}).tutorials({}).$);
+  await renderDiscoverPage(discoverRoutes.DEFAULT.TUTORIALS.path);
 
   const tutorialCardTitle = screen.getByText(/First Tutorial Title/i, {
     selector: 'a',

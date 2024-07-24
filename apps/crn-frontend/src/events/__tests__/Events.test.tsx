@@ -1,6 +1,6 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -25,7 +25,9 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-const renderEventsPage = async (pathname = events({}).$) => {
+const renderEventsPage = async (
+  pathname: string = eventRoutes.DEFAULT.path,
+) => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
@@ -36,8 +38,8 @@ const renderEventsPage = async (pathname = events({}).$) => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname }]}>
-              <Route path={events.template}>
+            <MemoryRouter initialEntries={[pathname]}>
+              <Route path={eventRoutes.DEFAULT.path}>
                 <Events />
               </Route>
             </MemoryRouter>
@@ -66,9 +68,9 @@ describe('Events', () => {
   });
 
   describe.each`
-    eventProperty | route                        | expected
-    ${'after'}    | ${events({}).past({}).$}     | ${'past'}
-    ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
+    eventProperty | route                                | expected
+    ${'after'}    | ${eventRoutes.DEFAULT.PAST.path}     | ${'past'}
+    ${'before'}   | ${eventRoutes.DEFAULT.UPCOMING.path} | ${'upcoming'}
   `('the events $expected page', ({ eventProperty, route, expected }) => {
     it('can search for events', async () => {
       await renderEventsPage(route);
@@ -85,7 +87,7 @@ describe('Events', () => {
   describe('the events calendar page', () => {
     it('renders a google calendar iframe', async () => {
       mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
-      await renderEventsPage(events({}).calendar({}).$);
+      await renderEventsPage(eventRoutes.DEFAULT.CALENDAR.path);
       const calendars = screen.getByTitle('Calendar');
       expect(calendars.tagName).toBe('IFRAME');
     });
@@ -98,7 +100,7 @@ describe('Events', () => {
           name: `Calendar title ${index}`,
         })),
       });
-      await renderEventsPage(events({}).calendar({}).$);
+      await renderEventsPage(eventRoutes.DEFAULT.CALENDAR.path);
       expect(screen.getByText(/calendar title 0/i)).toBeVisible();
       expect(screen.getByText(/calendar title 1/i)).toBeVisible();
     });

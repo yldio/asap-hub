@@ -12,5 +12,5 @@ it('renders the header', () => {
 it('Sign out button takes you to the logout', () => {
   render(<OnboardingWelcome />);
   const signOutButton = screen.getByRole('link', { name: /Sign Out/i });
-  expect(signOutButton.closest('a')).toHaveAttribute('href', logout({}).$);
+  expect(signOutButton.closest('a')).toHaveAttribute('href', logout.path);
 });

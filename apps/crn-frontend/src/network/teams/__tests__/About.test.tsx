@@ -15,7 +15,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import About from '../About';
 import { refreshTeamState } from '../state';
@@ -44,17 +44,10 @@ const renderTeamAbout = async (
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                network({}).teams({}).team({ teamId }).about({}).$,
+                networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.buildPath({ teamId }),
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template +
-                  network({}).teams({}).team({ teamId }).about.template
-                }
-              >
+              <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.path}>
                 <About teamListElementId="uuid" {...aboutProps} />
               </Route>
             </MemoryRouter>

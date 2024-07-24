@@ -2,7 +2,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -10,10 +10,10 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript } from '../api';
@@ -26,7 +26,9 @@ const manuscriptResponse = { id: '1', title: 'The Manuscript' };
 const teamId = '42';
 const history = createMemoryHistory({
   initialEntries: [
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.CREATE_MANUSCRIPT.buildPath({
+      teamId,
+    }),
   ],
 });
 jest.mock('../api', () => ({
@@ -41,12 +43,7 @@ const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
 ) => {
   const path =
-    network.template +
-    network({}).teams.template +
-    network({}).teams({}).team.template +
-    network({}).teams({}).team({ teamId }).workspace.template +
-    network({}).teams({}).team({ teamId }).workspace({}).createManuscript
-      .template;
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.CREATE_MANUSCRIPT.path;
 
   const { container } = render(
     <RecoilRoot
@@ -57,13 +54,13 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <Router history={history}>
+            <MemoryRouter>
               <Route path={path}>
                 <ManuscriptToastProvider>
                   <TeamManuscript teamId={teamId} />
                 </ManuscriptToastProvider>
               </Route>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -95,15 +92,13 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  userEvent.type(typeTextbox, 'Original{ENTER}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  userEvent.type(lifecycleTextbox, 'Typeset proof{ENTER}');
   lifecycleTextbox.blur();
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });

@@ -7,7 +7,7 @@ import {
   createInterestGroupResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import InterestGroupProfile from '../InterestGroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -46,18 +46,12 @@ const renderGroupProfile = async (
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                network({})
-                  .interestGroups({})
-                  .interestGroup({ interestGroupId }).$,
+                networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
+                  interestGroupId,
+                }),
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).interestGroups.template +
-                  network({}).interestGroups({}).interestGroup.template
-                }
-              >
+              <Route path={networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.path}>
                 <InterestGroupProfile currentTime={new Date()} />
               </Route>
             </MemoryRouter>
@@ -147,7 +141,7 @@ describe('the calendar tab', () => {
       ...createInterestGroupResponse(),
       active: false,
     });
-    expect(await queryByText('Calendar')).not.toBeInTheDocument();
+    expect(queryByText('Calendar')).not.toBeInTheDocument();
   });
 });
 
@@ -162,7 +156,7 @@ describe('the upcoming events tab', () => {
       ...createInterestGroupResponse(),
       active: false,
     });
-    expect(await queryByText('Upcoming Events')).not.toBeInTheDocument();
+    expect(queryByText('Upcoming Events')).not.toBeInTheDocument();
   });
 });
 

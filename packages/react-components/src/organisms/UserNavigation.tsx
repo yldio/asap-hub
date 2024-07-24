@@ -113,7 +113,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={logout({}).$} icon={logoutIcon}>
+        <NavigationLink href={logout.path} icon={logoutIcon}>
           Log Out
         </NavigationLink>
       </li>

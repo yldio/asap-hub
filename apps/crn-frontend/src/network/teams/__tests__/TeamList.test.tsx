@@ -38,7 +38,9 @@ const renderTeamList = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/teams']}>
-              <Route path="/teams" component={Teams} />
+              <Route path="/teams">
+                <Teams filters={new Set()} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

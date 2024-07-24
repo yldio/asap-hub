@@ -8,7 +8,7 @@ import {
   createEventResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 
 import {
   Auth0Provider,
@@ -38,10 +38,10 @@ const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
     <Auth0Provider user={{}}>
       <WhenReady>
         <Suspense fallback="Loading...">
-          <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Route path={events.template + events({}).event.template}>
-              {children}
-            </Route>
+          <StaticRouter
+            location={eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id })}
+          >
+            <Route path={eventRoutes.DEFAULT.DETAILS.path}>{children}</Route>
           </StaticRouter>
         </Suspense>
       </WhenReady>

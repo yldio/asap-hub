@@ -42,7 +42,9 @@ const renderInterestGroupList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/interest-groups/']}>
-              <Route path="/interest-groups" component={InterestGroupList} />
+              <Route path="/interest-groups">
+                <InterestGroupList filters={new Set()} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -1,6 +1,6 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
 import { EventConstraint } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -88,9 +88,10 @@ const renderEvents = async ({
 };
 
 const userPath = (userId: string) =>
-  network({}).users({}).user({ userId }).upcoming({}).$;
+  networkRoutes.DEFAULT.USERS.DETAILS.UPCOMING.buildPath({ id: userId });
 const teamPath = (teamId: string) =>
-  network({}).teams({}).team({ teamId }).upcoming({}).$;
+  networkRoutes.DEFAULT.TEAMS.DETAILS.UPCOMING.buildPath({ teamId: teamId });
+
 it.each`
   description                     | constraint            | getPath     | refreshState        | after                         | before
   ${'upcoming events by userId '} | ${{ userId: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}

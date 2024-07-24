@@ -1,6 +1,7 @@
 import {
   ApcCoverageOption,
   ManuscriptFileResponse,
+  ManuscriptFormData,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptPostRequest,
@@ -13,17 +14,18 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
+import React, { ComponentProps, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
   FormCard,
   LabeledDropdown,
+  LabeledFileField,
+  LabeledMultiSelect,
   LabeledRadioButtonGroup,
   LabeledTextField,
-  LabeledFileField,
 } from '..';
-import { Button } from '../atoms';
+import { Button, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
 
@@ -143,7 +145,13 @@ const setDefaultFieldValues = (
 
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
-  'type' | 'lifecycle' | 'manuscriptFile' | 'createdBy' | 'publishedAt'
+  | 'type'
+  | 'lifecycle'
+  | 'manuscriptFile'
+  | 'createdBy'
+  | 'publishedAt'
+  | 'teams'
+  | 'labs'
 > &
   Partial<Pick<ManuscriptPostRequest, 'title'>> & {
     type?: ManuscriptVersion['type'] | '';
@@ -159,6 +167,13 @@ type ManuscriptFormProps = Omit<
       handleError: (errorMessage: string) => void,
     ) => Promise<ManuscriptFileResponse | undefined>;
     teamId: string;
+    getTeamSuggestions?: ComponentProps<
+      typeof LabeledMultiSelect
+    >['loadOptions'];
+    selectedTeams: MultiSelectOptionsType[];
+    getLabSuggestions?: ComponentProps<
+      typeof LabeledMultiSelect
+    >['loadOptions'];
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -189,10 +204,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   codeDepositedDetails,
   protocolsDepositedDetails,
   labMaterialsRegisteredDetails,
+  getTeamSuggestions,
+  selectedTeams,
+  getLabSuggestions,
 }) => {
   const history = useHistory();
 
-  const methods = useForm<ManuscriptPostRequest>({
+  const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
     defaultValues: {
       title: title || '',
@@ -219,6 +237,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           codeDepositedDetails: codeDepositedDetails || '',
           protocolsDepositedDetails: protocolsDepositedDetails || '',
           labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
+          teams: selectedTeams || [],
         },
       ],
     },
@@ -266,6 +285,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             {
               ...getValues().versions[0],
               ...fieldDefaultValueMap,
+              teams: selectedTeams,
+              labs: [],
               manuscriptFile: undefined,
             },
           ],
@@ -273,67 +294,73 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         { keepDefaultValues: true },
       );
     }
-  }, [getValues, reset, watchType, watchLifecycle]);
+  }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
 
-  const onSubmit = async (data: ManuscriptPostRequest) => {
-    const versionData = data.versions[0] as ManuscriptVersion;
-    await onSave({
-      ...data,
-      teamId,
-      eligibilityReasons: [...eligibilityReasons],
-      versions: [
-        {
-          ...versionData,
-          publicationDoi: versionData?.publicationDoi || undefined,
-          preprintDoi: versionData?.preprintDoi || undefined,
-          otherDetails: versionData?.otherDetails || undefined,
-          requestingApcCoverage:
-            versionData?.requestingApcCoverage || undefined,
+  const onSubmit = async (data: ManuscriptFormData) => {
+    const versionData = data.versions[0];
 
-          acknowledgedGrantNumber:
-            versionData.acknowledgedGrantNumber || undefined,
-          asapAffiliationIncluded:
-            versionData.asapAffiliationIncluded || undefined,
-          manuscriptLicense: versionData.manuscriptLicense || undefined,
-          datasetsDeposited: versionData.datasetsDeposited || undefined,
-          codeDeposited: versionData.codeDeposited || undefined,
-          protocolsDeposited: versionData.protocolsDeposited || undefined,
-          labMaterialsRegistered:
-            versionData.labMaterialsRegistered || undefined,
+    if (versionData?.type && versionData.lifecycle) {
+      await onSave({
+        ...data,
+        teamId,
+        eligibilityReasons: [...eligibilityReasons],
+        versions: [
+          {
+            ...versionData,
+            publicationDoi: versionData?.publicationDoi || undefined,
+            preprintDoi: versionData?.preprintDoi || undefined,
+            otherDetails: versionData?.otherDetails || undefined,
+            requestingApcCoverage:
+              versionData?.requestingApcCoverage || undefined,
 
-          acknowledgedGrantNumberDetails:
-            versionData?.acknowledgedGrantNumber === 'No'
-              ? versionData.acknowledgedGrantNumberDetails
-              : '',
-          asapAffiliationIncludedDetails:
-            versionData?.asapAffiliationIncluded === 'No'
-              ? versionData.asapAffiliationIncludedDetails
-              : '',
-          manuscriptLicenseDetails:
-            versionData?.manuscriptLicense === 'No'
-              ? versionData.manuscriptLicenseDetails
-              : '',
-          datasetsDepositedDetails:
-            versionData?.datasetsDeposited === 'No'
-              ? versionData.datasetsDepositedDetails
-              : '',
-          codeDepositedDetails:
-            versionData?.codeDeposited === 'No'
-              ? versionData.codeDepositedDetails
-              : '',
-          protocolsDepositedDetails:
-            versionData?.protocolsDeposited === 'No'
-              ? versionData.protocolsDepositedDetails
-              : '',
-          labMaterialsRegisteredDetails:
-            versionData?.labMaterialsRegistered === 'No'
-              ? versionData.labMaterialsRegisteredDetails
-              : '',
-        },
-      ],
-    });
+            acknowledgedGrantNumber:
+              versionData.acknowledgedGrantNumber || undefined,
+            asapAffiliationIncluded:
+              versionData.asapAffiliationIncluded || undefined,
+            manuscriptLicense: versionData.manuscriptLicense || undefined,
+            datasetsDeposited: versionData.datasetsDeposited || undefined,
+            codeDeposited: versionData.codeDeposited || undefined,
+            protocolsDeposited: versionData.protocolsDeposited || undefined,
+            labMaterialsRegistered:
+              versionData.labMaterialsRegistered || undefined,
 
-    onSuccess();
+            acknowledgedGrantNumberDetails:
+              versionData?.acknowledgedGrantNumber === 'No'
+                ? versionData.acknowledgedGrantNumberDetails
+                : '',
+            asapAffiliationIncludedDetails:
+              versionData?.asapAffiliationIncluded === 'No'
+                ? versionData.asapAffiliationIncludedDetails
+                : '',
+            manuscriptLicenseDetails:
+              versionData?.manuscriptLicense === 'No'
+                ? versionData.manuscriptLicenseDetails
+                : '',
+            datasetsDepositedDetails:
+              versionData?.datasetsDeposited === 'No'
+                ? versionData.datasetsDepositedDetails
+                : '',
+            codeDepositedDetails:
+              versionData?.codeDeposited === 'No'
+                ? versionData.codeDepositedDetails
+                : '',
+            protocolsDepositedDetails:
+              versionData?.protocolsDeposited === 'No'
+                ? versionData.protocolsDepositedDetails
+                : '',
+            labMaterialsRegisteredDetails:
+              versionData?.labMaterialsRegistered === 'No'
+                ? versionData.labMaterialsRegisteredDetails
+                : '',
+
+            teams: versionData.teams.map((team) => team.value),
+            labs: versionData.labs.map((lab) => lab.value),
+          },
+        ],
+      });
+
+      onSuccess();
+    }
   };
 
   const lifecycleSuggestions =
@@ -619,6 +646,53 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 )}
               />
             )}
+          </FormCard>
+
+          <FormCard key="contributors" title="Who were the contributors?">
+            <Controller
+              name="versions.0.teams"
+              control={control}
+              rules={{
+                required: 'Please add at least one team.',
+              }}
+              render={({ field: { value, onChange } }) => (
+                <LabeledMultiSelect
+                  title="Teams"
+                  description="Add other teams that contributed to this manuscript. The Project Manager and Lead PI from all teams listed will receive updates. They will also be able to edit the manuscript metadata and submit a new version of the manuscript."
+                  subtitle="(required)"
+                  enabled={!isSubmitting}
+                  placeholder="Start typing..."
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  loadOptions={getTeamSuggestions!}
+                  onChange={onChange}
+                  values={value}
+                  noOptionsMessage={({ inputValue }) =>
+                    `Sorry, no teams match ${inputValue}`
+                  }
+                />
+              )}
+            />
+
+            <Controller
+              name="versions.0.labs"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <LabeledMultiSelect
+                  title="Labs"
+                  description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+                  subtitle="(optional)"
+                  enabled={!isSubmitting}
+                  placeholder="Start typing..."
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  loadOptions={getLabSuggestions!}
+                  onChange={onChange}
+                  values={value}
+                  noOptionsMessage={({ inputValue }) =>
+                    `Sorry, no labs match ${inputValue}`
+                  }
+                />
+              )}
+            />
           </FormCard>
 
           {watchType && watchLifecycle && (

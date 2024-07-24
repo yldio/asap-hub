@@ -1,4 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -20,10 +25,25 @@ beforeEach(() => {
   history = createMemoryHistory();
 });
 
-const teamId = '42';
+const teamId = '1';
+
+const mockGetLabSuggestions = jest.fn();
+mockGetLabSuggestions.mockResolvedValue([
+  { label: 'One Lab', value: '1' },
+  { label: 'Two Lab', value: '2' },
+]);
+
+const getTeamSuggestions = jest.fn();
+getTeamSuggestions.mockResolvedValue([
+  { label: 'One Team', value: '1' },
+  { label: 'Two Team', value: '2' },
+]);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  getLabSuggestions: mockGetLabSuggestions,
+  getTeamSuggestions,
+  selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -103,6 +123,9 @@ it('data is sent on form submission', async () => {
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+
+          teams: ['1'],
+          labs: [],
         },
       ],
       teamId,
@@ -153,7 +176,6 @@ test.each`
     );
 
     userEvent.click(screen.getByRole('button', { name: /Submit/i }));
-
     const payload = {
       title: 'manuscript title',
       eligibilityReasons: [],
@@ -179,6 +201,9 @@ test.each`
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+
+          teams: ['1'],
+          labs: [],
         },
       ],
       teamId,
@@ -261,6 +286,9 @@ test.each`
             codeDepositedDetails: '',
             protocolsDepositedDetails: '',
             labMaterialsRegisteredDetails: '',
+
+            teams: ['1'],
+            labs: [],
           },
         ],
         teamId,
@@ -585,6 +613,9 @@ describe('renders the necessary fields', () => {
     codeDepositedDetails: 'Please provide details',
     protocolsDepositedDetails: 'Please provide details',
     labMaterialsRegisteredDetails: 'Please provide details',
+
+    teams: 'Add other teams that contributed to this manuscript.',
+    labs: 'Add ASAP labs that contributed to this manuscript.',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(
@@ -852,4 +883,137 @@ it('should show error when file upload fails', async () => {
   });
 
   expect(screen.getByText(mockError)).toBeInTheDocument();
+});
+
+it('user can add teams', async () => {
+  const onSave = jest.fn();
+  const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
+    { label: 'Team A', value: 'team-a' },
+    { label: 'Team B', value: 'team-b' },
+  ]);
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        getTeamSuggestions={getTeamSuggestionsMock}
+      />
+    </StaticRouter>,
+  );
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Team A')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Team A'));
+
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Team B')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Team B'));
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        versions: [
+          expect.objectContaining({
+            teams: ['1', 'team-a', 'team-b'],
+          }),
+        ],
+      }),
+    );
+  });
+});
+
+it('user can add labs', async () => {
+  const onSave = jest.fn();
+  const getLabSuggestions = jest.fn().mockResolvedValue([
+    { label: 'Lab One', value: 'lab-1' },
+    { label: 'Lab Two', value: 'lab-2' },
+  ]);
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        getLabSuggestions={getLabSuggestions}
+      />
+    </StaticRouter>,
+  );
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Lab One')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Lab One'));
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  expect(screen.getByText('Lab Two')).toBeVisible();
+  userEvent.click(screen.getByText('Lab Two'));
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        versions: [
+          expect.objectContaining({
+            labs: ['lab-1', 'lab-2'],
+          }),
+        ],
+      }),
+    );
+  });
+});
+
+it('displays error message when no team is found', async () => {
+  const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        getTeamSuggestions={getTeamSuggestionsMock}
+      />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  expect(screen.getByText(/Sorry, no teams match/i)).toBeVisible();
+});
+
+it('displays error message when no lab is found', async () => {
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
+  render(
+    <StaticRouter>
+      <ManuscriptForm {...defaultProps} getLabSuggestions={getLabSuggestions} />
+    </StaticRouter>,
+  );
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });

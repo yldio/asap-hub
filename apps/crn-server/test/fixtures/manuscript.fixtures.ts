@@ -25,6 +25,10 @@ export const getManuscriptDataObject = (
         url: 'https://example.com/manuscript.pdf',
         id: 'file-id',
       },
+      teams: [
+        { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
+      ],
+      labs: [{ id: 'lab-1', name: 'Lab 1' }],
     },
   ],
   ...data,
@@ -71,6 +75,23 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
         fileName: 'manuscript.pdf',
         url: 'https://example.com/manuscript.pdf',
       },
+      teamsCollection: {
+        items: [
+          {
+            sys: { id: 'team-1' },
+            displayName: 'Test 1',
+            inactiveSince: null,
+          },
+        ],
+      },
+      labsCollection: {
+        items: [
+          {
+            sys: { id: 'lab-1' },
+            name: 'Lab 1',
+          },
+        ],
+      },
       createdBy: {
         sys: {
           id: manuscriptAuthor.id,
@@ -100,18 +121,29 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
 export const getManuscriptPostBody = (): ManuscriptPostRequest => {
   const { title, teamId, versions } = getManuscriptDataObject();
 
-  const { createdBy: _, publishedAt: __, ...version } = versions[0]!;
-  return { title, teamId, eligibilityReasons: [], versions: [version] };
+  const {
+    createdBy: _,
+    publishedAt: __,
+    teams: ___,
+    ...version
+  } = versions[0]!;
+  return {
+    title,
+    teamId,
+    eligibilityReasons: [],
+    versions: [{ ...version, teams: ['team-1'], labs: [] }],
+  };
 };
 
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
   const { title, teamId, versions } = getManuscriptDataObject();
+  const { teams: _, ...version } = versions[0]!;
 
   return {
     title,
     teamId,
     eligibilityReasons: [],
-    versions,
+    versions: [{ ...version, teams: ['team-1'], labs: [] }],
     userId: 'user-id-0',
   };
 };

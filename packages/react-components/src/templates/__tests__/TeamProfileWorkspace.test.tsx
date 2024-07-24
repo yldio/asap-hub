@@ -114,6 +114,19 @@ describe('compliance section', () => {
                 alumniSinceDate: undefined,
               },
               publishedAt: '2020-12-10T20:36:54Z',
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Team 1',
+                  inactiveSince: undefined,
+                },
+                {
+                  id: 'team-2',
+                  displayName: 'Team 2',
+                  inactiveSince: '2022-10-10T20:36:54Z',
+                },
+              ],
+              labs: [{ name: 'Lab 1', id: 'lab-1' }],
             },
           ],
         },
@@ -139,6 +152,19 @@ describe('compliance section', () => {
                 alumniSinceDate: undefined,
               },
               publishedAt: '2020-12-10T20:36:54Z',
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Team 1',
+                  inactiveSince: undefined,
+                },
+                {
+                  id: 'team-2',
+                  displayName: 'Team 2',
+                  inactiveSince: '2022-10-10T20:36:54Z',
+                },
+              ],
+              labs: [{ name: 'Lab 1', id: 'lab-1' }],
             },
           ],
         },

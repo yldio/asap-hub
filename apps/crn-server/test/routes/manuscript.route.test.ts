@@ -208,6 +208,8 @@ describe('/manuscripts/ route', () => {
             filename: 'file.pdf',
             id: 'file-id',
           },
+          teams: ['team-1'],
+          labs: [],
         });
 
         const response = await supertest(app)

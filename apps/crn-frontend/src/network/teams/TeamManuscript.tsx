@@ -7,9 +7,11 @@ import {
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
+import { useLabSuggestions, useTeamSuggestions } from '../../shared-state';
 import {
   refreshTeamState,
   usePostManuscript,
+  useTeamById,
   useUploadManuscriptFile,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
@@ -21,11 +23,15 @@ type TeamManuscriptProps = {
 const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
 
+  const team = useTeamById(teamId);
+
   const { eligibilityReasons } = useEligibilityReason();
   const { setShowSuccessBanner } = useManuscriptToast();
   const form = useForm();
   const createManuscript = usePostManuscript();
   const handleFileUpload = useUploadManuscriptFile();
+  const getTeamSuggestions = useTeamSuggestions();
+  const getLabSuggestions = useLabSuggestions();
 
   const pushFromHere = usePushFromHere();
 
@@ -35,6 +41,14 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);
   };
+
+  const selectedTeams = [
+    {
+      label: team?.displayName || '',
+      value: teamId,
+      isFixed: true,
+    },
+  ];
 
   return (
     <FormProvider {...form}>
@@ -46,6 +60,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
           teamId={teamId}
           handleFileUpload={handleFileUpload}
           eligibilityReasons={eligibilityReasons}
+          getTeamSuggestions={getTeamSuggestions}
+          selectedTeams={selectedTeams}
+          getLabSuggestions={getLabSuggestions}
         />
       </Frame>
     </FormProvider>

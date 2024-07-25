@@ -112,16 +112,15 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               }),
             }),
           )}
-          interestGroups={user.interestGroups.map(
-            ({ id, name = '', active }) => ({
+          interestGroups={user.interestGroups
+            .filter(({ id }) => !!id)
+            .map(({ id, name = '', active }) => ({
               name,
               active,
-              // TODO: fix this
               href: networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.buildPath({
                 interestGroupId: id,
               }),
-            }),
-          )}
+            }))}
           aboutHref="https://www.parkinsonsroadmap.org/"
         >
           <CheckOnboarded>

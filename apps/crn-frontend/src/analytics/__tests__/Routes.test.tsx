@@ -93,7 +93,7 @@ const renderPage = async (path: string) => {
 describe('Analytics page', () => {
   it('renders the Analytics Page successfully', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
     expect(
       await screen.findByText(/Analytics/i, {
@@ -106,7 +106,7 @@ describe('Analytics page', () => {
     mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
-    await renderPage(analytics({}).$);
+    await renderPage(analyticsRoutes.DEFAULT.buildPath({}));
 
     expect(
       await screen.findByText(/User Productivity/i, {
@@ -120,7 +120,7 @@ describe('Productivity', () => {
   it('renders the productivity tab', async () => {
     mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     expect(
       await screen.findByText(/Analytics/i, {
@@ -133,7 +133,7 @@ describe('Productivity', () => {
     mockGetTeamProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     await waitFor(() => {
       expect(mockGetTeamProductivity).toHaveBeenCalled();
@@ -148,7 +148,7 @@ describe('Productivity', () => {
     );
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     await waitFor(() => {
       expect(mockGetTeamProductivityPerformance).toHaveBeenCalled();
@@ -161,7 +161,7 @@ describe('Productivity', () => {
     mockGetUserProductivity.mockRejectedValueOnce(new Error('Failed to fetch'));
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     await waitFor(() => {
@@ -177,7 +177,7 @@ describe('Productivity', () => {
     );
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     await waitFor(() => {
@@ -193,7 +193,9 @@ describe('Leadership & Membership', () => {
     mockGetAnalyticsLeadership.mockResolvedValueOnce({ items: [], total: 0 });
 
     await renderPage(
-      analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
+      analyticsRoutes.DEFAULT.LEADERSHIP.METRIC.buildPath({
+        metric: 'interest-group',
+      }),
     );
     expect(
       await screen.findByText(/Analytics/i, {
@@ -207,7 +209,9 @@ describe('Leadership & Membership', () => {
       new Error('Failed to fetch'),
     );
     await renderPage(
-      analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
+      analyticsRoutes.DEFAULT.LEADERSHIP.METRIC.buildPath({
+        metric: 'interest-group',
+      }),
     );
 
     await waitFor(() => {
@@ -221,9 +225,10 @@ describe('Leadership & Membership', () => {
 describe('Collaboration', () => {
   it('renders the Collaboration tab', async () => {
     await renderPage(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric: 'user', type: 'within-team' }).$,
+      analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+        metric: 'user',
+        type: 'within-team',
+      }),
     );
     expect(
       await screen.findByText(/Analytics/i, {
@@ -237,9 +242,10 @@ describe('Collaboration', () => {
       new Error('Failed to fetch'),
     );
     await renderPage(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric: 'user', type: 'within-team' }).$,
+      analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+        metric: 'user',
+        type: 'within-team',
+      }),
     );
 
     await waitFor(() => {
@@ -254,9 +260,10 @@ describe('Collaboration', () => {
       new Error('Failed to fetch'),
     );
     await renderPage(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric: 'team', type: 'within-team' }).$,
+      analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+        metric: 'team',
+        type: 'within-team',
+      }),
     );
 
     await waitFor(() => {
@@ -269,7 +276,7 @@ describe('Collaboration', () => {
 
 describe('Engagement', () => {
   it('renders the Engagement tab', async () => {
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({}));
     expect(
       await screen.findByText(/Analytics/i, {
         selector: 'h1',

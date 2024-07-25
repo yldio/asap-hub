@@ -22,7 +22,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Router } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import {
@@ -236,7 +236,9 @@ describe('Share Output', () => {
     const userResponse = createUserResponse({}, 1);
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).teams({}).team({ teamId: teamResponse.id }).$,
+        networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+          teamId: teamResponse.id,
+        }),
       ],
     });
 
@@ -271,7 +273,9 @@ describe('Share Output', () => {
     const userResponse = createUserResponse({}, 1);
     const history = createMemoryHistory({
       initialEntries: [
-        network({}).teams({}).team({ teamId: teamResponse.id }).$,
+        networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+          teamId: teamResponse.id,
+        }),
       ],
     });
 
@@ -305,10 +309,10 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .teams({})
-          .team({ teamId: teamResponse.id })
-          .duplicateOutput({ id: researchOutput.id }).$,
+        networkRoutes.DEFAULT.TEAMS.DETAILS.DUPLICATE_OUTPUT.buildPath({
+          teamId: teamResponse.id,
+          id: researchOutput.id,
+        }),
       ],
     });
     await renderPage(
@@ -348,10 +352,10 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .teams({})
-          .team({ teamId: teamResponse.id })
-          .duplicateOutput({ id: researchOutput.id }).$,
+        networkRoutes.DEFAULT.TEAMS.DETAILS.DUPLICATE_OUTPUT.buildPath({
+          teamId: teamResponse.id,
+          id: researchOutput.id,
+        }),
       ],
     });
     await renderPage(
@@ -383,9 +387,9 @@ describe('Duplicate Output', () => {
 
     await waitFor(() => {
       expect(history.location.pathname).toEqual(
-        sharedResearch({}).researchOutput({
+        sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
           researchOutputId: researchOutput.id,
-        }).$,
+        }),
       );
       expect(screen.queryByText(/loading/i)).toBe(null);
     });
@@ -399,10 +403,10 @@ describe('Duplicate Output', () => {
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .teams({})
-          .team({ teamId: teamResponse.id })
-          .duplicateOutput({ id: 'fake' }).$,
+        networkRoutes.DEFAULT.TEAMS.DETAILS.DUPLICATE_OUTPUT.buildPath({
+          teamId: teamResponse.id,
+          id: 'fake',
+        }),
       ],
     });
     await renderPage(

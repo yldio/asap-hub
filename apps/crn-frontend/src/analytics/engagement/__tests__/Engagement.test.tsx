@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { ListEngagementResponse } from '@asap-hub/model';
+import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
@@ -21,7 +21,7 @@ const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
 >;
 
-const data: ListEngagementResponse = {
+const data: ListEngagementAlgoliaResponse = {
   total: 1,
   items: [
     {
@@ -33,6 +33,7 @@ const data: ListEngagementResponse = {
       totalSpeakerCount: 3,
       uniqueAllRolesCount: 3,
       uniqueKeyPersonnelCount: 2,
+      objectID: 'engagement-algolia-id',
     },
   ],
 };

@@ -25,7 +25,8 @@ export type Metric =
   | 'team-productivity'
   | 'user-productivity'
   | 'team-collaboration'
-  | 'user-collaboration';
+  | 'user-collaboration'
+  | 'engagement';
 
 export const exportAnalyticsData = async (
   metric: Metric,
@@ -78,6 +79,8 @@ const exportDataWithFilters = async (
         await file.write(',');
       }
     }
+  } else if (metric === 'engagement') {
+    await exportData(metric, file);
   } else {
     for (let i = 0; i < timeRanges.length; i += 1) {
       await exportData(metric, file, { timeRange: timeRanges[i] });
@@ -134,7 +137,7 @@ const exportData = async (
           outputType: filter?.outputType,
         },
       });
-    } else {
+    } else if (metric === 'user-collaboration') {
       records = await analyticsController.fetchUserCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
@@ -142,6 +145,11 @@ const exportData = async (
           timeRange: filter?.timeRange,
           documentCategory: filter?.documentCategory,
         },
+      });
+    } else {
+      records = await analyticsController.fetchEngagement({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
       });
     }
 

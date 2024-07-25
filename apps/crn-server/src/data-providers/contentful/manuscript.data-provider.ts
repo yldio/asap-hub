@@ -4,6 +4,7 @@ import {
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
   FETCH_MANUSCRIPT_BY_ID,
+  getLinkAsset,
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
@@ -63,11 +64,19 @@ export class ManuscriptContentfulDataProvider
       throw new Error('No versions provided');
     }
 
+    const manuscriptFileAsset = await environment.getAsset(
+      version.manuscriptFile.id,
+    );
+    await manuscriptFileAsset.publish();
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
         fields: addLocaleToFields({
           ...version,
+          teams: getLinkEntities(version.teams),
+          labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
+          manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           createdBy: getLinkEntity(userId),
         }),
       },
@@ -111,6 +120,11 @@ export const parseGraphqlManuscriptVersion = (
     .map((version) => ({
       type: version?.type,
       lifecycle: version?.lifecycle,
+      manuscriptFile: {
+        url: version?.manuscriptFile?.url,
+        filename: version?.manuscriptFile?.fileName,
+        id: version?.manuscriptFile?.sys.id,
+      },
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,
@@ -161,6 +175,15 @@ export const parseGraphqlManuscriptVersion = (
         })),
       },
       publishedAt: version?.sys.publishedAt,
+      teams: version?.teamsCollection?.items.map((teamItem) => ({
+        id: teamItem?.sys.id,
+        displayName: teamItem?.displayName,
+        inactiveSince: teamItem?.inactiveSince || undefined,
+      })),
+      labs: version?.labsCollection?.items.map((labItem) => ({
+        id: labItem?.sys.id,
+        name: labItem?.name,
+      })),
     }))
     .filter(
       (version) =>

@@ -199,7 +199,7 @@ export const FETCH_USER_COLLABORATION = gql`
           researchOutputsCollection(limit: 200) {
             items {
               addedDate
-              sharingStatus
+              documentType
               authorsCollection(limit: 6) {
                 items {
                   __typename
@@ -250,6 +250,7 @@ export const FETCH_TEAM_COLLABORATION = gql`
               addedDate
               createdDate
               documentType
+              sharingStatus
               labsCollection(limit: 2) {
                 total
               }
@@ -281,8 +282,17 @@ export const FETCH_ENGAGEMENT = gql`
         displayName
         inactiveSince
         linkedFrom {
-          teamMembershipCollection(limit: 1) {
-            total
+          teamMembershipCollection(limit: 100) {
+            items {
+              role
+              linkedFrom {
+                usersCollection(limit: 1) {
+                  items {
+                    onboarded
+                  }
+                }
+              }
+            }
           }
           eventSpeakersCollection(limit: 100) {
             items {

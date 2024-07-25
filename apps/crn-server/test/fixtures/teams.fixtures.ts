@@ -31,6 +31,10 @@ export const getContentfulGraphql = (teamById = false) => ({
   UsersLabsCollection: () => getContentfulGraphqlTeamMemberLabs(),
   ManuscriptsCollection: () => getContentfulGraphqlManuscripts(),
   ManuscriptsVersionsCollection: () => getContentfulGraphqlManuscriptVersions(),
+  ManuscriptVersionsTeamsCollection: () =>
+    getContentfulGraphqlManuscriptVersions().items[0]?.teamsCollection,
+  ManuscriptVersionsLabsCollection: () =>
+    getContentfulGraphqlManuscriptVersions().items[0]?.labsCollection,
 });
 
 export const getUsersTeamsCollection = () => ({
@@ -213,6 +217,18 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
+          manuscriptFile: {
+            id: 'file-id',
+            url: 'https://example.com/manuscript.pdf',
+            filename: 'manuscript.pdf',
+          },
+          teams: [
+            {
+              id: 'team-1',
+              displayName: 'Test 1',
+            },
+          ],
+          labs: [{ id: 'lab-1', name: 'Lab 1' }],
         },
       ],
     },
@@ -225,6 +241,18 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           publishedAt: '2020-09-23T20:45:22.000Z',
+          manuscriptFile: {
+            id: 'file-id',
+            url: 'https://example.com/manuscript.pdf',
+            filename: 'manuscript.pdf',
+          },
+          teams: [
+            {
+              id: 'team-1',
+              displayName: 'Test 1',
+            },
+          ],
+          labs: [{ id: 'lab-1', name: 'Lab 1' }],
         },
       ],
     },

@@ -2,6 +2,8 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   performanceByDocumentType,
   userProductivityPerformance,
+  userCollaborationPerformance,
+  teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
 import { analyticsRoutes } from '@asap-hub/routing';
 import {
@@ -17,8 +19,11 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
   getTeamCollaboration,
+  getTeamCollaborationPerformance,
   getUserCollaboration,
+  getUserCollaborationPerformance,
 } from '../collaboration/api';
+import { getEngagement } from '../engagement/api';
 import { getAnalyticsLeadership } from '../leadership/api';
 import {
   getTeamProductivity,
@@ -31,6 +36,7 @@ import Analytics from '../Routes';
 jest.mock('../leadership/api');
 jest.mock('../productivity/api');
 jest.mock('../collaboration/api');
+jest.mock('../engagement/api');
 
 mockConsoleError();
 afterEach(() => {
@@ -60,9 +66,31 @@ const mockGetUserProductivityPerformance =
 const mockGetUserCollaboration = getUserCollaboration as jest.MockedFunction<
   typeof getUserCollaboration
 >;
+
+const mockGetUserCollaborationPerformance =
+  getUserCollaborationPerformance as jest.MockedFunction<
+    typeof getUserCollaborationPerformance
+  >;
+
 const mockGetTeamCollaboration = getTeamCollaboration as jest.MockedFunction<
   typeof getTeamCollaboration
 >;
+
+const mockGetTeamCollaborationPerformance =
+  getTeamCollaborationPerformance as jest.MockedFunction<
+    typeof getTeamCollaborationPerformance
+  >;
+
+const mockGetEngagement = getEngagement as jest.MockedFunction<
+  typeof getEngagement
+>;
+
+mockGetUserCollaborationPerformance.mockResolvedValue(
+  userCollaborationPerformance,
+);
+mockGetTeamCollaborationPerformance.mockResolvedValue(
+  teamCollaborationPerformance,
+);
 
 mockGetTeamProductivityPerformance.mockResolvedValue(performanceByDocumentType);
 mockGetUserProductivityPerformance.mockResolvedValue(
@@ -282,5 +310,17 @@ describe('Engagement', () => {
         selector: 'h1',
       }),
     ).toBeVisible();
+  });
+
+  it('renders error message when the engagement response is not a 2XX', async () => {
+    mockGetEngagement.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({}));
+
+    await waitFor(() => {
+      expect(mockGetEngagement).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

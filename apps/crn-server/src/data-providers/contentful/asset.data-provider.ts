@@ -5,7 +5,11 @@ import {
   Environment,
 } from '@asap-hub/contentful';
 import { ListResponse } from '@asap-hub/model';
-import { AssetDataProvider, AssetCreateData } from '../types';
+import {
+  AssetDataProvider,
+  AssetCreateData,
+  AssetCreateDataObject,
+} from '../types';
 
 export class AssetContentfulDataProvider implements AssetDataProvider {
   constructor(private getRestClient: () => Promise<Environment>) {}
@@ -18,24 +22,39 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     throw new Error('Method not implemented.');
   }
 
-  async create({ id, avatar, contentType }: AssetCreateData): Promise<string> {
-    const fileName = `${id}.${mime.extension(contentType)}`;
+  async create({
+    id,
+    title,
+    description,
+    content,
+    contentType,
+    filename,
+    publish = true,
+  }: AssetCreateData): Promise<AssetCreateDataObject> {
+    const assetFilename = filename ?? `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();
     const asset = await environment.createAssetFromFiles({
       fields: addLocaleToFields({
-        title: 'Avatar',
-        description: 'Avatar',
+        title,
+        description,
         file: {
           contentType,
-          fileName,
-          file: avatar,
+          fileName: assetFilename,
+          file: content,
         },
       }) as AssetFileProp['fields'],
     });
     const processed = await asset.processForAllLocales();
-    const published = await processed.publish();
 
-    return published.sys.id;
+    if (publish) {
+      await processed.publish();
+    }
+
+    return {
+      id: asset.sys.id,
+      filename: asset.fields.file['en-US']?.fileName || assetFilename,
+      url: asset.fields.file['en-US']?.url || '',
+    };
   }
 }

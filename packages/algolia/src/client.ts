@@ -30,6 +30,7 @@ import {
   WithMeta,
   WorkingGroupResponse,
   UserCollaborationPerformance,
+  OutputTypeOption,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -146,6 +147,7 @@ export type DistributeToEntityRecords<
     type: ResponsesKey;
     range?: TimeRangeOption;
     documentCategory?: DocumentCategoryOption;
+    outputType?: OutputTypeOption;
   };
 };
 export type ClientSearchResponse<

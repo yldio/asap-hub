@@ -5,8 +5,10 @@ import {
   FilterAnalyticsOptions,
   ListResponse,
   outputTypes,
+  TeamCollaborationResponse,
   TeamProductivityResponse,
   timeRanges,
+  UserCollaborationResponse,
   UserProductivityResponse,
   UserProductivityTeam,
 } from '@asap-hub/model';
@@ -43,7 +45,7 @@ const exportDataWithFilters = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {
-  if (metric === 'user-productivity') {
+  if (metric === 'user-productivity' || metric === 'user-collaboration') {
     for (let i = 0; i < timeRanges.length; i += 1) {
       for (let j = 0; j < documentCategories.length; j += 1) {
         await exportData(metric, file, {
@@ -58,7 +60,10 @@ const exportDataWithFilters = async (
         await file.write(',');
       }
     }
-  } else if (metric === 'team-productivity') {
+  } else if (
+    metric === 'team-productivity' ||
+    metric === 'team-collaboration'
+  ) {
     for (let i = 0; i < timeRanges.length; i += 1) {
       for (let j = 0; j < outputTypes.length; j += 1) {
         await exportData(metric, file, {
@@ -124,11 +129,19 @@ const exportData = async (
       records = await analyticsController.fetchTeamCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        filter: {
+          timeRange: filter?.timeRange,
+          outputType: filter?.outputType,
+        },
       });
     } else {
       records = await analyticsController.fetchUserCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
+        filter: {
+          timeRange: filter?.timeRange,
+          documentCategory: filter?.documentCategory,
+        },
       });
     }
 
@@ -191,19 +204,36 @@ const transformRecords = (
   return payload;
 };
 
+const formatTags = (
+  metricOption: 'user' | 'team',
+  name: string,
+  teamNames: string[],
+): string[] => {
+  if (metricOption === 'user')
+    return name ? [name].concat(teamNames) : teamNames;
+  return name ? [name] : [];
+};
 const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
-  let tag = '';
+  let teamNames = [];
   switch (type) {
     case 'team-leadership':
-      tag = (record as AnalyticsTeamLeadershipResponse).displayName;
-      return tag ? [tag] : [];
+      return formatTags(
+        'team',
+        (record as AnalyticsTeamLeadershipResponse).displayName,
+        [],
+      );
     case 'user-productivity':
-      const { name, teams } = record as UserProductivityResponse;
-      const teamNames = teams.map((team) => team.team);
-      return name ? [name].concat(teamNames) : teamNames;
+      const userProductivityResponse = record as UserProductivityResponse;
+      teamNames = userProductivityResponse.teams.map((team) => team.team);
+      return formatTags('user', userProductivityResponse.name, teamNames);
+    case 'user-collaboration':
+      const userCollaborationResponse = record as UserCollaborationResponse;
+      teamNames = userCollaborationResponse.teams.map((team) => team.team);
+      return formatTags('user', userCollaborationResponse.name, teamNames);
     case 'team-productivity':
-      tag = (record as TeamProductivityResponse).name;
-      return tag ? [tag] : [];
+      return formatTags('team', (record as TeamProductivityResponse).name, []);
+    case 'team-collaboration':
+      return formatTags('team', (record as TeamCollaborationResponse).name, []);
     default:
       return [];
   }

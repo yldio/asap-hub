@@ -33,15 +33,20 @@ import {
 import { refreshResearchOutputState } from '../../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput, getTeam } from '../api';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
-// jest.mock('../api');
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
   createResearchOutput: jest.fn(),
+  uploadManuscriptFile: jest.fn().mockResolvedValue({
+    filename: 'manuscript.pdf',
+    url: 'https://example.com/manuscript.pdf',
+    id: 'file-id',
+  }),
   createManuscript: jest
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),
@@ -92,7 +97,9 @@ const renderPage = async (
             <MemoryRouter>
               <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.path}>
                 <ManuscriptToastProvider>
-                  <TeamProfile currentTime={currentTime} />
+                  <EligibilityReasonProvider>
+                    <TeamProfile currentTime={currentTime} />
+                  </EligibilityReasonProvider>
                 </ManuscriptToastProvider>
               </Route>
             </MemoryRouter>
@@ -173,6 +180,14 @@ it('displays manuscript success toast message and user can dismiss toast', async
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
   userEvent.click(screen.getByText(/Share Manuscript/i));
+  userEvent.click(screen.getByText(/Yes/i));
+
+  userEvent.click(
+    screen.getByText(
+      'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+    ),
+  );
+  userEvent.click(screen.getByText(/Continue/i));
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
@@ -198,6 +213,12 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.type(lifecycleTextbox, '{ENTER}');
   lifecycleTextbox.blur();
 
+  const testFile = new File(['file content'], 'file.txt', {
+    type: 'text/plain',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  userEvent.upload(uploadInput, testFile);
+
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   within(quickChecks)
     .getAllByText('Yes')
@@ -205,6 +226,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
       userEvent.click(button);
     });
 
+  await waitFor(() => {
+    expect(submitButton).toBeEnabled();
+  });
   userEvent.click(submitButton);
 
   await waitFor(() => {
@@ -218,7 +242,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.click(screen.getByLabelText('Close'));
 
   expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
-});
+}, 60000);
 
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
   await renderPage({

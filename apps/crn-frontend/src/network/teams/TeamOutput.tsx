@@ -36,7 +36,7 @@ import {
   useRelatedResearchSuggestions,
   useResearchTags,
   useTeamSuggestions,
-} from '../../shared-research';
+} from '../../shared-state';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
 const useParamOutputDocumentType = (): OutputDocumentTypeParameter => {

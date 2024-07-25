@@ -5,7 +5,7 @@ import { useAlgolia } from '../hooks/algolia';
 import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useRelatedResearchSuggestions,
-} from '../shared-research';
+} from '../shared-state/shared-research';
 
 const mockAlgoliaClient = {
   search: jest.fn(),

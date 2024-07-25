@@ -13,6 +13,8 @@ import {
   TeamCollaborationPerformance,
   UserCollaborationPerformance,
   TimeRangeOption,
+  DocumentCategoryOption,
+  OutputTypeOption,
 } from '@asap-hub/model';
 
 export type CollaborationListOptions = Pick<
@@ -20,6 +22,8 @@ export type CollaborationListOptions = Pick<
   'currentPage' | 'pageSize'
 > & {
   timeRange: TimeRangeOption;
+  documentCategory?: DocumentCategoryOption;
+  outputType?: OutputTypeOption;
 };
 
 export const getUserCollaboration =

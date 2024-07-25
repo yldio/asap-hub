@@ -1,9 +1,9 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
-  LeadershipAndMembershipSortingDirection,
-  initialSortingDirection,
-  SortLeadershipAndMembership,
   AnalyticsTeamLeadershipResponse,
+  initialSortingDirection,
+  LeadershipAndMembershipSortingDirection,
+  SortLeadershipAndMembership,
 } from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
 import { analyticsRoutes } from '@asap-hub/routing';
@@ -11,8 +11,10 @@ import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAnalyticsLeadership } from './api';
-import { algoliaResultsToStream, leadershipToCSV } from './export';
+import { leadershipToCSV } from './export';
+
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { algoliaResultsToStream } from '../utils/export';
 import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {

@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { ComponentProps } from 'react';
 import {
   manuscriptFormFieldsMapping,
@@ -11,7 +17,6 @@ import {
 } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
 
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -22,14 +27,37 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUseNavigate,
 }));
 
-const teamId = '42';
+const teamId = '1';
+
+const mockGetLabSuggestions = jest.fn();
+mockGetLabSuggestions.mockResolvedValue([
+  { label: 'One Lab', value: '1' },
+  { label: 'Two Lab', value: '2' },
+]);
+
+const getTeamSuggestions = jest.fn();
+getTeamSuggestions.mockResolvedValue([
+  { label: 'One Team', value: '1' },
+  { label: 'Two Team', value: '2' },
+]);
 
 beforeEach(jest.clearAllMocks);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  getLabSuggestions: mockGetLabSuggestions,
+  getTeamSuggestions,
+  selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: '123',
+      filename: 'test.pdf',
+      url: 'http://example.com/test.pdf',
+    }),
+  ),
   onSuccess: jest.fn(),
   teamId,
+  eligibilityReasons: new Set(),
   acknowledgedGrantNumber: 'Yes',
   asapAffiliationIncluded: 'Yes',
   manuscriptLicense: 'Yes',
@@ -41,9 +69,9 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter location="/">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.getByRole('heading', { name: /What are you sharing/i }),
@@ -54,25 +82,36 @@ it('renders the form', async () => {
 it('data is sent on form submission', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
         type="Original Research"
         lifecycle="Draft manuscript (prior to preprint submission)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   userEvent.click(screen.getByRole('button', { name: /Submit/i }));
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         {
           type: 'Original Research',
           lifecycle: 'Draft manuscript (prior to preprint submission)',
+          manuscriptFile: {
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: undefined,
@@ -88,6 +127,9 @@ it('data is sent on form submission', async () => {
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+
+          teams: ['1'],
+          labs: [],
         },
       ],
       teamId,
@@ -120,26 +162,32 @@ test.each`
       [fieldDetails]: 'Explanation',
     };
     render(
-      <StaticRouter location="">
+      <MemoryRouter>
         <ManuscriptForm
           {...props}
           title="manuscript title"
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
     userEvent.click(screen.getByRole('button', { name: /Submit/i }));
-
     const payload = {
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         {
           type: 'Original Research',
           lifecycle: 'Publication',
+          manuscriptFile: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
           acknowledgedGrantNumber: 'Yes',
@@ -157,6 +205,9 @@ test.each`
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+
+          teams: ['1'],
+          labs: [],
         },
       ],
       teamId,
@@ -194,16 +245,21 @@ test.each`
       [fieldDetails]: 'Explanation',
     };
     render(
-      <StaticRouter location="">
+      <MemoryRouter>
         <ManuscriptForm
           {...props}
           title="manuscript title"
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
           onSave={onSave}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
     userEvent.click(screen.getByRole('button', { name: /Submit/i }));
@@ -211,10 +267,12 @@ test.each`
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith({
         title: 'manuscript title',
+        eligibilityReasons: [],
         versions: [
           {
             type: 'Original Research',
             lifecycle: 'Publication',
+            manuscriptFile: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
@@ -232,6 +290,9 @@ test.each`
             codeDepositedDetails: '',
             protocolsDepositedDetails: '',
             labMaterialsRegisteredDetails: '',
+
+            teams: ['1'],
+            labs: [],
           },
         ],
         teamId,
@@ -248,16 +309,21 @@ it('displays an error message when user selects no in a quick check and does not
     acknowledgedGrantNumberDetails: undefined,
   };
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm
         {...props}
         title="manuscript title"
         type="Original Research"
         publicationDoi="10.0777"
         lifecycle="Publication"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.queryByText(/Please enter the details./i),
@@ -287,9 +353,9 @@ it('displays an error message when user selects no in a quick check and does not
 
 it('does not display the lifecycle select box until type is selected', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(
     screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
@@ -317,9 +383,9 @@ it.each(manuscriptTypeLifecyclesFlat)(
   'displays $lifecycle lifecycle option for when $type type is selected',
   async ({ lifecycle, type }) => {
     render(
-      <StaticRouter location="">
+      <MemoryRouter>
         <ManuscriptForm {...defaultProps} type={type} lifecycle="" />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
     fireEvent.keyDown(
@@ -336,9 +402,9 @@ it.each(manuscriptTypeLifecyclesFlat)(
 
 it('displays error message when manuscript title is missing', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
   const submitButton = screen.getByRole('button', { name: /Submit/i });
@@ -366,9 +432,9 @@ it('displays error message when manuscript title is missing', async () => {
 
 it('displays error message when no type was found', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   const textbox = screen.getByRole('combobox', { name: /Type of Manuscript/i });
@@ -379,9 +445,9 @@ it('displays error message when no type was found', async () => {
 
 it('displays error message when no lifecycle was found', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   fireEvent.keyDown(
@@ -404,9 +470,9 @@ it('displays error message when no lifecycle was found', async () => {
 
 it('displays error message when manuscript title is bigger than 256 characters', async () => {
   render(
-    <StaticRouter location="/">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   const input = screen.getByRole('textbox', {
@@ -431,14 +497,14 @@ it('displays error message when manuscript title is bigger than 256 characters',
 });
 it('displays error message when other details is bigger than 256 characters', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm
         {...defaultProps}
         title="Manuscript"
         type="Original Research"
         lifecycle="Other"
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   const input = screen.getByRole('textbox', {
@@ -465,26 +531,33 @@ it('displays error message when other details is bigger than 256 characters', as
 it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
         type="Original Research"
         lifecycle="Typeset proof"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
         onSave={onSave}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   userEvent.click(screen.getByRole('button', { name: /Submit/i }));
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       teamId,
       versions: [
         expect.objectContaining({
           type: 'Original Research',
           lifecycle: 'Typeset proof',
+          manuscriptFile: expect.anything(),
           requestingApcCoverage: 'Already submitted',
         }),
       ],
@@ -506,13 +579,13 @@ describe('preprintDoi', () => {
     'preprintDoi is $status when lifecycle is $lifecycle',
     async ({ lifecycle, status }) => {
       render(
-        <StaticRouter location="">
+        <MemoryRouter>
           <ManuscriptForm
             {...defaultProps}
             type="Original Research"
             lifecycle={lifecycle}
           />
-        </StaticRouter>,
+        </MemoryRouter>,
       );
 
       expect(
@@ -533,6 +606,7 @@ describe('renders the necessary fields', () => {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
+    manuscriptFile: 'Upload the main manuscript file',
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',
@@ -552,6 +626,9 @@ describe('renders the necessary fields', () => {
     codeDepositedDetails: 'Please provide details',
     protocolsDepositedDetails: 'Please provide details',
     labMaterialsRegisteredDetails: 'Please provide details',
+
+    teams: 'Add other teams that contributed to this manuscript.',
+    labs: 'Add ASAP labs that contributed to this manuscript.',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(
@@ -563,13 +640,13 @@ describe('renders the necessary fields', () => {
         (lifecycle) => {
           const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
           const { getByText } = render(
-            <StaticRouter location="">
+            <MemoryRouter>
               <ManuscriptForm
                 {...defaultProps}
                 type={manuscriptType}
                 lifecycle={manuscriptLifecycle}
               />
-            </StaticRouter>,
+            </MemoryRouter>,
           );
 
           manuscriptFormFieldsMapping[manuscriptType][
@@ -582,48 +659,30 @@ describe('renders the necessary fields', () => {
     },
   );
 });
-
 it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
         onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
-
-  const typeTextbox = screen.getByRole('textbox', {
-    name: /Type of Manuscript/i,
-  });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, '{enter}');
-  typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication');
-  userEvent.type(lifecycleTextbox, '{enter}');
-  lifecycleTextbox.blur();
-
-  const preprintDoi = '10.4444/test';
-  const publicationDoi = '10.4467/test';
-
-  const preprintDoiTextbox = screen.getByRole('textbox', {
-    name: /Preprint DOI/i,
-  });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
-
-  const publicationDoiTextbox = screen.getByRole('textbox', {
-    name: /Publication DOI/i,
-  });
-  userEvent.type(publicationDoiTextbox, publicationDoi);
-
-  expect(preprintDoiTextbox).toHaveValue(preprintDoi);
-  expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
   userEvent.type(
     lifecycleTextbox,
@@ -643,10 +702,13 @@ it('resets form fields to default values when no longer visible', async () => {
     }),
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(submitButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
+      eligibilityReasons: [],
       versions: [
         expect.objectContaining({
           preprintDoi: undefined,
@@ -660,9 +722,9 @@ it('resets form fields to default values when no longer visible', async () => {
 
 it('maintains values provided when lifecycle changes but field is still visible', async () => {
   render(
-    <StaticRouter location="">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} title="manuscript title" />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   const typeTextbox = screen.getByRole('textbox', {
@@ -714,9 +776,9 @@ it('maintains values provided when lifecycle changes but field is still visible'
 it('does not submit when required values are missing', async () => {
   const onSave = jest.fn();
   render(
-    <StaticRouter location="/">
+    <MemoryRouter>
       <ManuscriptForm {...defaultProps} onSave={onSave} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
@@ -745,4 +807,220 @@ it('should go back when cancel button is clicked', async () => {
 
   expect(mockedUseNavigate).toHaveBeenCalledTimes(1);
   expect(mockedUseNavigate).toHaveBeenCalledWith(-1);
+});
+
+it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
+  render(
+    <MemoryRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+      />
+    </MemoryRouter>,
+  );
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+
+  const testFile = new File(['file content'], 'test.pdf', {
+    type: 'application/pdf',
+  });
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(() => {
+    userEvent.upload(uploadInput, testFile);
+  });
+
+  expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+
+  const removeFileButton = screen.getByRole('button', { name: /cross/i });
+  expect(removeFileButton).toBeInTheDocument();
+
+  await waitFor(() => {
+    userEvent.click(removeFileButton);
+  });
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+});
+
+it('should show error when file upload fails', async () => {
+  const handleFileUpload: jest.MockedFunction<
+    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+  > = jest.fn();
+
+  const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+  const mockError = 'No file provided or file is not a PDF.';
+
+  handleFileUpload.mockImplementation(
+    (file: File, handleError: (errorMessage: string) => void) => {
+      if (file === mockFile) {
+        return Promise.reject(new Error(mockError)).catch((error) => {
+          handleError(error.message);
+          return undefined;
+        });
+      }
+      return Promise.resolve({
+        id: '123',
+        filename: 'test.pdf',
+        url: 'http://example.com/test.pdf',
+      });
+    },
+  );
+  render(
+    <MemoryRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        handleFileUpload={handleFileUpload}
+      />
+    </MemoryRouter>,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(async () => {
+    userEvent.upload(uploadInput, mockFile);
+  });
+
+  expect(screen.getByText(mockError)).toBeInTheDocument();
+});
+
+it('user can add teams', async () => {
+  const onSave = jest.fn();
+  const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
+    { label: 'Team A', value: 'team-a' },
+    { label: 'Team B', value: 'team-b' },
+  ]);
+  render(
+    <MemoryRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        getTeamSuggestions={getTeamSuggestionsMock}
+      />
+    </MemoryRouter>,
+  );
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Team A')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Team A'));
+
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Team B')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Team B'));
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        versions: [
+          expect.objectContaining({
+            teams: ['1', 'team-a', 'team-b'],
+          }),
+        ],
+      }),
+    );
+  });
+});
+
+it('user can add labs', async () => {
+  const onSave = jest.fn();
+  const getLabSuggestions = jest.fn().mockResolvedValue([
+    { label: 'Lab One', value: 'lab-1' },
+    { label: 'Lab Two', value: 'lab-2' },
+  ]);
+  render(
+    <MemoryRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        onSave={onSave}
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        manuscriptFile={{
+          id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        getLabSuggestions={getLabSuggestions}
+      />
+    </MemoryRouter>,
+  );
+  const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Lab One')).toBeVisible();
+  });
+  userEvent.click(screen.getByText('Lab One'));
+
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  expect(screen.getByText('Lab Two')).toBeVisible();
+  userEvent.click(screen.getByText('Lab Two'));
+
+  userEvent.click(submitButton);
+
+  await waitFor(() => {
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        versions: [
+          expect.objectContaining({
+            labs: ['lab-1', 'lab-2'],
+          }),
+        ],
+      }),
+    );
+  });
+});
+
+it('displays error message when no team is found', async () => {
+  const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
+  render(
+    <MemoryRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        getTeamSuggestions={getTeamSuggestionsMock}
+      />
+    </MemoryRouter>,
+  );
+  userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  expect(screen.getByText(/Sorry, no teams match/i)).toBeVisible();
+});
+
+it('displays error message when no lab is found', async () => {
+  const getLabSuggestions = jest.fn().mockResolvedValue([]);
+  render(
+    <MemoryRouter>
+      <ManuscriptForm {...defaultProps} getLabSuggestions={getLabSuggestions} />
+    </MemoryRouter>,
+  );
+  userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });

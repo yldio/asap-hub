@@ -179,6 +179,7 @@ type AssetLinkingCollections {
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
   iconCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): IconCollection
   interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
   tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TutorialsCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
@@ -2335,8 +2336,60 @@ input LabsFilter {
 
 type LabsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   usersCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+}
+
+enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
+  acknowledgedGrantNumber_ASC
+  acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
+  asapAffiliationIncluded_ASC
+  asapAffiliationIncluded_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
+  codeDeposited_ASC
+  codeDeposited_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
+  datasetsDeposited_ASC
+  datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
+  labMaterialsRegistered_ASC
+  labMaterialsRegistered_DESC
+  lifecycle_ASC
+  lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
+  manuscriptLicense_ASC
+  manuscriptLicense_DESC
+  otherDetails_ASC
+  otherDetails_DESC
+  preprintDoi_ASC
+  preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
+  protocolsDeposited_ASC
+  protocolsDeposited_DESC
+  publicationDoi_ASC
+  publicationDoi_DESC
+  requestingApcCoverage_ASC
+  requestingApcCoverage_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -2485,8 +2538,10 @@ type ManuscriptVersions implements Entry & _Node {
   datasetsDepositedDetails(locale: String): String
   labMaterialsRegistered(locale: String): String
   labMaterialsRegisteredDetails(locale: String): String
+  labsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): ManuscriptVersionsLabsCollection
   lifecycle(locale: String): String
   linkedFrom(allowedLocales: [String]): ManuscriptVersionsLinkingCollections
+  manuscriptFile(locale: String, preview: Boolean): Asset
   manuscriptLicense(locale: String): String
   manuscriptLicenseDetails(locale: String): String
   otherDetails(locale: String): String
@@ -2496,6 +2551,7 @@ type ManuscriptVersions implements Entry & _Node {
   publicationDoi(locale: String): String
   requestingApcCoverage(locale: String): String
   sys: Sys!
+  teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
 }
 
@@ -2582,6 +2638,8 @@ input ManuscriptVersionsFilter {
   labMaterialsRegistered_not: String
   labMaterialsRegistered_not_contains: String
   labMaterialsRegistered_not_in: [String]
+  labs: cfLabsNestedFilter
+  labsCollection_exists: Boolean
   lifecycle: String
   lifecycle_contains: String
   lifecycle_exists: Boolean
@@ -2589,6 +2647,7 @@ input ManuscriptVersionsFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  manuscriptFile_exists: Boolean
   manuscriptLicense: String
   manuscriptLicenseDetails: String
   manuscriptLicenseDetails_contains: String
@@ -2646,6 +2705,8 @@ input ManuscriptVersionsFilter {
   requestingApcCoverage_not_contains: String
   requestingApcCoverage_not_in: [String]
   sys: SysFilter
+  teams: cfTeamsNestedFilter
+  teamsCollection_exists: Boolean
   type: String
   type_contains: String
   type_exists: Boolean
@@ -2653,6 +2714,26 @@ input ManuscriptVersionsFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+}
+
+type ManuscriptVersionsLabsCollection {
+  items: [Labs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptVersionsLabsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type ManuscriptVersionsLinkingCollections {
@@ -2724,10 +2805,35 @@ enum ManuscriptVersionsOrder {
   type_DESC
 }
 
+type ManuscriptVersionsTeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ManuscriptVersionsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
 type Manuscripts implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
@@ -2746,6 +2852,10 @@ input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  eligibilityReasons_contains_all: [String]
+  eligibilityReasons_contains_none: [String]
+  eligibilityReasons_contains_some: [String]
+  eligibilityReasons_exists: Boolean
   sys: SysFilter
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean
@@ -4782,6 +4892,7 @@ type TeamsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
@@ -4829,6 +4940,57 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
+  acknowledgedGrantNumber_ASC
+  acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
+  asapAffiliationIncluded_ASC
+  asapAffiliationIncluded_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
+  codeDeposited_ASC
+  codeDeposited_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
+  datasetsDeposited_ASC
+  datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
+  labMaterialsRegistered_ASC
+  labMaterialsRegistered_DESC
+  lifecycle_ASC
+  lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
+  manuscriptLicense_ASC
+  manuscriptLicense_DESC
+  otherDetails_ASC
+  otherDetails_DESC
+  preprintDoi_ASC
+  preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
+  protocolsDeposited_ASC
+  protocolsDeposited_DESC
+  publicationDoi_ASC
+  publicationDoi_DESC
+  requestingApcCoverage_ASC
+  requestingApcCoverage_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
@@ -7010,6 +7172,7 @@ input cfManuscriptVersionsNestedFilter {
   labMaterialsRegistered_not: String
   labMaterialsRegistered_not_contains: String
   labMaterialsRegistered_not_in: [String]
+  labsCollection_exists: Boolean
   lifecycle: String
   lifecycle_contains: String
   lifecycle_exists: Boolean
@@ -7017,6 +7180,7 @@ input cfManuscriptVersionsNestedFilter {
   lifecycle_not: String
   lifecycle_not_contains: String
   lifecycle_not_in: [String]
+  manuscriptFile_exists: Boolean
   manuscriptLicense: String
   manuscriptLicenseDetails: String
   manuscriptLicenseDetails_contains: String
@@ -7074,6 +7238,7 @@ input cfManuscriptVersionsNestedFilter {
   requestingApcCoverage_not_contains: String
   requestingApcCoverage_not_in: [String]
   sys: SysFilter
+  teamsCollection_exists: Boolean
   type: String
   type_contains: String
   type_exists: Boolean

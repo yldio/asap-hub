@@ -18,7 +18,7 @@ const getDataForType = (
     return data.map((row) => ({
       id: row.id,
       name: row.name,
-      isInactive: row.isInactive,
+      isInactive: !!row.inactiveSince,
       ...row.outputsCoProducedWithin,
       collaborationByTeam: [],
       type: 'within-team',
@@ -27,26 +27,30 @@ const getDataForType = (
   return data.map((row) => ({
     id: row.id,
     name: row.name,
-    isInactive: row.isInactive,
+    isInactive: !!row.inactiveSince,
     ...row.outputsCoProducedAcross.byDocumentType,
     collaborationByTeam: row.outputsCoProducedAcross.byTeam,
     type: 'across-teams',
   }));
 };
 
-const TeamCollaboration: React.FC<CollaborationProps> = ({ type }) => {
+const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { timeRange } = useAnalytics();
+  const { timeRange, outputType } = useAnalytics();
 
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,
+    outputType,
     pageSize,
-    timeRange,
-    tags: [],
     sort: '',
+    tags,
+    timeRange,
   });
 
-  const performance = useTeamCollaborationPerformance({ timeRange });
+  const performance = useTeamCollaborationPerformance({
+    timeRange,
+    outputType,
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

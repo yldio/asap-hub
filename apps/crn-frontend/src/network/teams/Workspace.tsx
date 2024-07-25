@@ -11,12 +11,14 @@ import { ToastContext } from '@asap-hub/react-context';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
 
 import { usePatchTeamById } from './state';
+import { useEligibilityReason } from './useEligibilityReason';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const workspaceRoutes = networkRoutes.DEFAULT.$.TEAMS.$.DETAILS.$.WORKSPACE;
+  const { setEligibilityReasons } = useEligibilityReason();
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
@@ -24,50 +26,43 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   return (
     <Routes>
-      <Route
-        path="*"
-        element={
-          <TeamProfileWorkspace
-            {...team}
-            tools={team.tools}
-            onDeleteTool={
-              deleting
-                ? undefined
-                : async (toolIndex) => {
-                    setDeleting(true);
-                    if (
-                      window.confirm(
-                        'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
-                      )
-                    ) {
-                      await patchTeam({
-                        tools: team.tools.filter((_, i) => toolIndex !== i),
-                      }).catch(() => {
-                        toast('Something went wrong. Please try again.');
-                      });
-                    }
-                    setDeleting(false);
+      <Route>
+        <TeamProfileWorkspace
+          {...team}
+          setEligibilityReasons={setEligibilityReasons}
+          tools={team.tools}
+          onDeleteTool={
+            deleting
+              ? undefined
+              : async (toolIndex) => {
+                  setDeleting(true);
+                  if (
+                    window.confirm(
+                      'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
+                    )
+                  ) {
+                    await patchTeam({
+                      tools: team.tools.filter((_, i) => toolIndex !== i),
+                    }).catch(() => {
+                      toast('Something went wrong. Please try again.');
+                    });
                   }
-            }
-          />
-        }
-      />
-
-      <Route
-        path={workspaceRoutes.$.TOOLS.relativePath}
-        element={
-          <ToolModal
-            title="Add Link"
-            backHref={workspaceRoutes.relativePath}
-            onSave={(data: TeamTool) =>
-              patchTeam({
-                tools: [...(team.tools ?? []), data],
-              })
-            }
-          />
-        }
-      />
-
+                  setDeleting(false);
+                }
+          }
+        />
+      </Route>
+      <Route path={workspaceRoutes.TOOLS.path}>
+        <ToolModal
+          title="Add Link"
+          backHref={workspaceRoutes.buildPath({})}
+          onSave={(data: TeamTool) =>
+            patchTeam({
+              tools: [...(team.tools ?? []), data],
+            })
+          }
+        />
+      </Route>
       <Route
         path={workspaceRoutes.$.TOOLS.TOOL.relativePath}
         element={<EditTool teamId={team.id} tools={team.tools} />}

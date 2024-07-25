@@ -73,7 +73,6 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
     </div>
     <AnalyticsControls
       currentPage={currentPage}
-      timeRange={timeRange}
       documentCategory={documentCategory}
       outputType={outputType}
       metricOption={metric}
@@ -82,6 +81,7 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
       setTags={setTags}
       href={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric })}
       exportResults={exportResults}
+      timeRange={timeRange}
     />
     {children}
   </article>

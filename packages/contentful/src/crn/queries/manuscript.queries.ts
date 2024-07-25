@@ -16,6 +16,13 @@ export const manuscriptContentQueryFragment = gql`
         }
         type
         lifecycle
+        manuscriptFile {
+          sys {
+            id
+          }
+          fileName
+          url
+        }
         preprintDoi
         publicationDoi
         requestingApcCoverage
@@ -34,6 +41,23 @@ export const manuscriptContentQueryFragment = gql`
         protocolsDepositedDetails
         labMaterialsRegistered
         labMaterialsRegisteredDetails
+        teamsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            displayName
+            inactiveSince
+          }
+        }
+        labsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            name
+          }
+        }
         createdBy {
           sys {
             id

@@ -276,13 +276,14 @@ export type UserCollaborationTeam = {
   id: string;
   team: string;
   role?: TeamRole;
-  isTeamInactive: boolean;
+  teamInactiveSince?: string;
+  teamMembershipInactiveSince?: string;
   outputsCoAuthoredWithinTeam: number;
   outputsCoAuthoredAcrossTeams: number;
 };
 export type UserCollaborationDataObject = {
   id: string;
-  isAlumni: boolean;
+  alumniSince?: string;
   name: string;
   teams: UserCollaborationTeam[];
 };
@@ -317,7 +318,7 @@ export type TeamCollaborationAcrossOutputData = {
 export type TeamCollaborationDataObject = {
   id: string;
   name: string;
-  isInactive: boolean;
+  inactiveSince?: string;
   outputsCoProducedWithin: TeamCollaborationWithinOutputData;
   outputsCoProducedAcross: TeamCollaborationAcrossOutputData;
 };
@@ -336,11 +337,11 @@ export type EngagementDataObject = {
   id: string;
   name: string;
   inactiveSince: string | null;
-  members: number;
-  events: number;
-  totalSpeakers: number;
-  uniqueSpeakersAllRoles: number;
-  uniqueSpeakersKeyPersonnel: number;
+  memberCount: number;
+  eventCount: number;
+  totalSpeakerCount: number;
+  uniqueAllRolesCount: number;
+  uniqueKeyPersonnelCount: number;
 };
 export type ListEngagementDataObject = ListResponse<EngagementDataObject>;
 export type EngagementResponse = EngagementDataObject;

@@ -17,7 +17,7 @@ import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
-import { usePutResearchOutput } from '../shared-research';
+import { usePutResearchOutput } from '../shared-state';
 
 const ResearchOutput: React.FC = () => {
   const route = sharedResearchRoutes.DEFAULT.$.DETAILS;

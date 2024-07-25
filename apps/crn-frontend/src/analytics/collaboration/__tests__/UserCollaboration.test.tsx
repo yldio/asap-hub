@@ -42,7 +42,7 @@ mockGetUserCollaborationPerformance.mockResolvedValue(
 const userTeam: UserCollaborationResponse['teams'][number] = {
   id: '1',
   team: 'Team A',
-  isTeamInactive: false,
+  teamInactiveSince: undefined,
   role: 'Collaborating PI',
   outputsCoAuthoredWithinTeam: 1,
   outputsCoAuthoredAcrossTeams: 2,
@@ -54,14 +54,14 @@ const data: ListUserCollaborationAlgoliaResponse = {
     {
       id: '1',
       name: 'Ted Mosby',
-      isAlumni: false,
+      alumniSince: undefined,
       teams: [userTeam],
       objectID: '1',
     },
     {
       id: '2',
       name: 'Robin Scherbatsky',
-      isAlumni: false,
+      alumniSince: undefined,
       teams: [{ ...userTeam, role: 'Key Personnel' }],
       objectID: '2',
     },
@@ -87,7 +87,7 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <UserCollaboration type="within-team" />
+              <UserCollaboration type="within-team" tags={[]} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

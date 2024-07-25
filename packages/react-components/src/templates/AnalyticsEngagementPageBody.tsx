@@ -1,3 +1,4 @@
+import { EngagementResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { PageControls } from '..';
@@ -15,10 +16,14 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls>;
+export type AnalyticsEngagementPageBodyProps = ComponentProps<
+  typeof PageControls
+> & {
+  data: EngagementResponse[];
+};
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
-> = ({ ...pageControlsProps }) => (
+> = ({ data, ...pageControlsProps }) => (
   <article>
     <div css={tableHeaderStyles}>
       <Headline3>Representation of Presenters</Headline3>
@@ -27,7 +32,7 @@ const AnalyticsEngagementPageBody: React.FC<
         of which type of presenters were represented.
       </Paragraph>
     </div>
-    <EngagementTable data={[]} />
+    <EngagementTable data={data} />
     <section css={pageControlsStyles}>
       <PageControls {...pageControlsProps} />
     </section>

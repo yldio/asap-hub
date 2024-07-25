@@ -14,7 +14,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
-import { useResearchTags } from '../../shared-research';
+import { useResearchTags } from '../../shared-state';
 
 type ResearchProps = {
   user: UserResponse;

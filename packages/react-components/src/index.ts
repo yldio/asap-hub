@@ -78,6 +78,7 @@ export {
   LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,
+  LabeledFileField,
   LabeledMultiSelect,
   LabeledPasswordField,
   LabeledRadioButtonGroup,

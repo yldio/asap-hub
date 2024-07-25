@@ -57,6 +57,14 @@ export const apcCoverageOptions = ['Yes', 'No', 'Already submitted'] as const;
 
 export type ApcCoverageOption = (typeof apcCoverageOptions)[number];
 
+export type ManuscriptFileResponse = {
+  id: string;
+  filename: string;
+  url: string;
+};
+
+type ManuscriptFile = ManuscriptFileResponse;
+
 export type ManuscriptVersion = {
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
@@ -64,6 +72,7 @@ export type ManuscriptVersion = {
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
   otherDetails?: string;
+  manuscriptFile: ManuscriptFile;
 
   acknowledgedGrantNumber?: string;
   asapAffiliationIncluded?: string;
@@ -80,6 +89,9 @@ export type ManuscriptVersion = {
   codeDepositedDetails?: string;
   protocolsDepositedDetails?: string;
   labMaterialsRegisteredDetails?: string;
+
+  teams: { displayName: string; id: string; inactiveSince?: string }[];
+  labs: { name: string; id: string }[];
 
   createdBy: Pick<
     UserResponse,
@@ -248,6 +260,7 @@ export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,
   'title' | 'teamId'
 > & {
+  eligibilityReasons: string[];
   versions: {
     type: ManuscriptVersion['type'] | '';
     lifecycle: ManuscriptVersion['lifecycle'] | '';
@@ -255,6 +268,7 @@ export type ManuscriptPostRequest = Pick<
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    manuscriptFile: ManuscriptVersion['manuscriptFile'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -271,6 +285,49 @@ export type ManuscriptPostRequest = Pick<
     codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
     protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
     labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
+
+    teams: string[];
+    labs?: string[];
+  }[];
+};
+
+type MultiselectOption = {
+  label: string;
+  value: string;
+  isFixed?: boolean;
+};
+
+export type ManuscriptFormData = Pick<
+  ManuscriptPostRequest,
+  'title' | 'teamId' | 'eligibilityReasons'
+> & {
+  versions: {
+    type: ManuscriptVersion['type'] | '';
+    lifecycle: ManuscriptVersion['lifecycle'] | '';
+    preprintDoi?: ManuscriptVersion['preprintDoi'];
+    publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
+    requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    manuscriptFile: ManuscriptVersion['manuscriptFile'];
+
+    acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
+    asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
+    manuscriptLicense?: ManuscriptVersion['manuscriptLicense'];
+    datasetsDeposited?: ManuscriptVersion['datasetsDeposited'];
+    codeDeposited?: ManuscriptVersion['codeDeposited'];
+    protocolsDeposited?: ManuscriptVersion['protocolsDeposited'];
+    labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
+
+    acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
+    asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
+    manuscriptLicenseDetails?: ManuscriptVersion['manuscriptLicenseDetails'];
+    datasetsDepositedDetails?: ManuscriptVersion['datasetsDepositedDetails'];
+    codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
+    protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
+    labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
+
+    teams: MultiselectOption[];
+    labs: MultiselectOption[];
   }[];
 };
 
@@ -284,6 +341,11 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
     properties: {
       title: { type: 'string' },
       teamId: { type: 'string' },
+      eligibilityReasons: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 0,
+      },
       versions: {
         type: 'array',
         maxItems: 1,
@@ -301,6 +363,16 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               nullable: true,
             },
             otherDetails: { type: 'string', nullable: true },
+            manuscriptFile: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                filename: { type: 'string', nullable: true },
+                url: { type: 'string', nullable: true },
+              },
+              nullable: true,
+              required: ['id'],
+            },
             acknowledgedGrantNumber: { type: 'string', nullable: true },
             asapAffiliationIncluded: { type: 'string', nullable: true },
             manuscriptLicense: { type: 'string', nullable: true },
@@ -315,6 +387,9 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
             codeDepositedDetails: { type: 'string', nullable: true },
             protocolsDepositedDetails: { type: 'string', nullable: true },
             labMaterialsRegisteredDetails: { type: 'string', nullable: true },
+
+            teams: { type: 'array', minItems: 1, items: { type: 'string' } },
+            labs: { type: 'array', nullable: true, items: { type: 'string' } },
           },
           required: ['type', 'lifecycle'],
           additionalProperties: false,
@@ -383,5 +458,37 @@ export const quickCheckQuestions: QuickCheckQuestions[] = [
   {
     field: 'labMaterialsRegistered',
     question: 'Registered all newly generated lab materials',
+  },
+];
+
+export const asapFundingReason = [
+  'projects',
+  'method-or-resource',
+  'pivot',
+  'leadership',
+] as const;
+
+export type ASAPFundingReason = (typeof asapFundingReason)[number];
+
+export const asapFundingReasons = [
+  {
+    field: 'projects',
+    reason:
+      'The manuscript contains projects that are listed as part of the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'method-or-resource',
+    reason:
+      'The manuscript describes a method or resource that enables the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'pivot',
+    reason:
+      'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
+  },
+  {
+    field: 'leadership',
+    reason:
+      'The manuscript is a thought leadership piece (review, communication, letter) pertaining to knowledge gaps in the field that the ASAP-funded proposal was addressing.',
   },
 ];

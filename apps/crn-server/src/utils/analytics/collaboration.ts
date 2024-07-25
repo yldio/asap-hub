@@ -3,6 +3,8 @@ import {
   FetchUserCollaborationQuery,
 } from '@asap-hub/contentful';
 import {
+  DocumentCategoryOption,
+  OutputTypeOption,
   TeamCollaborationAcrossOutputData,
   TeamCollaborationDataObject,
   TeamCollaborationWithinOutputData,
@@ -12,7 +14,12 @@ import {
   UserCollaborationDataObject,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
-import { getFilterOutputByRange, isTeamOutputDocumentType } from './common';
+import {
+  getFilterOutputByDocumentCategory,
+  getFilterOutputByRange,
+  getFilterOutputBySharingStatus,
+  isTeamOutputDocumentType,
+} from './common';
 
 export type EntityWithId = {
   sys: {
@@ -119,11 +126,13 @@ export const getCollaborationCounts = (
 export const getUserCollaborationItems = (
   userCollection: FetchUserCollaborationQuery['usersCollection'],
   rangeKey?: TimeRangeOption,
+  documentCategory?: DocumentCategoryOption,
 ): UserCollaborationDataObject[] =>
   cleanArray(userCollection?.items).map((user) => {
     const teams = cleanArray(user?.teamsCollection?.items).map((team) => {
       const analyticData = user.linkedFrom?.researchOutputsCollection?.items
         .filter(getFilterOutputByRange(rangeKey))
+        .filter(getFilterOutputByDocumentCategory(documentCategory))
         .map((output) => {
           const authorList = cleanArray(
             cleanArray(output?.authorsCollection?.items).map((author) => {
@@ -157,7 +166,8 @@ export const getUserCollaborationItems = (
         id: team.team ? team.team.sys.id : '',
         team: team.team?.displayName ?? '',
         role: (team.role as TeamRole) ?? undefined,
-        isTeamInactive: !!team.inactiveSinceDate,
+        teamInactiveSince: team.team?.inactiveSince ?? undefined,
+        teamMembershipInactiveSince: team.inactiveSinceDate ?? undefined,
         outputsCoAuthoredAcrossTeams: acrossTeamCount,
         outputsCoAuthoredWithinTeam: withinTeamCount,
       };
@@ -171,7 +181,7 @@ export const getUserCollaborationItems = (
         undefined,
         user.nickname ?? '',
       ),
-      isAlumni: !!user.alumniSinceDate,
+      alumniSince: user.alumniSinceDate ?? undefined,
       teams,
     };
   });
@@ -252,10 +262,12 @@ const getTeamCollaborationWithinData = (
 export const getTeamCollaborationItems = (
   teamCollection: FetchTeamCollaborationQuery['teamsCollection'],
   rangeKey?: TimeRangeOption,
+  outputType?: OutputTypeOption,
 ): TeamCollaborationDataObject[] =>
   cleanArray(teamCollection?.items).map((team) => {
     const outputsData = team.linkedFrom?.researchOutputsCollection?.items
       .filter(getFilterOutputByRange(rangeKey))
+      .filter(getFilterOutputBySharingStatus(outputType))
       .filter(
         (output) =>
           output?.documentType && isTeamOutputDocumentType(output.documentType),
@@ -291,7 +303,7 @@ export const getTeamCollaborationItems = (
     return {
       id: team.sys.id,
       name: team.displayName ?? '',
-      isInactive: !!team.inactiveSince,
+      inactiveSince: team.inactiveSince ?? undefined,
       outputsCoProducedAcross,
       outputsCoProducedWithin,
     };

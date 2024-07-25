@@ -65,6 +65,7 @@ describe('getAlgoliaNews', () => {
     searchQuery: '',
   };
 
+  const descendingTrue = true;
   it('makes a search request with query, default page and page size', async () => {
     await getAlgoliaNews(mockAlgoliaSearchClient, {
       ...options,
@@ -77,6 +78,7 @@ describe('getAlgoliaNews', () => {
       ['news'],
       'test',
       expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+      descendingTrue,
     );
   });
 
@@ -91,6 +93,7 @@ describe('getAlgoliaNews', () => {
       ['news'],
       '',
       expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+      descendingTrue,
     );
   });
 
@@ -106,6 +109,7 @@ describe('getAlgoliaNews', () => {
       ['news'],
       '',
       expect.objectContaining({ filters: 'type:"news"' }),
+      descendingTrue,
     );
   });
 
@@ -123,6 +127,7 @@ describe('getAlgoliaNews', () => {
       expect.objectContaining({
         filters: 'type:"news" OR type:"update"',
       }),
+      descendingTrue,
     );
   });
 

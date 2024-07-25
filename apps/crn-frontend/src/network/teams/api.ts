@@ -6,6 +6,7 @@ import {
 import {
   ListLabsResponse,
   ListTeamResponse,
+  ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
   ResearchOutputPostRequest,
@@ -199,5 +200,35 @@ export const getManuscript = async (
       `Failed to fetch manuscript with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
+  return resp.json();
+};
+
+export const uploadManuscriptFile = async (
+  file: File,
+  authorization: string,
+  handleError: (errorMessage: string) => void,
+): Promise<ManuscriptFileResponse | undefined> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/manuscript-file`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+    body: formData,
+  });
+
+  if (!resp.ok) {
+    if (resp.status === 400 && handleError) {
+      handleError((await resp.json()).message);
+      return undefined;
+    }
+    throw new Error(
+      `Failed to upload manuscript file. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
   return resp.json();
 };

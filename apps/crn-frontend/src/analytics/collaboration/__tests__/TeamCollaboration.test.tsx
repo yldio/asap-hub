@@ -42,7 +42,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
     {
       id: '1',
       name: 'Team One',
-      isInactive: false,
+      inactiveSince: undefined,
       outputsCoProducedWithin: {
         Article: 4,
         Bioinformatics: 5,
@@ -65,7 +65,7 @@ const data: ListTeamCollaborationAlgoliaResponse = {
     {
       id: '2',
       name: 'Team Two',
-      isInactive: false,
+      inactiveSince: undefined,
       outputsCoProducedWithin: {
         Article: 0,
         Bioinformatics: 0,
@@ -107,7 +107,7 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <TeamCollaboration type="within-team" />
+              <TeamCollaboration type="within-team" tags={[]} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

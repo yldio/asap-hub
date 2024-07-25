@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { algoliaResultsToStream } from '../leadership/export';
+import { algoliaResultsToStream } from '../utils/export';
 import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';
 import {

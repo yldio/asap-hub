@@ -32,7 +32,7 @@ export const getDraftResearchOutputs = jest.fn(
 );
 export const getResearchTags = jest.fn(async () => researchTagsResponse);
 
-export const getGeneratedOutputContent = jest.fn(
+export const getGeneratedResearchOutputContent = jest.fn(
   async (): Promise<OutputGenerateContentResponse> => ({
     shortDescription: 'summarised short description',
   }),

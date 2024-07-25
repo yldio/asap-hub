@@ -23,7 +23,7 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getGeneratedOutputContent } from '../../../shared-research/api';
+import { getGeneratedResearchOutputContent } from '../../../shared-research/api';
 import {
   createResearchOutput,
   getTeam,
@@ -135,9 +135,9 @@ const mockUpdateResearchOutput =
     typeof updateTeamResearchOutput
   >;
 
-const mockGetGeneratedOutputContent =
-  getGeneratedOutputContent as jest.MockedFunction<
-    typeof getGeneratedOutputContent
+const mockGetGeneratedResearchOutputContent =
+  getGeneratedResearchOutputContent as jest.MockedFunction<
+    typeof getGeneratedResearchOutputContent
   >;
 
 interface RenderPageOptions {
@@ -473,7 +473,7 @@ it('can edit and publish a draft research output', async () => {
 });
 
 it('generates the short description based on the current description', async () => {
-  mockGetGeneratedOutputContent.mockResolvedValueOnce({
+  mockGetGeneratedResearchOutputContent.mockResolvedValueOnce({
     shortDescription: 'test generated short description 1',
   });
 

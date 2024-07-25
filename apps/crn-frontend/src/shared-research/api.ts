@@ -1,7 +1,7 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import {
-  BackendError,
   createSentryHeaders,
+  generateOutputContent,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import {
@@ -177,32 +177,11 @@ export const getResearchTags = async (
   return response?.items || [];
 };
 
-export const getGeneratedOutputContent = async (
+export const getGeneratedResearchOutputContent = async (
   output: ResearchOutputGenerateContentRequest,
   authorization: string,
 ): Promise<OutputGenerateContentResponse> => {
-  const resp = await fetch(
-    `${API_BASE_URL}/research-outputs/generate-content`,
-    {
-      method: 'POST',
-      headers: {
-        authorization,
-        'content-type': 'application/json',
-        ...createSentryHeaders(),
-      },
-      body: JSON.stringify(output),
-    },
-  );
+  const apiUrl = `${API_BASE_URL}/research-outputs/generate-content`;
 
-  const response = await resp.json();
-
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to generate content for research output. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-
-  return response;
+  return generateOutputContent(output, apiUrl, authorization, 'CRN');
 };

@@ -28,11 +28,11 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useLabSuggestions,
-  useOutputGeneratedContent,
   usePostResearchOutput,
   usePutResearchOutput,
   useRelatedEventsSuggestions,
   useRelatedResearchSuggestions,
+  useResearchOutputGeneratedContent,
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
@@ -90,7 +90,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     researchOutputData?.id,
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
-  const getShortDescriptionFromDescription = useOutputGeneratedContent();
+  const getShortDescriptionFromDescription =
+    useResearchOutputGeneratedContent();
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;

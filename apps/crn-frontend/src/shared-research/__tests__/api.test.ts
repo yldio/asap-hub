@@ -16,7 +16,7 @@ import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   getDraftResearchOutputs,
-  getGeneratedOutputContent,
+  getGeneratedResearchOutputContent,
   getResearchOutput,
   getResearchOutputs,
   getResearchTags,
@@ -443,7 +443,7 @@ describe('getDraftResearchOutputs', () => {
   });
 });
 
-describe('getGeneratedOutputContent', () => {
+describe('getGeneratedResearchOutputContent', () => {
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
@@ -458,7 +458,7 @@ describe('getGeneratedOutputContent', () => {
       })
       .reply(200, { shortDescription });
 
-    const result = await getGeneratedOutputContent(
+    const result = await getGeneratedResearchOutputContent(
       { descriptionMD },
       'Bearer x',
     );
@@ -473,7 +473,7 @@ describe('getGeneratedOutputContent', () => {
       .reply(500, {});
 
     await expect(
-      getGeneratedOutputContent({ descriptionMD: 'test' }, 'Bearer x'),
+      getGeneratedResearchOutputContent({ descriptionMD: 'test' }, 'Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to generate content for research output. Expected status 200. Received status 500."`,
     );

@@ -2,6 +2,7 @@ import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
+  generateOutputContent,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2, OutputGenerateContentResponse } from '@asap-hub/model';
@@ -152,25 +153,6 @@ export const getGeneratedOutputContent = async (
   output: gp2.OutputGenerateContentRequest,
   authorization: string,
 ): Promise<OutputGenerateContentResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/outputs/generate-content`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
-    body: JSON.stringify(output),
-  });
-
-  const response = await resp.json();
-
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to generate content for output. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      response,
-      resp.status,
-    );
-  }
-
-  return response;
+  const apiUrl = `${API_BASE_URL}/outputs/generate-content`;
+  return generateOutputContent(output, apiUrl, authorization, 'GP2');
 };

@@ -23,7 +23,7 @@ import { getUsersAndExternalAuthors } from '../network/users/api';
 import {
   getResearchTags,
   getResearchOutputs,
-  getGeneratedOutputContent,
+  getGeneratedResearchOutputContent,
 } from '../shared-research/api';
 import {
   useInvalidateResearchOutputIndex,
@@ -167,11 +167,11 @@ export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
   };
 };
 
-export const useOutputGeneratedContent = () => {
+export const useResearchOutputGeneratedContent = () => {
   const authorization = useRecoilValue(authorizationState);
 
   return (descriptionMD: string): Promise<string> =>
-    getGeneratedOutputContent({ descriptionMD }, authorization).then(
+    getGeneratedResearchOutputContent({ descriptionMD }, authorization).then(
       (output) => output.shortDescription || '',
     );
 };

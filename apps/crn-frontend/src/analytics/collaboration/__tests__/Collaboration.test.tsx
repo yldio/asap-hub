@@ -13,11 +13,17 @@ import {
   ListUserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { analyticsRoutes as analytics } from '@asap-hub/routing';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -176,9 +182,12 @@ const renderPage = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/collaboration/:metric/:type">
-                <Collaboration />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/collaboration/:metric/:type"
+                  element={<Collaboration />}
+                ></Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -217,10 +226,10 @@ describe('user collaboration', () => {
       screen.queryByText('Co-Production Across Teams by User'),
     ).not.toBeInTheDocument();
 
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
-    userEvent.click(input[1]!);
-    userEvent.click(screen.getByText('Across Teams'));
+    fireEvent.keyDown(input[1]!, { key: 'ArrowDown' });
+    fireEvent.click(await screen.findByText('Across Teams'));
 
     expect(
       screen.getByText('Co-Production Across Teams by User'),
@@ -269,7 +278,8 @@ describe('user collaboration', () => {
       name: /all chevron down/i,
     });
     userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/Article/));
+    await userEvent.click(screen.getByText(/Article/));
+
     await waitFor(() =>
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
@@ -293,10 +303,10 @@ describe('team collaboration', () => {
       screen.queryByText('Co-Production Across Teams by Team'),
     ).not.toBeInTheDocument();
 
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
-    userEvent.click(input[1]!);
-    userEvent.click(screen.getByText('Across Teams'));
+    fireEvent.keyDown(input[1]!, { key: 'ArrowDown' });
+    fireEvent.click(await screen.findByText('Across Teams'));
 
     expect(
       screen.getByText('Co-Production Across Teams by Team'),
@@ -346,7 +356,7 @@ describe('team collaboration', () => {
       name: /ASAP Output chevron down/i,
     });
     userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
@@ -358,10 +368,10 @@ describe('team collaboration', () => {
 
 it('navigates between user and team collaboration pages', async () => {
   await renderPage();
-  const input = screen.getAllByRole('textbox', { hidden: false });
+  const input = screen.getAllByRole('combobox', { hidden: false });
 
-  userEvent.click(input[0]!);
-  userEvent.click(screen.getByText('Team Co-Production'));
+  fireEvent.keyDown(input[0]!, { key: 'ArrowDown' });
+  fireEvent.click(await screen.findByText('Team Co-Production'));
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -373,7 +383,7 @@ it('navigates between user and team collaboration pages', async () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
     const mockAlgoliaClient = {
@@ -387,7 +397,7 @@ describe('search', () => {
     await renderPage();
     const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -402,7 +412,7 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for user', async () => {
     await renderPage('user');
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/collaboration_user_\d+\.csv/),
       expect.anything(),
@@ -413,10 +423,10 @@ describe('csv export', () => {
     'exports analytics for teams (%s)',
     async (type) => {
       await renderPage('team', type);
-      const input = screen.getAllByRole('textbox', { hidden: false })[0];
+      const input = screen.getAllByRole('combobox', { hidden: false })[0];
 
       input && userEvent.click(input);
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
       expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
         expect.stringMatching(/collaboration_team_\d+\.csv/),
         expect.anything(),

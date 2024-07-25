@@ -79,7 +79,7 @@ const tableHeaderStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
+const AnalyticsCollaborationPageBody = ({
   children,
   currentPage,
   documentCategory,
@@ -93,7 +93,7 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   tags,
   timeRange,
   type,
-}) => {
+}: CollaborationAnalyticsProps) => {
   const { header, description } = getPageHeaderDescription(metric, type);
   return (
     <article>

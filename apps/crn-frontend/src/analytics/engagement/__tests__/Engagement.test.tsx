@@ -3,7 +3,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ListEngagementResponse } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -53,9 +53,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/engagement/">
-                <Engagement />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/engagement/"
+                  element={<Engagement />}
+                ></Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -74,7 +77,7 @@ describe('Engagement', () => {
   it('renders with data', async () => {
     mockGetEngagement.mockResolvedValue(data);
 
-    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.path);
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({}));
 
     expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
     expect(screen.getByText('Test Team')).toBeInTheDocument();

@@ -25,7 +25,8 @@ export type Metric =
   | 'team-productivity'
   | 'user-productivity'
   | 'team-collaboration'
-  | 'user-collaboration';
+  | 'user-collaboration'
+  | 'engagement';
 
 export const exportAnalyticsData = async (
   metric: Metric,
@@ -45,46 +46,56 @@ const exportDataWithFilters = async (
   metric: Metric,
   file: FileHandle,
 ): Promise<void> => {
-  if (metric === 'user-productivity' || metric === 'user-collaboration') {
-    for (let i = 0; i < timeRanges.length; i += 1) {
-      for (let j = 0; j < documentCategories.length; j += 1) {
-        await exportData(metric, file, {
-          timeRange: timeRanges[i],
-          documentCategory: documentCategories[j],
-        });
-        if (j != documentCategories.length - 1) {
+  switch (metric) {
+    case 'user-productivity':
+    case 'user-collaboration':
+      for (let i = 0; i < timeRanges.length; i += 1) {
+        for (let j = 0; j < documentCategories.length; j += 1) {
+          await exportData(metric, file, {
+            timeRange: timeRanges[i],
+            documentCategory: documentCategories[j],
+          });
+          if (j != documentCategories.length - 1) {
+            await file.write(',');
+          }
+        }
+        if (i != timeRanges.length - 1) {
           await file.write(',');
         }
       }
-      if (i != timeRanges.length - 1) {
-        await file.write(',');
-      }
-    }
-  } else if (
-    metric === 'team-productivity' ||
-    metric === 'team-collaboration'
-  ) {
-    for (let i = 0; i < timeRanges.length; i += 1) {
-      for (let j = 0; j < outputTypes.length; j += 1) {
-        await exportData(metric, file, {
-          timeRange: timeRanges[i],
-          outputType: outputTypes[j],
-        });
-        if (j != outputTypes.length - 1) {
+      break;
+
+    case 'team-productivity':
+    case 'team-collaboration':
+      for (let i = 0; i < timeRanges.length; i += 1) {
+        for (let j = 0; j < outputTypes.length; j += 1) {
+          await exportData(metric, file, {
+            timeRange: timeRanges[i],
+            outputType: outputTypes[j],
+          });
+          if (j != outputTypes.length - 1) {
+            await file.write(',');
+          }
+        }
+        if (i != timeRanges.length - 1) {
           await file.write(',');
         }
       }
-      if (i != timeRanges.length - 1) {
-        await file.write(',');
+
+      break;
+
+    case 'engagement':
+      await exportData(metric, file);
+      break;
+
+    default:
+      for (let i = 0; i < timeRanges.length; i += 1) {
+        await exportData(metric, file, { timeRange: timeRanges[i] });
+        if (i != timeRanges.length - 1) {
+          await file.write(',');
+        }
       }
-    }
-  } else {
-    for (let i = 0; i < timeRanges.length; i += 1) {
-      await exportData(metric, file, { timeRange: timeRanges[i] });
-      if (i != timeRanges.length - 1) {
-        await file.write(',');
-      }
-    }
+      break;
   }
 };
 
@@ -134,7 +145,7 @@ const exportData = async (
           outputType: filter?.outputType,
         },
       });
-    } else {
+    } else if (metric === 'user-collaboration') {
       records = await analyticsController.fetchUserCollaboration({
         take: PAGE_SIZE,
         skip: (page - 1) * PAGE_SIZE,
@@ -142,6 +153,11 @@ const exportData = async (
           timeRange: filter?.timeRange,
           documentCategory: filter?.documentCategory,
         },
+      });
+    } else {
+      records = await analyticsController.fetchEngagement({
+        take: PAGE_SIZE,
+        skip: (page - 1) * PAGE_SIZE,
       });
     }
 

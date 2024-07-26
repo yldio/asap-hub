@@ -346,3 +346,8 @@ export type EngagementDataObject = {
 export type ListEngagementDataObject = ListResponse<EngagementDataObject>;
 export type EngagementResponse = EngagementDataObject;
 export type ListEngagementResponse = ListResponse<EngagementResponse>;
+export type EngagementAlgoliaResponse = EngagementResponse & {
+  objectID: string;
+};
+export type ListEngagementAlgoliaResponse =
+  ListResponse<EngagementAlgoliaResponse>;

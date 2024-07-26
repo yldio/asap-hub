@@ -3,6 +3,7 @@ export const TEAM_PRODUCTIVITY = 'team-productivity';
 export const USER_PRODUCTIVITY = 'user-productivity';
 export const TEAM_COLLABORATION = 'team-collaboration';
 export const USER_COLLABORATION = 'user-collaboration';
+export const ENGAGEMENT = 'engagement';
 
 export const USER_PRODUCTIVITY_PERFORMANCE = 'user-productivity-performance';
 export const TEAM_PRODUCTIVITY_PERFORMANCE = 'team-productivity-performance';
@@ -15,6 +16,7 @@ const types = [
   USER_PRODUCTIVITY,
   TEAM_COLLABORATION,
   USER_COLLABORATION,
+  ENGAGEMENT,
 ] as const;
 export type AnalyticType = (typeof types)[number];
 

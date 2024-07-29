@@ -1,4 +1,7 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  gp2 as gp2Model,
+  OutputGenerateContentResponse,
+} from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 
 export const getOutput = jest.fn(
@@ -35,7 +38,7 @@ export const updateOutput = jest.fn(
 );
 
 export const getGeneratedOutputContent = jest.fn(
-  async (): Promise<gp2Model.OutputGenerateContentResponse> => ({
+  async (): Promise<OutputGenerateContentResponse> => ({
     shortDescription: 'summarised short description',
   }),
 );

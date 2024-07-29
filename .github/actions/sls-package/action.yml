@@ -61,7 +61,7 @@ inputs:
     required: true
   openai-api-key:
     description: 'OpenAI API Key'
-    required: false
+    required: true
   sentry-dsn-api:
     description: 'Sentry DSN for the API'
     required: true

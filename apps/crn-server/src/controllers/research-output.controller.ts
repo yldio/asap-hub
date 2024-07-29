@@ -24,12 +24,17 @@ import {
 } from '../data-providers/types';
 import { fetchAll } from '../utils/fetch-all';
 import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
+import {
+  GenerativeContentDataProvider,
+  generativeContentDataProviderNoop,
+} from '../data-providers/contentful/generative-content.data-provider';
 
 export default class ResearchOutputController {
   constructor(
     private researchOutputDataProvider: ResearchOutputDataProvider,
     private researchTagDataProvider: ResearchTagDataProvider,
     private externalAuthorDataProvider: ExternalAuthorDataProvider,
+    private generativeContentDataProvider: GenerativeContentDataProvider = generativeContentDataProviderNoop,
   ) {}
 
   async fetchById(researchOutputId: string): Promise<ResearchOutputResponse> {
@@ -98,6 +103,7 @@ export default class ResearchOutputController {
       asapFunded: normalisedResearchOutputCreateData.asapFunded,
       createdBy: normalisedResearchOutputCreateData.createdBy,
       description: normalisedResearchOutputCreateData.description,
+      shortDescription: normalisedResearchOutputCreateData.shortDescription,
       descriptionMD: normalisedResearchOutputCreateData.descriptionMD,
       documentType: normalisedResearchOutputCreateData.documentType,
       doi: normalisedResearchOutputCreateData.doi,
@@ -194,6 +200,7 @@ export default class ResearchOutputController {
         : undefined,
       asapFunded: normalisedResearchOutputUpdateData.asapFunded,
       descriptionMD: normalisedResearchOutputUpdateData.descriptionMD,
+      shortDescription: normalisedResearchOutputUpdateData.shortDescription,
       description: normalisedResearchOutputUpdateData.description,
       documentType: normalisedResearchOutputUpdateData.documentType,
       doi: normalisedResearchOutputUpdateData.doi,
@@ -240,6 +247,25 @@ export default class ResearchOutputController {
     );
 
     return this.fetchById(id);
+  }
+
+  async generateContent(
+    data: Partial<Pick<ResearchOutputPostRequest, 'descriptionMD'>>,
+  ): Promise<Partial<Pick<ResearchOutputResponse, 'shortDescription'>>> {
+    if (!data.descriptionMD) {
+      return {
+        shortDescription: '',
+      };
+    }
+
+    const shortDescription =
+      await this.generativeContentDataProvider.summariseContent(
+        data.descriptionMD,
+      );
+
+    return {
+      shortDescription,
+    };
   }
 
   private async validateResearchOutput(
@@ -444,7 +470,6 @@ export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
   updatedBy: string;
   createVersion?: boolean;
 };
-
 const mapResearchTags = (
   researchTags: ResearchTagDataObject[],
   category: ResearchTagCategory,

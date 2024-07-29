@@ -34,6 +34,7 @@ export const getResearchOutputDataObject =
     title: 'Test Proposal 1234',
     description: '<p>Text</p>',
     descriptionMD: 'Text MD',
+    shortDescription: 'short description',
     authors: fetchExpectation.items,
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
     relatedResearch: [
@@ -159,6 +160,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     ...researchOutputResponse,
     description: '<p>Text</p>',
     descriptionMD: 'Text MD',
+    shortDescription: 'short description',
     link: 'http://a.link',
     type: 'Software',
     labs: labs.map(({ id }) => id),
@@ -276,6 +278,7 @@ export const getContentfulResearchOutputGraphqlResponse =
       },
     },
     descriptionMd: 'Text MD',
+    shortDescription: 'short description',
     usageNotes: 'Usage Notes',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',

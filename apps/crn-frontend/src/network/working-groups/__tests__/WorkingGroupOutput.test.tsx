@@ -60,12 +60,14 @@ const mandatoryFields = async (
     link = 'http://example.com',
     title = 'example title',
     descriptionMD = 'example description',
+    shortDescription = 'example short description',
     type = 'Preprint',
     doi = '10.1234',
   }: {
     link?: string;
     title?: string;
     descriptionMD?: string;
+    shortDescription?: string;
     type?: string;
     doi?: string;
   },
@@ -76,8 +78,12 @@ const mandatoryFields = async (
   userEvent.type(screen.getByRole('textbox', { name: url }), link);
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(
-    screen.getByRole('textbox', { name: /description/i }),
+    screen.getByRole('textbox', { name: /^description/i }),
     descriptionMD,
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /short description/i }),
+    shortDescription,
   );
 
   const typeInput = screen.getByRole('textbox', {
@@ -241,6 +247,7 @@ it('can submit a form when form data is valid', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
+  const shortDescription = 'example42 short description';
   const type = 'Preprint';
   const doi = '10.0777';
   const outputDocumentType = 'article';
@@ -264,6 +271,7 @@ it('can submit a form when form data is valid', async () => {
     link,
     title,
     descriptionMD,
+    shortDescription,
     type,
     doi,
   });
@@ -282,6 +290,7 @@ it('can submit a form when form data is valid', async () => {
       link,
       title,
       descriptionMD,
+      shortDescription,
       description: '',
       type,
       labs: ['l0'],
@@ -318,6 +327,7 @@ it('can save draft when form data is valid', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
+  const shortDescription = 'example42 short description';
   const type = 'Preprint';
   const doi = '10.0777';
   const outputDocumentType = 'article';
@@ -341,6 +351,7 @@ it('can save draft when form data is valid', async () => {
     link,
     title,
     descriptionMD,
+    shortDescription,
     type,
     doi,
   });
@@ -359,6 +370,7 @@ it('can save draft when form data is valid', async () => {
       link,
       title,
       descriptionMD,
+      shortDescription,
       description: '',
       type,
       labs: ['l0'],
@@ -487,6 +499,7 @@ it.each([
     const link = 'https://example42.com';
     const title = 'example42 title';
     const descriptionMD = 'example42 description';
+    const shortDescription = 'example42 short description';
     const outputDocumentType = 'report';
 
     const history = createMemoryHistory({
@@ -506,6 +519,7 @@ it.each([
         link,
         title,
         descriptionMD,
+        shortDescription,
         published,
         statusChangedBy: {
           id: 'user-id-1',
@@ -538,6 +552,7 @@ it.each([
         link,
         title,
         descriptionMD,
+        shortDescription,
         workingGroups: [workingGroupId],
         published: shouldPublish,
         statusChangedById: 'user-id-1',

@@ -20,7 +20,11 @@ import {
   updateTeamResearchOutput,
 } from '../network/teams/api';
 import { getUsersAndExternalAuthors } from '../network/users/api';
-import { getResearchTags, getResearchOutputs } from '../shared-research/api';
+import {
+  getResearchTags,
+  getResearchOutputs,
+  getGeneratedResearchOutputContent,
+} from '../shared-research/api';
 import {
   useInvalidateResearchOutputIndex,
   useSetResearchOutputItem,
@@ -161,4 +165,13 @@ export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
     }
     return researchOutput;
   };
+};
+
+export const useResearchOutputGeneratedContent = () => {
+  const authorization = useRecoilValue(authorizationState);
+
+  return (descriptionMD: string): Promise<string> =>
+    getGeneratedResearchOutputContent({ descriptionMD }, authorization).then(
+      (output) => output.shortDescription || '',
+    );
 };

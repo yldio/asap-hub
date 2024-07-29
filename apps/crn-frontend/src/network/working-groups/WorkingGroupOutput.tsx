@@ -32,6 +32,7 @@ import {
   usePutResearchOutput,
   useRelatedEventsSuggestions,
   useRelatedResearchSuggestions,
+  useResearchOutputGeneratedContent,
   useResearchTags,
   useTeamSuggestions,
 } from '../../shared-state';
@@ -89,6 +90,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     researchOutputData?.id,
   );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
+  const getShortDescriptionFromDescription =
+    useResearchOutputGeneratedContent();
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
@@ -159,6 +162,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             }
             getTeamSuggestions={getTeamSuggestions}
             getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+            getShortDescriptionFromDescription={
+              getShortDescriptionFromDescription
+            }
             getRelatedEventSuggestions={getRelatedEventSuggestions}
             researchTags={researchTags}
             serverValidationErrors={errors}

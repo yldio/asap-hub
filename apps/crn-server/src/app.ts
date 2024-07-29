@@ -112,6 +112,7 @@ import pinoLogger from './utils/logger';
 import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
+import { GenerativeContentDataProvider } from './data-providers/contentful/generative-content.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -255,6 +256,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const generativeContentDataProvider = new GenerativeContentDataProvider();
+
   // Controllers
   const analyticsController =
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
@@ -283,6 +286,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,
+      generativeContentDataProvider,
     );
   const researchTagController =
     libs.researchTagController ||

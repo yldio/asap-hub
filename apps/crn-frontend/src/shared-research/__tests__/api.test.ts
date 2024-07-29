@@ -16,6 +16,7 @@ import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   getDraftResearchOutputs,
+  getGeneratedResearchOutputContent,
   getResearchOutput,
   getResearchOutputs,
   getResearchTags,
@@ -438,6 +439,43 @@ describe('getDraftResearchOutputs', () => {
       ),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch draft research outputs. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getGeneratedResearchOutputContent', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+
+  it('returns a successfully fetched short description', async () => {
+    const { descriptionMD, shortDescription } = createResearchOutputResponse();
+
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post(`/research-outputs/generate-content`, {
+        descriptionMD,
+      })
+      .reply(200, { shortDescription });
+
+    const result = await getGeneratedResearchOutputContent(
+      { descriptionMD },
+      'Bearer x',
+    );
+    expect(result).toEqual({ shortDescription });
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post(`/research-outputs/generate-content`, {
+        descriptionMD: 'test',
+      })
+      .reply(500, {});
+
+    await expect(
+      getGeneratedResearchOutputContent({ descriptionMD: 'test' }, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to generate content for research output. Expected status 200. Received status 500."`,
     );
   });
 });

@@ -1,5 +1,7 @@
 import {
   ListResearchOutputResponse,
+  ResearchOutputGenerateContentRequest,
+  OutputGenerateContentResponse,
   ResearchOutputResponse,
   ResearchOutputTeamResponse,
   ResearchOutputWorkingGroupResponse,
@@ -18,6 +20,7 @@ import {
   validateResearchOutputPostRequestParametersIdentifiers,
   validateResearchOutputPutRequestParameters,
   validateResearchOutputFetchOptions,
+  validateResearchOutputGenerateContentRequestParameters,
 } from '../validation/research-output.validation';
 
 export const researchOutputRouteFactory = (
@@ -89,6 +92,20 @@ export const researchOutputRouteFactory = (
       res.json(result);
     },
   );
+
+  researchOutputRoutes.post<
+    ResearchOutputGenerateContentRequest,
+    OutputGenerateContentResponse
+  >('/research-outputs/generate-content', async (req, res) => {
+    const { body } = req;
+    const generateRequest =
+      validateResearchOutputGenerateContentRequestParameters(body);
+
+    const output =
+      await researchOutputController.generateContent(generateRequest);
+
+    res.status(200).json(output);
+  });
 
   researchOutputRoutes.post('/research-outputs', async (req, res) => {
     const { body, loggedInUser } = req;

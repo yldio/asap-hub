@@ -185,10 +185,6 @@ export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
 
 export type OutputResponse = OutputBaseResponse;
 
-export type OutputGenerateContentResponse = Partial<
-  Pick<OutputResponse, 'shortDescription'>
->;
-
 export type PublicOutputResponse = Pick<
   OutputBaseResponse,
   | 'title'

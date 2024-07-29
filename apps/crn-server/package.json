@@ -78,6 +78,7 @@
     "multer": "^1.4.5-lts.1",
     "nock": "13.4.0",
     "odata-query": "7.0.4",
+    "openai": "^4.49.0",
     "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
     "pump": "3.0.0",

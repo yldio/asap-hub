@@ -16,7 +16,7 @@ export const MAX_CONTENTFUL_RESULTS = 15;
 type ResearchOutputCSV = Record<
   keyof Omit<
     ResearchOutputResponse,
-    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions'
+    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions' | 'shortDescription'
   >,
   CSVValue
 >;

@@ -1,8 +1,14 @@
-import { TeamCollaborationResponse } from '@asap-hub/model';
+import {
+  SortTeamCollaboration,
+  teamCollaborationInitialSortingDirection,
+  TeamCollaborationResponse,
+  TeamCollaborationSortingDirection,
+} from '@asap-hub/model';
 import {
   TeamCollaborationMetric,
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
+import { useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamCollaboration,
@@ -34,15 +40,22 @@ const getDataForType = (
   }));
 };
 
-const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
+const TeamCollaboration: React.FC<
+  CollaborationProps<SortTeamCollaboration>
+> = ({ sort, setSort, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
+
+  const [sortingDirection, setSortingDirection] =
+    useState<TeamCollaborationSortingDirection>(
+      teamCollaborationInitialSortingDirection,
+    );
 
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,
     outputType,
     pageSize,
-    sort: '',
+    sort,
     tags,
     timeRange,
   });
@@ -56,13 +69,18 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
 
   return (
     <TeamCollaborationTable
-      data={getDataForType(data, type)}
       currentPageIndex={currentPage}
+      data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
-      renderPageHref={renderPageHref}
       performance={
         type === 'within-team' ? performance.withinTeam : performance.acrossTeam
       }
+      renderPageHref={renderPageHref}
+      setSort={setSort}
+      setSortingDirection={setSortingDirection}
+      sort={sort}
+      sortingDirection={sortingDirection}
+      type={type}
     />
   );
 };

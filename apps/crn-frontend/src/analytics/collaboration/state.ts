@@ -92,7 +92,13 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName =
+    options.sort === 'user_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
+
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
@@ -183,7 +189,13 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName =
+    options.sort === 'team_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_team_${options.sort.replace('team_', '')}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
+
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );

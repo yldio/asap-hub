@@ -1,11 +1,16 @@
 import {
+  CollaborationType,
+  SortUserCollaboration,
+  userCollaborationInitialSortingDirection,
   UserCollaborationPerformance,
   UserCollaborationResponse,
+  UserCollaborationSortingDirection,
 } from '@asap-hub/model';
 import {
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserCollaboration,
@@ -53,21 +58,33 @@ const getPerformanceForType = (
   return performance.acrossTeam;
 };
 
-export type CollaborationProps = {
-  type: 'within-team' | 'across-teams';
+export interface CollaborationProps<T = SortUserCollaboration> {
+  sort: T;
+  setSort: Dispatch<SetStateAction<T>>;
+  type: CollaborationType;
   tags: string[];
-};
+}
 
-const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
+const UserCollaboration: React.FC<CollaborationProps> = ({
+  sort,
+  setSort,
+  type,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { timeRange, documentCategory } = useAnalytics();
+
+  const [sortingDirection, setSortingDirection] =
+    useState<UserCollaborationSortingDirection>(
+      userCollaborationInitialSortingDirection,
+    );
 
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,
     documentCategory,
     pageSize,
-    sort: '',
+    sort,
     tags,
     timeRange,
   });
@@ -81,11 +98,16 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
 
   return (
     <UserCollaborationTable
-      data={getDataForType(data, type)}
-      performance={getPerformanceForType(performance, type)}
       currentPageIndex={currentPage}
+      data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
+      performance={getPerformanceForType(performance, type)}
       renderPageHref={renderPageHref}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+      type={type}
     />
   );
 };

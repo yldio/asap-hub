@@ -1,11 +1,14 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
+  SortTeamCollaboration,
+  SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
   UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
@@ -36,6 +39,8 @@ const Collaboration = () => {
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();
+  const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
+  const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
 
   const entityType =
     metric === 'user' ? 'user-collaboration' : 'team-collaboration';
@@ -134,9 +139,19 @@ const Collaboration = () => {
       type={type}
     >
       {metric === 'user' ? (
-        <UserCollaboration type={type} tags={tags} />
+        <UserCollaboration
+          sort={userSort}
+          setSort={setUserSort}
+          type={type}
+          tags={tags}
+        />
       ) : (
-        <TeamCollaboration type={type} tags={tags} />
+        <TeamCollaboration
+          sort={teamSort}
+          setSort={setTeamSort}
+          type={type}
+          tags={tags}
+        />
       )}
     </AnalyticsCollaborationPageBody>
   );

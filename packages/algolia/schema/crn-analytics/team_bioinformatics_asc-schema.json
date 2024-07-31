@@ -1,6 +1,7 @@
 {
   "ranking": [
     "asc(Bioinformatics)",
+    "asc(outputsCoProducedWithin.Bioinformatics)",
     "typo",
     "geo",
     "words",

@@ -9,6 +9,7 @@ import {
   TeamProductivityResponse,
   timeRanges,
   UserCollaborationResponse,
+  UserCollaborationTeam,
   UserProductivityResponse,
   UserProductivityTeam,
 } from '@asap-hub/model';
@@ -210,7 +211,7 @@ const transformRecords = (
     },
   };
 
-  if ('teams' in record && 'asapOutput' in record) {
+  if ('teams' in record) {
     return {
       ...payload,
       ...getUserTeamData(record.teams),
@@ -255,7 +256,9 @@ const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
   }
 };
 
-const getUserTeamData = (teams: UserProductivityTeam[]) =>
+const getUserTeamData = (
+  teams: UserProductivityTeam[] | UserCollaborationTeam[],
+) =>
   teams.length > 1
     ? { team: 'Multiple Teams', role: 'Multiple Roles' }
     : { team: teams[0]?.team ?? 'No team', role: teams[0]?.role ?? 'No role' };

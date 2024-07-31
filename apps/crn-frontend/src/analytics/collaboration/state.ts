@@ -2,6 +2,8 @@ import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  SortTeamCollaboration,
+  SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
   TeamCollaborationPerformance,
   UserCollaborationAlgoliaResponse,
@@ -90,7 +92,7 @@ export const analyticsUserCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsUserCollaboration = (
-  options: AnalyticsSearchOptionsWithFiltering,
+  options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
   const indexName =
     options.sort === 'user_asc'
@@ -187,7 +189,7 @@ export const analyticsTeamCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsTeamCollaboration = (
-  options: AnalyticsSearchOptionsWithFiltering,
+  options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
   const indexName =
     options.sort === 'team_asc'

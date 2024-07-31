@@ -279,6 +279,22 @@ describe('user collaboration', () => {
     expect(screen.getByText('100')).toBeVisible();
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage();
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('user_desc'),
+      );
+    });
+    userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('user_desc'),
+      );
+    });
+  });
 });
 
 describe('team collaboration', () => {
@@ -355,6 +371,22 @@ describe('team collaboration', () => {
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('100')).not.toBeInTheDocument();
+  });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage('team');
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('team_desc'),
+      );
+    });
+    userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('team_desc'),
+      );
+    });
   });
 });
 

@@ -81,7 +81,7 @@ const Collaboration = () => {
         (paginationParams) =>
           getUserCollaboration(algoliaClient.client, {
             documentCategory,
-            sort: '',
+            sort: userSort,
             tags,
             timeRange,
             ...paginationParams,
@@ -100,7 +100,7 @@ const Collaboration = () => {
       (paginationParams) =>
         getTeamCollaboration(algoliaClient.client, {
           outputType,
-          sort: '',
+          sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,

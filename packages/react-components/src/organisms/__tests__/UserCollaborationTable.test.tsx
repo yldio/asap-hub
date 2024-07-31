@@ -4,6 +4,7 @@ import {
   userCollaborationInitialSortingDirection,
 } from '@asap-hub/model';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import UserCollaborationTable, {
   UserCollaborationMetric,
@@ -182,4 +183,53 @@ describe('UserCollaborationTable', () => {
     );
     expect(getByText('0')).toBeVisible();
   });
+
+  it.each`
+    collaborationType | sort                                | sortingDirection                                                              | iconTitle                                                        | newSort                             | newSortingDirection
+    ${'within-team'}  | ${'user_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, user: 'asc' }}               | ${'User Active Alphabetical Ascending Sort Icon'}                | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, user: 'desc' }}
+    ${'within-team'}  | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, user: 'desc' }}              | ${'User Active Alphabetical Descending Sort Icon'}               | ${'user_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, user: 'asc' }}
+    ${'within-team'}  | ${'role_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, role: 'asc' }}               | ${'User Inactive Alphabetical Ascending Sort Icon'}              | ${'user_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, user: 'asc' }}
+    ${'within-team'}  | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, role: 'asc' }}               | ${'Role Inactive Alphabetical Ascending Sort Icon'}              | ${'role_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, role: 'asc' }}
+    ${'within-team'}  | ${'role_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, role: 'asc' }}               | ${'Role Active Alphabetical Ascending Sort Icon'}                | ${'role_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, role: 'desc' }}
+    ${'within-team'}  | ${'role_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, role: 'desc' }}              | ${'Role Active Alphabetical Descending Sort Icon'}               | ${'role_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, role: 'asc' }}
+    ${'within-team'}  | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, team: 'asc' }}               | ${'Team Inactive Alphabetical Ascending Sort Icon'}              | ${'team_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, team: 'asc' }}
+    ${'within-team'}  | ${'team_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, team: 'asc' }}               | ${'Team Active Alphabetical Ascending Sort Icon'}                | ${'team_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, team: 'desc' }}
+    ${'within-team'}  | ${'team_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, team: 'desc' }}              | ${'Team Active Alphabetical Descending Sort Icon'}               | ${'team_asc'}                       | ${{ ...userCollaborationInitialSortingDirection, team: 'asc' }}
+    ${'within-team'}  | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }} | ${'Outputs Co-Authored Inactive Numerical Descending Sort Icon'} | ${'outputs_coauthored_within_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }}
+    ${'within-team'}  | ${'outputs_coauthored_within_asc'}  | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'asc' }}  | ${'Outputs Co-Authored Active Numerical Ascending Sort Icon'}    | ${'outputs_coauthored_within_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }}
+    ${'within-team'}  | ${'outputs_coauthored_within_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }} | ${'Outputs Co-Authored Active Numerical Descending Sort Icon'}   | ${'outputs_coauthored_within_asc'}  | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'asc' }}
+    ${'across-teams'} | ${'user_desc'}                      | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }} | ${'Outputs Co-Authored Inactive Numerical Descending Sort Icon'} | ${'outputs_coauthored_across_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }}
+    ${'across-teams'} | ${'outputs_coauthored_within_asc'}  | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'asc' }}  | ${'Outputs Co-Authored Active Numerical Ascending Sort Icon'}    | ${'outputs_coauthored_across_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }}
+    ${'across-teams'} | ${'outputs_coauthored_within_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }} | ${'Outputs Co-Authored Active Numerical Descending Sort Icon'}   | ${'outputs_coauthored_across_asc'}  | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'asc' }}
+  `(
+    'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
+    ({
+      collaborationType,
+      sort,
+      sortingDirection,
+      iconTitle,
+      newSort,
+      newSortingDirection,
+    }) => {
+      const setSort = jest.fn();
+      const setSortingDirection = jest.fn();
+      const { getByTitle } = render(
+        <UserCollaborationTable
+          {...defaultProps}
+          sort={sort}
+          setSort={setSort}
+          sortingDirection={sortingDirection}
+          setSortingDirection={setSortingDirection}
+          type={collaborationType}
+        />,
+      );
+
+      const sortIcon = getByTitle(iconTitle);
+      expect(sortIcon).toBeInTheDocument();
+
+      userEvent.click(sortIcon);
+      expect(setSort).toHaveBeenCalledWith(newSort);
+      expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
+    },
+  );
 });

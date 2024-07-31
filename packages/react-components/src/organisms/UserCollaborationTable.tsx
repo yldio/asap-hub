@@ -237,7 +237,7 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
   const isUserSortActive = sort.includes('user');
   const isTeamSortActive = sort.includes('team');
   const isRoleSortActive = sort.includes('role');
-  const isOutputsCoAuthoredSortActive = sort.includes('outputs_coproduced');
+  const isOutputsCoAuthoredSortActive = sort.includes('outputs_coauthored');
   const collaborationType = type === 'within-team' ? 'within' : 'across';
 
   return (
@@ -332,23 +332,23 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
                 css={buttonStyles}
                 onClick={() => {
                   const newDirection = isOutputsCoAuthoredSortActive
-                    ? sortingDirection.outputsCoProduced === 'asc'
+                    ? sortingDirection.outputsCoAuthored === 'asc'
                       ? 'desc'
                       : 'asc'
                     : 'desc';
 
                   setSort(
-                    `outputs_coproduced_${collaborationType}_${newDirection}`,
+                    `outputs_coauthored_${collaborationType}_${newDirection}`,
                   );
                   setSortingDirection({
                     ...userCollaborationInitialSortingDirection,
-                    outputsCoProduced: newDirection,
+                    outputsCoAuthored: newDirection,
                   });
                 }}
               >
                 <NumericalSortingIcon
                   active={isOutputsCoAuthoredSortActive}
-                  ascending={sortingDirection.outputsCoProduced === 'asc'}
+                  ascending={sortingDirection.outputsCoAuthored === 'asc'}
                   description={'Outputs Co-Authored'}
                 />
               </button>

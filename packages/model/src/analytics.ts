@@ -342,10 +342,10 @@ export type SortUserCollaboration =
   | 'team_desc'
   | 'role_asc'
   | 'role_desc'
-  | 'outputs_coproduced_within_asc'
-  | 'outputs_coproduced_across_asc'
-  | 'outputs_coproduced_within_desc'
-  | 'outputs_coproduced_across_desc';
+  | 'outputs_coauthored_within_asc'
+  | 'outputs_coauthored_across_asc'
+  | 'outputs_coauthored_within_desc'
+  | 'outputs_coauthored_across_desc';
 
 export type SortTeamCollaboration =
   | 'team_asc'
@@ -375,7 +375,7 @@ export type UserCollaborationFields =
   | 'user'
   | 'team'
   | 'role'
-  | 'outputsCoProduced';
+  | 'outputsCoAuthored';
 
 export type TeamCollaborationFields =
   | 'team'
@@ -397,7 +397,7 @@ export const userCollaborationInitialSortingDirection = {
   user: ascending,
   team: ascending,
   role: ascending,
-  outputsCoProduced: descending,
+  outputsCoAuthored: descending,
 };
 
 export const teamCollaborationInitialSortingDirection = {

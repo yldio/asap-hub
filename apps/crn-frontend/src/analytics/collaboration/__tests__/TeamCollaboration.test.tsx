@@ -1,6 +1,10 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
 import { ListTeamCollaborationAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -35,6 +39,12 @@ const mockGetTeamCollaborationPerformance =
 mockGetTeamCollaborationPerformance.mockResolvedValue(
   teamCollaborationPerformance,
 );
+
+const mockAlgoliaSearchClientFactory =
+  algoliaSearchClientFactory as jest.MockedFunction<
+    typeof algoliaSearchClientFactory
+  >;
+
 const mockSetSort = jest.fn();
 
 const data: ListTeamCollaborationAlgoliaResponse = {
@@ -139,4 +149,24 @@ it('renders team collaboration data', async () => {
   expect(getAllByText('4')).toHaveLength(1);
   expect(getAllByText('5')).toHaveLength(1);
   expect(getAllByText('2')).toHaveLength(2);
+});
+
+it('calls algolia client with the right index name', async () => {
+  mockGetTeamCollaboration.mockResolvedValue(data);
+  mockGetTeamCollaborationPerformance.mockResolvedValue(
+    teamCollaborationPerformance,
+  );
+
+  const { getByTitle } = await renderPage();
+
+  await waitFor(() => {
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        algoliaIndex: expect.not.stringContaining('_team_desc'),
+      }),
+    );
+  });
+
+  userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+  expect(mockSetSort).toHaveBeenCalledWith('team_desc');
 });

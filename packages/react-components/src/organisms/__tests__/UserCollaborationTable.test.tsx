@@ -1,5 +1,10 @@
-import { TeamRole } from '@asap-hub/model';
+import {
+  SortUserCollaboration,
+  TeamRole,
+  userCollaborationInitialSortingDirection,
+} from '@asap-hub/model';
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 import UserCollaborationTable, {
   UserCollaborationMetric,
 } from '../UserCollaborationTable';
@@ -34,15 +39,19 @@ describe('UserCollaborationTable', () => {
     aboveAverageMax: 1,
   };
 
+  const defaultProps: ComponentProps<typeof UserCollaborationTable> = {
+    ...pageControlsProps,
+    performance,
+    data: [user],
+    type: 'within-team',
+    sort: 'user_asc' as SortUserCollaboration,
+    setSort: jest.fn(),
+    sortingDirection: userCollaborationInitialSortingDirection,
+    setSortingDirection: jest.fn(),
+  };
+
   it('renders data', () => {
-    const data = [user];
-    const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
-    );
+    const { getByText } = render(<UserCollaborationTable {...defaultProps} />);
     expect(getByText('Test User')).toBeInTheDocument();
   });
 
@@ -54,11 +63,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Alumni Member')).toBeInTheDocument();
   });
@@ -71,11 +76,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByTitle } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByTitle('Inactive Team')).toBeInTheDocument();
   });
@@ -89,11 +90,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByRole } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByRole('link', { name: 'User A' })).toBeInTheDocument();
     expect(getByRole('link', { name: 'Team A' })).toBeInTheDocument();
@@ -110,11 +107,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByText('Multiple teams')).toBeInTheDocument();
   });
@@ -130,11 +123,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByText('Multiple roles')).toBeInTheDocument();
   });
@@ -150,11 +139,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByText('Multiple values')).toBeInTheDocument();
   });
@@ -167,11 +152,7 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByText('No team')).toBeInTheDocument();
   });
@@ -184,16 +165,12 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
     expect(getByText('No role')).toBeInTheDocument();
   });
 
-  it('displays no values', () => {
+  it('displays 0 in outputs co-authored column if there are no teams for user', () => {
     const data: UserCollaborationMetric[] = [
       {
         ...user,
@@ -201,12 +178,8 @@ describe('UserCollaborationTable', () => {
       },
     ];
     const { getByText } = render(
-      <UserCollaborationTable
-        data={data}
-        performance={performance}
-        {...pageControlsProps}
-      />,
+      <UserCollaborationTable {...defaultProps} data={data} />,
     );
-    expect(getByText('No values')).toBeInTheDocument();
+    expect(getByText('0')).toBeVisible();
   });
 });

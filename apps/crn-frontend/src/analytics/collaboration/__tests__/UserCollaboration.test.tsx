@@ -39,6 +39,8 @@ mockGetUserCollaborationPerformance.mockResolvedValue(
   userCollaborationPerformance,
 );
 
+const mockSetSort = jest.fn();
+
 const userTeam: UserCollaborationResponse['teams'][number] = {
   id: '1',
   team: 'Team A',
@@ -56,6 +58,8 @@ const data: ListUserCollaborationAlgoliaResponse = {
       name: 'Ted Mosby',
       alumniSince: undefined,
       teams: [userTeam],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 2,
+      totalUniqueOutputsCoAuthoredWithinTeam: 1,
       objectID: '1',
     },
     {
@@ -63,6 +67,8 @@ const data: ListUserCollaborationAlgoliaResponse = {
       name: 'Robin Scherbatsky',
       alumniSince: undefined,
       teams: [{ ...userTeam, role: 'Key Personnel' }],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 2,
+      totalUniqueOutputsCoAuthoredWithinTeam: 1,
       objectID: '2',
     },
   ],
@@ -78,7 +84,7 @@ const renderPage = async () => {
             pageSize: 10,
             timeRange: '30d',
             tags: [],
-            sort: '',
+            sort: 'user_asc',
           }),
         );
       }}
@@ -87,7 +93,12 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <UserCollaboration type="within-team" tags={[]} />
+              <UserCollaboration
+                type="within-team"
+                tags={[]}
+                setSort={mockSetSort}
+                sort={'user_asc'}
+              />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

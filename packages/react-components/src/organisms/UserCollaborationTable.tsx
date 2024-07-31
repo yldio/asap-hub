@@ -79,8 +79,13 @@ const teamRowStyles = css({
   maxWidth: rem(500),
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb,   display: 'flex',
-alignItems: 'center', gap: rem(8), });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
 
 const iconStyles = css({
   display: 'flex',
@@ -191,15 +196,12 @@ const displayOutputsCount = (
   items: UserCollaborationMetric['teams'],
   performance: PerformanceMetrics,
 ) => {
-  if (items.length === 0) {
-    return `No values`;
-  }
-  if (items.length === 1) {
-    const team = items[0] as Team;
+  if (items.length <= 1) {
+    const team = items[0];
     return (
       <span css={rowValueStyles}>
-        {team.outputsCoAuthored}{' '}
-        {getPerformanceIcon(team.outputsCoAuthored, performance)}
+        {team?.outputsCoAuthored || 0}{' '}
+        {getPerformanceIcon(team?.outputsCoAuthored || 0, performance)}
       </span>
     );
   }

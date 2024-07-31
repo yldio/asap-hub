@@ -100,6 +100,8 @@ const userData: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredAcrossTeams: 400,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 400,
+      totalUniqueOutputsCoAuthoredWithinTeam: 300,
       objectID: '1',
     },
     {
@@ -116,6 +118,8 @@ const userData: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredAcrossTeams: 3,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 3,
+      totalUniqueOutputsCoAuthoredWithinTeam: 2,
       objectID: '2',
     },
   ],
@@ -230,7 +234,7 @@ describe('user collaboration', () => {
 
   it('renders data for different document categories', async () => {
     const defaultUserOptions: AnalyticsSearchOptionsWithFiltering = {
-      sort: '',
+      sort: 'user_asc',
       pageSize: 10,
       currentPage: 0,
       timeRange: '30d',
@@ -310,7 +314,7 @@ describe('team collaboration', () => {
       currentPage: 0,
       timeRange: '30d',
       outputType: 'all',
-      sort: '',
+      sort: 'team_asc',
       tags: [],
     };
 

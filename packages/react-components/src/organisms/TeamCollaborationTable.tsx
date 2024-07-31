@@ -62,8 +62,13 @@ const rowStyles = css({
   },
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb,  display: 'flex',
-alignItems: 'center', gap: rem(8), });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
 
 const pageControlsStyles = css({
   justifySelf: 'center',
@@ -96,7 +101,6 @@ export type TeamCollaborationMetric = {
     TeamCollaborationMetric,
     'collaborationByTeam' | 'type'
   >[];
-  type: CollaborationType;
 };
 
 type TeamCollaborationTableProps = ComponentProps<typeof PageControls> & {
@@ -138,14 +142,11 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
             css={[
               rowStyles,
               gridTitleStyles,
-              columnsStyles(data[0]?.type === 'within-team'),
+              columnsStyles(type === 'within-team'),
             ]}
           >
             <span
-              css={
-                titleStyles &&
-                data[0]?.type === 'within-team' && { display: 'none' }
-              }
+              css={titleStyles && type === 'within-team' && { display: 'none' }}
             ></span>
             <span css={titleStyles}>
               Team
@@ -302,6 +303,7 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
               rowItem={row}
               key={row.id}
               performance={performance}
+              type={type}
             />
           ))}
         </div>

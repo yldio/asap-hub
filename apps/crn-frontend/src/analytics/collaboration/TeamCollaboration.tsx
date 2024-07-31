@@ -27,7 +27,6 @@ const getDataForType = (
       isInactive: !!row.inactiveSince,
       ...row.outputsCoProducedWithin,
       collaborationByTeam: [],
-      type: 'within-team',
     }));
   }
   return data.map((row) => ({
@@ -36,7 +35,6 @@ const getDataForType = (
     isInactive: !!row.inactiveSince,
     ...row.outputsCoProducedAcross.byDocumentType,
     collaborationByTeam: row.outputsCoProducedAcross.byTeam,
-    type: 'across-teams',
   }));
 };
 

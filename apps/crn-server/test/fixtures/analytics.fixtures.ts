@@ -278,6 +278,108 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   },
 ];
 
+export const getResearchOutputUserCollaboration = (): NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        FetchUserCollaborationQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['researchOutputsCollection']
+>['items'] => [
+  {
+    sys: {
+      id: 'output-1',
+    },
+    documentType: 'Article',
+    addedDate: '2023-09-08T03:00:00.000Z',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      id: 'output-2',
+    },
+    documentType: 'Article',
+    addedDate: '2023-09-07T03:00:00.000Z',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-2',
+          },
+        },
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-3',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      id: 'output-3',
+    },
+    documentType: 'Article',
+    addedDate: '2023-09-06T03:00:00.000Z',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      id: 'output-4',
+    },
+    documentType: 'Article',
+    addedDate: '2023-09-05T03:00:00.000Z',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+  {
+    sys: {
+      id: 'output-5',
+    },
+    documentType: 'Article',
+    addedDate: '2023-07-05T03:00:00.000Z',
+    authorsCollection: {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    },
+  },
+];
+
 export const getTeamProductivityDataObject =
   (): TeamProductivityDataObject => ({
     id: 'team-id-0',
@@ -636,6 +738,8 @@ export const getUserCollaborationDataObject =
     alumniSince: undefined,
     name: 'User User',
     teams: [],
+    totalUniqueOutputsCoAuthoredAcrossTeams: 0,
+    totalUniqueOutputsCoAuthoredWithinTeam: 0,
   });
 
 export const getTeamCollaborationDataObject =

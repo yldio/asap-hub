@@ -75,6 +75,8 @@ const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredWithinTeam: 2,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 1,
+      totalUniqueOutputsCoAuthoredWithinTeam: 2,
       objectID: '1-user-collaboration-30d',
     },
   ],

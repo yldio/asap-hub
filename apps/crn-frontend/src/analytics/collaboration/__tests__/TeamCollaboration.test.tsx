@@ -35,6 +35,7 @@ const mockGetTeamCollaborationPerformance =
 mockGetTeamCollaborationPerformance.mockResolvedValue(
   teamCollaborationPerformance,
 );
+const mockSetSort = jest.fn();
 
 const data: ListTeamCollaborationAlgoliaResponse = {
   total: 2,
@@ -98,7 +99,7 @@ const renderPage = async () => {
             pageSize: 10,
             timeRange: '30d',
             tags: [],
-            sort: '',
+            sort: 'team_asc',
           }),
         );
       }}
@@ -107,7 +108,12 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <TeamCollaboration type="within-team" tags={[]} />
+              <TeamCollaboration
+                type="within-team"
+                tags={[]}
+                sort="team_asc"
+                setSort={mockSetSort}
+              />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

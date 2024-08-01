@@ -802,7 +802,9 @@ export const getEngagementResponse: () => EngagementResponse = () => ({
   eventCount: 2,
   totalSpeakerCount: 3,
   uniqueAllRolesCount: 2,
+  uniqueAllRolesCountPercentage: 67,
   uniqueKeyPersonnelCount: 1,
+  uniqueKeyPersonnelCountPercentage: 33,
 });
 
 export const getListEngagementResponse = (): ListEngagementResponse => ({

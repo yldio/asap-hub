@@ -1,6 +1,11 @@
-import { EngagementResponse } from '@asap-hub/model';
+import {
+  EngagementResponse,
+  EngagementSortingDirection,
+  SortEngagement,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+
 import { PageControls } from '..';
 import { Headline3, Paragraph } from '../atoms';
 import { EngagementTable } from '../organisms';
@@ -18,10 +23,23 @@ const pageControlsStyles = css({
 
 type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls> & {
   data: EngagementResponse[];
+  sort: SortEngagement;
+  setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
+  sortingDirection: EngagementSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<EngagementSortingDirection>
+  >;
 };
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
-> = ({ data, ...pageControlsProps }) => (
+> = ({
+  data,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
+  ...pageControlsProps
+}) => (
   <article>
     <div css={tableHeaderStyles}>
       <Headline3>Representation of Presenters</Headline3>
@@ -30,7 +48,13 @@ const AnalyticsEngagementPageBody: React.FC<
         of which type of presenters were represented.
       </Paragraph>
     </div>
-    <EngagementTable data={data} />
+    <EngagementTable
+      data={data}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+    />
     <section css={pageControlsStyles}>
       <PageControls {...pageControlsProps} />
     </section>

@@ -69,11 +69,9 @@ const Discover: FC<Record<string, never>> = () => {
           </Frame>
         }
       />
-
-      {/* TODO: Check if this is right */}
       <Route
         path="*"
-        element={<Navigate to={discoverRoutes.DEFAULT.$.GUIDES.relativePath} />}
+        element={<Navigate to={discoverRoutes.DEFAULT.GUIDES.buildPath({})} />}
       />
     </Routes>
   );

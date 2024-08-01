@@ -6,7 +6,7 @@ import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { useTutorialById } from './state';
 
 const Tutorial: React.FC<Record<string, never>> = () => {
-  const { id } = useTypedParams(discoverRoutes.DEFAULT.TUTORIALS.DETAILS);
+  const { id } = useTypedParams(discoverRoutes.DEFAULT.$.TUTORIALS.$.DETAILS);
 
   const tutorial = useTutorialById(id);
 

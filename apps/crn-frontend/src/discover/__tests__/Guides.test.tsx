@@ -4,6 +4,7 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
+  waitFor,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { createListGuidesResponse } from '@asap-hub/fixtures';
@@ -52,6 +53,10 @@ it('renders guides', async () => {
   });
 
   await renderGuides({});
-  expect(screen.getByText(/Guides/i, { selector: 'h2' })).toBeVisible();
-  expect(screen.getByText(/Guide Title 1/i, { selector: 'h5' })).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText(/Guides/i, { selector: 'h2' })).toBeVisible();
+    expect(
+      screen.getByText(/Guide Title 1/i, { selector: 'h5' }),
+    ).toBeVisible();
+  });
 });

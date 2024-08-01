@@ -1,7 +1,7 @@
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TutorialsResponse } from '@asap-hub/model';
 import { discoverRoutes } from '@asap-hub/routing';
 
@@ -32,7 +32,7 @@ const renderPage = async () => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
-        set(refreshTutorialItemState(tutorial.id), Math.random())
+        set(refreshTutorialItemState(tutorial.id), Math.random() * 100)
       }
     >
       <Suspense fallback="loading">
@@ -45,9 +45,12 @@ const renderPage = async () => {
                 }),
               ]}
             >
-              <Route path={discoverRoutes.DEFAULT.TUTORIALS.DETAILS.path}>
-                <Tutorial />
-              </Route>
+              <Routes>
+                <Route
+                  path={discoverRoutes.DEFAULT.TUTORIALS.DETAILS.relativePath}
+                  element={<Tutorial />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

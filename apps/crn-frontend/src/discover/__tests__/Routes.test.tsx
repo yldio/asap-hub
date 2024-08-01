@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   render,
   waitFor,
@@ -11,14 +11,18 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { createListTutorialsResponse } from '@asap-hub/fixtures';
+import {
+  createListGuidesResponse,
+  createListTutorialsResponse,
+} from '@asap-hub/fixtures';
 import { TutorialsResponse } from '@asap-hub/model';
 import { discoverRoutes } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 
-import Routes from '../Routes';
+import DiscoverRoutes from '../Routes';
 
 import { getTutorials, getTutorialById } from '../tutorials/api';
+import { getGuides } from '../../guides/api';
 
 jest.mock('../../guides/api');
 jest.mock('../tutorials/api');
@@ -31,6 +35,8 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
   typeof getTutorialById
 >;
 
+const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
+
 const renderDiscoverPage = async (pathname: string, query = '') => {
   const { container } = render(
     <RecoilRoot>
@@ -38,9 +44,12 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={discoverRoutes.DEFAULT.path}>
-                <Routes />
-              </Route>
+              <Routes>
+                <Route
+                  path={discoverRoutes.DEFAULT.path}
+                  element={<DiscoverRoutes />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -55,7 +64,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
 };
 
 it('redirects to the guides page when the index page accessed', async () => {
-  await renderDiscoverPage(discoverRoutes.DEFAULT.path);
+  await renderDiscoverPage(discoverRoutes.DEFAULT.buildPath({}));
   expect(
     await screen.findByText(/Guides/i, {
       selector: 'h2',
@@ -64,9 +73,12 @@ it('redirects to the guides page when the index page accessed', async () => {
 });
 
 it('renders tutorials list page when the tutorials tab is selected', async () => {
-  await renderDiscoverPage(discoverRoutes.DEFAULT.path);
-
   mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
+  mockGetGuides.mockResolvedValue(createListGuidesResponse(1));
+  await renderDiscoverPage(discoverRoutes.DEFAULT.GUIDES.buildPath({}));
+  await waitFor(() => {
+    expect(screen.getByText(/Tutorials/i, { selector: 'p' })).toBeVisible();
+  });
 
   const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
 
@@ -93,9 +105,7 @@ it('allows search on tutorials list', async () => {
     })),
   });
 
-  const container = await renderDiscoverPage(
-    discoverRoutes.DEFAULT.TUTORIALS.path,
-  );
+  await renderDiscoverPage(discoverRoutes.DEFAULT.TUTORIALS.buildPath({}));
 
   userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
@@ -106,9 +116,6 @@ it('allows search on tutorials list', async () => {
       }),
       expect.anything(),
     ),
-  );
-  await waitForElementToBeRemoved(
-    container.querySelectorAll('div[class*="animation"]')[0],
   );
 
   expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
@@ -139,7 +146,14 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
   });
   mockGetTutorialById.mockResolvedValue(tutorial);
 
-  await renderDiscoverPage(discoverRoutes.DEFAULT.TUTORIALS.path);
+  await renderDiscoverPage(discoverRoutes.DEFAULT.TUTORIALS.buildPath({}));
+  await waitFor(() => {
+    expect(
+      screen.getByText(/First Tutorial Title/i, {
+        selector: 'a',
+      }),
+    ).toBeVisible();
+  });
 
   const tutorialCardTitle = screen.getByText(/First Tutorial Title/i, {
     selector: 'a',

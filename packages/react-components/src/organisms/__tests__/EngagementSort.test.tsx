@@ -1,6 +1,7 @@
-import { render, fireEvent, screen } from '@testing-library/react';
-import EngagementSort, { EngagementSortProps } from '../EngagementSort';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import EngagementSort, { EngagementSortProps } from '../EngagementSort';
 
 const onClickOption1 = jest.fn();
 const onClickOption2 = jest.fn();

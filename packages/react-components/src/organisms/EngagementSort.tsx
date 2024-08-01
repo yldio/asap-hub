@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Theme } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -62,6 +62,17 @@ const optionStyles = css({
   },
 });
 
+const hoverStyles = ({
+  primary100 = mint,
+  primary900 = pine,
+}: Theme['colors'] = {}) =>
+  css({
+    ':hover': {
+      backgroundColor: primary100.rgba,
+      color: primary900.rgba,
+    },
+  });
+
 export interface EngagementSortProps {
   isActive: boolean;
   description?: string;
@@ -118,7 +129,7 @@ const EngagementSort: React.FC<EngagementSortProps> = ({
             <button
               role="menuitem"
               key={key}
-              css={optionStyles}
+              css={({ colors }) => [optionStyles, hoverStyles(colors)]}
               onClick={onClick}
             >
               {<Icon title={iconTitle} />}

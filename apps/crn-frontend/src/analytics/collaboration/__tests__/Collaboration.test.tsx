@@ -11,6 +11,8 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  SortTeamCollaboration,
+  SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -233,14 +235,15 @@ describe('user collaboration', () => {
   });
 
   it('renders data for different document categories', async () => {
-    const defaultUserOptions: AnalyticsSearchOptionsWithFiltering = {
-      sort: 'user_asc',
-      pageSize: 10,
-      currentPage: 0,
-      timeRange: '30d',
-      documentCategory: 'all',
-      tags: [],
-    };
+    const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration> =
+      {
+        sort: 'user_asc',
+        pageSize: 10,
+        currentPage: 0,
+        timeRange: '30d',
+        documentCategory: 'all',
+        tags: [],
+      };
 
     when(mockGetUserCollaboration)
       .calledWith(expect.anything(), {
@@ -325,14 +328,15 @@ describe('team collaboration', () => {
   });
 
   it('renders data for different output types', async () => {
-    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering = {
-      pageSize: 10,
-      currentPage: 0,
-      timeRange: '30d',
-      outputType: 'all',
-      sort: 'team_asc',
-      tags: [],
-    };
+    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration> =
+      {
+        pageSize: 10,
+        currentPage: 0,
+        timeRange: '30d',
+        outputType: 'all',
+        sort: 'team_asc',
+        tags: [],
+      };
 
     when(mockGetTeamCollaboration)
       .calledWith(expect.anything(), {

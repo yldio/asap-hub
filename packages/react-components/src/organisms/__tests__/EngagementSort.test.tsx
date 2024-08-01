@@ -68,7 +68,7 @@ describe('EngagementSort', () => {
     expect(screen.getByText(/option 1/i)).not.toBeVisible();
   });
 
-  it('should call the onClick function of a sorting option', () => {
+  it('should call the onClick and close the menu when clicking a sorting option', () => {
     render(<EngagementSort {...defaultProps} />);
     const sortButton = screen.getByTitle(/General Sort Icon/i);
     userEvent.click(sortButton);
@@ -76,5 +76,6 @@ describe('EngagementSort', () => {
     const option = screen.getByText(/option 1/i);
     userEvent.click(option);
     expect(onClickOption1).toHaveBeenCalled();
+    expect(screen.getByText(/option 1/i)).not.toBeVisible();
   });
 });

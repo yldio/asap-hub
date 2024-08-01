@@ -130,7 +130,10 @@ const EngagementSort: React.FC<EngagementSortProps> = ({
               role="menuitem"
               key={key}
               css={({ colors }) => [optionStyles, hoverStyles(colors)]}
-              onClick={onClick}
+              onClick={() => {
+                setMenuShown(false);
+                onClick();
+              }}
             >
               {<Icon title={iconTitle} />}
               {label}

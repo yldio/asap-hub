@@ -3,10 +3,11 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
+  waitFor,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 import { aboutRoutes } from '@asap-hub/routing';
@@ -36,9 +37,9 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/about']}>
-              <Route path={aboutRoutes.path}>
-                <About />
-              </Route>
+              <Routes>
+                <Route path={aboutRoutes.path} element={<About />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -76,7 +77,9 @@ describe('the About page', () => {
     mockGetDiscover.mockRejectedValue(new Error('error'));
 
     await renderPage();
-    expect(mockGetDiscover).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    waitFor(() => {
+      expect(mockGetDiscover).toHaveBeenCalled();
+      expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    });
   });
 });

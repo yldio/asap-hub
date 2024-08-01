@@ -64,6 +64,7 @@ describe('EngagementTable', () => {
     ${'team_asc'}     | ${{ ...engagementInitialSortingDirection, team: 'asc' }}     | ${'Members Inactive Numerical Descending Sort Icon'} | ${'members_desc'} | ${{ ...engagementInitialSortingDirection, members: 'desc' }}
     ${'members_asc'}  | ${{ ...engagementInitialSortingDirection, members: 'asc' }}  | ${'Members Active Numerical Ascending Sort Icon'}    | ${'members_desc'} | ${{ ...engagementInitialSortingDirection, members: 'desc' }}
     ${'members_desc'} | ${{ ...engagementInitialSortingDirection, members: 'desc' }} | ${'Members Active Numerical Descending Sort Icon'}   | ${'members_asc'}  | ${{ ...engagementInitialSortingDirection, members: 'asc' }}
+    ${'members_desc'} | ${{ ...engagementInitialSortingDirection, members: 'desc' }} | ${'Inactive Alphabetical Ascending Sort Icon'}       | ${'team_asc'}     | ${{ ...engagementInitialSortingDirection, team: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
     ({ sort, sortingDirection, iconTitle, newSort, newSortingDirection }) => {

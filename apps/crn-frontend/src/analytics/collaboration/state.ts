@@ -121,7 +121,7 @@ export const useAnalyticsUserCollaboration = (
   if (userCollaboration instanceof Error) {
     throw userCollaboration;
   }
-  return userCollaboration;
+  return { ...userCollaboration, client: algoliaClient.client };
 };
 
 export const analyticsTeamCollaborationIndexState = atomFamily<
@@ -218,7 +218,7 @@ export const useAnalyticsTeamCollaboration = (
   if (teamCollaboration instanceof Error) {
     throw teamCollaboration;
   }
-  return teamCollaboration;
+  return { ...teamCollaboration, client: algoliaClient.client };
 };
 
 export const teamCollaborationPerformanceState =

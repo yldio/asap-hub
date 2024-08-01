@@ -14,7 +14,6 @@ import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
@@ -26,6 +25,8 @@ import {
   userCollaborationToCSV,
 } from './export';
 import {
+  useAnalyticsTeamCollaboration,
+  useAnalyticsUserCollaboration,
   useTeamCollaborationPerformance,
   useUserCollaborationPerformance,
 } from './state';
@@ -42,7 +43,7 @@ const Collaboration = () => {
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
-  const { currentPage } = usePaginationParams();
+  const { currentPage, pageSize } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
   const [userSortingDirection, setUserSortingDirection] =
@@ -76,7 +77,24 @@ const Collaboration = () => {
         .collaborationPath({ metric, type: newType }).$,
     );
   };
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+
+  const { client: userClient } = useAnalyticsUserCollaboration({
+    currentPage,
+    pageSize,
+    timeRange,
+    documentCategory,
+    tags,
+    sort: userSort,
+  });
+
+  const { client: teamClient } = useAnalyticsTeamCollaboration({
+    currentPage,
+    pageSize,
+    timeRange,
+    outputType,
+    tags,
+    sort: teamSort,
+  });
 
   const userPerformance = useUserCollaborationPerformance({
     timeRange,
@@ -98,7 +116,7 @@ const Collaboration = () => {
           },
         ),
         (paginationParams) =>
-          getUserCollaboration(algoliaClient.client, {
+          getUserCollaboration(userClient, {
             documentCategory,
             sort: userSort,
             tags,
@@ -117,7 +135,7 @@ const Collaboration = () => {
         },
       ),
       (paginationParams) =>
-        getTeamCollaboration(algoliaClient.client, {
+        getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
           tags,

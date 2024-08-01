@@ -4,7 +4,7 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
-import Content from '../Content';
+import { Content } from '../Content';
 import { getPageByPath } from '../api';
 
 jest.mock('../api');

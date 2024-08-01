@@ -7,7 +7,7 @@ import { usePageByPageId } from './state';
 interface ContentProps {
   pageId: string;
 }
-const Content: React.FC<ContentProps> = ({ pageId }) => {
+export const Content: React.FC<ContentProps> = ({ pageId }) => {
   const page = usePageByPageId(pageId);
 
   if (page) {

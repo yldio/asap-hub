@@ -409,14 +409,14 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
                 Unique Speakers: All Roles
               </span>
               <p css={rowValueStyles}>
-                {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}{' '}
+                {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}
               </p>
 
               <span css={[titleStyles, rowTitleStyles]}>
                 Unique Speakers: Key Personnel
               </span>
               <p css={rowValueStyles}>
-                {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}{' '}
+                {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}
               </p>
             </div>
           ))}

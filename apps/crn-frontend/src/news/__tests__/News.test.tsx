@@ -1,7 +1,7 @@
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { NewsResponse } from '@asap-hub/model';
 import { newsRoutes } from '@asap-hub/routing';
 
@@ -37,9 +37,12 @@ const renderPage = async () => {
                 newsRoutes.DEFAULT.DETAILS.buildPath({ id: newsOrEvent.id }),
               ]}
             >
-              <Route path={newsRoutes.DEFAULT.DETAILS.path}>
-                <News />
-              </Route>
+              <Routes>
+                <Route
+                  path={newsRoutes.DEFAULT.DETAILS.relativePath}
+                  element={<News />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -74,6 +77,8 @@ describe('news detail page', () => {
     mockGetNewsById.mockResolvedValue(newsOrEvent);
 
     const { getByRole } = await renderPage();
-    expect(getByRole('heading').textContent).toContain('News Title');
+    await waitFor(() => {
+      expect(getByRole('heading').textContent).toContain('News Title');
+    });
   });
 });

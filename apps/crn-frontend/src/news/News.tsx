@@ -5,7 +5,7 @@ import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { useNewsById } from './state';
 
 const News: React.FC<Record<string, never>> = () => {
-  const { id } = useTypedParams(newsRoutes.DEFAULT.DETAILS);
+  const { id } = useTypedParams(newsRoutes.DEFAULT.$.DETAILS);
 
   const news = useNewsById(id);
 

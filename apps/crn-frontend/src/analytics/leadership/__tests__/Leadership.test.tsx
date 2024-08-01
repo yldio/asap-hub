@@ -169,7 +169,7 @@ describe('search', () => {
       ),
     );
   });
-  it.skip('Will search algolia using selected team', async () => {
+  it('Will search algolia using selected team', async () => {
     mockSearchForTagValues.mockResolvedValue({
       ...EMPTY_ALGOLIA_FACET_HITS,
       facetHits: [{ value: 'Alessi', count: 1, highlighted: 'Alessi' }],
@@ -178,10 +178,8 @@ describe('search', () => {
     await renderPage();
     const searchBox = getSearchBox();
 
-    await act(async () => {
-      fireEvent.click(searchBox);
-      fireEvent.click(await screen.findByText('Alessi'));
-    });
+    await userEvent.click(searchBox);
+    fireEvent.click(await screen.findByText('Alessi'));
 
     await waitFor(() =>
       expect(mockSearch).toHaveBeenCalledWith(

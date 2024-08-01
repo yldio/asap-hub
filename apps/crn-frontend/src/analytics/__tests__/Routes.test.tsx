@@ -1,4 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { disable, enable } from '@asap-hub/flags';
 import {
   performanceByDocumentType,
   userProductivityPerformance,
@@ -13,7 +14,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -104,9 +105,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: path }]}>
-              <Route path={analyticsRoutes.DEFAULT.path}>
-                <Analytics />
-              </Route>
+              <Routes>
+                <Route
+                  path={analyticsRoutes.DEFAULT.path}
+                  element={<Analytics />}
+                ></Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -131,6 +135,7 @@ describe('Analytics page', () => {
   });
 
   it('redirects to user productivity page when flag is true', async () => {
+    enable('DISPLAY_ANALYTICS_BETA');
     mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
 
@@ -251,6 +256,9 @@ describe('Leadership & Membership', () => {
 });
 
 describe('Collaboration', () => {
+  beforeEach(() => {
+    enable('DISPLAY_ANALYTICS_BETA');
+  });
   it('renders the Collaboration tab', async () => {
     await renderPage(
       analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({

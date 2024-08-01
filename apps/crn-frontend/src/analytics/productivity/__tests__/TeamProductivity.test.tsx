@@ -149,6 +149,6 @@ it('calls algolia client with the right index name', async () => {
     );
   });
 
-  userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+  await userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
   expect(mockSetSort).toHaveBeenCalledWith('team_desc');
 });

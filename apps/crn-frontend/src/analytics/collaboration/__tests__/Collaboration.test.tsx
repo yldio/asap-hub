@@ -277,14 +277,14 @@ describe('user collaboration', () => {
     const categoryButton = screen.getByRole('button', {
       name: /all chevron down/i,
     });
-    userEvent.click(categoryButton);
+    await userEvent.click(categoryButton);
     await userEvent.click(screen.getByText(/Article/));
-
     await waitFor(() =>
-      expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    expect(screen.getByText('100')).toBeVisible();
+    expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
+      expect(screen.getByText('100')).toBeVisible();
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
 });

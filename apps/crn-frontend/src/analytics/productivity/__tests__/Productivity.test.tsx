@@ -16,7 +16,13 @@ import {
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { analyticsRoutes } from '@asap-hub/routing';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
@@ -264,17 +270,19 @@ describe('user productivity', () => {
     const categoryButton = screen.getByRole('button', {
       name: /all chevron down/i,
     });
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/Article/));
+    await userEvent.click(categoryButton);
+    await userEvent.click(screen.getByText(/Article/));
     await waitFor(() =>
-      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
+
+    expect(screen.getAllByText('User Productivity')).toHaveLength(2);
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
     userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/All/));
+    await userEvent.click(screen.getByText(/All/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -289,22 +297,20 @@ describe('team productivity', () => {
     const label = 'Team Productivity';
 
     await renderPage(
-      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
-    const input = screen.getAllByRole('combobox', { hidden: false })[0]!;
-    userEvent.click(input);
-    await userEvent.click(screen.getByText(label));
 
     expect(screen.getAllByText(label).length).toBe(2);
   });
 
-  it.only('renders data for different time ranges', async () => {
+  it('renders data for different time ranges', async () => {
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
         outputType: 'all',
       })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
+
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
@@ -332,23 +338,22 @@ describe('team productivity', () => {
       name: /last 30 days chevron down/i,
     });
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 90 days/));
+    await userEvent.click(screen.getByText(/Last 90 days/));
 
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
     expect(screen.getAllByText('Team Productivity')).toHaveLength(2);
-
-    screen.debug(undefined, 30000);
     expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 30 days/));
-    await waitFor(() =>
-      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /last 90 days chevron down/i,
+      }),
     );
+    await userEvent.click(screen.getByText(/Last 30 days/));
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();

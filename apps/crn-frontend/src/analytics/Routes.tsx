@@ -30,8 +30,6 @@ const AnalyticsRoutes = () => {
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  // const { pathname: path } = useLocation();
-
   return (
     <Routes>
       <Route path={analytics.DEFAULT.$.PRODUCTIVITY.relativePath}>
@@ -49,12 +47,9 @@ const AnalyticsRoutes = () => {
           path="*"
           element={
             <Navigate
-              to={
-                analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
-                  metric: 'user',
-                })
-                // analytics({}).productivity({}).metric({ metric: 'user' }).$
-              }
+              to={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+                metric: 'user',
+              })}
             />
           }
         />
@@ -62,12 +57,6 @@ const AnalyticsRoutes = () => {
       {isEnabled('DISPLAY_ANALYTICS_BETA') && (
         <Route path={analytics.DEFAULT.$.COLLABORATION.relativePath}>
           <Route
-            // exact
-            // path={
-            //   path +
-            //   analytics({}).collaboration.template +
-            //   analytics({}).collaboration({}).collaborationPath.template
-            // }
             path={analytics.DEFAULT.COLLABORATION.$.METRIC.relativePath}
             element={
               <AnalyticsPage>
@@ -81,16 +70,10 @@ const AnalyticsRoutes = () => {
             path="*"
             element={
               <Navigate
-                to={
-                  analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
-                    metric: 'user',
-                    type: 'within-team',
-                  })
-                  // analytics({}).collaboration({}).collaborationPath({
-                  //   metric: 'user',
-                  //   type: 'within-team',
-                  // }).$
-                }
+                to={analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+                  metric: 'user',
+                  type: 'within-team',
+                })}
               />
             }
           />
@@ -111,12 +94,6 @@ const AnalyticsRoutes = () => {
       <Route path={analytics.DEFAULT.$.LEADERSHIP.relativePath}>
         <Route
           path={analytics.DEFAULT.LEADERSHIP.$.METRIC.relativePath}
-          // exact
-          // path={
-          //   path +
-          //   analytics({}).leadership.template +
-          //   analytics({}).leadership({}).metric.template
-          // }
           element={
             <AnalyticsPage>
               <Frame title="Leadership & Membership">
@@ -129,14 +106,9 @@ const AnalyticsRoutes = () => {
           path="*"
           element={
             <Navigate
-              to={
-                analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
-                  metric: 'working-group',
-                })
-                // analytics({})
-                //   .leadership({})
-                //   .metric({ metric: 'working-group' }).$
-              }
+              to={analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
+                metric: 'working-group',
+              })}
             />
           }
         />
@@ -145,12 +117,9 @@ const AnalyticsRoutes = () => {
         path="*"
         element={
           <Navigate
-            to={
-              analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
-                metric: 'working-group',
-              })
-              // analytics({}).leadership({ metric: 'working-group' }).$
-            }
+            to={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+              metric: 'user',
+            })}
           />
         }
       />

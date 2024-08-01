@@ -160,6 +160,8 @@ it('calls algolia client with the right index name', async () => {
     );
   });
 
-  userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+  await userEvent.click(
+    getByTitle('User Active Alphabetical Ascending Sort Icon'),
+  );
   expect(mockSetSort).toHaveBeenCalledWith('user_desc');
 });

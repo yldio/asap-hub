@@ -2,7 +2,6 @@ import {
   CollaborationType,
   SortUserCollaboration,
   UserCollaborationAlgoliaResponse,
-  userCollaborationInitialSortingDirection,
   UserCollaborationPerformance,
   UserCollaborationSortingDirection,
 } from '@asap-hub/model';
@@ -10,7 +9,7 @@ import {
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserCollaboration,
@@ -58,9 +57,14 @@ const getPerformanceForType = (
   return performance.acrossTeam;
 };
 
-export interface CollaborationProps<T = SortUserCollaboration> {
+export interface CollaborationProps<
+  T = SortUserCollaboration,
+  K = UserCollaborationSortingDirection,
+> {
   sort: T;
   setSort: Dispatch<SetStateAction<T>>;
+  sortingDirection: K;
+  setSortingDirection: React.Dispatch<React.SetStateAction<K>>;
   type: CollaborationType;
   tags: string[];
 }
@@ -68,17 +72,14 @@ export interface CollaborationProps<T = SortUserCollaboration> {
 const UserCollaboration: React.FC<CollaborationProps> = ({
   sort,
   setSort,
+  sortingDirection,
+  setSortingDirection,
   type,
   tags,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { timeRange, documentCategory } = useAnalytics();
-
-  const [sortingDirection, setSortingDirection] =
-    useState<UserCollaborationSortingDirection>(
-      userCollaborationInitialSortingDirection,
-    );
 
   const { items: data, total } = useAnalyticsUserCollaboration({
     currentPage,

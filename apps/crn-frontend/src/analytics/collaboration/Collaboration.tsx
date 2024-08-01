@@ -3,7 +3,11 @@ import {
   SortTeamCollaboration,
   SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
+  teamCollaborationInitialSortingDirection,
+  TeamCollaborationSortingDirection,
   UserCollaborationAlgoliaResponse,
+  userCollaborationInitialSortingDirection,
+  UserCollaborationSortingDirection,
 } from '@asap-hub/model';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -41,6 +45,14 @@ const Collaboration = () => {
   const { currentPage } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
+  const [userSortingDirection, setUserSortingDirection] =
+    useState<UserCollaborationSortingDirection>(
+      userCollaborationInitialSortingDirection,
+    );
+  const [teamSortingDirection, setTeamSortingDirection] =
+    useState<TeamCollaborationSortingDirection>(
+      teamCollaborationInitialSortingDirection,
+    );
 
   const entityType =
     metric === 'user' ? 'user-collaboration' : 'team-collaboration';
@@ -50,13 +62,20 @@ const Collaboration = () => {
         .collaboration({})
         .collaborationPath({ metric: newMetric, type }).$,
     );
-  const setType = (newType: 'within-team' | 'across-teams') =>
+  const setType = (newType: 'within-team' | 'across-teams') => {
+    if (metric === 'user') {
+      setUserSort('user_asc');
+      setUserSortingDirection(userCollaborationInitialSortingDirection);
+    } else {
+      setTeamSort('team_asc');
+      setTeamSortingDirection(teamCollaborationInitialSortingDirection);
+    }
     history.push(
       analytics({})
         .collaboration({})
         .collaborationPath({ metric, type: newType }).$,
     );
-
+  };
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
 
   const userPerformance = useUserCollaborationPerformance({
@@ -142,6 +161,8 @@ const Collaboration = () => {
         <UserCollaboration
           sort={userSort}
           setSort={setUserSort}
+          setSortingDirection={setUserSortingDirection}
+          sortingDirection={userSortingDirection}
           type={type}
           tags={tags}
         />
@@ -149,6 +170,8 @@ const Collaboration = () => {
         <TeamCollaboration
           sort={teamSort}
           setSort={setTeamSort}
+          setSortingDirection={setTeamSortingDirection}
+          sortingDirection={teamSortingDirection}
           type={type}
           tags={tags}
         />

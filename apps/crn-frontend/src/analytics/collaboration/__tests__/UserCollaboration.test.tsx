@@ -1,5 +1,6 @@
 import {
   ListUserCollaborationAlgoliaResponse,
+  userCollaborationInitialSortingDirection,
   UserCollaborationResponse,
 } from '@asap-hub/model';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
@@ -40,6 +41,7 @@ mockGetUserCollaborationPerformance.mockResolvedValue(
 );
 
 const mockSetSort = jest.fn();
+const mockSetSortingDirection = jest.fn();
 
 const userTeam: UserCollaborationResponse['teams'][number] = {
   id: '1',
@@ -97,6 +99,8 @@ const renderPage = async () => {
                 type="within-team"
                 tags={[]}
                 setSort={mockSetSort}
+                setSortingDirection={mockSetSortingDirection}
+                sortingDirection={userCollaborationInitialSortingDirection}
                 sort={'user_asc'}
               />
             </MemoryRouter>

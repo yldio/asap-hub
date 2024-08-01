@@ -1,6 +1,5 @@
 import {
   SortTeamCollaboration,
-  teamCollaborationInitialSortingDirection,
   TeamCollaborationResponse,
   TeamCollaborationSortingDirection,
 } from '@asap-hub/model';
@@ -8,7 +7,6 @@ import {
   TeamCollaborationMetric,
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
-import { useState } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamCollaboration,
@@ -39,15 +37,10 @@ const getDataForType = (
 };
 
 const TeamCollaboration: React.FC<
-  CollaborationProps<SortTeamCollaboration>
-> = ({ sort, setSort, type, tags }) => {
+  CollaborationProps<SortTeamCollaboration, TeamCollaborationSortingDirection>
+> = ({ sort, setSort, setSortingDirection, sortingDirection, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
-
-  const [sortingDirection, setSortingDirection] =
-    useState<TeamCollaborationSortingDirection>(
-      teamCollaborationInitialSortingDirection,
-    );
 
   const { items: data, total } = useAnalyticsTeamCollaboration({
     currentPage,

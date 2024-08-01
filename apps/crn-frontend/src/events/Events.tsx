@@ -80,7 +80,7 @@ const Events: FC<Record<string, never>> = () => {
       />
       <Route
         path="*"
-        element={<Navigate to={eventRoutes.DEFAULT.$.UPCOMING.relativePath} />}
+        element={<Navigate to={eventRoutes.DEFAULT.UPCOMING.buildPath({})} />}
       />
     </Routes>
   );

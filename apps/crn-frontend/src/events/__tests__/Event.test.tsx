@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { Route } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import {
   createCalendarResponse,
@@ -38,11 +37,18 @@ const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
     <Auth0Provider user={{}}>
       <WhenReady>
         <Suspense fallback="Loading...">
-          <StaticRouter
-            location={eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id })}
+          <MemoryRouter
+            initialEntries={[
+              eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id }),
+            ]}
           >
-            <Route path={eventRoutes.DEFAULT.DETAILS.path}>{children}</Route>
-          </StaticRouter>
+            <Routes>
+              <Route
+                path={eventRoutes.DEFAULT.DETAILS.relativePath}
+                element={children}
+              />
+            </Routes>
+          </MemoryRouter>
         </Suspense>
       </WhenReady>
     </Auth0Provider>

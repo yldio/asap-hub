@@ -15,11 +15,11 @@ import { useEventById, useQuietRefreshEventById } from './state';
 import { useTypedParams } from 'react-router-typesafe-routes/dom';
 
 const Event: React.FC = () => {
-  const { eventId } = useTypedParams(eventRoutes.DEFAULT.DETAILS);
+  const { eventId } = useTypedParams(eventRoutes.DEFAULT.$.DETAILS);
   const event = useEventById(eventId);
   const refreshEvent = useQuietRefreshEventById(eventId);
 
-  const backHref = useBackHref() ?? eventRoutes.DEFAULT.path;
+  const backHref = useBackHref() ?? eventRoutes.DEFAULT.buildPath({});
 
   const hasFinished = useDateHasPassed(
     considerEndedAfter(event?.endDate || ''),

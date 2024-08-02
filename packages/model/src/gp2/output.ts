@@ -197,6 +197,9 @@ export type PublicOutputResponse = Pick<
   | 'shortDescription'
   | 'id'
   | 'systemPublishedVersion'
+  | 'projects'
+  | 'contributingCohorts'
+  | 'versions'
 > & {
   authors: Array<
     | Pick<
@@ -208,6 +211,8 @@ export type PublicOutputResponse = Pick<
   lastModifiedDate: string;
   finalPublishDate?: string;
   preprintPublishDate?: string;
+  identifier?: string;
+  externalUrl?: string;
 };
 
 export type ListOutputResponse = ListResponse<OutputResponse>;

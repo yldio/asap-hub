@@ -219,6 +219,7 @@ export type PublicUserResponse = Pick<
       role: UserWorkingGroupMember['role'];
     }
   >;
+  tags: string[];
 };
 export type ListUserResponse = ListResponse<UserResponse>;
 export type ListPublicUserResponse = ListResponse<PublicUserResponse>;

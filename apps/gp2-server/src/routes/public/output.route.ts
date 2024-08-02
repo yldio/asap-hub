@@ -87,4 +87,9 @@ const mapOutputToPublicOutput = (
     output.subtype === 'Preprints'
       ? output.publishDate
       : undefined,
+  projects: output.projects,
+  identifier: output.doi || output.rrid || output.accessionNumber,
+  externalUrl: output.link,
+  contributingCohorts: output.contributingCohorts,
+  versions: output.versions,
 });

@@ -161,6 +161,7 @@ export const getPublicUserResponse = (): gp2Model.PublicUserResponse => {
         role: 'Co-lead',
       },
     ],
+    tags: ['BLAAC-PD', 'Cohort'],
   };
 };
 

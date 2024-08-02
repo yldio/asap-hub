@@ -101,7 +101,49 @@ describe('Field component', () => {
     ]);
   });
 
-  it('remove button works', () => {
+  it('remove button updates field', () => {
+    const mockSdk = {
+      ...mockBaseSdk,
+      field: {
+        getValue: jest.fn(() => [
+          {
+            role: 'Some role',
+            department: 'Some department',
+            institution: 'Some institution',
+          },
+          {
+            role: 'Another role',
+            department: 'Another department',
+            institution: 'Another institution',
+          },
+        ]),
+        setValue: jest.fn(),
+      },
+    };
+    (useSDK as jest.Mock).mockReturnValue(mockSdk);
+    render(<Field />);
+
+    expect(screen.getByText('Another role')).toBeInTheDocument();
+    expect(screen.getByText('Another department')).toBeInTheDocument();
+    expect(screen.getByText('Another institution')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /remove/i })).toHaveLength(2);
+
+    fireEvent.click(screen.getAllByRole('button', { name: /remove/i })[0]);
+
+    expect(mockSdk.field.setValue).toHaveBeenCalledWith([
+      {
+        department: 'Another department',
+        institution: 'Another institution',
+        role: 'Another role',
+      },
+    ]);
+
+    expect(screen.queryByRole('Another role')).not.toBeInTheDocument();
+    expect(screen.queryByRole('Another department')).not.toBeInTheDocument();
+    expect(screen.queryByRole('Another institution')).not.toBeInTheDocument();
+  });
+
+  it('remove button sets position as undefined if all positions are removed', () => {
     const mockSdk = {
       ...mockBaseSdk,
       field: {

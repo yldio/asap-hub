@@ -121,6 +121,7 @@ export const getPublicWorkingGroupResponse =
       shortDescription,
       systemPublishedVersion,
       title,
+      milestones: [{ status: 'Active' }],
     };
   };
 

@@ -88,7 +88,10 @@ const mapOutputToPublicOutput = (
       ? output.publishDate
       : undefined,
   projects: output.projects,
-  identifier: output.doi || output.rrid || output.accessionNumber,
+  identifier:
+    (output.doi && `https://doi.org/${output.doi}`) ||
+    (output.rrid && `https://scicrunch.org/resolver/${output.rrid}`) ||
+    output.accessionNumber,
   externalUrl: output.link,
   contributingCohorts: output.contributingCohorts,
   versions: output.versions,

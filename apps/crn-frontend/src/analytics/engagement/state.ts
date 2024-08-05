@@ -1,7 +1,9 @@
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   EngagementAlgoliaResponse,
   ListEngagementAlgoliaResponse,
+  SortEngagement,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -71,9 +73,14 @@ export const analyticsEngagementState = selectorFamily<
 });
 
 export const useAnalyticsEngagement = (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName =
+    options.sort === 'team_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_${options.sort}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
   const [engagement, setEngagement] = useRecoilState(
     analyticsEngagementState(options),
   );

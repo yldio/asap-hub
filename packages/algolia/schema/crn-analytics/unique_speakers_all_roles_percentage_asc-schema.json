@@ -1,0 +1,3 @@
+{
+  "customRanking": ["asc(uniqueAllRolesCountPercentage)"]
+}

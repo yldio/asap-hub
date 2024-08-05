@@ -462,7 +462,9 @@ describe('getEngagementItems', () => {
           eventCount: 1,
           totalSpeakerCount: 1,
           uniqueAllRolesCount: 1,
+          uniqueAllRolesCountPercentage: 100,
           uniqueKeyPersonnelCount: 0,
+          uniqueKeyPersonnelCountPercentage: 0,
         },
       ]);
     });
@@ -507,7 +509,9 @@ describe('getEngagementItems', () => {
           eventCount: 1,
           totalSpeakerCount: 1,
           uniqueAllRolesCount: 1,
+          uniqueAllRolesCountPercentage: 100,
           uniqueKeyPersonnelCount: 1,
+          uniqueKeyPersonnelCountPercentage: 100,
         },
       ]);
     });

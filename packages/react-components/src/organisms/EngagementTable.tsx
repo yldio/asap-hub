@@ -1,11 +1,24 @@
-import { EngagementResponse } from '@asap-hub/model';
+import {
+  engagementInitialSortingDirection,
+  EngagementResponse,
+  EngagementSortingDirection,
+  SortEngagement,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { InactiveBadgeIcon } from '..';
+
+import {
+  AlphabeticalSortingIcon,
+  HashtagIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+  PercentageIcon,
+} from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
+import EngagementSort from './EngagementSort';
 
 const container = css({
   display: 'grid',
@@ -71,54 +84,346 @@ const iconStyles = css({
   gap: rem(3),
 });
 
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
+});
+
 type EngagementTableProps = {
   data: EngagementResponse[];
+  sort: SortEngagement;
+  setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
+  sortingDirection: EngagementSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<EngagementSortingDirection>
+  >;
 };
 
-const EngagementTable: React.FC<EngagementTableProps> = ({ data }) => (
-  <>
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>Team</span>
-          <span css={titleStyles}>Members</span>
-          <span css={titleStyles}>Events</span>
-          <span css={titleStyles}>Total Speakers</span>
-          <span css={titleStyles}>Unique Speakers: All Roles</span>
-          <span css={titleStyles}>Unique Speakers: Key Personnel</span>
-        </div>
-        {data.map((row) => (
-          <div key={row.id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p css={iconStyles}>
-              <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
-                {row.name}
-              </Link>
+const EngagementTable: React.FC<EngagementTableProps> = ({
+  data,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
+}) => {
+  const isTeamSortActive = sort.includes('team');
+  const isMembersSortActive = sort.includes('members');
+  const isEventsSortActive = sort.includes('events');
+  const isTotalSpeakersSortActive = sort.includes('total_speakers');
+  const isUniqueSpeakersAllRolesSortActive = sort.includes(
+    'unique_speakers_all_roles',
+  );
+  const isUniqueSpeakersKeyPersonnelSortActive = sort.includes(
+    'unique_speakers_key_personnel',
+  );
 
-              {row.inactiveSince && <InactiveBadgeIcon />}
-            </p>
-            <span css={[titleStyles, rowTitleStyles]}>Members</span>
-            <p css={rowValueStyles}>{row.memberCount} </p>
-            <span css={[titleStyles, rowTitleStyles]}>Events</span>
-            <p css={rowValueStyles}>{row.eventCount} </p>
+  const onEventsSortClick = () => {
+    const newDirection = isEventsSortActive
+      ? sortingDirection.events === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
 
-            <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
-            <p css={rowValueStyles}>{row.totalSpeakerCount} </p>
+    setSort(`events_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      events: newDirection,
+    });
+  };
 
-            <span css={[titleStyles, rowTitleStyles]}>
+  const onTotalSpeakersSortClick = () => {
+    const newDirection = isTotalSpeakersSortActive
+      ? sortingDirection.totalSpeakers === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
+
+    setSort(`total_speakers_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      totalSpeakers: newDirection,
+    });
+  };
+
+  const onUniqueSpeakersSortClick = () => {
+    const newDirection = isUniqueSpeakersAllRolesSortActive
+      ? sortingDirection.uniqueSpeakersAllRoles === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
+
+    setSort(`unique_speakers_all_roles_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      uniqueSpeakersAllRoles: newDirection,
+    });
+  };
+
+  const onUniqueSpeakersPercentageSortClick = () => {
+    const newDirection = isUniqueSpeakersAllRolesSortActive
+      ? sortingDirection.uniqueSpeakersAllRolesPercentage === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
+
+    setSort(`unique_speakers_all_roles_percentage_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      uniqueSpeakersAllRolesPercentage: newDirection,
+    });
+  };
+
+  const onUniqueSpeakersKeyPersonnelSortClick = () => {
+    const newDirection = isUniqueSpeakersKeyPersonnelSortActive
+      ? sortingDirection.uniqueSpeakersKeyPersonnel === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
+
+    setSort(`unique_speakers_key_personnel_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      uniqueSpeakersKeyPersonnel: newDirection,
+    });
+  };
+
+  const onUniqueSpeakersKeyPersonnelPercentageSortClick = () => {
+    const newDirection = isUniqueSpeakersKeyPersonnelSortActive
+      ? sortingDirection.uniqueSpeakersKeyPersonnelPercentage === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'desc';
+
+    setSort(`unique_speakers_key_personnel_percentage_${newDirection}`);
+    setSortingDirection({
+      ...engagementInitialSortingDirection,
+      uniqueSpeakersKeyPersonnelPercentage: newDirection,
+    });
+  };
+
+  return (
+    <>
+      <Card padding={false}>
+        <div css={container}>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}>
+              Team
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isTeamSortActive
+                    ? sortingDirection.team === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`team_${newDirection}`);
+                  setSortingDirection({
+                    ...engagementInitialSortingDirection,
+                    team: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isTeamSortActive}
+                  ascending={sortingDirection.team === 'asc'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Members
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isMembersSortActive
+                    ? sortingDirection.members === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(`members_${newDirection}`);
+                  setSortingDirection({
+                    ...engagementInitialSortingDirection,
+                    members: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isMembersSortActive}
+                  ascending={sortingDirection.members === 'asc'}
+                  description={'Members'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Events
+              <EngagementSort
+                isActive={isEventsSortActive}
+                description="Events"
+                sortingOptions={[
+                  {
+                    key: 'eventsDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Events Numerical Descending Sort Icon',
+                    onClick: onEventsSortClick,
+                  },
+                  {
+                    key: 'eventsAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Events Numerical Ascending Sort Icon',
+                    onClick: onEventsSortClick,
+                  },
+                ]}
+              />
+            </span>
+            <span css={titleStyles}>
+              Total Speakers
+              <EngagementSort
+                isActive={isTotalSpeakersSortActive}
+                description="Total Speakers"
+                sortingOptions={[
+                  {
+                    key: 'totalSpeakersDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Total Speakers Numerical Descending Sort Icon',
+                    onClick: onTotalSpeakersSortClick,
+                  },
+                  {
+                    key: 'totalSpeakersAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Total Speakers Numerical Ascending Sort Icon',
+                    onClick: onTotalSpeakersSortClick,
+                  },
+                ]}
+              />
+            </span>
+            <span css={titleStyles}>
               Unique Speakers: All Roles
+              <EngagementSort
+                isActive={isUniqueSpeakersAllRolesSortActive}
+                description="Unique Speakers"
+                sortingOptions={[
+                  {
+                    key: 'uniqueSpeakersDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Unique Speakers Numerical Descending Sort Icon',
+                    onClick: onUniqueSpeakersSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: HashtagIcon,
+                    iconTitle: 'Unique Speakers Numerical Ascending Sort Icon',
+                    onClick: onUniqueSpeakersSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersPercentageDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: PercentageIcon,
+                    iconTitle:
+                      'Unique Speakers Percentage Numerical Descending Sort Icon',
+                    onClick: onUniqueSpeakersPercentageSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersPercentageAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: PercentageIcon,
+                    iconTitle:
+                      'Unique Speakers Percentage Numerical Ascending Sort Icon',
+                    onClick: onUniqueSpeakersPercentageSortClick,
+                  },
+                ]}
+              />
             </span>
-            <p css={rowValueStyles}>{row.uniqueAllRolesCount} </p>
-
-            <span css={[titleStyles, rowTitleStyles]}>
+            <span css={titleStyles}>
               Unique Speakers: Key Personnel
+              <EngagementSort
+                isActive={isUniqueSpeakersKeyPersonnelSortActive}
+                description="Unique Speakers Key Personnel"
+                sortingOptions={[
+                  {
+                    key: 'uniqueSpeakersKeyPersonnelDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: HashtagIcon,
+                    iconTitle:
+                      'Unique Speakers Key Personnel Numerical Descending Sort Icon',
+                    onClick: onUniqueSpeakersKeyPersonnelSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersKeyPersonnelAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: HashtagIcon,
+                    iconTitle:
+                      'Unique Speakers Key Personnel Numerical Ascending Sort Icon',
+                    onClick: onUniqueSpeakersKeyPersonnelSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersKeyPersonnelPercentageDesc',
+                    label: 'Sort highest to lowest',
+                    Icon: PercentageIcon,
+                    iconTitle:
+                      'Unique Speakers Key Personnel Percentage Numerical Descending Sort Icon',
+                    onClick: onUniqueSpeakersKeyPersonnelPercentageSortClick,
+                  },
+                  {
+                    key: 'uniqueSpeakersKeyPersonnelPercentageAsc',
+                    label: 'Sort lowest to highest',
+                    Icon: PercentageIcon,
+                    iconTitle:
+                      'Unique Speakers Key Personnel Percentage Numerical Ascending Sort Icon',
+                    onClick: onUniqueSpeakersKeyPersonnelPercentageSortClick,
+                  },
+                ]}
+              />
             </span>
-            <p css={rowValueStyles}>{row.uniqueKeyPersonnelCount} </p>
           </div>
-        ))}
-      </div>
-    </Card>
-  </>
-);
+          {data.map((row) => (
+            <div key={row.id} css={[rowStyles]}>
+              <span css={[titleStyles, rowTitleStyles]}>Team</span>
+              <p css={iconStyles}>
+                <Link href={network({}).teams({}).team({ teamId: row.id }).$}>
+                  {row.name}
+                </Link>
+
+                {row.inactiveSince && <InactiveBadgeIcon />}
+              </p>
+              <span css={[titleStyles, rowTitleStyles]}>Members</span>
+              <p css={rowValueStyles}>{row.memberCount} </p>
+              <span css={[titleStyles, rowTitleStyles]}>Events</span>
+              <p css={rowValueStyles}>{row.eventCount} </p>
+
+              <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
+              <p css={rowValueStyles}>{row.totalSpeakerCount} </p>
+
+              <span css={[titleStyles, rowTitleStyles]}>
+                Unique Speakers: All Roles
+              </span>
+              <p css={rowValueStyles}>
+                {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}
+              </p>
+
+              <span css={[titleStyles, rowTitleStyles]}>
+                Unique Speakers: Key Personnel
+              </span>
+              <p css={rowValueStyles}>
+                {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </>
+  );
+};
 
 export default EngagementTable;

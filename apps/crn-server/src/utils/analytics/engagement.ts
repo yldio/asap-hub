@@ -60,6 +60,8 @@ export const getEngagementItems = (
           : count,
       0,
     );
+    const uniqueAllRolesCount = uniqueSpeakers.allRoles.size;
+    const uniqueKeyPersonnelCount = uniqueSpeakers.keyPersonnel.size;
 
     return {
       id: teamItem.sys.id,
@@ -68,8 +70,14 @@ export const getEngagementItems = (
       memberCount,
       eventCount: events.size || 0,
       totalSpeakerCount,
-      uniqueAllRolesCount: uniqueSpeakers.allRoles.size,
-      uniqueKeyPersonnelCount: uniqueSpeakers.keyPersonnel.size,
+      uniqueAllRolesCount,
+      uniqueAllRolesCountPercentage: totalSpeakerCount
+        ? Math.round((uniqueAllRolesCount / totalSpeakerCount) * 100)
+        : 0,
+      uniqueKeyPersonnelCount,
+      uniqueKeyPersonnelCountPercentage: totalSpeakerCount
+        ? Math.round((uniqueKeyPersonnelCount / totalSpeakerCount) * 100)
+        : 0,
     };
   });
 

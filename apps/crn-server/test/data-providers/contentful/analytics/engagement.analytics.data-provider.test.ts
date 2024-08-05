@@ -136,7 +136,9 @@ describe('fetchEngagement', () => {
           eventCount: 0,
           totalSpeakerCount: 0,
           uniqueAllRolesCount: 0,
+          uniqueAllRolesCountPercentage: 0,
           uniqueKeyPersonnelCount: 0,
+          uniqueKeyPersonnelCountPercentage: 0,
         },
       ],
     });

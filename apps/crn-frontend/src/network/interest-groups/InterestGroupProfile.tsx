@@ -58,11 +58,9 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
 
     return (
       <InterestGroupProfilePage
-        // groupTeamsHref={`${
-        //   route({ interestGroupId }).about({}).$
-        // }#${groupTeamsElementId}`}
-        // TODO: fix this
-        groupTeamsHref={route.ABOUT.buildPath({ interestGroupId })}
+        groupTeamsHref={`${route.ABOUT.buildPath({
+          interestGroupId,
+        })}#${groupTeamsElementId}`}
         upcomingEventsCount={upcomingEvents?.total || 0}
         pastEventsCount={pastEvents?.total || 0}
         numberOfTeams={

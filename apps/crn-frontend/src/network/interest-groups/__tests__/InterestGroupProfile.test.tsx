@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -51,9 +51,14 @@ const renderGroupProfile = async (
                 }),
               ]}
             >
-              <Route path={networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.path}>
-                <InterestGroupProfile currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    networkRoutes.DEFAULT.INTEREST_GROUPS.DETAILS.relativePath
+                  }
+                  element={<InterestGroupProfile currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -78,11 +83,13 @@ it('deep links to the teams section', async () => {
     createInterestGroupResponse({ teamsCount: 1 }),
   );
 
-  const anchor = (await findByText(/1 team/i)).closest('a');
-  expect(anchor).toBeVisible();
-  const { hash } = new URL(anchor!.href, globalThis.location.href);
+  await waitFor(async () => {
+    const anchor = (await findByText(/1 team/i)).closest('a');
+    expect(anchor).toBeVisible();
+    const { hash } = new URL(anchor!.href, globalThis.location.href);
 
-  expect(container.querySelector(hash)).toHaveTextContent(/teams/i);
+    expect(container.querySelector(hash)).toHaveTextContent(/teams/i);
+  });
 });
 
 it('does not count inactive teams in the count', async () => {
@@ -133,7 +140,9 @@ describe('the calendar tab', () => {
     const { findByText, findAllByText } = await renderGroupProfile(
       createInterestGroupResponse(),
     );
-    userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
+    await userEvent.click(
+      await findByText(/calendar/i, { selector: 'nav a *' }),
+    );
     expect(await findAllByText(/subscribe/i)).not.toHaveLength(0);
   });
   it('cannot be switched to if the group is inactive', async () => {
@@ -148,7 +157,9 @@ describe('the calendar tab', () => {
 describe('the upcoming events tab', () => {
   it('can be switched to', async () => {
     const { findByText } = await renderGroupProfile();
-    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
+    await userEvent.click(
+      await findByText(/upcoming/i, { selector: 'nav a *' }),
+    );
     expect(await findByText(/results/i)).toBeVisible();
   });
   it('cannot be switched to if the group is inactive', async () => {
@@ -163,7 +174,7 @@ describe('the upcoming events tab', () => {
 describe('the past events tab', () => {
   it('can be switched to', async () => {
     const { findByText } = await renderGroupProfile();
-    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
+    await userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
     expect(await findByText(/results/i)).toBeVisible();
   });
 });

@@ -11657,12 +11657,11 @@ export type FetchTeamProductivityQuery = {
   >;
 };
 
-export type FetchUserCollaborationQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']>;
+export type FetchUserTotalResearchOutputsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type FetchUserCollaborationQuery = {
+export type FetchUserTotalResearchOutputsQuery = {
   usersCollection?: Maybe<
     Pick<UsersCollection, 'total'> & {
       items: Array<
@@ -11689,37 +11688,48 @@ export type FetchUserCollaborationQuery = {
               >;
             }>;
             linkedFrom?: Maybe<{
-              researchOutputsCollection?: Maybe<{
-                items: Array<
-                  Maybe<
-                    Pick<ResearchOutputs, 'addedDate' | 'documentType'> & {
-                      authorsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            | { __typename: 'ExternalAuthors' }
-                            | ({ __typename: 'Users' } & {
-                                sys: Pick<Sys, 'id'>;
-                                labsCollection?: Maybe<{
-                                  items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-                                }>;
-                                teamsCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<{
-                                      team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                                    }>
-                                  >;
-                                }>;
-                              })
-                          >
-                        >;
-                      }>;
-                    }
-                  >
-                >;
-              }>;
+              researchOutputsCollection?: Maybe<
+                Pick<ResearchOutputsCollection, 'total'>
+              >;
             }>;
           }
         >
+      >;
+    }
+  >;
+};
+
+export type FetchUserResearchOutputsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchUserResearchOutputsQuery = {
+  usersCollection?: Maybe<
+    Pick<UsersCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          sys: Pick<Sys, 'id'>;
+          linkedFrom?: Maybe<{
+            researchOutputsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<ResearchOutputs, 'addedDate' | 'documentType'> & {
+                    sys: Pick<Sys, 'id'>;
+                    authorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | { __typename: 'ExternalAuthors' }
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                  }
+                >
+              >;
+            }>;
+          }>;
+        }>
       >;
     }
   >;
@@ -25777,22 +25787,14 @@ export const FetchTeamProductivityDocument = {
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables
 >;
-export const FetchUserCollaborationDocument = {
+export const FetchUserTotalResearchOutputsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchUserCollaboration' },
+      name: { kind: 'Name', value: 'FetchUserTotalResearchOutputs' },
       variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'limit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
         {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
@@ -25814,10 +25816,7 @@ export const FetchUserCollaborationDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'limit' },
-                },
+                value: { kind: 'IntValue', value: '1000' },
               },
               {
                 kind: 'Argument',
@@ -25996,7 +25995,127 @@ export const FetchUserCollaborationDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '200' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'total' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchUserTotalResearchOutputsQuery,
+  FetchUserTotalResearchOutputsQueryVariables
+>;
+export const FetchUserResearchOutputsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchUserResearchOutputs' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'usersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: { kind: 'EnumValue', value: 'firstName_ASC' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'researchOutputsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '250' },
                                 },
                               ],
                               selectionSet: {
@@ -26008,6 +26127,22 @@ export const FetchUserCollaborationDocument = {
                                     selectionSet: {
                                       kind: 'SelectionSet',
                                       selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
                                         {
                                           kind: 'Field',
                                           name: {
@@ -26037,7 +26172,7 @@ export const FetchUserCollaborationDocument = {
                                               },
                                               value: {
                                                 kind: 'IntValue',
-                                                value: '6',
+                                                value: '120',
                                               },
                                             },
                                           ],
@@ -26091,151 +26226,6 @@ export const FetchUserCollaborationDocument = {
                                                               ],
                                                             },
                                                           },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'labsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '3',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'sys',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'id',
-                                                                                      },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
-                                                          {
-                                                            kind: 'Field',
-                                                            name: {
-                                                              kind: 'Name',
-                                                              value:
-                                                                'teamsCollection',
-                                                            },
-                                                            arguments: [
-                                                              {
-                                                                kind: 'Argument',
-                                                                name: {
-                                                                  kind: 'Name',
-                                                                  value:
-                                                                    'limit',
-                                                                },
-                                                                value: {
-                                                                  kind: 'IntValue',
-                                                                  value: '5',
-                                                                },
-                                                              },
-                                                            ],
-                                                            selectionSet: {
-                                                              kind: 'SelectionSet',
-                                                              selections: [
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'items',
-                                                                  },
-                                                                  selectionSet:
-                                                                    {
-                                                                      kind: 'SelectionSet',
-                                                                      selections:
-                                                                        [
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'team',
-                                                                            },
-                                                                            selectionSet:
-                                                                              {
-                                                                                kind: 'SelectionSet',
-                                                                                selections:
-                                                                                  [
-                                                                                    {
-                                                                                      kind: 'Field',
-                                                                                      name: {
-                                                                                        kind: 'Name',
-                                                                                        value:
-                                                                                          'sys',
-                                                                                      },
-                                                                                      selectionSet:
-                                                                                        {
-                                                                                          kind: 'SelectionSet',
-                                                                                          selections:
-                                                                                            [
-                                                                                              {
-                                                                                                kind: 'Field',
-                                                                                                name: {
-                                                                                                  kind: 'Name',
-                                                                                                  value:
-                                                                                                    'id',
-                                                                                                },
-                                                                                              },
-                                                                                            ],
-                                                                                        },
-                                                                                    },
-                                                                                  ],
-                                                                              },
-                                                                          },
-                                                                        ],
-                                                                    },
-                                                                },
-                                                              ],
-                                                            },
-                                                          },
                                                         ],
                                                       },
                                                     },
@@ -26265,8 +26255,8 @@ export const FetchUserCollaborationDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchUserCollaborationQuery,
-  FetchUserCollaborationQueryVariables
+  FetchUserResearchOutputsQuery,
+  FetchUserResearchOutputsQueryVariables
 >;
 export const FetchTeamCollaborationDocument = {
   kind: 'Document',

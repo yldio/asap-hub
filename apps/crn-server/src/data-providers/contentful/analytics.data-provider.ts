@@ -7,16 +7,19 @@ import {
   FetchTeamCollaborationQueryVariables,
   FetchTeamProductivityQuery,
   FetchTeamProductivityQueryVariables,
-  FetchUserCollaborationQuery,
-  FetchUserCollaborationQueryVariables,
   FetchUserProductivityQuery,
   FetchUserProductivityQueryVariables,
+  FetchUserResearchOutputsQuery,
+  FetchUserResearchOutputsQueryVariables,
+  FetchUserTotalResearchOutputsQuery,
+  FetchUserTotalResearchOutputsQueryVariables,
   FETCH_ANALYTICS_TEAM_LEADERSHIP,
   FETCH_ENGAGEMENT,
   FETCH_TEAM_COLLABORATION,
   FETCH_TEAM_PRODUCTIVITY,
-  FETCH_USER_COLLABORATION,
   FETCH_USER_PRODUCTIVITY,
+  FETCH_USER_RESEARCH_OUTPUTS,
+  FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
@@ -39,6 +42,7 @@ import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import {
   getTeamCollaborationItems,
   getUserCollaborationItems,
+  getUserDataById,
 } from '../../utils/analytics/collaboration';
 import {
   getFilterOutputByDocumentCategory,
@@ -49,6 +53,10 @@ import {
 import { getEngagementItems } from '../../utils/analytics/engagement';
 import { getTeamLeadershipItems } from '../../utils/analytics/leadership';
 import { AnalyticsDataProvider } from '../types/analytics.data-provider.types';
+
+type UserTotalResearchOutputsItems = NonNullable<
+  FetchUserTotalResearchOutputsQuery['usersCollection']
+>['items'];
 
 export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
@@ -102,18 +110,56 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
       ),
     };
   }
+
+  async getUserTotalResearchOutputs() {
+    const { usersCollection } = await this.contentfulClient.request<
+      FetchUserTotalResearchOutputsQuery,
+      FetchUserTotalResearchOutputsQueryVariables
+    >(FETCH_USER_TOTAL_RESEARCH_OUTPUTS, { skip: 0 });
+
+    const totalUsers = usersCollection?.total || 0;
+    const limit = 1000;
+    let skip = limit;
+    let userTotalResearchOutputsItems: UserTotalResearchOutputsItems =
+      cleanArray(usersCollection?.items) || [];
+
+    while (totalUsers > skip) {
+      const { usersCollection: usersTotalOutputs } =
+        await this.contentfulClient.request<
+          FetchUserTotalResearchOutputsQuery,
+          FetchUserTotalResearchOutputsQueryVariables
+        >(FETCH_USER_TOTAL_RESEARCH_OUTPUTS, { skip });
+
+      userTotalResearchOutputsItems = userTotalResearchOutputsItems.concat(
+        cleanArray(usersTotalOutputs?.items) || [],
+      );
+      skip += limit;
+    }
+
+    return userTotalResearchOutputsItems;
+  }
   async fetchUserCollaboration(options: FetchAnalyticsOptions) {
     const { take = 10, skip = 0, filter } = options;
-    let collection: FetchUserCollaborationQuery['usersCollection'] = {
+
+    const userTotalResearchOutputsItems =
+      await this.getUserTotalResearchOutputs();
+    const userDataById = getUserDataById(userTotalResearchOutputsItems);
+
+    let collection: FetchUserResearchOutputsQuery['usersCollection'] = {
       total: 0,
       items: [],
     };
 
-    for (let i = 0; i < take / 5; i += 1) {
+    const batchSize = 3;
+    for (let i = 0; i < take / batchSize; i += 1) {
       const { usersCollection } = await this.contentfulClient.request<
-        FetchUserCollaborationQuery,
-        FetchUserCollaborationQueryVariables
-      >(FETCH_USER_COLLABORATION, { limit: 5, skip: skip + 5 * i });
+        FetchUserResearchOutputsQuery,
+        FetchUserResearchOutputsQueryVariables
+      >(FETCH_USER_RESEARCH_OUTPUTS, {
+        limit: batchSize,
+        skip: skip + batchSize * i,
+      });
+
       if (usersCollection && usersCollection.items) {
         collection = {
           total: usersCollection.total,
@@ -121,14 +167,16 @@ export class AnalyticsContentfulDataProvider implements AnalyticsDataProvider {
         };
       }
     }
+    const userCollaborationItems = getUserCollaborationItems(
+      collection,
+      userDataById,
+      filter?.timeRange,
+      filter?.documentCategory,
+    );
 
     return {
       total: collection?.total || 0,
-      items: getUserCollaborationItems(
-        collection,
-        filter?.timeRange,
-        filter?.documentCategory,
-      ),
+      items: userCollaborationItems,
     };
   }
 

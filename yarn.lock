@@ -948,7 +948,7 @@ __metadata:
     identity-obj-proxy: 3.0.0
     jest-transform-css: ^6.0.1
     jest-when: 3.5.2
-    jose: 2.0.7
+    jose: 4.15.5
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.6
@@ -1425,7 +1425,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jest-transform-css: ^6.0.1
-    jose: 2.0.7
+    jose: 4.15.5
     nock: 13.4.0
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.6
@@ -12828,13 +12828,6 @@ __metadata:
     "@nodelib/fs.scandir": 2.1.5
     fastq: ^1.6.0
   checksum: 190c643f156d8f8f277bf2a6078af1ffde1fd43f498f187c2db24d35b4b4b5785c02c7dc52e356497b9a1b65b13edc996de08de0b961c32844364da02986dc53
-  languageName: node
-  linkType: hard
-
-"@panva/asn1.js@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@panva/asn1.js@npm:1.0.0"
-  checksum: cb6bcc1918a7f08e81e7d7f5bde83c20a66b30248ddc3ef10b1612e0e0b9f722c2b07ca6b586a089a49c1b6cfb29d63fdd23d4bc00c8cc40538b5595bec66d7d
   languageName: node
   linkType: hard
 
@@ -33174,12 +33167,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:2.0.7":
-  version: 2.0.7
-  resolution: "jose@npm:2.0.7"
-  dependencies:
-    "@panva/asn1.js": ^1.0.0
-  checksum: a8820108c05775d0054641a9666014629ebd81a0fd0ffcfea22cca1d2836d3eb321fe1ce43f3deb4add5c9ca8f4e03a72ac95c7ed823ea3c1d131c670da585df
+"jose@npm:4.15.5":
+  version: 4.15.5
+  resolution: "jose@npm:4.15.5"
+  checksum: 7dde76447c7707bd4b448f914b216f3858e701aa83f00447434252461af5b9e159dcbffb88badea3f9616739526763581267c9560622f0a058df8d68c86d7f79
   languageName: node
   linkType: hard
 

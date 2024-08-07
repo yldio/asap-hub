@@ -17,7 +17,7 @@
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
-  "paginationLimitedTo": 1000,
+  "paginationLimitedTo": 5000,
   "attributeForDistinct": null,
   "exactOnSingleWordQuery": "attribute",
   "ranking": [

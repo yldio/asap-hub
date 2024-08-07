@@ -103,6 +103,7 @@ const Productivity = () => {
         getTeamProductivity(teamClient, {
           sort: teamSort,
           timeRange,
+          outputType,
           tags,
           ...paginationParams,
         }),

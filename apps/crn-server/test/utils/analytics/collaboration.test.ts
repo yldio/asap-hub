@@ -103,6 +103,30 @@ describe('getUserCollaborationItems', () => {
       );
     });
 
+    it('handles null userItems', () => {
+      const userItems = getUserItems();
+      userItems[0] = null;
+
+      expect(getUserDataById(userItems)).toEqual({
+        'user-2': {
+          alumniSince: undefined,
+          labIds: ['lab-2'],
+          name: 'John (Johnny) Doe',
+          researchOutputs: 3,
+          teamIds: ['team-1'],
+          teams: [
+            {
+              id: 'team-1',
+              role: 'Trainee',
+              team: 'Team 1',
+              teamInactiveSince: undefined,
+              teamMembershipInactiveSince: '2024-08-01',
+            },
+          ],
+        },
+      });
+    });
+
     it('parses the query value and returns user data by id', () => {
       expect(getUserDataById(getUserItems())).toEqual({
         'user-1': {

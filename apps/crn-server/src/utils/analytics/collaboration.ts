@@ -61,43 +61,39 @@ export const getUserDataById = (
   >['items'],
 ): { [userId: string]: UserData } =>
   userItems.reduce((dataByUserId: { [userId: string]: UserData }, item) => {
-    const userId = item?.sys.id;
+    if (!item) return dataByUserId;
 
-    if (userId) {
-      return {
-        ...dataByUserId,
-        [userId]: {
-          name: parseUserDisplayName(
-            item.firstName ?? '',
-            item.lastName ?? '',
-            undefined,
-            item.nickname ?? '',
-          ),
-          alumniSince: item.alumniSinceDate ?? undefined,
-          teams:
-            item.teamsCollection?.items.map((teamItem) => ({
-              id: teamItem?.team ? teamItem.team.sys.id : '',
-              team: teamItem?.team?.displayName ?? '',
-              role: (teamItem?.role as TeamRole) ?? undefined,
-              teamInactiveSince: teamItem?.team?.inactiveSince ?? undefined,
-              teamMembershipInactiveSince:
-                teamItem?.inactiveSinceDate ?? undefined,
-            })) || [],
-          labIds:
-            item?.labsCollection?.items.map(
-              (labItem) => labItem?.sys.id || '',
-            ) || [],
-          teamIds:
-            item?.teamsCollection?.items.map(
-              (teamItem) => teamItem?.team?.sys.id || '',
-            ) || [],
-          researchOutputs:
-            item?.linkedFrom?.researchOutputsCollection?.total || 0,
-        },
-      };
-    }
-
-    return dataByUserId;
+    const userId = item.sys.id;
+    return {
+      ...dataByUserId,
+      [userId]: {
+        name: parseUserDisplayName(
+          item.firstName ?? '',
+          item.lastName ?? '',
+          undefined,
+          item.nickname ?? '',
+        ),
+        alumniSince: item.alumniSinceDate ?? undefined,
+        teams:
+          item.teamsCollection?.items.map((teamItem) => ({
+            id: teamItem?.team ? teamItem.team.sys.id : '',
+            team: teamItem?.team?.displayName ?? '',
+            role: (teamItem?.role as TeamRole) ?? undefined,
+            teamInactiveSince: teamItem?.team?.inactiveSince ?? undefined,
+            teamMembershipInactiveSince:
+              teamItem?.inactiveSinceDate ?? undefined,
+          })) || [],
+        labIds:
+          item?.labsCollection?.items.map((labItem) => labItem?.sys.id || '') ||
+          [],
+        teamIds:
+          item?.teamsCollection?.items.map(
+            (teamItem) => teamItem?.team?.sys.id || '',
+          ) || [],
+        researchOutputs:
+          item?.linkedFrom?.researchOutputsCollection?.total || 0,
+      },
+    };
   }, {});
 
 export const getUserCollaborationItems = (
@@ -109,69 +105,67 @@ export const getUserCollaborationItems = (
   const collaboration: UserCollaborationDataObject[] = [];
 
   cleanArray(collection?.items).forEach((item) => {
-    const userId = item?.sys.id;
+    const userId = item.sys.id;
 
-    if (userId) {
-      const userData = userDataById[userId];
-      if (userData) {
-        const userTeamIds = new Set(userData?.teamIds);
-        const userLabIds = new Set(userData?.labIds);
+    const userData = userDataById[userId];
+    if (userData) {
+      const userTeamIds = new Set(userData?.teamIds);
+      const userLabIds = new Set(userData?.labIds);
 
-        const teams = userData?.teamIds.map((userTeamId) => {
-          const outputsCoAuthoredAcrossTeamsSet = new Set();
-          const outputsCoAuthoredWithinTeamSet = new Set();
+      const teams = userData?.teamIds.map((userTeamId) => {
+        const outputsCoAuthoredAcrossTeamsSet = new Set();
+        const outputsCoAuthoredWithinTeamSet = new Set();
 
-          item?.linkedFrom?.researchOutputsCollection?.items
-            .filter(getFilterOutputByRange(rangeKey))
-            .filter(getFilterOutputByDocumentCategory(documentCategory))
-            .forEach((output) => {
-              const authorIds = cleanArray(
-                output?.authorsCollection?.items,
-              ).reduce((ids: string[], author) => {
-                if (author.__typename === 'Users') {
-                  ids.push(author.sys.id);
+        item.linkedFrom?.researchOutputsCollection?.items
+          .filter(getFilterOutputByRange(rangeKey))
+          .filter(getFilterOutputByDocumentCategory(documentCategory))
+          .forEach((output) => {
+            const authorIds = cleanArray(
+              output?.authorsCollection?.items,
+            ).reduce((ids: string[], author) => {
+              if (author.__typename === 'Users') {
+                ids.push(author.sys.id);
+              }
+              return ids;
+            }, []);
+
+            authorIds.forEach((authorId) => {
+              if (authorId !== userId) {
+                const coAuthor = userDataById[authorId];
+
+                if (
+                  hasSameTeamAndDifferentLab(
+                    userTeamId,
+                    userLabIds,
+                    coAuthor?.teamIds || [],
+                    coAuthor?.labIds || [],
+                  )
+                ) {
+                  outputsCoAuthoredWithinTeamSet.add(output?.sys.id);
                 }
-                return ids;
-              }, []);
 
-              authorIds.forEach((authorId) => {
-                if (authorId !== userId) {
-                  const coAuthor = userDataById[authorId];
-
-                  if (
-                    hasSameTeamAndDifferentLab(
-                      userTeamId,
-                      userLabIds,
-                      coAuthor?.teamIds || [],
-                      coAuthor?.labIds || [],
-                    )
-                  ) {
-                    outputsCoAuthoredWithinTeamSet.add(output?.sys.id);
-                  }
-
-                  if (hasDifferentTeams(userTeamIds, coAuthor?.teamIds || [])) {
-                    outputsCoAuthoredAcrossTeamsSet.add(output?.sys.id);
-                  }
+                if (hasDifferentTeams(userTeamIds, coAuthor?.teamIds || [])) {
+                  outputsCoAuthoredAcrossTeamsSet.add(output?.sys.id);
                 }
-              });
+              }
             });
+          });
 
-          return {
-            ...(userData.teams.find(
-              (teamItem) => teamItem.id === userTeamId,
-            ) as UserCollaborationDataObject['teams'][number]),
-            outputsCoAuthoredAcrossTeams: outputsCoAuthoredAcrossTeamsSet.size,
-            outputsCoAuthoredWithinTeam: outputsCoAuthoredWithinTeamSet.size,
-          };
-        });
+        return {
+          ...(userData.teams.find(
+            (teamItem) => teamItem.id === userTeamId,
+          ) as UserCollaborationDataObject['teams'][number]),
+          outputsCoAuthoredAcrossTeams: outputsCoAuthoredAcrossTeamsSet.size,
+          outputsCoAuthoredWithinTeam: outputsCoAuthoredWithinTeamSet.size,
+        };
+      });
 
-        collaboration.push({
-          id: userId,
-          name: userData.name,
-          alumniSince: userData.alumniSince,
-          teams,
-        });
-      }
+      collaboration.push({
+        id: userId,
+        name: userData.name,
+        alumniSince: userData.alumniSince,
+        teams,
+      });
     }
   });
 

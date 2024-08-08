@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { getAlgoliaUserClient, useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
 import { getTeamCollaboration, getUserCollaboration } from './api';
 import {
@@ -25,8 +25,6 @@ import {
   userCollaborationToCSV,
 } from './export';
 import {
-  useAnalyticsTeamCollaboration,
-  useAnalyticsUserCollaboration,
   useTeamCollaborationPerformance,
   useUserCollaborationPerformance,
 } from './state';
@@ -43,7 +41,7 @@ const Collaboration = () => {
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
-  const { currentPage, pageSize } = usePaginationParams();
+  const { currentPage } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
   const [userSortingDirection, setUserSortingDirection] =
@@ -78,24 +76,6 @@ const Collaboration = () => {
     );
   };
 
-  const { client: userClient } = useAnalyticsUserCollaboration({
-    currentPage,
-    pageSize,
-    timeRange,
-    documentCategory,
-    tags,
-    sort: userSort,
-  });
-
-  const { client: teamClient } = useAnalyticsTeamCollaboration({
-    currentPage,
-    pageSize,
-    timeRange,
-    outputType,
-    tags,
-    sort: teamSort,
-  });
-
   const userPerformance = useUserCollaborationPerformance({
     timeRange,
     documentCategory,
@@ -108,6 +88,7 @@ const Collaboration = () => {
 
   const exportResults = () => {
     if (metric === 'user') {
+      const userClient = getAlgoliaUserClient(userSort, 'user-collaboration');
       return algoliaResultsToStream<UserCollaborationAlgoliaResponse>(
         createCsvFileStream(
           `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
@@ -126,6 +107,7 @@ const Collaboration = () => {
         userCollaborationToCSV(type, userPerformance, documentCategory),
       );
     }
+    const teamClient = getAlgoliaUserClient(teamSort, 'team-collaboration');
 
     return algoliaResultsToStream<TeamCollaborationAlgoliaResponse>(
       createCsvFileStream(

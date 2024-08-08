@@ -9,16 +9,13 @@ import {
   UserCollaborationAlgoliaResponse,
   UserCollaborationPerformance,
 } from '@asap-hub/model';
-import { useEffect } from 'react';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useResetRecoilState,
 } from 'recoil';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { getAlgoliaUserClient } from '../../hooks/algolia';
 import { makePerformanceHook, makePerformanceState } from '../utils/state';
 import {
   getUserCollaboration,
@@ -29,7 +26,7 @@ import {
 
 const analyticsUserCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
+  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
 >({
   key: 'analyticsUserCollaborationIndex',
   default: undefined,
@@ -45,7 +42,7 @@ export const analyticsUserCollaborationListState = atomFamily<
 
 export const analyticsUserCollaborationState = selectorFamily<
   ListUserCollaborationAlgoliaResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
+  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
 >({
   key: 'userCollaboration',
   get:
@@ -94,34 +91,24 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
-  const indexName =
-    options.sort === 'user_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
-
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const algoliaClient = getAlgoliaUserClient(
+    options.sort,
+    'user-collaboration',
+  );
 
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
 
-  const resetUserCollaboration = useResetRecoilState(
-    analyticsUserCollaborationState(options),
-  );
-
-  useEffect(() => {
-    resetUserCollaboration(); // Reset state to force refetch on timeRange change
-  }, [options.timeRange, resetUserCollaboration]);
-
   if (userCollaboration === undefined) {
-    throw getUserCollaboration(algoliaClient.client, options)
+    throw getUserCollaboration(algoliaClient, options)
       .then(setUserCollaboration)
       .catch(setUserCollaboration);
   }
   if (userCollaboration instanceof Error) {
     throw userCollaboration;
   }
-  return { ...userCollaboration, client: algoliaClient.client };
+  return userCollaboration;
 };
 
 export const analyticsTeamCollaborationIndexState = atomFamily<
@@ -191,34 +178,24 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
-  const indexName =
-    options.sort === 'team_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_team_${options.sort.replace('team_', '')}`;
-
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const algoliaClient = getAlgoliaUserClient(
+    options.sort,
+    'team-collaboration',
+  );
 
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );
 
-  const resetTeamCollaboration = useResetRecoilState(
-    analyticsTeamCollaborationState(options),
-  );
-
-  useEffect(() => {
-    resetTeamCollaboration(); // Reset state to force refetch on timeRange change
-  }, [options.timeRange, resetTeamCollaboration]);
-
   if (teamCollaboration === undefined) {
-    throw getTeamCollaboration(algoliaClient.client, options)
+    throw getTeamCollaboration(algoliaClient, options)
       .then(setTeamCollaboration)
       .catch(setTeamCollaboration);
   }
   if (teamCollaboration instanceof Error) {
     throw teamCollaboration;
   }
-  return { ...teamCollaboration, client: algoliaClient.client };
+  return teamCollaboration;
 };
 
 export const teamCollaborationPerformanceState =

@@ -4,6 +4,7 @@ import {
   documentCategories,
   FilterAnalyticsOptions,
   ListResponse,
+  Metric,
   outputTypes,
   TeamCollaborationResponse,
   TeamProductivityResponse,
@@ -20,14 +21,6 @@ import AnalyticsController from '../src/controllers/analytics.controller';
 import { getAnalyticsDataProvider } from '../src/dependencies/analytics.dependencies';
 
 export const PAGE_SIZE = 10;
-
-export type Metric =
-  | 'team-leadership'
-  | 'team-productivity'
-  | 'user-productivity'
-  | 'team-collaboration'
-  | 'user-collaboration'
-  | 'engagement';
 
 export const exportAnalyticsData = async (
   metric: Metric,

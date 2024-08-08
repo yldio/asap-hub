@@ -10,8 +10,7 @@ import {
   useRecoilState,
 } from 'recoil';
 import { AnalyticsSearchOptions, getAnalyticsLeadership } from './api';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { getAlgoliaUserClient } from '../../hooks/algolia';
 
 type Options = AnalyticsSearchOptions & { sort: SortLeadershipAndMembership };
 type StateOptionKeyData = Pick<
@@ -73,18 +72,13 @@ export const analyticsLeadershipState = selectorFamily<
 });
 
 export const useAnalyticsLeadership = (options: Options) => {
-  const indexName =
-    options.sort === 'team_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_${options.sort}`;
-
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const algoliaClient = getAlgoliaUserClient(options.sort, 'team-leadership');
 
   const [leadership, setLeadership] = useRecoilState(
     analyticsLeadershipState(options),
   );
   if (leadership === undefined) {
-    throw getAnalyticsLeadership(algoliaClient.client, options)
+    throw getAnalyticsLeadership(algoliaClient, options)
       .then(setLeadership)
       .catch(setLeadership);
   }
@@ -93,6 +87,6 @@ export const useAnalyticsLeadership = (options: Options) => {
   }
   return {
     ...leadership,
-    client: algoliaClient.client,
+    client: algoliaClient,
   };
 };

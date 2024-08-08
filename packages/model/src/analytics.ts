@@ -474,3 +474,18 @@ export const engagementInitialSortingDirection = {
   uniqueSpeakersKeyPersonnel: descending,
   uniqueSpeakersKeyPersonnelPercentage: descending,
 };
+
+export type Metric =
+  | 'team-leadership'
+  | 'team-productivity'
+  | 'user-productivity'
+  | 'team-collaboration'
+  | 'user-collaboration'
+  | 'engagement';
+
+export type AnalyticsSortOptions =
+  | SortLeadershipAndMembership
+  | SortTeamCollaboration
+  | SortTeamProductivity
+  | SortUserCollaboration
+  | SortUserProductivity;

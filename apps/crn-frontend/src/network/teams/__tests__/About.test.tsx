@@ -13,7 +13,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { networkRoutes } from '@asap-hub/routing';
 
@@ -47,9 +47,12 @@ const renderTeamAbout = async (
                 networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.buildPath({ teamId }),
               ]}
             >
-              <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.path}>
-                <About teamListElementId="uuid" {...aboutProps} />
-              </Route>
+              <Routes>
+                <Route
+                  path={networkRoutes.DEFAULT.TEAMS.DETAILS.ABOUT.path}
+                  element={<About teamListElementId="uuid" {...aboutProps} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

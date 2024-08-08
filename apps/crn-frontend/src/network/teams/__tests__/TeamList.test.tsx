@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createListTeamResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import {
@@ -38,9 +38,9 @@ const renderTeamList = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/teams']}>
-              <Route path="/teams">
-                <Teams filters={new Set()} />
-              </Route>
+              <Routes>
+                <Route path="/teams" element={<Teams filters={new Set()} />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

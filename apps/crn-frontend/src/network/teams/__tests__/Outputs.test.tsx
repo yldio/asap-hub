@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -95,13 +95,18 @@ const renderOutputs = async (
                 },
               ]}
             >
-              <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.OUTPUTS.path}>
-                <Outputs
-                  userAssociationMember={userAssociationMember}
-                  draftOutputs={draftOutputs}
-                  team={team}
+              <Routes>
+                <Route
+                  path={networkRoutes.DEFAULT.TEAMS.DETAILS.OUTPUTS.path}
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      draftOutputs={draftOutputs}
+                      team={team}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

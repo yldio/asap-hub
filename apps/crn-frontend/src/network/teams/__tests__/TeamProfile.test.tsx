@@ -22,7 +22,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import {
@@ -95,13 +95,18 @@ const renderPage = async (
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter>
-              <Route path={networkRoutes.DEFAULT.TEAMS.DETAILS.path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamProfile currentTime={currentTime} />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
+              <Routes>
+                <Route
+                  path={networkRoutes.DEFAULT.TEAMS.DETAILS.path}
+                  element={
+                    <ManuscriptToastProvider>
+                      <EligibilityReasonProvider>
+                        <TeamProfile currentTime={currentTime} />
+                      </EligibilityReasonProvider>
+                    </ManuscriptToastProvider>
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -134,7 +139,7 @@ it('navigates to the outputs tab', async () => {
   });
   await renderPage();
 
-  userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
+  await userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
   expect(await screen.findByText(/Output 1/i)).toBeVisible();
 });
 
@@ -147,13 +152,13 @@ it('navigates to the outputs tab and is able to search', async () => {
   });
   await renderPage();
 
-  userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
+  await userEvent.click(screen.getByText(/outputs/i, { selector: 'nav *' }));
   expect(await screen.findByText(/Output 1/i)).toBeVisible();
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
   );
-  userEvent.type(screen.getByRole('searchbox'), 'test');
+  await userEvent.type(screen.getByRole('searchbox'), 'test');
   expect(await screen.findByRole('searchbox')).toHaveAttribute('value', 'test');
 });
 
@@ -163,7 +168,7 @@ it('navigates to the workspace tab', async () => {
     tools: [],
   });
 
-  userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
+  await userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
   expect(await screen.findByText(/tools/i)).toBeVisible();
 });
 
@@ -175,19 +180,19 @@ it('displays manuscript success toast message and user can dismiss toast', async
     tools: [],
   });
 
-  userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
+  await userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
 
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
-  userEvent.click(screen.getByText(/Share Manuscript/i));
-  userEvent.click(screen.getByText(/Yes/i));
+  await userEvent.click(screen.getByText(/Share Manuscript/i));
+  await userEvent.click(screen.getByText(/Yes/i));
 
-  userEvent.click(
+  await userEvent.click(
     screen.getByText(
       'The manuscript resulted from a pivot that was made as part of the team’s ASAP-funded proposal.',
     ),
   );
-  userEvent.click(screen.getByText(/Continue/i));
+  await userEvent.click(screen.getByText(/Continue/i));
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
@@ -195,29 +200,29 @@ it('displays manuscript success toast message and user can dismiss toast', async
     expect(submitButton).toBeVisible();
   });
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
     'manuscript title',
   );
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, '{ENTER}');
+  await userEvent.type(typeTextbox, 'Original');
+  await userEvent.type(typeTextbox, '{ENTER}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Typeset proof');
-  userEvent.type(lifecycleTextbox, '{ENTER}');
+  await userEvent.type(lifecycleTextbox, 'Typeset proof');
+  await userEvent.type(lifecycleTextbox, '{ENTER}');
   lifecycleTextbox.blur();
 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
   const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
-  userEvent.upload(uploadInput, testFile);
+  await userEvent.upload(uploadInput, testFile);
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   within(quickChecks)
@@ -229,7 +234,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(submitButton);
+  await userEvent.click(submitButton);
 
   await waitFor(() => {
     expect(submitButton).not.toBeVisible();
@@ -239,7 +244,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
     screen.getByText('Manuscript submitted successfully.'),
   ).toBeInTheDocument();
 
-  userEvent.click(screen.getByLabelText('Close'));
+  await userEvent.click(screen.getByLabelText('Close'));
 
   expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
 }, 60000);
@@ -282,9 +287,9 @@ describe('Share Output', () => {
       history,
     );
     expect(screen.getByText(/about/i)).toBeInTheDocument();
-    userEvent.click(await screen.findByText(/share an output/i));
+    await userEvent.click(await screen.findByText(/share an output/i));
     expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
-    userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
+    await userEvent.click(screen.getByText(/article/i, { selector: 'span' }));
     expect(history.location.pathname).toEqual(
       `/network/teams/${teamResponse.id}/create-output/article`,
     );
@@ -398,9 +403,9 @@ describe('Duplicate Output', () => {
       history,
     );
     expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
-    userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    userEvent.click(screen.getByText(/save draft/i));
-    userEvent.click(screen.getByText(/keep and/i));
+    await userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
+    await userEvent.click(screen.getByText(/save draft/i));
+    await userEvent.click(screen.getByText(/keep and/i));
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Copy of Example',
@@ -511,7 +516,7 @@ it.each`
   const nameRegex = new RegExp(name, 'i');
 
   const tab = screen.getByRole('link', { name: nameRegex });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Search by topic, presenting team, …',
@@ -565,7 +570,7 @@ describe('The draft output tab', () => {
         ],
       },
     );
-    userEvent.click(screen.getByText('Draft Outputs (10)'));
+    await userEvent.click(screen.getByText('Draft Outputs (10)'));
     await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
     expect(screen.getByText('Draft Output0')).toBeVisible();
   });

@@ -26,43 +26,50 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   return (
     <Routes>
-      <Route>
-        <TeamProfileWorkspace
-          {...team}
-          setEligibilityReasons={setEligibilityReasons}
-          tools={team.tools}
-          onDeleteTool={
-            deleting
-              ? undefined
-              : async (toolIndex) => {
-                  setDeleting(true);
-                  if (
-                    window.confirm(
-                      'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
-                    )
-                  ) {
-                    await patchTeam({
-                      tools: team.tools.filter((_, i) => toolIndex !== i),
-                    }).catch(() => {
-                      toast('Something went wrong. Please try again.');
-                    });
+      <Route
+        path="/"
+        element={
+          <TeamProfileWorkspace
+            {...team}
+            setEligibilityReasons={setEligibilityReasons}
+            tools={team.tools}
+            onDeleteTool={
+              deleting
+                ? undefined
+                : async (toolIndex) => {
+                    setDeleting(true);
+                    if (
+                      window.confirm(
+                        'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
+                      )
+                    ) {
+                      await patchTeam({
+                        tools: team.tools.filter((_, i) => toolIndex !== i),
+                      }).catch(() => {
+                        toast('Something went wrong. Please try again.');
+                      });
+                    }
+                    setDeleting(false);
                   }
-                  setDeleting(false);
-                }
-          }
-        />
-      </Route>
-      <Route path={workspaceRoutes.TOOLS.path}>
-        <ToolModal
-          title="Add Link"
-          backHref={workspaceRoutes.buildPath({})}
-          onSave={(data: TeamTool) =>
-            patchTeam({
-              tools: [...(team.tools ?? []), data],
-            })
-          }
-        />
-      </Route>
+            }
+          />
+        }
+      />
+
+      <Route
+        path={workspaceRoutes.TOOLS.relativePath}
+        element={
+          <ToolModal
+            title="Add Link"
+            backHref={workspaceRoutes.buildPath({})}
+            onSave={(data: TeamTool) =>
+              patchTeam({
+                tools: [...(team.tools ?? []), data],
+              })
+            }
+          />
+        }
+      />
       <Route
         path={workspaceRoutes.$.TOOLS.TOOL.relativePath}
         element={<EditTool teamId={team.id} tools={team.tools} />}

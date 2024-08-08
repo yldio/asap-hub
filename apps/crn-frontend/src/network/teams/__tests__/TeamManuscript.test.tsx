@@ -14,7 +14,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript } from '../api';
@@ -67,13 +67,18 @@ const renderPage = async (
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter>
-              <Route path={path}>
-                <ManuscriptToastProvider>
-                  <EligibilityReasonProvider>
-                    <TeamManuscript teamId={teamId} />
-                  </EligibilityReasonProvider>
-                </ManuscriptToastProvider>
-              </Route>
+              <Routes>
+                <Route
+                  path={path}
+                  element={
+                    <ManuscriptToastProvider>
+                      <EligibilityReasonProvider>
+                        <TeamManuscript teamId={teamId} />
+                      </EligibilityReasonProvider>
+                    </ManuscriptToastProvider>
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -21,8 +21,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { Route } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
@@ -581,19 +580,27 @@ async function renderPage({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <StaticRouter
-              location={networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath(
-                { teamId, outputDocumentType },
-              )}
+            <MemoryRouter
+              initialEntries={[
+                networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath({
+                  teamId,
+                  outputDocumentType,
+                }),
+              ]}
             >
-              <Route path={path}>
-                <TeamOutput
-                  teamId={teamId}
-                  researchOutputData={researchOutputData}
-                  versionAction={versionAction}
+              <Routes>
+                <Route
+                  path={path}
+                  element={
+                    <TeamOutput
+                      teamId={teamId}
+                      researchOutputData={researchOutputData}
+                      versionAction={versionAction}
+                    />
+                  }
                 />
-              </Route>
-            </StaticRouter>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

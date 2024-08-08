@@ -80,6 +80,7 @@ const EditModal: React.FC<EditModalProps> = ({
     status === 'isSaving' ||
     status === 'hasError' ||
     (status === 'initial' && dirty);
+
   return (
     <Modal padding={false}>
       <ReactRouterPrompt when={prompt}>

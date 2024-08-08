@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import {
   ListResearchOutputResponse,
+  OutputGenerateContentResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 
@@ -30,3 +31,9 @@ export const getDraftResearchOutputs = jest.fn(
     createListResearchOutputResponse(2),
 );
 export const getResearchTags = jest.fn(async () => researchTagsResponse);
+
+export const getGeneratedResearchOutputContent = jest.fn(
+  async (): Promise<OutputGenerateContentResponse> => ({
+    shortDescription: 'summarised short description',
+  }),
+);

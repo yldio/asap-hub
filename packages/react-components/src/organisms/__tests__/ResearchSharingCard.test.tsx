@@ -10,6 +10,7 @@ import ResearchOutputFormSharingCard, {
 
 const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   descriptionMD: '',
+  shortDescription: '',
   isSaving: false,
   title: '',
   link: '',
@@ -19,6 +20,7 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   sharingStatus: 'Network Only',
   researchTags: [],
   typeOptions: [],
+  getShortDescriptionFromDescription: jest.fn(),
 };
 it('renders the card with provided values', () => {
   render(
@@ -56,8 +58,8 @@ it.each`
 });
 
 it.each`
-  title            | label             | error
-  ${'Description'} | ${/description/i} | ${'Please enter a description'}
+  title            | label              | error
+  ${'Description'} | ${/^description/i} | ${'Please enter a description'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   render(
     <ResearchOutputFormSharingCard
@@ -104,8 +106,9 @@ it.each`
 });
 
 it.each`
-  field            | label             | prop
-  ${'Description'} | ${/description/i} | ${'onChangeDescription'}
+  field                  | label                   | prop
+  ${'Description'}       | ${/^description/i}      | ${'onChangeDescription'}
+  ${'Short Description'} | ${/short description/i} | ${'onChangeShortDescription'}
 `('triggers an onchange event for $field', async ({ label, prop }) => {
   const onChangeFn = jest.fn();
   render(

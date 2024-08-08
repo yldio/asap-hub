@@ -43,7 +43,10 @@ export type PublicWorkingGroupResponse = Pick<
   | 'shortDescription'
   | 'systemPublishedVersion'
   | 'title'
-> & { lastModifiedDate: string };
+> & {
+  lastModifiedDate: string;
+  milestones: Array<Pick<Milestone, 'status' | 'description'>>;
+};
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 export type ListPublicWorkingGroupResponse =

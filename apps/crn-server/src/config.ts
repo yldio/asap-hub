@@ -38,6 +38,7 @@ const {
   LOG_ENABLED,
   LOG_LEVEL,
   NODE_ENV,
+  OPENAI_API_KEY,
   REGION,
   SENTRY_DSN,
   SES_REGION,
@@ -89,6 +90,7 @@ export const googleCalenderEventQueueUrl =
   GOOGLE_CALENDER_EVENT_QUEUE_URL || 'google-calendar-event-queue-url';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
+export const openaiApiKey = OPENAI_API_KEY || 'test-key';
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
 export const region = REGION || 'us-east-1';
 export const sentryDsn = SENTRY_DSN;

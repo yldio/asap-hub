@@ -5,4 +5,5 @@ export const researchOutputControllerMock = {
   fetchById: jest.fn(),
   create: jest.fn(),
   update: jest.fn(),
+  generateContent: jest.fn(),
 } as unknown as jest.Mocked<ResearchOutputController>;

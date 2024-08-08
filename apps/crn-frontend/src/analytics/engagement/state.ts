@@ -1,13 +1,19 @@
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { EngagementResponse, ListEngagementResponse } from '@asap-hub/model';
+import {
+  EngagementAlgoliaResponse,
+  ListEngagementAlgoliaResponse,
+  SortEngagement,
+} from '@asap-hub/model';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValue,
 } from 'recoil';
-import { authorizationState } from '../../auth/state';
+
+import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getEngagement } from './api';
 
 const analyticsEngagementIndexState = atomFamily<
@@ -19,7 +25,7 @@ const analyticsEngagementIndexState = atomFamily<
 });
 
 export const analyticsEngagementListState = atomFamily<
-  EngagementResponse | undefined,
+  EngagementAlgoliaResponse | undefined,
   string
 >({
   key: 'analyticsEngagementList',
@@ -27,7 +33,7 @@ export const analyticsEngagementListState = atomFamily<
 });
 
 export const analyticsEngagementState = selectorFamily<
-  ListEngagementResponse | Error | undefined,
+  ListEngagementAlgoliaResponse | Error | undefined,
   Pick<GetListOptions, 'currentPage' | 'pageSize'>
 >({
   key: 'engagement',
@@ -36,7 +42,7 @@ export const analyticsEngagementState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsEngagementIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: EngagementResponse[] = [];
+      const teams: EngagementAlgoliaResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsEngagementListState(id));
         if (team === undefined) return undefined;
@@ -67,14 +73,19 @@ export const analyticsEngagementState = selectorFamily<
 });
 
 export const useAnalyticsEngagement = (
-  options: Pick<GetListOptions, 'currentPage' | 'pageSize'>,
+  options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
 ) => {
-  const authorization = useRecoilValue(authorizationState);
+  const indexName =
+    options.sort === 'team_asc'
+      ? ANALYTICS_ALGOLIA_INDEX
+      : `${ANALYTICS_ALGOLIA_INDEX}_${options.sort}`;
+
+  const algoliaClient = useAnalyticsAlgolia(indexName);
   const [engagement, setEngagement] = useRecoilState(
     analyticsEngagementState(options),
   );
   if (engagement === undefined) {
-    throw getEngagement(options, authorization)
+    throw getEngagement(algoliaClient.client, options)
       .then(setEngagement)
       .catch(setEngagement);
   }

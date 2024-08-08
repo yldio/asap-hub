@@ -828,6 +828,28 @@ describe('/research-outputs/ route', () => {
     });
   });
 
+  describe('POST /research-outputs/generate-content', () => {
+    test('Should return a 200 when is hit', async () => {
+      const { descriptionMD } = getResearchOutputPostRequest();
+
+      researchOutputControllerMock.generateContent.mockResolvedValueOnce({
+        shortDescription: 'short description',
+      });
+
+      const response = await supertest(app)
+        .post('/research-outputs/generate-content')
+        .send({ descriptionMD })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(researchOutputControllerMock.generateContent).toHaveBeenCalledWith(
+        {
+          descriptionMD,
+        },
+      );
+    });
+  });
+
   describe('PUT /research-outputs/', () => {
     const researchOutputResponse = getResearchOutputResponse();
     const {

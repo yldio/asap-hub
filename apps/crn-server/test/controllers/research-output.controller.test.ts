@@ -14,6 +14,7 @@ import {
 } from '../fixtures/research-output.fixtures';
 import { getFullListResearchTagDataObject } from '../fixtures/research-tag.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { generativeContentDataProviderMock } from '../mocks/generative-content.data-provider.mock';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputDataProviderMock = getDataProviderMock();
@@ -23,6 +24,7 @@ describe('ResearchOutputs controller', () => {
     researchOutputDataProviderMock,
     researchTagDataProviderMock,
     externalAuthorDataProviderMock,
+    generativeContentDataProviderMock,
   );
 
   afterEach(() => {
@@ -1544,6 +1546,45 @@ describe('ResearchOutputs controller', () => {
           data: [ERROR_UNIQUE_LINK],
         }),
       );
+    });
+  });
+
+  describe('Generate content method', () => {
+    test('Should throw when fails to generate the content', async () => {
+      generativeContentDataProviderMock.summariseContent.mockRejectedValueOnce(
+        new GenericError(),
+      );
+
+      await expect(
+        researchOutputs.generateContent({
+          descriptionMD: 'description',
+        }),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should generate the content and return it', async () => {
+      generativeContentDataProviderMock.summariseContent.mockResolvedValueOnce(
+        'some summarised content',
+      );
+
+      const result = await researchOutputs.generateContent({
+        descriptionMD: 'some description',
+      });
+
+      expect(result).toEqual({
+        shortDescription: 'some summarised content',
+      } satisfies Awaited<ReturnType<typeof researchOutputs.generateContent>>);
+      expect(
+        generativeContentDataProviderMock.summariseContent,
+      ).toHaveBeenCalledWith('some description');
+    });
+
+    test('Should return an empty string if no description was provided', async () => {
+      const result = await researchOutputs.generateContent({});
+
+      expect(result).toEqual({
+        shortDescription: '',
+      } satisfies Awaited<ReturnType<typeof researchOutputs.generateContent>>);
     });
   });
 });

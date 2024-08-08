@@ -21,10 +21,16 @@ import {
 } from '../molecules';
 import { noop } from '../utils';
 import { Markdown } from '../atoms/index';
+import OutputShortDescriptionCard from './OutputShortDescriptionCard';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
-  'link' | 'title' | 'descriptionMD' | 'sharingStatus' | 'subtype'
+  | 'link'
+  | 'title'
+  | 'descriptionMD'
+  | 'shortDescription'
+  | 'sharingStatus'
+  | 'subtype'
 > & {
   researchOutputData?: ResearchOutputResponse;
   documentType?: ResearchOutputResponse['documentType'];
@@ -33,6 +39,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
   onChangeDescription?: (newValue: string) => void;
+  onChangeShortDescription?: (newValue: string) => void;
   onChangeType?: (newValue: ResearchOutputType | '') => void;
   onChangeSubtype?: (newValue: string | '') => void;
   onChangeAsapFunded?: (newValue: DecisionOption) => void;
@@ -49,6 +56,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   typeDescription?: string;
   urlRequired?: boolean;
   typeOptions: ResearchOutputType[];
+  getShortDescriptionFromDescription: (description: string) => Promise<string>;
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
@@ -68,6 +76,7 @@ const ResearchOutputFormSharingCard: React.FC<
   link,
   title,
   descriptionMD,
+  shortDescription,
   type,
   typeOptions,
   subtype,
@@ -79,8 +88,10 @@ const ResearchOutputFormSharingCard: React.FC<
   serverValidationErrors = [],
   typeDescription,
   urlRequired,
+  getShortDescriptionFromDescription,
   clearServerValidationError = noop,
   onChangeDescription = noop,
+  onChangeShortDescription = noop,
   onChangeLink = noop,
   onChangeTitle = noop,
   onChangeType = noop,
@@ -206,6 +217,15 @@ const ResearchOutputFormSharingCard: React.FC<
             value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
         `}
           ></Markdown>
+        }
+      />
+      <OutputShortDescriptionCard
+        onChange={onChangeShortDescription}
+        buttonEnabled={descriptionMD.length > 0}
+        enabled={!isSaving}
+        value={shortDescription}
+        getShortDescription={() =>
+          getShortDescriptionFromDescription(descriptionMD)
         }
       />
       <LabeledRadioButtonGroup

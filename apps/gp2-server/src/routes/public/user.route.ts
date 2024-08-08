@@ -68,6 +68,7 @@ const mapUserToPublicUser = (
     title: workingGroup.title,
     role: workingGroup.role,
   })),
+  tags: user.tags.map((tag) => tag.name),
 });
 
 // filter public and gp2Supported outputs only

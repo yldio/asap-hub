@@ -63,6 +63,21 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_team_lab_resource_desc`,
     `${indexName}_team_protocol_asc`,
     `${indexName}_team_protocol_desc`,
+
+    `${indexName}_members_asc`,
+    `${indexName}_members_desc`,
+    `${indexName}_events_asc`,
+    `${indexName}_events_desc`,
+    `${indexName}_total_speakers_asc`,
+    `${indexName}_total_speakers_desc`,
+    `${indexName}_unique_speakers_all_roles_asc`,
+    `${indexName}_unique_speakers_all_roles_desc`,
+    `${indexName}_unique_speakers_all_roles_percentage_asc`,
+    `${indexName}_unique_speakers_all_roles_percentage_desc`,
+    `${indexName}_unique_speakers_key_personnel_asc`,
+    `${indexName}_unique_speakers_key_personnel_desc`,
+    `${indexName}_unique_speakers_key_personnel_percentage_asc`,
+    `${indexName}_unique_speakers_key_personnel_percentage_desc`,
   ];
   await index.setSettings({ ...indexSchema, replicas }).wait();
 

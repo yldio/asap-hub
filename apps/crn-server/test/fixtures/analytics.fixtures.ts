@@ -3,8 +3,9 @@ import {
   FetchEngagementQuery,
   FetchTeamCollaborationQuery,
   FetchTeamProductivityQuery,
-  FetchUserCollaborationQuery,
   FetchUserProductivityQuery,
+  FetchUserResearchOutputsQuery,
+  FetchUserTotalResearchOutputsQuery,
 } from '@asap-hub/contentful';
 import {
   AnalyticsTeamLeadershipDataObject,
@@ -19,7 +20,6 @@ import {
   ListUserCollaborationResponse,
   ListUserProductivityDataObject,
   ListUserProductivityResponse,
-  ResearchOutputDocumentType,
   TeamCollaborationDataObject,
   TeamCollaborationResponse,
   TeamProductivityDataObject,
@@ -30,8 +30,9 @@ import {
   UserProductivityDataObject,
   UserProductivityResponse,
 } from '@asap-hub/model';
-import { getTeamDataObject } from './teams.fixtures';
+
 import type { EventSpeakersCollectionItem } from '../../src/utils/analytics/engagement';
+import { getTeamDataObject } from './teams.fixtures';
 
 export const getAnalyticsTeamLeadershipDataObject =
   (): AnalyticsTeamLeadershipDataObject => {
@@ -404,122 +405,147 @@ export const getTeamProductivityResponse = (): TeamProductivityResponse =>
 export const getListTeamProductivityResponse =
   (): ListTeamProductivityResponse => getListTeamProductivityDataObject();
 
-type UserCollaborationOutputType = NonNullable<
-  NonNullable<
-    NonNullable<
-      NonNullable<
-        FetchUserCollaborationQuery['usersCollection']
-      >['items'][number]
-    >['linkedFrom']
-  >['researchOutputsCollection']
->['items'][number];
+type GetUserTotalResearchOutputsItemProps = {
+  userId?: string;
+  researchOutputs?: number;
+  labIds?: string[];
+  teams?: {
+    id: string;
+    name: string;
+    role: TeamRole;
+    teamInactiveSince: string | null;
+    teamMembershipInactiveSince: string | null;
+  }[];
+};
 
-export const generateUserCollaborationOutputByDocType = (
-  documentType: ResearchOutputDocumentType,
-): UserCollaborationOutputType => ({
-  addedDate: '2023-09-08T03:00:00.000Z',
-  documentType: documentType,
-  authorsCollection: {
-    items: [
-      {
-        __typename: 'Users',
-        sys: {
-          id: 'user-1',
-        },
+export const getUserTotalResearchOutputsItem = ({
+  userId = 'user-1',
+  researchOutputs = 1,
+  labIds = ['lab-1'],
+  teams = [
+    {
+      role: 'Key Personnel',
+      id: 'team-1',
+      name: 'Team 1',
+      teamInactiveSince: null,
+      teamMembershipInactiveSince: null,
+    },
+  ],
+}: GetUserTotalResearchOutputsItemProps): NonNullable<
+  NonNullable<FetchUserTotalResearchOutputsQuery['usersCollection']>['items']
+>[number] => ({
+  sys: {
+    id: userId,
+  },
+  firstName: 'John',
+  lastName: 'Doe',
+  nickname: 'Johnny',
+  alumniSinceDate: null,
+  labsCollection: {
+    items: labIds.map((labId) => ({
+      sys: {
+        id: labId,
       },
-      {
-        __typename: 'Users',
-        sys: {
-          id: 'user-2',
+    })),
+  },
+  teamsCollection: {
+    items: teams.map(
+      ({ id, name, role, teamInactiveSince, teamMembershipInactiveSince }) => ({
+        role,
+        inactiveSinceDate: teamMembershipInactiveSince,
+        team: {
+          sys: {
+            id,
+          },
+          displayName: name,
+          inactiveSince: teamInactiveSince,
         },
-        teamsCollection: {
-          items: [
-            {
-              team: {
-                sys: {
-                  id: 'team-1',
-                },
-              },
-            },
-            {
-              team: {
-                sys: {
-                  id: 'team-2',
-                },
-              },
-            },
-          ],
-        },
-        labsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'lab-2',
-              },
-            },
-          ],
-        },
-      },
-    ],
+      }),
+    ),
+  },
+  linkedFrom: {
+    researchOutputsCollection: {
+      total: researchOutputs,
+    },
   },
 });
 
-export const getUserCollaborationQuery = (): FetchUserCollaborationQuery => ({
+export const getUserTotalResearchOutputs = (
+  length: number = 2,
+): FetchUserTotalResearchOutputsQuery => ({
   usersCollection: {
-    total: 1,
-    items: [
-      {
-        sys: {
-          id: 'user-1',
-        },
-        firstName: 'Jane',
-        lastName: 'Doe',
-        nickname: 'Jenny',
-        alumniSinceDate: null,
-        linkedFrom: {
-          researchOutputsCollection: {
-            items: getResearchOutputUserProductivity(),
+    total: length,
+    items: Array.from({ length }).map(() =>
+      getUserTotalResearchOutputsItem({}),
+    ),
+  },
+});
+
+export const getUserResearchOutputsQuery =
+  (): FetchUserResearchOutputsQuery => ({
+    usersCollection: {
+      total: 1,
+      items: [
+        {
+          sys: {
+            id: 'user-1',
+          },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'research-output-1',
+                  },
+                  addedDate: '2024-07-02T08:12:02.234Z',
+                  documentType: 'Bioinformatics',
+                  authorsCollection: {
+                    items: [
+                      {
+                        __typename: 'Users',
+                        sys: {
+                          id: 'monica',
+                        },
+                      },
+                      {
+                        __typename: 'ExternalAuthors',
+                      },
+                      {
+                        __typename: 'Users',
+                        sys: {
+                          id: 'phoebe',
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  sys: {
+                    id: 'research-output-2',
+                  },
+                  addedDate: '2024-07-02T08:19:11.314Z',
+                  documentType: 'Bioinformatics',
+                  authorsCollection: {
+                    items: [
+                      {
+                        __typename: 'Users',
+                        sys: {
+                          id: 'monica',
+                        },
+                      },
+                      {
+                        __typename: 'ExternalAuthors',
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
           },
         },
-        teamsCollection: {
-          items: [
-            {
-              role: 'Co-PI (Core Leadership)',
-              inactiveSinceDate: null,
-              team: {
-                sys: {
-                  id: 'team-1',
-                },
-                displayName: 'Team Alessi',
-                inactiveSince: null,
-              },
-            },
-            {
-              role: 'Collaborating PI',
-              inactiveSinceDate: null,
-              team: {
-                sys: {
-                  id: 'team-2',
-                },
-                displayName: 'Team De Camilli',
-                inactiveSince: null,
-              },
-            },
-          ],
-        },
-        labsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'lab-1',
-              },
-            },
-          ],
-        },
-      },
-    ],
-  },
-});
+      ],
+    },
+  });
 
 export const getResearchOutputTeamCollaboration = (): NonNullable<
   NonNullable<
@@ -802,7 +828,9 @@ export const getEngagementResponse: () => EngagementResponse = () => ({
   eventCount: 2,
   totalSpeakerCount: 3,
   uniqueAllRolesCount: 2,
+  uniqueAllRolesCountPercentage: 67,
   uniqueKeyPersonnelCount: 1,
+  uniqueKeyPersonnelCountPercentage: 33,
 });
 
 export const getListEngagementResponse = (): ListEngagementResponse => ({

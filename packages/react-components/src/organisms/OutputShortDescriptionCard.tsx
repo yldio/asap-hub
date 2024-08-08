@@ -1,11 +1,9 @@
-import {
-  aiGenerate,
-  Button,
-  LabeledTextArea,
-  pixels,
-} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
+import { Button } from '../atoms';
+import { aiGenerate } from '../icons';
+import { LabeledTextArea } from '../molecules';
+import { rem } from '../pixels';
 
 type OutputShortDescriptionCardProps = Omit<
   ComponentProps<typeof LabeledTextArea>,
@@ -14,7 +12,6 @@ type OutputShortDescriptionCardProps = Omit<
   getShortDescription: () => Promise<string>;
   buttonEnabled?: boolean;
 };
-const { rem } = pixels;
 
 const iconStyles = css({
   display: 'flex',
@@ -49,7 +46,7 @@ const OutputShortDescriptionCard: React.FC<OutputShortDescriptionCardProps> = ({
         title="Short Description"
         subtitle="(required)"
         tip="Add a short description based on what you wrote on the
-  description field above."
+    description field above."
         getValidationMessage={() => 'Please enter a short description'}
         onChange={onChange}
         required

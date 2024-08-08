@@ -341,8 +341,58 @@ export type EngagementDataObject = {
   eventCount: number;
   totalSpeakerCount: number;
   uniqueAllRolesCount: number;
+  uniqueAllRolesCountPercentage: number;
   uniqueKeyPersonnelCount: number;
+  uniqueKeyPersonnelCountPercentage: number;
 };
 export type ListEngagementDataObject = ListResponse<EngagementDataObject>;
 export type EngagementResponse = EngagementDataObject;
 export type ListEngagementResponse = ListResponse<EngagementResponse>;
+export type EngagementAlgoliaResponse = EngagementResponse & {
+  objectID: string;
+};
+export type ListEngagementAlgoliaResponse =
+  ListResponse<EngagementAlgoliaResponse>;
+
+export type SortEngagement =
+  | 'team_asc'
+  | 'team_desc'
+  | 'members_asc'
+  | 'members_desc'
+  | 'events_asc'
+  | 'events_desc'
+  | 'total_speakers_asc'
+  | 'total_speakers_desc'
+  | 'unique_speakers_all_roles_asc'
+  | 'unique_speakers_all_roles_desc'
+  | 'unique_speakers_all_roles_percentage_asc'
+  | 'unique_speakers_all_roles_percentage_desc'
+  | 'unique_speakers_key_personnel_asc'
+  | 'unique_speakers_key_personnel_desc'
+  | 'unique_speakers_key_personnel_percentage_asc'
+  | 'unique_speakers_key_personnel_percentage_desc';
+
+export type SortEngagementFields =
+  | 'team'
+  | 'members'
+  | 'events'
+  | 'totalSpeakers'
+  | 'uniqueSpeakersAllRoles'
+  | 'uniqueSpeakersAllRolesPercentage'
+  | 'uniqueSpeakersKeyPersonnel'
+  | 'uniqueSpeakersKeyPersonnelPercentage';
+
+export type EngagementSortingDirection = {
+  [key in SortEngagementFields]: SortingDirection;
+};
+
+export const engagementInitialSortingDirection = {
+  team: ascending,
+  members: descending,
+  events: descending,
+  totalSpeakers: descending,
+  uniqueSpeakersAllRoles: descending,
+  uniqueSpeakersAllRolesPercentage: descending,
+  uniqueSpeakersKeyPersonnel: descending,
+  uniqueSpeakersKeyPersonnelPercentage: descending,
+};

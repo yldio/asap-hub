@@ -10,6 +10,7 @@ export const researchOutputContentQueryFragment = gql`
     }
     title
     descriptionMd
+    shortDescription
     link
     addedDate
     createdDate

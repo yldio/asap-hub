@@ -163,9 +163,9 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
   }
 `;
 
-export const FETCH_USER_COLLABORATION = gql`
-  query FetchUserCollaboration($limit: Int, $skip: Int) {
-    usersCollection(order: firstName_ASC, limit: $limit, skip: $skip) {
+export const FETCH_USER_TOTAL_RESEARCH_OUTPUTS = gql`
+  query FetchUserTotalResearchOutputs($skip: Int) {
+    usersCollection(order: firstName_ASC, limit: 1000, skip: $skip) {
       total
       items {
         sys {
@@ -196,32 +196,37 @@ export const FETCH_USER_COLLABORATION = gql`
           }
         }
         linkedFrom {
-          researchOutputsCollection(limit: 200) {
+          researchOutputsCollection(limit: 1) {
+            total
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_USER_RESEARCH_OUTPUTS = gql`
+  query FetchUserResearchOutputs($limit: Int, $skip: Int) {
+    usersCollection(order: firstName_ASC, limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        linkedFrom {
+          researchOutputsCollection(limit: 250) {
             items {
+              sys {
+                id
+              }
               addedDate
               documentType
-              authorsCollection(limit: 6) {
+              authorsCollection(limit: 120) {
                 items {
                   __typename
                   ... on Users {
                     sys {
                       id
-                    }
-                    labsCollection(limit: 3) {
-                      items {
-                        sys {
-                          id
-                        }
-                      }
-                    }
-                    teamsCollection(limit: 5) {
-                      items {
-                        team {
-                          sys {
-                            id
-                          }
-                        }
-                      }
                     }
                   }
                 }

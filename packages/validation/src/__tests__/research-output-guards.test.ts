@@ -38,6 +38,7 @@ describe('isResearchOutputWorkingGroupRequest', () => {
       publishDate: undefined,
       description: '',
       descriptionMD: '',
+      shortDescription: '',
       type: 'Software',
       labs: ['lab1'],
       methods: [],

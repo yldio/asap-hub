@@ -31,6 +31,7 @@ import {
   WorkingGroupResponse,
   UserCollaborationPerformance,
   OutputTypeOption,
+  EngagementResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -43,6 +44,7 @@ import {
   USER_COLLABORATION_PERFORMANCE,
   USER_PRODUCTIVITY,
   USER_PRODUCTIVITY_PERFORMANCE,
+  ENGAGEMENT,
 } from './analytics';
 import {
   EVENT_ENTITY_TYPE,
@@ -85,7 +87,8 @@ export type AnalyticsData =
   | UserProductivityResponse
   | TeamProductivityResponse
   | UserCollaborationResponse
-  | TeamCollaborationResponse;
+  | TeamCollaborationResponse
+  | EngagementResponse;
 
 export type EntityResponses = {
   [CRN]: {
@@ -135,6 +138,8 @@ export type EntityResponses = {
     [USER_COLLABORATION]: UserCollaborationResponse;
     [TEAM_COLLABORATION_PERFORMANCE]: TeamCollaborationPerformance;
     [USER_COLLABORATION_PERFORMANCE]: UserCollaborationPerformance;
+
+    [ENGAGEMENT]: EngagementResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

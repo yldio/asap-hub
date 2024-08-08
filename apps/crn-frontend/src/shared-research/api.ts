@@ -1,10 +1,16 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  generateOutputContent,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   FetchResearchTagsOptions,
   ListResponse,
+  OutputGenerateContentResponse,
   ResearchOutputDocumentType,
   researchOutputDocumentTypes,
+  ResearchOutputGenerateContentRequest,
   ResearchOutputPublishingEntities,
   ResearchOutputPublishingEntitiesValues,
   ResearchOutputResponse,
@@ -169,4 +175,13 @@ export const getResearchTags = async (
   const response = await resp.json();
 
   return response?.items || [];
+};
+
+export const getGeneratedResearchOutputContent = async (
+  output: ResearchOutputGenerateContentRequest,
+  authorization: string,
+): Promise<OutputGenerateContentResponse> => {
+  const apiUrl = `${API_BASE_URL}/research-outputs/generate-content`;
+
+  return generateOutputContent(output, apiUrl, authorization, 'CRN');
 };

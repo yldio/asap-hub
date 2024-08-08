@@ -23,6 +23,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { getGeneratedResearchOutputContent } from '../../../shared-research/api';
 import {
   createResearchOutput,
   getTeam,
@@ -56,12 +57,14 @@ const mandatoryFields = async (
     link = 'http://example.com',
     title = 'example title',
     descriptionMD = 'example description',
+    shortDescription = 'example short description',
     type = 'Preprint',
     doi = '10.1234',
   }: {
     link?: string;
     title?: string;
     descriptionMD?: string;
+    shortDescription?: string;
     type?: string;
     doi?: string;
   },
@@ -74,8 +77,12 @@ const mandatoryFields = async (
   userEvent.type(screen.getByRole('textbox', { name: url }), link);
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(
-    screen.getByRole('textbox', { name: /description/i }),
+    screen.getByRole('textbox', { name: /^description/i }),
     descriptionMD,
+  );
+  userEvent.type(
+    screen.getByRole('textbox', { name: /short description/i }),
+    shortDescription,
   );
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
@@ -126,6 +133,11 @@ const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 const mockUpdateResearchOutput =
   updateTeamResearchOutput as jest.MockedFunction<
     typeof updateTeamResearchOutput
+  >;
+
+const mockGetGeneratedResearchOutputContent =
+  getGeneratedResearchOutputContent as jest.MockedFunction<
+    typeof getGeneratedResearchOutputContent
   >;
 
 interface RenderPageOptions {
@@ -210,6 +222,7 @@ it('can publish a form when the data is valid', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
+  const shortDescription = 'example42 short description';
   const type = 'Animal Model';
   const doi = '10.0777';
 
@@ -219,6 +232,7 @@ it('can publish a form when the data is valid', async () => {
     link,
     title,
     descriptionMD,
+    shortDescription,
     type,
     doi,
   });
@@ -240,6 +254,7 @@ it('can publish a form when the data is valid', async () => {
       title,
       description: '',
       descriptionMD,
+      shortDescription,
       type,
       labs: ['l0'],
       authors: [
@@ -271,6 +286,7 @@ it('can save draft when form data is valid', async () => {
   const link = 'https://example42.com';
   const title = 'example42 title';
   const descriptionMD = 'example42 description';
+  const shortDescription = 'example42 short description';
   const type = 'Animal Model';
   const doi = '10.0777';
 
@@ -280,6 +296,7 @@ it('can save draft when form data is valid', async () => {
     link,
     title,
     descriptionMD,
+    shortDescription,
     type,
     doi,
   });
@@ -300,6 +317,7 @@ it('can save draft when form data is valid', async () => {
       link,
       title,
       descriptionMD,
+      shortDescription,
       description: '',
       type,
       labs: ['l0'],
@@ -344,6 +362,7 @@ it('can edit a research output', async () => {
       link,
       title: '',
       descriptionMD: '',
+      shortDescription: '',
       type,
       doi,
     },
@@ -451,6 +470,29 @@ it('can edit and publish a draft research output', async () => {
     }),
     expect.anything(),
   );
+});
+
+it('generates the short description based on the current description', async () => {
+  mockGetGeneratedResearchOutputContent.mockResolvedValueOnce({
+    shortDescription: 'test generated short description 1',
+  });
+
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: {
+      ...baseResearchOutput,
+      descriptionMD: 'output description',
+    },
+  });
+
+  userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /short description/i }),
+    ).toHaveValue('test generated short description 1');
+  });
 });
 
 it('will show server side validation error for link', async () => {

@@ -30,6 +30,7 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useLabSuggestions,
+  useResearchOutputGeneratedContent,
   usePostResearchOutput,
   usePutResearchOutput,
   useRelatedEventsSuggestions,
@@ -103,6 +104,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     researchOutputData?.teams.map(({ id }) => id) ?? [teamId],
     published,
   );
+  const getShortDescriptionFromDescription =
+    useResearchOutputGeneratedContent();
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
@@ -151,6 +154,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}
+            getShortDescriptionFromDescription={
+              getShortDescriptionFromDescription
+            }
             getAuthorSuggestions={(input) =>
               getAuthorSuggestions(input).then((authors) =>
                 authors.map((author) => ({

@@ -111,6 +111,10 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
     shortDescription,
     systemPublishedVersion,
     lastUpdatedPartial,
+    projects,
+    contributingCohorts,
+    versions,
+    link,
   } = getOutputDataObject();
 
   return {
@@ -135,6 +139,10 @@ export const getPublicOutputResponse = (): gp2Model.PublicOutputResponse => {
         avatarUrl,
       }),
     ),
+    projects,
+    contributingCohorts,
+    versions,
+    externalUrl: link,
   };
 };
 

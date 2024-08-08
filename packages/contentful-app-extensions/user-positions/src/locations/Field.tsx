@@ -33,9 +33,7 @@ const Field = () => {
   const removePosition = (position: PositionProps) => {
     const newValue = positions.filter((i: PositionProps) => i !== position);
     setPositions(newValue);
-    if (newValue.length === 0) {
-      sdk.field.setValue(undefined);
-    }
+    sdk.field.setValue(newValue.length === 0 ? undefined : newValue);
   };
 
   const updateFieldValue = () => {

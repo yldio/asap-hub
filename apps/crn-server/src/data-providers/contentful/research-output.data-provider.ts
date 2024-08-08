@@ -329,6 +329,7 @@ const parseGraphQLResearchOutput = (
       ? parseRichText(researchOutputs.description as RichTextFromQuery)
       : undefined,
     descriptionMD: researchOutputs.descriptionMd || '',
+    shortDescription: researchOutputs.shortDescription || '',
     usageNotesMD: researchOutputs.usageNotes || '',
     link: researchOutputs.link || undefined,
     asapFunded: convertDecisionToBoolean(researchOutputs.asapFunded || null),

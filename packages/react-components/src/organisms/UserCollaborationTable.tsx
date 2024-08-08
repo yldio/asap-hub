@@ -48,7 +48,6 @@ const rowStyles = css({
   display: 'grid',
   padding: `${rem(20)} ${rem(24)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
-  alignItems: 'baseline',
   ':first-of-type': {
     borderBottom: 'none',
   },

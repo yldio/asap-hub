@@ -111,6 +111,8 @@ export const getUserCollaborationItems = (
     if (userData) {
       const userTeamIds = new Set(userData?.teamIds);
       const userLabIds = new Set(userData?.labIds);
+      const totalUserOutputsCoAuthoredAcrossTeamsSet = new Set();
+      const totalUserOutputsCoAuthoredWithinTeamSet = new Set();
 
       const teams = userData?.teamIds.map((userTeamId) => {
         const outputsCoAuthoredAcrossTeamsSet = new Set();
@@ -142,10 +144,12 @@ export const getUserCollaborationItems = (
                   )
                 ) {
                   outputsCoAuthoredWithinTeamSet.add(output?.sys.id);
+                  totalUserOutputsCoAuthoredWithinTeamSet.add(output?.sys.id);
                 }
 
                 if (hasDifferentTeams(userTeamIds, coAuthor?.teamIds || [])) {
                   outputsCoAuthoredAcrossTeamsSet.add(output?.sys.id);
+                  totalUserOutputsCoAuthoredAcrossTeamsSet.add(output?.sys.id);
                 }
               }
             });
@@ -165,6 +169,10 @@ export const getUserCollaborationItems = (
         name: userData.name,
         alumniSince: userData.alumniSince,
         teams,
+        totalUniqueOutputsCoAuthoredAcrossTeams:
+          totalUserOutputsCoAuthoredAcrossTeamsSet.size,
+        totalUniqueOutputsCoAuthoredWithinTeam:
+          totalUserOutputsCoAuthoredWithinTeamSet.size,
       });
     }
   });

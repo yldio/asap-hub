@@ -1,18 +1,21 @@
 import {
   FETCH_TEAM_COLLABORATION,
-  FETCH_USER_COLLABORATION,
+  FETCH_USER_RESEARCH_OUTPUTS,
+  FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
+
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import {
-  generateUserCollaborationOutputByDocType,
   getResearchOutputTeamCollaboration,
   getTeamCollaborationDataObject,
   getTeamCollaborationQuery,
-  getUserCollaborationQuery,
+  getUserResearchOutputsQuery,
+  getUserTotalResearchOutputs,
 } from '../../../fixtures/analytics.fixtures';
 import { getContentfulGraphqlTeam } from '../../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
+
 const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 const analyticsDataProvider = new AnalyticsContentfulDataProvider(
   contentfulGraphqlClientMock,
@@ -33,105 +36,124 @@ describe('user collaboration', () => {
   });
 
   describe('Pagination', () => {
+    test('Should fetch all users', async () => {
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce(getUserTotalResearchOutputs(2700))
+        .mockResolvedValueOnce(getUserTotalResearchOutputs(2700))
+        .mockResolvedValueOnce(getUserTotalResearchOutputs(2700))
+        .mockResolvedValue(getUserResearchOutputsQuery());
+
+      await analyticsDataProvider.fetchUserCollaboration({});
+
+      expect(
+        contentfulGraphqlClientMock.request.mock.calls.slice(0, 3),
+      ).toEqual([
+        [
+          FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            skip: 0,
+          }),
+        ],
+        [
+          FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            skip: 1000,
+          }),
+        ],
+        [
+          FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            skip: 2000,
+          }),
+        ],
+      ]);
+    });
+
     test('Should apply pagination parameters and split query accordingly', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValue(
-        getUserCollaborationQuery(),
-      );
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce(getUserTotalResearchOutputs())
+        .mockResolvedValue(getUserResearchOutputsQuery());
 
       await analyticsDataProvider.fetchUserCollaboration({
-        take: 13,
-        skip: 3,
+        take: 7,
+        skip: 11,
       });
 
       expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
         [
-          FETCH_USER_COLLABORATION,
+          FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
           expect.objectContaining({
-            limit: 5,
-            skip: 3,
+            skip: 0,
           }),
         ],
         [
-          FETCH_USER_COLLABORATION,
+          FETCH_USER_RESEARCH_OUTPUTS,
           expect.objectContaining({
-            limit: 5,
-            skip: 8,
+            limit: 3,
+            skip: 11,
           }),
         ],
         [
-          FETCH_USER_COLLABORATION,
+          FETCH_USER_RESEARCH_OUTPUTS,
           expect.objectContaining({
-            limit: 5,
-            skip: 13,
+            limit: 3,
+            skip: 14,
+          }),
+        ],
+        [
+          FETCH_USER_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            limit: 3,
+            skip: 17,
           }),
         ],
       ]);
     });
 
     test('Should pass default pagination parameters and split query', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValue(
-        getUserCollaborationQuery(),
-      );
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce(getUserTotalResearchOutputs())
+        .mockResolvedValue(getUserResearchOutputsQuery());
 
       await analyticsDataProvider.fetchUserCollaboration({});
 
       expect(contentfulGraphqlClientMock.request.mock.calls).toEqual([
         [
-          FETCH_USER_COLLABORATION,
+          FETCH_USER_TOTAL_RESEARCH_OUTPUTS,
           expect.objectContaining({
-            limit: 5,
             skip: 0,
           }),
         ],
         [
-          FETCH_USER_COLLABORATION,
+          FETCH_USER_RESEARCH_OUTPUTS,
           expect.objectContaining({
-            limit: 5,
-            skip: 5,
+            limit: 3,
+            skip: 0,
+          }),
+        ],
+        [
+          FETCH_USER_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            limit: 3,
+            skip: 3,
+          }),
+        ],
+        [
+          FETCH_USER_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            limit: 3,
+            skip: 6,
+          }),
+        ],
+        [
+          FETCH_USER_RESEARCH_OUTPUTS,
+          expect.objectContaining({
+            limit: 3,
+            skip: 9,
           }),
         ],
       ]);
     });
-  });
-
-  describe('document category filter', () => {
-    it.each`
-      filter              | result
-      ${'article'}        | ${{ outputsCoAuthoredWithinTeam: 1 }}
-      ${'bioinformatics'} | ${{ outputsCoAuthoredWithinTeam: 1 }}
-      ${'dataset'}        | ${{ outputsCoAuthoredWithinTeam: 1 }}
-      ${'lab-resource'}   | ${{ outputsCoAuthoredWithinTeam: 1 }}
-      ${'protocol'}       | ${{ outputsCoAuthoredWithinTeam: 1 }}
-      ${'all'}            | ${{ outputsCoAuthoredWithinTeam: 5 }}
-    `(
-      'filters outputs by document category when filter $filter is provided',
-      async ({ filter, result }) => {
-        const graphqlResponse = getUserCollaborationQuery();
-        graphqlResponse.usersCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
-          [
-            generateUserCollaborationOutputByDocType('Article'),
-            generateUserCollaborationOutputByDocType('Bioinformatics'),
-            generateUserCollaborationOutputByDocType('Dataset'),
-            generateUserCollaborationOutputByDocType('Lab Resource'),
-            generateUserCollaborationOutputByDocType('Protocol'),
-          ];
-
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
-
-        const response = await analyticsDataProvider.fetchUserCollaboration({
-          take: 1,
-          filter: {
-            documentCategory: filter,
-          },
-        });
-
-        expect(response.items[0]?.teams[0]).toEqual(
-          expect.objectContaining(result),
-        );
-      },
-    );
   });
 });
 

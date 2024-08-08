@@ -1,6 +1,7 @@
 import {
   FetchTeamCollaborationQuery,
-  FetchUserCollaborationQuery,
+  FetchUserResearchOutputsQuery,
+  FetchUserTotalResearchOutputsQuery,
 } from '@asap-hub/contentful';
 import {
   DocumentCategoryOption,
@@ -12,6 +13,7 @@ import {
   TeamRole,
   TimeRangeOption,
   UserCollaborationDataObject,
+  UserCollaborationTeam,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import {
@@ -21,170 +23,154 @@ import {
   isTeamOutputDocumentType,
 } from './common';
 
-export type EntityWithId = {
-  sys: {
-    id: string;
-  };
-};
+export const hasDifferentTeams = (
+  userTeamIds: Set<string>,
+  coAuthorTeamIds: string[],
+): boolean => coAuthorTeamIds.every((id) => !userTeamIds.has(id));
 
-export type Author = {
-  id: string;
-  teams: EntityWithId[];
-  labs: EntityWithId[];
-};
-
-export const checkDifferentTeams = (
-  referenceTeams: EntityWithId[],
-  testTeams: EntityWithId[],
-): boolean =>
-  referenceTeams.every((referenceTeam) =>
-    testTeams.every((testTeam) => testTeam.sys.id !== referenceTeam.sys.id),
-  );
-
-export const checkSameTeamDifferentLab = (
-  referenceTeam: EntityWithId,
-  referenceLabs: EntityWithId[],
-  testUser: Author,
+export const hasSameTeamAndDifferentLab = (
+  userTeamId: string,
+  userLabIds: Set<string>,
+  coAuthorTeamIds: string[],
+  coAuthorLabIds: string[],
 ): boolean => {
-  const sameTeam = testUser.teams.find(
-    (testTeam) => testTeam.sys.id === referenceTeam.sys.id,
+  const sameTeam = coAuthorTeamIds.some(
+    (coAuthorTeamId) => coAuthorTeamId === userTeamId,
   );
-  if (sameTeam) {
-    return referenceLabs
-      .map((lab) =>
-        testUser.labs.find((testLab) => testLab.sys.id === lab.sys.id),
-      )
-      .every((value) => !value);
-  }
-  return false;
+  const differentLabs = coAuthorLabIds.every(
+    (coAuthorLabId) => !userLabIds.has(coAuthorLabId),
+  );
+  return sameTeam && differentLabs;
 };
 
-export const findMatchingAuthors = ({
-  referenceId,
-  referenceTeams,
-  referenceTeam,
-  referenceLabs,
-  authorList,
-}: {
-  referenceId: string;
-  referenceTeam: EntityWithId;
-  referenceTeams: EntityWithId[];
-  referenceLabs: EntityWithId[];
-  authorList: Author[];
-}) => {
-  let [differentTeamFlag, sameTeamDifferentLabFlag] = [false, false];
-  let isAuthor = false;
-  authorList.forEach((author) => {
-    if (author && author.id !== referenceId) {
-      if (
-        !differentTeamFlag &&
-        checkDifferentTeams(referenceTeams, author.teams)
-      ) {
-        differentTeamFlag = true;
-      }
-      if (
-        !sameTeamDifferentLabFlag &&
-        checkSameTeamDifferentLab(referenceTeam, referenceLabs, author)
-      ) {
-        sameTeamDifferentLabFlag = true;
-      }
-    } else if (author.id === referenceId) {
-      isAuthor = true;
-    }
-  });
-  if (isAuthor) {
-    return { differentTeamFlag, sameTeamDifferentLabFlag };
-  }
-  // don't count output if not the author
-  return { differentTeamFlag: false, sameTeamDifferentLabFlag: false };
+export type UserData = {
+  name: string;
+  alumniSince?: string;
+  teams: Omit<
+    UserCollaborationTeam,
+    'outputsCoAuthoredWithinTeam' | 'outputsCoAuthoredAcrossTeams'
+  >[];
+  labIds: string[];
+  teamIds: string[];
+  researchOutputs: number;
 };
 
-export const getCollaborationCounts = (
-  data: {
-    differentTeamFlag: boolean;
-    sameTeamDifferentLabFlag: boolean;
-  }[],
-) =>
-  data.reduce(
-    (
-      { acrossTeamCount, withinTeamCount },
-      { differentTeamFlag, sameTeamDifferentLabFlag },
-    ) => ({
-      acrossTeamCount: differentTeamFlag
-        ? acrossTeamCount + 1
-        : acrossTeamCount,
-      withinTeamCount: sameTeamDifferentLabFlag
-        ? withinTeamCount + 1
-        : withinTeamCount,
-    }),
-    {
-      acrossTeamCount: 0,
-      withinTeamCount: 0,
-    },
-  );
+export const getUserDataById = (
+  userItems: NonNullable<
+    FetchUserTotalResearchOutputsQuery['usersCollection']
+  >['items'],
+): { [userId: string]: UserData } =>
+  userItems.reduce((dataByUserId: { [userId: string]: UserData }, item) => {
+    if (!item) return dataByUserId;
+
+    const userId = item.sys.id;
+    return {
+      ...dataByUserId,
+      [userId]: {
+        name: parseUserDisplayName(
+          item.firstName ?? '',
+          item.lastName ?? '',
+          undefined,
+          item.nickname ?? '',
+        ),
+        alumniSince: item.alumniSinceDate ?? undefined,
+        teams:
+          item.teamsCollection?.items.map((teamItem) => ({
+            id: teamItem?.team ? teamItem.team.sys.id : '',
+            team: teamItem?.team?.displayName ?? '',
+            role: (teamItem?.role as TeamRole) ?? undefined,
+            teamInactiveSince: teamItem?.team?.inactiveSince ?? undefined,
+            teamMembershipInactiveSince:
+              teamItem?.inactiveSinceDate ?? undefined,
+          })) || [],
+        labIds:
+          item?.labsCollection?.items.map((labItem) => labItem?.sys.id || '') ||
+          [],
+        teamIds:
+          item?.teamsCollection?.items.map(
+            (teamItem) => teamItem?.team?.sys.id || '',
+          ) || [],
+        researchOutputs:
+          item?.linkedFrom?.researchOutputsCollection?.total || 0,
+      },
+    };
+  }, {});
 
 export const getUserCollaborationItems = (
-  userCollection: FetchUserCollaborationQuery['usersCollection'],
+  collection: FetchUserResearchOutputsQuery['usersCollection'],
+  userDataById: { [userId: string]: UserData },
   rangeKey?: TimeRangeOption,
   documentCategory?: DocumentCategoryOption,
-): UserCollaborationDataObject[] =>
-  cleanArray(userCollection?.items).map((user) => {
-    const teams = cleanArray(user?.teamsCollection?.items).map((team) => {
-      const analyticData = user.linkedFrom?.researchOutputsCollection?.items
-        .filter(getFilterOutputByRange(rangeKey))
-        .filter(getFilterOutputByDocumentCategory(documentCategory))
-        .map((output) => {
-          const authorList = cleanArray(
-            cleanArray(output?.authorsCollection?.items).map((author) => {
+): UserCollaborationDataObject[] => {
+  const collaboration: UserCollaborationDataObject[] = [];
+
+  cleanArray(collection?.items).forEach((item) => {
+    const userId = item.sys.id;
+
+    const userData = userDataById[userId];
+    if (userData) {
+      const userTeamIds = new Set(userData?.teamIds);
+      const userLabIds = new Set(userData?.labIds);
+
+      const teams = userData?.teamIds.map((userTeamId) => {
+        const outputsCoAuthoredAcrossTeamsSet = new Set();
+        const outputsCoAuthoredWithinTeamSet = new Set();
+
+        item.linkedFrom?.researchOutputsCollection?.items
+          .filter(getFilterOutputByRange(rangeKey))
+          .filter(getFilterOutputByDocumentCategory(documentCategory))
+          .forEach((output) => {
+            const authorIds = cleanArray(
+              output?.authorsCollection?.items,
+            ).reduce((ids: string[], author) => {
               if (author.__typename === 'Users') {
-                return {
-                  id: author.sys.id,
-                  teams: cleanArray(author.teamsCollection?.items).map(
-                    (item) => item.team || { sys: { id: '' } },
-                  ),
-                  labs: cleanArray(author.labsCollection?.items),
-                };
+                ids.push(author.sys.id);
               }
-              return null;
-            }),
-          );
-          return findMatchingAuthors({
-            referenceId: user.sys.id,
-            referenceTeam: team.team ? team.team : { sys: { id: '' } },
-            referenceTeams: cleanArray(user?.teamsCollection?.items).map(
-              (item) => item.team || { sys: { id: '' } },
-            ),
-            referenceLabs: cleanArray(user.labsCollection?.items),
-            authorList,
+              return ids;
+            }, []);
+
+            authorIds.forEach((authorId) => {
+              if (authorId !== userId) {
+                const coAuthor = userDataById[authorId];
+
+                if (
+                  hasSameTeamAndDifferentLab(
+                    userTeamId,
+                    userLabIds,
+                    coAuthor?.teamIds || [],
+                    coAuthor?.labIds || [],
+                  )
+                ) {
+                  outputsCoAuthoredWithinTeamSet.add(output?.sys.id);
+                }
+
+                if (hasDifferentTeams(userTeamIds, coAuthor?.teamIds || [])) {
+                  outputsCoAuthoredAcrossTeamsSet.add(output?.sys.id);
+                }
+              }
+            });
           });
-        });
-      const { acrossTeamCount, withinTeamCount } = getCollaborationCounts(
-        cleanArray(analyticData),
-      );
 
-      return {
-        id: team.team ? team.team.sys.id : '',
-        team: team.team?.displayName ?? '',
-        role: (team.role as TeamRole) ?? undefined,
-        teamInactiveSince: team.team?.inactiveSince ?? undefined,
-        teamMembershipInactiveSince: team.inactiveSinceDate ?? undefined,
-        outputsCoAuthoredAcrossTeams: acrossTeamCount,
-        outputsCoAuthoredWithinTeam: withinTeamCount,
-      };
-    });
+        return {
+          ...(userData.teams.find(
+            (teamItem) => teamItem.id === userTeamId,
+          ) as UserCollaborationDataObject['teams'][number]),
+          outputsCoAuthoredAcrossTeams: outputsCoAuthoredAcrossTeamsSet.size,
+          outputsCoAuthoredWithinTeam: outputsCoAuthoredWithinTeamSet.size,
+        };
+      });
 
-    return {
-      id: user.sys.id,
-      name: parseUserDisplayName(
-        user.firstName ?? '',
-        user.lastName ?? '',
-        undefined,
-        user.nickname ?? '',
-      ),
-      alumniSince: user.alumniSinceDate ?? undefined,
-      teams,
-    };
+      collaboration.push({
+        id: userId,
+        name: userData.name,
+        alumniSince: userData.alumniSince,
+        teams,
+      });
+    }
   });
+
+  return collaboration;
+};
 
 const getTeamCollaborationAcrossData = (
   outputs: {

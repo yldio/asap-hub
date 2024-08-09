@@ -15,8 +15,12 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { getAlgoliaUserClient } from '../../hooks/algolia';
-import { makePerformanceHook, makePerformanceState } from '../utils/state';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import {
+  getAlgoliaIndexName,
+  makePerformanceHook,
+  makePerformanceState,
+} from '../utils/state';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -88,7 +92,8 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
 ) => {
-  const algoliaClient = getAlgoliaUserClient(options.sort, 'user-productivity');
+  const indexName = getAlgoliaIndexName(options.sort, 'user-productivity');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
@@ -189,7 +194,8 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
 ) => {
-  const algoliaClient = getAlgoliaUserClient(options.sort, 'team-productivity');
+  const indexName = getAlgoliaIndexName(options.sort, 'team-productivity');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),

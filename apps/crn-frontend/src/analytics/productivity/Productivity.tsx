@@ -11,8 +11,9 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
-import { getAlgoliaUserClient, useAnalyticsAlgolia } from '../../hooks/algolia';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
+import { getAlgoliaIndexName } from '../utils/state';
 import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';
 import {
@@ -43,13 +44,17 @@ const Productivity = () => {
   const [userSort, setUserSort] = useState<SortUserProductivity>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamProductivity>('team_asc');
 
-  const userClient = getAlgoliaUserClient(userSort, 'user-productivity');
+  const userClient = useAnalyticsAlgolia(
+    getAlgoliaIndexName(userSort, 'user-productivity'),
+  ).client;
   const userPerformance = useUserProductivityPerformance({
     timeRange,
     documentCategory,
   });
 
-  const teamClient = getAlgoliaUserClient(teamSort, 'team-productivity');
+  const teamClient = useAnalyticsAlgolia(
+    getAlgoliaIndexName(teamSort, 'team-productivity'),
+  ).client;
 
   const teamPerformance = useTeamProductivityPerformance({
     timeRange,

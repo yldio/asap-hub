@@ -15,8 +15,12 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { getAlgoliaUserClient } from '../../hooks/algolia';
-import { makePerformanceHook, makePerformanceState } from '../utils/state';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import {
+  getAlgoliaIndexName,
+  makePerformanceHook,
+  makePerformanceState,
+} from '../utils/state';
 import {
   getUserCollaboration,
   getTeamCollaboration,
@@ -74,14 +78,14 @@ export const analyticsUserCollaborationState = selectorFamily<
       } else {
         newUserCollaboration?.items.forEach((userCollaboration) =>
           set(
-            analyticsUserCollaborationListState(userCollaboration.id),
+            analyticsUserCollaborationListState(userCollaboration.objectID),
             userCollaboration,
           ),
         );
         set(analyticsUserCollaborationIndexState(options), {
           total: newUserCollaboration.total,
           ids: newUserCollaboration.items.map(
-            (userCollaboration) => userCollaboration.id,
+            (userCollaboration) => userCollaboration.objectID,
           ),
         });
       }
@@ -91,11 +95,9 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
-  const algoliaClient = getAlgoliaUserClient(
-    options.sort,
-    'user-collaboration',
-  );
+  const indexName = getAlgoliaIndexName(options.sort, 'user-collaboration');
 
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
@@ -161,14 +163,14 @@ export const analyticsTeamCollaborationState = selectorFamily<
       } else {
         newTeamCollaboration?.items.forEach((teamCollaboration) =>
           set(
-            analyticsTeamCollaborationListState(teamCollaboration.id),
+            analyticsTeamCollaborationListState(teamCollaboration.objectID),
             teamCollaboration,
           ),
         );
         set(analyticsTeamCollaborationIndexState(options), {
           total: newTeamCollaboration.total,
           ids: newTeamCollaboration.items.map(
-            (teamCollaboration) => teamCollaboration.id,
+            (teamCollaboration) => teamCollaboration.objectID,
           ),
         });
       }
@@ -178,10 +180,8 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
-  const algoliaClient = getAlgoliaUserClient(
-    options.sort,
-    'team-collaboration',
-  );
+  const indexName = getAlgoliaIndexName(options.sort, 'team-collaboration');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),

@@ -4,7 +4,6 @@ import {
   Apps,
 } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
-import { AnalyticsSortOptions, Metric } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
 import {
@@ -58,37 +57,4 @@ export const useAnalyticsAlgolia = (index?: string) => {
   const user = useCurrentUserCRN();
 
   return initAlgolia<'analytics'>(user, index ?? ANALYTICS_ALGOLIA_INDEX);
-};
-
-export const getAlgoliaUserClient = (
-  sort: AnalyticsSortOptions,
-  metric: Metric,
-) => {
-  let indexName;
-  switch (metric) {
-    case 'team-collaboration':
-    case 'team-productivity':
-      indexName =
-        sort === 'team_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_team_${sort.replace('team_', '')}`;
-      break;
-    case 'user-collaboration':
-    case 'user-productivity':
-      indexName =
-        sort === 'user_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_user_${sort.replace('user_', '')}`;
-      break;
-    case 'team-leadership':
-      indexName =
-        sort === 'team_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_${sort}`;
-      break;
-    default:
-      indexName = ANALYTICS_ALGOLIA_INDEX;
-  }
-
-  return useAnalyticsAlgolia(indexName).client;
 };

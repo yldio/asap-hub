@@ -484,6 +484,7 @@ export type Metric =
   | 'engagement';
 
 export type AnalyticsSortOptions =
+  | SortEngagement
   | SortLeadershipAndMembership
   | SortTeamCollaboration
   | SortTeamProductivity

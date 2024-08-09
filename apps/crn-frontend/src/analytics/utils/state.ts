@@ -37,30 +37,28 @@ export const getAlgoliaIndexName = (
   sort: AnalyticsSortOptions,
   metric: Metric,
 ) => {
-  let indexName;
+  let indexName = ANALYTICS_ALGOLIA_INDEX;
   switch (metric) {
     case 'team-collaboration':
     case 'team-productivity':
-      indexName =
-        sort === 'team_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_team_${sort.replace('team_', '')}`;
+      if (sort !== 'team_asc')
+        indexName = `${ANALYTICS_ALGOLIA_INDEX}_team_${sort.replace(
+          'team_',
+          '',
+        )}`;
       break;
     case 'user-collaboration':
     case 'user-productivity':
-      indexName =
-        sort === 'user_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_user_${sort.replace('user_', '')}`;
+      if (sort !== 'user_asc')
+        indexName = `${ANALYTICS_ALGOLIA_INDEX}_user_${sort.replace(
+          'user_',
+          '',
+        )}`;
       break;
     case 'team-leadership':
-      indexName =
-        sort === 'team_asc'
-          ? ANALYTICS_ALGOLIA_INDEX
-          : `${ANALYTICS_ALGOLIA_INDEX}_${sort}`;
+    case 'engagement':
+      if (sort !== 'team_asc') indexName = `${ANALYTICS_ALGOLIA_INDEX}_${sort}`;
       break;
-    default:
-      indexName = ANALYTICS_ALGOLIA_INDEX;
   }
 
   return indexName;

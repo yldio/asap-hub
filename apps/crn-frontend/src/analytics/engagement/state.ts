@@ -12,8 +12,8 @@ import {
   useRecoilState,
 } from 'recoil';
 
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { getAlgoliaIndexName } from '../utils/state';
 import { getEngagement } from './api';
 
 const analyticsEngagementIndexState = atomFamily<
@@ -75,10 +75,7 @@ export const analyticsEngagementState = selectorFamily<
 export const useAnalyticsEngagement = (
   options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
 ) => {
-  const indexName =
-    options.sort === 'team_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_${options.sort}`;
+  const indexName = getAlgoliaIndexName(options.sort, 'engagement');
 
   const algoliaClient = useAnalyticsAlgolia(indexName);
   const [engagement, setEngagement] = useRecoilState(

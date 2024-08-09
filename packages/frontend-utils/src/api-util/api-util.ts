@@ -1,5 +1,5 @@
 import { ErrorResponse, ValidationErrorResponse } from '@asap-hub/model';
-import { configureScope } from '@sentry/react';
+import { getCurrentScope } from '@sentry/react';
 
 export type GetListOptions = {
   searchQuery: string;
@@ -31,9 +31,7 @@ export const createSentryHeaders = (): {
   'X-Transaction-Id': string;
 } => {
   const transactionId = Math.random().toString(36).substr(2, 9);
-  configureScope((scope) => {
-    scope.setTag('transaction_id', transactionId);
-  });
+  getCurrentScope().setTag('transaction_id', transactionId);
   return {
     'X-Transaction-Id': transactionId,
   };

@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -47,7 +46,17 @@ const SocialIconLink: React.FC<{
     </Link>
   ) : null;
 
-type SocialIconsProps = UserResponse['social'];
+type SocialIconsProps = {
+  website1?: string;
+  website2?: string;
+  linkedIn?: string;
+  orcid?: string;
+  researcherId?: string;
+  twitter?: string;
+  github?: string;
+  googleScholar?: string;
+  researchGate?: string;
+};
 
 const SocialIcons: React.FC<SocialIconsProps> = ({
   github,

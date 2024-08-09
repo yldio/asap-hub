@@ -7,7 +7,7 @@ import {
   useContext,
   useState,
 } from 'react';
-import { components, InputActionMeta, OptionTypeBase } from 'react-select';
+import { components, InputActionMeta } from 'react-select';
 import AsyncCreatable from 'react-select/async-creatable';
 import Creatable from 'react-select/creatable';
 import { useValidation, validationMessageStyles } from '../form';
@@ -57,7 +57,7 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
       isHidden={false}
       innerRef={(element) => {
         ref.current = element;
-        props.innerRef(element);
+        props.innerRef && props.innerRef(element);
       }}
     />
   );
@@ -126,7 +126,7 @@ const Typeahead: FC<TypeaheadProps> = ({
     controlShouldRenderValue: false,
     components: { DropdownIndicator, Input, LoadingIndicator },
     styles: reactSelectStyles(theme, !!validationMessage),
-    onChange: (option: OptionTypeBase | null) => {
+    onChange: (option: any | null) => {
       const newValue = option?.value || '';
       onNewValue(newValue);
     },
@@ -144,7 +144,7 @@ const Typeahead: FC<TypeaheadProps> = ({
         value={{ ...validationTargetProps, required, maxLength }}
       >
         {rest.suggestions ? (
-          <Creatable<OptionTypeBase>
+          <Creatable
             {...commonProps}
             options={rest.suggestions.map((suggestion) => ({
               value: suggestion,
@@ -152,7 +152,7 @@ const Typeahead: FC<TypeaheadProps> = ({
             }))}
           />
         ) : (
-          <AsyncCreatable<OptionTypeBase, false>
+          <AsyncCreatable
             {...commonProps}
             defaultOptions
             cacheOptions

@@ -62,9 +62,9 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   leadingMembers,
   tags,
 }) => {
-  const workingGroupHref = workingGroups({}).workingGroup({
+  const workingGroupHref = workingGroups.DEFAULT.DETAILS.buildPath({
     workingGroupId: id,
-  }).$;
+  });
   return (
     <Card padding={false}>
       <div css={containerStyles}>

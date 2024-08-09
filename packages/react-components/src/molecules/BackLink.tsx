@@ -16,7 +16,7 @@ const containerStyles = css({
   padding: `${30 / perRem}em 0 `,
 });
 
-interface BackLinkProps {
+export interface BackLinkProps {
   readonly href: string;
 }
 const BackLink: React.FC<BackLinkProps> = ({ href }) => (

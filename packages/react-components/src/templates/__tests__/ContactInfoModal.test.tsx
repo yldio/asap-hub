@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserResponse } from '@asap-hub/model';
@@ -8,7 +8,7 @@ import ContactInfoModal from '../ContactInfoModal';
 it('renders a form to edit the contact info', () => {
   const { getByText } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(getByText(/contact/i, { selector: 'h3' })).toBeVisible();
 });
@@ -16,7 +16,7 @@ it('renders a form to edit the contact info', () => {
 it('indicates which fields are optional', () => {
   const { getByText } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   [
@@ -39,7 +39,7 @@ it('indicates which fields are optional', () => {
 it('shows the fallback email', () => {
   const { container } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(container.textContent).toContain('fallback@example.com');
 });
@@ -51,7 +51,7 @@ it('renders a text field containing the email', () => {
       email="contact@example.com"
       backHref="#"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   expect(getByLabelText(/email/i)).toHaveValue('contact@example.com');
 });
@@ -64,7 +64,7 @@ it('fires onSave when submitting', async () => {
       backHref="#"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -86,7 +86,7 @@ it('does not fire onSave when the email is invalid', async () => {
       backHref="#"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -108,7 +108,7 @@ it('disables the form elements while submitting', async () => {
       fallbackEmail="fallback@example.com"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
 
   userEvent.click(getByText(/save/i));
@@ -152,7 +152,7 @@ it.each`
       social={social}
       backHref="#"
     />,
-    { wrapper: StaticRouter },
+    { wrapper: MemoryRouter },
   );
   const input = getByLabelText(new RegExp(label));
   expect(input).toHaveValue(value);
@@ -168,7 +168,7 @@ it.each`
   async ({ label, value, message }) => {
     const { getByLabelText, findByText } = render(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
-      { wrapper: StaticRouter },
+      { wrapper: MemoryRouter },
     );
     const input = getByLabelText(new RegExp(label));
     fireEvent.change(input, {

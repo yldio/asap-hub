@@ -1,24 +1,20 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
+import { useParams } from 'react-router-dom';
 import ResourceModal from './ResourceModal';
-
-const { resource: resourceRoute } = gp2Routing;
 
 type EditResponseModalProps = {
   resources: gp2Model.Resource[];
-  route: typeof resourceRoute;
   updateResources: (payload: gp2Model.Resource[]) => Promise<void>;
 } & Pick<ComponentProps<typeof ResourceModal>, 'backHref'>;
 
 const EditResourceModal: React.FC<EditResponseModalProps> = ({
   resources,
-  route,
   backHref,
   updateResources,
 }) => {
-  const { resourceIndex } = useRouteParams(route);
-  const index = parseInt(resourceIndex, 10);
+  const { resourceIndex } = useParams<{ resourceIndex: string }>();
+  const index = resourceIndex ? parseInt(resourceIndex, 10) : 0;
   const resource = resources[index];
 
   return (

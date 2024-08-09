@@ -222,7 +222,7 @@ describe('compliance section', () => {
   it('redirects to manuscript form when user finishes to fill eligibility modal', () => {
     const history = createMemoryHistory({});
     const { getByRole } = render(
-      <Router history={history}>
+      <Router location={'/'} navigator={history}>
         <Route path="">
           <TeamProfileWorkspace {...team} tools={[]} />
         </Route>

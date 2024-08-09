@@ -1,8 +1,8 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { render, waitFor, screen, renderHook } from '@testing-library/react';
+// import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import {
   createTutorialsResponse,
@@ -15,6 +15,7 @@ import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
 import { tutorialsListState } from '../state';
+import { discoverRoutes } from '@asap-hub/routing';
 
 jest.mock('../api');
 
@@ -46,12 +47,21 @@ const renderTutorials = async (searchQuery = '') => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
-              <Route path="/guides-tutorials/tutorials">
-                <Frame title={null}>
-                  <TutorialList searchQuery={searchQuery} />
-                </Frame>
-              </Route>
+            <MemoryRouter
+              initialEntries={[
+                { pathname: discoverRoutes.DEFAULT.$.TUTORIALS.buildPath({}) },
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={discoverRoutes.DEFAULT.$.TUTORIALS.path}
+                  element={
+                    <Frame title={null}>
+                      <TutorialList searchQuery={searchQuery} />
+                    </Frame>
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -124,7 +134,7 @@ it('renders a paginated list of tutorials', async () => {
     {
       wrapper: MemoryRouter,
       initialProps: {
-        initialEntries: [`/guides-tutorials/tutorials`],
+        initialEntries: [discoverRoutes.DEFAULT.$.TUTORIALS.buildPath({})],
       },
     },
   );

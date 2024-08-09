@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { UserListItemResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
 import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
@@ -55,7 +55,10 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
   degree,
   ...props
 }) => {
-  const userHref = network({}).users({}).user({ userId: id }).$;
+  const userHref = networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+    id,
+  });
+
   const userAvatar = (
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
   );

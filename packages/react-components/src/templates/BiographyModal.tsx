@@ -4,7 +4,7 @@ import { LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
 import { EditUserModal } from '../organisms';
 
-interface BiographyModalProps {
+export interface BiographyModalProps {
   biography?: string;
 
   onSave?: (newBiography: string) => void | Promise<void>;

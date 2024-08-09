@@ -1,5 +1,5 @@
 import { TeamResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { Link, Paragraph } from '../atoms';
@@ -85,7 +85,11 @@ const GroupTeamsTabbedCard: React.FC<InterestGroupTeamsTabbedCardProps> = ({
               <TeamIcon />
               <Link
                 ellipsed
-                href={network({}).teams({}).team({ teamId: id }).$}
+                href={
+                  // TODO: fix this
+                  networkRoutes.DEFAULT.path
+                  // network({}).teams({}).team({ teamId: id }).$
+                }
               >
                 {displayName}
               </Link>

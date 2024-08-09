@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useContext, useState, useCallback, createContext, FC } from 'react';
+import {
+  useContext,
+  useState,
+  useCallback,
+  createContext,
+  FC,
+  PropsWithChildren,
+} from 'react';
 import {
   isEnabled,
   disable,
@@ -49,7 +56,7 @@ export const FlagsContext = createContext<Flags>({
   setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 
-export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
+export const LiveFlagsProvider: FC<PropsWithChildren> = ({ children }) => {
   // ignore overrides value, new flags object identity every time will be sufficient to update consumers
   const [, setOverrides] = useState(getOverrides());
   const flags: Flags = {

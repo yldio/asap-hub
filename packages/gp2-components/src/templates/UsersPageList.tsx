@@ -28,7 +28,7 @@ const containerStyles = css({
   marginTop: rem(48),
 });
 
-const UsersPageList: React.FC<UsersPageListProps> = ({
+const UsersPageList: React.FC<React.PropsWithChildren<UsersPageListProps>> = ({
   children,
   searchQuery,
   onSearchQueryChange,
@@ -44,7 +44,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
   tags,
 }) => {
   const { users } = gp2Routing;
-  const backHref = users({}).$;
+  const backHref = users.DEFAULT.LIST.buildPath({});
   const onBackClick = () => changeLocation(backHref);
 
   const onRemove = (id: string, filterType: FilterType) => {

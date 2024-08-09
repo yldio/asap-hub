@@ -15,12 +15,18 @@ import {
   TeamProductivityAlgoliaResponse,
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
-import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { analyticsRoutes } from '@asap-hub/routing';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -157,9 +163,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/productivity/:metric">
-                <Productivity />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/productivity/:metric"
+                  element={<Productivity />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -182,7 +191,7 @@ describe('user productivity', () => {
   };
   it('renders with user data', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
     expect(screen.getAllByText('User Productivity').length).toBe(2);
   });
@@ -204,7 +213,7 @@ describe('user productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     expect(screen.getByText('200')).toBeVisible();
@@ -214,21 +223,21 @@ describe('user productivity', () => {
       name: /last 30 days chevron down/i,
     });
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 90 days/));
+    await userEvent.click(screen.getByText(/Last 90 days/));
     await waitFor(() =>
-      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-
-    expect(screen.getByText('600')).toBeVisible();
+    expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.getByText('600')).toBeVisible();
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 30 days/));
+    await userEvent.click(screen.getByText(/Last 30 days/));
     await waitFor(() =>
-      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-
-    expect(screen.getByText('200')).toBeVisible();
+    expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('600')).not.toBeInTheDocument();
   });
 
@@ -252,7 +261,7 @@ describe('user productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
 
     expect(screen.getByText('200')).toBeVisible();
@@ -261,17 +270,19 @@ describe('user productivity', () => {
     const categoryButton = screen.getByRole('button', {
       name: /all chevron down/i,
     });
-    userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/Article/));
+    await userEvent.click(categoryButton);
+    await userEvent.click(screen.getByText(/Article/));
     await waitFor(() =>
-      expect(screen.getAllByText('User Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
+
+    expect(screen.getAllByText('User Productivity')).toHaveLength(2);
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
     userEvent.click(categoryButton);
-    userEvent.click(screen.getByText(/All/));
+    await userEvent.click(screen.getByText(/All/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -286,11 +297,8 @@ describe('team productivity', () => {
     const label = 'Team Productivity';
 
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
-    const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
-    userEvent.click(input);
-    userEvent.click(screen.getByText(label));
 
     expect(screen.getAllByText(label).length).toBe(2);
   });
@@ -302,6 +310,7 @@ describe('team productivity', () => {
         outputType: 'all',
       })
       .mockResolvedValue({ items: [teamProductivityResponse], total: 1 });
+
     when(mockGetTeamProductivity)
       .calledWith(expect.anything(), {
         ...defaultTeamOptions,
@@ -319,7 +328,7 @@ describe('team productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
 
     expect(screen.getByText('50')).toBeVisible();
@@ -329,19 +338,22 @@ describe('team productivity', () => {
       name: /last 30 days chevron down/i,
     });
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 90 days/));
+    await userEvent.click(screen.getByText(/Last 90 days/));
+
     await waitFor(() =>
-      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
+    expect(screen.getAllByText('Team Productivity')).toHaveLength(2);
     expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
-    userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 30 days/));
-    await waitFor(() =>
-      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /last 90 days chevron down/i,
+      }),
     );
+    await userEvent.click(screen.getByText(/Last 30 days/));
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
@@ -370,7 +382,7 @@ describe('team productivity', () => {
         total: 1,
       });
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
 
     expect(screen.getByText('50')).toBeVisible();
@@ -380,16 +392,17 @@ describe('team productivity', () => {
       name: /ASAP Output chevron down/i,
     });
     userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Public Output/i));
+    await userEvent.click(screen.getByText(/ASAP Public Output/i));
     await waitFor(() =>
-      expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    expect(screen.getByText('60')).toBeVisible();
+    expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
+      expect(screen.getByText('60')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     userEvent.click(outputTypeButton);
-    userEvent.click(screen.getByText(/ASAP Output/));
+    await userEvent.click(screen.getByText(/ASAP Output/));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );
@@ -402,15 +415,15 @@ describe('team productivity', () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
     const searchBox = getSearchBox();
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -425,9 +438,9 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for user', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'user' }),
     );
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_user_\d+\.csv/),
       expect.anything(),
@@ -436,12 +449,12 @@ describe('csv export', () => {
 
   it('exports analytics for teams', async () => {
     await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      analyticsRoutes.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric: 'team' }),
     );
-    const input = screen.getAllByRole('textbox', { hidden: false })[0];
+    const input = screen.getAllByRole('combobox', { hidden: false })[0];
 
     input && userEvent.click(input);
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_team_\d+\.csv/),
       expect.anything(),

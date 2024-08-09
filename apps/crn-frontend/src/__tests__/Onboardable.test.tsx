@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, act } from '@testing-library/react';
 import { waitFor } from '@testing-library/dom';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { Suspense } from 'react';
 
@@ -60,10 +60,9 @@ const renderOnboardable = (onboarded: boolean) => (
         <WhenReady>
           <MemoryRouter
             initialEntries={[
-              network({})
-                .users({})
-                .user({ userId: onboardableUser.id })
-                .about({}).$,
+              networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.buildPath({
+                id: onboardableUser.id,
+              }),
             ]}
           >
             <Onboardable>

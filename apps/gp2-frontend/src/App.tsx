@@ -6,27 +6,37 @@ import {
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { logout, staticPages, welcome } from '@asap-hub/routing';
-import { init, reactRouterV5Instrumentation } from '@sentry/react';
-import { Integrations } from '@sentry/tracing';
+import * as Sentry from '@sentry/react';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
-import { LastLocationProvider } from 'react-router-last-location';
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  createRoutesFromChildren,
+  matchRoutes,
+  useLocation,
+  useNavigationType,
+} from 'react-router-dom';
+import { LastLocationProvider } from 'react-router-dom-last-location';
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
 import SentryAuth0 from './auth/SentryAuth0';
 import Signin from './auth/Signin';
 import { ENVIRONMENT, GTM_CONTAINER_ID, RELEASE, SENTRY_DSN } from './config';
 import Frame from './Frame';
-import history from './history';
 
-init({
+Sentry.init({
   dsn: SENTRY_DSN,
   release: RELEASE,
   integrations: [
-    new Integrations.BrowserTracing({
-      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
-      routingInstrumentation: reactRouterV5Instrumentation(history),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect,
+      useLocation,
+      useNavigationType,
+      createRoutesFromChildren,
+      matchRoutes,
     }),
+    Sentry.replayIntegration(),
   ],
   environment: ENVIRONMENT,
   // Is recommended adjusting this value in production, or using tracesSampler
@@ -83,52 +93,67 @@ const App: FC<Record<string, never>> = () => {
         <GoogleTagManager containerId={GTM_CONTAINER_ID} />
         <AuthProvider>
           <SentryAuth0 />
-          <Router history={history}>
+          <Router>
             <LastLocationProvider>
               <Frame title={null}>
-                <Switch>
-                  <Route path={welcome.template}>
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  </Route>
-                  <Route path={logout.template}>
-                    <Frame title="Logout">
-                      <Logout />
-                    </Frame>
-                  </Route>
-                  <Route exact path={staticPages({}).terms.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
+                <Routes>
+                  <Route
+                    path={welcome.template}
+                    element={
+                      <UtilityBar>
+                        <ToastStack>
+                          <Welcome />
+                        </ToastStack>
+                      </UtilityBar>
+                    }
+                  />
+                  <Route
+                    path={logout.path}
+                    element={
+                      <Frame title="Logout">
+                        <Logout />
                       </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route exact path={staticPages({}).privacyPolicy.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-policy" />
-                      </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route>
-                    <CheckAuth>
-                      {({ isAuthenticated }) =>
-                        !isAuthenticated ? (
-                          <Frame title={null}>
-                            <Signin />
-                          </Frame>
-                        ) : (
-                          <Frame title={null}>
-                            <AuthenticatedApp />
-                          </Frame>
-                        )
-                      }
-                    </CheckAuth>
-                  </Route>
-                </Switch>
+                    }
+                  />
+                  <Route
+                    path={staticPages.DEFAULT.TERMS.path}
+                    element={
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="terms-and-conditions" />
+                        </Frame>
+                      </BasicLayout>
+                    }
+                  />
+                  <Route
+                    path={staticPages.DEFAULT.PRIVACY_POLICY.path}
+                    element={
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="privacy-policy" />
+                        </Frame>
+                      </BasicLayout>
+                    }
+                  />
+                  <Route
+                    path="/*"
+                    element={
+                      <CheckAuth>
+                        {({ isAuthenticated }) =>
+                          !isAuthenticated ? (
+                            <Frame title={null}>
+                              <Signin />
+                            </Frame>
+                          ) : (
+                            <Frame title={null}>
+                              <AuthenticatedApp />
+                            </Frame>
+                          )
+                        }
+                      </CheckAuth>
+                    }
+                  />
+                </Routes>
               </Frame>
             </LastLocationProvider>
           </Router>

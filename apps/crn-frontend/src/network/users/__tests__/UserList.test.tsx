@@ -38,7 +38,9 @@ const renderUserList = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users']}>
-              <Route path="/users" component={UserList} />
+              <Route path="/users">
+                <UserList />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

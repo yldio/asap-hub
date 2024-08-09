@@ -108,12 +108,9 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
               <div css={leftButtons}>
                 <Link
                   noMargin
-                  href={
-                    gp2Routing
-                      .outputs({})
-                      .output({ outputId: output.id })
-                      .edit({}).$
-                  }
+                  href={gp2Routing.outputs.DEFAULT.DETAILS.EDIT.buildPath({
+                    outputId: output.id,
+                  })}
                   buttonStyle
                   small
                   primary
@@ -126,19 +123,19 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                   noMargin
                   href={
                     output.mainEntity.type === 'WorkingGroups'
-                      ? gp2Routing
-                          .workingGroups({})
-                          .workingGroup({
+                      ? gp2Routing.workingGroups.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath(
+                          {
                             workingGroupId: output.mainEntity.id,
-                          })
-                          .duplicateOutput({
                             outputId: output.id,
-                          }).$
+                          },
+                        )
                       : output.mainEntity.type === 'Projects'
-                        ? gp2Routing
-                            .projects({})
-                            .project({ projectId: output.mainEntity.id })
-                            .duplicateOutput({ outputId: output.id }).$
+                        ? gp2Routing.projects.DEFAULT.DETAILS.DUPLICATE_OUTPUT.buildPath(
+                            {
+                              projectId: output.mainEntity.id,
+                              outputId: output.id,
+                            },
+                          )
                         : undefined
                   }
                   buttonStyle
@@ -152,12 +149,9 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
                 <div css={leftButtons}>
                   <Link
                     noMargin
-                    href={
-                      gp2Routing
-                        .outputs({})
-                        .output({ outputId: output.id })
-                        .version({}).$
-                    }
+                    href={gp2Routing.outputs.DEFAULT.DETAILS.VERSION.buildPath({
+                      outputId: output.id,
+                    })}
                     buttonStyle
                     small
                     primary

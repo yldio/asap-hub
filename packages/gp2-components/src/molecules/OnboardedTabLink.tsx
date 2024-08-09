@@ -65,7 +65,7 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
   ) : (
     <NavLink
       to={href}
-      activeClassName={'active-link'}
+      className={({ isActive }) => (isActive ? 'active-link' : '')}
       css={[styles, mobileStyle, { [`&.active-link`]: activeStyles }]}
     >
       <p css={textStyles}>

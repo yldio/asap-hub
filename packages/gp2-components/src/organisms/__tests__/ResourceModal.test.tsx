@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import ResourceModal from '../ResourceModal';
 
@@ -46,7 +46,7 @@ describe('ResourceModal', () => {
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
     render(<ResourceModal {...defaultProps} {...props} />, {
-      wrapper: StaticRouter,
+      wrapper: MemoryRouter,
     });
   };
   describe('dialog', () => {
@@ -59,9 +59,9 @@ describe('ResourceModal', () => {
       },
     ) => {
       const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-      const history = createMemoryHistory({ getUserConfirmation });
+      const history = createMemoryHistory();
       render(
-        <Router history={history}>
+        <Router navigator={history} location="/url">
           <ResourceModal {...defaultProps} {...props} />
         </Router>,
       );

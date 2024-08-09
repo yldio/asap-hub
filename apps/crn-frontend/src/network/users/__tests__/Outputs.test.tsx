@@ -3,7 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { RecoilRoot } from 'recoil';
 
@@ -79,13 +79,17 @@ const renderOutputs = async (
             <MemoryRouter
               initialEntries={[
                 {
-                  pathname: network({}).users({}).user({ userId }).outputs({})
-                    .$,
+                  pathname:
+                    networkRoutes.DEFAULT.USERS.DETAILS.OUTPUTS.buildPath({
+                      id: userId,
+                    }),
                 },
               ]}
             >
               <Route
-                path={network({}).users({}).user({ userId }).outputs({}).$}
+                path={networkRoutes.DEFAULT.USERS.DETAILS.OUTPUTS.buildPath({
+                  id: userId,
+                })}
               >
                 <Outputs userId={userId} />
               </Route>

@@ -1,5 +1,5 @@
 import { TutorialsResponse } from '@asap-hub/model';
-import { discover } from '@asap-hub/routing';
+import { discoverRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
@@ -115,10 +115,9 @@ const RelatedTutorialsCard: React.FC<RelatedTutorialsCardProps> = ({
                   <p css={paragraphStyle}>
                     <Link
                       ellipsed
-                      href={
-                        discover({}).tutorials({}).tutorial({ tutorialId: id })
-                          .$
-                      }
+                      href={discoverRoutes.DEFAULT.TUTORIALS.DETAILS.buildPath({
+                        id,
+                      })}
                     >
                       {title}
                     </Link>

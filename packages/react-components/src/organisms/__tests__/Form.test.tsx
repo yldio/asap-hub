@@ -3,13 +3,7 @@ import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
 import { ComponentProps } from 'react';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Router,
-  StaticRouter,
-} from 'react-router-dom';
+import { Link, MemoryRouter, Route, Router } from 'react-router-dom';
 import { Button } from '../../atoms';
 import Form from '../Form';
 
@@ -25,7 +19,7 @@ let getUserConfirmation!: jest.MockedFunction<
 let history!: History;
 beforeEach(() => {
   getUserConfirmation = jest.fn((_message, cb) => cb(true));
-  history = createMemoryHistory({ getUserConfirmation });
+  history = createMemoryHistory();
 });
 
 it('renders a form with given children', () => {
@@ -37,7 +31,7 @@ it('renders a form with given children', () => {
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <Router history={history}>
+    <Router navigator={history} location={'/url'}>
       <Form {...props}>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
       </Form>
@@ -50,7 +44,7 @@ it('initially does not prompt when trying to leave', () => {
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
     <InnerToastContext.Provider value={jest.fn()}>
-      <Router history={history}>
+      <Router navigator={history} location={'/url'}>
         <Form {...props} dirty>
           {() => <Link to={'/another-url'}>Navigate away</Link>}
         </Form>
@@ -66,7 +60,7 @@ describe('on cancel', () => {
   it('prompts after making edits', () => {
     const { getByText } = render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <Router navigator={history} location={'/url'}>
           <Form {...props} dirty>
             {({ onCancel }) => (
               <>
@@ -88,7 +82,7 @@ describe('on cancel', () => {
   it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <Router navigator={history} location={'/url'}>
           <Form {...props} dirty>
             {({ onCancel }) => (
               <>
@@ -111,7 +105,7 @@ describe('on cancel', () => {
   it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <Router navigator={history} location={'/url'}>
           <Route path="/form">
             <Form {...props} dirty>
               {({ onCancel }) => (
@@ -177,7 +171,7 @@ describe('when saving', () => {
             )}
           </Form>
         </InnerToastContext.Provider>,
-        { wrapper: StaticRouter },
+        { wrapper: MemoryRouter },
       );
 
       userEvent.click(getByText(/^save/i));
@@ -191,7 +185,7 @@ describe('when saving', () => {
       const handleValidate = jest.fn(() => false);
       const { getByText } = render(
         <ToastContext.Provider value={mockToast}>
-          <Router history={history}>
+          <Router navigator={history} location={'/url'}>
             <Form
               {...props}
               validate={handleValidate}
@@ -235,10 +229,10 @@ describe('when saving', () => {
           rejectSave = reject;
         }),
       );
-      history = createMemoryHistory({ getUserConfirmation });
+      history = createMemoryHistory();
       result = render(
         <InnerToastContext.Provider value={innerMockToast}>
-          <Router history={history}>
+          <Router navigator={history} location={'/url'}>
             <Form {...props} dirty>
               {({ getWrappedOnSave, isSaving }) => (
                 <>
@@ -310,7 +304,7 @@ describe('when saving', () => {
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
         rerender(
-          <Router history={history}>
+          <Router navigator={history} location={'/url'}>
             <Form {...props}>
               {({ getWrappedOnSave, isSaving }) => (
                 <>

@@ -20,8 +20,10 @@ const renderWorkingGroupsList = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
-              <Route path={gp2Routing.workingGroups.template}>
+            <MemoryRouter
+              initialEntries={[gp2Routing.workingGroups.DEFAULT.path]}
+            >
+              <Route path={gp2Routing.workingGroups.DEFAULT.path}>
                 <WorkingGroupList role={'operational'} />
               </Route>
             </MemoryRouter>

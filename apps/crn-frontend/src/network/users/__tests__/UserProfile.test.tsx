@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -105,16 +105,12 @@ const renderUserProfile = async (
             <WhenReady>
               <MemoryRouter
                 initialEntries={[
-                  network({}).users({}).user({ userId: routeProfileId }).$,
+                  networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                    id: routeProfileId,
+                  }),
                 ]}
               >
-                <Route
-                  path={
-                    network.template +
-                    network({}).users.template +
-                    network({}).users({}).user.template
-                  }
-                >
+                <Route path={networkRoutes.DEFAULT.USERS.DETAILS.path}>
                   <UserProfile currentTime={currentTime} />
                 </Route>
               </MemoryRouter>

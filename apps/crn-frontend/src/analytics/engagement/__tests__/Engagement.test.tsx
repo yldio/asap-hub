@@ -1,14 +1,15 @@
+import { analyticsRoutes } from '@asap-hub/routing';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { ListEngagementResponse } from '@asap-hub/model';
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
-import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -74,9 +75,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/engagement/">
-                <Engagement />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/engagement/"
+                  element={<Engagement />}
+                ></Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -95,7 +99,7 @@ describe('Engagement', () => {
   it('renders with data', async () => {
     mockGetEngagement.mockResolvedValue(data);
 
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({}));
 
     expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
     expect(screen.getByText('Test Team')).toBeInTheDocument();
@@ -109,7 +113,7 @@ describe('Engagement', () => {
   it('calls algolia client with the right index name', async () => {
     mockGetEngagement.mockResolvedValue(data);
 
-    await renderPage(analytics({}).engagement({}).$);
+    await renderPage(analyticsRoutes.DEFAULT.ENGAGEMENT.buildPath({}));
 
     await waitFor(() => {
       expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(

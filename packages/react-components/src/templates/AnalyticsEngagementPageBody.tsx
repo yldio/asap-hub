@@ -21,7 +21,9 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls> & {
+export type AnalyticsEngagementPageBodyProps = ComponentProps<
+  typeof PageControls
+> & {
   data: EngagementResponse[];
   sort: SortEngagement;
   setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;

@@ -58,7 +58,7 @@ const expandedButtonIcon = css({
   },
 });
 
-const ExpandableText: React.FC = ({ children }) => {
+const ExpandableText: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);

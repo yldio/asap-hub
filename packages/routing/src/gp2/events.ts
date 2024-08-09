@@ -1,1 +1,1 @@
-export { default as events } from '../events';
+export { eventRoutes as events } from '../events';

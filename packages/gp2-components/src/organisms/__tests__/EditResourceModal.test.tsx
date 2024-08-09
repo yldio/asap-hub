@@ -1,12 +1,9 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import EditResourceModal from '../EditResourceModal';
-
-const { resource: resourceRoute } = gp2Routing;
 
 type renderEditResourceModalProps = Partial<
   ComponentProps<typeof EditResourceModal>
@@ -14,20 +11,16 @@ type renderEditResourceModalProps = Partial<
 
 const renderEditResourceModal = ({
   resources = [{ type: 'Note', title: 'a title' }],
-  resourceIndex = '0',
   updateResources = jest.fn(),
 }: renderEditResourceModalProps = {}) => {
   render(
-    <StaticRouter location={resourceRoute({ resourceIndex }).$}>
-      <Route path={resourceRoute.template}>
-        <EditResourceModal
-          backHref={'/back'}
-          resources={resources}
-          updateResources={updateResources}
-          route={resourceRoute}
-        />
-      </Route>
-    </StaticRouter>,
+    <MemoryRouter>
+      <EditResourceModal
+        backHref={'/back'}
+        resources={resources}
+        updateResources={updateResources}
+      />
+    </MemoryRouter>,
   );
 };
 describe('EditResource', () => {

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { TutorialsResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Card, Display } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
@@ -73,7 +73,9 @@ const TutorialHeaderCard: React.FC<TutorialHeaderCardProps> = ({
     <UsersList
       users={authors.map((author) => ({
         ...author,
-        href: author.id && network({}).users({}).user({ userId: author.id }).$,
+        href:
+          author.id &&
+          networkRoutes.DEFAULT.USERS.DETAILS.buildPath({ id: author.id }),
       }))}
     />
     <div css={associationStyles}>

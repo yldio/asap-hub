@@ -4,7 +4,7 @@ import {
   ManuscriptHeader,
   usePushFromHere,
 } from '@asap-hub/react-components';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
 import { useLabSuggestions, useTeamSuggestions } from '../../shared-state';
@@ -36,7 +36,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const pushFromHere = usePushFromHere();
 
   const onSuccess = () => {
-    const path = network({}).teams({}).team({ teamId }).workspace({}).$;
+    const path = networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.buildPath({
+      teamId,
+    });
     setShowSuccessBanner(true);
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);

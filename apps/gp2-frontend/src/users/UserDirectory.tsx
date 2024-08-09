@@ -32,7 +32,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 
-  const filtersHref = users({}).filters({}).$;
+  const filtersHref = users.DEFAULT.FILTERS.buildPath({});
   const onFiltersClick = () => changeLocation(filtersHref);
   const autorization = useRecoilValue(authorizationState);
   const { items: tags } = useTags();

@@ -4,7 +4,9 @@ import { FC, useCallback, useState } from 'react';
 const isSameNotification = (a: Notification, b: Notification) =>
   a.message === b.message && a.page === b.page && a.type === b.type;
 
-const NotificationMessages: FC = ({ children }) => {
+const NotificationMessages: FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const addNotification = useCallback(
     (notification: Notification) => {

@@ -1,8 +1,8 @@
 import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { logout, network, staticPages } from '@asap-hub/routing';
-import { ReactNode, useEffect } from 'react';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { logout, networkRoutes, staticPages } from '@asap-hub/routing';
+import { ReactNode } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -14,14 +14,18 @@ export const navigationPromptHandler = (
 ) => {
   const isNavigationBlocked =
     user && !user?.onboarded
-      ? ![
-          network({}).users({}).user({ userId: user.id }).about({}).$,
-          network({}).users({}).user({ userId: user.id }).research({}).$,
-          staticPages({}).terms({}).$,
-          staticPages({}).privacyPolicy({}).$,
-          logout({}).$,
-        ].find((route) => pathname === '/' || pathname.startsWith(route))
-      : false;
+      ? true
+      : ![
+          networkRoutes.DEFAULT.USERS.DETAILS.ABOUT.buildPath({
+            id: user?.id || '',
+          }),
+          networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath({
+            id: user?.id || '',
+          }),
+          staticPages.DEFAULT.TERMS.path,
+          staticPages.DEFAULT.PRIVACY_POLICY.path,
+          logout.path,
+        ].find((route) => pathname === '/' || pathname.startsWith(route));
 
   if (isNavigationBlocked) {
     window.alert('This link will be available when your profile is complete');
@@ -32,13 +36,14 @@ export const navigationPromptHandler = (
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUserCRN();
-  const history = useHistory();
+  // const navigate = useNavigate();
 
-  useEffect(
-    () =>
-      history.block(({ pathname }) => navigationPromptHandler(user, pathname)),
-    [user, history],
-  );
+  // TODO: FIX THIS
+  // useEffect(
+  //   () =>
+  //     navigate.block(({ pathname }) => navigationPromptHandler(user, pathname)),
+  //   [user, history],
+  // );
 
   if (!user) {
     throw new Error(
@@ -46,17 +51,18 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
     );
   }
 
-  const ownProfilePath = network({}).users({}).user({ userId: user.id }).$;
-
   if (user.onboarded) {
     return <>{children}</>;
   }
 
+  const ownProfilePath = networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+    id: user.id,
+  });
   return (
-    <Switch>
+    <Routes>
       <Route path={ownProfilePath}>{children}</Route>
-      <Redirect to={ownProfilePath} />
-    </Switch>
+      <Route path="*" element={<Navigate to={ownProfilePath} />} />
+    </Routes>
   );
 };
 

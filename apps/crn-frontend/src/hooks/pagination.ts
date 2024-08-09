@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { viewParam, listViewValue } from '@asap-hub/routing';
+import history from '../history';
 
 export const CARD_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
 
 export const usePaginationParams = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
 
@@ -20,7 +21,10 @@ export const usePaginationParams = () => {
   cardViewParams.delete(viewParam);
 
   const resetPagination = () => {
-    history.replace({ search: resetPaginationSearchParams.toString() });
+    navigate(
+      { search: resetPaginationSearchParams.toString() },
+      { replace: true },
+    );
   };
 
   return {
@@ -34,14 +38,15 @@ export const usePaginationParams = () => {
 };
 
 export const usePagination = (numberOfItems: number, pageSize: number) => {
-  const history = useHistory();
-  const searchParams = new URLSearchParams(useLocation().search);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
   const lastAllowedPage = Math.max(0, Math.ceil(numberOfItems / pageSize) - 1);
   const numberOfPages = Math.max(currentPage, lastAllowedPage) + 1;
 
   const renderPageHref = (page: number) => {
+    // const { pathname } = useLocation();
     const newSearchParams = new URLSearchParams(history.location.search);
 
     if (page === currentPage) return '';
@@ -54,9 +59,12 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
 
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
-      history.replace({
-        search: renderPageHref(lastAllowedPage),
-      });
+      navigate(
+        {
+          search: renderPageHref(lastAllowedPage),
+        },
+        { replace: true },
+      );
   });
 
   return {

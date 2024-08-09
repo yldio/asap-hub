@@ -10,10 +10,9 @@ type WorkingGroupDetailPageProps = ComponentProps<
 
 const { rem } = pixels;
 
-const WorkingGroupDetailPage: React.FC<WorkingGroupDetailPageProps> = ({
-  children,
-  ...headerProps
-}) => (
+const WorkingGroupDetailPage: React.FC<
+  React.PropsWithChildren<WorkingGroupDetailPageProps>
+> = ({ children, ...headerProps }) => (
   <article css={layoutContentStyles}>
     <WorkingGroupDetailHeader {...headerProps} />
     <main css={[mainStyles, { padding: `${rem(32)} 0` }]}>{children}</main>

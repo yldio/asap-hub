@@ -18,16 +18,16 @@ const getProperties = ({
   if (workingGroup) {
     return {
       ...workingGroup,
-      href: workingGroups({}).workingGroup({
+      href: workingGroups.DEFAULT.DETAILS.buildPath({
         workingGroupId: workingGroup.id,
-      }).$,
+      }),
       icon: workingGroupIcon,
     };
   }
   return project
     ? {
         ...project,
-        href: projects({}).project({ projectId: project.id }).$,
+        href: projects.DEFAULT.DETAILS.buildPath({ projectId: project.id }),
         icon: projectIcon,
       }
     : {

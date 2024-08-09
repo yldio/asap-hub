@@ -6,15 +6,15 @@ import {
   SortLeadershipAndMembership,
 } from '@asap-hub/model';
 import { AnalyticsLeadershipPageBody } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getAnalyticsLeadership } from './api';
+import { leadershipToCSV } from './export';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { algoliaResultsToStream } from '../utils/export';
-import { getAnalyticsLeadership } from './api';
-import { leadershipToCSV } from './export';
 import { useAnalyticsLeadership } from './state';
 
 type MetricResponse = {
@@ -59,12 +59,16 @@ const getDataForMetric = (
 };
 
 const Leadership: FC<Record<string, never>> = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { metric } = useParams<{
     metric: 'working-group' | 'interest-group';
   }>();
   const setMetric = (newMetric: 'working-group' | 'interest-group') => {
-    history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    navigate(
+      analyticsRoutes.DEFAULT.LEADERSHIP.METRIC.buildPath({
+        metric: newMetric,
+      }),
+    );
     setSort('team_asc');
     setSortingDirection(initialSortingDirection);
   };
@@ -98,7 +102,8 @@ const Leadership: FC<Record<string, never>> = () => {
           tags,
           ...paginationParams,
         }),
-      leadershipToCSV(metric),
+      //fix this
+      leadershipToCSV(metric!),
     );
 
   return (
@@ -116,14 +121,14 @@ const Leadership: FC<Record<string, never>> = () => {
           value,
         }));
       }}
-      metric={metric}
+      metric={metric!}
       setMetric={setMetric}
       sort={sort}
       setSort={setSort}
       sortingDirection={sortingDirection}
       setSortingDirection={setSortingDirection}
       exportResults={exportResults}
-      data={getDataForMetric(items, metric)}
+      data={getDataForMetric(items, metric!)}
       currentPageIndex={currentPage}
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}

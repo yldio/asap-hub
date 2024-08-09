@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
@@ -75,15 +75,13 @@ interface MembersListProps {
   >;
   singleColumn?: boolean;
   readonly overrideNameStyles?: SerializedStyles;
-  readonly userRoute?: ({ userId }: { userId: string }) => {
-    $: string;
-  };
+  readonly userRoute?: ({ id }: { id: string }) => string;
 }
 const MembersList: React.FC<MembersListProps> = ({
   members,
   singleColumn = false,
   overrideNameStyles,
-  userRoute = network({}).users({}).user,
+  userRoute = networkRoutes.DEFAULT.USERS.DETAILS.buildPath,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(
@@ -95,7 +93,7 @@ const MembersList: React.FC<MembersListProps> = ({
         alumniSinceDate,
         ...member
       }) => {
-        const href = userRoute({ userId: id }).$;
+        const href = userRoute({ id });
         const userAvatar = (
           <Avatar
             firstName={member.firstName}
@@ -146,7 +144,11 @@ const MembersList: React.FC<MembersListProps> = ({
                   thirdLine.map((team) => (
                     <Fragment key={team.id}>
                       <Link
-                        href={network({}).teams({}).team({ teamId: team.id }).$}
+                        href={
+                          // TODO: fix this
+                          networkRoutes.DEFAULT.path
+                          // network({}).teams({}).team({ teamId: team.id }).$
+                        }
                       >
                         Team {team.displayName}
                       </Link>{' '}

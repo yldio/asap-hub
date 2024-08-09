@@ -6,10 +6,10 @@ import {
   UserProductivityAlgoliaResponse,
 } from '@asap-hub/model';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+// import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
@@ -26,15 +26,15 @@ import TeamProductivity from './TeamProductivity';
 import UserProductivity from './UserProductivity';
 
 const Productivity = () => {
-  const history = useHistory();
+  // const history = useHistory();
   const { currentPage, pageSize } = usePaginationParams();
 
   const { metric } = useParams<{ metric: 'user' | 'team' }>();
-  const setMetric = (newMetric: 'user' | 'team') =>
-    history.push(
-      analytics({}).productivity({}).metric({ metric: newMetric }).$,
-    );
-
+  const setMetric = (newMetric: 'user' | 'team') => {
+    // history.push(
+    //   analytics({}).productivity({}).metric({ metric: newMetric }).$,
+    // );
+  };
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
@@ -113,7 +113,7 @@ const Productivity = () => {
 
   return (
     <AnalyticsProductivityPageBody
-      metric={metric}
+      metric={metric!}
       setMetric={setMetric}
       outputType={metric === 'team' ? outputType : undefined}
       timeRange={timeRange}

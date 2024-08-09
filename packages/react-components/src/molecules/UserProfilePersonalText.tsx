@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react';
 import { css } from '@emotion/react';
 import { UserListItemResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link, Ellipsis, Avatar, Anchor } from '../atoms';
@@ -105,7 +105,13 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           .map(({ id, role: teamRole, displayName }, idx) => (
             <div style={{ display: 'flex' }} key={id}>
               <div>{teamRole} on&nbsp;</div>
-              <Link href={network({}).teams({}).team({ teamId: id }).$}>
+              <Link
+                href={
+                  // TODO: fix this
+                  networkRoutes.DEFAULT.path
+                  // network({}).teams({}).team({ teamId: id }).$
+                }
+              >
                 Team {displayName}
               </Link>
               {idx === MAX_TEAMS - 1 && teams.length > MAX_TEAMS && (

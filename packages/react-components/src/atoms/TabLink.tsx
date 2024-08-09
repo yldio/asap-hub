@@ -9,7 +9,7 @@ import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
 import IconProps from '../icons/props';
 
-const activeClassName = 'active-link';
+const activeClassName = 'active';
 const styles = css({
   display: 'inline-block',
   paddingTop: rem(24),
@@ -63,7 +63,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
     return (
       <NavLink
         to={href}
-        activeClassName={activeClassName}
+        className={({ isActive }) => (isActive ? activeClassName : '')}
         css={(theme) => [
           styles,
           theme.components?.TabLink?.styles,

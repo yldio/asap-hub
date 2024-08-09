@@ -4,9 +4,10 @@ import {
   UserCollaborationAlgoliaResponse,
 } from '@asap-hub/model';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
+
+import { useNavigate, useParams } from 'react-router-dom';
+import { analyticsRoutes } from '@asap-hub/routing';
 import { format } from 'date-fns';
-import { useHistory, useParams } from 'react-router-dom';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
@@ -26,9 +27,9 @@ import TeamCollaboration from './TeamCollaboration';
 import UserCollaboration from './UserCollaboration';
 
 const Collaboration = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const { metric, type } = useParams<{
+  const { metric = 'user', type = 'within-team' } = useParams<{
     metric: 'user' | 'team';
     type: 'within-team' | 'across-teams';
   }>();
@@ -37,20 +38,22 @@ const Collaboration = () => {
   const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();
 
-  const entityType =
-    metric === 'user' ? 'user-collaboration' : 'team-collaboration';
-  const setMetric = (newMetric: 'user' | 'team') =>
-    history.push(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric: newMetric, type }).$,
+  const setMetric = (newMetric: 'user' | 'team') => {
+    navigate(
+      analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+        metric: newMetric,
+        type,
+      }),
     );
-  const setType = (newType: 'within-team' | 'across-teams') =>
-    history.push(
-      analytics({})
-        .collaboration({})
-        .collaborationPath({ metric, type: newType }).$,
+  };
+  const setType = (newType: 'within-team' | 'across-teams') => {
+    navigate(
+      analyticsRoutes.DEFAULT.COLLABORATION.METRIC.buildPath({
+        metric,
+        type: newType,
+      }),
     );
+  };
 
   const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
 
@@ -63,6 +66,9 @@ const Collaboration = () => {
     timeRange,
     outputType,
   });
+
+  const entityType =
+    metric === 'user' ? 'user-collaboration' : 'team-collaboration';
 
   const exportResults = () => {
     if (metric === 'user') {

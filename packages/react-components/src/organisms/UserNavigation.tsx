@@ -113,16 +113,16 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={logout({}).$} icon={logoutIcon}>
+        <NavigationLink href={logout.path} icon={logoutIcon}>
           Log Out
         </NavigationLink>
       </li>
     </ul>
     <div css={bottomLinksStyles}>
       <Caption accent="lead" asParagraph>
-        <Anchor href={staticPages({}).terms({}).$}>Terms of Use</Anchor>
+        <Anchor href={staticPages.DEFAULT.TERMS.path}>Terms of Use</Anchor>
         {'  ·  '}
-        <Anchor href={staticPages({}).privacyPolicy({}).$}>
+        <Anchor href={staticPages.DEFAULT.PRIVACY_POLICY.path}>
           Privacy Policy
         </Anchor>
         {'  ·  '}

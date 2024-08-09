@@ -1,8 +1,9 @@
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { ValidationErrorResponse, gp2 as gp2Model } from '@asap-hub/model';
 import { usePrevious } from '@asap-hub/react-components';
-import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useEffect, useState, FC } from 'react';
 import {
   handleError,
@@ -26,11 +27,10 @@ type CreateWorkingGroupOutputProps = {
 const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
   outputData,
 }) => {
-  const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
-
-  const { outputDocumentType } = useRouteParams(
-    workingGroups({}).workingGroup({ workingGroupId }).createOutput,
+  const { workingGroupId, outputDocumentType } = useTypedParams(
+    workingGroups.DEFAULT.DETAILS.CREATE_OUTPUT,
   );
+
   const createOutput = useCreateOutput();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
@@ -47,6 +47,7 @@ const CreateWorkingGroupOutput: FC<CreateWorkingGroupOutputProps> = ({
   });
 
   const workingGroup = useWorkingGroupById(workingGroupId);
+
   const mainEntity = {
     id: workingGroupId,
     title: workingGroup?.title || '',

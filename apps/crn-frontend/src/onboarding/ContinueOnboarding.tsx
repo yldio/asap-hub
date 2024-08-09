@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth0CRN } from '@asap-hub/react-context';
 
 const ContinueOnboarding: React.FC<{
@@ -10,7 +10,7 @@ const ContinueOnboarding: React.FC<{
     loading: auth0Loading,
     getTokenSilently,
   } = useAuth0CRN();
-  const history = useHistory();
+  const history = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

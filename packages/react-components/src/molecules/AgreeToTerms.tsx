@@ -8,12 +8,15 @@ interface AgreeToTermsProps {
 const AgreeToTerms: React.FC<AgreeToTermsProps> = ({ appOrigin }) => (
   <Paragraph accent="lead">
     By proceeding, you are agreeing to the{' '}
-    <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
+    <Link href={new URL(staticPages.DEFAULT.TERMS.path, appOrigin).toString()}>
       Terms and Conditions
     </Link>{' '}
     and confirm that you have read our{' '}
     <Link
-      href={new URL(staticPages({}).privacyPolicy({}).$, appOrigin).toString()}
+      href={new URL(
+        staticPages.DEFAULT.PRIVACY_POLICY.path,
+        appOrigin,
+      ).toString()}
     >
       Privacy Policy
     </Link>

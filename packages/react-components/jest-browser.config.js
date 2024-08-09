@@ -12,7 +12,7 @@ module.exports = {
   displayName: 'browser-test-react-components',
 
   preset: 'jest-playwright-jsdom',
-
+  setupFiles: ['whatwg-fetch'],
   setupFilesAfterEnv: [
     ...(this.setupFilesAfterEnv || []),
     require.resolve('./jest/global-styles-setup-after-env.js'),

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { discover } from '@asap-hub/routing';
+import { discoverRoutes } from '@asap-hub/routing';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -20,8 +20,12 @@ const DiscoverPageHeader: React.FC = () => (
       Guidance and resources about ASAP’s programs and policies.
     </Paragraph>
     <TabNav>
-      <TabLink href={discover({}).guides({}).$}>Guides</TabLink>
-      <TabLink href={discover({}).tutorials({}).$}>Tutorials</TabLink>
+      <TabLink href={discoverRoutes.DEFAULT.GUIDES.buildPath({})}>
+        Guides
+      </TabLink>
+      <TabLink href={discoverRoutes.DEFAULT.TUTORIALS.LIST.buildPath({})}>
+        Tutorials
+      </TabLink>
     </TabNav>
   </header>
 );

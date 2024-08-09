@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { NavHashLink } from 'react-router-hash-link';
+import { NavLink } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import {
@@ -13,7 +13,7 @@ import {
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
 
-const activeClassName = 'active-link';
+const activeClassName = 'active';
 
 const styles = css({
   display: 'block',
@@ -71,11 +71,9 @@ const squareBorderStyles = css({
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
 };
-const NavigationLink: React.FC<NavigationLinkProps> = ({
-  icon,
-  children,
-  ...props
-}) => (
+const NavigationLink: React.FC<
+  React.PropsWithChildren<NavigationLinkProps>
+> = ({ icon, children, ...props }) => (
   <Navigation {...props}>
     <p css={textStyles}>
       {icon && <span css={iconStyles}>{icon}</span>}
@@ -89,7 +87,7 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps> = ({
+export const Navigation: React.FC<React.PropsWithChildren<NavigationProps>> = ({
   href,
   children,
   enabled = true,
@@ -98,9 +96,9 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [internal, url] = isInternalLink(href);
   if (useHasRouter() && internal) {
     return (
-      <NavHashLink
+      <NavLink
         to={url}
-        activeClassName={activeClassName}
+        // className={activeClassName}
         css={({ colors, components }) => [
           styles,
           squareBorder && squareBorderStyles,
@@ -110,11 +108,11 @@ export const Navigation: React.FC<NavigationProps> = ({
           !enabled && disableStyles,
           components?.NavigationLink?.styles,
         ]}
-        smooth
-        isActive={(match) => enabled && !!match && match.url === url}
+        // smooth
+        // isActive={(match) => enabled && !!match && match.url === url}
       >
         {children}
-      </NavHashLink>
+      </NavLink>
     );
   }
   const active =

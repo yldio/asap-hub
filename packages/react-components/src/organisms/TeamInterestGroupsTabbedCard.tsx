@@ -1,5 +1,5 @@
 import { InterestGroupResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { Paragraph } from '../atoms';
@@ -111,9 +111,11 @@ const TeamInterestGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
               <li css={listElementStyles} key={`team-group-${index}`}>
                 <LinkHeadline
                   href={
-                    network({})
-                      .interestGroups({})
-                      .interestGroup({ interestGroupId: id }).$
+                    // TODO: fix this
+                    networkRoutes.DEFAULT.path
+                    // network({})
+                    //   .interestGroups({})
+                    //   .interestGroup({ interestGroupId: id }).$
                   }
                   level={4}
                   noMargin={true}

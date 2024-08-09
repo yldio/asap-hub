@@ -7,7 +7,7 @@ import {
   createListUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import {
   fireEvent,
   render,
@@ -72,7 +72,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={network.template}>
+              <Route path={networkRoutes.DEFAULT.path}>
                 <Network />
               </Route>
             </MemoryRouter>
@@ -92,7 +92,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
 describe('when toggling from teams to users', () => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    const container = await renderNetworkPage(network({}).teams({}).$);
+    const container = await renderNetworkPage(networkRoutes.DEFAULT.path);
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
@@ -111,7 +111,7 @@ describe('when toggling from teams to users', () => {
 
   it('preserves only the query text', async () => {
     await renderNetworkPage(
-      network({}).teams({}).$,
+      networkRoutes.DEFAULT.TEAMS.path,
       '?searchQuery=test123&filter=123',
     );
     const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
@@ -135,7 +135,7 @@ describe('when toggling from teams to users', () => {
 describe('when toggling from users to teams', () => {
   it('changes the placeholder', async () => {
     jest.spyOn(console, 'error').mockImplementation();
-    await renderNetworkPage(network({}).users({}).$);
+    await renderNetworkPage(networkRoutes.DEFAULT.USERS.path);
 
     expect(
       (screen.getByRole('searchbox') as HTMLInputElement).placeholder,
@@ -150,7 +150,7 @@ describe('when toggling from users to teams', () => {
   });
   it('preserves only query text', async () => {
     await renderNetworkPage(
-      network({}).users({}).$,
+      networkRoutes.DEFAULT.USERS.path,
       'searchQuery=test123&filter=123',
     );
     const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
@@ -172,7 +172,7 @@ describe('when toggling from users to teams', () => {
 
 it('allows typing in search queries', async () => {
   jest.spyOn(console, 'error').mockImplementation();
-  await renderNetworkPage(network({}).users({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.USERS.path);
   const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
   userEvent.type(searchBox, 'test123');
@@ -180,7 +180,7 @@ it('allows typing in search queries', async () => {
 });
 
 it('allows selection of user filters', async () => {
-  await renderNetworkPage(network({}).users({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.USERS.path);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Lead PI');
@@ -198,7 +198,7 @@ it('allows selection of user filters', async () => {
 });
 
 it('allows selection of group filters', async () => {
-  await renderNetworkPage(network({}).interestGroups({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.INTEREST_GROUPS.path);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');
@@ -217,7 +217,7 @@ it('allows selection of group filters', async () => {
 });
 
 it('allows selection of working group filters', async () => {
-  await renderNetworkPage(network({}).workingGroups({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.WORKING_GROUPS.path);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Complete');
@@ -236,7 +236,7 @@ it('allows selection of working group filters', async () => {
 });
 
 it('allows selection of teams filters', async () => {
-  await renderNetworkPage(network({}).teams({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.TEAMS.path);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');
@@ -256,7 +256,7 @@ it('allows selection of teams filters', async () => {
 
 it('reads filters from url', async () => {
   await renderNetworkPage(
-    network({}).users({}).$,
+    networkRoutes.DEFAULT.USERS.path,
     '?filter=Lead+PI+(Core Leadership)',
   );
 
@@ -276,7 +276,9 @@ it('renders working-group profile page', async () => {
   const workingGroupResponse = createWorkingGroupResponse({});
   mockGetWorkingGroup.mockResolvedValueOnce(workingGroupResponse);
   await renderNetworkPage(
-    network({}).workingGroups({}).workingGroup({ workingGroupId: '123' }).$,
+    networkRoutes.DEFAULT.WORKING_GROUPS.DETAILS.buildPath({
+      workingGroupId: '123',
+    }),
   );
 
   expect(await screen.findByText(/Working Group Description/i)).toBeVisible();
@@ -286,7 +288,7 @@ it('handles server error for working groups tab', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation();
 
   mockGetWorkingGroups.mockRejectedValueOnce(new Error('Failed to fetch'));
-  await renderNetworkPage(network({}).workingGroups({}).$);
+  await renderNetworkPage(networkRoutes.DEFAULT.WORKING_GROUPS.path);
 
   await waitFor(() => {
     expect(mockGetWorkingGroups).toHaveBeenCalled();

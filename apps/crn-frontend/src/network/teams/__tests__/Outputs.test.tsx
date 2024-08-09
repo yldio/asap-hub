@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   createListResearchOutputResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -88,24 +88,25 @@ const renderOutputs = async (
             <MemoryRouter
               initialEntries={[
                 {
-                  pathname: network({})
-                    .teams({})
-                    .team({ teamId: team.id })
-                    .outputs({}).$,
+                  pathname:
+                    networkRoutes.DEFAULT.TEAMS.DETAILS.OUTPUTS.buildPath({
+                      teamId: team.id,
+                    }),
                 },
               ]}
             >
-              <Route
-                path={
-                  network({}).teams({}).team({ teamId: team.id }).outputs({}).$
-                }
-              >
-                <Outputs
-                  userAssociationMember={userAssociationMember}
-                  draftOutputs={draftOutputs}
-                  team={team}
+              <Routes>
+                <Route
+                  path={networkRoutes.DEFAULT.TEAMS.DETAILS.OUTPUTS.path}
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      draftOutputs={draftOutputs}
+                      team={team}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

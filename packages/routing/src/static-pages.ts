@@ -1,6 +1,13 @@
-import { route } from 'typesafe-routes';
+import { route } from 'react-router-typesafe-routes/dom';
 
-const terms = route('/terms-and-conditions', {}, {});
-const privacyPolicy = route('/privacy-policy', {}, {});
-
-export default route('', {}, { terms, privacyPolicy });
+const staticPages = {
+  DEFAULT: route(
+    '',
+    {},
+    {
+      TERMS: route('terms-and-conditions'),
+      PRIVACY_POLICY: route('privacy-policy'),
+    },
+  ),
+};
+export default staticPages;

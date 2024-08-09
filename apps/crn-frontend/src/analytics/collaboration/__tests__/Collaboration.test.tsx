@@ -11,6 +11,8 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  SortTeamCollaboration,
+  SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -100,6 +102,8 @@ const userData: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredAcrossTeams: 400,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 400,
+      totalUniqueOutputsCoAuthoredWithinTeam: 300,
       objectID: '1',
     },
     {
@@ -116,6 +120,8 @@ const userData: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredAcrossTeams: 3,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 3,
+      totalUniqueOutputsCoAuthoredWithinTeam: 2,
       objectID: '2',
     },
   ],
@@ -229,14 +235,15 @@ describe('user collaboration', () => {
   });
 
   it('renders data for different document categories', async () => {
-    const defaultUserOptions: AnalyticsSearchOptionsWithFiltering = {
-      sort: '',
-      pageSize: 10,
-      currentPage: 0,
-      timeRange: '30d',
-      documentCategory: 'all',
-      tags: [],
-    };
+    const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration> =
+      {
+        sort: 'user_asc',
+        pageSize: 10,
+        currentPage: 0,
+        timeRange: '30d',
+        documentCategory: 'all',
+        tags: [],
+      };
 
     when(mockGetUserCollaboration)
       .calledWith(expect.anything(), {
@@ -275,6 +282,22 @@ describe('user collaboration', () => {
     expect(screen.getByText('100')).toBeVisible();
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage();
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('user_desc'),
+      );
+    });
+    userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('user_desc'),
+      );
+    });
+  });
 });
 
 describe('team collaboration', () => {
@@ -305,14 +328,15 @@ describe('team collaboration', () => {
   });
 
   it('renders data for different output types', async () => {
-    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering = {
-      pageSize: 10,
-      currentPage: 0,
-      timeRange: '30d',
-      outputType: 'all',
-      sort: '',
-      tags: [],
-    };
+    const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration> =
+      {
+        pageSize: 10,
+        currentPage: 0,
+        timeRange: '30d',
+        outputType: 'all',
+        sort: 'team_asc',
+        tags: [],
+      };
 
     when(mockGetTeamCollaboration)
       .calledWith(expect.anything(), {
@@ -351,6 +375,22 @@ describe('team collaboration', () => {
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('100')).not.toBeInTheDocument();
+  });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage('team');
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('team_desc'),
+      );
+    });
+    userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('team_desc'),
+      );
+    });
   });
 });
 

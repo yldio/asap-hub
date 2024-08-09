@@ -1,6 +1,7 @@
 {
   "ranking": [
     "asc(Dataset)",
+    "asc(outputsCoProducedWithin.Dataset)",
     "typo",
     "geo",
     "words",

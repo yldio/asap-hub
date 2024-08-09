@@ -286,6 +286,8 @@ export type UserCollaborationDataObject = {
   alumniSince?: string;
   name: string;
   teams: UserCollaborationTeam[];
+  totalUniqueOutputsCoAuthoredAcrossTeams: number;
+  totalUniqueOutputsCoAuthoredWithinTeam: number;
 };
 export type ListUserCollaborationDataObject =
   ListResponse<UserCollaborationDataObject>;
@@ -332,6 +334,82 @@ export type ListTeamCollaborationResponse =
   ListResponse<TeamCollaborationResponse>;
 export type ListTeamCollaborationAlgoliaResponse =
   ListResponse<TeamCollaborationAlgoliaResponse>;
+
+export type SortUserCollaboration =
+  | 'user_asc'
+  | 'user_desc'
+  | 'team_asc'
+  | 'team_desc'
+  | 'role_asc'
+  | 'role_desc'
+  | 'outputs_coauthored_within_asc'
+  | 'outputs_coauthored_across_asc'
+  | 'outputs_coauthored_within_desc'
+  | 'outputs_coauthored_across_desc';
+
+export type SortTeamCollaboration =
+  | 'team_asc'
+  | 'team_desc'
+  | 'article_asc'
+  | 'article_desc'
+  | 'bioinformatics_asc'
+  | 'bioinformatics_desc'
+  | 'dataset_asc'
+  | 'dataset_desc'
+  | 'lab_resource_asc'
+  | 'lab_resource_desc'
+  | 'protocol_asc'
+  | 'protocol_desc'
+  | 'article_across_asc'
+  | 'article_across_desc'
+  | 'bioinformatics_across_asc'
+  | 'bioinformatics_across_desc'
+  | 'dataset_across_asc'
+  | 'dataset_across_desc'
+  | 'lab_resource_across_asc'
+  | 'lab_resource_across_desc'
+  | 'protocol_across_asc'
+  | 'protocol_across_desc';
+
+export type UserCollaborationFields =
+  | 'user'
+  | 'team'
+  | 'role'
+  | 'outputsCoAuthored';
+
+export type TeamCollaborationFields =
+  | 'team'
+  | 'article'
+  | 'bioinformatics'
+  | 'dataset'
+  | 'labResource'
+  | 'protocol';
+
+export type TeamCollaborationSortingDirection = {
+  [key in TeamCollaborationFields]: SortingDirection;
+};
+
+export type UserCollaborationSortingDirection = {
+  [key in UserCollaborationFields]: SortingDirection;
+};
+
+export const userCollaborationInitialSortingDirection = {
+  user: ascending,
+  team: ascending,
+  role: ascending,
+  outputsCoAuthored: descending,
+};
+
+export const teamCollaborationInitialSortingDirection = {
+  team: ascending,
+  article: descending,
+  bioinformatics: descending,
+  dataset: descending,
+  labResource: descending,
+  protocol: descending,
+};
+
+export type CollaborationType = 'across-teams' | 'within-team';
 
 export type EngagementDataObject = {
   id: string;
@@ -396,3 +474,19 @@ export const engagementInitialSortingDirection = {
   uniqueSpeakersKeyPersonnel: descending,
   uniqueSpeakersKeyPersonnelPercentage: descending,
 };
+
+export type Metric =
+  | 'team-leadership'
+  | 'team-productivity'
+  | 'user-productivity'
+  | 'team-collaboration'
+  | 'user-collaboration'
+  | 'engagement';
+
+export type AnalyticsSortOptions =
+  | SortEngagement
+  | SortLeadershipAndMembership
+  | SortTeamCollaboration
+  | SortTeamProductivity
+  | SortUserCollaboration
+  | SortUserProductivity;

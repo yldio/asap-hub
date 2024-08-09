@@ -3,7 +3,7 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
 import { exportAnalyticsData } from './export-analytics';
-import type { Metric } from './export-analytics';
+import type { Metric } from '@asap-hub/model';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))

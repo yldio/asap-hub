@@ -279,6 +279,24 @@ describe('user productivity', () => {
     expect(screen.getByText('200')).toBeVisible();
     expect(screen.queryByText('50')).not.toBeInTheDocument();
   });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('user_desc'),
+      );
+    });
+    userEvent.click(getByTitle('User Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('user_desc'),
+      );
+    });
+  });
 });
 
 describe('team productivity', () => {
@@ -396,6 +414,24 @@ describe('team productivity', () => {
 
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
+  });
+
+  it('calls algolia client with the right index name', async () => {
+    const { getByTitle } = await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('team_desc'),
+      );
+    });
+    userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+    await waitFor(() => {
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('team_desc'),
+      );
+    });
   });
 });
 

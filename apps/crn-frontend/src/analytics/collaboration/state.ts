@@ -2,22 +2,25 @@ import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
+  SortTeamCollaboration,
+  SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
   TeamCollaborationPerformance,
   UserCollaborationAlgoliaResponse,
   UserCollaborationPerformance,
 } from '@asap-hub/model';
-import { useEffect } from 'react';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useResetRecoilState,
 } from 'recoil';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { makePerformanceHook, makePerformanceState } from '../utils/state';
+import {
+  getAlgoliaIndexName,
+  makePerformanceHook,
+  makePerformanceState,
+} from '../utils/state';
 import {
   getUserCollaboration,
   getTeamCollaboration,
@@ -27,7 +30,7 @@ import {
 
 const analyticsUserCollaborationIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
+  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
 >({
   key: 'analyticsUserCollaborationIndex',
   default: undefined,
@@ -43,7 +46,7 @@ export const analyticsUserCollaborationListState = atomFamily<
 
 export const analyticsUserCollaborationState = selectorFamily<
   ListUserCollaborationAlgoliaResponse | Error | undefined,
-  AnalyticsSearchOptionsWithFiltering
+  AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>
 >({
   key: 'userCollaboration',
   get:
@@ -75,14 +78,14 @@ export const analyticsUserCollaborationState = selectorFamily<
       } else {
         newUserCollaboration?.items.forEach((userCollaboration) =>
           set(
-            analyticsUserCollaborationListState(userCollaboration.id),
+            analyticsUserCollaborationListState(userCollaboration.objectID),
             userCollaboration,
           ),
         );
         set(analyticsUserCollaborationIndexState(options), {
           total: newUserCollaboration.total,
           ids: newUserCollaboration.items.map(
-            (userCollaboration) => userCollaboration.id,
+            (userCollaboration) => userCollaboration.objectID,
           ),
         });
       }
@@ -90,23 +93,17 @@ export const analyticsUserCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsUserCollaboration = (
-  options: AnalyticsSearchOptionsWithFiltering,
+  options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName = getAlgoliaIndexName(options.sort, 'user-collaboration');
+
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
 
-  const resetUserCollaboration = useResetRecoilState(
-    analyticsUserCollaborationState(options),
-  );
-
-  useEffect(() => {
-    resetUserCollaboration(); // Reset state to force refetch on timeRange change
-  }, [options.timeRange, resetUserCollaboration]);
-
   if (userCollaboration === undefined) {
-    throw getUserCollaboration(algoliaClient.client, options)
+    throw getUserCollaboration(algoliaClient, options)
       .then(setUserCollaboration)
       .catch(setUserCollaboration);
   }
@@ -166,14 +163,14 @@ export const analyticsTeamCollaborationState = selectorFamily<
       } else {
         newTeamCollaboration?.items.forEach((teamCollaboration) =>
           set(
-            analyticsTeamCollaborationListState(teamCollaboration.id),
+            analyticsTeamCollaborationListState(teamCollaboration.objectID),
             teamCollaboration,
           ),
         );
         set(analyticsTeamCollaborationIndexState(options), {
           total: newTeamCollaboration.total,
           ids: newTeamCollaboration.items.map(
-            (teamCollaboration) => teamCollaboration.id,
+            (teamCollaboration) => teamCollaboration.objectID,
           ),
         });
       }
@@ -181,23 +178,17 @@ export const analyticsTeamCollaborationState = selectorFamily<
 });
 
 export const useAnalyticsTeamCollaboration = (
-  options: AnalyticsSearchOptionsWithFiltering,
+  options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const indexName = getAlgoliaIndexName(options.sort, 'team-collaboration');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
+
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );
 
-  const resetTeamCollaboration = useResetRecoilState(
-    analyticsTeamCollaborationState(options),
-  );
-
-  useEffect(() => {
-    resetTeamCollaboration(); // Reset state to force refetch on timeRange change
-  }, [options.timeRange, resetTeamCollaboration]);
-
   if (teamCollaboration === undefined) {
-    throw getTeamCollaboration(algoliaClient.client, options)
+    throw getTeamCollaboration(algoliaClient, options)
       .then(setTeamCollaboration)
       .catch(setTeamCollaboration);
   }

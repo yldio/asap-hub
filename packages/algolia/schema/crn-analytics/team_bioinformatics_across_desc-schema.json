@@ -1,7 +1,6 @@
 {
   "ranking": [
-    "asc(Lab Resource)",
-    "asc(outputsCoProducedWithin.Lab Resource)",
+    "desc(outputsCoProducedAcross.byDocumentType.Bioinformatics)",
     "typo",
     "geo",
     "words",

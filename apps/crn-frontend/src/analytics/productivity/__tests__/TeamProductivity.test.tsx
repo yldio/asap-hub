@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   Auth0Provider,
   WhenReady,
@@ -9,7 +6,6 @@ import {
 import { performanceByDocumentType } from '@asap-hub/fixtures';
 import { ListTeamProductivityAlgoliaResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -38,11 +34,6 @@ const mockGetTeamProductivity = getTeamProductivity as jest.MockedFunction<
 const mockGetTeamProductivityPerformance =
   getTeamProductivityPerformance as jest.MockedFunction<
     typeof getTeamProductivityPerformance
-  >;
-
-const mockAlgoliaSearchClientFactory =
-  algoliaSearchClientFactory as jest.MockedFunction<
-    typeof algoliaSearchClientFactory
   >;
 
 const mockSetSort = jest.fn();
@@ -131,24 +122,4 @@ it('renders the team productivity data', async () => {
   expect(getAllByTitle('Below Average').length).toEqual(12);
   expect(getAllByTitle('Average').length).toEqual(7);
   expect(getAllByTitle('Above Average').length).toEqual(6);
-});
-
-it('calls algolia client with the right index name', async () => {
-  mockGetTeamProductivity.mockResolvedValue(data);
-  mockGetTeamProductivityPerformance.mockResolvedValue(
-    performanceByDocumentType,
-  );
-
-  const { getByTitle } = await renderPage();
-
-  await waitFor(() => {
-    expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        algoliaIndex: expect.not.stringContaining('_team_desc'),
-      }),
-    );
-  });
-
-  userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
-  expect(mockSetSort).toHaveBeenCalledWith('team_desc');
 });

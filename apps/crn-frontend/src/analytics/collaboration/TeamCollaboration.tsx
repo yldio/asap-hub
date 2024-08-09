@@ -1,4 +1,8 @@
-import { TeamCollaborationResponse } from '@asap-hub/model';
+import {
+  SortTeamCollaboration,
+  TeamCollaborationResponse,
+  TeamCollaborationSortingDirection,
+} from '@asap-hub/model';
 import {
   TeamCollaborationMetric,
   TeamCollaborationTable,
@@ -21,7 +25,6 @@ const getDataForType = (
       isInactive: !!row.inactiveSince,
       ...row.outputsCoProducedWithin,
       collaborationByTeam: [],
-      type: 'within-team',
     }));
   }
   return data.map((row) => ({
@@ -30,11 +33,12 @@ const getDataForType = (
     isInactive: !!row.inactiveSince,
     ...row.outputsCoProducedAcross.byDocumentType,
     collaborationByTeam: row.outputsCoProducedAcross.byTeam,
-    type: 'across-teams',
   }));
 };
 
-const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
+const TeamCollaboration: React.FC<
+  CollaborationProps<SortTeamCollaboration, TeamCollaborationSortingDirection>
+> = ({ sort, setSort, setSortingDirection, sortingDirection, type, tags }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange, outputType } = useAnalytics();
 
@@ -42,7 +46,7 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
     currentPage,
     outputType,
     pageSize,
-    sort: '',
+    sort,
     tags,
     timeRange,
   });
@@ -56,13 +60,18 @@ const TeamCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
 
   return (
     <TeamCollaborationTable
-      data={getDataForType(data, type)}
       currentPageIndex={currentPage}
+      data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
-      renderPageHref={renderPageHref}
       performance={
         type === 'within-team' ? performance.withinTeam : performance.acrossTeam
       }
+      renderPageHref={renderPageHref}
+      setSort={setSort}
+      setSortingDirection={setSortingDirection}
+      sort={sort}
+      sortingDirection={sortingDirection}
+      type={type}
     />
   );
 };

@@ -104,12 +104,12 @@ const buttonStyles = css({
 type TeamProductivityTableProps = ComponentProps<typeof PageControls> & {
   data: TeamProductivityResponse[];
   performance: TeamProductivityPerformance;
-  sort: SortTeamProductivity;
   setSort: React.Dispatch<React.SetStateAction<SortTeamProductivity>>;
-  sortingDirection: TeamProductivitySortingDirection;
   setSortingDirection: React.Dispatch<
     React.SetStateAction<TeamProductivitySortingDirection>
   >;
+  sort: SortTeamProductivity;
+  sortingDirection: TeamProductivitySortingDirection;
 };
 
 const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({

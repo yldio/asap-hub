@@ -43,6 +43,8 @@ describe('userCollaborationToCSV', () => {
         teamMembershipInactiveSince: undefined,
       },
     ],
+    totalUniqueOutputsCoAuthoredAcrossTeams: 1,
+    totalUniqueOutputsCoAuthoredWithinTeam: 3,
   };
   const performance: UserCollaborationPerformance = {
     withinTeam: performanceMetric,

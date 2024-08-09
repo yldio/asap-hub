@@ -15,6 +15,8 @@ import {
   TimeRangeOption,
   DocumentCategoryOption,
   OutputTypeOption,
+  SortUserCollaboration,
+  SortTeamCollaboration,
 } from '@asap-hub/model';
 
 export type CollaborationListOptions = Pick<
@@ -26,11 +28,15 @@ export type CollaborationListOptions = Pick<
   outputType?: OutputTypeOption;
 };
 
-export const getUserCollaboration =
-  getMetric<ListUserCollaborationAlgoliaResponse>(USER_COLLABORATION);
+export const getUserCollaboration = getMetric<
+  ListUserCollaborationAlgoliaResponse,
+  SortUserCollaboration
+>(USER_COLLABORATION);
 
-export const getTeamCollaboration =
-  getMetric<ListTeamCollaborationAlgoliaResponse>(TEAM_COLLABORATION);
+export const getTeamCollaboration = getMetric<
+  ListTeamCollaborationAlgoliaResponse,
+  SortTeamCollaboration
+>(TEAM_COLLABORATION);
 
 export const getTeamCollaborationPerformance =
   getPerformanceForMetric<TeamCollaborationPerformance>(

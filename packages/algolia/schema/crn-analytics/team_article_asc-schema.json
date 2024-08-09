@@ -1,6 +1,7 @@
 {
   "ranking": [
     "asc(Article)",
+    "asc(outputsCoProducedWithin.Article)",
     "typo",
     "geo",
     "words",

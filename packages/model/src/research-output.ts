@@ -213,7 +213,14 @@ export type ResearchOutputCoreObject = {
 
 export type ResearchOutputVersionCoreObject = Pick<
   ResearchOutputCoreObject,
-  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
+  | 'documentType'
+  | 'type'
+  | 'title'
+  | 'link'
+  | 'addedDate'
+  | 'doi'
+  | 'rrid'
+  | 'accession'
 >;
 
 export type ResearchOutputVersionPostRequest = ResearchOutputVersionCoreObject;

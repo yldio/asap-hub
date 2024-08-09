@@ -571,11 +571,24 @@ describe('outputs controller', () => {
 
     describe('Versioning', () => {
       test('Should create a new version when flag is set', async () => {
+        const doi = '10.555/YFRU1371.121212';
+        const rrid = 'RRID:AB_007358';
+        const accessionNumber = 'NT_123456';
+        outputDataProviderMock.fetchById.mockResolvedValueOnce({
+          ...getOutputDataObject(),
+          doi,
+          rrid,
+          accessionNumber,
+        });
+
         await outputs.update(outputId, {
           ...getOutputUpdateData(),
           createVersion: true,
           link: 'https://newUniqueLink.com',
           title: 'new title',
+          doi,
+          rrid,
+          accessionNumber,
         });
         expect(outputDataProviderMock.update).toHaveBeenCalledWith(
           outputId,
@@ -587,6 +600,9 @@ describe('outputs controller', () => {
               title: 'Test Proposal 1234',
               type: 'Research',
               addedDate: '2021-05-21T13:18:31.000Z',
+              doi,
+              rrid,
+              accessionNumber,
             },
           },
         );

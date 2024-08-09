@@ -93,6 +93,9 @@ export default class OutputController {
         type: currentOutput.type,
         addedDate: currentOutput.addedDate || '',
         documentType: currentOutput.documentType,
+        doi: currentOutput.doi,
+        rrid: currentOutput.rrid,
+        accessionNumber: currentOutput.accessionNumber,
       };
 
       this.validateVersionUniqueness(

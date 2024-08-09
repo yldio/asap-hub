@@ -1498,6 +1498,18 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should create a new version when flag is set', async () => {
+      const doi = '10.555/YFRU1371.121212';
+      const rrid = 'RRID:AB_007358';
+      const accession = 'NT_123456';
+
+      const currentResearchOutput = getResearchOutputDataObject();
+      currentResearchOutput.doi = doi;
+      currentResearchOutput.rrid = rrid;
+      currentResearchOutput.accession = accession;
+      researchOutputDataProviderMock.fetchById.mockResolvedValueOnce(
+        currentResearchOutput,
+      );
+
       researchOutputDataProviderMock.update.mockResolvedValueOnce(
         researchOutputId,
       );
@@ -1507,6 +1519,9 @@ describe('ResearchOutputs controller', () => {
         createVersion: true,
         link: 'https://newUniqueLink.com',
         title: 'new title',
+        doi,
+        rrid,
+        accession,
       });
 
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
@@ -1519,6 +1534,9 @@ describe('ResearchOutputs controller', () => {
             title: 'Test Proposal 1234',
             type: '3D Printing',
             addedDate: '2021-05-21T13:18:31Z',
+            doi,
+            rrid,
+            accession,
           },
           publish: true,
         },

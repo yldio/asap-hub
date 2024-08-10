@@ -23,7 +23,7 @@ describe('FilterPills', () => {
     expect(screen.getByText('Project 1')).toBeVisible();
     expect(screen.getByText('Working Group 1')).toBeVisible();
   });
-  it('calls the onRemove function for every pill with their respective id and type of filter', () => {
+  it('calls the onRemove function for every pill with their respective id and type of filter', async () => {
     render(<FilterPills {...props} />);
     const onRemoveTagButton = screen.getByText('Tag 1').nextElementSibling!;
     const onRemoveRegionButton = screen.getByText('Asia').nextElementSibling!;
@@ -37,16 +37,16 @@ describe('FilterPills', () => {
     expect(onRemoveProjectButton).toBeVisible();
     expect(onRemoveWorkingGroupButton).toBeVisible();
 
-    userEvent.click(onRemoveTagButton);
+    await userEvent.click(onRemoveTagButton);
     expect(props.onRemove).toHaveBeenCalledWith('tag-1', 'tags');
 
-    userEvent.click(onRemoveRegionButton);
+    await userEvent.click(onRemoveRegionButton);
     expect(props.onRemove).toHaveBeenCalledWith('Asia', 'regions');
 
-    userEvent.click(onRemoveProjectButton);
+    await userEvent.click(onRemoveProjectButton);
     expect(props.onRemove).toHaveBeenCalledWith('project-1', 'projects');
 
-    userEvent.click(onRemoveWorkingGroupButton);
+    await userEvent.click(onRemoveWorkingGroupButton);
     expect(props.onRemove).toHaveBeenCalledWith(
       'working-group-1',
       'workingGroups',

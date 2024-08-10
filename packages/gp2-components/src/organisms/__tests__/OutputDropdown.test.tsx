@@ -138,7 +138,7 @@ describe('OutputDropdown', () => {
   });
 
   describe('document type options', () => {
-    it('links to create output page', () => {
+    it('links to create output page', async () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {
@@ -171,16 +171,16 @@ describe('OutputDropdown', () => {
         role: 'Administrator',
       });
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',
         '/working-groups/1/create-output/article',
       );
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
 
-      userEvent.click(getByText('Project 1'));
+      await userEvent.click(getByText('Project 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',

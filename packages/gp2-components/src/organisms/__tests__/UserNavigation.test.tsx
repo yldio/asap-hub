@@ -10,10 +10,10 @@ describe('UserNavigation', () => {
     workingGroups: [],
   };
 
-  it('opens user menu when clicked', () => {
+  it('opens user menu when clicked', async () => {
     render(<UserNavigation {...props} />);
 
-    userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
 
     expect(screen.getByText(/Log Out/i, { selector: 'p' })).toBeVisible();
   });

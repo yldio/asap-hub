@@ -9,7 +9,7 @@ describe('ExpandableText', () => {
     render(<ExpandableText>{text}</ExpandableText>);
     expect(screen.getByText(text)).toBeVisible();
   });
-  it('renders show more if text height is larger than max height', () => {
+  it('renders show more if text height is larger than max height', async () => {
     const ref = { current: { scrollHeight: 125 } };
 
     Object.defineProperty(ref, 'current', {
@@ -26,7 +26,7 @@ describe('ExpandableText', () => {
     const button = screen.getByRole('button');
     expect(button).toBeVisible();
     expect(button.textContent).toMatchInlineSnapshot(`"Show moreChevron Down"`);
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(button.textContent).toMatchInlineSnapshot(`"Show lessChevron Down"`);
   });
 });

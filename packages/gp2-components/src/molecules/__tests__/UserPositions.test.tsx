@@ -24,6 +24,7 @@ describe('UserPositions', () => {
     });
 
   it('renders a dialog with the right title', () => {
+    jest.spyOn(console, 'error').mockImplementation();
     renderUserPositions({
       positions: [
         { institution: 'FPF', department: "Men's Team", role: 'Striker' },
@@ -33,7 +34,7 @@ describe('UserPositions', () => {
       screen.getByRole('heading', { name: 'Primary Position' }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
+      screen.getByRole('combobox', { name: 'Institution (required)' }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', { name: 'Department (required)' }),
@@ -43,7 +44,7 @@ describe('UserPositions', () => {
     ).toBeVisible();
   });
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
@@ -53,7 +54,7 @@ describe('UserPositions', () => {
       onChange,
     });
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(onChange).toHaveBeenCalledWith([
       ...positions,
       { institution: '', department: '', role: '' },
@@ -61,6 +62,7 @@ describe('UserPositions', () => {
   });
 
   it('there can be only 3 positions', () => {
+    jest.spyOn(console, 'error').mockImplementation();
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -98,13 +100,13 @@ describe('UserPositions', () => {
       name: /Secondary Position/i,
     }).parentElement?.parentElement as HTMLElement;
 
-    userEvent.click(
-      within(secondary).getByRole('textbox', {
+    await userEvent.click(
+      within(secondary).getByRole('combobox', {
         name: /Institution/i,
       }),
     );
     const institution = await screen.findByText(position.institution);
-    userEvent.click(institution);
+    await userEvent.click(institution);
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
@@ -126,7 +128,7 @@ describe('UserPositions', () => {
     const secondary = screen.getByRole('heading', {
       name: /Secondary Position/i,
     }).parentElement?.parentElement as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
@@ -151,7 +153,7 @@ describe('UserPositions', () => {
     const secondary = screen.getByRole('heading', {
       name: /Secondary Position/i,
     }).parentElement?.parentElement as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
@@ -159,7 +161,7 @@ describe('UserPositions', () => {
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
 
-  it('can delete a position', () => {
+  it('can delete a position', async () => {
     const onChange = jest.fn();
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
@@ -170,7 +172,7 @@ describe('UserPositions', () => {
       onChange,
     });
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(onChange).toHaveBeenCalledWith([positions[0]]);
   });
 });

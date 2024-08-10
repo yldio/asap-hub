@@ -5,7 +5,10 @@ import { MemoryRouter } from 'react-router-dom';
 import UserPosition from '../UserPosition';
 
 describe('UserPosition', () => {
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.spyOn(console, 'error').mockImplementation();
+  });
   type UserPositionProps = ComponentProps<typeof UserPosition>;
   const defaultProps: UserPositionProps = {
     onRemove: jest.fn(),
@@ -35,7 +38,7 @@ describe('UserPosition', () => {
       position,
     });
     expect(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
+      screen.getByRole('combobox', { name: 'Institution (required)' }),
     ).toHaveValue(position.institution);
     expect(
       screen.getByRole('textbox', { name: 'Department (required)' }),
@@ -53,9 +56,9 @@ describe('UserPosition', () => {
       loadInstitutionOptions: jest.fn().mockResolvedValue([institution]),
       index: 1,
     });
-    userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Institution/i }));
     const institutionBox = await screen.findByText(institution);
-    userEvent.click(institutionBox);
+    await userEvent.click(institutionBox);
 
     expect(onChange).toHaveBeenCalledWith({
       ...defaultProps.position,
@@ -75,7 +78,7 @@ describe('UserPosition', () => {
         role: '',
       },
     });
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /Department/i }),
       department,
     );
@@ -99,7 +102,7 @@ describe('UserPosition', () => {
         role: '',
       },
     });
-    userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
+    await userEvent.type(screen.getByRole('textbox', { name: /Role/i }), role);
 
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ role }));
   });
@@ -131,17 +134,17 @@ describe('UserPosition', () => {
     expect(screen.queryByRole('button')).toBeVisible();
   });
 
-  it('can delete a position', () => {
+  it('can delete a position', async () => {
     const onRemove = jest.fn();
     renderUserPosition({ onRemove, index: 2 });
     const removeButton = screen.getByRole('button');
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
     expect(onRemove).toHaveBeenCalled();
   });
 
   it.each([0, 1, 2])(
     'shows validation message when no institation is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',
@@ -151,14 +154,14 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /Institution/i }));
-      userEvent.tab();
+      await userEvent.click(screen.getByRole('combobox', { name: /Institution/i }));
+      await userEvent.tab();
       expect(screen.getByText(/Please add your institution/i)).toBeVisible();
     },
   );
   it.each([0, 1, 2])(
     'shows validation message when no department is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',
@@ -168,14 +171,14 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /department/i }));
-      userEvent.tab();
+      await userEvent.click(screen.getByRole('textbox', { name: /department/i }));
+      await userEvent.tab();
       expect(screen.getByText(/Please add your department/i)).toBeVisible();
     },
   );
   it.each([0, 1, 2])(
     'shows validation message when no role is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',
@@ -185,8 +188,8 @@ describe('UserPosition', () => {
         index,
       });
 
-      userEvent.click(screen.getByRole('textbox', { name: /role/i }));
-      userEvent.tab();
+      await userEvent.click(screen.getByRole('textbox', { name: /role/i }));
+      await userEvent.tab();
       expect(screen.getByText(/Please add your role/i)).toBeVisible();
     },
   );

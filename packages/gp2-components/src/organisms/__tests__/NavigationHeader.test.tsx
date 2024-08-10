@@ -26,10 +26,10 @@ describe('NavigationHeader', () => {
     render(<NavigationHeader {...props} menuShown={true} />);
     expect(screen.getByTitle(/close/i)).toBeInTheDocument();
   });
-  it('calls onMenuToggle when the menu toggle button is clicked', () => {
+  it('calls onMenuToggle when the menu toggle button is clicked', async () => {
     const onMenuToggle = jest.fn();
     render(<NavigationHeader {...props} onToggleMenu={onMenuToggle} />);
-    userEvent.click(screen.getByLabelText(/toggle menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle menu/i));
     expect(onMenuToggle).toHaveBeenCalledTimes(1);
   });
 });

@@ -29,7 +29,7 @@ describe('TagSearchPageList', () => {
       </TagSearchPageList>,
     );
 
-    userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('combobox'));
     expect(loadTags).toHaveBeenCalled();
     await waitFor(() =>
       expect(screen.getByText('No results found')).toBeVisible(),
@@ -44,9 +44,9 @@ describe('TagSearchPageList', () => {
     render(
       <TagSearchPageList {...props} loadTags={loadTags} setTags={setTags} />,
     );
-    userEvent.type(screen.getByRole('textbox'), "doesn't matter");
+    await userEvent.type(screen.getByRole('combobox'), "doesn't matter");
     await waitFor(() => expect(screen.getByText('foo')).toBeVisible());
-    userEvent.click(screen.getByText('foo'));
+    await userEvent.click(screen.getByText('foo'));
     expect(setTags).toHaveBeenCalledWith(['foo']);
   });
 });

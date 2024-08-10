@@ -8,20 +8,23 @@ const props: ComponentProps<typeof OutputIdentifier> = {
   documentType: 'Article',
 };
 
-it('should render Identifier', () => {
+beforeEach(jest.clearAllMocks);
+const setIdentifierType = jest.fn();
+
+it('should render Identifier', async () => {
   render(<OutputIdentifier {...props} />);
   expect(
-    screen.getByRole('textbox', { name: /Identifier Type/i }),
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
   ).toBeVisible();
 });
 
-it('should render Identifier info with DOI and RRID', () => {
+it('should render Identifier info with DOI and RRID', async () => {
   render(<OutputIdentifier {...props} documentType="Code/Software" />);
   const infoButton = screen.getByRole('button', {
     name: /info/i,
   });
   expect(infoButton).toBeVisible();
-  userEvent.click(infoButton);
+  await userEvent.click(infoButton);
   expect(screen.getByText(/Your DOI must start/i)).toBeVisible();
   expect(screen.getByText(/Your RRID must start/i)).toBeInTheDocument();
   expect(
@@ -29,13 +32,13 @@ it('should render Identifier info with DOI and RRID', () => {
   ).not.toBeInTheDocument();
 });
 
-it('should render Identifier info with DOI and Accession Number', () => {
+it('should render Identifier info with DOI and Accession Number', async () => {
   render(<OutputIdentifier {...props} documentType="Dataset" />);
   const infoButton = screen.getByRole('button', {
     name: /info/i,
   });
   expect(infoButton).toBeVisible();
-  userEvent.click(infoButton);
+  await userEvent.click(infoButton);
   expect(screen.getByText(/Your DOI must start/i)).toBeVisible();
   expect(screen.queryByText(/Your RRID must start/i)).not.toBeInTheDocument();
   expect(
@@ -43,36 +46,36 @@ it('should render Identifier info with DOI and Accession Number', () => {
   ).toBeInTheDocument();
 });
 
-it('should reset the identifier to a valid value on entering something unknown', () => {
-  const setIdentifierType = jest.fn();
+it('should reset the identifier to a valid value on entering something unknown', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
-  const textbox = screen.getByRole('textbox', { name: /identifier type/i });
-  userEvent.type(textbox, 'UNKNOWN{enter}');
-  textbox.blur();
+  const textbox = screen.getByRole('combobox', { name: /identifier type/i });
+  await userEvent.type(textbox, 'UNKNOWN{enter}');
+  await textbox.blur();
 
   expect(screen.getByText('Choose an identifier...')).toBeVisible();
-  expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
+  expect(screen.getByRole('combobox', { name: /Identifier/i })).toHaveValue('');
 });
 
-it('should set the identifier to the selected value', () => {
-  const setIdentifierType = jest.fn();
+it('should set the identifier to the selected value', async () => {
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  userEvent.type(textbox, 'DOI{enter}');
-  textbox.blur();
+  const textbox = screen.getByRole('combobox', { name: /identifier/i });
+  await userEvent.type(textbox, 'DOI{enter}');
+  await textbox.blur();
 
   expect(setIdentifierType).toHaveBeenCalledWith(gp2.OutputIdentifierType.DOI);
 });
 
 it('should show an error when field is required but no input is provided', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
   render(
     <OutputIdentifier
       {...props}
       identifierType={gp2.OutputIdentifierType.RRID}
     />,
   );
-  screen.getByRole('textbox', { name: /rrid/i }).focus();
-  screen.getByRole('textbox', { name: /rrid/i }).blur();
+  await screen.getByRole('textbox', { name: /rrid/i }).focus();
+  await screen.getByRole('textbox', { name: /rrid/i }).blur();
   expect(screen.getByText(/Please enter a valid RRID/i)).toBeVisible();
 });
 
@@ -93,6 +96,7 @@ describe.each`
     }
   };
   it(`shows ${isValid ? 'no' : ''} error `, async () => {
+    jest.spyOn(console, 'error').mockImplementation();
     render(
       <OutputIdentifier
         {...props}
@@ -100,8 +104,8 @@ describe.each`
         identifier={identifier}
       />,
     );
-    screen.getByRole('textbox', { name }).focus();
-    screen.getByRole('textbox', { name }).blur();
+    await screen.getByRole('textbox', { name }).focus();
+    await screen.getByRole('textbox', { name }).blur();
     expect.assertions(1);
     assertError();
   });

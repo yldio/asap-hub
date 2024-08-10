@@ -90,7 +90,7 @@ describe('UserDetailHeaderCard', () => {
       screen.getByText('Car designer in Design at Powell Motors'),
     ).toBeInTheDocument();
   });
-  it('renders upload button for avatar', () => {
+  it('renders upload button for avatar', async () => {
     const onImageSelect = jest.fn((file: File) => {});
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     render(
@@ -100,7 +100,7 @@ describe('UserDetailHeaderCard', () => {
     const uploadInput = screen.getByLabelText(/upload.+avatar/i);
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
-    userEvent.upload(uploadInput, testFile);
+    await userEvent.upload(uploadInput, testFile);
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
   describe('when passing a editHref', () => {

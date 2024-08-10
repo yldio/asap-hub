@@ -3,7 +3,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {
@@ -27,10 +27,16 @@ describe('ContributingCohortsModal', () => {
 
   const renderContributingCohorts = (
     overrides: Partial<ContributingCohortsModalProps> = {},
-  ) =>
-    render(<ContributingCohortsModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+  ) => {
+    const routes = [
+      {
+        path: '/',
+        element: <ContributingCohortsModal {...defaultProps} {...overrides} />,
+      },
+    ];
+    const router = createMemoryRouter(routes);
+    render(<RouterProvider router={router} />);
+  }
 
   beforeEach(jest.resetAllMocks);
 
@@ -44,17 +50,17 @@ describe('ContributingCohortsModal', () => {
   it('renders name, role and study link', () => {
     renderContributingCohorts();
     expect(
-      screen.getByRole('textbox', { name: /Name \(required\)/i }),
+      screen.getByRole('combobox', { name: /Name \(required\)/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: /Role \(required\)/i }),
+      screen.getByRole('combobox', { name: /Role \(required\)/i }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', { name: /link \(optional\)/i }),
     ).toBeVisible();
   });
 
-  it('can add an extra cohort', () => {
+  it('can add an extra cohort', async () => {
     renderContributingCohorts();
     expect(
       screen.getByRole('heading', { name: /#1 Cohort Study/i }),
@@ -63,7 +69,7 @@ describe('ContributingCohortsModal', () => {
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(
       screen.getByRole('heading', { name: /#2 Cohort Study/i }),
     ).toBeVisible();
@@ -99,7 +105,7 @@ describe('ContributingCohortsModal', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('can remove an cohort', () => {
+  it('can remove an cohort', async () => {
     const contributingCohorts = Array.from({ length: 2 }).map((_, i) => ({
       ...defaultProps.contributingCohorts[0]!,
       contributingCohortId: `${i}`,
@@ -120,13 +126,13 @@ describe('ContributingCohortsModal', () => {
       name: /delete/i,
     });
 
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
     expect(
       screen.queryByRole('heading', { name: /#2 Cohort Study/i }),
     ).not.toBeInTheDocument();
   });
 
-  it('removing the last', () => {
+  it('removing the last', async () => {
     const contributingCohorts = [
       {
         ...defaultProps.contributingCohorts[0]!,
@@ -142,7 +148,7 @@ describe('ContributingCohortsModal', () => {
       name: /delete/i,
     });
 
-    userEvent.click(removeButton);
+    await userEvent.click(removeButton);
 
     expect(
       screen.queryByRole('heading', { name: /#1 Cohort Study/i }),
@@ -179,12 +185,12 @@ describe('ContributingCohortsModal', () => {
       onSave,
     });
     const name = 'S3';
-    const input = screen.getByRole('textbox', { name: /Name/i });
-    userEvent.click(input);
-    userEvent.click(screen.getByText(name));
+    const input = screen.getByRole('combobox', { name: /Name/i });
+    await userEvent.click(input);
+    await userEvent.click(screen.getByText(name));
     expect(screen.getByText(/S3/i)).toBeVisible();
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId: '7', role }],
     });
@@ -216,11 +222,11 @@ describe('ContributingCohortsModal', () => {
         ],
         onSave,
       });
-      const input = screen.getByRole('textbox', { name: /Role/i });
-      userEvent.click(input);
-      userEvent.click(screen.getByText(updatedRole));
+      const input = screen.getByRole('combobox', { name: /Role/i });
+      await userEvent.click(input);
+      await userEvent.click(screen.getByText(updatedRole));
       expect(screen.getByText(updatedRole)).toBeVisible();
-      userEvent.click(getSaveButton());
+      await userEvent.click(getSaveButton());
       expect(onSave).toHaveBeenCalledWith({
         contributingCohorts: [{ contributingCohortId, role: updatedRole }],
       });
@@ -251,9 +257,9 @@ describe('ContributingCohortsModal', () => {
     });
     const studyUrl = 'http://example.com';
     const input = screen.getByRole('textbox', { name: /Link/i });
-    userEvent.type(input, studyUrl);
+    await userEvent.type(input, studyUrl);
     expect(input).toHaveValue(studyUrl);
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       contributingCohorts: [{ contributingCohortId, role, studyUrl }],
     });
@@ -262,7 +268,7 @@ describe('ContributingCohortsModal', () => {
     });
   });
 
-  it('shows the validation messages for required fields', () => {
+  it('shows the validation messages for required fields', async () => {
     const onSave = jest.fn();
     renderContributingCohorts({
       cohortOptions: [
@@ -272,13 +278,13 @@ describe('ContributingCohortsModal', () => {
       contributingCohorts: [],
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add the cohort name')).toBeVisible();
     expect(screen.getByText('Please add the role')).toBeVisible();
   });
 
-  it('does not allow an invalid url', () => {
+  it('does not allow an invalid url', async () => {
     const contributingCohortId = '11';
     const role = 'Investigator';
     const onSave = jest.fn();
@@ -298,10 +304,10 @@ describe('ContributingCohortsModal', () => {
     });
     const studyUrl = 'http://invalid-url';
     const input = screen.getByRole('textbox', { name: /Link/i });
-    userEvent.type(input, studyUrl);
+    await userEvent.type(input, studyUrl);
 
     expect(input).toHaveValue(studyUrl);
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(
       screen.getByText(/Please enter a valid URL, starting with http/),

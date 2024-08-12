@@ -6,7 +6,11 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Routes as ReactRouterRoutes,
+} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../../projects/api';
@@ -28,9 +32,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users']}>
-              <Route path="/users">
-                <Routes />
-              </Route>
+              <ReactRouterRoutes>
+                <Route path="/users/*" element={<Routes />} />
+              </ReactRouterRoutes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -7,7 +7,11 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Routes as ReactRouterRoutes,
+} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { gp2 } from '@asap-hub/model';
@@ -29,9 +33,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/outputs']}>
-              <Route path="/outputs">
-                <Routes />
-              </Route>
+              <ReactRouterRoutes>
+                <Route path="/outputs/*" element={<Routes />} />
+              </ReactRouterRoutes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

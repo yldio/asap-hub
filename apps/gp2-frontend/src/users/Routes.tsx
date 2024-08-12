@@ -21,7 +21,6 @@ const UserRoutes: React.FC<Record<string, never>> = () => {
   }, []);
   // const { path } = useMatch();
   const [currentTime] = useState(new Date());
-  console.log('in routes');
 
   return (
     <Routes>

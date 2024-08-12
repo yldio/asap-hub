@@ -9,7 +9,11 @@ import {
 import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Routes as ReactRouterRoutes,
+} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -28,9 +32,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/events']}>
-              <Route path="/events">
-                <Routes />
-              </Route>
+              <ReactRouterRoutes>
+                <Route path="/events/*" element={<Routes />} />
+              </ReactRouterRoutes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

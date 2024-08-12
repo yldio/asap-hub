@@ -278,6 +278,7 @@ describe('Collaboration', () => {
   });
 
   it('renders error message when the team response is not a 2XX', async () => {
+    mockGetUserCollaboration.mockResolvedValueOnce({ items: [], total: 0 });
     mockGetTeamCollaboration.mockRejectedValueOnce(
       new Error('Failed to fetch'),
     );

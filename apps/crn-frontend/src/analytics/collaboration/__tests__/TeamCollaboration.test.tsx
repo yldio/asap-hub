@@ -1,5 +1,8 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { ListTeamCollaborationAlgoliaResponse } from '@asap-hub/model';
+import {
+  ListTeamCollaborationAlgoliaResponse,
+  teamCollaborationInitialSortingDirection,
+} from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -35,6 +38,9 @@ const mockGetTeamCollaborationPerformance =
 mockGetTeamCollaborationPerformance.mockResolvedValue(
   teamCollaborationPerformance,
 );
+
+const mockSetSort = jest.fn();
+const mockSetSortingDirection = jest.fn();
 
 const data: ListTeamCollaborationAlgoliaResponse = {
   total: 2,
@@ -98,7 +104,7 @@ const renderPage = async () => {
             pageSize: 10,
             timeRange: '30d',
             tags: [],
-            sort: '',
+            sort: 'team_asc',
           }),
         );
       }}
@@ -107,7 +113,14 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/analytics']}>
-              <TeamCollaboration type="within-team" tags={[]} />
+              <TeamCollaboration
+                type="within-team"
+                tags={[]}
+                sort="team_asc"
+                sortingDirection={teamCollaborationInitialSortingDirection}
+                setSortingDirection={mockSetSortingDirection}
+                setSort={mockSetSort}
+              />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

@@ -52,6 +52,10 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_user_role_desc`,
     `${indexName}_user_team_asc`,
     `${indexName}_user_team_desc`,
+    `${indexName}_user_outputs_coauthored_within_asc`,
+    `${indexName}_user_outputs_coauthored_within_desc`,
+    `${indexName}_user_outputs_coauthored_across_asc`,
+    `${indexName}_user_outputs_coauthored_across_desc`,
 
     `${indexName}_team_article_asc`,
     `${indexName}_team_article_desc`,
@@ -78,6 +82,17 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_unique_speakers_key_personnel_desc`,
     `${indexName}_unique_speakers_key_personnel_percentage_asc`,
     `${indexName}_unique_speakers_key_personnel_percentage_desc`,
+
+    `${indexName}_team_article_across_asc`,
+    `${indexName}_team_article_across_desc`,
+    `${indexName}_team_bioinformatics_across_asc`,
+    `${indexName}_team_bioinformatics_across_desc`,
+    `${indexName}_team_dataset_across_asc`,
+    `${indexName}_team_dataset_across_desc`,
+    `${indexName}_team_lab_resource_across_asc`,
+    `${indexName}_team_lab_resource_across_desc`,
+    `${indexName}_team_protocol_across_asc`,
+    `${indexName}_team_protocol_across_desc`,
   ];
   await index.setSettings({ ...indexSchema, replicas }).wait();
 

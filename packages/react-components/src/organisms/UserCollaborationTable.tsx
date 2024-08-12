@@ -1,4 +1,11 @@
-import { PerformanceMetrics, TeamRole } from '@asap-hub/model';
+import {
+  CollaborationType,
+  PerformanceMetrics,
+  SortUserCollaboration,
+  TeamRole,
+  userCollaborationInitialSortingDirection,
+  UserCollaborationSortingDirection,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -7,7 +14,12 @@ import { CaptionCard, CaptionItem, PageControls } from '..';
 import { Card, Link, Paragraph } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
-import { alumniBadgeIcon, InactiveBadgeIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  alumniBadgeIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import HoverTable from '../molecules/HoverTable';
 import { rem, tabletScreen } from '../pixels';
 import { getPerformanceIcon } from '../utils';
@@ -36,7 +48,6 @@ const rowStyles = css({
   display: 'grid',
   padding: `${rem(20)} ${rem(24)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
-  alignItems: 'baseline',
   ':first-of-type': {
     borderBottom: 'none',
   },
@@ -67,7 +78,13 @@ const teamRowStyles = css({
   maxWidth: rem(500),
 });
 
-const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
+const titleStyles = css({
+  fontWeight: 'bold',
+  color: charcoal.rgb,
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
 
 const iconStyles = css({
   display: 'flex',
@@ -85,6 +102,16 @@ const rowValueStyles = css({
   display: 'flex',
   gap: rem(6),
   fontWeight: 400,
+});
+
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
 });
 
 type Team = {
@@ -168,15 +195,12 @@ const displayOutputsCount = (
   items: UserCollaborationMetric['teams'],
   performance: PerformanceMetrics,
 ) => {
-  if (items.length === 0) {
-    return `No values`;
-  }
-  if (items.length === 1) {
-    const team = items[0] as Team;
+  if (items.length <= 1) {
+    const team = items[0];
     return (
       <span css={rowValueStyles}>
-        {team.outputsCoAuthored}{' '}
-        {getPerformanceIcon(team.outputsCoAuthored, performance)}
+        {team?.outputsCoAuthored || 0}{' '}
+        {getPerformanceIcon(team?.outputsCoAuthored || 0, performance)}
       </span>
     );
   }
@@ -190,51 +214,171 @@ const displayOutputsCount = (
 type UserCollaborationTableProps = ComponentProps<typeof PageControls> & {
   data: UserCollaborationMetric[];
   performance: PerformanceMetrics;
+  type: CollaborationType;
+  sort: SortUserCollaboration;
+  setSort: React.Dispatch<React.SetStateAction<SortUserCollaboration>>;
+  sortingDirection: UserCollaborationSortingDirection;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<UserCollaborationSortingDirection>
+  >;
 };
 
 const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
   data,
   performance,
+  type,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   ...pageControlProps
-}) => (
-  <>
-    <CaptionCard>
-      <>
-        <CaptionItem label="Outputs Co-Authored" {...performance} />
-      </>
-    </CaptionCard>
+}) => {
+  const isUserSortActive = sort.includes('user');
+  const isTeamSortActive = sort.includes('team');
+  const isRoleSortActive = sort.includes('role');
+  const isOutputsCoAuthoredSortActive = sort.includes('outputs_coauthored');
+  const collaborationType = type === 'within-team' ? 'within' : 'across';
 
-    <Card padding={false}>
-      <div css={container}>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>User</span>
-          <span css={titleStyles}>Team</span>
-          <span css={titleStyles}>Role</span>
-          <span css={titleStyles}>Outputs Co-Authored</span>
-        </div>
-        {data.map((row) => (
-          <div key={row.id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>User</span>
-            <p css={iconStyles}>
-              <Link href={network({}).users({}).user({ userId: row.id }).$}>
-                {row.name}
-              </Link>
-              {row.isAlumni && alumniBadgeIcon}
-            </p>
-            <span css={[titleStyles, rowTitleStyles]}>Team</span>
-            <p>{displayTeams(row.teams)}</p>
-            <span css={[titleStyles, rowTitleStyles]}>Role</span>
-            <p>{displayRoles(row.teams)}</p>
-            <span css={[titleStyles, rowTitleStyles]}>Outputs Co-Authored</span>
-            <p>{displayOutputsCount(row.teams, performance)}</p>
+  return (
+    <>
+      <CaptionCard>
+        <>
+          <CaptionItem label="Outputs Co-Authored" {...performance} />
+        </>
+      </CaptionCard>
+
+      <Card padding={false}>
+        <div css={container}>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}>
+              User
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isUserSortActive
+                    ? sortingDirection.user === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`user_${newDirection}`);
+                  setSortingDirection({
+                    ...userCollaborationInitialSortingDirection,
+                    user: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isUserSortActive}
+                  ascending={sortingDirection.user === 'asc'}
+                  description={'User'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Team
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isTeamSortActive
+                    ? sortingDirection.team === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`team_${newDirection}`);
+                  setSortingDirection({
+                    ...userCollaborationInitialSortingDirection,
+                    team: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isTeamSortActive}
+                  ascending={sortingDirection.team === 'asc'}
+                  description={'Team'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Role
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isRoleSortActive
+                    ? sortingDirection.role === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'asc';
+
+                  setSort(`role_${newDirection}`);
+                  setSortingDirection({
+                    ...userCollaborationInitialSortingDirection,
+                    role: newDirection,
+                  });
+                }}
+              >
+                <AlphabeticalSortingIcon
+                  active={isRoleSortActive}
+                  ascending={sortingDirection.role === 'asc'}
+                  description={'Role'}
+                />
+              </button>
+            </span>
+            <span css={titleStyles}>
+              Outputs Co-Authored
+              <button
+                css={buttonStyles}
+                onClick={() => {
+                  const newDirection = isOutputsCoAuthoredSortActive
+                    ? sortingDirection.outputsCoAuthored === 'asc'
+                      ? 'desc'
+                      : 'asc'
+                    : 'desc';
+
+                  setSort(
+                    `outputs_coauthored_${collaborationType}_${newDirection}`,
+                  );
+                  setSortingDirection({
+                    ...userCollaborationInitialSortingDirection,
+                    outputsCoAuthored: newDirection,
+                  });
+                }}
+              >
+                <NumericalSortingIcon
+                  active={isOutputsCoAuthoredSortActive}
+                  ascending={sortingDirection.outputsCoAuthored === 'asc'}
+                  description={'Outputs Co-Authored'}
+                />
+              </button>
+            </span>
           </div>
-        ))}
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+          {data.map((row) => (
+            <div key={row.id} css={[rowStyles]}>
+              <span css={[titleStyles, rowTitleStyles]}>User</span>
+              <p css={iconStyles}>
+                <Link href={network({}).users({}).user({ userId: row.id }).$}>
+                  {row.name}
+                </Link>
+                {row.isAlumni && alumniBadgeIcon}
+              </p>
+              <span css={[titleStyles, rowTitleStyles]}>Team</span>
+              <p>{displayTeams(row.teams)}</p>
+              <span css={[titleStyles, rowTitleStyles]}>Role</span>
+              <p>{displayRoles(row.teams)}</p>
+              <span css={[titleStyles, rowTitleStyles]}>
+                Outputs Co-Authored
+              </span>
+              <p>{displayOutputsCount(row.teams, performance)}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default UserCollaborationTable;

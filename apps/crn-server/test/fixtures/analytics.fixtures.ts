@@ -636,6 +636,8 @@ export const getUserCollaborationDataObject =
     alumniSince: undefined,
     name: 'User User',
     teams: [],
+    totalUniqueOutputsCoAuthoredAcrossTeams: 0,
+    totalUniqueOutputsCoAuthoredWithinTeam: 0,
   });
 
 export const getTeamCollaborationDataObject =

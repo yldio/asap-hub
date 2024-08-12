@@ -1,4 +1,7 @@
-import { PerformanceMetricByDocumentType } from '@asap-hub/model';
+import {
+  CollaborationType,
+  PerformanceMetricByDocumentType,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -92,14 +95,16 @@ const rowContainerStyles = css({
 interface TeamCollaborationProps {
   rowItem: TeamCollaborationMetric;
   performance: PerformanceMetricByDocumentType;
+  type: CollaborationType;
 }
 const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
   rowItem,
   performance,
+  type,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const canExpand = !!rowItem.collaborationByTeam.length;
-  const isWithinTeam = rowItem.type === 'within-team';
+  const isWithinTeam = type === 'within-team';
 
   return (
     <div css={[rowContainerStyles]}>

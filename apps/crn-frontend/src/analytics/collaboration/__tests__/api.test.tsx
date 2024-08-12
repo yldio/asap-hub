@@ -13,6 +13,8 @@ import {
   ListTeamCollaborationAlgoliaResponse,
   ListUserCollaborationAlgoliaResponse,
   OutputTypeOption,
+  SortTeamCollaboration,
+  SortUserCollaboration,
   TimeRangeOption,
 } from '@asap-hub/model';
 import nock from 'nock';
@@ -50,13 +52,23 @@ const algoliaSearchClient = {
   search,
 } as unknown as AlgoliaSearchClient<'analytics'>;
 
-const defaultOptions: AnalyticsSearchOptionsWithFiltering = {
-  pageSize: 10,
-  currentPage: 0,
-  timeRange: '30d',
-  tags: [],
-  sort: '',
-};
+const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration> =
+  {
+    pageSize: 10,
+    currentPage: 0,
+    timeRange: '30d',
+    tags: [],
+    sort: 'user_asc',
+  };
+
+const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration> =
+  {
+    pageSize: 10,
+    currentPage: 0,
+    timeRange: '30d',
+    tags: [],
+    sort: 'team_asc',
+  };
 
 const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
   total: 1,
@@ -75,6 +87,8 @@ const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
           outputsCoAuthoredWithinTeam: 2,
         },
       ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 1,
+      totalUniqueOutputsCoAuthoredWithinTeam: 2,
       objectID: '1-user-collaboration-30d',
     },
   ],
@@ -140,7 +154,7 @@ describe('getUserCollaboration', () => {
   it('returns successfully fetched user collaboration', async () => {
     const userCollaboration = await getUserCollaboration(
       algoliaSearchClient,
-      defaultOptions,
+      defaultUserOptions,
     );
 
     expect(userCollaboration).toMatchObject(userCollaborationResponse);
@@ -155,7 +169,7 @@ describe('getUserCollaboration', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns user collaboration for $range', async ({ timeRange }) => {
     await getUserCollaboration(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       timeRange,
     });
 
@@ -180,7 +194,7 @@ describe('getUserCollaboration', () => {
     'returns user collaboration for document category $category',
     async ({ documentCategory }) => {
       await getUserCollaboration(algoliaSearchClient, {
-        ...defaultOptions,
+        ...defaultUserOptions,
         documentCategory,
       });
 
@@ -196,7 +210,7 @@ describe('getUserCollaboration', () => {
 
   it('should pass the search query to Algolia', async () => {
     await getUserCollaboration(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultUserOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(
@@ -229,7 +243,7 @@ describe('getTeamCollaboration', () => {
   it('returns successfully fetched team collaboration', async () => {
     const teamCollaboration = await getTeamCollaboration(
       algoliaSearchClient,
-      defaultOptions,
+      defaultTeamOptions,
     );
 
     expect(teamCollaboration).toMatchObject(teamCollaborationResponse);
@@ -244,7 +258,7 @@ describe('getTeamCollaboration', () => {
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns team collaboration for $range', async ({ timeRange }) => {
     await getTeamCollaboration(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       timeRange,
     });
 
@@ -265,7 +279,7 @@ describe('getTeamCollaboration', () => {
     'returns team collaboration for output type $type',
     async ({ outputType }) => {
       await getTeamCollaboration(algoliaSearchClient, {
-        ...defaultOptions,
+        ...defaultTeamOptions,
         outputType,
       });
 
@@ -281,7 +295,7 @@ describe('getTeamCollaboration', () => {
 
   it('should pass the search query to Algolia', async () => {
     await getTeamCollaboration(algoliaSearchClient, {
-      ...defaultOptions,
+      ...defaultTeamOptions,
       tags: ['Alessi'],
     });
     expect(search).toHaveBeenCalledWith(

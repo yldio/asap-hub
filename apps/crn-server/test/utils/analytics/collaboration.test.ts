@@ -205,6 +205,12 @@ describe('getUserCollaborationItems', () => {
                         id: 'phoebe',
                       },
                     },
+                    {
+                      __typename: 'Users',
+                      sys: {
+                        id: 'rachel',
+                      },
+                    },
                   ],
                 },
               },
@@ -262,6 +268,12 @@ describe('getUserCollaborationItems', () => {
                         id: 'phoebe',
                       },
                     },
+                    {
+                      __typename: 'Users',
+                      sys: {
+                        id: 'rachel',
+                      },
+                    },
                   ],
                 },
               },
@@ -315,6 +327,49 @@ describe('getUserCollaborationItems', () => {
           },
         },
       },
+      {
+        sys: {
+          id: 'rachel',
+        },
+        linkedFrom: {
+          researchOutputsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'research-output-1',
+                },
+                addedDate: '2024-07-02T08:12:02.234Z',
+                documentType: 'Bioinformatics',
+                authorsCollection: {
+                  items: [
+                    {
+                      __typename: 'Users',
+                      sys: {
+                        id: 'monica',
+                      },
+                    },
+                    {
+                      __typename: 'ExternalAuthors',
+                    },
+                    {
+                      __typename: 'Users',
+                      sys: {
+                        id: 'phoebe',
+                      },
+                    },
+                    {
+                      __typename: 'Users',
+                      sys: {
+                        id: 'rachel',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
     ],
   };
 
@@ -351,6 +406,19 @@ describe('getUserCollaborationItems', () => {
       teamIds: ['chen'],
       researchOutputs: 3,
     },
+    rachel: {
+      name: 'Rachel Green',
+      teams: [
+        {
+          id: 'asap',
+          team: 'ASAP',
+          role: 'Collaborating PI',
+        },
+      ],
+      labIds: ['powell'],
+      teamIds: ['asap'],
+      researchOutputs: 1,
+    },
   };
 
   it('returns user collaboration items', () => {
@@ -365,16 +433,18 @@ describe('getUserCollaborationItems', () => {
             team: 'Alessi',
             role: 'Key Personnel',
             outputsCoAuthoredWithinTeam: 0,
-            outputsCoAuthoredAcrossTeams: 0,
+            outputsCoAuthoredAcrossTeams: 1,
           },
           {
             id: 'chen',
             team: 'Chen',
             role: 'Project Manager',
             outputsCoAuthoredWithinTeam: 1,
-            outputsCoAuthoredAcrossTeams: 0,
+            outputsCoAuthoredAcrossTeams: 1,
           },
         ],
+        totalUniqueOutputsCoAuthoredWithinTeam: 1,
+        totalUniqueOutputsCoAuthoredAcrossTeams: 1,
       },
       {
         id: 'phoebe',
@@ -386,9 +456,27 @@ describe('getUserCollaborationItems', () => {
             team: 'Chen',
             role: 'Collaborating PI',
             outputsCoAuthoredWithinTeam: 1,
-            outputsCoAuthoredAcrossTeams: 2,
+            outputsCoAuthoredAcrossTeams: 3,
           },
         ],
+        totalUniqueOutputsCoAuthoredWithinTeam: 1,
+        totalUniqueOutputsCoAuthoredAcrossTeams: 3,
+      },
+      {
+        id: 'rachel',
+        name: 'Rachel Green',
+        alumniSince: undefined,
+        teams: [
+          {
+            id: 'asap',
+            team: 'ASAP',
+            role: 'Collaborating PI',
+            outputsCoAuthoredWithinTeam: 0,
+            outputsCoAuthoredAcrossTeams: 1,
+          },
+        ],
+        totalUniqueOutputsCoAuthoredWithinTeam: 0,
+        totalUniqueOutputsCoAuthoredAcrossTeams: 1,
       },
     ]);
   });

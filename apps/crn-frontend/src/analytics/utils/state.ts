@@ -1,5 +1,6 @@
 import { atomFamily, RecoilState, useRecoilState } from 'recoil';
 import { AlgoliaClient, AnalyticsPerformanceOptions } from '@asap-hub/algolia';
+import { AnalyticsSortOptions, Metric } from '@asap-hub/model';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
@@ -31,3 +32,34 @@ export const makePerformanceHook =
     }
     return performance;
   };
+
+export const getAlgoliaIndexName = (
+  sort: AnalyticsSortOptions,
+  metric: Metric,
+) => {
+  let indexName = ANALYTICS_ALGOLIA_INDEX;
+  switch (metric) {
+    case 'team-collaboration':
+    case 'team-productivity':
+      if (sort !== 'team_asc')
+        indexName = `${ANALYTICS_ALGOLIA_INDEX}_team_${sort.replace(
+          'team_',
+          '',
+        )}`;
+      break;
+    case 'user-collaboration':
+    case 'user-productivity':
+      if (sort !== 'user_asc')
+        indexName = `${ANALYTICS_ALGOLIA_INDEX}_user_${sort.replace(
+          'user_',
+          '',
+        )}`;
+      break;
+    case 'team-leadership':
+    case 'engagement':
+      if (sort !== 'team_asc') indexName = `${ANALYTICS_ALGOLIA_INDEX}_${sort}`;
+      break;
+  }
+
+  return indexName;
+};

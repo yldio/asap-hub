@@ -1,6 +1,7 @@
 {
   "ranking": [
     "desc(Protocol)",
+    "desc(outputsCoProducedWithin.Protocol)",
     "typo",
     "geo",
     "words",

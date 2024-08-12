@@ -1,17 +1,24 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
+  SortTeamCollaboration,
+  SortUserCollaboration,
   TeamCollaborationAlgoliaResponse,
+  teamCollaborationInitialSortingDirection,
+  TeamCollaborationSortingDirection,
   UserCollaborationAlgoliaResponse,
+  userCollaborationInitialSortingDirection,
+  UserCollaborationSortingDirection,
 } from '@asap-hub/model';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 
 import { useAnalytics, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
+import { getAlgoliaIndexName } from '../utils/state';
 import { getTeamCollaboration, getUserCollaboration } from './api';
 import {
   teamCollaborationAcrossTeamToCSV,
@@ -36,6 +43,16 @@ const Collaboration = () => {
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();
+  const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
+  const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
+  const [userSortingDirection, setUserSortingDirection] =
+    useState<UserCollaborationSortingDirection>(
+      userCollaborationInitialSortingDirection,
+    );
+  const [teamSortingDirection, setTeamSortingDirection] =
+    useState<TeamCollaborationSortingDirection>(
+      teamCollaborationInitialSortingDirection,
+    );
 
   const entityType =
     metric === 'user' ? 'user-collaboration' : 'team-collaboration';
@@ -45,14 +62,27 @@ const Collaboration = () => {
         .collaboration({})
         .collaborationPath({ metric: newMetric, type }).$,
     );
-  const setType = (newType: 'within-team' | 'across-teams') =>
+  const setType = (newType: 'within-team' | 'across-teams') => {
+    if (metric === 'user') {
+      setUserSort('user_asc');
+      setUserSortingDirection(userCollaborationInitialSortingDirection);
+    } else {
+      setTeamSort('team_asc');
+      setTeamSortingDirection(teamCollaborationInitialSortingDirection);
+    }
     history.push(
       analytics({})
         .collaboration({})
         .collaborationPath({ metric, type: newType }).$,
     );
+  };
 
-  const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
+  const userClient = useAnalyticsAlgolia(
+    getAlgoliaIndexName(userSort, 'user-collaboration'),
+  ).client;
+  const teamClient = useAnalyticsAlgolia(
+    getAlgoliaIndexName(teamSort, 'team-collaboration'),
+  ).client;
 
   const userPerformance = useUserCollaborationPerformance({
     timeRange,
@@ -74,9 +104,9 @@ const Collaboration = () => {
           },
         ),
         (paginationParams) =>
-          getUserCollaboration(algoliaClient.client, {
+          getUserCollaboration(userClient, {
             documentCategory,
-            sort: '',
+            sort: userSort,
             tags,
             timeRange,
             ...paginationParams,
@@ -93,9 +123,9 @@ const Collaboration = () => {
         },
       ),
       (paginationParams) =>
-        getTeamCollaboration(algoliaClient.client, {
+        getTeamCollaboration(teamClient, {
           outputType,
-          sort: '',
+          sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,
@@ -134,9 +164,23 @@ const Collaboration = () => {
       type={type}
     >
       {metric === 'user' ? (
-        <UserCollaboration type={type} tags={tags} />
+        <UserCollaboration
+          sort={userSort}
+          setSort={setUserSort}
+          setSortingDirection={setUserSortingDirection}
+          sortingDirection={userSortingDirection}
+          type={type}
+          tags={tags}
+        />
       ) : (
-        <TeamCollaboration type={type} tags={tags} />
+        <TeamCollaboration
+          sort={teamSort}
+          setSort={setTeamSort}
+          setSortingDirection={setTeamSortingDirection}
+          sortingDirection={teamSortingDirection}
+          type={type}
+          tags={tags}
+        />
       )}
     </AnalyticsCollaborationPageBody>
   );

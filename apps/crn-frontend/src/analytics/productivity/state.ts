@@ -15,9 +15,12 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { makePerformanceHook, makePerformanceState } from '../utils/state';
+import {
+  getAlgoliaIndexName,
+  makePerformanceHook,
+  makePerformanceState,
+} from '../utils/state';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -89,25 +92,21 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
 ) => {
-  const indexName =
-    options.sort === 'user_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_user_${options.sort.replace('user_', '')}`;
-
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const indexName = getAlgoliaIndexName(options.sort, 'user-productivity');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [userProductivity, setUserProductivity] = useRecoilState(
     analyticsUserProductivityState(options),
   );
   if (userProductivity === undefined) {
-    throw getUserProductivity(algoliaClient.client, options)
+    throw getUserProductivity(algoliaClient, options)
       .then(setUserProductivity)
       .catch(setUserProductivity);
   }
   if (userProductivity instanceof Error) {
     throw userProductivity;
   }
-  return { ...userProductivity, client: algoliaClient.client };
+  return { ...userProductivity };
 };
 
 export const userProductivityPerformanceState =
@@ -195,22 +194,19 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
 ) => {
-  const indexName =
-    options.sort === 'team_asc'
-      ? ANALYTICS_ALGOLIA_INDEX
-      : `${ANALYTICS_ALGOLIA_INDEX}_team_${options.sort.replace('team_', '')}`;
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const indexName = getAlgoliaIndexName(options.sort, 'team-productivity');
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [teamProductivity, setTeamProductivity] = useRecoilState(
     analyticsTeamProductivityState(options),
   );
   if (teamProductivity === undefined) {
-    throw getTeamProductivity(algoliaClient.client, options)
+    throw getTeamProductivity(algoliaClient, options)
       .then(setTeamProductivity)
       .catch(setTeamProductivity);
   }
   if (teamProductivity instanceof Error) {
     throw teamProductivity;
   }
-  return { ...teamProductivity, client: algoliaClient.client };
+  return { ...teamProductivity };
 };

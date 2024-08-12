@@ -1,11 +1,15 @@
 import {
+  CollaborationType,
+  SortUserCollaboration,
+  UserCollaborationAlgoliaResponse,
   UserCollaborationPerformance,
-  UserCollaborationResponse,
+  UserCollaborationSortingDirection,
 } from '@asap-hub/model';
 import {
   UserCollaborationMetric,
   UserCollaborationTable,
 } from '@asap-hub/react-components';
+import { Dispatch, SetStateAction } from 'react';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserCollaboration,
@@ -13,7 +17,7 @@ import {
 } from './state';
 
 const getDataForType = (
-  data: UserCollaborationResponse[],
+  data: UserCollaborationAlgoliaResponse[],
   type: 'within-team' | 'across-teams',
 ): UserCollaborationMetric[] => {
   if (type === 'within-team') {
@@ -53,12 +57,26 @@ const getPerformanceForType = (
   return performance.acrossTeam;
 };
 
-export type CollaborationProps = {
-  type: 'within-team' | 'across-teams';
+export interface CollaborationProps<
+  T = SortUserCollaboration,
+  K = UserCollaborationSortingDirection,
+> {
+  sort: T;
+  setSort: Dispatch<SetStateAction<T>>;
+  sortingDirection: K;
+  setSortingDirection: React.Dispatch<React.SetStateAction<K>>;
+  type: CollaborationType;
   tags: string[];
-};
+}
 
-const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
+const UserCollaboration: React.FC<CollaborationProps> = ({
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
+  type,
+  tags,
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { timeRange, documentCategory } = useAnalytics();
@@ -67,7 +85,7 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
     currentPage,
     documentCategory,
     pageSize,
-    sort: '',
+    sort,
     tags,
     timeRange,
   });
@@ -81,11 +99,16 @@ const UserCollaboration: React.FC<CollaborationProps> = ({ type, tags }) => {
 
   return (
     <UserCollaborationTable
-      data={getDataForType(data, type)}
-      performance={getPerformanceForType(performance, type)}
       currentPageIndex={currentPage}
+      data={getDataForType(data, type)}
       numberOfPages={numberOfPages}
+      performance={getPerformanceForType(performance, type)}
       renderPageHref={renderPageHref}
+      sort={sort}
+      setSort={setSort}
+      sortingDirection={sortingDirection}
+      setSortingDirection={setSortingDirection}
+      type={type}
     />
   );
 };

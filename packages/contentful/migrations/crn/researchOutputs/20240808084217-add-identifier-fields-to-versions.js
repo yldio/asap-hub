@@ -50,7 +50,7 @@ module.exports.up = (migration) => {
     .validations([
       {
         regexp: {
-          pattern: '^(w+d+(.d+)?)|(NP_d+)$',
+          pattern: '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
           flags: null,
         },
         message: 'This must start with a letter',

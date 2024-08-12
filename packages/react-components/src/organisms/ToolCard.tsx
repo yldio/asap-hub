@@ -47,7 +47,6 @@ const ToolCard: React.FC<ToolCardProps> = ({
   name,
   description,
   url,
-
   editHref,
   onDelete,
 }) => {

@@ -31,13 +31,13 @@ describe('FiltersModal', () => {
     { id: '32', name: 'Data Science' },
   ];
   const getRegionsField = () =>
-    screen.getByRole('textbox', { name: 'Regions' });
+    screen.getByRole('combobox', { name: 'Regions' });
   const getExpertiseField = () =>
-    screen.getByRole('textbox', { name: 'Expertise / Interests' });
+    screen.getByRole('combobox', { name: 'Expertise / Interests' });
   const getProjectsField = () =>
-    screen.getByRole('textbox', { name: 'Projects' });
+    screen.getByRole('combobox', { name: 'Projects' });
   const getWorkingGroupsField = () =>
-    screen.getByRole('textbox', { name: 'Working Groups' });
+    screen.getByRole('combobox', { name: 'Working Groups' });
   const getApplyButton = () => screen.getByRole('button', { name: 'Apply' });
   beforeEach(jest.resetAllMocks);
   it('renders the header', () => {
@@ -54,109 +54,109 @@ describe('FiltersModal', () => {
     'renders the %s input field',
     (fieldName) => {
       render(<FiltersModal {...defaultProps} />);
-      expect(screen.getByRole('textbox', { name: fieldName })).toBeVisible();
+      expect(screen.getByRole('combobox', { name: fieldName })).toBeVisible();
     },
   );
-  it.each(userRegions)('%s region is selectable', (region) => {
+  it.each(userRegions)('%s region is selectable', async (region) => {
     render(<FiltersModal {...defaultProps} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
-    userEvent.click(getRegionsField());
-    userEvent.click(screen.getByText(region));
+    await userEvent.click(getRegionsField());
+    await userEvent.click(screen.getByText(region));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`1 filter`);
   });
-  it('renders the no options message for regions', () => {
+  it('renders the no options message for regions', async () => {
     render(<FiltersModal {...defaultProps} />);
-    userEvent.type(getRegionsField(), 'LT');
+    await userEvent.type(getRegionsField(), 'LT');
     expect(
       screen.getByText(/sorry, no current regions match "lt"/i),
     ).toBeVisible();
   });
-  it('should select an expertise', () => {
+  it('should select an expertise', async () => {
     render(<FiltersModal {...defaultProps} tags={tags} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
-    userEvent.click(getExpertiseField());
-    userEvent.type(getExpertiseField(), 'Data');
-    userEvent.click(screen.getByText('Data Science'));
+    await userEvent.click(getExpertiseField());
+    await userEvent.type(getExpertiseField(), 'Data');
+    await userEvent.click(screen.getByText('Data Science'));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`1 filter`);
   });
-  it('renders the no options message for expertise', () => {
+  it('renders the no options message for expertise', async () => {
     render(<FiltersModal {...defaultProps} tags={tags} />);
-    userEvent.type(getExpertiseField(), 'LTX');
+    await userEvent.type(getExpertiseField(), 'LTX');
     expect(
       screen.getByText(/sorry, no current expertise \/ interests match "ltx"/i),
     ).toBeVisible();
   });
-  it('projects are selectable', () => {
+  it('projects are selectable', async () => {
     render(<FiltersModal {...defaultProps} projects={projects} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
-    userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText(projects[0]!.title));
+    await userEvent.click(getProjectsField());
+    await userEvent.click(screen.getByText(projects[0]!.title));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`1 filter`);
   });
-  it('renders the no options message for projects', () => {
+  it('renders the no options message for projects', async () => {
     render(<FiltersModal {...defaultProps} />);
-    userEvent.type(getProjectsField(), 'LT');
+    await userEvent.type(getProjectsField(), 'LT');
     expect(
       screen.getByText(/sorry, no current projects match "lt"/i),
     ).toBeVisible();
   });
-  it('working groups are selectable', () => {
+  it('working groups are selectable', async () => {
     render(<FiltersModal {...defaultProps} workingGroups={workingGroups} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
-    userEvent.click(getWorkingGroupsField());
-    userEvent.click(screen.getByText(workingGroups[0]!.title));
+    await userEvent.click(getWorkingGroupsField());
+    await userEvent.click(screen.getByText(workingGroups[0]!.title));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`1 filter`);
   });
-  it('renders the no options message for working groups', () => {
+  it('renders the no options message for working groups', async () => {
     render(<FiltersModal {...defaultProps} />);
-    userEvent.type(getWorkingGroupsField(), 'LT');
+    await userEvent.type(getWorkingGroupsField(), 'LT');
     expect(
       screen.getByText(/sorry, no current working groups match "lt"/i),
     ).toBeVisible();
   });
-  it('calls the onBackClick function on close', () => {
+  it('calls the onBackClick function on close', async () => {
     render(<FiltersModal {...defaultProps} />);
     const closeButton = screen.getAllByRole('button', { name: 'Close' })[1]!;
     expect(closeButton).toBeVisible();
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
     expect(defaultProps.onBackClick).toHaveBeenCalledTimes(1);
   });
-  it('calls the onApplyClick function on apply', () => {
+  it('calls the onApplyClick function on apply', async () => {
     render(<FiltersModal {...defaultProps} />);
     const applyButton = getApplyButton();
     expect(applyButton).toBeVisible();
-    userEvent.click(applyButton);
+    await userEvent.click(applyButton);
     expect(defaultProps.onApplyClick).toHaveBeenCalledTimes(1);
   });
-  it('calls the onApplyClick function with correct region filters', () => {
+  it('calls the onApplyClick function with correct region filters', async () => {
     render(<FiltersModal {...defaultProps} />);
-    userEvent.click(getRegionsField());
-    userEvent.click(screen.getByText('Asia'));
-    userEvent.click(getApplyButton());
+    await userEvent.click(getRegionsField());
+    await userEvent.click(screen.getByText('Asia'));
+    await userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: ['Asia'],
       tags: [],
@@ -164,11 +164,11 @@ describe('FiltersModal', () => {
       workingGroups: [],
     });
   });
-  it('calls the onApplyClick function with correct expertise filters', () => {
+  it('calls the onApplyClick function with correct expertise filters', async () => {
     render(<FiltersModal {...defaultProps} tags={tags} />);
-    userEvent.click(getExpertiseField());
-    userEvent.click(screen.getByText('Data Science'));
-    userEvent.click(getApplyButton());
+    await userEvent.click(getExpertiseField());
+    await userEvent.click(screen.getByText('Data Science'));
+    await userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
       tags: [tags[0]!.id],
@@ -176,11 +176,11 @@ describe('FiltersModal', () => {
       workingGroups: [],
     });
   });
-  it('calls the onApplyClick function with correct project filters', () => {
+  it('calls the onApplyClick function with correct project filters', async () => {
     render(<FiltersModal {...defaultProps} projects={projects} />);
-    userEvent.click(getProjectsField());
-    userEvent.click(screen.getByText(projects[0]!.title));
-    userEvent.click(getApplyButton());
+    await userEvent.click(getProjectsField());
+    await userEvent.click(screen.getByText(projects[0]!.title));
+    await userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
       tags: [],
@@ -188,11 +188,11 @@ describe('FiltersModal', () => {
       workingGroups: [],
     });
   });
-  it('calls the onApplyClick function with correct working group filters', () => {
+  it('calls the onApplyClick function with correct working group filters', async () => {
     render(<FiltersModal {...defaultProps} workingGroups={workingGroups} />);
-    userEvent.click(getWorkingGroupsField());
-    userEvent.click(screen.getByText(workingGroups[0]!.title));
-    userEvent.click(getApplyButton());
+    await userEvent.click(getWorkingGroupsField());
+    await userEvent.click(screen.getByText(workingGroups[0]!.title));
+    await userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
       tags: [],
@@ -207,7 +207,7 @@ describe('FiltersModal', () => {
     ${'expertise'}     | ${getExpertiseField}     | ${tags[0]!.name}
     ${'project'}       | ${getProjectsField}      | ${projects[0]!.title}
     ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0]!.title}
-  `('resets selected filter, $name, on Reset', ({ getField, value }) => {
+  `('resets selected filter, $name, on Reset', async ({ getField, value }) => {
     render(
       <FiltersModal
         {...defaultProps}
@@ -222,13 +222,13 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain(`0 filters`);
     expect(resetButton).toBeVisible();
-    userEvent.click(getField());
-    userEvent.click(screen.getByText(value));
+    await userEvent.click(getField());
+    await userEvent.click(screen.getByText(value));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain('1 filter');
-    userEvent.click(resetButton);
+    await userEvent.click(resetButton);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -261,7 +261,7 @@ describe('FiltersModal', () => {
     expect(screen.getByText(expected)).toBeVisible();
   });
   describe('sorting', () => {
-    it('sorts tag', () => {
+    it('sorts tag', async () => {
       const tagList = [
         {
           id: '42',
@@ -277,13 +277,13 @@ describe('FiltersModal', () => {
         },
       ];
       render(<FiltersModal {...defaultProps} tags={tagList} />);
-      userEvent.click(getExpertiseField());
+      await userEvent.click(getExpertiseField());
       const options = screen.getByText('TagA').parentElement?.childNodes || [];
       expect(options[0]!).toHaveTextContent('TagA');
       expect(options[1]).toHaveTextContent('TagB');
       expect(options[2]).toHaveTextContent('TagC');
     });
-    it('sorts projects', () => {
+    it('sorts projects', async () => {
       const projectsList = [
         {
           id: '42',
@@ -299,14 +299,14 @@ describe('FiltersModal', () => {
         },
       ];
       render(<FiltersModal {...defaultProps} projects={projectsList} />);
-      userEvent.click(getProjectsField());
+      await userEvent.click(getProjectsField());
       const options =
         screen.getByText('ProjectA').parentElement?.childNodes || [];
       expect(options[0]!).toHaveTextContent('ProjectA');
       expect(options[1]).toHaveTextContent('ProjectB');
       expect(options[2]).toHaveTextContent('ProjectC');
     });
-    it('sorts working groups', () => {
+    it('sorts working groups', async () => {
       const workingGroupList = [
         {
           id: '42',
@@ -324,14 +324,14 @@ describe('FiltersModal', () => {
       render(
         <FiltersModal {...defaultProps} workingGroups={workingGroupList} />,
       );
-      userEvent.click(getWorkingGroupsField());
+      await userEvent.click(getWorkingGroupsField());
       const options =
         screen.getByText('GroupA').parentElement?.childNodes || [];
       expect(options[0]!).toHaveTextContent('GroupA');
       expect(options[1]).toHaveTextContent('GroupB');
       expect(options[2]).toHaveTextContent('GroupC');
     });
-    it('sorts expertise', () => {
+    it('sorts expertise', async () => {
       const workingGroupList = [
         {
           id: '42',
@@ -349,7 +349,7 @@ describe('FiltersModal', () => {
       render(
         <FiltersModal {...defaultProps} workingGroups={workingGroupList} />,
       );
-      userEvent.click(getWorkingGroupsField());
+      await userEvent.click(getWorkingGroupsField());
       const options =
         screen.getByText('GroupA').parentElement?.childNodes || [];
       expect(options[0]!).toHaveTextContent('GroupA');

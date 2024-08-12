@@ -1,13 +1,13 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import {
   createCalendarResponse,
   createEventResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 
 import {
   Auth0Provider,
@@ -30,18 +30,25 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC = ({ children }) => (
+const wrapper: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => (
   <RecoilRoot
     initializeState={({ set }) => set(refreshEventState(id), Math.random())}
   >
     <Auth0Provider user={{}}>
       <WhenReady>
         <Suspense fallback="Loading...">
-          <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Route path={events.template + events({}).event.template}>
-              {children}
-            </Route>
-          </StaticRouter>
+          <MemoryRouter
+            initialEntries={[
+              eventRoutes.DEFAULT.DETAILS.buildPath({ eventId: id }),
+            ]}
+          >
+            <Routes>
+              <Route
+                path={eventRoutes.DEFAULT.DETAILS.relativePath}
+                element={children}
+              />
+            </Routes>
+          </MemoryRouter>
         </Suspense>
       </WhenReady>
     </Auth0Provider>

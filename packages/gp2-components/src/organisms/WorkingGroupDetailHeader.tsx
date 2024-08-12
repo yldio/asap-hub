@@ -53,9 +53,10 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
   pastTotal,
 }) => {
   const { isEnabled } = useFlags();
-  const route = gp2Routing
-    .workingGroups({})
-    .workingGroup({ workingGroupId: id });
+  // const route = gp2Routing
+  //   .workingGroups({})
+  //   .workingGroup({ workingGroupId: id });
+  const route = gp2Routing.workingGroups.DEFAULT.DETAILS;
   return (
     <header css={detailHeaderStyles}>
       <CardWithBackground image={workingGroupsImage}>
@@ -73,20 +74,26 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
         </div>
       </CardWithBackground>
       <TabNav>
-        <TabLink href={route.overview({}).$}>Overview</TabLink>
+        <TabLink href={route.OVERVIEW.buildPath({ workingGroupId: id })}>
+          Overview
+        </TabLink>
         {isWorkingGroupMember && (
-          <TabLink href={route.workspace({}).$}>Workspace</TabLink>
+          <TabLink href={route.WORKSPACE.buildPath({ workingGroupId: id })}>
+            Workspace
+          </TabLink>
         )}
-        <TabLink href={route.outputs({}).$}>
+        <TabLink href={route.OUTPUTS.buildPath({ workingGroupId: id })}>
           Shared Outputs ({outputsTotal})
         </TabLink>
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.upcoming({}).$}>
+          <TabLink href={route.UPCOMING.buildPath({ workingGroupId: id })}>
             Upcoming Events ({upcomingTotal})
           </TabLink>
         )}
         {isEnabled('DISPLAY_EVENTS') && (
-          <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+          <TabLink href={route.PAST.buildPath({ workingGroupId: id })}>
+            Past Events ({pastTotal})
+          </TabLink>
         )}
       </TabNav>
     </header>

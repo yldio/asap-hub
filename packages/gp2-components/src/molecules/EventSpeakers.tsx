@@ -70,7 +70,9 @@ type UserSpeakerProps = {
 };
 
 const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
-  <Link href={gp2Routing.users({}).user({ userId: speaker.id }).$}>
+  <Link
+    href={gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: speaker.id })}
+  >
     <div css={[{ gap: 9, display: 'flex' }, textWrap]}>
       <div>
         <Avatar {...speaker} imageUrl={speaker.avatarUrl} />

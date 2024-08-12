@@ -166,7 +166,7 @@ describe('dismissing the getting started option', () => {
     await renderDashboard({});
 
     expect(screen.queryByText(/Get Started with ASAP/i)).toBeVisible();
-    userEvent.click(screen.getByText(/show/i));
+    await userEvent.click(screen.getByText(/show/i));
 
     expect(screen.getByText(/Remove help/i)).toBeVisible();
     expect(screen.getByText(/Cancel/i).closest('a')).toHaveAttribute(
@@ -178,7 +178,7 @@ describe('dismissing the getting started option', () => {
       '/',
     );
 
-    userEvent.click(screen.getByText('Remove'));
+    await userEvent.click(screen.getByText('Remove'));
 
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenCalledWith(

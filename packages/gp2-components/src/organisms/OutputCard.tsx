@@ -121,7 +121,9 @@ const OutputCard: React.FC<OutputCardProps> = ({
           <LinkHeadline
             level={2}
             styleAsHeading={4}
-            href={gp2Routing.outputs({}).output({ outputId: id }).$}
+            href={gp2Routing.outputs.DEFAULT.DETAILS.buildPath({
+              outputId: id,
+            })}
           >
             {title}
           </LinkHeadline>
@@ -130,7 +132,9 @@ const OutputCard: React.FC<OutputCardProps> = ({
       <UsersList
         users={authors.map((author) => ({
           ...author,
-          href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
+          href:
+            author.id &&
+            gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: author.id }),
         }))}
         max={detailedView ? undefined : 3}
       />

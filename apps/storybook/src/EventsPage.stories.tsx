@@ -1,6 +1,6 @@
 import { EventsPage } from '@asap-hub/react-components';
-import { events } from '@asap-hub/routing';
-import { StaticRouter } from 'react-router-dom';
+import { eventRoutes } from '@asap-hub/routing';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { text } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -13,9 +13,9 @@ export default {
 export const Normal = () => {
   const activeTab = 'calendar';
   const routes = {
-    calendar: events({}).calendar({}).$,
-    upcoming: events({}).upcoming({}).$,
-    past: events({}).past({}).$,
+    calendar: eventRoutes.DEFAULT.CALENDAR.path,
+    upcoming: eventRoutes.DEFAULT.UPCOMING.path,
+    past: eventRoutes.DEFAULT.PAST.path,
   };
   return (
     <StaticRouter key={activeTab} location={routes[activeTab]}>

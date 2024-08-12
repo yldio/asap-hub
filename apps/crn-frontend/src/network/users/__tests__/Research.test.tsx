@@ -12,7 +12,7 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import {
   Auth0Provider,
@@ -38,18 +38,12 @@ const renderResearch = async (
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                network({}).users({}).user({ userId: user.id }).research({}).$,
+                networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.buildPath({
+                  id: user.id,
+                }),
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).users.template +
-                  network({}).users({}).user.template +
-                  network({}).users({}).user({ userId: user.id }).research
-                    .template
-                }
-              >
+              <Route path={networkRoutes.DEFAULT.USERS.DETAILS.RESEARCH.path}>
                 <Research user={user} />
               </Route>
             </MemoryRouter>

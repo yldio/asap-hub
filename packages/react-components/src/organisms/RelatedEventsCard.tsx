@@ -1,5 +1,5 @@
 import { ResearchOutputResponse, gp2 } from '@asap-hub/model';
-import { events } from '@asap-hub/routing';
+import { eventRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
@@ -118,7 +118,12 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
                 <React.Fragment key={`${index}-${id}`}>
                   <span css={[titleStyles, rowTitleStyles]}>Event Name</span>
                   <p css={paragraphStyle}>
-                    <Link ellipsed href={events({}).event({ eventId: id }).$}>
+                    <Link
+                      ellipsed
+                      href={eventRoutes.DEFAULT.DETAILS.buildPath({
+                        eventId: id,
+                      })}
+                    >
                       {title}
                     </Link>
                   </p>

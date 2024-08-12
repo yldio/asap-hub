@@ -1,5 +1,5 @@
 import { UserListItemResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Card, Avatar, Ellipsis, Paragraph } from '../atoms';
 import { ImageLink, LinkHeadline, TagList } from '../molecules';
@@ -47,7 +47,11 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
     {recommendedUsers.map((user) => (
       <Card key={user.id}>
         <div css={containerStyles}>
-          <ImageLink link={network({}).users({}).user({ userId: user.id }).$}>
+          <ImageLink
+            link={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+              id: user.id,
+            })}
+          >
             <Avatar
               overrideStyles={avatarStyles}
               imageUrl={user.avatarUrl}
@@ -56,7 +60,9 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
             />
           </ImageLink>
           <LinkHeadline
-            href={network({}).users({}).user({ userId: user.id }).$}
+            href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+              id: user.id,
+            })}
             level={3}
             noMargin
             title={`${user.displayName}${

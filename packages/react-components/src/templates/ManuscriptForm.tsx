@@ -14,9 +14,9 @@ import {
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   FormCard,
   LabeledDropdown,
@@ -143,7 +143,7 @@ const setDefaultFieldValues = (
   return fieldDefaultValueMap;
 };
 
-type ManuscriptFormProps = Omit<
+export type ManuscriptFormProps = Omit<
   ManuscriptVersion,
   | 'type'
   | 'lifecycle'
@@ -176,7 +176,7 @@ type ManuscriptFormProps = Omit<
     >['loadOptions'];
   };
 
-const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
+const ManuscriptForm = ({
   onSave,
   onSuccess,
   handleFileUpload,
@@ -207,8 +207,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getTeamSuggestions,
   selectedTeams,
   getLabSuggestions,
-}) => {
-  const history = useHistory();
+}: ManuscriptFormProps) => {
+  const navigate = useNavigate();
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
@@ -771,7 +771,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Button
                 noMargin
                 enabled={!isSubmitting}
-                onClick={() => history.goBack()}
+                onClick={() => navigate(-1)}
               >
                 Cancel
               </Button>

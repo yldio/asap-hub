@@ -63,14 +63,7 @@ const renderShareOutput = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]} initialIndex={1}>
-              <Route
-                path={
-                  gp2Routing.outputs.template +
-                  gp2Routing.outputs({}).output.template +
-                  gp2Routing.outputs({}).output({ outputId: 'output-id' }).edit
-                    .template
-                }
-              >
+              <Route path={gp2Routing.outputs.DEFAULT.DETAILS.EDIT.path}>
                 <NotificationMessages>
                   <OutputFormPage>
                     <ShareOutput output={output} />
@@ -88,7 +81,7 @@ const renderShareOutput = async (
 };
 
 const getEditPath = (outputId = 'output-id') =>
-  gp2Routing.outputs({}).output({ outputId }).edit({}).$;
+  gp2Routing.outputs.DEFAULT.DETAILS.EDIT.buildPath({ outputId });
 
 describe('ShareOutput', () => {
   beforeEach(() => {

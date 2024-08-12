@@ -410,7 +410,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               isEditing={isEditing}
               entityType={entityType}
               path={(id: string) =>
-                gp2Routing.outputs({}).output({ outputId: id }).$
+                gp2Routing.outputs.DEFAULT.DETAILS.buildPath({ outputId: id })
               }
               currentPayload={currentPayload}
             >

@@ -16,9 +16,9 @@ export default class ReminderController {
       items: reminders.items.map((reminder) => ({
         id: reminder.id,
         entity: reminder.entity,
-        href: gp2Routing.outputs({}).output({
+        href: gp2Routing.outputs.DEFAULT.DETAILS.buildPath({
           outputId: reminder.data.outputId,
-        }).$,
+        }),
         description:
           reminder.entity === 'Output'
             ? `**${reminder.data.statusChangedBy}** in ${reminder.data.associationType} **${reminder.data.associationName}** published a **${reminder.data.documentType}** output: "${reminder.data.title}".`

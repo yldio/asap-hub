@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { PAGE_SIZE } from '../../hooks';
@@ -45,10 +45,13 @@ const renderProjectsList = async (searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[gp2Routing.projects({}).$]}>
-              <Route path={gp2Routing.projects.template}>
-                <ProjectDirectory />
-              </Route>
+            <MemoryRouter initialEntries={[gp2Routing.projects.DEFAULT.path]}>
+              <Routes>
+                <Route
+                  path={gp2Routing.projects.DEFAULT.path}
+                  element={<ProjectDirectory />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

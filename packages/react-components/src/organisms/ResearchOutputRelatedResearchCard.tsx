@@ -85,7 +85,8 @@ const ResearchOutputRelatedResearchCard = <
         MultiValueContainer: (multiValueContainerProps) => (
           <div
             css={{
-              ...multiValueContainerProps.selectProps.styles.multiValue(),
+              // TODO: fix this
+              // ...multiValueContainerProps.selectProps.styles.multiValue(),
               paddingLeft: `${8 / perRem}em`,
             }}
           >
@@ -120,7 +121,9 @@ const ResearchOutputRelatedResearchCard = <
             >
               {
                 <div css={iconStyles}>
-                  {getIconForDocumentType(optionProps.data.documentType)}
+                  {getIconForDocumentType(
+                    optionProps.data.documentType as T[number]['documentType'],
+                  )}
                 </div>
               }
               {optionProps.data.documentType === 'Article' && (

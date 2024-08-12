@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import KeyInformationModal from '../KeyInformationModal';
 
 describe('KeyInformationModal', () => {
@@ -12,7 +12,10 @@ describe('KeyInformationModal', () => {
     screen.getByRole('button', {
       name: /add another position/i,
     });
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.spyOn(console, 'error').mockImplementation();
+  });
   type KeyInformationModalProps = ComponentProps<typeof KeyInformationModal>;
   const defaultProps: KeyInformationModalProps = {
     ...gp2Fixtures.createUserResponse(),
@@ -24,10 +27,16 @@ describe('KeyInformationModal', () => {
 
   const renderKeyInformation = (
     overrides: Partial<KeyInformationModalProps> = {},
-  ) =>
-    render(<KeyInformationModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+  ) => {
+    const routes = [
+      {
+        path: '/',
+        element: <KeyInformationModal {...defaultProps} {...overrides} />,
+      },
+    ];
+    const router = createMemoryRouter(routes);
+    render(<RouterProvider router={router} />);
+  }
 
   it('renders a dialog with the right title', () => {
     renderKeyInformation();
@@ -82,7 +91,7 @@ describe('KeyInformationModal', () => {
       social: { ...social, orcid },
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       firstName,
       middleName,
@@ -106,8 +115,8 @@ describe('KeyInformationModal', () => {
       city: '',
       onSave,
     });
-    userEvent.click(screen.getByRole('textbox', { name: /city/i }));
-    userEvent.tab();
+    await userEvent.click(screen.getByRole('textbox', { name: /city/i }));
+    await userEvent.tab();
     expect(screen.getByText(/Please add your city/i)).toBeVisible();
   });
 
@@ -121,7 +130,7 @@ describe('KeyInformationModal', () => {
       },
     });
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     const {
       firstName,
       lastName,
@@ -188,77 +197,77 @@ describe('KeyInformationModal', () => {
         .mockResolvedValue([positions[0]!.institution]),
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
       firstName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Middle Name(s) (optional)' }),
       middleName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
       lastName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Nickname (optional)' }),
       nickname,
     );
-    userEvent.click(screen.getByRole('textbox', { name: 'Degree (required)' }));
-    userEvent.click(screen.getByText(degrees[0]!));
-    userEvent.click(
-      screen.getByRole('textbox', {
+    await userEvent.click(screen.getByRole('combobox', { name: 'Degree (required)' }));
+    await userEvent.click(screen.getByText(degrees[0]!));
+    await userEvent.click(
+      screen.getByRole('combobox', {
         name: 'Region (required) Select the region you are based in.',
       }),
     );
-    userEvent.click(screen.getByText(region));
-    userEvent.click(
-      screen.getByRole('textbox', {
+    await userEvent.click(screen.getByText(region));
+    await userEvent.click(
+      screen.getByRole('combobox', {
         name: 'Location (required) Select the location you are based in.',
       }),
     );
-    userEvent.click(screen.getByText(country));
-    userEvent.type(
+    await userEvent.click(screen.getByText(country));
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'City (required)' }),
       city,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'State/Province (required)' }),
       stateOrProvince,
     );
-    userEvent.click(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
+    await userEvent.click(
+      screen.getByRole('combobox', { name: 'Institution (required)' }),
     );
     const institution = await screen.findByText(positions[0]!.institution);
-    userEvent.click(institution);
-    userEvent.type(
+    await userEvent.click(institution);
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Department (required)' }),
       positions[0]!.department,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Role (required)' }),
       positions[0]!.role,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'ORCID (optional) Type your ORCID ID.',
       }),
       orcid,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
       }),
       social.linkedIn,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Github (optional) Type your Github profile URL.',
       }),
       social.github,
     );
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       firstName,
       middleName,
@@ -321,68 +330,68 @@ describe('KeyInformationModal', () => {
         .mockResolvedValue([positions[0]!.institution]),
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Google Scholar (optional) Type your Google Scholar profile URL.',
       }),
       social.googleScholar,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'ORCID (optional) Type your ORCID ID.',
       }),
       orcid,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Research Gate (optional) Type your Research Gate profile URL.',
       }),
       social.researchGate,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'ResearcherID (optional) Type your Researcher ID.',
       }),
       social.researcherId,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Blog (optional)',
       }),
       social.blog,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'BlueSky (optional) Type your BlueSky profile URL.',
       }),
       social.blueSky,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Threads (optional) Type your Threads profile URL.',
       }),
       social.threads,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'X (optional) Type your X (formerly twitter) profile URL.',
       }),
       social.twitter,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
       }),
       social.linkedIn,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Github (optional) Type your Github profile URL.',
       }),
       social.github,
     );
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       city,
       country,
@@ -403,24 +412,24 @@ describe('KeyInformationModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 300000);
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     renderKeyInformation();
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const secondary = screen.getByRole('heading', {
       name: /Secondary Position/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(
-      within(secondary).getByRole('textbox', {
+      within(secondary).getByRole('combobox', {
         name: /Institution/i,
       }),
     ).toBeVisible();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     const tertiary = screen.getByRole('heading', {
       name: /Tertiary Position/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(
-      within(tertiary).getByRole('textbox', {
+      within(tertiary).getByRole('combobox', {
         name: /Institution/i,
       }),
     ).toBeVisible();
@@ -461,27 +470,27 @@ describe('KeyInformationModal', () => {
         .fn()
         .mockResolvedValue([position.institution]),
     });
-    userEvent.click(getAddButton());
+    await userEvent.click(getAddButton());
 
     const tertiary = screen.getByRole('heading', {
       name: /Tertiary Position/i,
     }).parentElement?.parentElement as HTMLElement;
 
-    userEvent.click(
-      within(tertiary).getByRole('textbox', { name: /Institution/i }),
+    await userEvent.click(
+      within(tertiary).getByRole('combobox', { name: /Institution/i }),
     );
     const institution = await screen.findByText(position.institution);
-    userEvent.click(institution);
-    userEvent.type(
+    await userEvent.click(institution);
+    await userEvent.type(
       within(tertiary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
-    userEvent.type(
+    await userEvent.type(
       within(tertiary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith(
       expect.objectContaining({ positions: [...positions, position] }),
     );

@@ -1,5 +1,6 @@
 import { Auth0User, gp2, User } from '@asap-hub/auth';
-import { renderHook } from '@testing-library/react-hooks';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { renderHook } from '@testing-library/react';
 
 import {
   getUserClaimKey,
@@ -16,8 +17,10 @@ import {
   useAuth0GP2,
 } from '../auth0';
 
+mockConsoleError();
+
 const userProvider =
-  (user: Auth0User | undefined): React.FC =>
+  (user: Auth0User | undefined): React.FC<React.PropsWithChildren> =>
   ({ children }) => {
     const ctx = useAuth0CRN();
 
@@ -36,7 +39,7 @@ const userProvider =
   };
 
 const userProviderGP2 =
-  (user: Auth0User<gp2.User> | undefined): React.FC =>
+  (user: Auth0User<gp2.User> | undefined): React.FC<React.PropsWithChildren> =>
   ({ children }) => {
     const ctx = useAuth0GP2();
 
@@ -71,28 +74,30 @@ describe('useCurrentUser', () => {
   });
 
   it('throws if the Auth0 user is missing the user claim', async () => {
-    const { result } = renderHook(useCurrentUserCRN, {
-      wrapper: userProvider({
-        sub: '42',
-        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+    expect(() =>
+      renderHook(useCurrentUserCRN, {
+        wrapper: userProvider({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        }),
       }),
-    });
-    expect(result.error).toMatchInlineSnapshot(
-      `[Error: Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]]`,
+    ).toThrow(
+      Error(
+        `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`,
+      ),
     );
   });
 
   it('throws if the user claim is not an object', async () => {
-    const { result } = renderHook(useCurrentUserCRN, {
-      wrapper: userProvider({
-        sub: '42',
-        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-        [`${window.location.origin}/user`]: 'testuser',
+    expect(() =>
+      renderHook(useCurrentUserCRN, {
+        wrapper: userProvider({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: 'testuser',
+        }),
       }),
-    });
-    expect(result.error).toMatchInlineSnapshot(
-      `[Error: Invalid user claim - expected object, got testuser]`,
-    );
+    ).toThrow(Error(`Invalid user claim - expected object, got testuser`));
   });
 
   it('returns the user claim', async () => {
@@ -126,28 +131,30 @@ describe('useCurrentUserGP2', () => {
   });
 
   it('throws if the Auth0 user is missing the user claim', async () => {
-    const { result } = renderHook(useCurrentUserGP2, {
-      wrapper: userProviderGP2({
-        sub: '42',
-        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+    expect(() =>
+      renderHook(useCurrentUserGP2, {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+        }),
       }),
-    });
-    expect(result.error).toMatchInlineSnapshot(
-      `[Error: Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]]`,
+    ).toThrow(
+      Error(
+        `Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]`,
+      ),
     );
   });
 
   it('throws if the user claim is not an object', async () => {
-    const { result } = renderHook(useCurrentUserGP2, {
-      wrapper: userProviderGP2({
-        sub: '42',
-        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-        [`${window.location.origin}/user`]: 'testuser',
+    expect(() =>
+      renderHook(useCurrentUserGP2, {
+        wrapper: userProviderGP2({
+          sub: '42',
+          aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+          [`${window.location.origin}/user`]: 'testuser',
+        }),
       }),
-    });
-    expect(result.error).toMatchInlineSnapshot(
-      `[Error: Invalid user claim - expected object, got testuser]`,
-    );
+    ).toThrow(Error(`Invalid user claim - expected object, got testuser`));
   });
 
   it('returns the user claim', async () => {

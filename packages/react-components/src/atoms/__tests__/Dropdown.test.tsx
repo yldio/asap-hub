@@ -1,6 +1,6 @@
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ember, fern, lead, pine, silver } from '../../colors';
 import Dropdown from '../Dropdown';
 
@@ -289,7 +289,7 @@ it('shows the field in red when required field not filled', () => {
 
   userEvent.click(input);
   userEvent.type(input, 'Heathrow');
-  userEvent.type(input, specialChars.enter);
+  userEvent.type(input, '{enter}');
 
   expect(handleChange).toHaveBeenCalledWith('LHR');
   rerender(

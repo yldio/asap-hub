@@ -47,7 +47,9 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
 }) => (
   <Card key={user.id} overrideStyles={cardStyles}>
     <div css={containerStyles}>
-      <ImageLink link={gp2Routing.users({}).user({ userId: user.id }).$}>
+      <ImageLink
+        link={gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: user.id })}
+      >
         <Avatar
           overrideStyles={avatarStyles}
           imageUrl={user.avatarUrl}
@@ -56,7 +58,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
         />
       </ImageLink>
       <LinkHeadline
-        href={gp2Routing.users({}).user({ userId: user.id }).$}
+        href={gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: user.id })}
         level={4}
         noMargin
         title={`${user.displayName}${

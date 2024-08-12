@@ -1,10 +1,11 @@
 import { pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { ReactNode } from 'react';
 
 const { rem } = pixels;
 
 type IconWithLabelProps = {
-  readonly icon: JSX.Element | React.FC;
+  readonly icon: ReactNode; // JSX.Element | React.FC;
   readonly noMargin?: boolean;
 };
 
@@ -18,7 +19,7 @@ const iconStyles = css({
   display: 'inline-flex',
 });
 
-const IconWithLabel: React.FC<IconWithLabelProps> = ({
+const IconWithLabel: React.FC<React.PropsWithChildren<IconWithLabelProps>> = ({
   icon,
   children,
   noMargin = false,

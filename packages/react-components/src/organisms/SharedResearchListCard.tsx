@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2 } from '../atoms';
 import { steel } from '../colors';
@@ -55,9 +55,9 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
                 link={link}
               />
               <Anchor
-                href={
-                  sharedResearch({}).researchOutput({ researchOutputId: id }).$
-                }
+                href={sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
+                  researchOutputId: id,
+                })}
               >
                 <Headline2 styleAsHeading={5}>{title}</Headline2>
               </Anchor>

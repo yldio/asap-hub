@@ -1,5 +1,5 @@
 import { EventResponse, gp2, ResearchOutputResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearchRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 
@@ -59,9 +59,9 @@ const paragraphStyle = css({
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 const getSharedOutputHrefCRN = (id: string) =>
-  sharedResearch({}).researchOutput({
+  sharedResearchRoutes.DEFAULT.DETAILS.buildPath({
     researchOutputId: id,
-  }).$;
+  });
 
 type RecentSharedOutputProp<
   T extends

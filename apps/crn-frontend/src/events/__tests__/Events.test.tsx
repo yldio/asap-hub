@@ -1,10 +1,15 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
-import { events } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { eventRoutes } from '@asap-hub/routing';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -25,7 +30,9 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-const renderEventsPage = async (pathname = events({}).$) => {
+const renderEventsPage = async (
+  pathname: string = eventRoutes.DEFAULT.buildPath({}),
+) => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
@@ -36,10 +43,10 @@ const renderEventsPage = async (pathname = events({}).$) => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname }]}>
-              <Route path={events.template}>
-                <Events />
-              </Route>
+            <MemoryRouter initialEntries={[pathname]}>
+              <Routes>
+                <Route path={eventRoutes.DEFAULT.path} element={<Events />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -66,13 +73,13 @@ describe('Events', () => {
   });
 
   describe.each`
-    eventProperty | route                        | expected
-    ${'after'}    | ${events({}).past({}).$}     | ${'past'}
-    ${'before'}   | ${events({}).upcoming({}).$} | ${'upcoming'}
+    eventProperty | route                                         | expected
+    ${'after'}    | ${eventRoutes.DEFAULT.PAST.buildPath({})}     | ${'past'}
+    ${'before'}   | ${eventRoutes.DEFAULT.UPCOMING.buildPath({})} | ${'upcoming'}
   `('the events $expected page', ({ eventProperty, route, expected }) => {
     it('can search for events', async () => {
       await renderEventsPage(route);
-      userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+      await userEvent.type(screen.getByRole('searchbox'), 'searchterm');
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),
@@ -85,7 +92,7 @@ describe('Events', () => {
   describe('the events calendar page', () => {
     it('renders a google calendar iframe', async () => {
       mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
-      await renderEventsPage(events({}).calendar({}).$);
+      await renderEventsPage(eventRoutes.DEFAULT.CALENDAR.buildPath({}));
       const calendars = screen.getByTitle('Calendar');
       expect(calendars.tagName).toBe('IFRAME');
     });
@@ -98,9 +105,11 @@ describe('Events', () => {
           name: `Calendar title ${index}`,
         })),
       });
-      await renderEventsPage(events({}).calendar({}).$);
-      expect(screen.getByText(/calendar title 0/i)).toBeVisible();
-      expect(screen.getByText(/calendar title 1/i)).toBeVisible();
+      await renderEventsPage(eventRoutes.DEFAULT.CALENDAR.path);
+      waitFor(() => {
+        expect(screen.getByText(/calendar title 0/i)).toBeVisible();
+        expect(screen.getByText(/calendar title 1/i)).toBeVisible();
+      });
     });
   });
 });

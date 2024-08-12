@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputDocumentType } from '@asap-hub/model';
 
-import { news } from '@asap-hub/routing';
+import { newsRoutes } from '@asap-hub/routing';
 import { Display, Link, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
@@ -33,11 +33,9 @@ const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
       Add your protocol to a repository (e.g. protocols.io) before sharing on
       the Hub. Find out{' '}
       <Link
-        href={
-          news({}).article({
-            articleId: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
-          }).$
-        }
+        href={newsRoutes.DEFAULT.DETAILS.buildPath({
+          id: '7d3dd1ec-14ef-441c-8a2c-19a23d6264f3',
+        })}
       >
         how to add to protocols.io
       </Link>{' '}
@@ -49,11 +47,9 @@ const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
       Add your dataset to a platform (e.g. Zenodo) before sharing on the Hub.
       Find out{' '}
       <Link
-        href={
-          news({}).article({
-            articleId: '735944ac-5641-431f-8984-bf53972dfd4e',
-          }).$
-        }
+        href={newsRoutes.DEFAULT.DETAILS.buildPath({
+          id: '735944ac-5641-431f-8984-bf53972dfd4e',
+        })}
       >
         how to add to Zenodo
       </Link>{' '}

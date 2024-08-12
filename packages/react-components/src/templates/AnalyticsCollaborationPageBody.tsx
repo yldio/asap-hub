@@ -1,4 +1,4 @@
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
@@ -53,7 +53,7 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
             'Number of outputs in which additional teams are listed as contributors to the output',
         };
 
-type CollaborationAnalyticsProps = Pick<
+export type CollaborationAnalyticsProps = Pick<
   ComponentProps<typeof AnalyticsControls>,
   | 'currentPage'
   | 'documentCategory'
@@ -79,7 +79,7 @@ const tableHeaderStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
-const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
+const AnalyticsCollaborationPageBody = ({
   children,
   currentPage,
   documentCategory,
@@ -93,7 +93,7 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   tags,
   timeRange,
   type,
-}) => {
+}: CollaborationAnalyticsProps) => {
   const { header, description } = getPageHeaderDescription(metric, type);
   return (
     <article>
@@ -121,11 +121,12 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
       </div>
       <AnalyticsControls
         currentPage={currentPage}
+        href={analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+          metric,
+          type,
+        })}
         documentCategory={documentCategory}
         exportResults={exportResults}
-        href={
-          analytics({}).collaboration({}).collaborationPath({ metric, type }).$
-        }
         loadTags={loadTags}
         metricOption={metric}
         outputType={outputType}

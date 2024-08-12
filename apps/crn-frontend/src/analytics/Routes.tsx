@@ -1,9 +1,9 @@
 import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
-import { analytics } from '@asap-hub/routing';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 const loadProductivity = () =>
   import(/* webpackChunkName: "productivity" */ './productivity/Productivity');
@@ -24,99 +24,107 @@ const ProductivityBody = lazy(loadProductivity);
 const CollaborationBody = lazy(loadCollaboration);
 const EngagementBody = lazy(loadEngagement);
 
-const Routes = () => {
+const AnalyticsRoutes = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
 
-  const { path } = useRouteMatch();
-
   return (
-    <Switch>
-      <Route path={path + analytics({}).productivity.template}>
-        <Switch>
-          <Route
-            exact
-            path={
-              path +
-              analytics({}).productivity.template +
-              analytics({}).productivity({}).metric.template
-            }
-          >
+    <Routes>
+      <Route path={analytics.DEFAULT.$.PRODUCTIVITY.relativePath}>
+        <Route
+          path={analytics.DEFAULT.PRODUCTIVITY.$.METRIC.relativePath}
+          element={
             <AnalyticsPage>
               <Frame title="Resource & Data Sharing">
                 <ProductivityBody />
               </Frame>
             </AnalyticsPage>
-          </Route>
-          <Redirect
-            to={analytics({}).productivity({}).metric({ metric: 'user' }).$}
-          />
-        </Switch>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+                metric: 'user',
+              })}
+            />
+          }
+        />
       </Route>
       {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-        <Route path={path + analytics({}).collaboration.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).collaboration.template +
-                analytics({}).collaboration({}).collaborationPath.template
-              }
-            >
+        <Route path={analytics.DEFAULT.$.COLLABORATION.relativePath}>
+          <Route
+            path={analytics.DEFAULT.COLLABORATION.$.METRIC.relativePath}
+            element={
               <AnalyticsPage>
                 <Frame title="Collaboration">
                   <CollaborationBody />
                 </Frame>
               </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .collaboration({})
-                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
-              }
-            />
-          </Switch>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to={analytics.DEFAULT.COLLABORATION.METRIC.buildPath({
+                  metric: 'user',
+                  type: 'within-team',
+                })}
+              />
+            }
+          />
         </Route>
       )}
       {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-        <Route path={path + analytics({}).engagement.template}>
-          <AnalyticsPage>
-            <Frame title="Engagement">
-              <EngagementBody />
-            </Frame>
-          </AnalyticsPage>
-        </Route>
+        <Route
+          path={analytics.DEFAULT.$.ENGAGEMENT.relativePath}
+          element={
+            <AnalyticsPage>
+              <Frame title="Engagement">
+                <EngagementBody />
+              </Frame>
+            </AnalyticsPage>
+          }
+        />
       )}
-      <Route path={path + analytics({}).leadership.template}>
-        <Switch>
-          <Route
-            exact
-            path={
-              path +
-              analytics({}).leadership.template +
-              analytics({}).leadership({}).metric.template
-            }
-          >
+      <Route path={analytics.DEFAULT.$.LEADERSHIP.relativePath}>
+        <Route
+          path={analytics.DEFAULT.LEADERSHIP.$.METRIC.relativePath}
+          element={
             <AnalyticsPage>
               <Frame title="Leadership & Membership">
                 <LeadershipBody />
               </Frame>
             </AnalyticsPage>
-          </Route>
-          <Redirect
-            to={
-              analytics({}).leadership({}).metric({ metric: 'working-group' }).$
-            }
-          />
-        </Switch>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={analytics.DEFAULT.LEADERSHIP.METRIC.buildPath({
+                metric: 'working-group',
+              })}
+            />
+          }
+        />
       </Route>
-      <Redirect to={analytics({}).productivity({ metric: 'user' }).$} />)
-    </Switch>
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({
+              metric: 'user',
+            })}
+          />
+        }
+      />
+    </Routes>
   );
 };
 
-export default Routes;
+export default AnalyticsRoutes;

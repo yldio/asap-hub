@@ -6,7 +6,7 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { boolean } from './knobs';
 
@@ -124,13 +124,13 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ResearchOutputForm {...researchOutputFormProps} />
   </StaticRouter>
 );
 
 export const EditMode = () => (
-  <StaticRouter>
+  <StaticRouter location="/url">
     <ResearchOutputForm
       {...researchOutputFormProps}
       researchOutputData={{

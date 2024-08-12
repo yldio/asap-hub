@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import {
-  about,
-  discover,
-  network,
-  sharedResearch,
-  news,
-  events,
-  analytics,
+  aboutRoutes,
+  discoverRoutes,
+  networkRoutes,
+  sharedResearchRoutes,
+  newsRoutes,
+  eventRoutes,
+  analyticsRoutes,
 } from '@asap-hub/routing';
 
 import {
@@ -56,7 +56,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
     <ul css={listStyles}>
       <li>
         <NavigationLink
-          href={network({}).$}
+          href={networkRoutes.DEFAULT.buildPath({})}
           icon={networkIcon}
           enabled={userOnboarded}
         >
@@ -65,7 +65,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={sharedResearch({}).$}
+          href={sharedResearchRoutes.DEFAULT.LIST.buildPath({})}
           icon={<LibraryIcon />}
           enabled={userOnboarded}
         >
@@ -74,7 +74,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={events({}).$}
+          href={eventRoutes.DEFAULT.buildPath({})}
           icon={calendarIcon}
           enabled={userOnboarded}
         >
@@ -83,7 +83,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={news({}).$}
+          href={newsRoutes.DEFAULT.LIST.buildPath({})}
           icon={newsIcon}
           enabled={userOnboarded}
         >
@@ -92,7 +92,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={discover({}).$}
+          href={discoverRoutes.DEFAULT.LIST.buildPath({})}
           icon={discoverIcon}
           enabled={userOnboarded}
         >
@@ -101,7 +101,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink
-          href={about({}).$}
+          href={aboutRoutes.buildPath({})}
           icon={aboutIcon}
           enabled={userOnboarded}
         >
@@ -111,7 +111,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       {canViewAnalytics && (
         <li>
           <NavigationLink
-            href={analytics({}).$}
+            href={analyticsRoutes.DEFAULT.buildPath({})}
             icon={analyticsIcon}
             enabled={userOnboarded}
           >

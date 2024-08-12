@@ -7,7 +7,7 @@ import {
   utils,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps, FC } from 'react';
 
@@ -87,10 +87,15 @@ const OutputsList: React.FC<OutputsListProps> = ({
       renderPageHref={renderPageHref}
       isListView={isListView}
       cardViewHref={
-        network({}).users({}).user({ userId }).outputs({}).$ + cardViewParams
+        networkRoutes.DEFAULT.USERS.DETAILS.buildPath({ id: userId }) +
+        cardViewParams
+        // network({}).users({}).user({ userId }).outputs({}).$
       }
       listViewHref={
-        network({}).users({}).user({ userId }).outputs({}).$ + listViewParams
+        networkRoutes.DEFAULT.USERS.DETAILS.buildPath({ id: userId }) +
+        listViewParams
+
+        // network({}).users({}).user({ userId }).outputs({}).$ + listViewParams
       }
       ownUser={ownUser}
       hasOutputs={hasOutputs}

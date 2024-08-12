@@ -11,7 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
-import { tags } from '@asap-hub/routing';
+import { tagRoutes } from '@asap-hub/routing';
 
 import {
   steel,
@@ -169,7 +169,7 @@ export const searchButtonAreaStyles = css({
   svg: {
     fill: charcoal.rgb,
   },
-  '& .active-link': {
+  '& .active': {
     svg: {
       fill: success900.rgb,
     },
@@ -268,7 +268,7 @@ const Layout: FC<LayoutProps> = ({
           </Suspense>
         </div>
         <div css={searchButtonAreaStyles}>
-          <Navigation squareBorder href={tags({}).$}>
+          <Navigation squareBorder href={tagRoutes.buildPath({})}>
             <div css={SearchIconStyles}>{tagSearchIcon}</div>
           </Navigation>
         </div>

@@ -110,11 +110,9 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
                 <Fragment key={id}>
                   {idx === 0 || <span css={dotDivider}>·</span>}
                   <Link
-                    href={
-                      gp2Routing
-                        .workingGroups({})
-                        .workingGroup({ workingGroupId: id }).$
-                    }
+                    href={gp2Routing.workingGroups.DEFAULT.DETAILS.buildPath({
+                      workingGroupId: id,
+                    })}
                   >
                     <span css={workingGroupsLinkStyles}>{title}</span>
                   </Link>
@@ -135,7 +133,9 @@ const UserCardInfo: React.FC<UserCardInfoProps> = ({
             [...projects].sort(caseInsensitiveTitle).map(({ id, title }) => (
               <Link
                 key={id}
-                href={gp2Routing.projects({}).project({ projectId: id }).$}
+                href={gp2Routing.projects.DEFAULT.DETAILS.buildPath({
+                  projectId: id,
+                })}
               >
                 {title}
               </Link>

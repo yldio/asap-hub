@@ -1,8 +1,9 @@
+import { useTypedParams } from 'react-router-typesafe-routes/dom';
 import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { ValidationErrorResponse, gp2 as gp2Model } from '@asap-hub/model';
 import { usePrevious } from '@asap-hub/react-components';
-import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useEffect, useState, FC } from 'react';
 import {
   handleError,
@@ -35,10 +36,10 @@ type CreateProjectOutputProps = {
 };
 
 const CreateProjectOutput: FC<CreateProjectOutputProps> = ({ outputData }) => {
-  const { projectId } = useRouteParams(projects({}).project);
-  const { outputDocumentType } = useRouteParams(
-    projects({}).project({ projectId }).createOutput,
+  const { projectId, outputDocumentType } = useTypedParams(
+    projects.DEFAULT.DETAILS.CREATE_OUTPUT,
   );
+
   const createOutput = useCreateOutput();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();

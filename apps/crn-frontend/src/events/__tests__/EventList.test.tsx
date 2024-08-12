@@ -1,8 +1,8 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
-import { render, waitFor } from '@testing-library/react';
+import { act, screen, render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -37,13 +37,18 @@ const renderEventsListPage = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <Route path="/">
-                <EventList
-                  searchQuery={searchQuery}
-                  currentTime={currentTime}
-                  past={past}
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <EventList
+                      searchQuery={searchQuery}
+                      currentTime={currentTime}
+                      past={past}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -62,7 +67,9 @@ afterEach(() => {
 });
 
 it('can search for events', async () => {
-  await renderEventsListPage('searchterm');
+  await act(async () => {
+    await renderEventsListPage('searchterm');
+  });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.anything(),
     expect.objectContaining({
@@ -72,7 +79,9 @@ it('can search for events', async () => {
 });
 
 it('sets after to an hour before date provided for upcoming events', async () => {
-  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
+  await act(async () => {
+    await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
+  });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.anything(),
     expect.objectContaining({
@@ -82,7 +91,9 @@ it('sets after to an hour before date provided for upcoming events', async () =>
 });
 
 it('sets before to an hour before date provided for past events', async () => {
-  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
+  await act(async () => {
+    await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
+  });
   expect(mockGetEvents).toHaveBeenCalledWith(
     expect.anything(),
     expect.objectContaining({
@@ -99,20 +110,23 @@ it('renders an algolia tagged result list and hit', async () => {
     algoliaIndexName: 'index',
     algoliaQueryId: 'queryId',
   });
-
   const { container } = await renderEventsListPage(
     '',
     new Date('2020-01-01T12:00:00Z'),
     true,
   );
-  const resultListHtml = container.querySelector('*[data-insights-index]');
-  expect(resultListHtml?.getAttribute('data-insights-index')).toEqual('index');
-  const hitHtml = resultListHtml?.querySelector('*[data-insights-object-id]');
-  expect(hitHtml?.attributes).toMatchInlineSnapshot(`
+  waitFor(() => {
+    const resultListHtml = container.querySelector('*[data-insights-index]');
+    expect(resultListHtml?.getAttribute('data-insights-index')).toEqual(
+      'index',
+    );
+    const hitHtml = resultListHtml?.querySelector('*[data-insights-object-id]');
+    expect(hitHtml?.attributes).toMatchInlineSnapshot(`
     NamedNodeMap {
       "data-insights-object-id": "hitId",
       "data-insights-position": "1",
       "data-insights-query-id": "queryId",
     }
   `);
+  });
 });

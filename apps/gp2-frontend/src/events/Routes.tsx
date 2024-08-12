@@ -1,6 +1,6 @@
 import { useFlags } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { EventsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';
@@ -20,41 +20,58 @@ const Events: FC<Record<string, never>> = () => {
     loadEventDirectory().then(loadEvent);
   }, []);
 
-  const { path } = useRouteMatch();
+  // const { pathname: path } = useLocation();
   const [currentTime] = useState(new Date());
   const { isEnabled } = useFlags();
 
   return (
-    <Switch>
-      <Route exact path={path + gp2.events({}).calendar.template}>
-        <EventsPage>
-          <Frame title="Subscribe to Calendars">
-            <Calendars />
+    <Routes>
+      <Route
+        path={gp2.events.DEFAULT.$.CALENDAR.relativePath}
+        element={
+          <EventsPage>
+            <Frame title="Subscribe to Calendars">
+              <Calendars />
+            </Frame>
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events.DEFAULT.$.UPCOMING.relativePath}
+        element={
+          <EventsPage>
+            <EventsDirectory currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events.DEFAULT.$.PAST.relativePath}
+        element={
+          <EventsPage>
+            <EventsDirectory past currentTime={currentTime} paddingTop={32} />
+          </EventsPage>
+        }
+      />
+      <Route
+        path={gp2.events.DEFAULT.$.DETAILS.relativePath}
+        element={
+          <Frame title="Event">
+            <Event />
           </Frame>
-        </EventsPage>
-      </Route>
-
-      <Route exact path={path + gp2.events({}).upcoming.template}>
-        <EventsPage>
-          <EventsDirectory currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      </Route>
-      <Route exact path={path + gp2.events({}).past.template}>
-        <EventsPage>
-          <EventsDirectory past currentTime={currentTime} paddingTop={32} />
-        </EventsPage>
-      </Route>
-      <Route path={path + gp2.events({}).event.template}>
-        <Frame title="Event">
-          <Event />
-        </Frame>
-      </Route>
+        }
+      />
       {isEnabled('DISPLAY_EVENTS') ? (
-        <Redirect to={gp2.events({}).upcoming({}).$} />
+        <Route
+          path="*"
+          element={<Navigate to={gp2.events.DEFAULT.$.UPCOMING.relativePath} />}
+        />
       ) : (
-        <Redirect to={gp2.events({}).calendar({}).$} />
+        <Route
+          path="*"
+          element={<Navigate to={gp2.events.DEFAULT.$.CALENDAR.relativePath} />}
+        />
       )}
-    </Switch>
+    </Routes>
   );
 };
 

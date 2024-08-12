@@ -1,6 +1,6 @@
-import { analytics } from '@asap-hub/routing';
-import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
+import { analyticsRoutes as analytics } from '@asap-hub/routing';
 
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { rem } from '../pixels';
@@ -74,13 +74,13 @@ const AnalyticsProductivityPageBody: React.FC<ProductivityAnalyticsProps> = ({
     <AnalyticsControls
       currentPage={currentPage}
       documentCategory={documentCategory}
-      exportResults={exportResults}
-      href={analytics({}).productivity({}).metric({ metric }).$}
-      loadTags={loadTags}
-      metricOption={metric}
       outputType={outputType}
-      setTags={setTags}
+      metricOption={metric}
       tags={tags}
+      loadTags={loadTags}
+      setTags={setTags}
+      href={analytics.DEFAULT.PRODUCTIVITY.METRIC.buildPath({ metric })}
+      exportResults={exportResults}
       timeRange={timeRange}
     />
     {children}

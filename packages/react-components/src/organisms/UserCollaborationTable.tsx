@@ -1,5 +1,5 @@
 import { PerformanceMetrics, TeamRole } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { CaptionCard, CaptionItem, PageControls } from '..';
@@ -131,12 +131,20 @@ const displayTeams = (items: UserCollaborationMetric['teams']) => {
   }
   if (items.length === 1) {
     return items[0] && !items[0].isTeamInactive ? (
-      <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+      <Link
+        href={networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+          teamId: team.id,
+        })}
+      >
         {team.team}
       </Link>
     ) : (
       <span css={iconStyles}>
-        <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+        <Link
+          href={networkRoutes.DEFAULT.TEAMS.DETAILS.buildPath({
+            teamId: team.id,
+          })}
+        >
           {team.team}
         </Link>
         <InactiveBadgeIcon />
@@ -216,7 +224,11 @@ const UserCollaborationTable: React.FC<UserCollaborationTableProps> = ({
           <div key={row.id} css={[rowStyles]}>
             <span css={[titleStyles, rowTitleStyles]}>User</span>
             <p css={iconStyles}>
-              <Link href={network({}).users({}).user({ userId: row.id }).$}>
+              <Link
+                href={networkRoutes.DEFAULT.USERS.DETAILS.buildPath({
+                  id: row.id,
+                })}
+              >
                 {row.name}
               </Link>
               {row.isAlumni && alumniBadgeIcon}

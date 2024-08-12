@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useLastLocation } from 'react-router-last-location';
+import { useLastLocation } from 'react-router-dom-last-location';
 
 export const useBackHref = (): string | null => {
   const [lastLocationWhenEntering] = useState(useLastLocation());
-  return (
-    lastLocationWhenEntering &&
-    lastLocationWhenEntering.pathname +
-      lastLocationWhenEntering.search +
-      lastLocationWhenEntering.hash
-  );
+  const lastLocation = lastLocationWhenEntering.lastLocation;
+  return lastLocation
+    ? lastLocation.pathname + lastLocation.search + lastLocation.hash
+    : null;
 };

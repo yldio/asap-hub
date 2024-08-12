@@ -86,7 +86,7 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByRole('link', { name: /get in touch/i })).toBeVisible();
     });
 
-    it('conditionally renders external link icon if link is an external link', () => {
+    it('conditionally renders external link icon if link is an external link', async () => {
       const opportunitiesLink = new URL(
         '/example',
         mockGetLocation(),
@@ -100,7 +100,7 @@ describe('ProjectDetailHeader', () => {
       );
 
       expect(
-        screen.queryByRole('link', { name: /read more external link/i }),
+        await screen.queryByRole('link', { name: /read more external link/i }),
       ).not.toBeInTheDocument();
 
       rerender(
@@ -131,7 +131,7 @@ describe('ProjectDetailHeader', () => {
       );
       const copyButton = screen.getByRole('button', { name: 'Copy' });
       expect(copyButton).toBeVisible();
-      userEvent.click(copyButton);
+      await userEvent.click(copyButton);
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
         'test@example.com',
       );

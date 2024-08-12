@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { gp2 } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -25,7 +26,9 @@ type ProjectOverviewProps = Pick<
   | 'members'
   | 'calendar'
   | 'tags'
->;
+> & {
+  children?: ReactNode;
+};
 
 const { rem } = pixels;
 
@@ -128,7 +131,9 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
               id,
             }),
           )}
-          userRoute={gp2Routing.users({}).user}
+          userRoute={(params: { id: string }) =>
+            gp2Routing.users.DEFAULT.DETAILS.buildPath({ userId: params.id })
+          }
           overrideNameStyles={css({ overflowWrap: 'anywhere' })}
         />
       </div>

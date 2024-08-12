@@ -59,7 +59,7 @@ const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderCreateWorkingGroupOutput = async (
-  documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
+  outputDocumentType: gp2Routing.OutputDocumentTypeParameter = 'article',
 ) => {
   render(
     <RecoilRoot>
@@ -68,21 +68,15 @@ const renderCreateWorkingGroupOutput = async (
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                gp2Routing
-                  .workingGroups({})
-                  .workingGroup({ workingGroupId: 'working-group-id-1' })
-                  .createOutput({ outputDocumentType: documentType }).$,
+                gp2Routing.workingGroups.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath(
+                  { workingGroupId: 'working-group-id-1', outputDocumentType },
+                ),
               ]}
             >
               <Route
-                path={
-                  gp2Routing.workingGroups.template +
-                  gp2Routing.workingGroups({}).workingGroup.template +
-                  gp2Routing
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: 'working-group-id-1' })
-                    .createOutput.template
-                }
+                path={gp2Routing.workingGroups.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath(
+                  { workingGroupId: 'working-group-id-1', outputDocumentType },
+                )}
               >
                 <NotificationMessages>
                   <CreateWorkingGroupOutput />

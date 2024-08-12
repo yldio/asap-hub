@@ -67,19 +67,14 @@ const renderCreateProjectOutput = async (
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                gp2Routing
-                  .projects({})
-                  .project({ projectId: 'project-id-1' })
-                  .createOutput({ outputDocumentType: documentType }).$,
+                gp2Routing.projects.DEFAULT.DETAILS.CREATE_OUTPUT.buildPath({
+                  projectId: 'project-id-1',
+                  outputDocumentType: documentType,
+                }),
               ]}
             >
               <Route
-                path={
-                  gp2Routing.projects.template +
-                  gp2Routing.projects({}).project.template +
-                  gp2Routing.projects({}).project({ projectId: 'project-id-1' })
-                    .createOutput.template
-                }
+                path={gp2Routing.projects.DEFAULT.DETAILS.CREATE_OUTPUT.path}
               >
                 <NotificationMessages>
                   <CreateProjectOutput />

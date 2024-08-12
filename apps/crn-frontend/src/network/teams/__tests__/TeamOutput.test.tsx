@@ -12,16 +12,16 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
+import { networkRoutes, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { Route, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getGeneratedResearchOutputContent } from '../../../shared-research/api';
 import {
@@ -87,11 +87,11 @@ const mandatoryFields = async (
 
   const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
   userEvent.type(typeInput, type);
-  userEvent.type(typeInput, specialChars.enter);
+  userEvent.type(typeInput, '{ENTER}');
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
   userEvent.type(identifier, 'DOI');
-  userEvent.type(identifier, specialChars.enter);
+  userEvent.type(identifier, '{ENTER}');
   userEvent.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
   return {
     publish: async () => {
@@ -611,11 +611,7 @@ async function renderPage({
   researchOutputData,
   versionAction,
 }: RenderPageOptions) {
-  const path =
-    network.template +
-    network({}).teams.template +
-    network({}).teams({}).team.template +
-    network({}).teams({}).team({ teamId }).createOutput.template;
+  const path = networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.path;
 
   render(
     <RecoilRoot
@@ -626,22 +622,27 @@ async function renderPage({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <StaticRouter
-              location={
-                network({})
-                  .teams({})
-                  .team({ teamId })
-                  .createOutput({ outputDocumentType }).$
-              }
+            <MemoryRouter
+              initialEntries={[
+                networkRoutes.DEFAULT.TEAMS.DETAILS.CREATE_OUTPUT.buildPath({
+                  teamId,
+                  outputDocumentType,
+                }),
+              ]}
             >
-              <Route path={path}>
-                <TeamOutput
-                  teamId={teamId}
-                  researchOutputData={researchOutputData}
-                  versionAction={versionAction}
+              <Routes>
+                <Route
+                  path={path}
+                  element={
+                    <TeamOutput
+                      teamId={teamId}
+                      researchOutputData={researchOutputData}
+                      versionAction={versionAction}
+                    />
+                  }
                 />
-              </Route>
-            </StaticRouter>
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

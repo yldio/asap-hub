@@ -115,7 +115,7 @@ const NavigationHeader: React.FC<NavigationHeaderProps> = ({
         </div>
       </div>
       <div css={searchButtonAreaStyles}>
-        <NavigationLink squareBorder href={gp2Routing.tags({}).$}>
+        <NavigationLink squareBorder href={gp2Routing.tags.buildPath({})}>
           <span css={searchIconStyles}>{tagSearchIcon}</span>
         </NavigationLink>
       </div>

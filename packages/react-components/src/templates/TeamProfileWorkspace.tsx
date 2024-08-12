@@ -1,9 +1,9 @@
 import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -59,7 +59,7 @@ const toolContainerStyles = css({
   gridRowGap: `${24 / perRem}em`,
 });
 
-type TeamProfileWorkspaceProps = Readonly<
+export type TeamProfileWorkspaceProps = Readonly<
   Pick<
     TeamResponse,
     'id' | 'pointOfContact' | 'lastModifiedDate' | 'manuscripts'
@@ -80,26 +80,24 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   setEligibilityReasons,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const toolsRoute = network({})
-    .teams({})
-    .team({ teamId: id })
-    .workspace({})
-    .tools({});
+  const toolsRoute =
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.TOOLS.buildPath({
+      teamId: id,
+    });
 
-  const manuscriptRoute = network({})
-    .teams({})
-    .team({ teamId: id })
-    .workspace({})
-    .createManuscript({}).$;
+  const manuscriptRoute =
+    networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.CREATE_MANUSCRIPT.buildPath({
+      teamId: id,
+    });
 
   const handleShareManuscript = () => {
     setDisplayEligibilityModal(true);
   };
 
   const handleGoToManuscriptForm = () => {
-    history.push(manuscriptRoute);
+    navigate(manuscriptRoute);
   };
 
   return (
@@ -154,7 +152,9 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               <li key={`tool-${index}`}>
                 <ToolCard
                   {...tool}
-                  editHref={toolsRoute.tool({ toolIndex: `${index}` }).$}
+                  editHref={networkRoutes.DEFAULT.TEAMS.DETAILS.WORKSPACE.TOOLS.TOOL.buildPath(
+                    { teamId: id, toolIndex: index },
+                  )}
                   onDelete={onDeleteTool && (() => onDeleteTool(index))}
                 />
               </li>
@@ -162,7 +162,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
           </ul>
         )}
         <div css={newToolStyles}>
-          <Link href={toolsRoute.$} buttonStyle>
+          <Link href={toolsRoute} buttonStyle>
             <span>Add a new team link</span>
           </Link>
         </div>

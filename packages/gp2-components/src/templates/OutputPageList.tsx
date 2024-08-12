@@ -26,7 +26,9 @@ const outputFilters: ReadonlyArray<
   ...gp2Model.outputDocumentTypes.map((value) => ({ label: value, value })),
 ];
 
-const OutputPageList: React.FC<OutputPageListProps> = ({
+const OutputPageList: React.FC<
+  React.PropsWithChildren<OutputPageListProps>
+> = ({
   children,
   filters,
   onChangeFilter,

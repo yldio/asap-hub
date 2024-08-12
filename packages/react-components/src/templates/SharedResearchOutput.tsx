@@ -1,5 +1,5 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { networkRoutes, sharedResearchRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
 
@@ -89,6 +89,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
+
   const tags = [
     ...props.methods,
     ...props.organisms,
@@ -123,20 +124,24 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   const duplicateLink =
     props.workingGroups && props.workingGroups[0].id
-      ? network({})
-          .workingGroups({})
-          .workingGroup({
-            workingGroupId: props.workingGroups[0].id,
-          })
-          .duplicateOutput({
-            id,
-          }).$
-      : props.teams[0] && props.teams[0].id
-        ? network({})
-            .teams({})
-            .team({ teamId: props.teams[0].id })
-            .duplicateOutput({ id }).$
-        : undefined;
+      ? // TODO: fix this
+        networkRoutes.DEFAULT.path
+      : // network({})
+        //     .workingGroups({})
+        //     .workingGroup({
+        //       workingGroupId: props.workingGroups[0].id,
+        //     })
+        //     .duplicateOutput({
+        //       id,
+        //     }).$
+        props.teams[0] && props.teams[0].id
+        ? // TODO: fix this
+          networkRoutes.DEFAULT.path
+        : // network({})
+          //     .teams({})
+          //     .team({ teamId: props.teams[0].id })
+          //     .duplicateOutput({ id }).$
+          undefined;
 
   return (
     <div>
@@ -204,11 +209,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             cancelText="Cancel"
             confirmText="Publish Output"
             onSave={() => publishOutput()}
-            successHref={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .researchOutputPublished({}).$
-            }
+            successHref={sharedResearchRoutes.DEFAULT.DETAILS.PUBLISH_RESEARCH_OUTPUT.buildPath(
+              { researchOutputId: id },
+            )}
             onCancel={() => {
               setDisplayPublishModal(false);
             }}

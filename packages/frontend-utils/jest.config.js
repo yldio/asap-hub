@@ -8,6 +8,8 @@ module.exports = {
   rootDir: __dirname,
   testEnvironment: 'jsdom',
 
+  setupFiles: ['whatwg-fetch'],
+
   setupFilesAfterEnv: [
     ...(setupFilesAfterEnv || []),
     require.resolve('../../jest/dom-extensions-setup-after-env.js'),

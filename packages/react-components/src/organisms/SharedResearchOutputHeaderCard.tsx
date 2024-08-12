@@ -1,6 +1,6 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { network } from '@asap-hub/routing';
+import { networkRoutes } from '@asap-hub/routing';
 
 import { Card, Display, StateTag } from '../atoms';
 import { lead } from '../colors';
@@ -98,7 +98,9 @@ const SharedResearchOutputHeaderCard: React.FC<
     <UsersList
       users={authors.map((author) => ({
         ...author,
-        href: author.id && network({}).users({}).user({ userId: author.id }).$,
+        href:
+          author.id &&
+          networkRoutes.DEFAULT.USERS.DETAILS.buildPath({ id: author.id }),
       }))}
     />
     <div css={associationStyles}>

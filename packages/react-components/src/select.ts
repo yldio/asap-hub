@@ -91,7 +91,7 @@ export const reactSelectStyles = (
   }: Theme,
   isInvalid: boolean,
 ): ComponentProps<typeof Select>['styles'] => ({
-  ...baseSelectStyles,
+  ...(baseSelectStyles as ComponentProps<typeof Select>['styles']),
   option: (provided, { isFocused }) => ({
     ...provided,
 
@@ -120,7 +120,7 @@ export const reactSelectStyles = (
   singleValue: (provided, { getValue }) => ({
     ...provided,
     margin: 0,
-    color: getValue()?.some((option) => option.value !== '')
+    color: getValue()?.some((option) => (option as { value: any }).value !== '')
       ? 'unset'
       : tin.rgb,
   }),
@@ -134,7 +134,7 @@ export const reactSelectStyles = (
     color: isInvalid ? ember.rgb : lead.rgb,
     opacity: isInvalid ? 0.4 : provided.opacity,
   }),
-  menu: (provided: CSSObject) => ({
+  menu: (provided) => ({
     ...provided,
 
     zIndex: 300,
@@ -147,7 +147,7 @@ export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
   }: Theme,
   isInvalid: boolean,
 ): StylesConfig<T, true> => ({
-  ...baseSelectStyles,
+  ...(baseSelectStyles as StylesConfig<T, true>),
   option: (provided, { isFocused }) => ({
     ...provided,
 

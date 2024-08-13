@@ -14,11 +14,12 @@ const orderedSteps = [
 ] as const;
 
 export const stepToHref: Record<(typeof orderedSteps)[number], string> = {
-  'Core Details': gp2Routing.onboarding({}).coreDetails({}).$,
-  Background: gp2Routing.onboarding({}).background({}).$,
-  'GP2 Groups': gp2Routing.onboarding({}).groups({}).$,
-  'Additional Details': gp2Routing.onboarding({}).additionalDetails({}).$,
-  Preview: gp2Routing.onboarding({}).preview({}).$,
+  'Core Details': gp2Routing.onboarding.DEFAULT.CORE_DETAILS.relativePath,
+  Background: gp2Routing.onboarding.DEFAULT.BACKGROUND.relativePath,
+  'GP2 Groups': gp2Routing.onboarding.DEFAULT.GROUPS.relativePath,
+  'Additional Details':
+    gp2Routing.onboarding.DEFAULT.ADDITIONAL_DETAILS.relativePath,
+  Preview: gp2Routing.onboarding.DEFAULT.PREVIEW.relativePath,
 };
 
 const fieldToStep: Record<

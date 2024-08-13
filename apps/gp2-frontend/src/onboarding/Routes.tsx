@@ -49,19 +49,19 @@ const OnboardingRoutes: React.FC<Record<string, never>> = () => {
       <Frame title={null}>
         <Onboarding>
           <Frame title={null}>
-            <Route path={onboarding({}).coreDetails({}).$}>
+            <Route path={onboarding.DEFAULT.CORE_DETAILS.relativePath}>
               <CoreDetails />
             </Route>
-            <Route path={onboarding({}).background({}).$}>
+            <Route path={onboarding.DEFAULT.CORE_DETAILS.relativePath}>
               <Background />
             </Route>
-            <Route path={onboarding({}).groups({}).$}>
+            <Route path={onboarding.DEFAULT.GROUPS.relativePath}>
               <Groups />
             </Route>
-            <Route path={onboarding({}).additionalDetails({}).$}>
+            <Route path={onboarding.DEFAULT.ADDITIONAL_DETAILS.relativePath}>
               <AdditionalDetails />
             </Route>
-            <Route path={onboarding({}).preview({}).$}>
+            <Route path={onboarding.DEFAULT.PREVIEW.relativePath}>
               <Preview />
             </Route>
           </Frame>

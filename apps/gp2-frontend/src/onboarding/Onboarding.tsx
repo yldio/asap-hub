@@ -23,7 +23,7 @@ const Onboarding: React.FC<React.PropsWithChildren<unknown>> = ({
       previousHref={onboardingState.previousStep}
       continueHref={onboardingState.nextStep}
       isContinueEnabled={onboardingState?.isContinueEnabled || false}
-      publishHref={gp2.onboarding({}).preview({}).publish({}).$}
+      publishHref={gp2.onboarding.DEFAULT.PREVIEW.PUBLISH.relativePath}
     >
       {children}
     </OnboardingPage>

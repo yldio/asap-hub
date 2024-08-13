@@ -6,7 +6,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../users/state';
 import { useTags } from '../shared/state';
@@ -24,28 +24,43 @@ const Background: React.FC<Record<string, never>> = () => {
 
   if (userData) {
     return (
-      <>
-        <OnboardingBackground
-          {...userData}
-          editBiographyHref={onboarding({}).background({}).editBiography({}).$}
-          editTagsHref={onboarding({}).background({}).editTags({}).$}
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <OnboardingBackground
+              {...userData}
+              editBiographyHref={
+                onboarding.DEFAULT.$.BACKGROUND.EDIT_BIOGRAPHY.relativePath
+              }
+              editTagsHref={
+                onboarding.DEFAULT.$.BACKGROUND.EDIT_TAGS.relativePath
+              }
+            />
+          }
         />
-        <Route path={onboarding({}).background({}).editBiography({}).$}>
-          <BiographyModal
-            {...userData}
-            backHref={onboarding({}).background({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
-          />
-        </Route>
-        <Route path={onboarding({}).background({}).editTags({}).$}>
-          <TagsModal
-            {...userData}
-            backHref={onboarding({}).background({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
-            suggestions={allTags}
-          />
-        </Route>
-      </>
+        <Route
+          path={onboarding.DEFAULT.$.BACKGROUND.EDIT_BIOGRAPHY.relativePath}
+          element={
+            <BiographyModal
+              {...userData}
+              backHref={onboarding.DEFAULT.BACKGROUND.relativePath}
+              onSave={(patchedUser) => patchUser(patchedUser)}
+            />
+          }
+        />
+        <Route
+          path={onboarding.DEFAULT.$.BACKGROUND.EDIT_TAGS.relativePath}
+          element={
+            <TagsModal
+              {...userData}
+              backHref={onboarding.DEFAULT.BACKGROUND.relativePath}
+              onSave={(patchedUser) => patchUser(patchedUser)}
+              suggestions={allTags}
+            />
+          }
+        />
+      </Routes>
     );
   }
   return <NotFoundPage />;

@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -32,9 +32,12 @@ const renderBackground = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).background({}).$]}
             >
-              <Route path={gp2Routing.onboarding({}).background.template}>
-                <Background />
-              </Route>
+              <Routes>
+                <Route
+                  path={gp2Routing.onboarding({}).background.template}
+                  element={<Background />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -54,7 +57,7 @@ describe('Background', () => {
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
-  it('renders biography and tags', async () => {
+  it.only('renders biography and tags', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);

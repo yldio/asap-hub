@@ -121,7 +121,14 @@ export type OutputCoreObject = {
 
 export type OutputVersionCoreObject = Pick<
   OutputCoreObject,
-  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
+  | 'documentType'
+  | 'type'
+  | 'title'
+  | 'link'
+  | 'addedDate'
+  | 'doi'
+  | 'rrid'
+  | 'accessionNumber'
 >;
 
 export type OutputVersionPostObject = OutputVersionCoreObject;

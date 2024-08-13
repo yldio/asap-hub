@@ -165,6 +165,9 @@ export default class ResearchOutputController {
         type: currentResearchOutput.type,
         addedDate: currentResearchOutput?.addedDate,
         documentType: currentResearchOutput.documentType,
+        doi: currentResearchOutput.doi,
+        rrid: currentResearchOutput.rrid,
+        accession: currentResearchOutput.accession,
       };
 
       this.validateVersionUniqueness(

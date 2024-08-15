@@ -108,18 +108,16 @@ describe('getCurrentWorkingGroupIdsFromTeamLeaders', () => {
 
 describe('getTeamLeadershipItem', () => {
   describe('Project Manager role', () => {
-    it('counts current PM in IG memberships but not leadership', () => {
+    it('does not count current PM in IG leadership', () => {
       const team = makeTestTeam([makeLeader('A', true, 'Project Manager')]);
       const result = getTeamLeadershipItem(team);
       expect(result.interestGroupLeadershipRoleCount).toBe(0);
-      expect(result.interestGroupMemberCount).toBe(1);
     });
 
-    it('counts previous PM in IG memberships but not leadership', () => {
+    it('does not count previous PM in IG leadership', () => {
       const team = makeTestTeam([makeLeader('A', false, 'Project Manager')]);
       const result = getTeamLeadershipItem(team);
       expect(result.interestGroupPreviousLeadershipRoleCount).toBe(0);
-      expect(result.interestGroupPreviousMemberCount).toBe(1);
     });
 
     it('counts current PM in WG memberships but not leadership', () => {

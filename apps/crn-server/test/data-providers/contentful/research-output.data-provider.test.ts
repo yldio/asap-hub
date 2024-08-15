@@ -236,6 +236,27 @@ describe('Research Outputs Data Provider', () => {
           );
         });
 
+        test('Should pass the parameters to filter by asapFunded and sharing status as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              sharingStatus: 'Public',
+              asapFunded: 'Yes',
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                sharingStatus: 'Public',
+                asapFunded: 'Yes',
+              },
+            }),
+          );
+        });
+
         test('Should pass the parameters to filter by document type as expected when document type is an array', async () => {
           await researchOutputDataProvider.fetch({
             take: 13,

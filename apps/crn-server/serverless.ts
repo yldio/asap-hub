@@ -290,6 +290,20 @@ const serverlessConfig: AWS = {
       '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
   },
   functions: {
+    publicApiHandler: {
+      handler: 'src/handlers/public-api-handler.publicApiHandler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/public/{proxy+}',
+          },
+        },
+      ],
+      environment: {
+        APP_ORIGIN: appUrl,
+      },
+    },
     apiHandler: {
       handler: './src/handlers/api-handler.apiHandler',
       events: [

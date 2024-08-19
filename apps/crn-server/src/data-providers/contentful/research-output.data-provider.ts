@@ -112,6 +112,12 @@ export class ResearchOutputContentfulDataProvider
           publishedVersion_exists: filter.status !== 'draft',
         };
       }
+      if (filter.sharingStatus) {
+        where.sharingStatus = filter.sharingStatus;
+      }
+      if (filter.asapFunded) {
+        where.asapFunded = filter.asapFunded;
+      }
     }
     const client = includeDrafts
       ? this.contentfulPreviewClient

@@ -348,6 +348,30 @@ export type ResearchOutputResponse =
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
 
+export type PublicResearchOutputResponse = Pick<
+  ResearchOutputResponse,
+  | 'id'
+  | 'title'
+  | 'sharingStatus'
+  | 'asapFunded'
+  | 'type'
+  | 'relatedResearch'
+  | 'created'
+  | 'description'
+  | 'shortDescription'
+> & {
+  hyperlink: ResearchOutputResponse['link'];
+  teams: string[];
+  authors: string[];
+  tags: string[];
+  persistentIdentifier: ResearchOutputResponse['doi'];
+  finalPublishDate?: string;
+  preprintPublishDate?: string;
+};
+
+export type ListPublicOutputResponse =
+  ListResponse<PublicResearchOutputResponse>;
+
 export type AuthorPostRequest =
   | { userId: string }
   | { externalAuthorId: string }

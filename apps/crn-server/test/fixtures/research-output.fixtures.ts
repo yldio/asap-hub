@@ -1,6 +1,8 @@
 import {
+  ListPublicOutputResponse,
   ListResearchOutputResponse,
   ListResponse,
+  PublicResearchOutputResponse,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputDraftDataObject,
@@ -134,6 +136,48 @@ export const getListResearchOutputResponse = ({
 } = {}): ListResearchOutputResponse => ({
   total: 1,
   items: [getResearchOutputResponse()],
+});
+
+export const getPublicResearchOutputResponse =
+  (): PublicResearchOutputResponse => {
+    const researchOutput = getResearchOutputResponse();
+    return {
+      id: researchOutput.id,
+      sharingStatus: 'Public',
+      asapFunded: true,
+      teams: researchOutput.teams.map((team) => team.displayName),
+      authors: researchOutput.authors.map((author) => author.displayName),
+      title: researchOutput.title,
+      description: researchOutput.descriptionMD,
+      shortDescription: researchOutput.shortDescription,
+      tags: [
+        ...researchOutput.methods,
+        ...researchOutput.organisms,
+        ...researchOutput.environments,
+        ...(researchOutput.subtype ? [researchOutput.subtype] : []),
+        ...researchOutput.keywords,
+      ],
+      hyperlink: researchOutput.link,
+      type: researchOutput.type,
+      persistentIdentifier: researchOutput.doi,
+      relatedResearch: researchOutput.relatedResearch,
+      created: researchOutput.created,
+      finalPublishDate:
+        researchOutput.type === 'Published'
+          ? researchOutput.publishDate
+          : undefined,
+      preprintPublishDate:
+        researchOutput.type === 'Preprint'
+          ? researchOutput.publishDate
+          : undefined,
+    };
+  };
+
+export const getPublicListResearchOutputResponse = ({
+  published = true,
+} = {}): ListPublicOutputResponse => ({
+  total: 1,
+  items: [getPublicResearchOutputResponse()],
 });
 
 export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {

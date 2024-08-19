@@ -18,6 +18,7 @@ import {
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import {
+  FetchResearchOutputFilter,
   FetchResearchOutputOptions,
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
@@ -512,16 +513,14 @@ const mapResearchTag = (
   ]);
 };
 
-type ResearchOutputFilter =
-  | string[]
-  | {
-      documentType?: string | string[];
-      title?: string;
-      link?: string;
-      status?: string;
-      teamId?: string;
-      workingGroupId?: string;
-    };
+type ResearchOutputFilter = FetchResearchOutputFilter &
+  (
+    | string[]
+    | {
+        title?: string;
+        link?: string;
+      }
+  );
 
 type ResearchOutputInputTags = {
   methods: string[];

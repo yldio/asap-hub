@@ -5,6 +5,7 @@ import {
   DataProvider,
   FetchOptions,
   ResearchOutputVersionPostRequest,
+  ResearchOutputSharingStatus,
 } from '@asap-hub/model';
 
 import { ResearchOutputFilter } from '../../utils/odata';
@@ -14,6 +15,8 @@ export type FetchResearchOutputFilter = ResearchOutputFilter & {
   teamId?: string;
   workingGroupId?: string;
   documentType?: string | string[];
+  sharingStatus?: ResearchOutputSharingStatus;
+  asapFunded?: 'Yes' | 'No' | 'Not Sure';
 };
 
 export type UpdateResearchOutputOptions = {

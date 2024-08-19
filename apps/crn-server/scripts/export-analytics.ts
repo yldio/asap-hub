@@ -2,6 +2,7 @@ import { AnalyticsData, EntityResponses } from '@asap-hub/algolia';
 import {
   AnalyticsTeamLeadershipResponse,
   documentCategories,
+  EngagementResponse,
   FilterAnalyticsOptions,
   ListResponse,
   Metric,
@@ -244,6 +245,8 @@ const getRecordTags = (record: AnalyticsData, type: Metric): string[] => {
       return formatTags('team', (record as TeamProductivityResponse).name, []);
     case 'team-collaboration':
       return formatTags('team', (record as TeamCollaborationResponse).name, []);
+    case 'engagement':
+      return formatTags('team', (record as EngagementResponse).name, []);
     default:
       return [];
   }

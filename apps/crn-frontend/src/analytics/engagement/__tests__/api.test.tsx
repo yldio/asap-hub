@@ -25,6 +25,7 @@ const algoliaSearchClient = {
 const defaultOptions: EngagementListOptions = {
   pageSize: 10,
   currentPage: 0,
+  tags: [],
 };
 
 const listEngagementResponse: ListEngagementAlgoliaResponse = {
@@ -64,5 +65,19 @@ describe('getEngagement', () => {
     const engagement = await getEngagement(algoliaSearchClient, defaultOptions);
 
     expect(engagement).toMatchObject(listEngagementResponse);
+  });
+
+  it('should pass the search query to Algolia', async () => {
+    await getEngagement(algoliaSearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi'],
+    });
+    expect(search).toHaveBeenCalledWith(
+      ['engagement'],
+      '',
+      expect.objectContaining({
+        tagFilters: [['Alessi']],
+      }),
+    );
   });
 });

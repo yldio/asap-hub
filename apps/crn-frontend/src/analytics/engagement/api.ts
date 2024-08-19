@@ -1,18 +1,18 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
+import { AlgoliaClient, AnalyticsSearchOptions } from '@asap-hub/algolia';
 import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
 
 export type EngagementListOptions = Pick<
-  GetListOptions,
-  'currentPage' | 'pageSize'
+  AnalyticsSearchOptions,
+  'currentPage' | 'pageSize' | 'tags'
 >;
 
 export const getEngagement = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: EngagementListOptions,
 ): Promise<ListEngagementAlgoliaResponse> => {
-  const { currentPage, pageSize } = options;
+  const { currentPage, pageSize, tags } = options;
   const result = await algoliaClient.search(['engagement'], '', {
+    tagFilters: [tags],
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

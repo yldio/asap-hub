@@ -1,11 +1,8 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaSearchClient, EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -15,6 +12,7 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getEngagement } from '../api';
 import Engagement from '../Engagement';
 import { analyticsEngagementState } from '../state';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
 jest.mock('../api');
 mockConsoleError();
@@ -26,17 +24,28 @@ jest.mock('@asap-hub/algolia', () => ({
     .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
 }));
 
+jest.mock('../../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
+
 afterEach(() => {
   jest.clearAllMocks();
 });
 
-const mockAlgoliaSearchClientFactory =
-  algoliaSearchClientFactory as jest.MockedFunction<
-    typeof algoliaSearchClientFactory
-  >;
-
 const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
+>;
+
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['searchForTagValues']
+>;
+
+const mockSearch = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'analytics'>['search']
+>;
+
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
 >;
 
 const data: ListEngagementAlgoliaResponse = {
@@ -57,6 +66,21 @@ const data: ListEngagementAlgoliaResponse = {
     },
   ],
 };
+
+beforeEach(() => {
+  jest.clearAllMocks();
+
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+    search: mockSearch,
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+  mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+  mockGetEngagement.mockResolvedValue(data);
+});
 
 const renderPage = async (path: string) => {
   const result = render(
@@ -93,8 +117,6 @@ const renderPage = async (path: string) => {
 
 describe('Engagement', () => {
   it('renders with data', async () => {
-    mockGetEngagement.mockResolvedValue(data);
-
     await renderPage(analytics({}).engagement({}).$);
 
     expect(screen.getAllByText('Representation of Presenters').length).toBe(1);
@@ -107,15 +129,11 @@ describe('Engagement', () => {
   });
 
   it('calls algolia client with the right index name', async () => {
-    mockGetEngagement.mockResolvedValue(data);
-
     await renderPage(analytics({}).engagement({}).$);
 
     await waitFor(() => {
-      expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          algoliaIndex: expect.not.stringContaining('_team_desc'),
-        }),
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.not.stringContaining('team_desc'),
       );
     });
 
@@ -124,10 +142,30 @@ describe('Engagement', () => {
     );
 
     await waitFor(() => {
-      expect(mockAlgoliaSearchClientFactory).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          algoliaIndex: expect.stringContaining('_team_desc'),
-        }),
+      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+        expect.stringContaining('team_desc'),
+      );
+    });
+  });
+
+  describe('search', () => {
+    const getSearchBox = () => {
+      const searchContainer = screen.getByRole('search') as HTMLElement;
+      return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    };
+    it('allows typing in search queries', async () => {
+      await renderPage(analytics({}).engagement({}).$);
+
+      const searchBox = getSearchBox();
+
+      userEvent.type(searchBox, 'test123');
+      expect(searchBox.value).toEqual('test123');
+      await waitFor(() =>
+        expect(mockSearchForTagValues).toHaveBeenCalledWith(
+          ['engagement'],
+          'test123',
+          {},
+        ),
       );
     });
   });

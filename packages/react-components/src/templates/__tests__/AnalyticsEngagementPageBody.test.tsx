@@ -26,6 +26,8 @@ describe('AnalyticsEngagementPageBody', () => {
     setSort: jest.fn(),
     sortingDirection: engagementInitialSortingDirection,
     setSortingDirection: jest.fn(),
+    setTags: jest.fn(),
+    tags: [],
   };
   it('renders the page title', () => {
     const { getByText } = render(<AnalyticsEngagementPageBody {...props} />);

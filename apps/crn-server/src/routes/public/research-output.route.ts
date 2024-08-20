@@ -80,6 +80,7 @@ const mapToPublicResearchOutput = (
   persistentIdentifier: researchOutput.doi,
   relatedResearch: researchOutput.relatedResearch,
   created: researchOutput.created,
+  researchTheme: researchOutput.researchTheme,
   finalPublishDate:
     researchOutput.type === 'Published'
       ? researchOutput.publishDate

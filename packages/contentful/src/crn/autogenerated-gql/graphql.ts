@@ -5340,15 +5340,23 @@ export type QueryWorkingGroupsCollectionArgs = {
 export type ResearchOutputVersions = Entry &
   _Node & {
     _id: Scalars['ID'];
+    accession?: Maybe<Scalars['String']>;
     addedDate?: Maybe<Scalars['DateTime']>;
     contentfulMetadata: ContentfulMetadata;
     documentType?: Maybe<Scalars['String']>;
+    doi?: Maybe<Scalars['String']>;
     link?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ResearchOutputVersionsLinkingCollections>;
+    rrid?: Maybe<Scalars['String']>;
     sys: Sys;
     title?: Maybe<Scalars['String']>;
     type?: Maybe<Scalars['String']>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
+export type ResearchOutputVersionsAccessionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
 export type ResearchOutputVersionsAddedDateArgs = {
@@ -5361,6 +5369,11 @@ export type ResearchOutputVersionsDocumentTypeArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
+export type ResearchOutputVersionsDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
 export type ResearchOutputVersionsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -5368,6 +5381,11 @@ export type ResearchOutputVersionsLinkArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
 export type ResearchOutputVersionsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
+export type ResearchOutputVersionsRridArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
@@ -5390,6 +5408,13 @@ export type ResearchOutputVersionsCollection = {
 export type ResearchOutputVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsFilter>>>;
+  accession?: InputMaybe<Scalars['String']>;
+  accession_contains?: InputMaybe<Scalars['String']>;
+  accession_exists?: InputMaybe<Scalars['Boolean']>;
+  accession_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  accession_not?: InputMaybe<Scalars['String']>;
+  accession_not_contains?: InputMaybe<Scalars['String']>;
+  accession_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   addedDate?: InputMaybe<Scalars['DateTime']>;
   addedDate_exists?: InputMaybe<Scalars['Boolean']>;
   addedDate_gt?: InputMaybe<Scalars['DateTime']>;
@@ -5407,6 +5432,13 @@ export type ResearchOutputVersionsFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi?: InputMaybe<Scalars['String']>;
+  doi_contains?: InputMaybe<Scalars['String']>;
+  doi_exists?: InputMaybe<Scalars['Boolean']>;
+  doi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi_not?: InputMaybe<Scalars['String']>;
+  doi_not_contains?: InputMaybe<Scalars['String']>;
+  doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -5414,6 +5446,13 @@ export type ResearchOutputVersionsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid?: InputMaybe<Scalars['String']>;
+  rrid_contains?: InputMaybe<Scalars['String']>;
+  rrid_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid_not?: InputMaybe<Scalars['String']>;
+  rrid_not_contains?: InputMaybe<Scalars['String']>;
+  rrid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -5502,12 +5541,18 @@ export enum ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionOrd
 }
 
 export enum ResearchOutputVersionsOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5551,6 +5596,7 @@ export type ResearchOutputs = Entry &
     publishDate?: Maybe<Scalars['DateTime']>;
     relatedEventsCollection?: Maybe<ResearchOutputsRelatedEventsCollection>;
     relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
+    researchTheme?: Maybe<Array<Maybe<Scalars['String']>>>;
     rrid?: Maybe<Scalars['String']>;
     sharingStatus?: Maybe<Scalars['String']>;
     shortDescription?: Maybe<Scalars['String']>;
@@ -5736,6 +5782,11 @@ export type ResearchOutputsRelatedResearchCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchOutputsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsResearchThemeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -6045,6 +6096,14 @@ export type ResearchOutputsFilter = {
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearch?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTheme_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6490,12 +6549,18 @@ export type ResearchOutputsVersionsCollection = {
 };
 
 export enum ResearchOutputsVersionsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -8269,6 +8334,7 @@ export type Users = Entry &
     researchGate?: Maybe<Scalars['String']>;
     researchInterests?: Maybe<Scalars['String']>;
     researchTagsCollection?: Maybe<UsersResearchTagsCollection>;
+    researchTheme?: Maybe<Array<Maybe<Scalars['String']>>>;
     researcherId?: Maybe<Scalars['String']>;
     responsibilities?: Maybe<Scalars['String']>;
     role?: Maybe<Scalars['String']>;
@@ -8479,6 +8545,11 @@ export type UsersResearchTagsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersResearchThemeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -8779,6 +8850,14 @@ export type UsersFilter = {
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTheme_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10622,6 +10701,13 @@ export type CfPagesNestedFilter = {
 export type CfResearchOutputVersionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfResearchOutputVersionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfResearchOutputVersionsNestedFilter>>>;
+  accession?: InputMaybe<Scalars['String']>;
+  accession_contains?: InputMaybe<Scalars['String']>;
+  accession_exists?: InputMaybe<Scalars['Boolean']>;
+  accession_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  accession_not?: InputMaybe<Scalars['String']>;
+  accession_not_contains?: InputMaybe<Scalars['String']>;
+  accession_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   addedDate?: InputMaybe<Scalars['DateTime']>;
   addedDate_exists?: InputMaybe<Scalars['Boolean']>;
   addedDate_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10639,6 +10725,13 @@ export type CfResearchOutputVersionsNestedFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi?: InputMaybe<Scalars['String']>;
+  doi_contains?: InputMaybe<Scalars['String']>;
+  doi_exists?: InputMaybe<Scalars['Boolean']>;
+  doi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi_not?: InputMaybe<Scalars['String']>;
+  doi_not_contains?: InputMaybe<Scalars['String']>;
+  doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10646,6 +10739,13 @@ export type CfResearchOutputVersionsNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid?: InputMaybe<Scalars['String']>;
+  rrid_contains?: InputMaybe<Scalars['String']>;
+  rrid_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid_not?: InputMaybe<Scalars['String']>;
+  rrid_not_contains?: InputMaybe<Scalars['String']>;
+  rrid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -10776,6 +10876,14 @@ export type CfResearchOutputsNestedFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTheme_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -11279,6 +11387,14 @@ export type CfUsersNestedFilter = {
   researchInterests_not_contains?: InputMaybe<Scalars['String']>;
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchTheme_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -16503,6 +16619,7 @@ export type ResearchOutputsContentFragment = Pick<
   | 'asapFunded'
   | 'usedInAPublication'
   | 'type'
+  | 'researchTheme'
   | 'publishDate'
   | 'usageNotes'
   | 'statusChangedAt'
@@ -16721,6 +16838,7 @@ export type FetchResearchOutputByIdQuery = {
       | 'asapFunded'
       | 'usedInAPublication'
       | 'type'
+      | 'researchTheme'
       | 'publishDate'
       | 'usageNotes'
       | 'statusChangedAt'
@@ -16963,6 +17081,7 @@ export type FetchResearchOutputsQuery = {
             | 'asapFunded'
             | 'usedInAPublication'
             | 'type'
+            | 'researchTheme'
             | 'publishDate'
             | 'usageNotes'
             | 'statusChangedAt'
@@ -17963,6 +18082,7 @@ export type UsersContentFragment = Pick<
   | 'website1'
   | 'website2'
   | 'role'
+  | 'researchTheme'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -18108,6 +18228,7 @@ export type FetchUserByIdQuery = {
       | 'website1'
       | 'website2'
       | 'role'
+      | 'researchTheme'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -21511,6 +21632,7 @@ export const ResearchOutputsContentFragmentDoc = {
             name: { kind: 'Name', value: 'usedInAPublication' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'researchTheme' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
           {
             kind: 'Field',
@@ -23170,6 +23292,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'researchTheme' } },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },

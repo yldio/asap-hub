@@ -378,6 +378,18 @@ describe('User data provider', () => {
       const response = await userDataProvider.fetchById(id);
       expect(response!.tags).toEqual([{ id: '1', name: 'Lysosomes' }]);
     });
+
+    test('Should default missing research theme to an empty array', async () => {
+      const id = 'user-id-1';
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          researchTheme: null,
+        }),
+      });
+
+      const response = await userDataProvider.fetchById(id);
+      expect(response!.researchTheme).toEqual([]);
+    });
   });
 
   describe('Fetch', () => {

@@ -104,6 +104,7 @@ export interface UserDataObject extends Invitee {
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
   tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
+  researchTheme?: string[];
 }
 
 export interface UserResponse

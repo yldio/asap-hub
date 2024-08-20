@@ -410,6 +410,18 @@ describe('Research Outputs Data Provider', () => {
       expect(result!.workingGroups).toEqual([]);
     });
 
+    test('Should default missing research theme to an empty array', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.researchTheme = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.researchTheme).toEqual([]);
+    });
+
     test('Should parse working group reference to array', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.workingGroup = {
@@ -699,6 +711,10 @@ describe('Research Outputs Data Provider', () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.teamsCollection!.items = [];
       researchOutputs.workingGroup = { sys: { id: '1' }, title: 'wg' };
+      researchOutputs.researchTheme = [
+        'PD Functional Genomics',
+        'Neuro-Immune Interactions',
+      ];
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
@@ -713,6 +729,10 @@ describe('Research Outputs Data Provider', () => {
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
       expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
       expectedResult.publishingEntity = 'Working Group';
+      expectedResult.researchTheme = [
+        'PD Functional Genomics',
+        'Neuro-Immune Interactions',
+      ];
 
       expect(result).toEqual(expectedResult);
     });

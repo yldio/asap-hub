@@ -133,6 +133,7 @@ export const getUserResponse = (): UserResponse => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
+  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
 });
 
 export const getUserListItemDataObject = (): UserListItemDataObject => ({
@@ -275,6 +276,7 @@ export const getUserDataObject = (): UserDataObject => ({
     { id: '4', name: 'expertise 4' },
     { id: '5', name: 'expertise 5' },
   ],
+  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -404,6 +406,7 @@ export const getContentfulGraphqlUser = (
       { sys: { id: '5' }, name: 'expertise 5' },
     ],
   },
+  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',

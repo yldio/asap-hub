@@ -46,6 +46,7 @@ export const usersContentQueryFragment = gql`
     website1
     website2
     role
+    researchTheme
     responsibilities
     researchInterests
     reachOut

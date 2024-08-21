@@ -332,6 +332,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     interestGroups,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,
     email: item.email ?? '',
+    researchTheme: item.researchTheme ? cleanArray(item.researchTheme) : [],
     contactEmail: item.contactEmail ?? undefined,
     firstName: item.firstName ?? '',
     middleName: item.middleName || undefined,

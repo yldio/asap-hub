@@ -3459,11 +3459,14 @@ type Query {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions)"""
 type ResearchOutputVersions implements Entry & _Node {
   _id: ID!
+  accession(locale: String): String
   addedDate(locale: String): DateTime
   contentfulMetadata: ContentfulMetadata!
   documentType(locale: String): String
+  doi(locale: String): String
   link(locale: String): String
   linkedFrom(allowedLocales: [String]): ResearchOutputVersionsLinkingCollections
+  rrid(locale: String): String
   sys: Sys!
   title(locale: String): String
   type(locale: String): String
@@ -3479,6 +3482,13 @@ type ResearchOutputVersionsCollection {
 input ResearchOutputVersionsFilter {
   AND: [ResearchOutputVersionsFilter]
   OR: [ResearchOutputVersionsFilter]
+  accession: String
+  accession_contains: String
+  accession_exists: Boolean
+  accession_in: [String]
+  accession_not: String
+  accession_not_contains: String
+  accession_not_in: [String]
   addedDate: DateTime
   addedDate_exists: Boolean
   addedDate_gt: DateTime
@@ -3496,6 +3506,13 @@ input ResearchOutputVersionsFilter {
   documentType_not: String
   documentType_not_contains: String
   documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean
@@ -3503,6 +3520,13 @@ input ResearchOutputVersionsFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String
@@ -3571,12 +3595,18 @@ enum ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionOrder {
 }
 
 enum ResearchOutputVersionsOrder {
+  accession_ASC
+  accession_DESC
   addedDate_ASC
   addedDate_DESC
   documentType_ASC
   documentType_DESC
+  doi_ASC
+  doi_DESC
   link_ASC
   link_DESC
+  rrid_ASC
+  rrid_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3619,6 +3649,7 @@ type ResearchOutputs implements Entry & _Node {
   publishDate(locale: String): DateTime
   relatedEventsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): ResearchOutputsRelatedEventsCollection
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
+  researchTheme(locale: String): [String]
   rrid(locale: String): String
   sharingStatus(locale: String): String
   shortDescription(locale: String): String
@@ -3849,6 +3880,10 @@ input ResearchOutputsFilter {
   relatedEventsCollection_exists: Boolean
   relatedResearch: cfResearchOutputsNestedFilter
   relatedResearchCollection_exists: Boolean
+  researchTheme_contains_all: [String]
+  researchTheme_contains_none: [String]
+  researchTheme_contains_some: [String]
+  researchTheme_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -4265,12 +4300,18 @@ type ResearchOutputsVersionsCollection {
 }
 
 enum ResearchOutputsVersionsCollectionOrder {
+  accession_ASC
+  accession_DESC
   addedDate_ASC
   addedDate_DESC
   documentType_ASC
   documentType_DESC
+  doi_ASC
+  doi_DESC
   link_ASC
   link_DESC
+  rrid_ASC
+  rrid_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5609,6 +5650,7 @@ type Users implements Entry & _Node {
   researchGate(locale: String): String
   researchInterests(locale: String): String
   researchTagsCollection(limit: Int = 100, locale: String, order: [UsersResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): UsersResearchTagsCollection
+  researchTheme(locale: String): [String]
   researcherId(locale: String): String
   responsibilities(locale: String): String
   role(locale: String): String
@@ -5863,6 +5905,10 @@ input UsersFilter {
   researchInterests_not_in: [String]
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
+  researchTheme_contains_all: [String]
+  researchTheme_contains_none: [String]
+  researchTheme_contains_some: [String]
+  researchTheme_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean
@@ -7360,6 +7406,13 @@ input cfPagesNestedFilter {
 input cfResearchOutputVersionsNestedFilter {
   AND: [cfResearchOutputVersionsNestedFilter]
   OR: [cfResearchOutputVersionsNestedFilter]
+  accession: String
+  accession_contains: String
+  accession_exists: Boolean
+  accession_in: [String]
+  accession_not: String
+  accession_not_contains: String
+  accession_not_in: [String]
   addedDate: DateTime
   addedDate_exists: Boolean
   addedDate_gt: DateTime
@@ -7377,6 +7430,13 @@ input cfResearchOutputVersionsNestedFilter {
   documentType_not: String
   documentType_not_contains: String
   documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean
@@ -7384,6 +7444,13 @@ input cfResearchOutputVersionsNestedFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String
@@ -7512,6 +7579,10 @@ input cfResearchOutputsNestedFilter {
   publishDate_not_in: [DateTime]
   relatedEventsCollection_exists: Boolean
   relatedResearchCollection_exists: Boolean
+  researchTheme_contains_all: [String]
+  researchTheme_contains_none: [String]
+  researchTheme_contains_some: [String]
+  researchTheme_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -8005,6 +8076,10 @@ input cfUsersNestedFilter {
   researchInterests_not_contains: String
   researchInterests_not_in: [String]
   researchTagsCollection_exists: Boolean
+  researchTheme_contains_all: [String]
+  researchTheme_contains_none: [String]
+  researchTheme_contains_some: [String]
+  researchTheme_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean

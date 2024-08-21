@@ -55,6 +55,7 @@ export const researchOutputToCSV = (
         .sort(caseInsensitive)
         .join(',')
     : '',
+  researchTheme: output.researchTheme?.join(','),
   methods: output.methods
     .map((item) => item)
     .sort(caseInsensitive)

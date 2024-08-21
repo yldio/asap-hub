@@ -209,6 +209,7 @@ export type ResearchOutputCoreObject = {
   type?: ResearchOutputType;
   usageNotes?: string;
   usedInPublication?: boolean;
+  researchTheme?: string[];
 };
 
 export type ResearchOutputVersionCoreObject = Pick<
@@ -359,6 +360,7 @@ export type PublicResearchOutputResponse = Pick<
   | 'created'
   | 'description'
   | 'shortDescription'
+  | 'researchTheme'
 > & {
   hyperlink: ResearchOutputResponse['link'];
   teams: string[];

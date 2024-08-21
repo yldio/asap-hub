@@ -24,6 +24,7 @@ export const researchOutputContentQueryFragment = gql`
     asapFunded
     usedInAPublication
     type
+    researchTheme
     publishDate
     description {
       json

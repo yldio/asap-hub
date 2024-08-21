@@ -108,6 +108,7 @@ export const getPublicWorkingGroupResponse =
       shortDescription,
       systemPublishedVersion,
       title,
+      milestones,
     } = getWorkingGroupResponse();
 
     return {
@@ -121,7 +122,7 @@ export const getPublicWorkingGroupResponse =
       shortDescription,
       systemPublishedVersion,
       title,
-      milestones: [{ status: 'Active' }],
+      milestones,
     };
   };
 

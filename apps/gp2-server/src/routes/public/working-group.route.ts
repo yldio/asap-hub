@@ -47,8 +47,5 @@ const mapWorkingGroupToPublicWorkingGroup = (
   shortDescription: workingGroup.shortDescription,
   systemPublishedVersion: workingGroup.systemPublishedVersion,
   title: workingGroup.title,
-  milestones: workingGroup.milestones.map(({ status, description }) => ({
-    status,
-    description,
-  })),
+  milestones: workingGroup.milestones,
 });

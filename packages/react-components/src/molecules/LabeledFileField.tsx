@@ -102,7 +102,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}
-        accept={accept ? accept : ''}
+        accept={accept}
         value=""
         hidden
       />

@@ -83,6 +83,21 @@ it('restricts allowed files when accept prop is provided', async () => {
   expect(uploadInput).toHaveAttribute('accept', 'application/pdf');
 });
 
+it('does not restrict allowed files when accept prop is not provided', async () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      placeholder="Upload Manuscript File"
+    />,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  expect(uploadInput).not.toHaveAttribute('accept');
+});
+
 it('calls handleFileUpload when a file is selected', async () => {
   render(
     <LabeledFileField

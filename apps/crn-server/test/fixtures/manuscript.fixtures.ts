@@ -80,6 +80,11 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
         fileName: 'manuscript.pdf',
         url: 'https://example.com/manuscript.pdf',
       },
+      keyResourceTable: {
+        sys: { id: 'file-table-id' },
+        fileName: 'manuscript.csv',
+        url: 'https://example.com/manuscript.csv',
+      },
       teamsCollection: {
         items: [
           {

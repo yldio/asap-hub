@@ -30,6 +30,7 @@ import { Button, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
 
+const MAX_FILE_SIZE = 50_000_000;
 const mainStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -634,29 +635,31 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }}
                     handleFileUpload={async (file) => {
                       setIsUploading(true);
-                      if (file.size > 1000) {
+                      if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 1kb',
+                          message: 'File is larger than 50MB',
+                        });
+                        setIsUploading(false);
+                      } else {
+                        const uploadedFile = await handleFileUpload(
+                          file,
+                          'Manuscript File',
+                          (validationErrorMessage) => {
+                            setError('versions.0.manuscriptFile', {
+                              type: 'custom',
+                              message: validationErrorMessage,
+                            });
+                          },
+                        );
+                        setIsUploading(false);
+
+                        if (!uploadedFile) return;
+
+                        setValue('versions.0.manuscriptFile', uploadedFile, {
+                          shouldValidate: true,
                         });
                       }
-                      const uploadedFile = await handleFileUpload(
-                        file,
-                        'Manuscript File',
-                        (validationErrorMessage) => {
-                          setError('versions.0.manuscriptFile', {
-                            type: 'custom',
-                            message: validationErrorMessage,
-                          });
-                        },
-                      );
-                      setIsUploading(false);
-
-                      if (!uploadedFile) return;
-
-                      setValue('versions.0.manuscriptFile', uploadedFile, {
-                        shouldValidate: true,
-                      });
                     }}
                     currentFiles={value && [value]}
                     accept="application/pdf"
@@ -688,23 +691,35 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       }}
                       handleFileUpload={async (file) => {
                         setIsUploading(true);
-                        const uploadedFile = await handleFileUpload(
-                          file,
-                          'Key Resource Table',
-                          (validationErrorMessage) => {
-                            setError('versions.0.keyResourceTable', {
-                              type: 'custom',
-                              message: validationErrorMessage,
-                            });
-                          },
-                        );
-                        setIsUploading(false);
+                        if (file.size > MAX_FILE_SIZE) {
+                          setError('versions.0.manuscriptFile', {
+                            type: 'custom',
+                            message: 'File is larger than 50MB.',
+                          });
+                          setIsUploading(false);
+                        } else {
+                          const uploadedFile = await handleFileUpload(
+                            file,
+                            'Key Resource Table',
+                            (validationErrorMessage) => {
+                              setError('versions.0.keyResourceTable', {
+                                type: 'custom',
+                                message: validationErrorMessage,
+                              });
+                            },
+                          );
+                          setIsUploading(false);
 
-                        if (!uploadedFile) return;
+                          if (!uploadedFile) return;
 
-                        setValue('versions.0.keyResourceTable', uploadedFile, {
-                          shouldValidate: true,
-                        });
+                          setValue(
+                            'versions.0.keyResourceTable',
+                            uploadedFile,
+                            {
+                              shouldValidate: true,
+                            },
+                          );
+                        }
                       }}
                       currentFiles={value && [value]}
                       accept="text/csv"
@@ -724,7 +739,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     subtitle="(optional)"
                     description="Additional files can be submitted in any of the supported formats (PDF, JATS/NLM, TEI XML, CSV...)."
                     placeholder="Upload Additional Files"
-                    onRemove={(id: string) => {
+                    onRemove={(id?: string) => {
                       setValue('versions.0.additionalFiles', [
                         ...(value?.filter(
                           (additionalFile) => additionalFile.id !== id,
@@ -741,30 +756,39 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         ) !== -1;
                       if (!isExistingFile) {
                         setIsUploading(true);
-                        const uploadedFile = await handleFileUpload(
-                          file,
-                          'Additional Files',
-                          (validationErrorMessage) => {
-                            setError('versions.0.additionalFiles', {
-                              type: 'custom',
-                              message: validationErrorMessage,
-                            });
-                          },
-                        );
-                        setIsUploading(false);
+                        if (file.size > MAX_FILE_SIZE) {
+                          setError('versions.0.additionalFiles', {
+                            type: 'custom',
+                            message: 'File is larger than 50MB.',
+                          });
+                          setIsUploading(false);
+                        } else {
+                          const uploadedFile = await handleFileUpload(
+                            file,
+                            'Additional Files',
+                            (validationErrorMessage) => {
+                              setError('versions.0.additionalFiles', {
+                                type: 'custom',
+                                message: validationErrorMessage,
+                              });
+                            },
+                          );
+                          setIsUploading(false);
 
-                        if (!uploadedFile) return;
+                          if (!uploadedFile) return;
 
-                        setValue(
-                          'versions.0.additionalFiles',
-                          [
-                            ...(getValues('versions.0.additionalFiles') || []),
-                            uploadedFile,
-                          ],
-                          {
-                            shouldValidate: true,
-                          },
-                        );
+                          setValue(
+                            'versions.0.additionalFiles',
+                            [
+                              ...(getValues('versions.0.additionalFiles') ||
+                                []),
+                              uploadedFile,
+                            ],
+                            {
+                              shouldValidate: true,
+                            },
+                          );
+                        }
                       } else {
                         setError('versions.0.additionalFiles', {
                           type: 'custom',

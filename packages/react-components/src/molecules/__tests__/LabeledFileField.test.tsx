@@ -32,6 +32,7 @@ it('renders a file tag and a disabled button when a file is selected', () => {
       title="Title"
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
+      enabled
       currentFiles={[
         {
           filename: 'file.txt',
@@ -43,6 +44,43 @@ it('renders a file tag and a disabled button when a file is selected', () => {
   );
   expect(screen.getByText('file.txt')).toBeVisible();
   expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
+});
+
+it('renders a file tag and an enabled button when a file is selected and multiUpload is true', () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      multiUpload
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
+    />,
+  );
+  expect(screen.getByText('file.txt')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Add File' })).toBeEnabled();
+});
+
+it('restricts allowed files when accept prop is provided', async () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      placeholder="Upload Manuscript File"
+      accept="application/pdf"
+    />,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  expect(uploadInput).toHaveAttribute('accept', 'application/pdf');
 });
 
 it('calls handleFileUpload when a file is selected', async () => {

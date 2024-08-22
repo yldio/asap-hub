@@ -56,7 +56,7 @@ type LabeledFileFieldProps = {
   readonly placeholder?: string;
   readonly multiUpload?: boolean;
   readonly currentFiles?: FileUploadResponse[];
-  readonly onRemove?: (id: string) => void;
+  readonly onRemove?: (id?: string) => void;
   readonly customValidationMessage?: string;
   readonly customValidation?: (file: File) => boolean;
   readonly handleFileUpload: (file: File) => Promise<void>;
@@ -87,7 +87,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
       await handleFileUpload(file);
     }
   };
-  const handleRemove = (id: string) => {
+  const handleRemove = (id?: string) => {
     if (onRemove) {
       onRemove(id);
       if (fileInputRef.current) {
@@ -105,6 +105,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
         type="file"
         aria-label={placeholder}
         {...(accept ? { accept } : {})}
+        {...(!currentFiles ? { value: '' } : {})}
         hidden
       />
       <Label

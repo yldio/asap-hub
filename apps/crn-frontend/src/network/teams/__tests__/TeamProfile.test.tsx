@@ -222,8 +222,13 @@ it('displays manuscript success toast message and user can dismiss toast', async
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
-  userEvent.upload(uploadInput, testFile);
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
+
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   within(quickChecks)

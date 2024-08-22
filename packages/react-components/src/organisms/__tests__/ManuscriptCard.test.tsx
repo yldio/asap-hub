@@ -117,7 +117,7 @@ it('renders a divider between fields in Additional Information section and files
   );
 
   userEvent.click(getByRole('button'));
-  expect(queryAllByRole('separator').length).toEqual(5);
+  expect(queryAllByRole('separator').length).toEqual(6);
 });
 
 it.each`
@@ -190,6 +190,7 @@ it('renders manuscript main file details and download link', () => {
             url: 'https://example.com/main-file.pdf',
             id: 'file-1',
           },
+          keyResourceTable: undefined,
         },
       ]}
     />,
@@ -200,5 +201,35 @@ it('renders manuscript main file details and download link', () => {
   expect(getByText('Download').closest('a')).toHaveAttribute(
     'href',
     'https://example.com/main-file.pdf',
+  );
+});
+
+it('renders key resource table file details and download link', () => {
+  const { getAllByText, getByText, getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      versions={[
+        {
+          ...props.versions[0]!,
+          manuscriptFile: {
+            filename: 'manuscript_file.pdf',
+            url: 'https://example.com/main-file.pdf',
+            id: 'file-1',
+          },
+          keyResourceTable: {
+            filename: 'key_resource_table.csv',
+            url: 'https://example.com/key_resource_table.csv',
+            id: 'file-2',
+          },
+        },
+      ]}
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText('key_resource_table.csv')).toBeVisible();
+  expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com/key_resource_table.csv',
   );
 });

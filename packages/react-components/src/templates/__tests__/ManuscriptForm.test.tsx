@@ -90,6 +90,11 @@ it('data is sent on form submission', async () => {
           filename: 'test.pdf',
           url: 'http://example.com/test.pdf',
         }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -108,6 +113,11 @@ it('data is sent on form submission', async () => {
             id: '123',
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
+          },
+          keyResourceTable: {
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
           },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
@@ -144,7 +154,7 @@ test.each`
   ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
   ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
 `(
-  'should sent $fieldDetails value if $field is No',
+  'should send $fieldDetails value if $field is No',
   async ({
     field,
     fieldDetails,
@@ -171,6 +181,11 @@ test.each`
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
           }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -185,6 +200,7 @@ test.each`
           type: 'Original Research',
           lifecycle: 'Publication',
           manuscriptFile: expect.anything(),
+          keyResourceTable: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
           acknowledgedGrantNumber: 'Yes',
@@ -227,7 +243,7 @@ test.each`
   ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
   ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
 `(
-  'should sent $fieldDetails as empty string if $field is Yes',
+  'should send $fieldDetails as empty string if $field is Yes',
   async ({
     field,
     fieldDetails,
@@ -254,6 +270,11 @@ test.each`
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
           }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -270,6 +291,7 @@ test.each`
             type: 'Original Research',
             lifecycle: 'Publication',
             manuscriptFile: expect.anything(),
+            keyResourceTable: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
@@ -530,6 +552,11 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
           filename: 'test.pdf',
           url: 'http://example.com/test.pdf',
         }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -546,6 +573,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
           type: 'Original Research',
           lifecycle: 'Typeset proof',
           manuscriptFile: expect.anything(),
+          keyResourceTable: expect.anything(),
           requestingApcCoverage: 'Already submitted',
         }),
       ],
@@ -649,6 +677,7 @@ describe('renders the necessary fields', () => {
     },
   );
 });
+
 it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
@@ -848,6 +877,88 @@ it('should upload and remove file when user clicks on upload manuscript file and
 });
 
 it('should show error when file upload fails', async () => {
+  const handleFileUpload: jest.MockedFunction<
+    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+  > = jest.fn();
+
+  const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+  const mockError = 'No file provided or file is not a PDF.';
+
+  handleFileUpload.mockImplementation(
+    (
+      file: File,
+      fileType: ManuscriptFileType,
+      handleError: (errorMessage: string) => void,
+    ) => {
+      if (file === mockFile) {
+        return Promise.reject(new Error(mockError)).catch((error) => {
+          handleError(error.message);
+          return undefined;
+        });
+      }
+      return Promise.resolve({
+        id: '123',
+        filename: 'test.pdf',
+        url: 'http://example.com/test.pdf',
+      });
+    },
+  );
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        handleFileUpload={handleFileUpload}
+      />
+    </StaticRouter>,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(async () => {
+    userEvent.upload(uploadInput, mockFile);
+  });
+
+  expect(screen.getByText(mockError)).toBeInTheDocument();
+});
+
+it('should show error when file size is greater than 50MB', async () => {
+  const handleFileUpload: jest.MockedFunction<
+    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+  > = jest.fn();
+
+  const mockFile = new File(['1'.repeat(1024 * 1024 * 50)], 'test.txt', {
+    type: 'text/plain',
+  });
+
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Publication"
+        preprintDoi="10.4444/test"
+        publicationDoi="10.4467/test"
+        handleFileUpload={handleFileUpload}
+      />
+    </StaticRouter>,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+  await waitFor(async () => {
+    userEvent.upload(uploadInput, mockFile);
+  });
+
+  expect(screen.getByText('File is larger than 50MB')).toBeInTheDocument();
+});
+
+it('should remove one of the additional files without removing the others', async () => {
   const handleFileUpload: jest.MockedFunction<
     ComponentProps<typeof ManuscriptForm>['handleFileUpload']
   > = jest.fn();

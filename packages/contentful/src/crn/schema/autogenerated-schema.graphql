@@ -2,6 +2,8 @@ schema {
   query: Query
 }
 
+directive @contentSourceMaps on QUERY
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!

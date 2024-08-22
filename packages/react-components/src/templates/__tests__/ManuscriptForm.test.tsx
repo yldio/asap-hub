@@ -9,6 +9,7 @@ import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import {
+  ManuscriptFileType,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptType,
@@ -594,6 +595,8 @@ describe('renders the necessary fields', () => {
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
     manuscriptFile: 'Upload the main manuscript file',
+    keyResourceTable: 'Upload a key resource table',
+    additionalFiles: 'Upload any additional files',
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',
@@ -660,6 +663,11 @@ it('resets form fields to default values when no longer visible', async () => {
         publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        keyResourceTable={{
+          id: '124',
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}
@@ -848,7 +856,11 @@ it('should show error when file upload fails', async () => {
   const mockError = 'No file provided or file is not a PDF.';
 
   handleFileUpload.mockImplementation(
-    (file: File, handleError: (errorMessage: string) => void) => {
+    (
+      file: File,
+      fileType: ManuscriptFileType,
+      handleError: (errorMessage: string) => void,
+    ) => {
       if (file === mockFile) {
         return Promise.reject(new Error(mockError)).catch((error) => {
           handleError(error.message);
@@ -906,6 +918,11 @@ it('user can add teams', async () => {
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}
+        keyResourceTable={{
+          id: '124',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
         getTeamSuggestions={getTeamSuggestionsMock}
       />
     </StaticRouter>,
@@ -957,6 +974,11 @@ it('user can add labs', async () => {
         publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        keyResourceTable={{
+          id: '124',
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}

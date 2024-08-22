@@ -1,6 +1,7 @@
 import {
   ApcCoverageOption,
   ManuscriptFileResponse,
+  ManuscriptFileType,
   ManuscriptFormData,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
@@ -148,6 +149,8 @@ type ManuscriptFormProps = Omit<
   | 'type'
   | 'lifecycle'
   | 'manuscriptFile'
+  | 'keyResourceTable'
+  | 'additionalFiles'
   | 'createdBy'
   | 'publishedAt'
   | 'teams'
@@ -157,6 +160,8 @@ type ManuscriptFormProps = Omit<
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
+    keyResourceTable?: ManuscriptFileResponse;
+    additionalFiles?: ManuscriptFileResponse[];
     eligibilityReasons: Set<string>;
     onSave: (
       output: ManuscriptPostRequest,
@@ -164,6 +169,7 @@ type ManuscriptFormProps = Omit<
     onSuccess: () => void;
     handleFileUpload: (
       file: File,
+      fileType: ManuscriptFileType,
       handleError: (errorMessage: string) => void,
     ) => Promise<ManuscriptFileResponse | undefined>;
     teamId: string;
@@ -185,6 +191,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   type,
   lifecycle,
   manuscriptFile,
+  keyResourceTable,
+  additionalFiles,
   eligibilityReasons,
   requestingApcCoverage,
   preprintDoi,
@@ -223,6 +231,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
           manuscriptFile: manuscriptFile || undefined,
+          keyResourceTable: keyResourceTable || undefined,
+          additionalFiles: additionalFiles || undefined,
           acknowledgedGrantNumber: acknowledgedGrantNumber || '',
           asapAffiliationIncluded: asapAffiliationIncluded || '',
           manuscriptLicense: manuscriptLicense || '',
@@ -288,6 +298,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               teams: selectedTeams,
               labs: [],
               manuscriptFile: undefined,
+              keyResourceTable: undefined,
+              additionalFiles: undefined,
             },
           ],
         },
@@ -622,8 +634,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }}
                     handleFileUpload={async (file) => {
                       setIsUploading(true);
+                      if (file.size > 1000) {
+                        setError('versions.0.manuscriptFile', {
+                          type: 'custom',
+                          message: 'File is larger than 1kb',
+                        });
+                      }
                       const uploadedFile = await handleFileUpload(
                         file,
+                        'Manuscript File',
                         (validationErrorMessage) => {
                           setError('versions.0.manuscriptFile', {
                             type: 'custom',
@@ -639,7 +658,121 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         shouldValidate: true,
                       });
                     }}
-                    currentFile={value}
+                    currentFiles={value && [value]}
+                    accept="application/pdf"
+                    customValidationMessage={error?.message}
+                    enabled={!isSubmitting && !isUploading}
+                  />
+                )}
+              />
+            )}
+            {watchType &&
+              watchLifecycle &&
+              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+                'keyResourceTable',
+              ) && (
+                <Controller
+                  name="versions.0.keyResourceTable"
+                  control={control}
+                  rules={{
+                    required: 'Please select a key resource table.',
+                  }}
+                  render={({ field: { value }, fieldState: { error } }) => (
+                    <LabeledFileField
+                      title="Upload a key resource table"
+                      subtitle="(required)"
+                      description="The key resource table must be submitted as a single CSV file and should outline the resources used and generated in this study. View guidance here."
+                      placeholder="Upload Key Resource Table"
+                      onRemove={() => {
+                        resetField('versions.0.keyResourceTable');
+                      }}
+                      handleFileUpload={async (file) => {
+                        setIsUploading(true);
+                        const uploadedFile = await handleFileUpload(
+                          file,
+                          'Key Resource Table',
+                          (validationErrorMessage) => {
+                            setError('versions.0.keyResourceTable', {
+                              type: 'custom',
+                              message: validationErrorMessage,
+                            });
+                          },
+                        );
+                        setIsUploading(false);
+
+                        if (!uploadedFile) return;
+
+                        setValue('versions.0.keyResourceTable', uploadedFile, {
+                          shouldValidate: true,
+                        });
+                      }}
+                      currentFiles={value && [value]}
+                      accept="text/csv"
+                      customValidationMessage={error?.message}
+                      enabled={!isSubmitting && !isUploading}
+                    />
+                  )}
+                />
+              )}
+            {watchType && (
+              <Controller
+                name="versions.0.additionalFiles"
+                control={control}
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <LabeledFileField
+                    title="Upload any additional files"
+                    subtitle="(optional)"
+                    description="Additional files can be submitted in any of the supported formats (PDF, JATS/NLM, TEI XML, CSV...)."
+                    placeholder="Upload Additional Files"
+                    onRemove={(id: string) => {
+                      setValue('versions.0.additionalFiles', [
+                        ...(value?.filter(
+                          (additionalFile) => additionalFile.id !== id,
+                        ) || []),
+                      ]);
+                    }}
+                    multiUpload
+                    handleFileUpload={async (file) => {
+                      const isExistingFile =
+                        value &&
+                        value.findIndex(
+                          (additionalFile) =>
+                            additionalFile.filename === file.name,
+                        ) !== -1;
+                      if (!isExistingFile) {
+                        setIsUploading(true);
+                        const uploadedFile = await handleFileUpload(
+                          file,
+                          'Additional Files',
+                          (validationErrorMessage) => {
+                            setError('versions.0.additionalFiles', {
+                              type: 'custom',
+                              message: validationErrorMessage,
+                            });
+                          },
+                        );
+                        setIsUploading(false);
+
+                        if (!uploadedFile) return;
+
+                        setValue(
+                          'versions.0.additionalFiles',
+                          [
+                            ...(getValues('versions.0.additionalFiles') || []),
+                            uploadedFile,
+                          ],
+                          {
+                            shouldValidate: true,
+                          },
+                        );
+                      } else {
+                        setError('versions.0.additionalFiles', {
+                          type: 'custom',
+                          message: 'File uploaded already exists.',
+                        });
+                      }
+                    }}
+                    currentFiles={value}
                     customValidationMessage={error?.message}
                     enabled={!isSubmitting && !isUploading}
                   />

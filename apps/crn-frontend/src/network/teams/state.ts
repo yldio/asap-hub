@@ -6,6 +6,7 @@ import {
   TeamListItemResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
+  ManuscriptFileType,
 } from '@asap-hub/model';
 import {
   atom,
@@ -182,6 +183,9 @@ export const usePostManuscript = () => {
 export const useUploadManuscriptFile = () => {
   const authorization = useRecoilValue(authorizationState);
 
-  return (file: File, handleError: (errorMessage: string) => void) =>
-    uploadManuscriptFile(file, authorization, handleError);
+  return (
+    file: File,
+    fileType: ManuscriptFileType,
+    handleError: (errorMessage: string) => void,
+  ) => uploadManuscriptFile(file, fileType, authorization, handleError);
 };

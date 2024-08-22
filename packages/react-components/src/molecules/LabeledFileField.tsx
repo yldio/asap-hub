@@ -54,11 +54,13 @@ type LabeledFileFieldProps = {
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
   readonly placeholder?: string;
-  readonly currentFile?: FileUploadResponse;
-  readonly onRemove?: () => void;
+  readonly multiUpload?: boolean;
+  readonly currentFiles?: FileUploadResponse[];
+  readonly onRemove?: (id: string) => void;
   readonly customValidationMessage?: string;
   readonly customValidation?: (file: File) => boolean;
   readonly handleFileUpload: (file: File) => Promise<void>;
+  readonly accept?: string;
 } & Pick<ComponentProps<typeof Button>, 'enabled'>;
 
 const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
@@ -67,7 +69,9 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   description,
   hint,
   placeholder,
-  currentFile,
+  multiUpload = false,
+  currentFiles,
+  accept,
   onRemove,
   enabled,
   customValidationMessage,
@@ -83,43 +87,46 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
       await handleFileUpload(file);
     }
   };
-  const handleRemove = () => {
+  const handleRemove = (id: string) => {
     if (onRemove) {
-      onRemove();
+      onRemove(id);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
   };
+  const canUploadFile = (!multiUpload && !currentFiles) || multiUpload;
   return (
     <div css={containerStyles}>
       <input
         onChange={handleFileChange}
-        multiple={false}
+        multiple={multiUpload}
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}
+        {...(accept ? { accept } : {})}
         hidden
       />
       <Label
         forContent={(id) => (
           <div css={fileSelectionContainerStyles}>
-            {currentFile && (
-              <div css={uploadedButtonTagStyles}>
-                <Tag key={currentFile.id} onRemove={handleRemove}>
-                  {currentFile.filename}
-                </Tag>
-              </div>
-            )}
+            {currentFiles &&
+              currentFiles.map((file) => (
+                <div css={uploadedButtonTagStyles} key={file.id}>
+                  <Tag onRemove={() => handleRemove(file.id)}>
+                    {file.filename}
+                  </Tag>
+                </div>
+              ))}
             <div css={buttonContainerStyles}>
               <Button
                 primary
                 small
-                enabled={!!enabled && !currentFile}
+                enabled={!!enabled && canUploadFile}
                 noMargin
                 id={id}
                 preventDefault={false}
-                onClick={() => !currentFile && fileInputRef.current?.click()}
+                onClick={() => canUploadFile && fileInputRef.current?.click()}
               >
                 <div css={iconStyles}>{plusIcon}</div> Add File
               </Button>

@@ -32,11 +32,13 @@ it('renders a file tag and a disabled button when a file is selected', () => {
       title="Title"
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
-      currentFile={{
-        filename: 'file.txt',
-        url: 'http://example.com/file.txt',
-        id: '123',
-      }}
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
     />,
   );
   expect(screen.getByText('file.txt')).toBeVisible();
@@ -73,11 +75,13 @@ it('calls the onRemove function when the remove button is clicked and allows for
       handleFileUpload={handleFileUploadMock}
       onRemove={onRemoveMock}
       placeholder="Upload Manuscript File"
-      currentFile={{
-        filename: 'file.txt',
-        url: 'http://example.com/file.txt',
-        id: '123',
-      }}
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
     />,
   );
 

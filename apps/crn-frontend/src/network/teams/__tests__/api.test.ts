@@ -339,16 +339,21 @@ describe('Manuscript', () => {
 
     it('makes an authorized POST request', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .reply(200, {});
 
-      await uploadManuscriptFile(file, 'Bearer x', jest.fn());
+      await uploadManuscriptFile(
+        file,
+        'Manuscript File',
+        'Bearer x',
+        jest.fn(),
+      );
       expect(nock.isDone()).toBe(true);
     });
 
     it('passes the object in the body', async () => {
       nock(API_BASE_URL)
-        .post('/manuscripts/manuscript-file', (body) => {
+        .post('/manuscripts/file-upload', (body) => {
           if (typeof body === 'string' && body.includes('test-file')) {
             return true;
           }
@@ -356,26 +361,36 @@ describe('Manuscript', () => {
         })
         .reply(200, {});
 
-      await uploadManuscriptFile(file, 'Bearer x', jest.fn());
+      await uploadManuscriptFile(
+        file,
+        'Manuscript File',
+        'Bearer x',
+        jest.fn(),
+      );
       expect(nock.isDone()).toBe(true);
     });
 
     it('returns a successfully uploaded file data', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .reply(200, mockResponse);
 
-      const response = await uploadManuscriptFile(file, 'Bearer x', jest.fn());
+      const response = await uploadManuscriptFile(
+        file,
+        'Manuscript File',
+        'Bearer x',
+        jest.fn(),
+      );
       expect(response).toEqual(mockResponse);
     });
 
     it('errors for an error status', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .reply(500, {});
 
       await expect(
-        uploadManuscriptFile(file, 'Bearer x', jest.fn()),
+        uploadManuscriptFile(file, 'Manuscript File', 'Bearer x', jest.fn()),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to upload manuscript file. Expected status 2xx. Received status 500."`,
       );
@@ -383,13 +398,18 @@ describe('Manuscript', () => {
 
     it('invokes handleError with the error message when a 400 error occurs', async () => {
       nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .reply(400, {
           message: 'Validation Error',
         });
 
       const handleErrorMock = jest.fn();
-      await uploadManuscriptFile(file, 'Bearer x', handleErrorMock);
+      await uploadManuscriptFile(
+        file,
+        'Manuscript File',
+        'Bearer x',
+        handleErrorMock,
+      );
 
       expect(handleErrorMock).toHaveBeenCalledWith('Validation Error');
     });

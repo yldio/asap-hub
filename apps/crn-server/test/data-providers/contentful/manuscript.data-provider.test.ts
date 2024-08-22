@@ -220,6 +220,11 @@ describe('Manuscripts Contentful Data Provider', () => {
       when(environmentMock.getAsset)
         .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
         .mockResolvedValue(assetMock);
+      when(environmentMock.getAsset)
+        .calledWith(
+          manuscriptCreateDataObject.versions[0]!.keyResourceTable!.id,
+        )
+        .mockResolvedValue(assetMock);
 
       const result = await manuscriptDataProvider.create({
         ...manuscriptCreateDataObject,
@@ -245,6 +250,18 @@ describe('Manuscripts Contentful Data Provider', () => {
                   id: 'file-id',
                 },
               },
+            },
+            keyResourceTable: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: 'file-table-id',
+                },
+              },
+            },
+            additionalFiles: {
+              'en-US': null,
             },
             labs: { 'en-US': [] },
             teams: {

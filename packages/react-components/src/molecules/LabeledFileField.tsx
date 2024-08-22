@@ -90,12 +90,10 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   const handleRemove = (id?: string) => {
     if (onRemove) {
       onRemove(id);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
     }
   };
   const canUploadFile = (!multiUpload && !currentFiles) || multiUpload;
+
   return (
     <div css={containerStyles}>
       <input
@@ -104,8 +102,8 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}
-        {...(accept ? { accept } : {})}
-        {...(!currentFiles ? { value: '' } : {})}
+        accept={accept ? accept : ''}
+        value=""
         hidden
       />
       <Label

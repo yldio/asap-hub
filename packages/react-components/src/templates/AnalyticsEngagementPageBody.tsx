@@ -33,11 +33,13 @@ type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls> & {
   setSortingDirection: React.Dispatch<
     React.SetStateAction<EngagementSortingDirection>
   >;
+  exportResults: () => Promise<void>;
 };
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
 > = ({
   data,
+  exportResults,
   tags,
   setTags,
   loadTags,
@@ -60,6 +62,7 @@ const AnalyticsEngagementPageBody: React.FC<
       tags={tags}
       loadTags={loadTags}
       setTags={setTags}
+      exportResults={exportResults}
     />
     <EngagementTable
       data={data}

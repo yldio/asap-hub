@@ -12,62 +12,86 @@ import {
   processUserCollaborationPerformance,
 } from './performance/collaboration';
 
-type RoundingType = 'ceil' | 'floor';
+const isEven = (number: number) => number % 2 === 0;
 
-const roundToTwoDecimals = (number: number, type?: RoundingType): number => {
-  const factor = 100;
-
-  if (!type) {
-    return parseFloat(number.toFixed(2));
+export const getMedian = (numbers: number[]): number => {
+  const midValue = Math.floor(numbers.length / 2);
+  if (isEven(numbers.length)) {
+    return (numbers[midValue - 1] + numbers[midValue]) / 2;
   }
-
-  return type === 'ceil'
-    ? Math.ceil(number * factor) / factor
-    : Math.floor(number * factor) / factor;
+  return numbers[midValue];
 };
 
-export const getStandardDeviation = (
+export const getQuartiles = (
   numbers: number[],
-  mean: number,
-): number => {
+): { min: number; q1: number; q3: number; max: number } => {
   const n = numbers.length;
-  if (n === 0) return 0;
+  if (n < 4) return { min: 0, q1: 0, q3: 0, max: 0 };
 
-  const variance =
-    numbers.reduce((sum, value) => sum + (value - mean) ** 2, 0) / n;
-
-  return Math.sqrt(variance);
+  const sortedData = numbers.sort((a, b) => a - b);
+  const middleIndex = Math.floor(n / 2);
+  const q1 = getMedian(sortedData.slice(0, middleIndex));
+  const q3 = isEven(n)
+    ? getMedian(sortedData.slice(middleIndex))
+    : getMedian(sortedData.slice(middleIndex + 1));
+  return { min: sortedData[0], q1, q3, max: sortedData[n - 1] };
 };
 
-export const getBellCurveMetrics = (
+export const getPerformanceMetrics = (
   data: number[],
   isInteger: boolean = true,
 ): PerformanceMetrics => {
-  const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
-  const stdDev = getStandardDeviation(data, mean);
+  const { min, q1, q3, max } = getQuartiles(data);
+  const firstQuartile = isInteger ? q1 : parseFloat(q1.toFixed(2));
+  const thirdQuartile = isInteger ? q3 : parseFloat(q3.toFixed(2));
+  const factor = isInteger ? 1 : 0.01;
 
-  const inferiorLimit = mean - stdDev;
-  const superiorLimit = mean + stdDev;
+  if (min === max) {
+    return {
+      belowAverageMin: -1,
+      belowAverageMax: -1,
+      averageMin: min,
+      averageMax: max,
+      aboveAverageMin: -1,
+      aboveAverageMax: -1,
+    };
+  }
 
+  if (
+    isInteger &&
+    (!Number.isInteger(firstQuartile) || !Number.isInteger(thirdQuartile))
+  ) {
+    const belowAverageMax = Math.floor(firstQuartile);
+    const averageMin = belowAverageMax + factor;
+    const aboveAverageMin = Math.ceil(thirdQuartile);
+    return {
+      belowAverageMin: min,
+      belowAverageMax,
+      averageMin,
+      averageMax: Math.max(averageMin, aboveAverageMin - 1),
+      aboveAverageMin,
+      aboveAverageMax: max,
+    };
+  }
+
+  const belowAverageMin = min;
+  const belowAverageMax = Math.max(min, firstQuartile - factor);
+  const averageMin = belowAverageMax + factor;
+  const averageMax = Math.max(averageMin, thirdQuartile - factor);
+  let aboveAverageMin = Math.min(averageMax + factor, max);
+  let aboveAverageMax = max;
+
+  if (averageMin == aboveAverageMax) {
+    aboveAverageMin = -1;
+    aboveAverageMax = -1;
+  }
   return {
-    belowAverageMin: isInteger
-      ? Math.min(...data)
-      : roundToTwoDecimals(Math.min(...data)),
-    belowAverageMax: isInteger
-      ? Math.floor(inferiorLimit)
-      : roundToTwoDecimals(inferiorLimit, 'floor'),
-    averageMin: isInteger
-      ? Math.ceil(inferiorLimit)
-      : roundToTwoDecimals(inferiorLimit, 'ceil'),
-    averageMax: isInteger
-      ? Math.floor(superiorLimit)
-      : roundToTwoDecimals(superiorLimit, 'floor'),
-    aboveAverageMin: isInteger
-      ? Math.ceil(superiorLimit)
-      : roundToTwoDecimals(superiorLimit, 'ceil'),
-    aboveAverageMax: isInteger
-      ? Math.max(...data)
-      : roundToTwoDecimals(Math.max(...data)),
+    belowAverageMin,
+    belowAverageMax,
+    averageMin,
+    averageMax,
+    aboveAverageMin,
+    aboveAverageMax,
   };
 };
 
@@ -114,7 +138,7 @@ export const deletePreviousObjects = async (
   await index.deleteObjects(objectIDs);
 };
 /* istanbul ignore next */
-export const processProductivityPerformance = async ({
+export const processPerformance = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,

@@ -15,7 +15,7 @@ import {
   removeAlgoliaRecords,
   setAlgoliaAnalyticsSettings,
   setAlgoliaSettings,
-  processProductivityPerformance,
+  processPerformance,
 } from './scripts/algolia';
 
 const stringType = 'string' as const;
@@ -68,9 +68,14 @@ type BaseArguments = {
   apikey: string;
 };
 
-interface ProcessProductivityPerformanceArguments extends BaseArguments {
+interface ProcessPerformanceArguments extends BaseArguments {
   index: string;
-  metric: 'all' | 'user-productivity' | 'team-productivity';
+  metric:
+    | 'all'
+    | 'user-productivity'
+    | 'team-productivity'
+    | 'user-collaboration'
+    | 'team-collaboration';
 }
 
 interface DeleteIndexArguments extends BaseArguments {
@@ -106,7 +111,7 @@ interface SetAnalyticsSettings extends BaseArguments {
 
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
 yargs(hideBin(process.argv))
-  .command<ProcessProductivityPerformanceArguments>({
+  .command<ProcessPerformanceArguments>({
     command: 'algolia:process-performance',
     describe: 'process analytics performance',
     builder: (cli) =>
@@ -116,7 +121,7 @@ yargs(hideBin(process.argv))
         .option('index', indexOption)
         .option('metric', productivityMetricOption),
     handler: async ({ index, appid, apikey, metric }) =>
-      processProductivityPerformance({
+      processPerformance({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,

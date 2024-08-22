@@ -10,7 +10,7 @@ import {
 import {
   deletePreviousObjects,
   getAllHits,
-  getBellCurveMetrics,
+  getPerformanceMetrics,
   Hit,
 } from '../process-performance';
 
@@ -62,10 +62,10 @@ export const processUserCollaborationPerformance = async (
 
       await index.saveObject(
         {
-          withinTeam: getBellCurveMetrics(
+          withinTeam: getPerformanceMetrics(
             flatHits.map((hit) => hit.outputsCoAuthoredWithinTeam),
           ),
-          acrossTeam: getBellCurveMetrics(
+          acrossTeam: getPerformanceMetrics(
             flatHits.map((hit) => hit.outputsCoAuthoredAcrossTeams),
           ),
           __meta: {
@@ -114,7 +114,7 @@ export const processTeamCollaborationPerformance = async (
         fields.reduce(
           (metrics, { name, documentType }) => ({
             ...metrics,
-            [documentType]: getBellCurveMetrics(
+            [documentType]: getPerformanceMetrics(
               rawMetrics.map((item) => item[name as TeamOutputDocumentType]),
             ),
           }),

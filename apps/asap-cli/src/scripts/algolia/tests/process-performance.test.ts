@@ -4,65 +4,79 @@ import type { SearchIndex } from 'algoliasearch';
 import {
   deletePreviousObjects,
   getAllHits,
-  getBellCurveMetrics,
-  getStandardDeviation,
+  getPerformanceMetrics,
+  getQuartiles,
 } from '../process-performance';
 
-describe('getStandardDeviation', () => {
-  it('should return 0 for an empty array', () => {
-    expect(getStandardDeviation([], 0)).toBe(0);
+describe('getQuartiles', () => {
+  it('should return 0 values when data contains less than 4 values', () => {
+    expect(getQuartiles([])).toEqual({ min: 0, q1: 0, q3: 0, max: 0 });
   });
 
   it('should return correct standard deviation for an array of numbers', () => {
     const numbers = [
       20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
     ];
-    const mean =
-      numbers.reduce((sum, value) => sum + value, 0) / numbers.length;
-    const stdDev = getStandardDeviation(numbers, mean);
-    expect(mean).toEqual(10.5);
-    expect(stdDev).toBeCloseTo(5.766, 3);
+
+    const quartiles = getQuartiles(numbers);
+    expect(quartiles.min).toEqual(1);
+    expect(quartiles.q1).toEqual(5.5);
+    expect(quartiles.q3).toEqual(15.5);
+    expect(quartiles.max).toEqual(20);
   });
 });
 
-describe('getBellCurveMetrics', () => {
+describe('getPerformanceMetrics', () => {
   it('returns correct performance metrics when the data has a variety of integers', () => {
     const data = [
       20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
     ];
-    const metrics = getBellCurveMetrics(data);
+    const metrics = getPerformanceMetrics(data);
     expect(metrics).toEqual({
       belowAverageMin: 1,
-      belowAverageMax: 4,
-      averageMin: 5,
-      averageMax: 16,
-      aboveAverageMin: 17,
+      belowAverageMax: 5,
+      averageMin: 6,
+      averageMax: 15,
+      aboveAverageMin: 16,
       aboveAverageMax: 20,
     });
   });
 
   it('returns correct performance metrics when the data has a lot of zeros', () => {
     const data = [0, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 1, 0, 0, 1, 2];
-    const metrics = getBellCurveMetrics(data);
+    const metrics = getPerformanceMetrics(data);
     expect(metrics).toEqual({
       belowAverageMin: 0,
-      belowAverageMax: -1,
-      averageMin: -0,
+      belowAverageMax: 0,
+      averageMin: 1,
       averageMax: 1,
       aboveAverageMin: 2,
       aboveAverageMax: 2,
     });
   });
 
+  it('returns correct performance metrics when the data has same values', () => {
+    const data = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
+    const metrics = getPerformanceMetrics(data);
+    expect(metrics).toEqual({
+      belowAverageMin: -1,
+      belowAverageMax: -1,
+      averageMin: 6,
+      averageMax: 6,
+      aboveAverageMin: -1,
+      aboveAverageMax: -1,
+    });
+  });
+
   it('returns correct performance metrics when the data and result have decimal places', () => {
     const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
-    const metrics = getBellCurveMetrics(data, false);
+    const metrics = getPerformanceMetrics(data, false);
     expect(metrics).toEqual({
       belowAverageMin: 0.01,
-      belowAverageMax: 0.25,
-      averageMin: 0.26,
-      averageMax: 0.8,
-      aboveAverageMin: 0.81,
+      belowAverageMax: 0.32,
+      averageMin: 0.33,
+      averageMax: 0.7,
+      aboveAverageMin: 0.71,
       aboveAverageMax: 0.98,
     });
   });

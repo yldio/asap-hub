@@ -81,7 +81,7 @@ export const getPerformanceMetrics = (
   let aboveAverageMin = Math.min(averageMax + factor, max);
   let aboveAverageMax = max;
 
-  if (averageMin == aboveAverageMax) {
+  if (averageMin === aboveAverageMax) {
     aboveAverageMin = -1;
     aboveAverageMax = -1;
   }

@@ -1,4 +1,8 @@
-import { ManuscriptFileResponse, ManuscriptResponse } from '@asap-hub/model';
+import {
+  ManuscriptFileResponse,
+  ManuscriptFileType,
+  ManuscriptResponse,
+} from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { RequestHandler, Response, Router } from 'express';
 import multer from 'multer';
@@ -32,16 +36,30 @@ export const manuscriptRouteFactory = (
   );
 
   manuscriptRoutes.post<unknown, ManuscriptFileResponse>(
-    '/manuscripts/manuscript-file',
+    '/manuscripts/file-upload',
     upload.single('file') as RequestHandler<unknown, ManuscriptFileResponse>,
     async (req, res) => {
-      const { file } = req;
+      const { file, body } = req;
+      const fileType = body.fileType as ManuscriptFileType;
 
-      if (!file || file.mimetype !== 'application/pdf') {
+      if (
+        fileType === 'Manuscript File' &&
+        (!file || file.mimetype !== 'application/pdf')
+      ) {
         throw Boom.badRequest('No file provided or file is not a PDF.');
+      }
+      if (
+        fileType === 'Key Resource Table' &&
+        (!file || file.mimetype !== 'text/csv')
+      ) {
+        throw Boom.badRequest('No file provided or file is not a csv.');
+      }
+      if (!file) {
+        throw Boom.badRequest('No file provided');
       }
 
       const manuscript = await manuscriptController.createFile({
+        fileType,
         content: file.buffer,
         contentType: file.mimetype,
         filename: file.originalname,

@@ -1,4 +1,5 @@
 import { NotFoundError, GenericError } from '@asap-hub/errors';
+import { ManuscriptFileType } from '@asap-hub/model';
 import ManuscriptController from '../../src/controllers/manuscript.controller';
 import { AssetContentfulDataProvider } from '../../src/data-providers/contentful/asset.data-provider';
 import {
@@ -78,6 +79,7 @@ describe('Manuscript controller', () => {
       await expect(
         manuscriptController.createFile({
           filename: 'file.pdf',
+          fileType: 'Manuscript File' as ManuscriptFileType,
           content: Buffer.from('file-content'),
           contentType: 'application/pdf',
         }),
@@ -89,6 +91,7 @@ describe('Manuscript controller', () => {
         content: Buffer.from('file-content'),
         contentType: 'application/pdf',
         filename: 'file.pdf',
+        fileType: 'Manuscript File' as ManuscriptFileType,
       };
       const manuscriptFileResponse = getManuscriptFileResponse();
 

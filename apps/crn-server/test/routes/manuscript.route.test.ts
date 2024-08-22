@@ -234,7 +234,7 @@ describe('/manuscripts/ route', () => {
     });
   });
 
-  describe('POST /manuscripts/manuscript-file', () => {
+  describe('POST /manuscripts/file-upload', () => {
     const manuscriptFileResponse = getManuscriptFileResponse();
 
     test('Should return 403 when not allowed to create a manuscript because user is not onboarded', async () => {
@@ -244,11 +244,12 @@ describe('/manuscripts/ route', () => {
       });
 
       const response = await supertest(app)
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .attach('file', Buffer.from('file content'), {
           filename: 'file.pdf',
           contentType: 'application/pdf',
-        });
+        })
+        .field('fileType', 'Manuscript File');
 
       expect(response.status).toEqual(403);
     });
@@ -263,14 +264,16 @@ describe('/manuscripts/ route', () => {
       );
 
       const response = await supertest(app)
-        .post('/manuscripts/manuscript-file')
+        .post('/manuscripts/file-upload')
         .attach('file', Buffer.from('file content'), {
           filename: 'file.pdf',
           contentType: 'application/pdf',
-        });
+        })
+        .field('fileType', 'Manuscript File');
 
       expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
         filename: 'file.pdf',
+        fileType: 'Manuscript File',
         content: expect.any(Buffer),
         contentType: 'application/pdf',
       });
@@ -280,22 +283,31 @@ describe('/manuscripts/ route', () => {
     });
 
     test('Should return 400 if the file is missing', async () => {
-      const response = await supertest(app).post(
-        '/manuscripts/manuscript-file',
-      );
+      const response = await supertest(app).post('/manuscripts/file-upload');
 
       expect(response.status).toBe(400);
     });
 
-    test('Should return 400 if the file mime type is not pdf', async () => {
-      const response = await supertest(app)
-        .post('/manuscripts/manuscript-file')
-        .attach('file', Buffer.from('file content'), {
-          filename: 'file.pdf',
-          contentType: 'application/json',
-        });
+    it.each([
+      { fileType: 'Manuscript File', mimeType: 'text/csv', extension: 'pdf' },
+      {
+        fileType: 'Key Resource Table',
+        mimeType: 'application/pdf',
+        extension: 'csv',
+      },
+    ])(
+      'should return 400 if file type is $fileType and the file mimetype is not $extension',
+      async ({ fileType, mimeType, extension }) => {
+        const response = await supertest(app)
+          .post('/manuscripts/file-upload')
+          .attach('file', Buffer.from('file content'), {
+            filename: `file.${extension}`,
+            contentType: mimeType,
+          })
+          .field('fileType', fileType);
 
-      expect(response.status).toBe(400);
-    });
+        expect(response.status).toBe(400);
+      },
+    );
   });
 });

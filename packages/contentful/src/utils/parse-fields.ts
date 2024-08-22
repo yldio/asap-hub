@@ -54,6 +54,9 @@ export function getLinkAsset(id: string): Link<'Asset'> {
   };
 }
 
+export const getLinkAssets = (assets: string[]) =>
+  assets.map((id) => getLinkAsset(id));
+
 export const getLinkEntities = <Version extends boolean>(
   entities: string[],
   version?: Version,

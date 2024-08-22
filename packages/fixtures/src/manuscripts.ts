@@ -33,6 +33,12 @@ export const createManuscriptResponse = (
         url: `https://example.com/manuscript_${itemIndex}.pdf`,
         filename: `manuscript_${itemIndex}.pdf`,
       },
+      keyResourceTable: {
+        id: `file-resource-table-id-${itemIndex}`,
+        url: `https://example.com/manuscript_${itemIndex}.csv`,
+        filename: `manuscript_${itemIndex}.csv`,
+      },
+      additionalFiles: [],
       teams: [
         {
           id: 'team-1',

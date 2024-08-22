@@ -222,6 +222,11 @@ export const getTeamDataObject = (): TeamDataObject => ({
             url: 'https://example.com/manuscript.pdf',
             filename: 'manuscript.pdf',
           },
+          keyResourceTable: {
+            id: 'file-table-id',
+            url: 'https://example.com/manuscript.csv',
+            filename: 'manuscript.csv',
+          },
           teams: [
             {
               id: 'team-1',

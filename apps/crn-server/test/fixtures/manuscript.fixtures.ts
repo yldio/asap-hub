@@ -25,6 +25,11 @@ export const getManuscriptDataObject = (
         url: 'https://example.com/manuscript.pdf',
         id: 'file-id',
       },
+      keyResourceTable: {
+        filename: 'manuscript.csv',
+        url: 'https://example.com/manuscript.csv',
+        id: 'file-table-id',
+      },
       teams: [
         { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
       ],

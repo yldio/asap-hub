@@ -9,7 +9,7 @@ module.exports.up = (migration) => {
     .name('Key Resource Table')
     .type('Link')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         linkMimetypeGroup: ['spreadsheet'],
@@ -38,6 +38,10 @@ module.exports.up = (migration) => {
 
       linkType: 'Asset',
     });
+  manuscriptVersions.moveField('keyResourceTable').afterField('manuscriptFile');
+  manuscriptVersions
+    .moveField('additionalFiles')
+    .afterField('keyResourceTable');
 };
 
 module.exports.down = (migration) => {

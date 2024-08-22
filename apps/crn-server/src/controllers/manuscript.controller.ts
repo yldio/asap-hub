@@ -2,6 +2,7 @@ import { NotFoundError } from '@asap-hub/errors';
 import {
   ManuscriptCreateDataObject,
   ManuscriptFileResponse,
+  ManuscriptFileType,
   ManuscriptResponse,
 } from '@asap-hub/model';
 
@@ -40,14 +41,15 @@ export default class ManuscriptController {
   }
 
   async createFile({
+    fileType,
     filename,
     content,
     contentType,
   }: ManuscruptFileCreateDataObject): Promise<ManuscriptFileResponse> {
     const manuscriptFileAsset = await this.assetDataProvider.create({
       id: '',
-      title: 'Manuscript File',
-      description: 'Manuscript File',
+      title: fileType,
+      description: fileType,
       content,
       contentType,
       filename,
@@ -59,6 +61,7 @@ export default class ManuscriptController {
 }
 
 export type ManuscruptFileCreateDataObject = {
+  fileType: ManuscriptFileType;
   filename: string;
   content: Buffer;
   contentType: string;

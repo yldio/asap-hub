@@ -26,11 +26,13 @@ import {
   LabeledRadioButtonGroup,
   LabeledTextField,
 } from '..';
-import { Button, MultiSelectOptionsType } from '../atoms';
+import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
 
 const MAX_FILE_SIZE = 25_000_000;
+const KRT_GUIDANCE_FILE =
+  'https://docs.google.com/document/d/1FCnqC3VpvLFPLcshLSkmGPtRIFfh70MR7KkrXi7IMX4/edit?usp=sharing';
 const mainStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -689,7 +691,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledFileField
                       title="Upload a key resource table"
                       subtitle="(required)"
-                      description="The key resource table must be submitted as a single CSV file and should outline the resources used and generated in this study. View guidance here."
+                      description={
+                        <>
+                          The key resource table must be submitted as a single
+                          CSV file and should outline the resources used and
+                          generated in this study. View guidance{' '}
+                          {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
+                        </>
+                      }
                       placeholder="Upload Key Resource Table"
                       onRemove={() => {
                         resetField('versions.0.keyResourceTable');
@@ -741,14 +750,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload any additional files"
                     subtitle="(optional)"
-                    description="Additional files must be submitted in PDF and/or CSV formats.."
+                    description="Additional files must be submitted in PDF and/or CSV formats."
                     placeholder="Upload Additional Files"
                     onRemove={(id?: string) => {
-                      setValue('versions.0.additionalFiles', [
-                        ...(value?.filter(
+                      setValue(
+                        'versions.0.additionalFiles',
+                        value?.filter(
                           (additionalFile) => additionalFile.id !== id,
-                        ) || []),
-                      ]);
+                        ),
+                      );
                     }}
                     maxFiles={5}
                     handleFileUpload={async (file) => {

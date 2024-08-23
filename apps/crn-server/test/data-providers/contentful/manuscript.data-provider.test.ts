@@ -184,6 +184,19 @@ describe('Manuscripts Contentful Data Provider', () => {
         'some error message',
       );
     });
+
+    test('Should default key resource table to undefined if not present', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.versionsCollection!.items[0]!.keyResourceTable = undefined;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+
+      expect(result!.versions[0]!.keyResourceTable).toBeUndefined();
+    });
   });
 
   describe('Create', () => {

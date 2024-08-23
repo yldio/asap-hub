@@ -108,29 +108,32 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
       />
       <Label
         forContent={(id) => (
-          <div css={fileSelectionContainerStyles}>
-            {currentFiles &&
-              currentFiles.map((file) => (
-                <div css={uploadedButtonTagStyles} key={file.id}>
-                  <Tag onRemove={() => handleRemove(file.id)}>
-                    {file.filename}
-                  </Tag>
-                </div>
-              ))}
-            <div css={buttonContainerStyles}>
-              <Button
-                primary
-                small
-                enabled={!!enabled && canUploadFile}
-                noMargin
-                id={id}
-                preventDefault={false}
-                onClick={() => canUploadFile && fileInputRef.current?.click()}
-              >
-                <div css={iconStyles}>{plusIcon}</div> Add File
-              </Button>
+          <>
+            <div style={{ width: '100%' }} />
+            <div css={fileSelectionContainerStyles}>
+              {currentFiles &&
+                currentFiles.map((file) => (
+                  <div css={uploadedButtonTagStyles} key={file.id}>
+                    <Tag onRemove={() => handleRemove(file.id)}>
+                      {file.filename}
+                    </Tag>
+                  </div>
+                ))}
+              <div css={buttonContainerStyles}>
+                <Button
+                  primary
+                  small
+                  enabled={!!enabled && canUploadFile}
+                  noMargin
+                  id={id}
+                  preventDefault={false}
+                  onClick={() => canUploadFile && fileInputRef.current?.click()}
+                >
+                  <div css={iconStyles}>{plusIcon}</div> Add File
+                </Button>
+              </div>
             </div>
-          </div>
+          </>
         )}
       >
         <Paragraph>

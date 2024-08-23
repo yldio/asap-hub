@@ -289,14 +289,26 @@ describe('/manuscripts/ route', () => {
     });
 
     it.each([
-      { fileType: 'Manuscript File', mimeType: 'text/csv', extension: 'pdf' },
+      {
+        fileType: 'Manuscript File',
+        mimeType: 'text/csv',
+        extension: 'csv',
+        acceptedExtension: 'pdf',
+      },
       {
         fileType: 'Key Resource Table',
         mimeType: 'application/pdf',
-        extension: 'csv',
+        extension: 'pdf',
+        acceptedExtension: 'csv',
+      },
+      {
+        fileType: 'Additional Files',
+        mimeType: 'image/png',
+        extension: 'png',
+        acceptedExtension: 'csv',
       },
     ])(
-      'should return 400 if file type is $fileType and the file mimetype is not $extension',
+      'should return 400 if file type is $fileType and the file mimetype is not $acceptedExtension',
       async ({ fileType, mimeType, extension }) => {
         const response = await supertest(app)
           .post('/manuscripts/file-upload')

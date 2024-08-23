@@ -890,12 +890,12 @@ describe('manuscript file', () => {
     expect(screen.getByText(mockError)).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 50MB', async () => {
+  it('should show error when file size is greater than 25MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 50)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
       type: 'text/plain',
     });
 
@@ -919,7 +919,7 @@ describe('manuscript file', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 50MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
@@ -1003,12 +1003,12 @@ describe('key resource table', () => {
     expect(screen.getByText(mockError)).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 50MB', async () => {
+  it('should show error when file size is greater than 25MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 50)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
       type: 'text/plain',
     });
 
@@ -1032,7 +1032,7 @@ describe('key resource table', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 50MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
   });
 
   it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
@@ -1192,12 +1192,12 @@ describe('additional files', () => {
     ).toBeInTheDocument();
   });
 
-  it('should show error when file size is greater than 50MB', async () => {
+  it('should show error when file size is greater than 25MB', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 50)], 'test.txt', {
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
       type: 'text/plain',
     });
 
@@ -1221,7 +1221,7 @@ describe('additional files', () => {
       userEvent.upload(uploadInput, mockFile);
     });
 
-    expect(screen.getByText('File is larger than 50MB.')).toBeInTheDocument();
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
   });
 
   it('should remove one of the additional files without removing the others', async () => {

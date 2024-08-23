@@ -30,7 +30,7 @@ import { Button, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
 
-const MAX_FILE_SIZE = 50_000_000;
+const MAX_FILE_SIZE = 25_000_000;
 const mainStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -253,7 +253,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       ],
     },
   });
-  const [isUploading, setIsUploading] = useState(false);
+
+  const [isUploadingManuscriptFile, setIsUploadingManuscriptFile] =
+    useState(false);
+  const [isUploadingKeyResourceTable, setIsUploadingKeyResourceTable] =
+    useState(false);
+  const [isUploadingAdditionalFiles, setIsUploadingAdditionalFiles] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -637,10 +643,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 50MB.',
+                          message: 'File is larger than 25MB.',
                         });
                       } else {
-                        setIsUploading(true);
+                        setIsUploadingManuscriptFile(true);
                         const uploadedFile = await handleFileUpload(
                           file,
                           'Manuscript File',
@@ -651,7 +657,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                             });
                           },
                         );
-                        setIsUploading(false);
+                        setIsUploadingManuscriptFile(false);
 
                         if (!uploadedFile) return;
 
@@ -663,7 +669,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     currentFiles={value && [value]}
                     accept="application/pdf"
                     customValidationMessage={error?.message}
-                    enabled={!isSubmitting && !isUploading}
+                    enabled={!isSubmitting && !isUploadingManuscriptFile}
                   />
                 )}
               />
@@ -692,10 +698,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.keyResourceTable', {
                             type: 'custom',
-                            message: 'File is larger than 50MB.',
+                            message: 'File is larger than 25MB.',
                           });
                         } else {
-                          setIsUploading(true);
+                          setIsUploadingKeyResourceTable(true);
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Key Resource Table',
@@ -706,7 +712,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                               });
                             },
                           );
-                          setIsUploading(false);
+                          setIsUploadingKeyResourceTable(false);
 
                           if (!uploadedFile) return;
 
@@ -722,7 +728,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       currentFiles={value && [value]}
                       accept="text/csv"
                       customValidationMessage={error?.message}
-                      enabled={!isSubmitting && !isUploading}
+                      enabled={!isSubmitting && !isUploadingKeyResourceTable}
                     />
                   )}
                 />
@@ -735,7 +741,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledFileField
                     title="Upload any additional files"
                     subtitle="(optional)"
-                    description="Additional files can be submitted in any of the supported formats (PDF, JATS/NLM, TEI XML, CSV...)."
+                    description="Additional files must be submitted in PDF and/or CSV formats.."
                     placeholder="Upload Additional Files"
                     onRemove={(id?: string) => {
                       setValue('versions.0.additionalFiles', [
@@ -753,14 +759,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                             additionalFile.filename === file.name,
                         ) !== -1;
                       if (!isExistingFile) {
-                        setIsUploading(true);
                         if (file.size > MAX_FILE_SIZE) {
                           setError('versions.0.additionalFiles', {
                             type: 'custom',
-                            message: 'File is larger than 50MB.',
+                            message: 'File is larger than 25MB.',
                           });
-                          setIsUploading(false);
                         } else {
+                          setIsUploadingAdditionalFiles(true);
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Additional Files',
@@ -771,7 +776,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                               });
                             },
                           );
-                          setIsUploading(false);
+                          setIsUploadingAdditionalFiles(false);
 
                           if (!uploadedFile) return;
 
@@ -797,7 +802,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     currentFiles={value}
                     customValidationMessage={error?.message}
                     accept="application/pdf,text/csv"
-                    enabled={!isSubmitting && !isUploading}
+                    enabled={!isSubmitting && !isUploadingAdditionalFiles}
                   />
                 )}
               />
@@ -935,7 +940,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 submit
-                enabled={!isSubmitting && !isUploading}
+                enabled={
+                  !isSubmitting &&
+                  !isUploadingManuscriptFile &&
+                  !isUploadingKeyResourceTable &&
+                  !isUploadingAdditionalFiles
+                }
                 preventDefault={false}
               >
                 Submit

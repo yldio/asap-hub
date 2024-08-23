@@ -233,3 +233,36 @@ it('renders key resource table file details and download link', () => {
     'https://example.com/key_resource_table.csv',
   );
 });
+
+it('renders additional files details and download link when provided', () => {
+  const { getAllByText, getByText, getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      versions={[
+        {
+          ...props.versions[0]!,
+          manuscriptFile: {
+            filename: 'manuscript_file.pdf',
+            url: 'https://example.com/main-file.pdf',
+            id: 'file-1',
+          },
+          keyResourceTable: undefined,
+          additionalFiles: [
+            {
+              filename: 'additional_file.pdf',
+              url: 'https://example.com/additional-file.pdf',
+              id: 'additional-file-1',
+            },
+          ],
+        },
+      ]}
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText('additional_file.pdf')).toBeVisible();
+  expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com/additional-file.pdf',
+  );
+});

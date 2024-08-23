@@ -54,7 +54,7 @@ type LabeledFileFieldProps = {
   readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
   readonly placeholder?: string;
-  readonly multiUpload?: boolean;
+  readonly maxFiles?: number;
   readonly currentFiles?: FileUploadResponse[];
   readonly onRemove?: (id?: string) => void;
   readonly customValidationMessage?: string;
@@ -69,7 +69,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   description,
   hint,
   placeholder,
-  multiUpload = false,
+  maxFiles = 1,
   currentFiles,
   accept,
   onRemove,
@@ -92,13 +92,13 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
       onRemove(id);
     }
   };
-  const canUploadFile = (!multiUpload && !currentFiles) || multiUpload;
+  const canUploadFile = !currentFiles || currentFiles.length < maxFiles;
 
   return (
     <div css={containerStyles}>
       <input
         onChange={handleFileChange}
-        multiple={multiUpload}
+        multiple={maxFiles > 1}
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}

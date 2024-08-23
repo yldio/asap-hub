@@ -52,10 +52,17 @@ export const manuscriptRouteFactory = (
         fileType === 'Key Resource Table' &&
         (!file || file.mimetype !== 'text/csv')
       ) {
-        throw Boom.badRequest('No file provided or file is not a csv.');
+        throw Boom.badRequest('No file provided or file is not a CSV.');
+      }
+      if (
+        fileType === 'Additional Files' &&
+        (!file ||
+          (file.mimetype !== 'text/csv' && file.mimetype !== 'application/pdf'))
+      ) {
+        throw Boom.badRequest('No file provided or file is not a CSV or PDF.');
       }
       if (!file) {
-        throw Boom.badRequest('No file provided');
+        throw Boom.badRequest('No file provided.');
       }
 
       const manuscript = await manuscriptController.createFile({

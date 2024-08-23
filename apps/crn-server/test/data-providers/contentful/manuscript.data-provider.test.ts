@@ -199,6 +199,13 @@ describe('Manuscripts Contentful Data Provider', () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';
       const manuscriptCreateDataObject = getManuscriptPostBody();
+      manuscriptCreateDataObject.versions[0]!.additionalFiles = [
+        {
+          filename: 'manuscript.csv',
+          url: 'https://example.com/manuscript.csv',
+          id: 'file-table-id',
+        },
+      ];
       const publish = jest.fn();
 
       when(environmentMock.createEntry)
@@ -261,7 +268,15 @@ describe('Manuscripts Contentful Data Provider', () => {
               },
             },
             additionalFiles: {
-              'en-US': null,
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Asset',
+                    id: 'file-table-id',
+                  },
+                },
+              ],
             },
             labs: { 'en-US': [] },
             teams: {

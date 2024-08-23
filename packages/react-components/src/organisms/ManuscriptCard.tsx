@@ -199,24 +199,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                       <ManuscriptFileSection
                         filename={additionalFile.filename}
                         url={additionalFile.url}
+                        key={additionalFile.id}
                       />
                     ))}
-                  {/* <div css={fileContainerStyles}>
-                    {linkIcon}
-                    <Subtitle>{version.manuscriptFile.filename}</Subtitle>
-                    <div css={css(downloadButtonStyles)}>
-                      <Link
-                        href={version.manuscriptFile.url}
-                        primary
-                        noMargin
-                        small
-                        buttonStyle
-                      >
-                        {downloadIcon} Download
-                      </Link>
-                    </div>
-                  </div> */}
-
                   {quickCheckDetails.length > 0 && (
                     <span css={fileDividerStyles}>
                       <Divider />

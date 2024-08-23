@@ -46,14 +46,14 @@ it('renders a file tag and a disabled button when a file is selected', () => {
   expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
 });
 
-it('renders a file tag and an enabled button when a file is selected and multiUpload is true', () => {
+it('renders a file tag and an enabled button when a file is selected and maxFiles is greater than 1', () => {
   render(
     <LabeledFileField
       title="Title"
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
       enabled
-      multiUpload
+      maxFiles={2}
       currentFiles={[
         {
           filename: 'file.txt',

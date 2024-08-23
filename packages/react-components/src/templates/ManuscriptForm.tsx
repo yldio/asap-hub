@@ -634,14 +634,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       resetField('versions.0.manuscriptFile');
                     }}
                     handleFileUpload={async (file) => {
-                      setIsUploading(true);
                       if (file.size > MAX_FILE_SIZE) {
                         setError('versions.0.manuscriptFile', {
                           type: 'custom',
-                          message: 'File is larger than 50MB',
+                          message: 'File is larger than 50MB.',
                         });
-                        setIsUploading(false);
                       } else {
+                        setIsUploading(true);
                         const uploadedFile = await handleFileUpload(
                           file,
                           'Manuscript File',
@@ -690,14 +689,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         resetField('versions.0.keyResourceTable');
                       }}
                       handleFileUpload={async (file) => {
-                        setIsUploading(true);
                         if (file.size > MAX_FILE_SIZE) {
-                          setError('versions.0.manuscriptFile', {
+                          setError('versions.0.keyResourceTable', {
                             type: 'custom',
                             message: 'File is larger than 50MB.',
                           });
-                          setIsUploading(false);
                         } else {
+                          setIsUploading(true);
                           const uploadedFile = await handleFileUpload(
                             file,
                             'Key Resource Table',
@@ -746,7 +744,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                         ) || []),
                       ]);
                     }}
-                    multiUpload
+                    maxFiles={5}
                     handleFileUpload={async (file) => {
                       const isExistingFile =
                         value &&
@@ -798,6 +796,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     }}
                     currentFiles={value}
                     customValidationMessage={error?.message}
+                    accept="application/pdf,text/csv"
                     enabled={!isSubmitting && !isUploading}
                   />
                 )}

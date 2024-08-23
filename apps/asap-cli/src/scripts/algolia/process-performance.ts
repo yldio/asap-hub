@@ -57,31 +57,33 @@ export const getPerformanceMetrics = (
     };
   }
 
+  const belowAverageMin = min;
+  let belowAverageMax;
+  let averageMin;
+  let averageMax;
+  let aboveAverageMin;
+  let aboveAverageMax = max;
+
   if (
     isInteger &&
     (!Number.isInteger(firstQuartile) || !Number.isInteger(thirdQuartile))
   ) {
-    const belowAverageMax = Math.floor(firstQuartile);
-    const averageMin = belowAverageMax + factor;
-    const aboveAverageMin = Math.ceil(thirdQuartile);
-    return {
-      belowAverageMin: min,
-      belowAverageMax,
-      averageMin,
-      averageMax: Math.max(averageMin, aboveAverageMin - 1),
-      aboveAverageMin,
-      aboveAverageMax: max,
-    };
+    belowAverageMax = Number.isInteger(firstQuartile)
+      ? Math.max(belowAverageMin, firstQuartile - factor)
+      : Math.floor(firstQuartile);
+    averageMin = belowAverageMax + factor;
+    averageMax = Number.isInteger(thirdQuartile)
+      ? Math.max(averageMin, thirdQuartile)
+      : Math.floor(thirdQuartile);
+    aboveAverageMin = Math.min(averageMax + factor, max);
+  } else {
+    belowAverageMax = Math.max(min, firstQuartile - factor);
+    averageMin = belowAverageMax + factor;
+    averageMax = Math.max(averageMin, thirdQuartile);
+    aboveAverageMin = Math.min(averageMax + factor, max);
   }
 
-  const belowAverageMin = min;
-  const belowAverageMax = Math.max(min, firstQuartile - factor);
-  const averageMin = belowAverageMax + factor;
-  const averageMax = Math.max(averageMin, thirdQuartile - factor);
-  let aboveAverageMin = Math.min(averageMax + factor, max);
-  let aboveAverageMax = max;
-
-  if (averageMin === aboveAverageMax) {
+  if (averageMax === aboveAverageMax) {
     aboveAverageMin = -1;
     aboveAverageMax = -1;
   }

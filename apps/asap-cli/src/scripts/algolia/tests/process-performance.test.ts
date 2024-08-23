@@ -27,57 +27,157 @@ describe('getQuartiles', () => {
 });
 
 describe('getPerformanceMetrics', () => {
-  it('returns correct performance metrics when the data has a variety of integers', () => {
-    const data = [
-      20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
-    ];
-    const metrics = getPerformanceMetrics(data);
-    expect(metrics).toEqual({
-      belowAverageMin: 1,
-      belowAverageMax: 5,
-      averageMin: 6,
-      averageMax: 15,
-      aboveAverageMin: 16,
-      aboveAverageMax: 20,
+  describe('when dataset is a list of integers', () => {
+    it('sets below average and above average ranges to -1 when all values are the same', () => {
+      const data = [6, 6, 6, 6, 6, 6];
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics).toEqual({
+        belowAverageMin: -1,
+        belowAverageMax: -1,
+        averageMin: 6,
+        averageMax: 6,
+        aboveAverageMin: -1,
+        aboveAverageMax: -1,
+      });
+    });
+
+    it('returns correct performance metrics when the data has a lot of zeros', () => {
+      const data = [0, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 1, 0, 0, 1, 2];
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics).toEqual({
+        belowAverageMin: 0,
+        belowAverageMax: 0,
+        averageMin: 1,
+        averageMax: 1,
+        aboveAverageMin: 2,
+        aboveAverageMax: 2,
+      });
+    });
+
+    it('sets below average max to rounded down first quartile when first quartile is decimal', () => {
+      const data = [
+        20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+      ];
+      const { q1 } = getQuartiles(data);
+
+      expect(q1).toBe(5.5);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.belowAverageMax).toBe(5);
+    });
+
+    it('sets average min to rounded up first quartile when first quartile is decimal', () => {
+      const data = [
+        20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+      ];
+      const { q1 } = getQuartiles(data);
+
+      expect(q1).toBe(5.5);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.averageMin).toBe(6);
+    });
+
+    it('sets average max to rounded down third quartile when third quartile is decimal', () => {
+      const data = [
+        20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+      ];
+      const { q3 } = getQuartiles(data);
+
+      expect(q3).toBe(15.5);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.averageMax).toBe(15);
+    });
+
+    it('sets above average min to rounded up third quartile when third quartile is decimal', () => {
+      const data = [
+        20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
+      ];
+      const { q3 } = getQuartiles(data);
+
+      expect(q3).toBe(15.5);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.aboveAverageMin).toBe(16);
+    });
+
+    it('sets average min to first quartile when first quartile is integer', () => {
+      const data = [
+        20, 1, 3, 2, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 13, 6, 15, 17,
+      ];
+      const { q1 } = getQuartiles(data);
+
+      expect(q1).toBe(6);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.averageMin).toBe(q1);
+      expect(metrics.belowAverageMax).toBeLessThan(metrics.averageMin);
+    });
+
+    it('sets average max to third quartile when third quartile is integer', () => {
+      const data = [
+        20, 1, 3, 2, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 13, 6, 15, 17,
+      ];
+      const { q3 } = getQuartiles(data);
+
+      expect(q3).toBe(16);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.averageMax).toBe(16);
+      expect(metrics.averageMax).toBeLessThan(metrics.aboveAverageMin);
+    });
+
+    it('sets above average range to -1 when average max and above average max are the same', () => {
+      const data = [2, 2, 2, 3, 4, 4, 4, 4];
+      const { q3, max } = getQuartiles(data);
+
+      expect(q3).toBe(max);
+      const metrics = getPerformanceMetrics(data);
+      expect(metrics.aboveAverageMin).toBe(-1);
+      expect(metrics.aboveAverageMax).toBe(-1);
     });
   });
 
-  it('returns correct performance metrics when the data has a lot of zeros', () => {
-    const data = [0, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 1, 0, 0, 1, 2];
-    const metrics = getPerformanceMetrics(data);
-    expect(metrics).toEqual({
-      belowAverageMin: 0,
-      belowAverageMax: 0,
-      averageMin: 1,
-      averageMax: 1,
-      aboveAverageMin: 2,
-      aboveAverageMax: 2,
+  describe('when dataset is a list of decimals', () => {
+    it('sets below average and above average ranges to -1 when all values are the same', () => {
+      const data = [6.75, 6.75, 6.75, 6.75, 6.75];
+      const metrics = getPerformanceMetrics(data, false);
+      expect(metrics).toEqual({
+        belowAverageMin: -1,
+        belowAverageMax: -1,
+        averageMin: 6.75,
+        averageMax: 6.75,
+        aboveAverageMin: -1,
+        aboveAverageMax: -1,
+      });
     });
-  });
 
-  it('returns correct performance metrics when the data has same values', () => {
-    const data = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
-    const metrics = getPerformanceMetrics(data);
-    expect(metrics).toEqual({
-      belowAverageMin: -1,
-      belowAverageMax: -1,
-      averageMin: 6,
-      averageMax: 6,
-      aboveAverageMin: -1,
-      aboveAverageMax: -1,
+    it('average min is first quartile', () => {
+      const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
+      const { q1 } = getQuartiles(data);
+
+      expect(q1).toBe(0.33);
+      const metrics = getPerformanceMetrics(data, false);
+      expect(metrics.averageMin).toBe(q1);
+      expect(metrics.belowAverageMax).toBeLessThan(metrics.averageMin);
     });
-  });
 
-  it('returns correct performance metrics when the data and result have decimal places', () => {
-    const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
-    const metrics = getPerformanceMetrics(data, false);
-    expect(metrics).toEqual({
-      belowAverageMin: 0.01,
-      belowAverageMax: 0.32,
-      averageMin: 0.33,
-      averageMax: 0.7,
-      aboveAverageMin: 0.71,
-      aboveAverageMax: 0.98,
+    it('average max is third quartile', () => {
+      const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
+      const { q3 } = getQuartiles(data);
+
+      expect(q3).toBe(0.71);
+      const metrics = getPerformanceMetrics(data, false);
+      expect(metrics.averageMax).toBe(q3);
+      expect(metrics.averageMax).toBeLessThan(metrics.aboveAverageMin);
+    });
+
+    it('returns correct performance metrics when the data and result have decimal places', () => {
+      const data = [0.58, 0.46, 0.71, 0.32, 0.98, 0.01, 0.33, 0.88, 0.61, 0.41];
+      const metrics = getPerformanceMetrics(data, false);
+      expect(metrics).toEqual({
+        belowAverageMin: 0.01,
+        belowAverageMax: 0.32,
+        averageMin: 0.33,
+        averageMax: 0.71,
+        aboveAverageMin: 0.72,
+        aboveAverageMax: 0.98,
+      });
     });
   });
 });

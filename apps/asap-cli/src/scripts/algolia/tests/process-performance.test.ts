@@ -13,7 +13,7 @@ describe('getQuartiles', () => {
     expect(getQuartiles([])).toEqual({ min: 0, q1: 0, q3: 0, max: 0 });
   });
 
-  it('should return correct standard deviation for an array of numbers', () => {
+  it('should return correct quartiles for an array of numbers', () => {
     const numbers = [
       20, 1, 3, 2, 5, 19, 14, 9, 18, 16, 11, 8, 12, 10, 4, 7, 13, 6, 15, 17,
     ];

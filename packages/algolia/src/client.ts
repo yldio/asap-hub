@@ -32,6 +32,7 @@ import {
   UserCollaborationPerformance,
   OutputTypeOption,
   EngagementResponse,
+  EngagementPerformance,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
@@ -45,6 +46,7 @@ import {
   USER_PRODUCTIVITY,
   USER_PRODUCTIVITY_PERFORMANCE,
   ENGAGEMENT,
+  ENGAGEMENT_PERFORMANCE,
 } from './analytics';
 import {
   EVENT_ENTITY_TYPE,
@@ -140,6 +142,7 @@ export type EntityResponses = {
     [USER_COLLABORATION_PERFORMANCE]: UserCollaborationPerformance;
 
     [ENGAGEMENT]: EngagementResponse;
+    [ENGAGEMENT_PERFORMANCE]: EngagementPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;

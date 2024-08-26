@@ -44,6 +44,7 @@ const uploadedButtonTagStyles = css({
 const fileSelectionContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'flex-start',
 });
 
 type FileUploadResponse = { id: string; url: string; filename: string };

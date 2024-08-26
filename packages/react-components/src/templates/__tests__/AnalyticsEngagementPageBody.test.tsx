@@ -22,6 +22,7 @@ describe('AnalyticsEngagementPageBody', () => {
     numberOfPages: 1,
     currentPageIndex: 0,
     renderPageHref: () => '',
+    exportResults: () => Promise.resolve(),
     sort: 'team_asc',
     setSort: jest.fn(),
     sortingDirection: engagementInitialSortingDirection,

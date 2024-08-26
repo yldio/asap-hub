@@ -1,5 +1,6 @@
 import { AlgoliaSearchClient, EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -9,10 +10,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { getEngagement } from '../api';
 import Engagement from '../Engagement';
 import { analyticsEngagementState } from '../state';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 
 jest.mock('../api');
 mockConsoleError();
@@ -27,6 +28,16 @@ jest.mock('@asap-hub/algolia', () => ({
 jest.mock('../../../hooks/algolia', () => ({
   useAnalyticsAlgolia: jest.fn(),
 }));
+
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -46,6 +57,10 @@ const mockSearch = jest.fn() as jest.MockedFunction<
 
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
+>;
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
 >;
 
 const data: ListEngagementAlgoliaResponse = {
@@ -146,6 +161,16 @@ describe('Engagement', () => {
         expect.stringContaining('team_desc'),
       );
     });
+  });
+
+  it('exports csv when user clicks on CSV button', async () => {
+    await renderPage(analytics({}).engagement({}).$);
+
+    userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/engagement_\d+\.csv/),
+      expect.anything(),
+    );
   });
 
   describe('search', () => {

@@ -3,7 +3,7 @@ import { SearchIndex } from 'algoliasearch';
 import {
   deletePreviousObjects,
   getAllHits,
-  getBellCurveMetrics,
+  getPerformanceMetrics,
   Hit,
 } from '../process-performance';
 
@@ -36,14 +36,14 @@ export const processEngagementPerformance = async (index: SearchIndex) => {
 
   await index.saveObject(
     {
-      events: getBellCurveMetrics(hits.map((hit) => hit.eventCount)),
-      totalSpeakers: getBellCurveMetrics(
+      events: getPerformanceMetrics(hits.map((hit) => hit.eventCount)),
+      totalSpeakers: getPerformanceMetrics(
         hits.map((hit) => hit.totalSpeakerCount),
       ),
-      uniqueAllRoles: getBellCurveMetrics(
+      uniqueAllRoles: getPerformanceMetrics(
         hits.map((hit) => hit.uniqueAllRolesCount),
       ),
-      uniqueKeyPersonnel: getBellCurveMetrics(
+      uniqueKeyPersonnel: getPerformanceMetrics(
         hits.map((hit) => hit.uniqueKeyPersonnelCount),
       ),
       __meta: {

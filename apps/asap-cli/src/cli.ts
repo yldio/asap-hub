@@ -72,6 +72,7 @@ interface ProcessPerformanceArguments extends BaseArguments {
   index: string;
   metric:
     | 'all'
+    | 'engagement'
     | 'user-productivity'
     | 'team-productivity'
     | 'user-collaboration'

@@ -36,6 +36,13 @@ export type UserCollaborationPerformance = {
   acrossTeam: PerformanceMetrics;
 };
 
+export type EngagementPerformance = {
+  events: PerformanceMetrics;
+  totalSpeakers: PerformanceMetrics;
+  uniqueAllRoles: PerformanceMetrics;
+  uniqueKeyPersonnel: PerformanceMetrics;
+};
+
 export type SortLeadershipAndMembership =
   | 'team_asc'
   | 'team_desc'

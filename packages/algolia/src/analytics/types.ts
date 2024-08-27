@@ -9,6 +9,7 @@ export const USER_PRODUCTIVITY_PERFORMANCE = 'user-productivity-performance';
 export const TEAM_PRODUCTIVITY_PERFORMANCE = 'team-productivity-performance';
 export const TEAM_COLLABORATION_PERFORMANCE = 'team-collaboration-performance';
 export const USER_COLLABORATION_PERFORMANCE = 'user-collaboration-performance';
+export const ENGAGEMENT_PERFORMANCE = 'engagement-performance';
 
 const types = [
   TEAM_LEADERSHIP,
@@ -25,5 +26,6 @@ const performanceTypes = [
   TEAM_PRODUCTIVITY_PERFORMANCE,
   TEAM_COLLABORATION_PERFORMANCE,
   USER_COLLABORATION_PERFORMANCE,
+  ENGAGEMENT_PERFORMANCE,
 ] as const;
 export type AnalyticPerformanceType = (typeof performanceTypes)[number];

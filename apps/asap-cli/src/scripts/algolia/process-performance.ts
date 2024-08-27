@@ -11,6 +11,7 @@ import {
   processTeamCollaborationPerformance,
   processUserCollaborationPerformance,
 } from './performance/collaboration';
+import { processEngagementPerformance } from './performance/engagement';
 
 const isEven = (number: number) => number % 2 === 0;
 
@@ -163,5 +164,9 @@ export const processPerformance = async ({
 
   if (metric === 'all' || metric === 'user-collaboration') {
     await processUserCollaborationPerformance(index);
+  }
+
+  if (metric === 'all' || metric === 'engagement') {
+    await processEngagementPerformance(index);
   }
 };

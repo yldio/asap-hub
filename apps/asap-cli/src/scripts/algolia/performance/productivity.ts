@@ -10,7 +10,7 @@ import type { SearchIndex } from 'algoliasearch';
 import {
   deletePreviousObjects,
   getAllHits,
-  getBellCurveMetrics,
+  getPerformanceMetrics,
   Hit,
 } from '../process-performance';
 
@@ -50,7 +50,7 @@ export const processUserProductivityPerformance = async (
           if (field === 'ratio') {
             return {
               ...metrics,
-              ratio: getBellCurveMetrics(
+              ratio: getPerformanceMetrics(
                 userProductivityHits.map((hit) => parseFloat(hit.ratio)),
                 false,
               ),
@@ -59,7 +59,7 @@ export const processUserProductivityPerformance = async (
 
           return {
             ...metrics,
-            [field]: getBellCurveMetrics(
+            [field]: getPerformanceMetrics(
               userProductivityHits.map(
                 (hit) => hit[field as 'asapOutput' | 'asapPublicOutput'],
               ),
@@ -115,7 +115,7 @@ export const processTeamProductivityPerformance = async (
       const teamPerformanceByDocumentType = fields.reduce(
         (metrics, { name, documentType }) => ({
           ...metrics,
-          [documentType]: getBellCurveMetrics(
+          [documentType]: getPerformanceMetrics(
             teamProductivityHits.map(
               (hit) => hit[name as TeamOutputDocumentType],
             ),

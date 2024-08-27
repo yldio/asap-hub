@@ -44,28 +44,26 @@ const CaptionItem: React.FC<CaptionItemProps> = ({
 }) => {
   // Sometimes belowAverageMax can be negative, in this case,
   // below average will not have any number
-  const belowAverageCaption =
-    belowAverageMax < 0 ? `- - -` : `${belowAverageMin} - ${belowAverageMax}`;
-
-  const averageMinPositive = averageMin < 0 ? 0 : averageMin;
+  const getCaption = (min: number, max: number) =>
+    min < 0 ? `- - -` : `${min} - ${max}`;
 
   return (
     <div css={containerStyles}>
       <Subtitle noMargin>{label}:</Subtitle>
       <div css={dataContainerStyles}>
-        <span css={dataTextStyles}>{belowAverageCaption}</span>
+        <span css={dataTextStyles}>
+          {getCaption(belowAverageMin, belowAverageMax)}
+        </span>
         {belowAverageIcon}
       </div>
       <div css={dataContainerStyles}>
-        <span
-          css={dataTextStyles}
-        >{`${averageMinPositive} - ${averageMax}`}</span>
+        <span css={dataTextStyles}>{getCaption(averageMin, averageMax)}</span>
         {averageIcon}
       </div>
       <div css={dataContainerStyles}>
-        <span
-          css={dataTextStyles}
-        >{`${aboveAverageMin} - ${aboveAverageMax}`}</span>
+        <span css={dataTextStyles}>
+          {getCaption(aboveAverageMin, aboveAverageMax)}
+        </span>
         {aboveAverageIcon}
       </div>
     </div>

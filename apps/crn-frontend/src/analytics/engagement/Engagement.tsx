@@ -1,14 +1,20 @@
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   engagementInitialSortingDirection,
+  EngagementResponse,
   EngagementSortingDirection,
   SortEngagement,
 } from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
+import { algoliaResultsToStream } from '../utils/export';
 import { useAnalyticsEngagement } from './state';
+import { getEngagement } from './api';
+import { engagementToCSV } from './export';
 
 const Engagement = () => {
   const { currentPage, pageSize } = usePaginationParams();
@@ -28,6 +34,20 @@ const Engagement = () => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+
+  const exportResults = () =>
+    algoliaResultsToStream<EngagementResponse>(
+      createCsvFileStream(`engagement_${format(new Date(), 'MMddyy')}.csv`, {
+        header: true,
+      }),
+      (paginationParams) =>
+        getEngagement(client, {
+          tags,
+          ...paginationParams,
+        }),
+      engagementToCSV,
+    );
+
   return (
     <AnalyticsEngagementPageBody
       tags={tags}
@@ -44,6 +64,7 @@ const Engagement = () => {
         }));
       }}
       data={data}
+      exportResults={exportResults}
       sort={sort}
       setSort={setSort}
       sortingDirection={sortingDirection}

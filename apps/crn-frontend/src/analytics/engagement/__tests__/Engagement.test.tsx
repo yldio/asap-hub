@@ -1,7 +1,10 @@
 import { AlgoliaSearchClient, EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
+import {
+  EngagementPerformance,
+  ListEngagementAlgoliaResponse,
+} from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,7 +14,7 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
-import { getEngagement } from '../api';
+import { getEngagement, getEngagementPerformance } from '../api';
 import Engagement from '../Engagement';
 import { analyticsEngagementState } from '../state';
 
@@ -45,6 +48,10 @@ afterEach(() => {
 
 const mockGetEngagement = getEngagement as jest.MockedFunction<
   typeof getEngagement
+>;
+
+const mockGetPerformance = getEngagementPerformance as jest.MockedFunction<
+  typeof getEngagementPerformance
 >;
 
 const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
@@ -95,6 +102,26 @@ beforeEach(() => {
   });
   mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
   mockGetEngagement.mockResolvedValue(data);
+  const metric = {
+    belowAverageMin: 1,
+    belowAverageMax: 1,
+    averageMin: 1,
+    averageMax: 1,
+    aboveAverageMin: 1,
+    aboveAverageMax: 1,
+  };
+
+  const engagementPerformance: EngagementPerformance = {
+    events: metric,
+    totalSpeakers: metric,
+    uniqueAllRoles: metric,
+    uniqueKeyPersonnel: metric,
+  };
+  mockGetPerformance.mockResolvedValue({
+    ...engagementPerformance,
+    objectID: '',
+    __meta: { type: 'engagement-performance' },
+  });
 });
 
 const renderPage = async (path: string) => {

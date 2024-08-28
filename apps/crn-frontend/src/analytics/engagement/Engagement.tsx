@@ -35,8 +35,6 @@ const Engagement = () => {
 
   const performance = useEngagementPerformance({ timeRange: '30d' });
 
-  console.log(performance);
-
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   const exportResults = () =>

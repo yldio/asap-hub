@@ -10,7 +10,11 @@ import {
 type AnalyticOutput = Maybe<
   Pick<
     ResearchOutputs,
-    'documentType' | 'sharingStatus' | 'addedDate' | 'createdDate'
+    | 'documentType'
+    | 'sharingStatus'
+    | 'addedDate'
+    | 'createdDate'
+    | 'asapFunded'
   > & {
     authorsCollection?: Maybe<{
       items: Array<
@@ -78,6 +82,10 @@ export const isTeamOutputDocumentType = (
   documentType: string,
 ): documentType is TeamOutputDocumentType =>
   teamOutputDocumentTypes.includes(documentType as TeamOutputDocumentType);
+
+export const isAsapFundedResearchOutput = (
+  researchOutput: AnalyticOutput,
+): boolean => researchOutput?.asapFunded === 'Yes';
 
 // remove string from one array that are present in another array and return a new array of strings
 export const removeDuplicates = (arr1: string[], arr2: string[]): string[] => [

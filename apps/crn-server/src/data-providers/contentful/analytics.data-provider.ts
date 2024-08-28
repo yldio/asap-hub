@@ -48,6 +48,7 @@ import {
   getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
   getFilterOutputBySharingStatus,
+  isAsapFundedResearchOutput,
   isTeamOutputDocumentType,
 } from '../../utils/analytics/common';
 import { getEngagementItems } from '../../utils/analytics/engagement';
@@ -272,6 +273,7 @@ const getUserProductivityItems = (
         ) || [];
 
     const userOutputsCount = user.linkedFrom?.researchOutputsCollection?.items
+      .filter(isAsapFundedResearchOutput)
       .filter(getFilterOutputByRange(filter?.timeRange))
       .filter(getFilterOutputByDocumentCategory(filter?.documentCategory))
       .reduce(
@@ -343,6 +345,7 @@ const getTeamProductivityItems = (
 
     const documentTypesCount =
       teamItem.linkedFrom?.researchOutputsCollection?.items
+        .filter(isAsapFundedResearchOutput)
         .filter(getFilterOutputByRange(rangeKey))
         .filter(getFilterOutputBySharingStatus(outputType))
         .reduce((count, researchOutput) => {

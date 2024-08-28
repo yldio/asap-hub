@@ -1,6 +1,5 @@
 import {
   AlgoliaClient,
-  AnalyticPerformanceType,
   AnalyticsSearchOptions,
   ENGAGEMENT_PERFORMANCE,
 } from '@asap-hub/algolia';

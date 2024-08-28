@@ -2,6 +2,8 @@ schema {
   query: Query
 }
 
+directive @contentSourceMaps on QUERY
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!
@@ -2528,6 +2530,7 @@ type ManuscriptVersions implements Entry & _Node {
   _id: ID!
   acknowledgedGrantNumber(locale: String): String
   acknowledgedGrantNumberDetails(locale: String): String
+  additionalFilesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): AssetCollection
   asapAffiliationIncluded(locale: String): String
   asapAffiliationIncludedDetails(locale: String): String
   codeDeposited(locale: String): String
@@ -2536,6 +2539,7 @@ type ManuscriptVersions implements Entry & _Node {
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   datasetsDeposited(locale: String): String
   datasetsDepositedDetails(locale: String): String
+  keyResourceTable(locale: String, preview: Boolean): Asset
   labMaterialsRegistered(locale: String): String
   labMaterialsRegisteredDetails(locale: String): String
   labsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): ManuscriptVersionsLabsCollection
@@ -2579,6 +2583,7 @@ input ManuscriptVersionsFilter {
   acknowledgedGrantNumber_not: String
   acknowledgedGrantNumber_not_contains: String
   acknowledgedGrantNumber_not_in: [String]
+  additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
   asapAffiliationIncludedDetails: String
   asapAffiliationIncludedDetails_contains: String
@@ -2624,6 +2629,7 @@ input ManuscriptVersionsFilter {
   datasetsDeposited_not: String
   datasetsDeposited_not_contains: String
   datasetsDeposited_not_in: [String]
+  keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
   labMaterialsRegisteredDetails: String
   labMaterialsRegisteredDetails_contains: String
@@ -7168,6 +7174,7 @@ input cfManuscriptVersionsNestedFilter {
   acknowledgedGrantNumber_not: String
   acknowledgedGrantNumber_not_contains: String
   acknowledgedGrantNumber_not_in: [String]
+  additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
   asapAffiliationIncludedDetails: String
   asapAffiliationIncludedDetails_contains: String
@@ -7212,6 +7219,7 @@ input cfManuscriptVersionsNestedFilter {
   datasetsDeposited_not: String
   datasetsDeposited_not_contains: String
   datasetsDeposited_not_in: [String]
+  keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
   labMaterialsRegisteredDetails: String
   labMaterialsRegisteredDetails_contains: String

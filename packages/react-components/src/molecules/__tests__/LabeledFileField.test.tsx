@@ -32,15 +32,70 @@ it('renders a file tag and a disabled button when a file is selected', () => {
       title="Title"
       subtitle="Subtitle"
       handleFileUpload={handleFileUploadMock}
-      currentFile={{
-        filename: 'file.txt',
-        url: 'http://example.com/file.txt',
-        id: '123',
-      }}
+      enabled
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
     />,
   );
   expect(screen.getByText('file.txt')).toBeVisible();
   expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
+});
+
+it('renders a file tag and an enabled button when a file is selected and maxFiles is greater than 1', () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      maxFiles={2}
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
+    />,
+  );
+  expect(screen.getByText('file.txt')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Add File' })).toBeEnabled();
+});
+
+it('restricts allowed files when accept prop is provided', async () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      placeholder="Upload Manuscript File"
+      accept="application/pdf"
+    />,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  expect(uploadInput).toHaveAttribute('accept', 'application/pdf');
+});
+
+it('does not restrict allowed files when accept prop is not provided', async () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      placeholder="Upload Manuscript File"
+    />,
+  );
+
+  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  expect(uploadInput).not.toHaveAttribute('accept');
 });
 
 it('calls handleFileUpload when a file is selected', async () => {
@@ -73,11 +128,13 @@ it('calls the onRemove function when the remove button is clicked and allows for
       handleFileUpload={handleFileUploadMock}
       onRemove={onRemoveMock}
       placeholder="Upload Manuscript File"
-      currentFile={{
-        filename: 'file.txt',
-        url: 'http://example.com/file.txt',
-        id: '123',
-      }}
+      currentFiles={[
+        {
+          filename: 'file.txt',
+          url: 'http://example.com/file.txt',
+          id: '123',
+        },
+      ]}
     />,
   );
 

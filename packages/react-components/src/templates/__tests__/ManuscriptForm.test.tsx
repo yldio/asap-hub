@@ -9,6 +9,7 @@ import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import {
+  ManuscriptFileType,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
   ManuscriptType,
@@ -89,6 +90,11 @@ it('data is sent on form submission', async () => {
           filename: 'test.pdf',
           url: 'http://example.com/test.pdf',
         }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -107,6 +113,11 @@ it('data is sent on form submission', async () => {
             id: '123',
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
+          },
+          keyResourceTable: {
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
           },
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
@@ -143,7 +154,7 @@ test.each`
   ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
   ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
 `(
-  'should sent $fieldDetails value if $field is No',
+  'should send $fieldDetails value if $field is No',
   async ({
     field,
     fieldDetails,
@@ -170,6 +181,11 @@ test.each`
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
           }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -184,6 +200,7 @@ test.each`
           type: 'Original Research',
           lifecycle: 'Publication',
           manuscriptFile: expect.anything(),
+          keyResourceTable: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
           acknowledgedGrantNumber: 'Yes',
@@ -226,7 +243,7 @@ test.each`
   ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
   ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
 `(
-  'should sent $fieldDetails as empty string if $field is Yes',
+  'should send $fieldDetails as empty string if $field is Yes',
   async ({
     field,
     fieldDetails,
@@ -253,6 +270,11 @@ test.each`
             filename: 'test.pdf',
             url: 'http://example.com/test.pdf',
           }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
           onSave={onSave}
         />
       </StaticRouter>,
@@ -269,6 +291,7 @@ test.each`
             type: 'Original Research',
             lifecycle: 'Publication',
             manuscriptFile: expect.anything(),
+            keyResourceTable: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
             acknowledgedGrantNumber: 'Yes',
@@ -529,6 +552,11 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
           filename: 'test.pdf',
           url: 'http://example.com/test.pdf',
         }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
         onSave={onSave}
       />
     </StaticRouter>,
@@ -545,6 +573,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
           type: 'Original Research',
           lifecycle: 'Typeset proof',
           manuscriptFile: expect.anything(),
+          keyResourceTable: expect.anything(),
           requestingApcCoverage: 'Already submitted',
         }),
       ],
@@ -594,6 +623,8 @@ describe('renders the necessary fields', () => {
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
     manuscriptFile: 'Upload the main manuscript file',
+    keyResourceTable: 'Upload a key resource table',
+    additionalFiles: 'Upload any additional files',
     otherDetails: 'Please provide details',
     type: 'Type of Manuscript',
     lifecycle: 'Where is the manuscript in the life cycle?',
@@ -646,6 +677,7 @@ describe('renders the necessary fields', () => {
     },
   );
 });
+
 it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
@@ -660,6 +692,11 @@ it('resets form fields to default values when no longer visible', async () => {
         publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        keyResourceTable={{
+          id: '124',
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}
@@ -802,87 +839,432 @@ it('should go back when cancel button is clicked', () => {
   expect(history.location.pathname).toBe('/another-url');
 });
 
-it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Publication"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-      />
-    </StaticRouter>,
-  );
+describe('manuscript file', () => {
+  it('should show error when file upload fails', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
 
-  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockError = 'No file provided or file is not a PDF.';
 
-  const testFile = new File(['file content'], 'test.pdf', {
-    type: 'application/pdf',
+    handleFileUpload.mockImplementation(
+      (
+        file: File,
+        fileType: ManuscriptFileType,
+        handleError: (errorMessage: string) => void,
+      ) => {
+        if (file === mockFile) {
+          return Promise.reject(new Error(mockError)).catch((error) => {
+            handleError(error.message);
+            return undefined;
+          });
+        }
+        return Promise.resolve({
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        });
+      },
+    );
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText(mockError)).toBeInTheDocument();
   });
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
 
-  await waitFor(() => {
-    userEvent.upload(uploadInput, testFile);
+  it('should show error when file size is greater than 25MB', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+      type: 'text/plain',
+    });
+
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
   });
 
-  expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+  it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+        />
+      </StaticRouter>,
+    );
 
-  const removeFileButton = screen.getByRole('button', { name: /cross/i });
-  expect(removeFileButton).toBeInTheDocument();
+    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
 
-  await waitFor(() => {
-    userEvent.click(removeFileButton);
+    const testFile = new File(['file content'], 'test.pdf', {
+      type: 'application/pdf',
+    });
+    const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+
+    await waitFor(() => {
+      userEvent.upload(uploadInput, testFile);
+    });
+
+    expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+
+    const removeFileButton = screen.getByRole('button', { name: /cross/i });
+    expect(removeFileButton).toBeInTheDocument();
+
+    await waitFor(() => {
+      userEvent.click(removeFileButton);
+    });
+
+    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
   });
-
-  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
 });
 
-it('should show error when file upload fails', async () => {
-  const handleFileUpload: jest.MockedFunction<
-    ComponentProps<typeof ManuscriptForm>['handleFileUpload']
-  > = jest.fn();
+describe('key resource table', () => {
+  it('should show error when file upload fails', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
 
-  const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
-  const mockError = 'No file provided or file is not a PDF.';
+    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockError = 'No file provided or file is not a CSV.';
 
-  handleFileUpload.mockImplementation(
-    (file: File, handleError: (errorMessage: string) => void) => {
-      if (file === mockFile) {
-        return Promise.reject(new Error(mockError)).catch((error) => {
+    handleFileUpload.mockImplementation(
+      (
+        file: File,
+        fileType: ManuscriptFileType,
+        handleError: (errorMessage: string) => void,
+      ) =>
+        Promise.reject(new Error(mockError)).catch((error) => {
           handleError(error.message);
           return undefined;
-        });
-      }
-      return Promise.resolve({
-        id: '123',
-        filename: 'test.pdf',
-        url: 'http://example.com/test.pdf',
-      });
-    },
-  );
-  render(
-    <StaticRouter>
-      <ManuscriptForm
-        {...defaultProps}
-        title="manuscript title"
-        type="Original Research"
-        lifecycle="Publication"
-        preprintDoi="10.4444/test"
-        publicationDoi="10.4467/test"
-        handleFileUpload={handleFileUpload}
-      />
-    </StaticRouter>,
-  );
+        }),
+    );
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
 
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
 
-  await waitFor(async () => {
-    userEvent.upload(uploadInput, mockFile);
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText(mockError)).toBeInTheDocument();
   });
 
-  expect(screen.getByText(mockError)).toBeInTheDocument();
+  it('should show error when file size is greater than 25MB', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+      type: 'text/plain',
+    });
+
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
+  });
+
+  it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
+    const handleFileUpload = jest.fn(() =>
+      Promise.resolve({
+        id: '123',
+        filename: 'test.csv',
+        url: 'http://example.com/test.csv',
+      }),
+    );
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    expect(screen.queryByText(/test.csv/i)).not.toBeInTheDocument();
+
+    const testFile = new File(['file content'], 'test.csv', {
+      type: 'text/csv',
+    });
+    const uploadInput = screen.getByLabelText(/Upload Key Resource Table/i);
+
+    await waitFor(() => {
+      userEvent.upload(uploadInput, testFile);
+    });
+
+    expect(screen.getByText(/test.csv/i)).toBeInTheDocument();
+
+    const removeFileButton = screen.getByRole('button', { name: /cross/i });
+    expect(removeFileButton).toBeInTheDocument();
+
+    await waitFor(() => {
+      userEvent.click(removeFileButton);
+    });
+
+    expect(screen.queryByText(/test.csv/i)).not.toBeInTheDocument();
+  });
+});
+
+describe('additional files', () => {
+  it('user can upload additional files', async () => {
+    const onSave = jest.fn();
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          onSave={onSave}
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+        />
+      </StaticRouter>,
+    );
+
+    expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+
+    const testFile = new File(['file content'], 'test.pdf', {
+      type: 'application/pdf',
+    });
+    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+
+    await waitFor(() => {
+      userEvent.upload(uploadInput, testFile);
+    });
+
+    expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+  });
+  it('should show error when file upload fails', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockError = 'No file provided or file is not a CSV or PDF.';
+
+    handleFileUpload.mockImplementation(
+      (
+        file: File,
+        fileType: ManuscriptFileType,
+        handleError: (errorMessage: string) => void,
+      ) =>
+        Promise.reject(new Error(mockError)).catch((error) => {
+          handleError(error.message);
+          return undefined;
+        }),
+    );
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText(mockError)).toBeInTheDocument();
+  });
+
+  it('user cannot upload the same file multiple times', async () => {
+    const onSave = jest.fn();
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          onSave={onSave}
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          additionalFiles={[
+            {
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            },
+          ]}
+        />
+      </StaticRouter>,
+    );
+
+    expect(screen.getByText(/test.csv/i)).toBeInTheDocument();
+
+    const testFile = new File(['file content'], 'test.csv', {
+      type: 'application/pdf',
+    });
+    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+
+    await waitFor(() => {
+      userEvent.upload(uploadInput, testFile);
+    });
+
+    expect(
+      screen.getByText(/File uploaded already exists./i),
+    ).toBeInTheDocument();
+  });
+
+  it('should show error when file size is greater than 25MB', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFile = new File(['1'.repeat(1024 * 1024 * 25)], 'test.txt', {
+      type: 'text/plain',
+    });
+
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          handleFileUpload={handleFileUpload}
+        />
+      </StaticRouter>,
+    );
+
+    const uploadInput = screen.getByLabelText(/Upload Additional Files/i);
+
+    await waitFor(async () => {
+      userEvent.upload(uploadInput, mockFile);
+    });
+
+    expect(screen.getByText('File is larger than 25MB.')).toBeInTheDocument();
+  });
+
+  it('should remove one of the additional files without removing the others', async () => {
+    render(
+      <StaticRouter>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          lifecycle="Publication"
+          preprintDoi="10.4444/test"
+          publicationDoi="10.4467/test"
+          additionalFiles={[
+            {
+              id: '123',
+              filename: 'file_one.csv',
+              url: 'http://example.com/file_one.csv',
+            },
+            {
+              id: '124',
+              filename: 'file_two.pdf',
+              url: 'http://example.com/file_two.pdf',
+            },
+          ]}
+        />
+      </StaticRouter>,
+    );
+
+    expect(screen.getByText(/file_one.csv/i)).toBeInTheDocument();
+    expect(screen.getByText(/file_two.pdf/i)).toBeInTheDocument();
+
+    const removeFileOneButton = screen.getAllByRole('button', {
+      name: /cross/i,
+    })[0]!;
+    expect(removeFileOneButton).toBeInTheDocument();
+
+    await waitFor(() => {
+      userEvent.click(removeFileOneButton);
+    });
+
+    expect(screen.queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/file_two.pdf/i)).toBeInTheDocument();
+  });
 });
 
 it('user can add teams', async () => {
@@ -903,6 +1285,11 @@ it('user can add teams', async () => {
         publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        keyResourceTable={{
+          id: '124',
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}
@@ -957,6 +1344,11 @@ it('user can add labs', async () => {
         publicationDoi="10.4467/test"
         manuscriptFile={{
           id: '123',
+          url: 'https://test-url',
+          filename: 'abc.jpeg',
+        }}
+        keyResourceTable={{
+          id: '124',
           url: 'https://test-url',
           filename: 'abc.jpeg',
         }}

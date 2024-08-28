@@ -5,6 +5,7 @@ import {
   FetchManuscriptByIdQueryVariables,
   FETCH_MANUSCRIPT_BY_ID,
   getLinkAsset,
+  getLinkAssets,
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
@@ -69,6 +70,18 @@ export class ManuscriptContentfulDataProvider
     );
     await manuscriptFileAsset.publish();
 
+    if (version.keyResourceTable) {
+      const keyResourceTableAsset = await environment.getAsset(
+        version.keyResourceTable.id,
+      );
+      await keyResourceTableAsset.publish();
+    }
+
+    version.additionalFiles?.forEach(async (additionalFile) => {
+      const additionalFileAsset = await environment.getAsset(additionalFile.id);
+      await additionalFileAsset.publish();
+    });
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
@@ -77,6 +90,16 @@ export class ManuscriptContentfulDataProvider
           teams: getLinkEntities(version.teams),
           labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
+          keyResourceTable: version.keyResourceTable
+            ? getLinkAsset(version.keyResourceTable.id)
+            : null,
+          additionalFiles: version.additionalFiles?.length
+            ? getLinkAssets(
+                version.additionalFiles.map(
+                  (additionalFile) => additionalFile.id,
+                ),
+              )
+            : null,
           createdBy: getLinkEntity(userId),
         }),
       },
@@ -125,6 +148,20 @@ export const parseGraphqlManuscriptVersion = (
         filename: version?.manuscriptFile?.fileName,
         id: version?.manuscriptFile?.sys.id,
       },
+      keyResourceTable: version?.keyResourceTable
+        ? {
+            url: version?.keyResourceTable?.url,
+            filename: version?.keyResourceTable?.fileName,
+            id: version?.keyResourceTable?.sys.id,
+          }
+        : undefined,
+      additionalFiles: version?.additionalFilesCollection?.items.map(
+        (file) => ({
+          url: file?.url,
+          filename: file?.fileName,
+          id: file?.sys.id,
+        }),
+      ),
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,

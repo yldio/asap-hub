@@ -1,6 +1,7 @@
 import {
   ApcCoverageOption,
   ManuscriptFileResponse,
+  ManuscriptFileType,
   ManuscriptFormData,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
@@ -25,10 +26,13 @@ import {
   LabeledRadioButtonGroup,
   LabeledTextField,
 } from '..';
-import { Button, MultiSelectOptionsType } from '../atoms';
+import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
 
+const MAX_FILE_SIZE = 25_000_000;
+const KRT_GUIDANCE_FILE =
+  'https://docs.google.com/document/d/1FCnqC3VpvLFPLcshLSkmGPtRIFfh70MR7KkrXi7IMX4/edit?usp=sharing';
 const mainStyles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -148,6 +152,8 @@ type ManuscriptFormProps = Omit<
   | 'type'
   | 'lifecycle'
   | 'manuscriptFile'
+  | 'keyResourceTable'
+  | 'additionalFiles'
   | 'createdBy'
   | 'publishedAt'
   | 'teams'
@@ -157,6 +163,8 @@ type ManuscriptFormProps = Omit<
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
+    keyResourceTable?: ManuscriptFileResponse;
+    additionalFiles?: ManuscriptFileResponse[];
     eligibilityReasons: Set<string>;
     onSave: (
       output: ManuscriptPostRequest,
@@ -164,6 +172,7 @@ type ManuscriptFormProps = Omit<
     onSuccess: () => void;
     handleFileUpload: (
       file: File,
+      fileType: ManuscriptFileType,
       handleError: (errorMessage: string) => void,
     ) => Promise<ManuscriptFileResponse | undefined>;
     teamId: string;
@@ -185,6 +194,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   type,
   lifecycle,
   manuscriptFile,
+  keyResourceTable,
+  additionalFiles,
   eligibilityReasons,
   requestingApcCoverage,
   preprintDoi,
@@ -223,6 +234,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
           manuscriptFile: manuscriptFile || undefined,
+          keyResourceTable: keyResourceTable || undefined,
+          additionalFiles: additionalFiles || undefined,
           acknowledgedGrantNumber: acknowledgedGrantNumber || '',
           asapAffiliationIncluded: asapAffiliationIncluded || '',
           manuscriptLicense: manuscriptLicense || '',
@@ -242,7 +255,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       ],
     },
   });
-  const [isUploading, setIsUploading] = useState(false);
+
+  const [isUploadingManuscriptFile, setIsUploadingManuscriptFile] =
+    useState(false);
+  const [isUploadingKeyResourceTable, setIsUploadingKeyResourceTable] =
+    useState(false);
+  const [isUploadingAdditionalFiles, setIsUploadingAdditionalFiles] =
+    useState(false);
 
   const {
     handleSubmit,
@@ -288,6 +307,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               teams: selectedTeams,
               labs: [],
               manuscriptFile: undefined,
+              keyResourceTable: undefined,
+              additionalFiles: undefined,
             },
           ],
         },
@@ -621,27 +642,177 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       resetField('versions.0.manuscriptFile');
                     }}
                     handleFileUpload={async (file) => {
-                      setIsUploading(true);
-                      const uploadedFile = await handleFileUpload(
-                        file,
-                        (validationErrorMessage) => {
-                          setError('versions.0.manuscriptFile', {
-                            type: 'custom',
-                            message: validationErrorMessage,
-                          });
-                        },
-                      );
-                      setIsUploading(false);
+                      if (file.size > MAX_FILE_SIZE) {
+                        setError('versions.0.manuscriptFile', {
+                          type: 'custom',
+                          message: 'File is larger than 25MB.',
+                        });
+                      } else {
+                        setIsUploadingManuscriptFile(true);
+                        const uploadedFile = await handleFileUpload(
+                          file,
+                          'Manuscript File',
+                          (validationErrorMessage) => {
+                            setError('versions.0.manuscriptFile', {
+                              type: 'custom',
+                              message: validationErrorMessage,
+                            });
+                          },
+                        );
+                        setIsUploadingManuscriptFile(false);
 
-                      if (!uploadedFile) return;
+                        if (!uploadedFile) return;
 
-                      setValue('versions.0.manuscriptFile', uploadedFile, {
-                        shouldValidate: true,
-                      });
+                        setValue('versions.0.manuscriptFile', uploadedFile, {
+                          shouldValidate: true,
+                        });
+                      }
                     }}
-                    currentFile={value}
+                    currentFiles={value && [value]}
+                    accept="application/pdf"
                     customValidationMessage={error?.message}
-                    enabled={!isSubmitting && !isUploading}
+                    enabled={!isSubmitting && !isUploadingManuscriptFile}
+                  />
+                )}
+              />
+            )}
+            {watchType &&
+              watchLifecycle &&
+              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+                'keyResourceTable',
+              ) && (
+                <Controller
+                  name="versions.0.keyResourceTable"
+                  control={control}
+                  rules={{
+                    required: 'Please select a key resource table.',
+                  }}
+                  render={({ field: { value }, fieldState: { error } }) => (
+                    <LabeledFileField
+                      title="Upload a key resource table"
+                      subtitle="(required)"
+                      description={
+                        <>
+                          The key resource table must be submitted as a single
+                          CSV file and should outline the resources used and
+                          generated in this study. View guidance{' '}
+                          {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
+                        </>
+                      }
+                      placeholder="Upload Key Resource Table"
+                      onRemove={() => {
+                        resetField('versions.0.keyResourceTable');
+                      }}
+                      handleFileUpload={async (file) => {
+                        if (file.size > MAX_FILE_SIZE) {
+                          setError('versions.0.keyResourceTable', {
+                            type: 'custom',
+                            message: 'File is larger than 25MB.',
+                          });
+                        } else {
+                          setIsUploadingKeyResourceTable(true);
+                          const uploadedFile = await handleFileUpload(
+                            file,
+                            'Key Resource Table',
+                            (validationErrorMessage) => {
+                              setError('versions.0.keyResourceTable', {
+                                type: 'custom',
+                                message: validationErrorMessage,
+                              });
+                            },
+                          );
+                          setIsUploadingKeyResourceTable(false);
+
+                          if (!uploadedFile) return;
+
+                          setValue(
+                            'versions.0.keyResourceTable',
+                            uploadedFile,
+                            {
+                              shouldValidate: true,
+                            },
+                          );
+                        }
+                      }}
+                      currentFiles={value && [value]}
+                      accept="text/csv"
+                      customValidationMessage={error?.message}
+                      enabled={!isSubmitting && !isUploadingKeyResourceTable}
+                    />
+                  )}
+                />
+              )}
+            {watchType && (
+              <Controller
+                name="versions.0.additionalFiles"
+                control={control}
+                render={({ field: { value }, fieldState: { error } }) => (
+                  <LabeledFileField
+                    title="Upload any additional files"
+                    subtitle="(optional)"
+                    description="Additional files must be submitted in PDF and/or CSV formats."
+                    placeholder="Upload Additional Files"
+                    onRemove={(id?: string) => {
+                      setValue(
+                        'versions.0.additionalFiles',
+                        value?.filter(
+                          (additionalFile) => additionalFile.id !== id,
+                        ),
+                      );
+                    }}
+                    maxFiles={5}
+                    handleFileUpload={async (file) => {
+                      const isExistingFile =
+                        value &&
+                        value.findIndex(
+                          (additionalFile) =>
+                            additionalFile.filename === file.name,
+                        ) !== -1;
+                      if (!isExistingFile) {
+                        if (file.size > MAX_FILE_SIZE) {
+                          setError('versions.0.additionalFiles', {
+                            type: 'custom',
+                            message: 'File is larger than 25MB.',
+                          });
+                        } else {
+                          setIsUploadingAdditionalFiles(true);
+                          const uploadedFile = await handleFileUpload(
+                            file,
+                            'Additional Files',
+                            (validationErrorMessage) => {
+                              setError('versions.0.additionalFiles', {
+                                type: 'custom',
+                                message: validationErrorMessage,
+                              });
+                            },
+                          );
+                          setIsUploadingAdditionalFiles(false);
+
+                          if (!uploadedFile) return;
+
+                          setValue(
+                            'versions.0.additionalFiles',
+                            [
+                              ...(getValues('versions.0.additionalFiles') ||
+                                []),
+                              uploadedFile,
+                            ],
+                            {
+                              shouldValidate: true,
+                            },
+                          );
+                        }
+                      } else {
+                        setError('versions.0.additionalFiles', {
+                          type: 'custom',
+                          message: 'File uploaded already exists.',
+                        });
+                      }
+                    }}
+                    currentFiles={value}
+                    customValidationMessage={error?.message}
+                    accept="application/pdf,text/csv"
+                    enabled={!isSubmitting && !isUploadingAdditionalFiles}
                   />
                 )}
               />
@@ -779,7 +950,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 primary
                 noMargin
                 submit
-                enabled={!isSubmitting && !isUploading}
+                enabled={
+                  !isSubmitting &&
+                  !isUploadingManuscriptFile &&
+                  !isUploadingKeyResourceTable &&
+                  !isUploadingAdditionalFiles
+                }
                 preventDefault={false}
               >
                 Submit

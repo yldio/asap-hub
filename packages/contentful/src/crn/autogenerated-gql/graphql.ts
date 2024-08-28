@@ -3493,6 +3493,7 @@ export type ManuscriptVersions = Entry &
     _id: Scalars['ID'];
     acknowledgedGrantNumber?: Maybe<Scalars['String']>;
     acknowledgedGrantNumberDetails?: Maybe<Scalars['String']>;
+    additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
     asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
     codeDeposited?: Maybe<Scalars['String']>;
@@ -3501,6 +3502,7 @@ export type ManuscriptVersions = Entry &
     createdBy?: Maybe<Users>;
     datasetsDeposited?: Maybe<Scalars['String']>;
     datasetsDepositedDetails?: Maybe<Scalars['String']>;
+    keyResourceTable?: Maybe<Asset>;
     labMaterialsRegistered?: Maybe<Scalars['String']>;
     labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<ManuscriptVersionsLabsCollection>;
@@ -3528,6 +3530,14 @@ export type ManuscriptVersionsAcknowledgedGrantNumberArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAcknowledgedGrantNumberDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAdditionalFilesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3565,6 +3575,12 @@ export type ManuscriptVersionsDatasetsDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsDatasetsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsKeyResourceTableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3688,6 +3704,7 @@ export type ManuscriptVersionsFilter = {
   acknowledgedGrantNumber_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
@@ -3745,6 +3762,7 @@ export type ManuscriptVersionsFilter = {
   datasetsDeposited_not?: InputMaybe<Scalars['String']>;
   datasetsDeposited_not_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
@@ -10435,6 +10453,7 @@ export type CfManuscriptVersionsNestedFilter = {
   acknowledgedGrantNumber_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
@@ -10491,6 +10510,7 @@ export type CfManuscriptVersionsNestedFilter = {
   datasetsDeposited_not?: InputMaybe<Scalars['String']>;
   datasetsDeposited_not_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
@@ -15796,6 +15816,14 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           manuscriptFile?: Maybe<
             Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
           >;
+          keyResourceTable?: Maybe<
+            Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+          >;
+          additionalFilesCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
           teamsCollection?: Maybe<{
             items: Array<
               Maybe<
@@ -15873,6 +15901,16 @@ export type FetchManuscriptByIdQuery = {
               manuscriptFile?: Maybe<
                 Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
               >;
+              keyResourceTable?: Maybe<
+                Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+              >;
+              additionalFilesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -17434,6 +17472,20 @@ export type FetchTeamByIdQuery = {
                             sys: Pick<Sys, 'id'>;
                           }
                         >;
+                        keyResourceTable?: Maybe<
+                          Pick<Asset, 'fileName' | 'url'> & {
+                            sys: Pick<Sys, 'id'>;
+                          }
+                        >;
+                        additionalFilesCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<Asset, 'fileName' | 'url'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         teamsCollection?: Maybe<{
                           items: Array<
                             Maybe<
@@ -20906,6 +20958,85 @@ export const ManuscriptsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'keyResourceTable' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'fileName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'additionalFilesCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '10' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

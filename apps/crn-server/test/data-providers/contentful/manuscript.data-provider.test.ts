@@ -184,6 +184,19 @@ describe('Manuscripts Contentful Data Provider', () => {
         'some error message',
       );
     });
+
+    test('Should default key resource table to undefined if not present', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.versionsCollection!.items[0]!.keyResourceTable = undefined;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+
+      expect(result!.versions[0]!.keyResourceTable).toBeUndefined();
+    });
   });
 
   describe('Create', () => {
@@ -199,6 +212,8 @@ describe('Manuscripts Contentful Data Provider', () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';
       const manuscriptCreateDataObject = getManuscriptPostBody();
+      manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+
       const publish = jest.fn();
 
       when(environmentMock.createEntry)
@@ -245,6 +260,157 @@ describe('Manuscripts Contentful Data Provider', () => {
                   id: 'file-id',
                 },
               },
+            },
+            keyResourceTable: {
+              'en-US': null,
+            },
+            additionalFiles: {
+              'en-US': null,
+            },
+            labs: { 'en-US': [] },
+            teams: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'team-1',
+
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+            createdBy: {
+              'en-US': {
+                sys: {
+                  id: 'user-id-0',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+        },
+      );
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
+        fields: {
+          title: {
+            'en-US': 'Manuscript Title',
+          },
+          teams: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'team-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+          eligibilityReasons: {
+            'en-US': [],
+          },
+          versions: {
+            'en-US': [
+              {
+                sys: {
+                  id: manuscriptVersionId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      });
+      expect(assetMock.publish).toHaveBeenCalled();
+      expect(publish).toHaveBeenCalled();
+      expect(result).toEqual(manuscriptId);
+    });
+
+    test('can create a manuscript with key resource table and additional files', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const manuscriptVersionId = 'manuscript-version-id-1';
+      const manuscriptCreateDataObject = getManuscriptPostBody();
+      manuscriptCreateDataObject.versions[0]!.additionalFiles = [
+        {
+          filename: 'manuscript.csv',
+          url: 'https://example.com/manuscript.csv',
+          id: 'file-table-id',
+        },
+      ];
+      const publish = jest.fn();
+
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('manuscripts', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptId },
+          publish,
+        } as unknown as Entry);
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
+      when(environmentMock.getAsset)
+        .calledWith(
+          manuscriptCreateDataObject.versions[0]!.keyResourceTable!.id,
+        )
+        .mockResolvedValue(assetMock);
+
+      const result = await manuscriptDataProvider.create({
+        ...manuscriptCreateDataObject,
+        userId: 'user-id-0',
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'manuscriptVersions',
+        {
+          fields: {
+            type: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.type,
+            },
+            lifecycle: {
+              'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
+            },
+            manuscriptFile: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: 'file-id',
+                },
+              },
+            },
+            keyResourceTable: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: 'file-table-id',
+                },
+              },
+            },
+            additionalFiles: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Asset',
+                    id: 'file-table-id',
+                  },
+                },
+              ],
             },
             labs: { 'en-US': [] },
             teams: {

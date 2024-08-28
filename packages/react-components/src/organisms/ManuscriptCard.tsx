@@ -19,10 +19,10 @@ import {
   lead,
   AssociationList,
 } from '..';
-import { downloadIcon, linkIcon } from '../icons';
 import { paddingStyles } from '../card';
 import { UserCommentHeader } from '../molecules';
 import { mobileScreen, perRem, rem } from '../pixels';
+import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'>;
 
@@ -113,18 +113,6 @@ const additionalInformationValueStyles = css({
   },
 });
 
-const fileContainerStyles = css({
-  display: 'flex',
-  gap: rem(12),
-  alignItems: 'center',
-});
-
-const downloadButtonStyles = css({
-  marginLeft: 'auto',
-  flexGrow: 0,
-  alignSelf: 'center',
-});
-
 const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.preprintDoi ||
   version.publicationDoi ||
@@ -195,26 +183,25 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
                   />
                 </div>
                 <div>
-                  <span css={fileDividerStyles}>
-                    <Divider />
-                  </span>
-
-                  <div css={fileContainerStyles}>
-                    {linkIcon}
-                    <Subtitle>{version.manuscriptFile.filename}</Subtitle>
-                    <div css={css(downloadButtonStyles)}>
-                      <Link
-                        href={version.manuscriptFile.url}
-                        primary
-                        noMargin
-                        small
-                        buttonStyle
-                      >
-                        {downloadIcon} Download
-                      </Link>
-                    </div>
-                  </div>
-
+                  <ManuscriptFileSection
+                    filename={version.manuscriptFile.filename}
+                    url={version.manuscriptFile.url}
+                  />
+                  {version.keyResourceTable && (
+                    <ManuscriptFileSection
+                      filename={version.keyResourceTable.filename}
+                      url={version.keyResourceTable.url}
+                    />
+                  )}
+                  {version.additionalFiles &&
+                    version.additionalFiles.length > 0 &&
+                    version.additionalFiles.map((additionalFile) => (
+                      <ManuscriptFileSection
+                        filename={additionalFile.filename}
+                        url={additionalFile.url}
+                        key={additionalFile.id}
+                      />
+                    ))}
                   {quickCheckDetails.length > 0 && (
                     <span css={fileDividerStyles}>
                       <Divider />

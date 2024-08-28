@@ -12,7 +12,7 @@ import { format } from 'date-fns';
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
-import { useAnalyticsEngagement } from './state';
+import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 import { getEngagement } from './api';
 import { engagementToCSV } from './export';
 
@@ -33,6 +33,10 @@ const Engagement = () => {
     timeRange: '30d',
   });
 
+  const performance = useEngagementPerformance({ timeRange: '30d' });
+
+  console.log(performance);
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   const exportResults = () =>
@@ -50,6 +54,7 @@ const Engagement = () => {
 
   return (
     <AnalyticsEngagementPageBody
+      performance={performance}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {

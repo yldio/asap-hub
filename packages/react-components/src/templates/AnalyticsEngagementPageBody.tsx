@@ -1,4 +1,5 @@
 import {
+  EngagementPerformance,
   EngagementResponse,
   EngagementSortingDirection,
   SortEngagement,
@@ -6,10 +7,10 @@ import {
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { PageControls } from '..';
+import { CaptionItem, PageControls } from '..';
 import { Headline3, MultiSelect, Paragraph } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { EngagementTable } from '../organisms';
+import { CaptionCard, EngagementTable } from '../organisms';
 import { rem } from '../pixels';
 
 const tableHeaderStyles = css({
@@ -33,6 +34,7 @@ type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls> & {
   setSortingDirection: React.Dispatch<
     React.SetStateAction<EngagementSortingDirection>
   >;
+  performance: EngagementPerformance;
   exportResults: () => Promise<void>;
 };
 const AnalyticsEngagementPageBody: React.FC<
@@ -47,6 +49,7 @@ const AnalyticsEngagementPageBody: React.FC<
   setSort,
   sortingDirection,
   setSortingDirection,
+  performance,
   ...pageControlsProps
 }) => (
   <article>
@@ -64,6 +67,17 @@ const AnalyticsEngagementPageBody: React.FC<
       setTags={setTags}
       exportResults={exportResults}
     />
+    <CaptionCard>
+      <>
+        <CaptionItem label="Presentations" {...performance.events} />
+        <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
+        <CaptionItem label="U.S.: All Roles" {...performance.uniqueAllRoles} />
+        <CaptionItem
+          label="U.S.: Key Personnel"
+          {...performance.uniqueKeyPersonnel}
+        />
+      </>
+    </CaptionCard>
     <EngagementTable
       data={data}
       sort={sort}

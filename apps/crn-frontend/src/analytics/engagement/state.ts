@@ -2,6 +2,7 @@ import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   EngagementAlgoliaResponse,
+  EngagementPerformance,
   ListEngagementAlgoliaResponse,
   SortEngagement,
 } from '@asap-hub/model';
@@ -13,8 +14,12 @@ import {
 } from 'recoil';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getAlgoliaIndexName } from '../utils/state';
-import { getEngagement } from './api';
+import {
+  getAlgoliaIndexName,
+  makePerformanceHook,
+  makePerformanceState,
+} from '../utils/state';
+import { getEngagement, getEngagementPerformance } from './api';
 
 const analyticsEngagementIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -91,3 +96,12 @@ export const useAnalyticsEngagement = (
   }
   return engagement;
 };
+
+export const engagementPerformanceState =
+  makePerformanceState<EngagementPerformance>('analyticsEngagementPerformance');
+
+export const useEngagementPerformance =
+  makePerformanceHook<EngagementPerformance>(
+    engagementPerformanceState,
+    getEngagementPerformance,
+  );

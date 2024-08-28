@@ -1,4 +1,9 @@
-import { AlgoliaClient, AnalyticsSearchOptions } from '@asap-hub/algolia';
+import {
+  AlgoliaClient,
+  AnalyticPerformanceType,
+  AnalyticsSearchOptions,
+  ENGAGEMENT_PERFORMANCE,
+} from '@asap-hub/algolia';
 import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
 
 export type EngagementListOptions = Pick<
@@ -22,4 +27,11 @@ export const getEngagement = async (
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
+};
+
+export const getEngagementPerformance = async (
+  algoliaClient: AlgoliaClient<'analytics'>,
+) => {
+  const result = await algoliaClient.search([ENGAGEMENT_PERFORMANCE], '', {});
+  return result.hits[0];
 };

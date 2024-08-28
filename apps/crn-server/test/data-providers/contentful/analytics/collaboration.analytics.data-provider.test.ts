@@ -326,6 +326,7 @@ describe('team collaboration', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -334,6 +335,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
           labsCollection: {
@@ -342,6 +344,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
           labsCollection: {
@@ -350,6 +353,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -447,6 +451,7 @@ describe('team collaboration', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -455,6 +460,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
           labsCollection: {
@@ -463,6 +469,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
           labsCollection: {
@@ -471,6 +478,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -509,6 +517,7 @@ describe('team collaboration', () => {
       const researchOutputs = [
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -520,6 +529,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-08-30T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -531,6 +541,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Protocol',
           labsCollection: {
@@ -542,6 +553,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-07-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -588,6 +600,7 @@ describe('team collaboration', () => {
       const researchOutputs = [
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -614,6 +627,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -640,6 +654,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -705,6 +720,7 @@ describe('team collaboration', () => {
       const researchOutputs = [
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -738,6 +754,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {

@@ -43,6 +43,7 @@ describe('fetchUserProductivity', () => {
       }),
       ResearchOutputs: () => ({
         addedDate: '2023-09-03T03:00:00.000Z',
+        asapFunded: 'Yes',
         sharingStatus: 'Network Only',
         authorsCollection: {
           items: [
@@ -522,21 +523,25 @@ describe('fetchTeamProductivity', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
         },
@@ -570,21 +575,25 @@ describe('fetchTeamProductivity', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
         },

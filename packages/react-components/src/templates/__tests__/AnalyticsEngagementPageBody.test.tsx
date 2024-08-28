@@ -4,6 +4,15 @@ import { ComponentProps } from 'react';
 import { AnalyticsEngagementPageBody } from '..';
 
 describe('AnalyticsEngagementPageBody', () => {
+  const metric = {
+    belowAverageMin: 1,
+    belowAverageMax: 1,
+    averageMin: 1,
+    averageMax: 1,
+    aboveAverageMin: 1,
+    aboveAverageMax: 1,
+  };
+
   const props: ComponentProps<typeof AnalyticsEngagementPageBody> = {
     data: [
       {
@@ -29,6 +38,12 @@ describe('AnalyticsEngagementPageBody', () => {
     setSortingDirection: jest.fn(),
     setTags: jest.fn(),
     tags: [],
+    performance: {
+      events: metric,
+      totalSpeakers: metric,
+      uniqueAllRoles: metric,
+      uniqueKeyPersonnel: metric,
+    },
   };
   it('renders the page title', () => {
     const { getByText } = render(<AnalyticsEngagementPageBody {...props} />);

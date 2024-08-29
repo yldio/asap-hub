@@ -7,6 +7,7 @@ import {
   ListLabsResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
+  ManuscriptFileType,
   ManuscriptPostRequest,
   ManuscriptResponse,
   ResearchOutputPostRequest,
@@ -205,13 +206,15 @@ export const getManuscript = async (
 
 export const uploadManuscriptFile = async (
   file: File,
+  fileType: ManuscriptFileType,
   authorization: string,
   handleError: (errorMessage: string) => void,
 ): Promise<ManuscriptFileResponse | undefined> => {
   const formData = new FormData();
   formData.append('file', file);
+  formData.append('fileType', fileType);
 
-  const resp = await fetch(`${API_BASE_URL}/manuscripts/manuscript-file`, {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/file-upload`, {
     method: 'POST',
     headers: {
       authorization,
@@ -226,7 +229,7 @@ export const uploadManuscriptFile = async (
       return undefined;
     }
     throw new Error(
-      `Failed to upload manuscript file. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to upload ${fileType.toLowerCase()}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
 

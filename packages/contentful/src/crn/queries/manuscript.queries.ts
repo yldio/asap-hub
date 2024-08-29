@@ -23,6 +23,22 @@ export const manuscriptContentQueryFragment = gql`
           fileName
           url
         }
+        keyResourceTable {
+          sys {
+            id
+          }
+          fileName
+          url
+        }
+        additionalFilesCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            fileName
+            url
+          }
+        }
         preprintDoi
         publicationDoi
         requestingApcCoverage

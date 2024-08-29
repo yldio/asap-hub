@@ -123,9 +123,13 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
-  const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
+  const keyResourceTableInput = screen.getByLabelText(
+    /Upload Key Resource Table/i,
+  );
 
-  userEvent.upload(uploadInput, testFile);
+  userEvent.upload(manuscriptFileInput, testFile);
+  userEvent.upload(keyResourceTableInput, testFile);
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 
@@ -154,6 +158,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             lifecycle: 'Typeset proof',
             type: 'Original Research',
             manuscriptFile: {
+              filename: 'manuscript.pdf',
+              url: 'https://example.com/manuscript.pdf',
+              id: 'file-id',
+            },
+            keyResourceTable: {
               filename: 'manuscript.pdf',
               url: 'https://example.com/manuscript.pdf',
               id: 'file-id',

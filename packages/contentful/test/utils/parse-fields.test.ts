@@ -4,6 +4,7 @@ import {
   createLink,
   getBulkPayload,
   getLinkAsset,
+  getLinkAssets,
   getLinkEntities,
   getLinkEntity,
   updateEntryFields,
@@ -84,6 +85,35 @@ describe('getLinkAsset', () => {
         id,
       },
     });
+  });
+});
+
+describe('getLinkAssets', () => {
+  test('passing a list of ids', () => {
+    const ids = ['42', '43', '44'];
+    expect(getLinkAssets(ids)).toEqual([
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Asset',
+          id: '42',
+        },
+      },
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Asset',
+          id: '43',
+        },
+      },
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Asset',
+          id: '44',
+        },
+      },
+    ]);
   });
 });
 

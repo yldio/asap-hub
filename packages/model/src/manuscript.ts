@@ -65,6 +65,13 @@ export type ManuscriptFileResponse = {
 
 type ManuscriptFile = ManuscriptFileResponse;
 
+const manuscriptFileTypes = [
+  'Manuscript File',
+  'Key Resource Table',
+  'Additional Files',
+] as const;
+export type ManuscriptFileType = (typeof manuscriptFileTypes)[number];
+
 export type ManuscriptVersion = {
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
@@ -73,6 +80,8 @@ export type ManuscriptVersion = {
   requestingApcCoverage?: ApcCoverageOption;
   otherDetails?: string;
   manuscriptFile: ManuscriptFile;
+  keyResourceTable?: ManuscriptFile;
+  additionalFiles?: ManuscriptFile[];
 
   acknowledgedGrantNumber?: string;
   asapAffiliationIncluded?: string;
@@ -122,6 +131,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Revised Draft Manuscript (prior to preprint submission)': [
       'acknowledgedGrantNumber',
@@ -130,6 +140,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Preprint, version 1': [
       'preprintDoi',
@@ -140,6 +151,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Preprint, version 2': [
       'preprintDoi',
@@ -150,6 +162,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Preprint, version 3+': [
       'preprintDoi',
@@ -160,6 +173,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Typeset proof': [
       'requestingApcCoverage',
@@ -170,6 +184,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     Publication: [
       'preprintDoi',
@@ -182,6 +197,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     'Publication with addendum or corrigendum': [
       'preprintDoi',
@@ -194,6 +210,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
     Other: [
       'otherDetails',
@@ -204,6 +221,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'keyResourceTable',
     ],
   },
   'Review / Op-Ed / Letter / Hot Topic': {
@@ -269,6 +287,8 @@ export type ManuscriptPostRequest = Pick<
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
+    keyResourceTable?: ManuscriptVersion['keyResourceTable'];
+    additionalFiles?: ManuscriptVersion['additionalFiles'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -309,6 +329,8 @@ export type ManuscriptFormData = Pick<
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
+    keyResourceTable: ManuscriptVersion['keyResourceTable'];
+    additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -372,6 +394,30 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               },
               nullable: true,
               required: ['id'],
+            },
+            keyResourceTable: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                filename: { type: 'string', nullable: true },
+                url: { type: 'string', nullable: true },
+              },
+              nullable: true,
+              required: ['id'],
+            },
+            additionalFiles: {
+              type: 'array',
+              nullable: true,
+              items: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  id: { type: 'string' },
+                  filename: { type: 'string', nullable: true },
+                  url: { type: 'string', nullable: true },
+                },
+                required: ['id'],
+              },
             },
             acknowledgedGrantNumber: { type: 'string', nullable: true },
             asapAffiliationIncluded: { type: 'string', nullable: true },

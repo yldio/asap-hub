@@ -82,7 +82,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       description: { type: 'string', nullable: true },
       descriptionMD: { type: 'string' },
-      shortDescription: { type: 'string' },
+      shortDescription: { type: 'string', nullable: true, maxLength: 250 },
       methods: {
         type: 'array',
         items: { type: 'string' },
@@ -213,7 +213,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       },
       description: { type: 'string', nullable: true },
       descriptionMD: { type: 'string' },
-      shortDescription: { type: 'string' },
+      shortDescription: { type: 'string', nullable: true, maxLength: 250 },
       methods: {
         type: 'array',
         items: { type: 'string' },

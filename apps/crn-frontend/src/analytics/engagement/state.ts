@@ -62,11 +62,11 @@ export const analyticsEngagementState = selectorFamily<
         set(analyticsEngagementIndexState(options), newEngagement);
       } else {
         newEngagement?.items.forEach((engagement) =>
-          set(analyticsEngagementListState(engagement.id), engagement),
+          set(analyticsEngagementListState(engagement.objectID), engagement),
         );
         set(analyticsEngagementIndexState(options), {
           total: newEngagement.total,
-          ids: newEngagement.items.map((engagement) => engagement.id),
+          ids: newEngagement.items.map((engagement) => engagement.objectID),
         });
       }
     },
@@ -81,6 +81,7 @@ export const useAnalyticsEngagement = (
   const [engagement, setEngagement] = useRecoilState(
     analyticsEngagementState(options),
   );
+
   if (engagement === undefined) {
     throw getEngagement(algoliaClient.client, options)
       .then(setEngagement)

@@ -26,6 +26,7 @@ const defaultOptions: EngagementListOptions = {
   pageSize: 10,
   currentPage: 0,
   tags: [],
+  timeRange: 'all',
 };
 
 const listEngagementResponse: ListEngagementAlgoliaResponse = {

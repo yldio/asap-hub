@@ -54,6 +54,9 @@ enum ProductivityMetricOption {
   all = 'all',
   'team-productivity' = 'team-productivity',
   'user-productivity' = 'user-productivity',
+  'user-collaboration' = 'user-collaboration',
+  'team-collaboration' = 'team-collaboration',
+  'engagement' = 'engagement',
 }
 
 const productivityMetricOption = {

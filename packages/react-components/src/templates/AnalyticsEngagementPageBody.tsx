@@ -3,11 +3,12 @@ import {
   EngagementSortingDirection,
   SortEngagement,
 } from '@asap-hub/model';
+import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { PageControls } from '..';
-import { Headline3, MultiSelect, Paragraph } from '../atoms';
+import { Headline3, Paragraph } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { EngagementTable } from '../organisms';
 import { rem } from '../pixels';
@@ -22,25 +23,27 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
-type AnalyticsEngagementPageBodyProps = ComponentProps<typeof PageControls> & {
-  tags: string[];
-  loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
-  setTags: (tags: string[]) => void;
-  data: EngagementResponse[];
-  sort: SortEngagement;
-  setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
-  sortingDirection: EngagementSortingDirection;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<EngagementSortingDirection>
-  >;
-  exportResults: () => Promise<void>;
-};
+type AnalyticsEngagementPageBodyProps = Pick<
+  ComponentProps<typeof AnalyticsControls>,
+  'currentPage' | 'loadTags' | 'setTags' | 'tags' | 'timeRange'
+> &
+  ComponentProps<typeof PageControls> & {
+    data: EngagementResponse[];
+    sort: SortEngagement;
+    setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
+    sortingDirection: EngagementSortingDirection;
+    setSortingDirection: React.Dispatch<
+      React.SetStateAction<EngagementSortingDirection>
+    >;
+    exportResults: () => Promise<void>;
+  };
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
 > = ({
   data,
   exportResults,
   tags,
+  timeRange,
   setTags,
   loadTags,
   sort,
@@ -58,10 +61,13 @@ const AnalyticsEngagementPageBody: React.FC<
       </Paragraph>
     </div>
     <AnalyticsControls
+      currentPage={pageControlsProps.currentPageIndex}
       metricOption={'team'}
       tags={tags}
       loadTags={loadTags}
       setTags={setTags}
+      timeRange={timeRange}
+      href={analytics({}).engagement({}).$}
       exportResults={exportResults}
     />
     <EngagementTable

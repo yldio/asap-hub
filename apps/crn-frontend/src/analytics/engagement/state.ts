@@ -5,13 +5,11 @@ import {
   ListEngagementAlgoliaResponse,
   SortEngagement,
 } from '@asap-hub/model';
-import { useEffect } from 'react';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useResetRecoilState,
 } from 'recoil';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';

@@ -80,9 +80,6 @@ const exportDataWithFilters = async (
       break;
 
     case 'engagement':
-      await exportData(metric, file);
-      break;
-
     default:
       for (let i = 0; i < timeRanges.length; i += 1) {
         await exportData(metric, file, { timeRange: timeRanges[i] });
@@ -107,54 +104,36 @@ const exportData = async (
   let total = 0;
   let records: ListResponse<AnalyticsData> | null = null;
   let page = 1;
-  do {
-    if (metric === 'team-leadership') {
-      records = await analyticsController.fetchTeamLeadership({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-      });
-    } else if (metric === 'team-productivity') {
-      records = await analyticsController.fetchTeamProductivity({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-        filter: {
-          timeRange: filter?.timeRange,
-          outputType: filter?.outputType,
-        },
-      });
-    } else if (metric === 'user-productivity') {
-      records = await analyticsController.fetchUserProductivity({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-        filter: {
-          timeRange: filter?.timeRange,
-          documentCategory: filter?.documentCategory,
-        },
-      });
-    } else if (metric === 'team-collaboration') {
-      records = await analyticsController.fetchTeamCollaboration({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-        filter: {
-          timeRange: filter?.timeRange,
-          outputType: filter?.outputType,
-        },
-      });
-    } else if (metric === 'user-collaboration') {
-      records = await analyticsController.fetchUserCollaboration({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-        filter: {
-          timeRange: filter?.timeRange,
-          documentCategory: filter?.documentCategory,
-        },
-      });
-    } else {
-      records = await analyticsController.fetchEngagement({
-        take: PAGE_SIZE,
-        skip: (page - 1) * PAGE_SIZE,
-      });
+
+  const fetchRecords = async () => {
+    const options = {
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+      filter: {
+        timeRange: filter?.timeRange,
+        documentCategory: filter?.documentCategory,
+        outputType: filter?.outputType,
+      },
+    };
+
+    switch (metric) {
+      case 'team-leadership':
+        return analyticsController.fetchTeamLeadership(options);
+      case 'team-productivity':
+        return analyticsController.fetchTeamProductivity(options);
+      case 'user-productivity':
+        return analyticsController.fetchUserProductivity(options);
+      case 'team-collaboration':
+        return analyticsController.fetchTeamCollaboration(options);
+      case 'user-collaboration':
+        return analyticsController.fetchUserCollaboration(options);
+      default:
+        return analyticsController.fetchEngagement(options);
     }
+  };
+
+  do {
+    records = await fetchRecords();
 
     if (records) {
       total = records.total;

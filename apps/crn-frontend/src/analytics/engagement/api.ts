@@ -1,17 +1,23 @@
 import { AlgoliaClient, AnalyticsSearchOptions } from '@asap-hub/algolia';
-import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
+import {
+  ListEngagementAlgoliaResponse,
+  TimeRangeOption,
+} from '@asap-hub/model';
 
 export type EngagementListOptions = Pick<
   AnalyticsSearchOptions,
   'currentPage' | 'pageSize' | 'tags'
->;
+> & {
+  timeRange: TimeRangeOption;
+};
 
 export const getEngagement = async (
   algoliaClient: AlgoliaClient<'analytics'>,
   options: EngagementListOptions,
 ): Promise<ListEngagementAlgoliaResponse> => {
-  const { currentPage, pageSize, tags } = options;
+  const { currentPage, pageSize, tags, timeRange } = options;
   const result = await algoliaClient.search(['engagement'], '', {
+    filters: `(__meta.range:"${timeRange || '30d'}")`,
     tagFilters: [tags],
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,

@@ -82,13 +82,12 @@ const data: ListEngagementAlgoliaResponse = {
   ],
 };
 
+const mockAlgoliaClient = {
+  searchForTagValues: mockSearchForTagValues,
+  search: mockSearch,
+};
 beforeEach(() => {
   jest.clearAllMocks();
-
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-    search: mockSearch,
-  };
 
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
@@ -159,6 +158,29 @@ describe('Engagement', () => {
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
         expect.stringContaining('team_desc'),
+      );
+    });
+  });
+
+  it('calls algolia with the correct time range', async () => {
+    await renderPage(analytics({}).engagement({}).$);
+
+    await waitFor(() => {
+      expect(mockGetEngagement).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ timeRange: '30d' }),
+      );
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /chevron down/i }));
+    userEvent.click(
+      screen.getByRole('link', { name: 'Since Hub Launch (2020)' }),
+    );
+
+    await waitFor(() => {
+      expect(mockGetEngagement).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ timeRange: 'all' }),
       );
     });
   });

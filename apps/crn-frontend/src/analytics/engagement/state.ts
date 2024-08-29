@@ -5,11 +5,13 @@ import {
   ListEngagementAlgoliaResponse,
   SortEngagement,
 } from '@asap-hub/model';
+import { useEffect } from 'react';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
+  useResetRecoilState,
 } from 'recoil';
 
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
@@ -81,6 +83,15 @@ export const useAnalyticsEngagement = (
   const [engagement, setEngagement] = useRecoilState(
     analyticsEngagementState(options),
   );
+
+  const resetEngagement = useResetRecoilState(
+    analyticsEngagementState(options),
+  );
+
+  useEffect(() => {
+    resetEngagement(); // Reset state to force refetch on timeRange change
+  }, [options.timeRange, resetEngagement]);
+
   if (engagement === undefined) {
     throw getEngagement(algoliaClient.client, options)
       .then(setEngagement)

@@ -20,6 +20,7 @@ const dataContainerStyles = css({
 const dataTextStyles = css({
   fontWeight: 400,
   fontSize: rem(17),
+  textWrap: 'nowrap',
   color: lead.rgb,
 });
 

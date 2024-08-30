@@ -187,6 +187,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-1',
                 },
                 addedDate: '2024-07-02T08:12:02.234Z',
+                asapFunded: 'Yes',
                 documentType: 'Bioinformatics',
                 authorsCollection: {
                   items: [
@@ -219,6 +220,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-2',
                 },
                 addedDate: '2024-07-02T08:19:11.314Z',
+                asapFunded: 'Yes',
                 documentType: 'Bioinformatics',
                 authorsCollection: {
                   items: [
@@ -250,6 +252,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-1',
                 },
                 addedDate: '2024-07-02T08:12:02.234Z',
+                asapFunded: 'Yes',
                 documentType: 'Bioinformatics',
                 authorsCollection: {
                   items: [
@@ -282,6 +285,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-3',
                 },
                 addedDate: '2024-07-02T08:19:11.314Z',
+                asapFunded: 'Yes',
                 documentType: 'Article',
                 authorsCollection: {
                   items: [
@@ -305,6 +309,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-4',
                 },
                 addedDate: '2024-07-02T08:19:11.314Z',
+                asapFunded: 'Yes',
                 documentType: 'Article',
                 authorsCollection: {
                   items: [
@@ -339,6 +344,7 @@ describe('getUserCollaborationItems', () => {
                   id: 'research-output-1',
                 },
                 addedDate: '2024-07-02T08:12:02.234Z',
+                asapFunded: 'Yes',
                 documentType: 'Bioinformatics',
                 authorsCollection: {
                   items: [
@@ -505,6 +511,7 @@ describe('getTeamCollaborationItems ', () => {
                   {
                     documentType: 'Article',
                     addedDate: '2023-09-01T03:00:00.000Z',
+                    asapFunded: 'Yes',
                     teamsCollection: {
                       items: [
                         {
@@ -552,6 +559,7 @@ describe('getTeamCollaborationItems ', () => {
                   {
                     documentType: 'Article',
                     addedDate: '2023-09-01T03:00:00.000Z',
+                    asapFunded: 'Yes',
                     teamsCollection: {
                       items: [
                         {
@@ -594,6 +602,7 @@ describe('getTeamCollaborationItems ', () => {
                   {
                     documentType: 'Article',
                     addedDate: '2023-09-01T03:00:00.000Z',
+                    asapFunded: 'Yes',
                     labsCollection: {
                       total: 2,
                     },
@@ -625,6 +634,7 @@ describe('getTeamCollaborationItems ', () => {
                 items: [
                   {
                     documentType: 'Article',
+                    asapFunded: 'Yes',
                     addedDate: '2023-09-01T03:00:00.000Z',
                     labsCollection: {
                       total: 1,

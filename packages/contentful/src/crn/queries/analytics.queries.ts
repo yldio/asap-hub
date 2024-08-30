@@ -117,6 +117,7 @@ export const FETCH_USER_PRODUCTIVITY = gql`
           researchOutputsCollection(limit: 100) {
             items {
               addedDate
+              asapFunded
               createdDate
               sharingStatus
               documentType
@@ -152,6 +153,7 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
           researchOutputsCollection(limit: 2000) {
             items {
               addedDate
+              asapFunded
               createdDate
               documentType
               sharingStatus
@@ -220,6 +222,7 @@ export const FETCH_USER_RESEARCH_OUTPUTS = gql`
                 id
               }
               addedDate
+              asapFunded
               documentType
               authorsCollection(limit: 120) {
                 items {
@@ -253,6 +256,7 @@ export const FETCH_TEAM_COLLABORATION = gql`
           researchOutputsCollection(limit: 850) {
             items {
               addedDate
+              asapFunded
               createdDate
               documentType
               sharingStatus

@@ -11733,6 +11733,7 @@ export type FetchUserProductivityQuery = {
                     Pick<
                       ResearchOutputs,
                       | 'addedDate'
+                      | 'asapFunded'
                       | 'createdDate'
                       | 'sharingStatus'
                       | 'documentType'
@@ -11778,6 +11779,7 @@ export type FetchTeamProductivityQuery = {
                     Pick<
                       ResearchOutputs,
                       | 'addedDate'
+                      | 'asapFunded'
                       | 'createdDate'
                       | 'documentType'
                       | 'sharingStatus'
@@ -11850,7 +11852,10 @@ export type FetchUserResearchOutputsQuery = {
             researchOutputsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<ResearchOutputs, 'addedDate' | 'documentType'> & {
+                  Pick<
+                    ResearchOutputs,
+                    'addedDate' | 'asapFunded' | 'documentType'
+                  > & {
                     sys: Pick<Sys, 'id'>;
                     authorsCollection?: Maybe<{
                       items: Array<
@@ -11890,6 +11895,7 @@ export type FetchTeamCollaborationQuery = {
                     Pick<
                       ResearchOutputs,
                       | 'addedDate'
+                      | 'asapFunded'
                       | 'createdDate'
                       | 'documentType'
                       | 'sharingStatus'
@@ -25762,6 +25768,13 @@ export const FetchUserProductivityDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'asapFunded',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'createdDate',
                                           },
                                         },
@@ -25995,6 +26008,13 @@ export const FetchTeamProductivityDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'addedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'asapFunded',
                                           },
                                         },
                                         {
@@ -26408,6 +26428,13 @@ export const FetchUserResearchOutputsDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'asapFunded',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'documentType',
                                           },
                                         },
@@ -26627,6 +26654,13 @@ export const FetchTeamCollaborationDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'addedDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'asapFunded',
                                           },
                                         },
                                         {

@@ -1,4 +1,5 @@
 import {
+  FetchUserResearchOutputsQuery,
   FETCH_TEAM_PRODUCTIVITY,
   FETCH_USER_PRODUCTIVITY,
   getContentfulGraphqlClientMockServer,
@@ -42,6 +43,7 @@ describe('fetchUserProductivity', () => {
       }),
       ResearchOutputs: () => ({
         addedDate: '2023-09-03T03:00:00.000Z',
+        asapFunded: 'Yes',
         sharingStatus: 'Network Only',
         authorsCollection: {
           items: [
@@ -171,6 +173,64 @@ describe('fetchUserProductivity', () => {
           ratio: '0.00',
         },
       ],
+    });
+  });
+
+  test('Should return only asap funded research outputs', async () => {
+    const graphqlResponse = getUserProductivityQuery();
+    const authorDetails = {
+      items: [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-1',
+          },
+        },
+      ],
+    } as AuthorsCollection;
+
+    graphqlResponse.usersCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          sharingStatus: 'Network Only',
+          asapFunded: 'No',
+          authorsCollection: authorDetails,
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          sharingStatus: 'Public',
+          asapFunded: 'Not Sure',
+          authorsCollection: authorDetails,
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          sharingStatus: 'Public',
+          asapFunded: 'Yes',
+          authorsCollection: authorDetails,
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          sharingStatus: 'Network Only',
+          asapFunded: 'Yes',
+          authorsCollection: authorDetails,
+        },
+      ];
+
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchUserProductivity({});
+
+    expect(result).toEqual({
+      items: [
+        {
+          ...getUserProductivityDataObject(),
+          asapOutput: 2,
+          asapPublicOutput: 1,
+          ratio: '0.50',
+        },
+      ],
+      total: 1,
     });
   });
 
@@ -413,27 +473,75 @@ describe('fetchTeamProductivity', () => {
     });
   });
 
-  test('Should only count the research outputs with the sharing status Public when the public output type filter is applied', async () => {
+  test('Should return only asap funded research outputs', async () => {
     const graphqlResponse = getTeamProductivityQuery();
     graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
           documentType: 'Article',
+          asapFunded: 'No',
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          asapFunded: 'Yes',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          asapFunded: 'No',
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          asapFunded: 'Yes',
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamProductivity({});
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        {
+          ...getTeamProductivityDataObject(),
+          Article: 1,
+          Bioinformatics: 1,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 0,
+        },
+      ],
+    });
+  });
+
+  test('Should only count the research outputs with the sharing status Public when the public output type filter is applied', async () => {
+    const graphqlResponse = getTeamProductivityQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
+          documentType: 'Article',
           sharingStatus: 'Network Only',
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
         },
@@ -467,21 +575,25 @@ describe('fetchTeamProductivity', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
         },
@@ -522,3 +634,15 @@ describe('fetchTeamProductivity', () => {
     });
   });
 });
+
+type AuthorsCollection = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<
+          FetchUserResearchOutputsQuery['usersCollection']
+        >['items'][number]
+      >['linkedFrom']
+    >['researchOutputsCollection']
+  >['items'][number]
+>['authorsCollection'];

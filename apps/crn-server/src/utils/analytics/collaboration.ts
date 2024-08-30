@@ -20,6 +20,7 @@ import {
   getFilterOutputByDocumentCategory,
   getFilterOutputByRange,
   getFilterOutputBySharingStatus,
+  isAsapFundedResearchOutput,
   isTeamOutputDocumentType,
 } from './common';
 
@@ -119,6 +120,7 @@ export const getUserCollaborationItems = (
         const outputsCoAuthoredWithinTeamSet = new Set();
 
         item.linkedFrom?.researchOutputsCollection?.items
+          .filter(isAsapFundedResearchOutput)
           .filter(getFilterOutputByRange(rangeKey))
           .filter(getFilterOutputByDocumentCategory(documentCategory))
           .forEach((output) => {
@@ -260,6 +262,7 @@ export const getTeamCollaborationItems = (
 ): TeamCollaborationDataObject[] =>
   cleanArray(teamCollection?.items).map((team) => {
     const outputsData = team.linkedFrom?.researchOutputsCollection?.items
+      .filter(isAsapFundedResearchOutput)
       .filter(getFilterOutputByRange(rangeKey))
       .filter(getFilterOutputBySharingStatus(outputType))
       .filter(

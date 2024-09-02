@@ -4,13 +4,15 @@ import { rem, smallDesktopScreen } from '../pixels';
 import { Card } from '../atoms';
 
 const cardStyles = css({ marginBottom: rem(32) });
+const containerPadding = rem(24);
 
 const containerStyles = css({
-  padding: rem(24),
+  padding: containerPadding,
   display: 'grid',
-  [`@media (max-width: ${smallDesktopScreen.width + 2}px)`]: {
-    gridTemplateColumns: '1fr',
-  },
+  [`@media (max-width: calc(${smallDesktopScreen.width}px + ${containerPadding}))`]:
+    {
+      gridTemplateColumns: '1fr',
+    },
   gridTemplateColumns: '1fr 1fr',
   rowGap: rem(16),
   columnGap: rem(16),

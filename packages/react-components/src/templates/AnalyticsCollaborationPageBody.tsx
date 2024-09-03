@@ -45,7 +45,7 @@ const getPageHeaderDescription = (metric: MetricOption, type: TypeOption) =>
       ? {
           header: 'Co-Production Within Teams by Team',
           description:
-            'Number of team outputs that are co-produced by different core labs within same team',
+            'Number of team outputs that are co-produced by different labs within same team',
         }
       : {
           header: 'Co-Production Across Teams by Team',

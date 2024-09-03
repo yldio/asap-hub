@@ -9,12 +9,18 @@ import { ComponentProps } from 'react';
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
 import { rem, tabletScreen } from '../pixels';
-import { MultiSelect, Subtitle } from '../atoms';
-import { noop, searchIcon } from '..';
+import { MultiSelect, Paragraph, Subtitle } from '../atoms';
+import { formatDateToTimezone, noop, searchIcon } from '..';
 import ExportButton from './ExportButton';
 
 export type MetricOption = 'user' | 'team';
 const containerStyles = css({
+  display: 'flex',
+  alignItems: 'baseline',
+  justifyContent: 'space-between',
+});
+
+const controlsContainerStyles = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -150,6 +156,20 @@ const updateSearchParams = (): URLSearchParams => {
   return searchParams;
 };
 
+const getLastUpdated = () => {
+  const lastUpdated = new Date();
+  const currentHour = lastUpdated.getUTCHours();
+
+  if (currentHour <= 6) lastUpdated.setDate(lastUpdated.getDate() - 1);
+
+  lastUpdated.setUTCHours(6, 0, 0);
+
+  return formatDateToTimezone(
+    lastUpdated.toISOString(),
+    'do MMMM y, h:mm aaa (z)',
+  );
+};
+
 interface AnalyticsControlsProps {
   readonly timeRange?: TimeRangeOption;
   readonly documentCategory?: DocumentCategoryOption;
@@ -260,40 +280,45 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
           </div>
         )}
       </div>
-      <span css={containerStyles}>
-        {timeRange && (
-          <span css={selectContainerStyles}>
-            <strong>View:</strong>
-            <DropdownButton
-              noMargin
-              buttonChildren={() => (
-                <>
-                  <span css={{ marginRight: rem(10) }}>
-                    {timeRangeOptions[timeRange]}
-                  </span>
-                  {dropdownChevronIcon}
-                </>
-              )}
-            >
-              {Object.keys(timeRangeOptions).map((key) => ({
-                item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
-                href: generateLink(
-                  href,
-                  currentPage,
-                  tagsQueryString,
-                  key,
-                  documentCategory,
-                ),
-              }))}
-            </DropdownButton>
-          </span>
-        )}
-        {exportResults && (
-          <span css={exportContainerStyles}>
-            <ExportButton exportResults={exportResults} />
-          </span>
-        )}
-      </span>
+      <div css={containerStyles}>
+        <Paragraph noMargin accent="lead">
+          Last Update: {getLastUpdated()}
+        </Paragraph>
+        <span css={controlsContainerStyles}>
+          {timeRange && (
+            <span css={selectContainerStyles}>
+              <strong>View:</strong>
+              <DropdownButton
+                noMargin
+                buttonChildren={() => (
+                  <>
+                    <span css={{ marginRight: rem(10) }}>
+                      {timeRangeOptions[timeRange]}
+                    </span>
+                    {dropdownChevronIcon}
+                  </>
+                )}
+              >
+                {Object.keys(timeRangeOptions).map((key) => ({
+                  item: <>{timeRangeOptions[key as TimeRangeOption]}</>,
+                  href: generateLink(
+                    href,
+                    currentPage,
+                    tagsQueryString,
+                    key,
+                    documentCategory,
+                  ),
+                }))}
+              </DropdownButton>
+            </span>
+          )}
+          {exportResults && (
+            <span css={exportContainerStyles}>
+              <ExportButton exportResults={exportResults} />
+            </span>
+          )}
+        </span>
+      </div>
     </>
   );
 };

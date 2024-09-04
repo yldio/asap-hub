@@ -64,7 +64,7 @@ describe('processEngagementPerformance', () => {
     });
 
     // one for each time range
-    expect(await mockIndex.saveObject).toHaveBeenCalledTimes(5);
+    expect(mockIndex.saveObject).toHaveBeenCalledTimes(5);
     expect(mockIndex.saveObject).toHaveBeenCalledWith(
       {
         __meta: {

@@ -133,5 +133,16 @@ describe('AnalyticsControls', () => {
         getByText(/31st August 2024, 9:00 am \(GMT\+3\)/i),
       ).toBeInTheDocument();
     });
+
+    it('returns current days run if 7am UTC', () => {
+      jest.setSystemTime(new Date('2024-09-01T10:00:00.000+03:00'));
+
+      const { getByText } = render(
+        <AnalyticsControls {...defaultProps} timeRange={'30d'} />,
+      );
+      expect(
+        getByText(/1st September 2024, 9:00 am \(GMT\+3\)/i),
+      ).toBeInTheDocument();
+    });
   });
 });

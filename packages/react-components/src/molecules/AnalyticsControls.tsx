@@ -5,6 +5,7 @@ import {
   TimeRangeOption,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
+import { add } from 'date-fns';
 
 import { dropdownChevronIcon } from '../icons';
 import DropdownButton from './DropdownButton';
@@ -160,10 +161,10 @@ const getLastUpdate = () => {
   const lastUpdate = new Date();
   lastUpdate.setUTCHours(6, 0, 0);
 
+  const completedSyncDate = add(lastUpdate, { hours: 1 });
   const now = new Date();
 
-  if (lastUpdate.getUTCHours() >= now.getUTCHours())
-    lastUpdate.setDate(lastUpdate.getDate() - 1);
+  if (completedSyncDate > now) lastUpdate.setDate(lastUpdate.getDate() - 1);
 
   return formatDateToTimezone(
     lastUpdate.toISOString(),

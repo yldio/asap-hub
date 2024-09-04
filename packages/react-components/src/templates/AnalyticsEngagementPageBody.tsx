@@ -9,7 +9,7 @@ import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { CaptionItem, PageControls } from '..';
-import { Headline3, MultiSelect, Paragraph } from '../atoms';
+import { Headline3, Paragraph } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { CaptionCard, EngagementTable } from '../organisms';
 import { rem } from '../pixels';

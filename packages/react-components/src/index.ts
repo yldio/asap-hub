@@ -125,6 +125,7 @@ export {
   EventConversation,
   EventMaterials,
   EventSearch,
+  ExportAnalyticsModal,
   Filter,
   Form,
   GoogleCalendar,

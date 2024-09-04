@@ -95,6 +95,29 @@ export const timeRanges = [
   'all',
 ] as const;
 
+export type MetricExportKeys =
+  | 'user-productivity'
+  | 'team-productivity'
+  | 'user-collaboration-within'
+  | 'user-collaboration-across'
+  | 'team-collaboration-within'
+  | 'team-collaboration-across'
+  | 'wg-leadership'
+  | 'ig-leadership'
+  | 'engagement';
+
+export const metricsExportMap: Record<MetricExportKeys, string> = {
+  'user-productivity': 'User Productivity',
+  'team-productivity': 'Team Productivity',
+  'user-collaboration-within': 'User Co-Production: Within Team',
+  'user-collaboration-across': 'User Co-Production: Across Teams',
+  'team-collaboration-within': 'Team Co-Production: Within Team',
+  'team-collaboration-across': 'Team Co-Production: Across Teams',
+  'wg-leadership': 'Working Groups',
+  'ig-leadership': 'Interest Groups',
+  engagement: 'Speaker Diversity',
+};
+
 export const documentCategories = [
   'all',
   'article',
@@ -107,6 +130,14 @@ export const documentCategories = [
 export const outputTypes = ['public', 'all'] as const;
 
 export type TimeRangeOption = (typeof timeRanges)[number];
+export const timeRangeOptions: Record<TimeRangeOption, string> = {
+  '30d': 'Last 30 days',
+  '90d': 'Last 90 days',
+  'current-year': 'This year (Jan-Today)',
+  'last-year': 'Last 12 months',
+  all: 'Since Hub Launch (2020)',
+};
+
 export type DocumentCategoryOption = (typeof documentCategories)[number];
 export type OutputTypeOption = (typeof outputTypes)[number];
 

@@ -12,6 +12,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -128,6 +129,40 @@ describe('Analytics page', () => {
         selector: 'h1',
       }),
     ).toBeVisible();
+  });
+
+  it('renders the export modal when user clicks on the export button', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    expect(screen.queryByText(/Select data range/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Select metrics to export/i),
+    ).not.toBeInTheDocument();
+
+    userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
+
+    expect(screen.getByText(/Select data range/i)).toBeVisible();
+    expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
+  });
+
+  it('user can dismiss export modal when they click on cancel button', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /Multiple XLSX/i }));
+
+    expect(screen.getByText(/Select data range/i)).toBeVisible();
+    expect(screen.getByText(/Select metrics to export/i)).toBeVisible();
+
+    userEvent.click(screen.getByRole('button', { name: /Cancel/i }));
+
+    expect(screen.queryByText(/Select data range/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Select metrics to export/i),
+    ).not.toBeInTheDocument();
   });
 
   it('redirects to user productivity page when flag is true', async () => {

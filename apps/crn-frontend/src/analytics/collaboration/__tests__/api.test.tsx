@@ -1,17 +1,17 @@
 import {
-  createAlgoliaResponse,
   AlgoliaSearchClient,
-  ClientSearchResponse,
   AnalyticsSearchOptionsWithFiltering,
+  ClientSearchResponse,
+  createAlgoliaResponse,
 } from '@asap-hub/algolia';
 import {
   teamCollaborationPerformance,
+  teamCollaborationResponse,
   userCollaborationPerformance,
+  userCollaborationResponse,
 } from '@asap-hub/fixtures';
 import {
   DocumentCategoryOption,
-  ListTeamCollaborationAlgoliaResponse,
-  ListUserCollaborationAlgoliaResponse,
   OutputTypeOption,
   SortTeamCollaboration,
   SortUserCollaboration,
@@ -20,10 +20,10 @@ import {
 import nock from 'nock';
 
 import {
-  getUserCollaboration,
   getTeamCollaboration,
-  getUserCollaborationPerformance,
   getTeamCollaborationPerformance,
+  getUserCollaboration,
+  getUserCollaborationPerformance,
 } from '../api';
 
 jest.mock('../../../config');
@@ -69,70 +69,6 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamCollaborat
     tags: [],
     sort: 'team_asc',
   };
-
-const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
-  total: 1,
-  items: [
-    {
-      id: '1',
-      name: 'Test User',
-      alumniSince: undefined,
-      teams: [
-        {
-          id: '1',
-          team: 'Team A',
-          teamInactiveSince: undefined,
-          role: 'Collaborating PI',
-          outputsCoAuthoredAcrossTeams: 1,
-          outputsCoAuthoredWithinTeam: 2,
-        },
-      ],
-      totalUniqueOutputsCoAuthoredAcrossTeams: 1,
-      totalUniqueOutputsCoAuthoredWithinTeam: 2,
-      objectID: '1-user-collaboration-30d',
-    },
-  ],
-};
-
-const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
-  total: 1,
-  items: [
-    {
-      id: '1',
-      name: 'Team 1',
-      inactiveSince: undefined,
-      outputsCoProducedWithin: {
-        Article: 1,
-        Bioinformatics: 0,
-        Dataset: 0,
-        'Lab Resource': 0,
-        Protocol: 1,
-      },
-      outputsCoProducedAcross: {
-        byDocumentType: {
-          Article: 1,
-          Bioinformatics: 0,
-          Dataset: 0,
-          'Lab Resource': 0,
-          Protocol: 1,
-        },
-        byTeam: [
-          {
-            id: '2',
-            name: 'Team 2',
-            isInactive: false,
-            Article: 1,
-            Bioinformatics: 0,
-            Dataset: 0,
-            'Lab Resource': 0,
-            Protocol: 1,
-          },
-        ],
-      },
-      objectID: '1-team-collaboration-30d',
-    },
-  ],
-};
 
 describe('getUserCollaboration', () => {
   beforeEach(() => {

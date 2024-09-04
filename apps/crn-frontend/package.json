@@ -33,6 +33,7 @@
     "browser-image-compression": "1.0.17",
     "csv-stringify": "6.4.5",
     "date-fns": "2.30.0",
+    "file-saver": "^2.0.5",
     "fs": "npm:browserify-fs@1.0.0",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
@@ -49,7 +50,8 @@
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
     "uuid": "8.3.2",
-    "vite": "5.0.13"
+    "vite": "5.0.13",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
@@ -61,6 +63,7 @@
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "12.8.3",
+    "@types/file-saver": "^2",
     "@types/history": "4.7.11",
     "@types/jest": "29.5.12",
     "@types/jest-when": "3.5.2",

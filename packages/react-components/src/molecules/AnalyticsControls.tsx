@@ -156,16 +156,16 @@ const updateSearchParams = (): URLSearchParams => {
   return searchParams;
 };
 
-const getLastUpdated = () => {
-  const lastUpdated = new Date();
-  const currentHour = lastUpdated.getUTCHours();
+const getLastUpdate = () => {
+  const lastUpdate = new Date();
+  const currentUTCHour = lastUpdate.getUTCHours();
 
-  if (currentHour <= 6) lastUpdated.setDate(lastUpdated.getDate() - 1);
+  if (currentUTCHour <= 6) lastUpdate.setDate(lastUpdate.getDate() - 1);
 
-  lastUpdated.setUTCHours(6, 0, 0);
+  lastUpdate.setUTCHours(6, 0, 0);
 
   return formatDateToTimezone(
-    lastUpdated.toISOString(),
+    lastUpdate.toISOString(),
     'do MMMM y, h:mm aaa (z)',
   );
 };
@@ -282,7 +282,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
       </div>
       <div css={containerStyles}>
         <Paragraph noMargin accent="lead">
-          Last Update: {getLastUpdated()}
+          Last Update: {getLastUpdate()}
         </Paragraph>
         <span css={controlsContainerStyles}>
           {timeRange && (

@@ -101,7 +101,7 @@ describe('AnalyticsControls', () => {
     );
   });
 
-  describe('getLastUpdated', () => {
+  describe('getLastUpdate', () => {
     const zone = 'Europe/Moscow';
     beforeAll(() => {
       jest.useFakeTimers();
@@ -112,7 +112,7 @@ describe('AnalyticsControls', () => {
       jest.useRealTimers();
     });
 
-    it('returns last updated in users timezone', () => {
+    it('returns last update in users timezone', () => {
       jest.setSystemTime(new Date('2024-09-01T12:35:00.000+03:00'));
 
       const { getByText } = render(

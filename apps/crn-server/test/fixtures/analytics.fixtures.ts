@@ -202,6 +202,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
 >['items'] => [
   {
     addedDate: '2023-09-08T03:00:00.000Z',
+    asapFunded: 'Yes',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -216,6 +217,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   },
   {
     addedDate: '2023-09-07T03:00:00.000Z',
+    asapFunded: 'Yes',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -236,6 +238,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   },
   {
     addedDate: '2023-09-06T03:00:00.000Z',
+    asapFunded: 'Yes',
     sharingStatus: 'Network Only',
     authorsCollection: {
       items: [
@@ -250,6 +253,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   },
   {
     addedDate: '2023-09-05T03:00:00.000Z',
+    asapFunded: 'Yes',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -264,6 +268,7 @@ export const getResearchOutputUserProductivity = (): NonNullable<
   },
   {
     addedDate: '2023-07-05T03:00:00.000Z',
+    asapFunded: 'Yes',
     sharingStatus: 'Public',
     authorsCollection: {
       items: [
@@ -301,18 +306,22 @@ export const getResearchOutputTeamProductivity = (): NonNullable<
 >['items'] => [
   {
     addedDate: '2023-09-05T03:00:00.000Z',
+    asapFunded: 'Yes',
     documentType: 'Article',
   },
   {
     addedDate: '2023-09-03T03:00:00.000Z',
+    asapFunded: 'Yes',
     documentType: 'Bioinformatics',
   },
   {
     addedDate: '2023-09-01T03:00:00.000Z',
+    asapFunded: 'Yes',
     documentType: 'Grant Document',
   },
   {
     addedDate: null,
+    asapFunded: 'Yes',
     documentType: 'Protocol',
   },
 ];
@@ -558,6 +567,7 @@ export const getResearchOutputTeamCollaboration = (): NonNullable<
 >['items'] => [
   {
     addedDate: '2023-09-05T03:00:00.000Z',
+    asapFunded: 'Yes',
     documentType: 'Article',
     labsCollection: {
       total: 3,
@@ -598,6 +608,7 @@ export const getTeamCollaborationQuery = (): FetchTeamCollaborationQuery => ({
             items: [
               {
                 addedDate: '2023-09-01T03:00:00.000Z',
+                asapFunded: 'Yes',
                 createdDate: '',
                 documentType: '',
                 labsCollection: {

@@ -1,3 +1,4 @@
+import { timeRanges } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import { processEngagementPerformance } from '../engagement';
 
@@ -48,22 +49,27 @@ describe('processEngagementPerformance', () => {
       'old-performance-3',
     ]);
 
-    expect(mockIndex.search).toHaveBeenCalledWith('', {
-      filters: `__meta.type:"engagement"`,
-      attributesToRetrieve: [
-        'eventCount',
-        'totalSpeakerCount',
-        'uniqueAllRolesCount',
-        'uniqueKeyPersonnelCount',
-      ],
-      page: expect.any(Number),
-      hitsPerPage: 50,
+    timeRanges.forEach((range) => {
+      expect(mockIndex.search).toHaveBeenCalledWith('', {
+        filters: `__meta.range:"${range}" AND __meta.type:"engagement"`,
+        attributesToRetrieve: [
+          'eventCount',
+          'totalSpeakerCount',
+          'uniqueAllRolesCount',
+          'uniqueKeyPersonnelCount',
+        ],
+        page: expect.any(Number),
+        hitsPerPage: 50,
+      });
     });
 
+    // one for each time range
+    expect(mockIndex.saveObject).toHaveBeenCalledTimes(5);
     expect(mockIndex.saveObject).toHaveBeenCalledWith(
       {
         __meta: {
           type: 'engagement-performance',
+          range: 'all',
         },
         events: {
           aboveAverageMax: -1,

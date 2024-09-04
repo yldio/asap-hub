@@ -9,7 +9,12 @@ import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { useState } from 'react';
 import { format } from 'date-fns';
 
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import {
+  useAnalytics,
+  usePagination,
+  usePaginationParams,
+  useSearch,
+} from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
@@ -18,6 +23,7 @@ import { engagementToCSV } from './export';
 
 const Engagement = () => {
   const { currentPage, pageSize } = usePaginationParams();
+  const { timeRange } = useAnalytics();
 
   const [sort, setSort] = useState<SortEngagement>('team_asc');
   const [sortingDirection, setSortingDirection] =
@@ -30,7 +36,7 @@ const Engagement = () => {
     pageSize,
     sort,
     tags,
-    timeRange: '30d',
+    timeRange,
   });
 
   const performance = useEngagementPerformance({ timeRange: '30d' });
@@ -44,6 +50,7 @@ const Engagement = () => {
       }),
       (paginationParams) =>
         getEngagement(client, {
+          timeRange,
           tags,
           ...paginationParams,
         }),
@@ -66,6 +73,7 @@ const Engagement = () => {
           value,
         }));
       }}
+      timeRange={timeRange}
       data={data}
       exportResults={exportResults}
       sort={sort}

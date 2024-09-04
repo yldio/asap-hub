@@ -326,6 +326,7 @@ describe('team collaboration', () => {
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -334,6 +335,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
           labsCollection: {
@@ -342,6 +344,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
           labsCollection: {
@@ -350,6 +353,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -382,12 +386,72 @@ describe('team collaboration', () => {
     });
   });
 
+  test('Should only count asap funded research outputs', async () => {
+    const graphqlResponse = getTeamCollaborationQuery();
+    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
+      [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          asapFunded: 'Not Sure',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          documentType: 'Article',
+          asapFunded: 'Yes',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          asapFunded: 'No',
+          labsCollection: {
+            total: 3,
+          },
+        },
+        {
+          addedDate: '2023-09-03T03:00:00.000Z',
+          documentType: 'Bioinformatics',
+          asapFunded: 'Yes',
+          labsCollection: {
+            total: 3,
+          },
+        },
+      ];
+    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
+
+    const result = await analyticsDataProvider.fetchTeamCollaboration({
+      take: 1,
+    });
+
+    expect(result).toEqual({
+      total: 1,
+      items: [
+        expect.objectContaining({
+          outputsCoProducedWithin: {
+            Article: 1,
+            Bioinformatics: 1,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 0,
+          },
+        }),
+      ],
+    });
+  });
+
   test('Should count research outputs with all sharing statuses when the "all" output type filter is applied', async () => {
     const graphqlResponse = getTeamCollaborationQuery();
     graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection!.items =
       [
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -396,6 +460,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Article',
           sharingStatus: 'Public',
           labsCollection: {
@@ -404,6 +469,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Public',
           labsCollection: {
@@ -412,6 +478,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-03T03:00:00.000Z',
+          asapFunded: 'Yes',
           documentType: 'Bioinformatics',
           sharingStatus: 'Network Only',
           labsCollection: {
@@ -450,6 +517,7 @@ describe('team collaboration', () => {
       const researchOutputs = [
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -461,6 +529,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-08-30T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -472,6 +541,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Protocol',
           labsCollection: {
@@ -483,6 +553,7 @@ describe('team collaboration', () => {
         },
         {
           addedDate: '2023-07-01T03:00:00.000Z',
+          asapFunded: 'Yes',
           createdDate: '',
           documentType: 'Article',
           labsCollection: {
@@ -523,232 +594,242 @@ describe('team collaboration', () => {
     });
   });
 
-  describe('across teams', () => {});
-  test('Should return a count of 2 if client has two outputs of the same document type with multiple teams', async () => {
-    const graphqlResponse = getTeamCollaborationQuery();
-    const researchOutputs = [
-      {
-        addedDate: '2023-09-01T03:00:00.000Z',
-        createdDate: '',
-        documentType: 'Article',
-        labsCollection: {
-          total: 3,
-        },
-        teamsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Team A',
-              inactiveSince: null,
-            },
-            {
-              sys: {
-                id: 'team-2',
-              },
-              displayName: 'Team B',
-              inactiveSince: null,
-            },
-          ],
-        },
-      },
-      {
-        addedDate: '2023-09-05T03:00:00.000Z',
-        createdDate: '',
-        documentType: 'Article',
-        labsCollection: {
-          total: 3,
-        },
-        teamsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Team A',
-              inactiveSince: null,
-            },
-            {
-              sys: {
-                id: 'team-2',
-              },
-              displayName: 'Team B',
-              inactiveSince: null,
-            },
-          ],
-        },
-      },
-      {
-        addedDate: '2023-09-05T03:00:00.000Z',
-        createdDate: '',
-        documentType: 'Article',
-        labsCollection: {
-          total: 3,
-        },
-        teamsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Team A',
-              inactiveSince: null,
-            },
-          ],
-        },
-      },
-    ];
-    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection =
-      {
-        items: researchOutputs,
-      };
-    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
-
-    const result = await analyticsDataProvider.fetchTeamCollaboration({
-      take: 1,
-    });
-
-    expect(result).toEqual({
-      total: 1,
-      items: [
-        expect.objectContaining({
-          outputsCoProducedAcross: {
-            byDocumentType: {
-              Article: 2,
-              Bioinformatics: 0,
-              Dataset: 0,
-              'Lab Resource': 0,
-              Protocol: 0,
-            },
-            byTeam: [
+  describe('across teams', () => {
+    test('Should return a count of 2 if client has two outputs of the same document type with multiple teams', async () => {
+      const graphqlResponse = getTeamCollaborationQuery();
+      const researchOutputs = [
+        {
+          addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
+          createdDate: '',
+          documentType: 'Article',
+          labsCollection: {
+            total: 3,
+          },
+          teamsCollection: {
+            items: [
               {
-                id: 'team-2',
-                name: 'Team B',
-                isInactive: false,
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team A',
+                inactiveSince: null,
+              },
+              {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team B',
+                inactiveSince: null,
+              },
+            ],
+          },
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
+          createdDate: '',
+          documentType: 'Article',
+          labsCollection: {
+            total: 3,
+          },
+          teamsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team A',
+                inactiveSince: null,
+              },
+              {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team B',
+                inactiveSince: null,
+              },
+            ],
+          },
+        },
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
+          createdDate: '',
+          documentType: 'Article',
+          labsCollection: {
+            total: 3,
+          },
+          teamsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team A',
+                inactiveSince: null,
+              },
+            ],
+          },
+        },
+      ];
+      graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection =
+        {
+          items: researchOutputs,
+        };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        graphqlResponse,
+      );
+
+      const result = await analyticsDataProvider.fetchTeamCollaboration({
+        take: 1,
+      });
+
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          expect.objectContaining({
+            outputsCoProducedAcross: {
+              byDocumentType: {
                 Article: 2,
                 Bioinformatics: 0,
                 Dataset: 0,
                 'Lab Resource': 0,
                 Protocol: 0,
               },
+              byTeam: [
+                {
+                  id: 'team-2',
+                  name: 'Team B',
+                  isInactive: false,
+                  Article: 2,
+                  Bioinformatics: 0,
+                  Dataset: 0,
+                  'Lab Resource': 0,
+                  Protocol: 0,
+                },
+              ],
+            },
+          }),
+        ],
+      });
+    });
+
+    test('Should group outputs by team in sorted order (team name asc)', async () => {
+      const graphqlResponse = getTeamCollaborationQuery();
+      const researchOutputs = [
+        {
+          addedDate: '2023-09-01T03:00:00.000Z',
+          asapFunded: 'Yes',
+          createdDate: '',
+          documentType: 'Article',
+          labsCollection: {
+            total: 3,
+          },
+          teamsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team A',
+                inactiveSince: null,
+              },
+              {
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team C',
+                inactiveSince: null,
+              },
+              {
+                sys: {
+                  id: 'team-3',
+                },
+                displayName: 'Team B',
+                inactiveSince: null,
+              },
             ],
           },
-        }),
-      ],
-    });
-  });
-
-  test('Should group outputs by team in sorted order (team name asc)', async () => {
-    const graphqlResponse = getTeamCollaborationQuery();
-    const researchOutputs = [
-      {
-        addedDate: '2023-09-01T03:00:00.000Z',
-        createdDate: '',
-        documentType: 'Article',
-        labsCollection: {
-          total: 3,
         },
-        teamsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Team A',
-              inactiveSince: null,
-            },
-            {
-              sys: {
-                id: 'team-2',
-              },
-              displayName: 'Team C',
-              inactiveSince: null,
-            },
-            {
-              sys: {
-                id: 'team-3',
-              },
-              displayName: 'Team B',
-              inactiveSince: null,
-            },
-          ],
-        },
-      },
-      {
-        addedDate: '2023-09-05T03:00:00.000Z',
-        createdDate: '',
-        documentType: 'Article',
-        labsCollection: {
-          total: 3,
-        },
-        teamsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'team-1',
-              },
-              displayName: 'Team A',
-              inactiveSince: null,
-            },
-            {
-              sys: {
-                id: 'team-2',
-              },
-              displayName: 'Team C',
-              inactiveSince: null,
-            },
-          ],
-        },
-      },
-    ];
-    graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection =
-      {
-        items: researchOutputs,
-      };
-    contentfulGraphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
-
-    const result = await analyticsDataProvider.fetchTeamCollaboration({
-      take: 1,
-    });
-
-    expect(result).toEqual({
-      total: 1,
-      items: [
-        expect.objectContaining({
-          outputsCoProducedAcross: {
-            byDocumentType: {
-              Article: 2,
-              Bioinformatics: 0,
-              Dataset: 0,
-              'Lab Resource': 0,
-              Protocol: 0,
-            },
-            byTeam: [
+        {
+          addedDate: '2023-09-05T03:00:00.000Z',
+          asapFunded: 'Yes',
+          createdDate: '',
+          documentType: 'Article',
+          labsCollection: {
+            total: 3,
+          },
+          teamsCollection: {
+            items: [
               {
-                id: 'team-3',
-                name: 'Team B',
-                isInactive: false,
-                Article: 1,
-                Bioinformatics: 0,
-                Dataset: 0,
-                'Lab Resource': 0,
-                Protocol: 0,
+                sys: {
+                  id: 'team-1',
+                },
+                displayName: 'Team A',
+                inactiveSince: null,
               },
               {
-                id: 'team-2',
-                name: 'Team C',
-                isInactive: false,
+                sys: {
+                  id: 'team-2',
+                },
+                displayName: 'Team C',
+                inactiveSince: null,
+              },
+            ],
+          },
+        },
+      ];
+      graphqlResponse.teamsCollection!.items[0]!.linkedFrom!.researchOutputsCollection =
+        {
+          items: researchOutputs,
+        };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        graphqlResponse,
+      );
+
+      const result = await analyticsDataProvider.fetchTeamCollaboration({
+        take: 1,
+      });
+
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          expect.objectContaining({
+            outputsCoProducedAcross: {
+              byDocumentType: {
                 Article: 2,
                 Bioinformatics: 0,
                 Dataset: 0,
                 'Lab Resource': 0,
                 Protocol: 0,
               },
-            ],
-          },
-        }),
-      ],
+              byTeam: [
+                {
+                  id: 'team-3',
+                  name: 'Team B',
+                  isInactive: false,
+                  Article: 1,
+                  Bioinformatics: 0,
+                  Dataset: 0,
+                  'Lab Resource': 0,
+                  Protocol: 0,
+                },
+                {
+                  id: 'team-2',
+                  name: 'Team C',
+                  isInactive: false,
+                  Article: 2,
+                  Bioinformatics: 0,
+                  Dataset: 0,
+                  'Lab Resource': 0,
+                  Protocol: 0,
+                },
+              ],
+            },
+          }),
+        ],
+      });
     });
   });
 });

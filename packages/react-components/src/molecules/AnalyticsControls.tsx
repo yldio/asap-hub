@@ -158,11 +158,12 @@ const updateSearchParams = (): URLSearchParams => {
 
 const getLastUpdate = () => {
   const lastUpdate = new Date();
-  const currentUTCHour = lastUpdate.getUTCHours();
-
-  if (currentUTCHour <= 6) lastUpdate.setDate(lastUpdate.getDate() - 1);
-
   lastUpdate.setUTCHours(6, 0, 0);
+
+  const now = new Date();
+
+  if (lastUpdate.getUTCHours() >= now.getUTCHours())
+    lastUpdate.setDate(lastUpdate.getDate() - 1);
 
   return formatDateToTimezone(
     lastUpdate.toISOString(),

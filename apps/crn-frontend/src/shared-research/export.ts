@@ -80,9 +80,7 @@ export const researchOutputToCSV = (
   rrid: output.rrid,
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
-  description: [htmlToCsvText(output.description), output.descriptionMD]
-    .filter((item) => item && item.length !== 0)
-    .join(' '),
+  description: output.descriptionMD || htmlToCsvText(output.description),
   usageNotes: output.usageNotesMD || htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)

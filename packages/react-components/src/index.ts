@@ -99,6 +99,7 @@ export {
   TagList,
   TeamCollaborationRow,
   ToastCard,
+  TooltipInfo,
   UserAvatarList,
   UserMenuButton,
   UserNavigationAssociationSection,

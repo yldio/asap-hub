@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AnalyticsPage } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
@@ -55,42 +54,38 @@ const Routes = () => {
           />
         </Switch>
       </Route>
-      {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-        <Route path={path + analytics({}).collaboration.template}>
-          <Switch>
-            <Route
-              exact
-              path={
-                path +
-                analytics({}).collaboration.template +
-                analytics({}).collaboration({}).collaborationPath.template
-              }
-            >
-              <AnalyticsPage>
-                <Frame title="Collaboration">
-                  <CollaborationBody />
-                </Frame>
-              </AnalyticsPage>
-            </Route>
-            <Redirect
-              to={
-                analytics({})
-                  .collaboration({})
-                  .collaborationPath({ metric: 'user', type: 'within-team' }).$
-              }
-            />
-          </Switch>
-        </Route>
-      )}
-      {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-        <Route path={path + analytics({}).engagement.template}>
-          <AnalyticsPage>
-            <Frame title="Engagement">
-              <EngagementBody />
-            </Frame>
-          </AnalyticsPage>
-        </Route>
-      )}
+      <Route path={path + analytics({}).collaboration.template}>
+        <Switch>
+          <Route
+            exact
+            path={
+              path +
+              analytics({}).collaboration.template +
+              analytics({}).collaboration({}).collaborationPath.template
+            }
+          >
+            <AnalyticsPage>
+              <Frame title="Collaboration">
+                <CollaborationBody />
+              </Frame>
+            </AnalyticsPage>
+          </Route>
+          <Redirect
+            to={
+              analytics({})
+                .collaboration({})
+                .collaborationPath({ metric: 'user', type: 'within-team' }).$
+            }
+          />
+        </Switch>
+      </Route>
+      <Route path={path + analytics({}).engagement.template}>
+        <AnalyticsPage>
+          <Frame title="Engagement">
+            <EngagementBody />
+          </Frame>
+        </AnalyticsPage>
+      </Route>
       <Route path={path + analytics({}).leadership.template}>
         <Switch>
           <Route

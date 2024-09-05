@@ -2,9 +2,11 @@ import {
   AlgoliaClient,
   AnalyticsSearchOptions,
   ENGAGEMENT_PERFORMANCE,
+  getPerformanceForMetric,
 } from '@asap-hub/algolia';
 
 import {
+  EngagementPerformance,
   ListEngagementAlgoliaResponse,
   TimeRangeOption,
 } from '@asap-hub/model';
@@ -35,9 +37,5 @@ export const getEngagement = async (
   };
 };
 
-export const getEngagementPerformance = async (
-  algoliaClient: AlgoliaClient<'analytics'>,
-) => {
-  const result = await algoliaClient.search([ENGAGEMENT_PERFORMANCE], '', {});
-  return result.hits[0];
-};
+export const getEngagementPerformance =
+  getPerformanceForMetric<EngagementPerformance>(ENGAGEMENT_PERFORMANCE);

@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -39,19 +38,15 @@ const AnalyticsPageHeader: React.FC = () => (
         >
           Resource & Data Sharing
         </TabLink>
-        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-          <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
-            Collaboration
-          </TabLink>
-        )}
+        <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
+          Collaboration
+        </TabLink>
         <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
           Leadership & Membership
         </TabLink>
-        {isEnabled('DISPLAY_ANALYTICS_BETA') && (
-          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
-            Engagement
-          </TabLink>
-        )}
+        <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+          Engagement
+        </TabLink>
       </TabNav>
     </div>
   </header>

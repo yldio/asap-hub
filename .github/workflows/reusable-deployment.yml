@@ -119,7 +119,7 @@ jobs:
           hostname: ${{ steps.setup.outputs.crn-hostname }}
           openai-api-key: ${{ secrets.CRN_OPENAI_API_KEY }}
           sentry-dsn-api: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
-          sentry-dsn-public-api: 'n-a'
+          sentry-dsn-public-api: ${{ steps.setup.outputs.crn-sentry-dsn-public-api }}
           sentry-dsn-handlers: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
           ses-region: ${{ steps.setup.outputs.crn-ses-region }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}

@@ -152,6 +152,9 @@ outputs:
   crn-sentry-dsn-api:
     description: 'CRN Sentry DSN API'
     value: ${{ steps.vars.outputs.crn-sentry-dsn-api }}
+  crn-sentry-dsn-public-api:
+    description: 'CRN Sentry DSN Public API'
+    value: ${{ steps.vars.outputs.crn-sentry-dsn-public-api }}
   crn-sentry-dsn-handlers:
     description: 'CRN Sentry DSN Handlers'
     value: ${{ steps.vars.outputs.crn-sentry-dsn-handlers }}

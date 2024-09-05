@@ -6,6 +6,7 @@ crn-auth0-client-id=xRDvgZe3Ql3LSZDs2dWQYzcohFnLyeL2
 crn-auth0-domain=dev-asap-hub.us.auth0.com
 crn-ci-auth0-client-id=jeg4r0tHTyZC3N17gfTWNbtxmBZfjkAJ
 crn-sentry-dsn-api=
+crn-sentry-dsn-public-api=https://e499ecb84d0be7b6a9c98d8366695f09@o850903.ingest.us.sentry.io/4507187121160192
 crn-sentry-dsn-handlers=
 crn-ses-region=eu-west-1
 gp2-algolia-api-key-name=gp2-algolia-api-key-ci-dev

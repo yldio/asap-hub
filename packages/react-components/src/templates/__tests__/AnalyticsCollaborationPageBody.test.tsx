@@ -59,9 +59,7 @@ describe('AnalyticsCollaborationPageBody', () => {
       expect(
         getByRole('heading', { name: /Co-Production Within Teams by Team/i }),
       ).toBeInTheDocument();
-      expect(container).toHaveTextContent(
-        'different core labs within same team',
-      );
+      expect(container).toHaveTextContent('different labs within same team');
     });
 
     it('renders team collaboration across teams header & description', () => {

@@ -2,6 +2,12 @@ import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
 import AnalyticsControls from '../AnalyticsControls';
+import { getLocalTimezone } from '../../localization';
+
+jest.mock('../../localization');
+const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
+  typeof getLocalTimezone
+>;
 
 describe('AnalyticsControls', () => {
   const defaultProps: ComponentProps<typeof AnalyticsControls> = {
@@ -93,5 +99,50 @@ describe('AnalyticsControls', () => {
     expect(getByText('Last 90 days').closest('a')!.href).toContain(
       'tag=TestTag',
     );
+  });
+
+  describe('getLastUpdate', () => {
+    const zone = 'Europe/Moscow';
+    beforeAll(() => {
+      jest.useFakeTimers();
+      mockGetLocalTimezone.mockReturnValue(zone);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('returns last update in users timezone', () => {
+      jest.setSystemTime(new Date('2024-09-01T12:35:00.000+03:00'));
+
+      const { getByText } = render(
+        <AnalyticsControls {...defaultProps} timeRange={'30d'} />,
+      );
+      expect(
+        getByText(/1st September 2024, 9:00 am \(GMT\+3\)/i),
+      ).toBeInTheDocument();
+    });
+
+    it('returns previous days run if not yet 7am UTC', () => {
+      jest.setSystemTime(new Date('2024-09-01T09:00:00.000+03:00'));
+
+      const { getByText } = render(
+        <AnalyticsControls {...defaultProps} timeRange={'30d'} />,
+      );
+      expect(
+        getByText(/31st August 2024, 9:00 am \(GMT\+3\)/i),
+      ).toBeInTheDocument();
+    });
+
+    it('returns current days run if 7am UTC', () => {
+      jest.setSystemTime(new Date('2024-09-01T10:00:00.000+03:00'));
+
+      const { getByText } = render(
+        <AnalyticsControls {...defaultProps} timeRange={'30d'} />,
+      );
+      expect(
+        getByText(/1st September 2024, 9:00 am \(GMT\+3\)/i),
+      ).toBeInTheDocument();
+    });
   });
 });

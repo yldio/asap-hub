@@ -118,8 +118,6 @@ beforeEach(() => {
   };
   mockGetPerformance.mockResolvedValue({
     ...engagementPerformance,
-    objectID: '',
-    __meta: { type: 'engagement-performance' },
   });
 });
 

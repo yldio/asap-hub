@@ -54,7 +54,7 @@ const Engagement = () => {
           tags,
           ...paginationParams,
         }),
-      engagementToCSV,
+      engagementToCSV(performance),
     );
 
   return (

@@ -31,7 +31,7 @@ describe('engagementToCSV', () => {
   };
 
   it('exports engagement data', () => {
-    expect(engagementToCSV(data, performance)).toEqual({
+    expect(engagementToCSV(performance)(data)).toEqual({
       Team: 'Test Team',
       'Team Status': 'Active',
       'Inactive Since': '',

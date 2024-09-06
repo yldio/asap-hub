@@ -106,7 +106,7 @@ const defaultUserOptions: AnalyticsSearchOptionsWithFiltering<SortUserProductivi
   {
     pageSize: 10,
     currentPage: 0,
-    timeRange: '30d',
+    timeRange: 'all',
     sort: 'team_asc',
     tags: [],
   };
@@ -114,14 +114,14 @@ const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivi
   {
     pageSize: 10,
     currentPage: 0,
-    timeRange: '30d',
+    timeRange: 'all',
     sort: 'team_asc',
     tags: [],
   };
 
 const userProductivityResponse: UserProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-user-productivity-30d-all',
+  objectID: '1-user-productivity-all-all',
   name: 'Test User',
   isAlumni: false,
   teams: [
@@ -140,7 +140,7 @@ const userProductivityResponse: UserProductivityAlgoliaResponse = {
 
 const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   id: '1',
-  objectID: '1-team-productivity-30d',
+  objectID: '1-team-productivity-all',
   name: 'Team Alessi',
   isInactive: false,
   Article: 50,
@@ -211,7 +211,7 @@ describe('user productivity', () => {
     expect(screen.queryByText('600')).not.toBeInTheDocument();
 
     const rangeButton = screen.getByRole('button', {
-      name: /last 30 days chevron down/i,
+      name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
@@ -223,7 +223,7 @@ describe('user productivity', () => {
     expect(screen.queryByText('200')).not.toBeInTheDocument();
 
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 30 days/));
+    userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/));
     await waitFor(() =>
       expect(screen.getAllByText('User Productivity')).toHaveLength(2),
     );
@@ -344,7 +344,7 @@ describe('team productivity', () => {
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
     const rangeButton = screen.getByRole('button', {
-      name: /last 30 days chevron down/i,
+      name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
     userEvent.click(rangeButton);
     userEvent.click(screen.getByText(/Last 90 days/));
@@ -356,7 +356,7 @@ describe('team productivity', () => {
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     userEvent.click(rangeButton);
-    userEvent.click(screen.getByText(/Last 30 days/));
+    userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
     );

@@ -1,5 +1,6 @@
 import {
   engagementInitialSortingDirection,
+  EngagementPerformance,
   EngagementResponse,
   EngagementSortingDirection,
   SortEngagement,
@@ -18,6 +19,7 @@ import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, neutral200, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
+import { getPerformanceIcon } from '../utils';
 import EngagementSort from './EngagementSort';
 
 const container = css({
@@ -96,6 +98,7 @@ const buttonStyles = css({
 
 type EngagementTableProps = {
   data: EngagementResponse[];
+  performance: EngagementPerformance;
   sort: SortEngagement;
   setSort: React.Dispatch<React.SetStateAction<SortEngagement>>;
   sortingDirection: EngagementSortingDirection;
@@ -106,6 +109,7 @@ type EngagementTableProps = {
 
 const EngagementTable: React.FC<EngagementTableProps> = ({
   data,
+  performance,
   sort,
   setSort,
   sortingDirection,
@@ -400,23 +404,40 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
               <span css={[titleStyles, rowTitleStyles]}>Members</span>
               <p css={rowValueStyles}>{row.memberCount} </p>
               <span css={[titleStyles, rowTitleStyles]}>Events</span>
-              <p css={rowValueStyles}>{row.eventCount} </p>
+              <p css={rowValueStyles}>
+                {row.eventCount}{' '}
+                {getPerformanceIcon(row.eventCount, performance.events)}
+              </p>
 
               <span css={[titleStyles, rowTitleStyles]}>Total Speakers</span>
-              <p css={rowValueStyles}>{row.totalSpeakerCount} </p>
+              <p css={rowValueStyles}>
+                {row.totalSpeakerCount}{' '}
+                {getPerformanceIcon(
+                  row.totalSpeakerCount,
+                  performance.totalSpeakers,
+                )}
+              </p>
 
               <span css={[titleStyles, rowTitleStyles]}>
                 Unique Speakers: All Roles
               </span>
               <p css={rowValueStyles}>
-                {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}
+                {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}{' '}
+                {getPerformanceIcon(
+                  row.uniqueAllRolesCount,
+                  performance.uniqueAllRoles,
+                )}
               </p>
 
               <span css={[titleStyles, rowTitleStyles]}>
                 Unique Speakers: Key Personnel
               </span>
               <p css={rowValueStyles}>
-                {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}
+                {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}{' '}
+                {getPerformanceIcon(
+                  row.uniqueKeyPersonnelCount,
+                  performance.uniqueKeyPersonnel,
+                )}
               </p>
             </div>
           ))}

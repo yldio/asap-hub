@@ -1,4 +1,5 @@
 import {
+  EngagementPerformance,
   EngagementResponse,
   EngagementSortingDirection,
   SortEngagement,
@@ -7,11 +8,12 @@ import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { PageControls } from '..';
+import { CaptionItem, PageControls, PercentageIcon } from '..';
 import { Headline3, Paragraph } from '../atoms';
 import { AnalyticsControls } from '../molecules';
-import { EngagementTable } from '../organisms';
+import { CaptionCard, EngagementTable } from '../organisms';
 import { rem } from '../pixels';
+import { lead } from '../colors';
 
 const tableHeaderStyles = css({
   paddingBottom: rem(24),
@@ -21,6 +23,20 @@ const pageControlsStyles = css({
   justifySelf: 'center',
   paddingTop: rem(36),
   paddingBottom: rem(36),
+});
+
+const captionLegend = css({
+  display: 'grid',
+  gridColumn: '1 / span 2',
+  gridTemplateColumns: `${rem(20)} auto`,
+  gridTemplateRows: 'auto',
+  gap: rem(14),
+  alignItems: 'start',
+  '& p': {
+    color: lead.rgb,
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
+  },
 });
 
 type AnalyticsEngagementPageBodyProps = Pick<
@@ -35,8 +51,10 @@ type AnalyticsEngagementPageBodyProps = Pick<
     setSortingDirection: React.Dispatch<
       React.SetStateAction<EngagementSortingDirection>
     >;
+    performance: EngagementPerformance;
     exportResults: () => Promise<void>;
   };
+
 const AnalyticsEngagementPageBody: React.FC<
   AnalyticsEngagementPageBodyProps
 > = ({
@@ -50,6 +68,7 @@ const AnalyticsEngagementPageBody: React.FC<
   setSort,
   sortingDirection,
   setSortingDirection,
+  performance,
   ...pageControlsProps
 }) => (
   <article>
@@ -70,8 +89,28 @@ const AnalyticsEngagementPageBody: React.FC<
       href={analytics({}).engagement({}).$}
       exportResults={exportResults}
     />
+    <CaptionCard>
+      <>
+        <CaptionItem label="Events" {...performance.events} />
+        <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
+        <CaptionItem label="U.S.: All Roles" {...performance.uniqueAllRoles} />
+        <CaptionItem
+          label="U.S.: Key Personnel"
+          {...performance.uniqueKeyPersonnel}
+        />
+        <div css={captionLegend}>
+          <PercentageIcon title="percentage" color={lead.rgb} />
+          <Paragraph>
+            'Unique Speakers: All Roles' percentage is based on 'Total Speakers'
+            and 'Unique Speakers: Key Personnel' is based on 'Unique Speakers:
+            All Roles'
+          </Paragraph>
+        </div>
+      </>
+    </CaptionCard>
     <EngagementTable
       data={data}
+      performance={performance}
       sort={sort}
       setSort={setSort}
       sortingDirection={sortingDirection}

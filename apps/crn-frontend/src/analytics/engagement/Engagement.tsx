@@ -17,7 +17,7 @@ import {
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { algoliaResultsToStream } from '../utils/export';
-import { useAnalyticsEngagement } from './state';
+import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 import { getEngagement } from './api';
 import { engagementToCSV } from './export';
 
@@ -39,6 +39,8 @@ const Engagement = () => {
     timeRange,
   });
 
+  const performance = useEngagementPerformance({ timeRange });
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   const exportResults = () =>
@@ -52,11 +54,12 @@ const Engagement = () => {
           tags,
           ...paginationParams,
         }),
-      engagementToCSV,
+      engagementToCSV(performance),
     );
 
   return (
     <AnalyticsEngagementPageBody
+      performance={performance}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {

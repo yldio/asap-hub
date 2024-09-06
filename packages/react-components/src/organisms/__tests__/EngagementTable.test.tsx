@@ -13,7 +13,14 @@ describe('EngagementTable', () => {
     currentPageIndex: 0,
     renderPageHref: () => '',
   };
-
+  const performanceMetric = {
+    belowAverageMin: 1,
+    belowAverageMax: 2,
+    averageMin: 2,
+    averageMax: 3,
+    aboveAverageMin: 3,
+    aboveAverageMax: 5,
+  };
   const defaultProps: ComponentProps<typeof EngagementTable> = {
     ...pageControlsProps,
     data: [],
@@ -21,6 +28,12 @@ describe('EngagementTable', () => {
     setSort: jest.fn(),
     sortingDirection: engagementInitialSortingDirection,
     setSortingDirection: jest.fn(),
+    performance: {
+      events: performanceMetric,
+      uniqueAllRoles: performanceMetric,
+      uniqueKeyPersonnel: performanceMetric,
+      totalSpeakers: performanceMetric,
+    },
   };
 
   const engagementData: EngagementResponse = {

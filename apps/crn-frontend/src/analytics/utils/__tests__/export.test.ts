@@ -327,7 +327,7 @@ describe('downloadAnalyticsXLSX', () => {
       3,
       'workbook',
       'worksheet',
-      'User Co-Prod.: Within Team',
+      'User Co-Prod Within Team',
     );
 
     expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(4, [
@@ -365,7 +365,7 @@ describe('downloadAnalyticsXLSX', () => {
       4,
       'workbook',
       'worksheet',
-      'User Co-Prod.: Across Teams',
+      'User Co-Prod Across Teams',
     );
 
     expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(5, [
@@ -389,7 +389,7 @@ describe('downloadAnalyticsXLSX', () => {
       5,
       'workbook',
       'worksheet',
-      'Team Co-Prod.: Within Team',
+      'Team Co-Prod Within Team',
     );
 
     expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(6, [
@@ -423,7 +423,7 @@ describe('downloadAnalyticsXLSX', () => {
       6,
       'workbook',
       'worksheet',
-      'Team Co-Prod.: Across Teams',
+      'Team Co-Prod Across Teams',
     );
 
     expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(7, [

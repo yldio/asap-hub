@@ -39,7 +39,7 @@ const Engagement = () => {
     timeRange,
   });
 
-  const performance = useEngagementPerformance({ timeRange: '30d' });
+  const performance = useEngagementPerformance({ timeRange });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 

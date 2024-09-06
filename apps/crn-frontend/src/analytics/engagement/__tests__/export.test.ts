@@ -48,4 +48,13 @@ describe('engagementToCSV', () => {
       'Unique Speakers (Key Personnel): Average': 'Above',
     });
   });
+  it('handles inactiveSince', () => {
+    expect(
+      engagementToCSV(performance)({ ...data, inactiveSince: 'dateT000' }),
+    ).toEqual(
+      expect.objectContaining({
+        'Inactive Since': 'date',
+      }),
+    );
+  });
 });

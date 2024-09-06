@@ -91,7 +91,7 @@ const AnalyticsEngagementPageBody: React.FC<
     />
     <CaptionCard>
       <>
-        <CaptionItem label="Presentations" {...performance.events} />
+        <CaptionItem label="Events" {...performance.events} />
         <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
         <CaptionItem label="U.S.: All Roles" {...performance.uniqueAllRoles} />
         <CaptionItem

@@ -9,8 +9,8 @@ export const engagementToCSV =
       ? data.inactiveSince.split('T')[0]
       : '',
     Members: data.memberCount,
-    'Presentations: Value': data.eventCount,
-    'Presentations: Average': utils.getPerformanceText(
+    'Events: Value': data.eventCount,
+    'Events: Average': utils.getPerformanceText(
       data.eventCount,
       performance.events,
     ),

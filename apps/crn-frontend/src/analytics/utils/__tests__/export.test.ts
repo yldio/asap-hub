@@ -227,6 +227,53 @@ describe('downloadAnalyticsXLSX', () => {
           },
         ]),
       );
+
+    when(algoliaSearchClient.search)
+      .calledWith(['engagement-performance'], '', expect.anything())
+      .mockResolvedValue(
+        createAlgoliaResponse<'analytics', 'engagement-performance'>([
+          {
+            events: {
+              aboveAverageMax: -1,
+              aboveAverageMin: -1,
+              averageMax: 0,
+              averageMin: 0,
+              belowAverageMax: -1,
+              belowAverageMin: -1,
+            },
+            totalSpeakers: {
+              aboveAverageMax: -1,
+              aboveAverageMin: -1,
+              averageMax: 0,
+              averageMin: 0,
+              belowAverageMax: -1,
+              belowAverageMin: -1,
+            },
+            uniqueAllRoles: {
+              aboveAverageMax: -1,
+              aboveAverageMin: -1,
+              averageMax: 0,
+              averageMin: 0,
+              belowAverageMax: -1,
+              belowAverageMin: -1,
+            },
+            uniqueKeyPersonnel: {
+              aboveAverageMax: -1,
+              aboveAverageMin: -1,
+              averageMax: 0,
+              averageMin: 0,
+              belowAverageMax: -1,
+              belowAverageMin: -1,
+            },
+            objectID: '1',
+            __meta: {
+              type: 'engagement-performance',
+              range: 'current-year',
+              documentCategory: 'all',
+            },
+          },
+        ]),
+      );
   });
 
   it('should create a new workbook and process the selected metrics', async () => {
@@ -467,13 +514,17 @@ describe('downloadAnalyticsXLSX', () => {
         Team: 'Test Team',
         'Team Status': 'Active',
         'Inactive Since': '',
-        Events: 2,
+        'Events: Value': 2,
+        'Events: Average': 'Above',
         Members: 5,
-        'Total Speakers': 3,
+        'Total Speakers: Value': 3,
+        'Total Speakers: Average': 'Above',
         'Unique Speakers (All Roles): Percentage': '67%',
         'Unique Speakers (All Roles): Value': 2,
+        'Unique Speakers (All Roles): Average': 'Above',
         'Unique Speakers (Key Personnel): Percentage': '33%',
         'Unique Speakers (Key Personnel): Value': 1,
+        'Unique Speakers (Key Personnel): Average': 'Above',
       },
     ]);
     expect(XLSX.utils.book_append_sheet).toHaveBeenNthCalledWith(

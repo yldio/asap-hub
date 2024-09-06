@@ -43,6 +43,39 @@ describe('ExportAnalyticsModal', () => {
     expect(onDismiss).toHaveBeenCalled();
   });
 
+  it('calls onDismiss after downloading the data', async () => {
+    const onDismiss = jest.fn();
+    const onDownload = jest.fn();
+    render(
+      <ExportAnalyticsModal
+        {...defaultProps}
+        onDownload={onDownload}
+        onDismiss={onDismiss}
+      />,
+      {
+        wrapper: MemoryRouter,
+      },
+    );
+
+    userEvent.click(screen.getByText(/Choose a data range/i));
+    userEvent.click(screen.getByText(/This year/i));
+
+    userEvent.click(
+      screen.getByRole('checkbox', { name: /Team Productivity/i }),
+    );
+
+    const exportButton = screen.getByRole('button', { name: /export/i });
+    userEvent.click(exportButton);
+    await waitFor(() => {
+      expect(onDownload).toHaveBeenCalledWith(
+        'current-year',
+        new Set(['team-productivity']),
+      );
+    });
+
+    expect(onDismiss).toHaveBeenCalled();
+  });
+
   it('the export button becomes enabled when user selects time range and at least one metric to export', async () => {
     render(<ExportAnalyticsModal {...defaultProps} />, {
       wrapper: MemoryRouter,
@@ -124,7 +157,7 @@ describe('ExportAnalyticsModal', () => {
     });
   });
 
-  it('changes the text to "Exporting..." and disables button while downloading', async () => {
+  it('changes the text to "Exporting..." and disables buttons while downloading', async () => {
     const onDownload = jest.fn(() => Promise.resolve());
     render(<ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />, {
       wrapper: MemoryRouter,
@@ -141,6 +174,11 @@ describe('ExportAnalyticsModal', () => {
 
     expect(exportButton).toHaveTextContent('Exporting...');
     expect(exportButton).toBeDisabled();
+
+    expect(screen.getByLabelText(/time range/i)).toBeDisabled();
+    expect(
+      screen.getByRole('checkbox', { name: /User Productivity/i }),
+    ).toBeDisabled();
 
     await waitFor(() => {
       expect(exportButton).toHaveTextContent('Export XLSX');

@@ -29,6 +29,7 @@ const checkboxStyles = ({
     ':enabled:hover, :enabled:focus': {
       borderColor: lead.rgb,
     },
+
     ':checked': {
       borderColor: primary500.rgba,
       backgroundColor: primary500.rgba,
@@ -41,9 +42,18 @@ const checkboxStyles = ({
         lineHeight: `${24 / perRem}em`,
       },
 
+      ':disabled': {
+        borderColor: steel.rgba,
+        backgroundColor: steel.rgba,
+      },
       ':hover, :focus': {
         borderColor: primary900.rgba,
         backgroundColor: primary900.rgba,
+
+        ':disabled': {
+          borderColor: steel.rgba,
+          backgroundColor: steel.rgba,
+        },
       },
     },
   });

@@ -154,8 +154,10 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
     setIsDownloading(true);
     await onDownload(timeRange, metrics);
     setIsDownloading(false);
+    onDismiss();
   };
 
+  const isDisabled = isSubmitting || isDownloading;
   return (
     <Modal padding={false}>
       <header css={headerStyles}>
@@ -178,11 +180,12 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
             }}
             render={({ field: { value, onChange } }) => (
               <LabeledDropdown
+                name="Time Range"
                 title="Select data range"
                 subtitle="(required)"
                 options={dataRange}
                 required
-                enabled={!isSubmitting}
+                enabled={!isDisabled}
                 placeholder="Choose a data range"
                 value={value ?? ''}
                 onChange={onChange}
@@ -216,7 +219,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                   return {
                     value: item?.value,
                     label: item.label,
-                    enabled: !isSubmitting && !isDownloading,
+                    enabled: !isDisabled,
                   };
                 })}
               />
@@ -233,7 +236,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
             <Button
               noMargin
               primary
-              enabled={isExportEnabled && !isDownloading}
+              enabled={isExportEnabled && !isDisabled}
               onClick={handleExport}
               overrideStyles={css({ height: 'fit-content' })}
             >

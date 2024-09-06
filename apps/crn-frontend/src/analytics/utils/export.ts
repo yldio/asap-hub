@@ -3,7 +3,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ListResponse,
   MetricExportKeys,
-  metricsExportMap,
+  metricsSheetName,
   TimeRangeOption,
 } from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify/browser/esm';
@@ -91,7 +91,7 @@ export const downloadAnalyticsXLSX =
       XLSX.utils.book_append_sheet(
         workbook,
         worksheet,
-        metricsExportMap[metricKey],
+        metricsSheetName[metricKey],
       );
     };
 

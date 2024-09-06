@@ -118,6 +118,19 @@ export const metricsExportMap: Record<MetricExportKeys, string> = {
   engagement: 'Speaker Diversity',
 };
 
+// Sheet names cannot exceed 31 chars
+export const metricsSheetName: Record<MetricExportKeys, string> = {
+  'user-productivity': 'User Productivity',
+  'team-productivity': 'Team Productivity',
+  'user-collaboration-within': 'User Co-Prod.: Within Team',
+  'user-collaboration-across': 'User Co-Prod.: Across Teams',
+  'team-collaboration-within': 'Team Co-Prod.: Within Team',
+  'team-collaboration-across': 'Team Co-Prod.: Across Teams',
+  'wg-leadership': 'Working Groups',
+  'ig-leadership': 'Interest Groups',
+  engagement: 'Speaker Diversity',
+};
+
 export const documentCategories = [
   'all',
   'article',

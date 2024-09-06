@@ -20,7 +20,7 @@ import {
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from '../collaboration/export';
-import { getEngagement } from '../engagement/api';
+import { getEngagement, getEngagementPerformance } from '../engagement/api';
 import { engagementToCSV } from '../engagement/export';
 import { getAnalyticsLeadership } from '../leadership/api';
 import { leadershipToCSV } from '../leadership/export';
@@ -241,10 +241,13 @@ export const downloadAnalyticsXLSX =
       engagement: () =>
         processMetric(
           'engagement',
-          async () => undefined,
+          () =>
+            getEngagementPerformance(client, {
+              timeRange,
+            }),
           (paginationParams) =>
             getEngagement(client, { tags: [], timeRange, ...paginationParams }),
-          () => engagementToCSV,
+          (performance) => engagementToCSV(performance),
         ),
     };
 

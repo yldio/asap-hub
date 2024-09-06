@@ -216,7 +216,7 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                   return {
                     value: item?.value,
                     label: item.label,
-                    enabled: !isSubmitting,
+                    enabled: !isSubmitting && !isDownloading,
                   };
                 })}
               />

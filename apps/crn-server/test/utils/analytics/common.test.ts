@@ -21,10 +21,6 @@ describe('filtering', () => {
       out: string;
     }>([
       {
-        inRange: '2023-09-05T03:00:00.000Z',
-        out: '2023-08-05T03:00:00.000Z',
-      },
-      {
         key: '30d',
         inRange: '2023-09-05T03:00:00.000Z',
         out: '2023-08-05T03:00:00.000Z',
@@ -46,7 +42,6 @@ describe('filtering', () => {
       },
     ])('filters outputs for time range $key', ({ key, inRange, out }) => {
       const items = [{ addedDate: inRange }, { addedDate: out }];
-
       expect(items.filter(getFilterOutputByRange(key)).length).toBe(1);
     });
     it('does not filter when rangeKey is "all"', () => {

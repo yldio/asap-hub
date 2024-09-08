@@ -234,7 +234,7 @@ describe('fetchUserProductivity', () => {
     });
   });
 
-  test('Should return the user productivity considering publications from last month', async () => {
+  test('Should return the user productivity considering all publications', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(
       getUserProductivityQuery(),
     );
@@ -621,7 +621,7 @@ describe('fetchTeamProductivity', () => {
     });
   });
 
-  test('Should return the number of research outputs published in the last month', async () => {
+  test('Should return the number of research outputs published since launch', async () => {
     contentfulGraphqlClientMock.request.mockResolvedValueOnce(
       getTeamProductivityQuery(),
     );

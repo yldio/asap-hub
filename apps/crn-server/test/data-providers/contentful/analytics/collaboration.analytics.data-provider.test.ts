@@ -582,7 +582,7 @@ describe('team collaboration', () => {
         items: [
           expect.objectContaining({
             outputsCoProducedWithin: {
-              Article: 2,
+              Article: 3,
               Bioinformatics: 0,
               Dataset: 0,
               'Lab Resource': 0,

@@ -45,7 +45,7 @@ export const getRangeFilterParams = (
   if (rangeKey && rangeKey in options) {
     return options[rangeKey];
   }
-  return options['30d'];
+  return options['all'];
 };
 
 export const getFilterOutputByRange =

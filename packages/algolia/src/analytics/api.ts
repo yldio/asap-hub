@@ -32,7 +32,7 @@ export const getPerformanceForMetric =
     options: AnalyticsPerformanceOptions,
   ): Promise<T | undefined> => {
     const { timeRange, documentCategory, outputType } = options;
-    const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+    const rangeFilter = `__meta.range:"${timeRange || 'all'}"`;
     const documentCategoryFilter = `__meta.documentCategory:"${
       documentCategory || 'all'
     }"`;
@@ -59,7 +59,7 @@ export const getMetric =
   ): Promise<T | undefined> => {
     const { currentPage, pageSize, timeRange, tags, documentCategory } =
       options;
-    const rangeFilter = `__meta.range:"${timeRange || '30d'}"`;
+    const rangeFilter = `__meta.range:"${timeRange || 'all'}"`;
     const documentCategoryFilter = `__meta.documentCategory:"${
       documentCategory || 'all'
     }"`;

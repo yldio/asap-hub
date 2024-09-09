@@ -3,6 +3,7 @@ import {
   DocumentCategoryOption,
   OutputTypeOption,
   TimeRangeOption,
+  timeRangeOptions,
 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
 import { add } from 'date-fns';
@@ -102,13 +103,6 @@ const exportContainerStyles = css({
   },
 });
 
-const timeRangeOptions: Record<TimeRangeOption, string> = {
-  '30d': 'Last 30 days',
-  '90d': 'Last 90 days',
-  'current-year': 'This year (Jan-Today)',
-  'last-year': 'Last 12 months',
-  all: 'Since Hub Launch (2020)',
-};
 const documentCategoryOptions: Record<DocumentCategoryOption, string> = {
   all: 'All',
   article: 'Article',

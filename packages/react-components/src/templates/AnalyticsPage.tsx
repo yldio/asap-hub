@@ -23,10 +23,13 @@ const pageDesktopStyles = css({
 
 type AnalyticsPageProps = ComponentProps<typeof AnalyticsPageHeader>;
 
-const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ children }) => (
+const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
+  children,
+  onExportAnalytics,
+}) => (
   <article>
     <div css={pageDesktopStyles}>
-      <AnalyticsPageHeader />
+      <AnalyticsPageHeader onExportAnalytics={onExportAnalytics} />
       <main css={mainStyles}>{children}</main>
     </div>
     <div css={pageMobileStyles}>

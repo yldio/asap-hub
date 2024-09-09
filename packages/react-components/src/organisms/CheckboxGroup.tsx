@@ -1,9 +1,9 @@
 import { Fragment, useRef } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
-import { noop } from '../utils';
-import { LabeledCheckbox } from '../molecules';
 import { Caption } from '../atoms';
+import { LabeledCheckbox, TooltipInfo } from '../molecules';
+import { noop } from '../utils';
 
 export interface Option<V extends string> {
   value: V;
@@ -14,6 +14,7 @@ export interface Option<V extends string> {
 export interface Title {
   title: string;
   label?: undefined;
+  info?: string;
 }
 
 interface CheckboxGroupProps<V extends string> {
@@ -35,6 +36,7 @@ export default function CheckboxGroup<V extends string>({
           {option.label === undefined ? (
             <Caption asParagraph>
               <strong>{option.title}</strong>
+              {option.info ? <TooltipInfo>{option.info}</TooltipInfo> : null}
             </Caption>
           ) : (
             <LabeledCheckbox

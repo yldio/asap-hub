@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { Dropdown, DropdownProps, Label, Paragraph } from '../atoms';
 import { lead } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
-import { Info } from '.';
+import { TooltipInfo } from '.';
 
 const subtitleStyles = css({
   paddingLeft: `${6 / perRem}em`,
@@ -15,13 +15,6 @@ const descriptionStyles = css({
   [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
     display: 'unset',
   },
-});
-
-const infoStyle = css({
-  display: 'grid',
-  gap: `${6 / perRem}em`,
-  paddingTop: `${6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
 });
 
 const infoWrapperStyle = css({
@@ -48,14 +41,11 @@ export default function LabeledDropdown<V extends string>({
         <Paragraph>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
-          {info && (
-            <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
-              <Info>
-                <span css={infoStyle}>{info}</span>
-              </Info>
-            </span>
-          )}
-
+          {info ? (
+            <TooltipInfo overrideWrapperStyles={infoWrapperStyle}>
+              {info}
+            </TooltipInfo>
+          ) : null}
           {description ? (
             <>
               <br />

@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { perRem } from '../pixels';
 import { Label, Paragraph, TextArea } from '../atoms';
 import { lead, paper } from '../colors';
-import Info from './Info';
+import { TooltipInfo } from '.';
 
 const tipStyles = css({
   marginTop: 0,
@@ -62,13 +62,14 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
         <span css={{ display: 'flex', marginBottom: 0 }}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
-          {info && (
-            <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
-              <Info>
-                <span css={infoStyle}>{info}</span>
-              </Info>
-            </span>
-          )}
+          {info ? (
+            <TooltipInfo
+              overrideWrapperStyles={infoWrapperStyle}
+              overrideTooltipStyles={infoStyle}
+            >
+              {info}
+            </TooltipInfo>
+          ) : null}
         </span>
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

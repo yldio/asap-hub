@@ -3,7 +3,7 @@ import {
   ClientSearchResponse,
   createAlgoliaResponse,
 } from '@asap-hub/algolia';
-import { ListEngagementAlgoliaResponse } from '@asap-hub/model';
+import { listEngagementResponse } from '@asap-hub/fixtures';
 import nock from 'nock';
 
 import { EngagementListOptions, getEngagement } from '../api';
@@ -27,25 +27,6 @@ const defaultOptions: EngagementListOptions = {
   currentPage: 0,
   tags: [],
   timeRange: 'all',
-};
-
-const listEngagementResponse: ListEngagementAlgoliaResponse = {
-  total: 1,
-  items: [
-    {
-      id: '1',
-      name: 'Test Team',
-      inactiveSince: null,
-      memberCount: 5,
-      eventCount: 2,
-      totalSpeakerCount: 3,
-      uniqueAllRolesCount: 2,
-      uniqueAllRolesCountPercentage: 67,
-      uniqueKeyPersonnelCount: 1,
-      uniqueKeyPersonnelCountPercentage: 33,
-      objectID: 'engagement-algolia-id',
-    },
-  ],
 };
 
 describe('getEngagement', () => {

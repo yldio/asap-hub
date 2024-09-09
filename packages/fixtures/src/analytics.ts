@@ -1,12 +1,93 @@
 import {
-  UserProductivityPerformance,
+  AnalyticsTeamLeadershipResponse,
+  ListEngagementAlgoliaResponse,
+  ListTeamCollaborationAlgoliaResponse,
+  ListUserCollaborationAlgoliaResponse,
   PerformanceMetricByDocumentType,
   TeamCollaborationPerformance,
   TeamProductivityAlgoliaResponse,
-  UserProductivityAlgoliaResponse,
   TeamProductivityPerformance,
   UserCollaborationPerformance,
+  UserProductivityAlgoliaResponse,
+  UserProductivityPerformance,
 } from '@asap-hub/model';
+
+export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
+  id: '1',
+  displayName: 'Team 1',
+  workingGroupLeadershipRoleCount: 1,
+  workingGroupPreviousLeadershipRoleCount: 2,
+  workingGroupMemberCount: 3,
+  workingGroupPreviousMemberCount: 4,
+  interestGroupLeadershipRoleCount: 5,
+  interestGroupPreviousLeadershipRoleCount: 6,
+  interestGroupMemberCount: 7,
+  interestGroupPreviousMemberCount: 8,
+};
+
+export const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
+  total: 1,
+  items: [
+    {
+      id: '1',
+      name: 'Test User',
+      alumniSince: undefined,
+      teams: [
+        {
+          id: '1',
+          team: 'Team A',
+          teamInactiveSince: undefined,
+          role: 'Collaborating PI',
+          outputsCoAuthoredAcrossTeams: 1,
+          outputsCoAuthoredWithinTeam: 2,
+        },
+      ],
+      totalUniqueOutputsCoAuthoredAcrossTeams: 1,
+      totalUniqueOutputsCoAuthoredWithinTeam: 2,
+      objectID: '1-user-collaboration-30d',
+    },
+  ],
+};
+
+export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
+  total: 1,
+  items: [
+    {
+      id: '1',
+      name: 'Team 1',
+      inactiveSince: undefined,
+      outputsCoProducedWithin: {
+        Article: 1,
+        Bioinformatics: 0,
+        Dataset: 0,
+        'Lab Resource': 0,
+        Protocol: 1,
+      },
+      outputsCoProducedAcross: {
+        byDocumentType: {
+          Article: 1,
+          Bioinformatics: 0,
+          Dataset: 0,
+          'Lab Resource': 0,
+          Protocol: 1,
+        },
+        byTeam: [
+          {
+            id: '2',
+            name: 'Team 2',
+            isInactive: false,
+            Article: 1,
+            Bioinformatics: 0,
+            Dataset: 0,
+            'Lab Resource': 0,
+            Protocol: 1,
+          },
+        ],
+      },
+      objectID: '1-team-collaboration-30d',
+    },
+  ],
+};
 
 export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   id: '1',
@@ -173,4 +254,23 @@ export const userCollaborationPerformance: UserCollaborationPerformance = {
     aboveAverageMin: 3,
     aboveAverageMax: 3,
   },
+};
+
+export const listEngagementResponse: ListEngagementAlgoliaResponse = {
+  total: 1,
+  items: [
+    {
+      id: '1',
+      name: 'Test Team',
+      inactiveSince: null,
+      memberCount: 5,
+      eventCount: 2,
+      totalSpeakerCount: 3,
+      uniqueAllRolesCount: 2,
+      uniqueAllRolesCountPercentage: 67,
+      uniqueKeyPersonnelCount: 1,
+      uniqueKeyPersonnelCountPercentage: 33,
+      objectID: 'engagement-algolia-id',
+    },
+  ],
 };

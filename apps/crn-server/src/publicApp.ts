@@ -101,6 +101,12 @@ export const publicAppFactory = (
     res.status(200).json({ status: 'ok' });
   });
 
+  /* istanbul ignore next */
+  basicRoutes.get('/test', (req, res) => {
+    Sentry.captureMessage('Test message for Sentry');
+    res.send('Check Sentry for the test message!');
+  });
+
   const researchOutputRoutes = researchOutputRouteFactory(
     researchOutputController,
   );

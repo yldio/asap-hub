@@ -153,8 +153,42 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
+      researchOutputsCollection {
+        items {
+          sys {
+            id
+          }
+          authorsCollection(limit: 20) {
+            items {
+              __typename
+              ... on Users {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
+`;
+
+export const FETCH_PUBLIC_USERS = gql`
+  query FetchPublicUsers(
+    $limit: Int
+    $skip: Int
+    $order: [UsersOrder]
+    $where: UsersFilter
+  ) {
+    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
+      total
+      items {
+        ...UsersContent
+      }
+    }
+  }
+  ${usersContentQueryFragment}
 `;
 
 export const FETCH_USER_BY_ID = gql`

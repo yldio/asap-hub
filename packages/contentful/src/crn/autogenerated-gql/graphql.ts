@@ -18239,7 +18239,198 @@ export type UsersContentFragment = Pick<
         }>
       >;
     }>;
+    researchOutputsCollection?: Maybe<{
+      items: Array<
+        Maybe<{
+          sys: Pick<Sys, 'id'>;
+          authorsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                | { __typename: 'ExternalAuthors' }
+                | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              >
+            >;
+          }>;
+        }>
+      >;
+    }>;
   }>;
+};
+
+export type FetchPublicUsersQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<InputMaybe<UsersOrder>> | InputMaybe<UsersOrder>>;
+  where?: InputMaybe<UsersFilter>;
+}>;
+
+export type FetchPublicUsersQuery = {
+  usersCollection?: Maybe<
+    Pick<UsersCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Users,
+            | 'activeCampaignId'
+            | 'lastUpdated'
+            | 'alumniSinceDate'
+            | 'alumniLocation'
+            | 'biography'
+            | 'connections'
+            | 'createdDate'
+            | 'degree'
+            | 'email'
+            | 'contactEmail'
+            | 'dismissedGettingStarted'
+            | 'firstName'
+            | 'middleName'
+            | 'lastName'
+            | 'nickname'
+            | 'institution'
+            | 'jobTitle'
+            | 'country'
+            | 'stateOrProvince'
+            | 'city'
+            | 'onboarded'
+            | 'orcid'
+            | 'orcidLastModifiedDate'
+            | 'orcidLastSyncDate'
+            | 'orcidWorks'
+            | 'questions'
+            | 'expertiseAndResourceDescription'
+            | 'github'
+            | 'googleScholar'
+            | 'linkedIn'
+            | 'researcherId'
+            | 'researchGate'
+            | 'twitter'
+            | 'website1'
+            | 'website2'
+            | 'role'
+            | 'researchTheme'
+            | 'responsibilities'
+            | 'researchInterests'
+            | 'reachOut'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            avatar?: Maybe<Pick<Asset, 'url'>>;
+            researchTagsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ResearchTags, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+            teamsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
+                    team?: Maybe<
+                      Pick<Teams, 'displayName' | 'inactiveSince'> & {
+                        sys: Pick<Sys, 'id'>;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                        linkedFrom?: Maybe<{
+                          interestGroupsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<InterestGroups, 'active' | 'name'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }>;
+            labsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+            linkedFrom?: Maybe<{
+              workingGroupMembersCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembers, 'inactiveSinceDate'> & {
+                      linkedFrom?: Maybe<{
+                        workingGroupsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<WorkingGroups, 'title' | 'complete'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
+                      }>;
+                      user?: Maybe<Pick<Users, 'lastName'>>;
+                    }
+                  >
+                >;
+              }>;
+              workingGroupLeadersCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupLeaders, 'role' | 'inactiveSinceDate'> & {
+                      linkedFrom?: Maybe<{
+                        workingGroupsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<WorkingGroups, 'title' | 'complete'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
+                      }>;
+                      user?: Maybe<Pick<Users, 'lastName'>>;
+                    }
+                  >
+                >;
+              }>;
+              interestGroupLeadersCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    linkedFrom?: Maybe<{
+                      interestGroupsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<InterestGroups, 'active' | 'name'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >
+                        >;
+                      }>;
+                    }>;
+                  }>
+                >;
+              }>;
+              researchOutputsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    sys: Pick<Sys, 'id'>;
+                    authorsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          | { __typename: 'ExternalAuthors' }
+                          | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        >
+                      >;
+                    }>;
+                  }>
+                >;
+              }>;
+            }>;
+          }
+        >
+      >;
+    }
+  >;
 };
 
 export type FetchUserByIdQueryVariables = Exact<{
@@ -18383,6 +18574,21 @@ export type FetchUserByIdQuery = {
                     >
                   >;
                 }>;
+              }>;
+            }>
+          >;
+        }>;
+        researchOutputsCollection?: Maybe<{
+          items: Array<
+            Maybe<{
+              sys: Pick<Sys, 'id'>;
+              authorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | { __typename: 'ExternalAuthors' }
+                    | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  >
+                >;
               }>;
             }>
           >;
@@ -24015,6 +24221,106 @@ export const UsersContentFragmentDoc = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'name',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'authorsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '20' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: '__typename',
+                                          },
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Users',
+                                            },
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
                                                 },
                                               },
                                             ],
@@ -32413,6 +32719,122 @@ export const FetchTutorialsDocument = {
     ...TutorialsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchTutorialsQuery, FetchTutorialsQueryVariables>;
+export const FetchPublicUsersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchPublicUsers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UsersOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'UsersFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'usersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'UsersContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...UsersContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchPublicUsersQuery,
+  FetchPublicUsersQueryVariables
+>;
 export const FetchUserByIdDocument = {
   kind: 'Document',
   definitions: [

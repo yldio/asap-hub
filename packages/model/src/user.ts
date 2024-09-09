@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
+import { ResearchOutputDataObject } from './research-output';
 import { ResearchTagDataObject } from './research-tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
@@ -73,6 +74,8 @@ export interface Connection {
   code: string;
 }
 
+export type UserResearchOutput = Pick<ResearchOutputDataObject, 'id'>;
+
 export interface UserDataObject extends Invitee {
   activeCampaignId?: string;
   membershipStatus?: UserMembershipStatus[];
@@ -96,6 +99,7 @@ export interface UserDataObject extends Invitee {
   questions: string[];
   reachOut?: string;
   researchInterests?: string;
+  researchOutputs?: UserResearchOutput[];
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
@@ -112,6 +116,37 @@ export interface UserResponse
   onboarded: boolean;
   displayName: string;
   fullDisplayName: string;
+}
+
+export interface PublicUserTeam {
+  displayName: string;
+  role: TeamRole;
+}
+
+export interface PublicUserResponse
+  extends Pick<
+    UserResponse,
+    | 'avatarUrl'
+    | 'biography'
+    | 'city'
+    | 'country'
+    | 'createdDate'
+    | 'degree'
+    | 'firstName'
+    | 'lastName'
+    | 'id'
+    | 'interestGroups'
+    | 'labs'
+    | 'lastModifiedDate'
+    | 'orcid'
+    | 'researchTheme'
+    | 'social'
+    | 'workingGroups'
+  > {
+  institution?: string;
+  researchOutputs?: Array<UserResearchOutput>;
+  tags: string[];
+  teams: PublicUserTeam[];
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
@@ -143,6 +178,7 @@ export type UserListItemDataObject = Pick<
   teams: UserListItemTeam[];
 };
 export type ListUserDataObject = ListResponse<UserListItemDataObject>;
+export type ListPublicUserDataObject = ListResponse<UserDataObject>;
 
 export type UserListItemResponse = UserListItemDataObject & {
   displayName: string;
@@ -217,6 +253,7 @@ export interface UserAvatarPostRequest {
 }
 
 export type ListUserResponse = ListResponse<UserListItemResponse>;
+export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
 
 export type FetchUsersFilter =
   | {

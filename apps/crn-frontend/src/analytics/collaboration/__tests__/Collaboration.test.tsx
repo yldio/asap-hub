@@ -240,7 +240,7 @@ describe('user collaboration', () => {
         sort: 'user_asc',
         pageSize: 10,
         currentPage: 0,
-        timeRange: '30d',
+        timeRange: 'all',
         documentCategory: 'all',
         tags: [],
       };
@@ -254,7 +254,7 @@ describe('user collaboration', () => {
         items: [
           {
             ...userData.items[0]!,
-            objectID: '1-user-collaboration-30d-article',
+            objectID: '1-user-collaboration-all-article',
             teams: [
               {
                 ...userData.items[0]!.teams[0]!,
@@ -332,7 +332,7 @@ describe('team collaboration', () => {
       {
         pageSize: 10,
         currentPage: 0,
-        timeRange: '30d',
+        timeRange: 'all',
         outputType: 'all',
         sort: 'team_asc',
         tags: [],
@@ -347,7 +347,7 @@ describe('team collaboration', () => {
         items: [
           {
             ...teamData.items[0]!,
-            objectID: '1-team-collaboration-30d-public',
+            objectID: '1-team-collaboration-all-public',
             outputsCoProducedWithin: {
               Article: 50,
               Bioinformatics: 0,

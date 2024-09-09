@@ -11,7 +11,7 @@ export const useAnalytics = () => {
   const documentCategoryParam = currentUrlParams.get('documentCategory');
   const outputTypeParam = currentUrlParams.get('outputType');
 
-  const timeRange = rangeParam ? (rangeParam as TimeRangeOption) : '30d';
+  const timeRange = rangeParam ? (rangeParam as TimeRangeOption) : 'all';
   const documentCategory = documentCategoryParam
     ? (documentCategoryParam as DocumentCategoryOption)
     : 'all';

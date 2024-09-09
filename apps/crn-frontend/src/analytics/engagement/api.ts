@@ -24,7 +24,7 @@ export const getEngagement = async (
 ): Promise<ListEngagementAlgoliaResponse> => {
   const { currentPage, pageSize, tags, timeRange } = options;
   const result = await algoliaClient.search(['engagement'], '', {
-    filters: `(__meta.range:"${timeRange || '30d'}")`,
+    filters: `(__meta.range:"${timeRange || 'all'}")`,
     tagFilters: [tags],
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,

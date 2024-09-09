@@ -186,9 +186,9 @@ export const getUserProductivityDataObject =
         team: 'Team De Camilli',
       },
     ],
-    asapOutput: 3,
-    asapPublicOutput: 1,
-    ratio: '0.33',
+    asapOutput: 4,
+    asapPublicOutput: 2,
+    ratio: '0.50',
   });
 
 export const getResearchOutputUserProductivity = (): NonNullable<
@@ -292,7 +292,7 @@ export const getTeamProductivityDataObject =
     Bioinformatics: 1,
     Dataset: 0,
     'Lab Resource': 0,
-    Protocol: 0,
+    Protocol: 1,
   });
 
 export const getResearchOutputTeamProductivity = (): NonNullable<

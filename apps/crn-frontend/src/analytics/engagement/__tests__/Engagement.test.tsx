@@ -193,7 +193,7 @@ describe('Engagement', () => {
     await waitFor(() => {
       expect(mockGetEngagement).toHaveBeenLastCalledWith(
         expect.anything(),
-        expect.objectContaining({ timeRange: '30d' }),
+        expect.objectContaining({ timeRange: 'all' }),
       );
     });
 

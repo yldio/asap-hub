@@ -144,7 +144,7 @@ export interface PublicUserResponse
     | 'workingGroups'
   > {
   institution?: string;
-  researchOutputs?: Array<UserResearchOutput>;
+  researchOutputs?: UserResearchOutput[];
   tags: string[];
   teams: PublicUserTeam[];
 }

@@ -103,7 +103,7 @@ export const publicAppFactory = (
 
   /* istanbul ignore next */
   basicRoutes.get('/test', (req, res) => {
-    Sentry.captureMessage('Test message for Sentry CRN');
+    Sentry.captureMessage('Test message for Sentry');
     res.send('Check Sentry for the test message!');
   });
 

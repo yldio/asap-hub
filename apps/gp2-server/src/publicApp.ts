@@ -99,12 +99,6 @@ export const publicAppFactory = (
   const userRoutes = userRouteFactory(userController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupController);
 
-  /* istanbul ignore next */
-  app.get('/public/test', (req, res) => {
-    Sentry.captureMessage('Test message for Sentry');
-    res.send('Check Sentry for the test message!');
-  });
-
   // add routes
   app.use(
     '/public',

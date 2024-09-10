@@ -7,17 +7,18 @@ import {
 } from '../../src/data-providers/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
+  getPublicUserResponse,
   getUserDataObject,
   getUserListItemDataObject,
   getUserListItemResponse,
   getUserResponse,
 } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 
 describe('Users controller', () => {
   const assetDataProviderMock: jest.Mocked<AssetDataProvider> =
     getDataProviderMock();
-  const userDataProviderMock = getDataProviderMock();
   const researchTagDataProviderMock = getDataProviderMock();
   const userController = new Users(
     userDataProviderMock,
@@ -43,6 +44,28 @@ describe('Users controller', () => {
     test('Should return empty list when there are no users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });
       const result = await userController.fetch({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
+  describe('FetchPublicUsers', () => {
+    test('Should return the users', async () => {
+      userDataProviderMock.fetchPublicUsers.mockResolvedValue({
+        total: 1,
+        items: [getUserDataObject()],
+      });
+      const result = await userController.fetchPublicUsers({});
+
+      expect(result).toEqual({ items: [getPublicUserResponse()], total: 1 });
+    });
+
+    test('Should return empty list when there are no users', async () => {
+      userDataProviderMock.fetchPublicUsers.mockResolvedValue({
+        total: 0,
+        items: [],
+      });
+      const result = await userController.fetchPublicUsers({});
 
       expect(result).toEqual({ items: [], total: 0 });
     });

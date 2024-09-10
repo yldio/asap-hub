@@ -2,7 +2,10 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import {
   FetchUsersOptions,
+  ListPublicUserResponse,
   ListUserResponse,
+  PublicUserDataObject,
+  PublicUserResponse,
   UserDataObject,
   UserResponse,
   UserUpdateDataObject,
@@ -67,6 +70,18 @@ export default class UserController {
           user.nickname,
         ),
       })),
+    };
+  }
+
+  async fetchPublicUsers(
+    options: FetchUsersOptions,
+  ): Promise<ListPublicUserResponse> {
+    const { total, items } =
+      await this.userDataProvider.fetchPublicUsers(options);
+
+    return {
+      total,
+      items: items.map(parsePublicUserToResponse),
     };
   }
 
@@ -262,3 +277,37 @@ export const parseUserToResponse = ({
     onboarded,
   };
 };
+
+export const parsePublicUserToResponse = ({
+  ...user
+}: PublicUserDataObject): PublicUserResponse => ({
+  biography: user.biography,
+  id: user.id,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  degree: user.degree,
+  city: user.city,
+  country: user.country,
+  institution: user.institution,
+  labs: user.labs,
+  researchTheme: user.researchTheme,
+  orcid: user.orcid,
+  avatarUrl: user.avatarUrl,
+  social: user.social,
+  createdDate: user.createdDate,
+  lastModifiedDate: user.lastModifiedDate,
+  tags: user.tags?.map((tag) => tag.name) || [],
+  teams:
+    user.teams.map((team) => ({
+      displayName: team.displayName || '',
+      role: team.role,
+    })) || [],
+  researchOutputs: user.researchOutputs || [],
+  workingGroups: user.workingGroups.map((wg) => ({
+    name: wg.name,
+    role: wg.role,
+  })),
+  interestGroups: user.interestGroups.map((ig) => ({
+    name: ig.name,
+  })),
+});

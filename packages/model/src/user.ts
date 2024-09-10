@@ -111,6 +111,30 @@ export interface UserDataObject extends Invitee {
   researchTheme?: string[];
 }
 
+export type PublicUserDataObject = Pick<
+  UserDataObject,
+  | 'avatarUrl'
+  | 'biography'
+  | 'city'
+  | 'country'
+  | 'createdDate'
+  | 'degree'
+  | 'firstName'
+  | 'lastName'
+  | 'id'
+  | 'institution'
+  | 'interestGroups'
+  | 'labs'
+  | 'lastModifiedDate'
+  | 'orcid'
+  | 'researchOutputs'
+  | 'researchTheme'
+  | 'social'
+  | 'tags'
+  | 'teams'
+  | 'workingGroups'
+>;
+
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
@@ -124,27 +148,13 @@ export interface PublicUserTeam {
 }
 
 export interface PublicUserResponse
-  extends Pick<
-    UserResponse,
-    | 'avatarUrl'
-    | 'biography'
-    | 'city'
-    | 'country'
-    | 'createdDate'
-    | 'degree'
-    | 'firstName'
-    | 'lastName'
-    | 'id'
-    | 'interestGroups'
-    | 'labs'
-    | 'lastModifiedDate'
-    | 'orcid'
-    | 'researchTheme'
-    | 'social'
-    | 'workingGroups'
+  extends Omit<
+    PublicUserDataObject,
+    'interestGroups' | 'tags' | 'teams' | 'workingGroups'
   > {
-  institution?: string;
-  researchOutputs?: UserResearchOutput[];
+  interestGroups: Pick<InterestGroupMembership, 'name'>[];
+  researchOutputs: UserResearchOutput[];
+  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
   tags: string[];
   teams: PublicUserTeam[];
 }
@@ -178,7 +188,7 @@ export type UserListItemDataObject = Pick<
   teams: UserListItemTeam[];
 };
 export type ListUserDataObject = ListResponse<UserListItemDataObject>;
-export type ListPublicUserDataObject = ListResponse<UserDataObject>;
+export type ListPublicUserDataObject = ListResponse<PublicUserDataObject>;
 
 export type UserListItemResponse = UserListItemDataObject & {
   displayName: string;

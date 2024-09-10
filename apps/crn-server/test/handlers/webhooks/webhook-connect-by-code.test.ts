@@ -10,6 +10,7 @@ import {
   getDataProviderMock,
   getDataProviderMock as mockGetDataProvider,
 } from '../../mocks/data-provider.mock';
+import { userDataProviderMock } from '../../mocks/user.data-provider.mock';
 
 import { getApiGatewayEvent } from '../../helpers/events';
 
@@ -88,7 +89,7 @@ describe('POST /webhook/users/connections - success', () => {
     const mockDataProvider = getDataProviderMock();
     const handler = connectByCodeHandler(
       new UserController(
-        mockDataProvider,
+        userDataProviderMock,
         getDataProviderMock(),
         getDataProviderMock(),
       ),
@@ -132,7 +133,7 @@ describe('POST /webhook/users/connections - success', () => {
     const mockDataProvider = mockGetDataProvider();
     const handler = connectByCodeHandler(
       new UserController(
-        mockDataProvider,
+        userDataProviderMock,
         getDataProviderMock(),
         getDataProviderMock(),
       ),

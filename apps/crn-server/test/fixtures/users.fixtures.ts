@@ -9,6 +9,7 @@ import {
   WebhookDetail,
   UserListItemResponse,
   UserListItemDataObject,
+  PublicUserResponse,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -187,6 +188,44 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   displayName: 'Tom (Iron Man) Hardy',
   fullDisplayName: 'Tom (Iron Man) E. Hardy',
   onboarded: true,
+});
+
+export const getPublicUserResponse = (): PublicUserResponse => ({
+  id: 'user-id-1',
+  biography: 'some bio',
+  createdDate: '2020-09-23T20:45:22.000Z',
+  tags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  institution: 'some institution',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  city: 'London',
+  lastModifiedDate: '2021-09-23T20:45:22.000Z',
+  workingGroups: [],
+  interestGroups: [],
+  orcid: '123-456-789',
+  degree: 'MPH',
+  social: {
+    orcid: '123-456-789',
+  },
+  teams: [
+    {
+      role: 'Lead PI (Core Leadership)',
+      displayName: 'Team A',
+    },
+  ],
+  labs: [
+    { id: 'cd7be4902', name: 'Brighton' },
+    { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchOutputs: [],
 });
 
 export const fetchExpectation: ListUserResponse = {

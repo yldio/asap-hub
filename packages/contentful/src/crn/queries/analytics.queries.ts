@@ -303,7 +303,7 @@ export const FETCH_ENGAGEMENT = gql`
               }
             }
           }
-          eventSpeakersCollection(limit: 100) {
+          eventSpeakersCollection(limit: 1000) {
             items {
               linkedFrom {
                 eventsCollection(limit: 1) {

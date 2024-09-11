@@ -37,14 +37,17 @@ const envRef =
   stage === 'production' ? 'prod' : stage === 'dev' ? 'dev' : `CI-${stage}`;
 
 if (stage === 'dev' || stage === 'production') {
-  ['SENTRY_DSN_API', 'SENTRY_DSN_HANDLERS'].forEach((env) => {
-    assert.ok(process.env[env], `${env} not defined`);
-  });
+  ['SENTRY_DSN_API', 'SENTRY_DSN_PUBLIC_API', 'SENTRY_DSN_HANDLERS'].forEach(
+    (env) => {
+      assert.ok(process.env[env], `${env} not defined`);
+    },
+  );
 }
 
 const activeCampaignAccount = process.env.ACTIVE_CAMPAIGN_ACCOUNT || '';
 const activeCampaignToken = process.env.ACTIVE_CAMPAIGN_TOKEN!;
 const sentryDsnApi = process.env.SENTRY_DSN_API!;
+const sentryDsnPublicApi = process.env.SENTRY_DSN_PUBLIC_API!;
 const sentryDsnHandlers = process.env.SENTRY_DSN_HANDLERS!;
 const auth0ClientId = process.env.AUTH0_CLIENT_ID!;
 const auth0Audience = process.env.AUTH0_AUDIENCE!;
@@ -302,6 +305,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         APP_ORIGIN: appUrl,
+        SENTRY_DSN: sentryDsnPublicApi,
       },
     },
     apiHandler: {

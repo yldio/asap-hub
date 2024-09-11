@@ -58,6 +58,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   ],
   workingGroups: [],
   interestGroups: [],
+  researchOutputs: [],
   connections: [],
 });
 
@@ -101,6 +102,7 @@ export const getUserResponse = (): UserResponse => ({
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   interestGroups: [],
+  researchOutputs: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
     {
@@ -316,6 +318,7 @@ export const getUserDataObject = (): UserDataObject => ({
     { id: '5', name: 'expertise 5' },
   ],
   researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchOutputs: [],
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',

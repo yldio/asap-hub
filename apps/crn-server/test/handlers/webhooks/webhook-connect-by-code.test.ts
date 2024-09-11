@@ -86,7 +86,6 @@ describe('POST /webhook/users/connections - success', () => {
     jest.resetAllMocks();
   });
   test('returns 202 for valid code and updates the user', async () => {
-    const mockDataProvider = getDataProviderMock();
     const handler = connectByCodeHandler(
       new UserController(
         userDataProviderMock,
@@ -100,11 +99,11 @@ describe('POST /webhook/users/connections - success', () => {
       email: 'test@example.com',
       conections: [],
     };
-    mockDataProvider.fetch.mockResolvedValueOnce({
+    userDataProviderMock.fetch.mockResolvedValueOnce({
       total: 1,
       items: [user],
     });
-    mockDataProvider.fetchById.mockResolvedValue(user);
+    userDataProviderMock.fetchById.mockResolvedValue(user);
 
     const res = (await handler(
       getApiGatewayEvent({
@@ -119,7 +118,7 @@ describe('POST /webhook/users/connections - success', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toEqual(202);
-    expect(mockDataProvider.update).toHaveBeenCalledWith(
+    expect(userDataProviderMock.update).toHaveBeenCalledWith(
       'user-0',
       {
         connections: [{ code: 'oauth-connection-code' }],

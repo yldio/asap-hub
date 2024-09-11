@@ -297,11 +297,10 @@ export const parsePublicUserToResponse = ({
   createdDate: user.createdDate,
   lastModifiedDate: user.lastModifiedDate,
   tags: user.tags?.map((tag) => tag.name) || [],
-  teams:
-    user.teams.map((team) => ({
-      displayName: team.displayName || '',
-      role: team.role,
-    })) || [],
+  teams: user.teams.map((team) => ({
+    displayName: team.displayName || '',
+    role: team.role,
+  })),
   researchOutputs: user.researchOutputs || [],
   workingGroups: user.workingGroups
     .filter((wg) => wg.active)

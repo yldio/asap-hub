@@ -584,11 +584,7 @@ export const parseResearchOutputsCollection = (
       userResearchOutputs: UserResearchOutput[],
       researchOutput: ResearchOutputItem | null,
     ): UserResearchOutput[] => {
-      if (!researchOutput) {
-        return userResearchOutputs;
-      }
-
-      const isAuthor = researchOutput.authorsCollection?.items.some(
+      const isAuthor = researchOutput?.authorsCollection?.items.some(
         (author) => author?.__typename === 'Users' && author.sys.id === userId,
       );
 
@@ -596,7 +592,7 @@ export const parseResearchOutputsCollection = (
         return [
           ...userResearchOutputs,
           {
-            id: researchOutput.sys.id || '',
+            id: researchOutput?.sys.id || '',
           },
         ];
       }

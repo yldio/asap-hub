@@ -7,6 +7,7 @@ import {
 } from '../../src/data-providers/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
+  getPublicUserDataObject,
   getPublicUserResponse,
   getUserDataObject,
   getUserListItemDataObject,
@@ -53,7 +54,7 @@ describe('Users controller', () => {
     test('Should return the users', async () => {
       userDataProviderMock.fetchPublicUsers.mockResolvedValue({
         total: 1,
-        items: [getUserDataObject()],
+        items: [getPublicUserDataObject()],
       });
       const result = await userController.fetchPublicUsers({});
 

@@ -1,6 +1,7 @@
 import {
   Entry,
   Environment,
+  FETCH_PUBLIC_USERS,
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
@@ -17,6 +18,7 @@ import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlUser,
   getContentfulGraphqlUserListItem,
+  getPublicUserDataObject,
   getUserCreateDataObject,
   getUserDataObject,
   getUserListItemDataObject,
@@ -693,6 +695,167 @@ describe('User data provider', () => {
               onboarded: true,
               role_not: 'Hidden',
             },
+          }),
+        );
+      });
+    });
+  });
+
+  describe('FetchPublicUsers', () => {
+    test('should receive a user list', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [getContentfulGraphqlUser()],
+        },
+      });
+
+      const expectation = {
+        ...getPublicUserDataObject(),
+        researchOutputs: [],
+        workingGroups: [
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Project Manager',
+          },
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Member',
+          },
+        ],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+          {
+            active: true,
+            id: 'interest-group-leader-1',
+            name: 'Interest Group Leader 1',
+          },
+        ],
+      };
+
+      const result = await userDataProvider.fetchPublicUsers({});
+
+      expect(result.total).toEqual(1);
+      expect(result.items).toEqual([expectation]);
+    });
+
+    test('should return an empty response if there is no result', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: null,
+      });
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('should filter out research outputs where the user is not the author', async () => {
+      const graphqlUser = getContentfulGraphqlUser();
+      graphqlUser.linkedFrom!.researchOutputsCollection = {
+        items: [
+          {
+            sys: {
+              id: 'research-output-1',
+            },
+            authorsCollection: {
+              items: [
+                {
+                  __typename: 'Users',
+                  sys: {
+                    id: graphqlUser.sys.id,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            sys: {
+              id: 'research-output-2',
+            },
+            authorsCollection: {
+              items: [
+                {
+                  __typename: 'Users',
+                  sys: {
+                    id: 'random-user-id',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        usersCollection: {
+          total: 1,
+          items: [graphqlUser],
+        },
+      });
+
+      const result = await userDataProvider.fetchPublicUsers({});
+      expect(result!.items[0]!.researchOutputs).toEqual([
+        {
+          id: 'research-output-1',
+        },
+      ]);
+    });
+
+    describe('query parameters', () => {
+      beforeEach(() => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          usersCollection: {
+            total: 0,
+            items: [],
+          },
+        });
+      });
+
+      test('should set default pagination parameters', async () => {
+        await userDataProvider.fetchPublicUsers({});
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_PUBLIC_USERS,
+          expect.objectContaining({ limit: 8, skip: 0 }),
+        );
+      });
+
+      test('should pass pagination parameters if provided', async () => {
+        await userDataProvider.fetchPublicUsers({ take: 20, skip: 20 });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_PUBLIC_USERS,
+          expect.objectContaining({ limit: 20, skip: 20 }),
+        );
+      });
+
+      test('should filter out non-onboarded users by default', async () => {
+        await userDataProvider.fetchPublicUsers({});
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_PUBLIC_USERS,
+          expect.objectContaining({
+            where: expect.objectContaining({ onboarded: true }),
+          }),
+        );
+      });
+
+      test('should filter out hidden users by default', async () => {
+        await userDataProvider.fetchPublicUsers({});
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_PUBLIC_USERS,
+          expect.objectContaining({
+            where: expect.objectContaining({ role_not: 'Hidden' }),
           }),
         );
       });

@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import {
   ListPublicUserResponse,
   PublicUserResponse,
@@ -35,6 +36,10 @@ export const userRouteFactory = (userController: UserController): Router => {
 
       const user = await userController.fetchById(userId);
 
+      if (user.onboarded === false) {
+        throw new NotFoundError(undefined, `user with id ${userId} not found`);
+      }
+
       res.json(mapUserToPublicUser(user));
     },
   );
@@ -47,25 +52,30 @@ const mapUserToPublicUser = (user: UserResponse): PublicUserResponse => ({
   biography: user.biography,
   city: user.city,
   country: user.country,
+  createdDate: user.createdDate,
   degree: user.degree,
   firstName: user.firstName,
   id: user.id,
+  institution: user.institution,
+  interestGroups: user.interestGroups.map((ig) => ({
+    name: ig.name,
+  })),
   labs: user.labs,
   lastName: user.lastName,
   lastModifiedDate: user.lastModifiedDate,
-  institution: user.institution,
-  createdDate: user.createdDate,
+  orcid: user.orcid,
+  researchTheme: user.researchTheme,
+  researchOutputs: user.researchOutputs || [],
+  social: user.social,
   tags: user.tags?.map((tag) => tag.name) || [],
   teams: user.teams?.map((team) => ({
     displayName: team.displayName ?? '',
     role: team.role,
   })),
-  workingGroups: user.workingGroups.map((wg) => ({
-    name: wg.name,
-    role: wg.role,
-  })),
-  interestGroups: user.interestGroups.map((ig) => ({
-    name: ig.name,
-  })),
-  researchOutputs: user.researchOutputs || [],
+  workingGroups: user.workingGroups
+    .filter((wg) => wg.active)
+    .map((wg) => ({
+      name: wg.name,
+      role: wg.role,
+    })),
 });

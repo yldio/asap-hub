@@ -303,10 +303,12 @@ export const parsePublicUserToResponse = ({
       role: team.role,
     })) || [],
   researchOutputs: user.researchOutputs || [],
-  workingGroups: user.workingGroups.map((wg) => ({
-    name: wg.name,
-    role: wg.role,
-  })),
+  workingGroups: user.workingGroups
+    .filter((wg) => wg.active)
+    .map((wg) => ({
+      name: wg.name,
+      role: wg.role,
+    })),
   interestGroups: user.interestGroups.map((ig) => ({
     name: ig.name,
   })),

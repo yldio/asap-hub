@@ -593,15 +593,15 @@ export const parseResearchOutputsCollection = (
       );
 
       if (isAuthor) {
-        return userResearchOutputs;
+        return [
+          ...userResearchOutputs,
+          {
+            id: researchOutput.sys.id || '',
+          },
+        ];
       }
 
-      return [
-        ...userResearchOutputs,
-        {
-          id: researchOutput.sys.id || '',
-        },
-      ];
+      return userResearchOutputs;
     },
     [],
   );

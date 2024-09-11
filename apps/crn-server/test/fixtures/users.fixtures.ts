@@ -10,6 +10,8 @@ import {
   UserListItemResponse,
   UserListItemDataObject,
   PublicUserResponse,
+  ListPublicUserResponse,
+  PublicUserDataObject,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -209,8 +211,8 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
   country: 'United Kingdom',
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
-  workingGroups: [],
-  interestGroups: [],
+  workingGroups: [{ name: 'Active Working Group 1', role: 'Chair' }],
+  interestGroups: [{ name: 'Interest Group 1' }],
   orcid: '123-456-789',
   degree: 'MPH',
   social: {
@@ -227,7 +229,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
   researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
-  researchOutputs: [],
+  researchOutputs: [{ id: 'research-output-id' }],
 });
 
 export const fetchExpectation: ListUserResponse = {
@@ -266,6 +268,11 @@ export const fetchExpectation: ListUserResponse = {
 export const getListUserResponse = (): ListUserResponse => ({
   total: 1,
   items: [getUserListItemResponse()],
+});
+
+export const getListPublicUserResponse = (): ListPublicUserResponse => ({
+  total: 1,
+  items: [getPublicUserResponse()],
 });
 
 export const getUserDataObjects = () => [getUserDataObject()];
@@ -364,6 +371,26 @@ export const getUserDataObject = (): UserDataObject => ({
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+});
+
+export const getPublicUserDataObject = (): PublicUserDataObject => ({
+  ...getUserDataObject(),
+  researchOutputs: [{ id: 'research-output-id' }],
+  interestGroups: [
+    {
+      id: 'interest-group-1',
+      name: 'Interest Group 1',
+      active: true,
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'working-group-1',
+      name: 'Active Working Group 1',
+      active: true,
+      role: 'Chair',
+    },
   ],
 });
 

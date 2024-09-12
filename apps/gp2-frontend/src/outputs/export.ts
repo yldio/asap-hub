@@ -88,7 +88,7 @@ export const outputToCSV = ({
   relatedEvents: sorted(relatedEvents.map((event) => event.title)) || '',
   relatedResearch: sorted(relatedOutputs.map((event) => event.title)) || '',
   gp2Supported: gp2Supported ? 'yes' : 'no',
-  sharingStatus: sharingStatus,
+  sharingStatus,
   doi,
   rrid,
   accession: accessionNumber,
@@ -106,15 +106,15 @@ export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
       firstVersionAccession: versions[0]?.accessionNumber,
       firstVersionLink: versions[0]?.link,
     };
-  } else {
-    return {
-      firstVersionTitle: '',
-      firstVersionType: '',
-      firstVersionRRID: '',
-      firstVersionAccession: '',
-      firstVersionLink: '',
-    };
   }
+
+  return {
+    firstVersionTitle: '',
+    firstVersionType: '',
+    firstVersionRRID: '',
+    firstVersionAccession: '',
+    firstVersionLink: '',
+  };
 };
 
 export const outputsResponseToStream = async (

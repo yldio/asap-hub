@@ -11,11 +11,27 @@ export const outputFields = {
   subtype: 'Subtype',
   link: 'Link',
   authors: 'Authors',
+  description: 'Description',
+  shortDescription: 'Short Description',
+  relatedResearch: 'Related Research',
+  relatedEvents: 'Related Events',
   tags: 'Tags',
   contributingCohorts: 'Contributing Cohorts',
   workingGroups: 'Working Groups',
   projects: 'Projects',
   date: 'Date Added',
+  gp2Supported: 'GP2 Supported',
+  sharingStatus: 'Sharing Status',
+  doi: 'DOI',
+  rrid: 'RRID',
+  accession: 'Accession',
+  publishDate: 'Publish Date',
+  lastUpdatedPartial: 'Last Updated Partial',
+  firstVersionTitle: 'First Version Title',
+  firstVersionType: 'First Version Type',
+  firstVersionRRID: 'First Version RRID',
+  firstVersionAccession: 'First Version Accession',
+  firstVersionLink: 'First Version Link',
 };
 
 type OutputCSV = Record<keyof typeof outputFields, CSVValue>;
@@ -35,6 +51,18 @@ export const outputToCSV = ({
   addedDate,
   tags,
   contributingCohorts,
+  description,
+  shortDescription,
+  relatedEvents,
+  relatedOutputs,
+  gp2Supported,
+  sharingStatus,
+  doi,
+  rrid,
+  accessionNumber,
+  publishDate,
+  lastUpdatedPartial,
+  versions,
 }: gp2.OutputResponse): OutputCSV => ({
   title,
   documentType,
@@ -55,7 +83,39 @@ export const outputToCSV = ({
     sorted(workingGroups?.map((workingGroup) => workingGroup.title)) || '',
   projects: sorted(projects?.map((project) => project.title)) || '',
   date: formatDate(new Date(addedDate)),
+  description,
+  shortDescription,
+  relatedEvents: sorted(relatedEvents.map((event) => event.title)) || '',
+  relatedResearch: sorted(relatedOutputs.map((event) => event.title)) || '',
+  gp2Supported: gp2Supported ? 'yes' : 'no',
+  sharingStatus: sharingStatus,
+  doi,
+  rrid,
+  accession: accessionNumber,
+  publishDate,
+  lastUpdatedPartial,
+  ...getVersionFields(versions),
 });
+
+export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
+  if (versions && versions.length > 0) {
+    return {
+      firstVersionTitle: versions[0]?.title,
+      firstVersionType: versions[0]?.type,
+      firstVersionRRID: versions[0]?.rrid,
+      firstVersionAccession: versions[0]?.accessionNumber,
+      firstVersionLink: versions[0]?.link,
+    };
+  } else {
+    return {
+      firstVersionTitle: '',
+      firstVersionType: '',
+      firstVersionRRID: '',
+      firstVersionAccession: '',
+      firstVersionLink: '',
+    };
+  }
+};
 
 export const outputsResponseToStream = async (
   csvStream: Stringifier,

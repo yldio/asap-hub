@@ -38,7 +38,13 @@ const getFirstVersionData = (
   versions: Array<ResearchOutputVersion>,
 ): FirstVersionCSV => {
   if (versions[0]) {
-    const { title, type = '', rrid = '', accession = '', link = '' } = versions[0];
+    const {
+      title,
+      type = '',
+      rrid = '',
+      accession = '',
+      link = '',
+    } = versions[0];
     return {
       firstVersionTitle: title,
       firstVersionType: type,

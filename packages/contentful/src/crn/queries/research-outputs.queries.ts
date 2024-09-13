@@ -221,6 +221,8 @@ export const researchOutputContentQueryFragment = gql`
         type
         addedDate
         link
+        rrid
+        accession
       }
     }
   }

@@ -19,18 +19,18 @@ export const MAX_CONTENTFUL_RESULTS = 15;
 
 type FirstVersionCSV = {
   firstVersionTitle: string;
-  firstVersionType?: string;
-  firstVersionRrid?: string;
-  firstVersionAccession?: string;
-  firstVersionLink?: string;
+  firstVersionType: string;
+  firstVersionRrid: string;
+  firstVersionAccession: string;
+  firstVersionLink: string;
 };
 
 type ResearchOutputCSV = Record<
-  keyof Omit<
+  keyof (Omit<
     ResearchOutputResponse,
     'team' | 'descriptionMD' | 'usageNotesMD' | 'versions'
   > &
-    keyof FirstVersionCSV,
+    FirstVersionCSV),
   CSVValue
 >;
 
@@ -38,7 +38,7 @@ const getFirstVersionData = (
   versions: Array<ResearchOutputVersion>,
 ): FirstVersionCSV => {
   if (versions[0]) {
-    const { title, type, rrid, accession, link } = versions[0];
+    const { title, type = '', rrid = '', accession = '', link = '' } = versions[0];
     return {
       firstVersionTitle: title,
       firstVersionType: type,

@@ -153,7 +153,7 @@ export const usersContentQueryFragment = gql`
           }
         }
       }
-      researchOutputsCollection {
+      researchOutputsCollection @include(if: $publicUser) {
         items {
           sys {
             id
@@ -180,6 +180,7 @@ export const FETCH_PUBLIC_USERS = gql`
     $skip: Int
     $order: [UsersOrder]
     $where: UsersFilter
+    $publicUser: Boolean = true
   ) {
     usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
@@ -192,7 +193,7 @@ export const FETCH_PUBLIC_USERS = gql`
 `;
 
 export const FETCH_USER_BY_ID = gql`
-  query FetchUserById($id: String!) {
+  query FetchUserById($id: String!, $publicUser: Boolean = false) {
     users(id: $id) {
       ...UsersContent
     }

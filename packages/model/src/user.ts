@@ -1,7 +1,6 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
-import { ResearchOutputDataObject } from './research-output';
 import { ResearchTagDataObject } from './research-tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
@@ -74,8 +73,6 @@ export interface Connection {
   code: string;
 }
 
-export type UserResearchOutput = Pick<ResearchOutputDataObject, 'id'>;
-
 export interface UserDataObject extends Invitee {
   activeCampaignId?: string;
   membershipStatus?: UserMembershipStatus[];
@@ -99,7 +96,7 @@ export interface UserDataObject extends Invitee {
   questions: string[];
   reachOut?: string;
   researchInterests?: string;
-  researchOutputs?: UserResearchOutput[];
+  researchOutputs?: string[];
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
@@ -149,14 +146,15 @@ export interface PublicUserTeam {
 
 export interface PublicUserResponse
   extends Omit<
-    PublicUserDataObject,
-    'interestGroups' | 'tags' | 'teams' | 'workingGroups'
-  > {
+      PublicUserDataObject,
+      'interestGroups' | 'orcid' | 'social' | 'tags' | 'teams' | 'workingGroups'
+    >,
+    UserSocialLinks {
   interestGroups: Pick<InterestGroupMembership, 'name'>[];
-  researchOutputs: UserResearchOutput[];
-  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
+  researchOutputs: string[];
   tags: string[];
   teams: PublicUserTeam[];
+  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;

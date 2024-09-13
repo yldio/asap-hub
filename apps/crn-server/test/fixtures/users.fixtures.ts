@@ -215,9 +215,6 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
   interestGroups: [{ name: 'Interest Group 1' }],
   orcid: '123-456-789',
   degree: 'MPH',
-  social: {
-    orcid: '123-456-789',
-  },
   teams: [
     {
       role: 'Lead PI (Core Leadership)',
@@ -229,7 +226,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
   researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
-  researchOutputs: [{ id: 'research-output-id' }],
+  researchOutputs: ['research-output-id'],
 });
 
 export const fetchExpectation: ListUserResponse = {
@@ -376,7 +373,7 @@ export const getUserDataObject = (): UserDataObject => ({
 
 export const getPublicUserDataObject = (): PublicUserDataObject => ({
   ...getUserDataObject(),
-  researchOutputs: [{ id: 'research-output-id' }],
+  researchOutputs: ['research-output-id'],
   interestGroups: [
     {
       id: 'interest-group-1',

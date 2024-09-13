@@ -326,7 +326,10 @@ describe('Users controller', () => {
         content: Buffer.from('avatar'),
         contentType: 'image/jpeg',
       } satisfies AssetCreateData);
-      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith('user-id');
+      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(
+        'user-id',
+        false,
+      );
     });
   });
 

@@ -85,8 +85,11 @@ export default class UserController {
     };
   }
 
-  async fetchById(id: string): Promise<UserResponse> {
-    const user = await this.userDataProvider.fetchById(id);
+  async fetchById(
+    id: string,
+    publicUser: boolean = false,
+  ): Promise<UserResponse> {
+    const user = await this.userDataProvider.fetchById(id, publicUser);
 
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
@@ -291,9 +294,7 @@ export const parsePublicUserToResponse = ({
   institution: user.institution,
   labs: user.labs,
   researchTheme: user.researchTheme,
-  orcid: user.orcid,
   avatarUrl: user.avatarUrl,
-  social: user.social,
   createdDate: user.createdDate,
   lastModifiedDate: user.lastModifiedDate,
   tags: user.tags?.map((tag) => tag.name) || [],
@@ -311,4 +312,5 @@ export const parsePublicUserToResponse = ({
   interestGroups: user.interestGroups.map((ig) => ({
     name: ig.name,
   })),
+  ...user.social,
 });

@@ -18262,6 +18262,7 @@ export type FetchPublicUsersQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<Array<InputMaybe<UsersOrder>> | InputMaybe<UsersOrder>>;
   where?: InputMaybe<UsersFilter>;
+  publicUser?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchPublicUsersQuery = {
@@ -18435,6 +18436,7 @@ export type FetchPublicUsersQuery = {
 
 export type FetchUserByIdQueryVariables = Exact<{
   id: Scalars['String'];
+  publicUser?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchUserByIdQuery = {
@@ -24241,6 +24243,22 @@ export const UsersContentFragmentDoc = {
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  directives: [
+                    {
+                      kind: 'Directive',
+                      name: { kind: 'Name', value: 'include' },
+                      arguments: [
+                        {
+                          kind: 'Argument',
+                          name: { kind: 'Name', value: 'if' },
+                          value: {
+                            kind: 'Variable',
+                            name: { kind: 'Name', value: 'publicUser' },
+                          },
+                        },
+                      ],
+                    },
+                  ],
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -27302,7 +27320,7 @@ export const FetchEngagementDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '100' },
+                                  value: { kind: 'IntValue', value: '1000' },
                                 },
                               ],
                               selectionSet: {
@@ -32765,6 +32783,15 @@ export const FetchPublicUsersDocument = {
             name: { kind: 'Name', value: 'UsersFilter' },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicUser' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: true },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -32853,6 +32880,15 @@ export const FetchUserByIdDocument = {
               name: { kind: 'Name', value: 'String' },
             },
           },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'publicUser' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {

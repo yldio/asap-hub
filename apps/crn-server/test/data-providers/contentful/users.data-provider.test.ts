@@ -807,11 +807,7 @@ describe('User data provider', () => {
       });
 
       const result = await userDataProvider.fetchPublicUsers({});
-      expect(result!.items[0]!.researchOutputs).toEqual([
-        {
-          id: 'research-output-1',
-        },
-      ]);
+      expect(result!.items[0]!.researchOutputs).toEqual(['research-output-1']);
     });
 
     describe('query parameters', () => {

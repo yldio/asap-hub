@@ -107,7 +107,7 @@ describe('/users/ route', () => {
         role: 'Chair',
       },
     ];
-    userResponse.researchOutputs = [{ id: 'research-output-id' }];
+    userResponse.researchOutputs = ['research-output-id'];
 
     test('Should return 200 when the user exists', async () => {
       const userId = 'user-id-1';

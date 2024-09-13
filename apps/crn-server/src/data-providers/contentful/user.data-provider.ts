@@ -12,7 +12,6 @@ import {
   UserDataObject,
   UserListItemDataObject,
   UserListItemTeam,
-  UserResearchOutput,
   UserSocialLinks,
   UserTeam,
   UserUpdateDataObject,
@@ -111,15 +110,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  private fetchUserById(id: string) {
+  private fetchUserById(id: string, publicUser: boolean = false) {
     return this.contentfulClient.request<
       FetchUserByIdQuery,
       FetchUserByIdQueryVariables
-    >(FETCH_USER_BY_ID, { id });
+    >(FETCH_USER_BY_ID, { id, publicUser });
   }
 
-  async fetchById(id: string): Promise<UserDataObject | null> {
-    const { users } = await this.fetchUserById(id);
+  async fetchById(
+    id: string,
+    publicUser: boolean = false,
+  ): Promise<UserDataObject | null> {
+    const { users } = await this.fetchUserById(id, publicUser);
 
     if (!users) {
       return null;
@@ -578,23 +580,18 @@ export const parseTeamsCollection = (
 export const parseResearchOutputsCollection = (
   researchOutputsCollection: ResearchOutputsCollection,
   userId: string,
-): UserResearchOutput[] =>
+): string[] =>
   (researchOutputsCollection?.items || []).reduce(
     (
-      userResearchOutputs: UserResearchOutput[],
+      userResearchOutputs: string[],
       researchOutput: ResearchOutputItem | null,
-    ): UserResearchOutput[] => {
+    ): string[] => {
       const isAuthor = researchOutput?.authorsCollection?.items.some(
         (author) => author?.__typename === 'Users' && author.sys.id === userId,
       );
 
-      if (isAuthor) {
-        return [
-          ...userResearchOutputs,
-          {
-            id: researchOutput?.sys.id || '',
-          },
-        ];
+      if (isAuthor && researchOutput?.sys.id) {
+        return [...userResearchOutputs, researchOutput.sys.id];
       }
 
       return userResearchOutputs;

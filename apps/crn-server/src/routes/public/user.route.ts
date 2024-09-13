@@ -34,7 +34,7 @@ export const userRouteFactory = (userController: UserController): Router => {
     async (req, res: Response<PublicUserResponse>) => {
       const { userId } = req.params;
 
-      const user = await userController.fetchById(userId);
+      const user = await userController.fetchById(userId, true);
 
       if (user.onboarded === false) {
         throw new NotFoundError(undefined, `user with id ${userId} not found`);
@@ -66,7 +66,6 @@ const mapUserToPublicUser = (user: UserResponse): PublicUserResponse => ({
   orcid: user.orcid,
   researchTheme: user.researchTheme,
   researchOutputs: user.researchOutputs || [],
-  social: user.social,
   tags: user.tags?.map((tag) => tag.name) || [],
   teams: user.teams?.map((team) => ({
     displayName: team.displayName ?? '',
@@ -78,4 +77,5 @@ const mapUserToPublicUser = (user: UserResponse): PublicUserResponse => ({
       name: wg.name,
       role: wg.role,
     })),
+  ...user.social,
 });

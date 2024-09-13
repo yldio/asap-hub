@@ -20,4 +20,8 @@ export type UserDataProvider = DataProvider<
   fetchPublicUsers: (
     options: FetchUsersOptions,
   ) => Promise<ListPublicUserDataObject>;
+  fetchById: (
+    id: string,
+    publicUser: boolean,
+  ) => Promise<UserDataObject | null>;
 };

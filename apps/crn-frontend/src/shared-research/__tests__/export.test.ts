@@ -27,6 +27,7 @@ describe('researchOutputToCSV', () => {
       ...createResearchOutputResponse(),
       created: 'created',
       description: 'description',
+      shortDescription: 'shortDescription',
       descriptionMD: '',
       id: 'id',
       lastUpdatedPartial: 'lastUpdatedPartial',
@@ -53,6 +54,7 @@ describe('researchOutputToCSV', () => {
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
       description: 'description',
+      shortDescription: 'shortDescription',
       id: 'id',
       lastUpdatedPartial: 'lastUpdatedPartial',
       sharingStatus: 'Network Only',
@@ -86,6 +88,11 @@ describe('researchOutputToCSV', () => {
       statusChangedBy: 'John Doe',
       isInReview: true,
       publishingEntity: 'Working Group',
+      firstVersionTitle: '',
+      firstVersionType: '',
+      firstVersionRrid: '',
+      firstVersionAccession: '',
+      firstVersionLink: '',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {
@@ -212,6 +219,31 @@ describe('researchOutputToCSV', () => {
     expect(researchOutputToCSV(output).usageNotes).toMatchInlineSnapshot(
       `"example 123"`,
     );
+  });
+
+  it('retrieves the first version related data when it exists', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      versions: [
+        {
+          id: 'version0Id',
+          documentType: 'Article',
+          title: 'version0Title',
+          type: '3D Printing',
+          rrid: 'version0Rrid',
+          accession: 'version0Accession',
+          link: 'version0Link',
+        },
+      ],
+    };
+
+    expect(researchOutputToCSV(output).firstVersionTitle).toBe('version0Title');
+    expect(researchOutputToCSV(output).firstVersionType).toBe('3D Printing');
+    expect(researchOutputToCSV(output).firstVersionRrid).toBe('version0Rrid');
+    expect(researchOutputToCSV(output).firstVersionAccession).toBe(
+      'version0Accession',
+    );
+    expect(researchOutputToCSV(output).firstVersionLink).toBe('version0Link');
   });
 });
 

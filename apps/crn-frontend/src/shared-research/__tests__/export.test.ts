@@ -245,6 +245,25 @@ describe('researchOutputToCSV', () => {
     );
     expect(researchOutputToCSV(output).firstVersionLink).toBe('version0Link');
   });
+
+  it('retrieves the first version title only if none of the other fields exist', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      versions: [
+        {
+          id: 'version0Id',
+          documentType: 'Article',
+          title: 'version0Title',
+        },
+      ],
+    };
+
+    expect(researchOutputToCSV(output).firstVersionTitle).toBe('version0Title');
+    expect(researchOutputToCSV(output).firstVersionType).toBe('');
+    expect(researchOutputToCSV(output).firstVersionRrid).toBe('');
+    expect(researchOutputToCSV(output).firstVersionAccession).toBe('');
+    expect(researchOutputToCSV(output).firstVersionLink).toBe('');
+  });
 });
 
 describe('squidexResultsToStream', () => {

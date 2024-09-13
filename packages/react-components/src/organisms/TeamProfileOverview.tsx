@@ -1,9 +1,21 @@
-import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
+import { css } from '@emotion/react';
+import { useState } from 'react';
 
-import { Display, Card, Link, Paragraph, Headline2 } from '../atoms';
-import { mobileScreen } from '../pixels';
+import { steel } from '..';
+import { Card, Display, Headline2, Link, Paragraph, TabButton } from '../atoms';
+import { TabNav } from '../molecules';
+import { mobileScreen, rem } from '../pixels';
+
+const tabsContainerStyles = css({
+  display: 'flex',
+  borderBottom: `1px solid ${steel.rgb}}`,
+});
+
+const tabContentStyles = css({
+  paddingTop: rem(20),
+});
 
 const stretchOnMobile = css({
   [`@media (max-width: ${mobileScreen.width}px)`]: {
@@ -14,38 +26,103 @@ const stretchOnMobile = css({
 
 type TeamProfileOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary' | 'proposalURL'
+  'projectTitle' | 'projectSummary' | 'proposalURL' | 'supplementGrant'
 > & {
   readonly proposalURL?: string;
 };
+
+type TeamProfileOverviewContentProps = {
+  title: TeamResponse['projectTitle'];
+  description: TeamResponse['projectSummary'];
+  researchOutputURL?: string;
+};
+const TeamProfileOverviewContent: React.FC<TeamProfileOverviewContentProps> = ({
+  title,
+  description,
+  researchOutputURL,
+}) => (
+  <>
+    <Headline2 styleAsHeading={4}>{title}</Headline2>
+    <Paragraph>{description}</Paragraph>
+    {researchOutputURL ? (
+      <div css={stretchOnMobile}>
+        <Link
+          buttonStyle
+          primary
+          href={
+            sharedResearch({}).researchOutput({
+              researchOutputId: researchOutputURL,
+            }).$
+          }
+        >
+          Read Full Proposal
+        </Link>
+      </div>
+    ) : null}
+  </>
+);
+
+export const tabs = ['Supplement Grant', 'Original Grant'] as const;
+
+export type Tabs = (typeof tabs)[number];
 
 const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   projectSummary,
   projectTitle,
   proposalURL,
-}) => (
-  <Card>
-    <div>
-      <Display styleAsHeading={3}>Project Overview</Display>
-      <Headline2 styleAsHeading={4}>{projectTitle}</Headline2>
-      <Paragraph>{projectSummary}</Paragraph>
-      {proposalURL ? (
-        <div css={stretchOnMobile}>
-          <Link
-            buttonStyle
-            primary
-            href={
-              sharedResearch({}).researchOutput({
-                researchOutputId: proposalURL,
-              }).$
-            }
-          >
-            Read Full Proposal
-          </Link>
-        </div>
-      ) : null}
-    </div>
-  </Card>
-);
+  supplementGrant,
+}) => {
+  const [selectedTab, setSelectedTab] = useState<Tabs>('Supplement Grant');
+
+  return (
+    <Card>
+      <div>
+        <Display styleAsHeading={3}>Project Overview</Display>
+
+        {supplementGrant?.title ? (
+          <>
+            <div css={tabsContainerStyles}>
+              <TabNav>
+                {tabs.map((tab) => (
+                  <TabButton
+                    key={tab}
+                    active={selectedTab === tab}
+                    onClick={() => {
+                      setSelectedTab(tab);
+                    }}
+                  >
+                    {tab}
+                  </TabButton>
+                ))}
+              </TabNav>
+            </div>
+
+            <div css={tabContentStyles}>
+              {selectedTab === 'Original Grant' ? (
+                <TeamProfileOverviewContent
+                  title={projectTitle}
+                  description={projectSummary}
+                  researchOutputURL={proposalURL}
+                />
+              ) : (
+                <TeamProfileOverviewContent
+                  title={supplementGrant.title}
+                  description={supplementGrant.description}
+                  researchOutputURL={supplementGrant.proposalURL}
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <TeamProfileOverviewContent
+            title={projectTitle}
+            description={projectSummary}
+            researchOutputURL={proposalURL}
+          />
+        )}
+      </div>
+    </Card>
+  );
+};
 
 export default TeamProfileOverview;

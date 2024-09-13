@@ -1129,6 +1129,72 @@ describe('Teams data provider', () => {
       });
     });
 
+    describe('supplementGrant', () => {
+      test('should return supplementGrant when it exists', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: 'Grant Title',
+          description: 'Grant Description',
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toEqual({
+          description: 'Grant Description',
+          proposalURL: undefined,
+          title: 'Grant Title',
+        });
+      });
+
+      test('should return supplementGrant proposal when it exists', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: 'Grant Title',
+          description: 'Grant Description',
+          proposal: {
+            sys: {
+              id: 'proposal-id',
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toEqual({
+          description: 'Grant Description',
+          proposalURL: 'proposal-id',
+          title: 'Grant Title',
+        });
+      });
+
+      test('should return supplementGrant as undefined when title is not set', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: null,
+          description: null,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toBeUndefined();
+      });
+    });
+
     describe('proposalURL', () => {
       test('should return proposalURL in team response when there is one', async () => {
         const id = 'some-id';

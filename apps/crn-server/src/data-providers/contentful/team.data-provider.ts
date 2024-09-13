@@ -301,6 +301,15 @@ export const parseContentfulGraphQlTeam = (
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
+    supplementGrant: item.supplementGrant?.title
+      ? {
+          title: item.supplementGrant.title,
+          description: item.supplementGrant?.description ?? undefined,
+          proposalURL: item.supplementGrant?.proposal
+            ? item.supplementGrant.proposal.sys.id
+            : undefined,
+        }
+      : undefined,
     manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
       (manuscript): TeamDataObject['manuscripts'][number] => ({
         id: manuscript.sys.id,

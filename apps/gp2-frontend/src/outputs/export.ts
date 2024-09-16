@@ -87,7 +87,7 @@ export const outputToCSV = ({
   shortDescription,
   relatedEvents: sorted(relatedEvents.map((event) => event.title)) || '',
   relatedResearch: sorted(relatedOutputs.map((event) => event.title)) || '',
-  gp2Supported: gp2Supported ? 'yes' : 'no',
+  gp2Supported,
   sharingStatus,
   doi,
   rrid,
@@ -98,7 +98,7 @@ export const outputToCSV = ({
 });
 
 export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
-  if (versions && versions.length > 0) {
+  if (versions?.[0]) {
     return {
       firstVersionTitle: versions[0]?.title,
       firstVersionType: versions[0]?.type,

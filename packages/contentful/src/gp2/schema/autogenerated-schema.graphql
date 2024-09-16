@@ -2,8 +2,11 @@ schema {
   query: Query
 }
 
+directive @contentSourceMaps on QUERY
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
-type Announcements implements Entry {
+type Announcements implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   deadline(locale: String): DateTime
   description(locale: String): String
@@ -205,7 +208,8 @@ enum AssetOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars)"""
-type Calendars implements Entry {
+type Calendars implements Entry & _Node {
+  _id: ID!
   color(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   googleApiMetadata(locale: String): JSON
@@ -397,7 +401,7 @@ input ContentfulMetadataTagsFilter {
 
 """
 Represents a tag entity for finding and organizing content easily.
-    Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
+      Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
 """
 type ContentfulTag {
   id: String
@@ -405,7 +409,8 @@ type ContentfulTag {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts)"""
-type ContributingCohorts implements Entry {
+type ContributingCohorts implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ContributingCohortsLinkingCollections
   name(locale: String): String
@@ -500,7 +505,8 @@ enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
-type ContributingCohortsMembership implements Entry {
+type ContributingCohortsMembership implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
   linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
@@ -634,7 +640,8 @@ enum ContributingCohortsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)"""
-type Dashboard implements Entry {
+type Dashboard implements Entry & _Node {
+  _id: ID!
   announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): DashboardAnnouncementsCollection
   contentfulMetadata: ContentfulMetadata!
   guidesCollection(limit: Int = 100, locale: String, order: [DashboardGuidesCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideFilter): DashboardGuidesCollection
@@ -764,7 +771,8 @@ enum EntryOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers)"""
-type EventSpeakers implements Entry {
+type EventSpeakers implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
@@ -879,7 +887,8 @@ input EventSpeakersUserFilter {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
-type Events implements Entry {
+type Events implements Entry & _Node {
+  _id: ID!
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   copyMeetingLink(locale: String): Boolean
@@ -1320,7 +1329,8 @@ type EventsVideoRecordingResourcesInline implements ResourceLink {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
-type ExternalUsers implements Entry {
+type ExternalUsers implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ExternalUsersLinkingCollections
   name(locale: String): String
@@ -1430,7 +1440,8 @@ enum ExternalUsersOrder {
 }
 
 """Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
-type Guide implements Entry {
+type Guide implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   descriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideDescriptionFilter): GuideDescriptionCollection
   icon(locale: String, preview: Boolean): Asset
@@ -1447,7 +1458,8 @@ type GuideCollection {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription)"""
-type GuideDescription implements Entry {
+type GuideDescription implements Entry & _Node {
+  _id: ID!
   bodyText(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   linkText(locale: String): String
@@ -1699,7 +1711,8 @@ input ImageTransformOptions {
 scalar JSON
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)"""
-type LatestStats implements Entry {
+type LatestStats implements Entry & _Node {
+  _id: ID!
   articleCount(locale: String): Int
   cohortCount(locale: String): Int
   contentfulMetadata: ContentfulMetadata!
@@ -1783,7 +1796,8 @@ enum LatestStatsOrder {
 }
 
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
-type Media implements Entry {
+type Media implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MediaLinkingCollections
   sys: Sys!
@@ -1829,7 +1843,8 @@ enum MediaOrder {
 }
 
 """Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
-type Migration implements Entry {
+type Migration implements Entry & _Node {
+  _id: ID!
   contentTypeId(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MigrationLinkingCollections
@@ -1877,7 +1892,8 @@ enum MigrationOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones)"""
-type Milestones implements Entry {
+type Milestones implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   externalLink(locale: String): String
@@ -2011,7 +2027,8 @@ enum MilestonesOrder {
 }
 
 """Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
-type News implements Entry {
+type News implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   link(locale: String): String
   linkText(locale: String): String
@@ -2130,12 +2147,16 @@ enum NewsTagsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion)"""
-type OutputVersion implements Entry {
+type OutputVersion implements Entry & _Node {
+  _id: ID!
+  accessionNumber(locale: String): String
   addedDate(locale: String): DateTime
   contentfulMetadata: ContentfulMetadata!
   documentType(locale: String): String
+  doi(locale: String): String
   link(locale: String): String
   linkedFrom(allowedLocales: [String]): OutputVersionLinkingCollections
+  rrid(locale: String): String
   sys: Sys!
   title(locale: String): String
   type(locale: String): String
@@ -2151,6 +2172,13 @@ type OutputVersionCollection {
 input OutputVersionFilter {
   AND: [OutputVersionFilter]
   OR: [OutputVersionFilter]
+  accessionNumber: String
+  accessionNumber_contains: String
+  accessionNumber_exists: Boolean
+  accessionNumber_in: [String]
+  accessionNumber_not: String
+  accessionNumber_not_contains: String
+  accessionNumber_not_in: [String]
   addedDate: DateTime
   addedDate_exists: Boolean
   addedDate_gt: DateTime
@@ -2168,6 +2196,13 @@ input OutputVersionFilter {
   documentType_not: String
   documentType_not_contains: String
   documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean
@@ -2175,6 +2210,13 @@ input OutputVersionFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String
@@ -2237,12 +2279,18 @@ enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
 }
 
 enum OutputVersionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
   addedDate_ASC
   addedDate_DESC
   documentType_ASC
   documentType_DESC
+  doi_ASC
+  doi_DESC
   link_ASC
   link_DESC
+  rrid_ASC
+  rrid_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2258,7 +2306,8 @@ enum OutputVersionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""
-type Outputs implements Entry {
+type Outputs implements Entry & _Node {
+  _id: ID!
   accessionNumber(locale: String): String
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
@@ -2724,12 +2773,18 @@ type OutputsVersionsCollection {
 }
 
 enum OutputsVersionsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
   addedDate_ASC
   addedDate_DESC
   documentType_ASC
   documentType_DESC
+  doi_ASC
+  doi_DESC
   link_ASC
   link_DESC
+  rrid_ASC
+  rrid_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2745,7 +2800,8 @@ enum OutputsVersionsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
-type Pages implements Entry {
+type Pages implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   link(locale: String): String
   linkText(locale: String): String
@@ -2871,7 +2927,8 @@ type PagesTextResourcesInline implements ResourceLink {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
-type ProjectMembership implements Entry {
+type ProjectMembership implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
   role(locale: String): String
@@ -2956,7 +3013,8 @@ enum ProjectMembershipOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
-type Projects implements Entry {
+type Projects implements Entry & _Node {
+  _id: ID!
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
@@ -3334,7 +3392,8 @@ type ResourceSys {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources)"""
-type Resources implements Entry {
+type Resources implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   externalLink(locale: String): String
@@ -3471,6 +3530,8 @@ type Sys {
   environmentId: String!
   firstPublishedAt: DateTime
   id: String!
+  """The locale that was requested."""
+  locale: String
   publishedAt: DateTime
   publishedVersion: Int
   spaceId: String!
@@ -3514,7 +3575,8 @@ input SysFilter {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/tags)"""
-type Tags implements Entry {
+type Tags implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): TagsLinkingCollections
   name(locale: String): String
@@ -3798,7 +3860,8 @@ enum TagsOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
-type Users implements Entry {
+type Users implements Entry & _Node {
+  _id: ID!
   activatedDate(locale: String): DateTime
   activeCampaignCreatedAt(locale: String): DateTime
   activeCampaignId(locale: String): String
@@ -4293,7 +4356,8 @@ enum UsersTagsCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership)"""
-type WorkingGroupMembership implements Entry {
+type WorkingGroupMembership implements Entry & _Node {
+  _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
   role(locale: String): String
@@ -4364,7 +4428,8 @@ enum WorkingGroupMembershipOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)"""
-type WorkingGroupNetwork implements Entry {
+type WorkingGroupNetwork implements Entry & _Node {
+  _id: ID!
   complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
@@ -4524,7 +4589,8 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
-type WorkingGroups implements Entry {
+type WorkingGroups implements Entry & _Node {
+  _id: ID!
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): WorkingGroupsDescription
@@ -5192,6 +5258,13 @@ input cfMilestonesNestedFilter {
 input cfOutputVersionNestedFilter {
   AND: [cfOutputVersionNestedFilter]
   OR: [cfOutputVersionNestedFilter]
+  accessionNumber: String
+  accessionNumber_contains: String
+  accessionNumber_exists: Boolean
+  accessionNumber_in: [String]
+  accessionNumber_not: String
+  accessionNumber_not_contains: String
+  accessionNumber_not_in: [String]
   addedDate: DateTime
   addedDate_exists: Boolean
   addedDate_gt: DateTime
@@ -5209,6 +5282,13 @@ input cfOutputVersionNestedFilter {
   documentType_not: String
   documentType_not_contains: String
   documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean
@@ -5216,6 +5296,13 @@ input cfOutputVersionNestedFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String

@@ -41,9 +41,22 @@ describe('Outputs data provider', () => {
 
   const outputDataProvider: OutputDataProvider =
     new OutputContentfulDataProvider(graphqlClientMock, restClientMock);
+
+  const outputGraphqlResponse = getContentfulGraphqlOutput();
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
-      Outputs: () => getContentfulGraphqlOutput(),
+      Outputs: () => ({
+        ...outputGraphqlResponse,
+        relatedOutputsCollection: () =>
+          outputGraphqlResponse.relatedOutputsCollection,
+        linkedFrom: () => outputGraphqlResponse.linkedFrom,
+      }),
+      OutputsCollection: () => {
+        return {
+          total: 1,
+          items: [{}],
+        };
+      },
     });
   const outputDataProviderWithMockServer: OutputDataProvider =
     new OutputContentfulDataProvider(

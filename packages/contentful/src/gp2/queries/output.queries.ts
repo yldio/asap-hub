@@ -148,6 +148,8 @@ export const outputsContentQueryFragment = gql`
         type
         addedDate
         link
+        rrid
+        accessionNumber
       }
     }
   }

@@ -36,14 +36,16 @@ export type Scalars = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
-export type Announcements = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  deadline?: Maybe<Scalars['DateTime']>;
-  description?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<AnnouncementsLinkingCollections>;
-  sys: Sys;
-};
+export type Announcements = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    deadline?: Maybe<Scalars['DateTime']>;
+    description?: Maybe<Scalars['String']>;
+    link?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<AnnouncementsLinkingCollections>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
 export type AnnouncementsDeadlineArgs = {
@@ -356,15 +358,17 @@ export enum AssetOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
-export type Calendars = Entry & {
-  color?: Maybe<Scalars['String']>;
-  contentfulMetadata: ContentfulMetadata;
-  googleApiMetadata?: Maybe<Scalars['JSON']>;
-  googleCalendarId?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<CalendarsLinkingCollections>;
-  name?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
+export type Calendars = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    color?: Maybe<Scalars['String']>;
+    contentfulMetadata: ContentfulMetadata;
+    googleApiMetadata?: Maybe<Scalars['JSON']>;
+    googleCalendarId?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<CalendarsLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
 export type CalendarsColorArgs = {
@@ -610,7 +614,7 @@ export type ContentfulMetadataTagsFilter = {
 
 /**
  * Represents a tag entity for finding and organizing content easily.
- *     Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
+ *       Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-tags
  */
 export type ContentfulTag = {
   id?: Maybe<Scalars['String']>;
@@ -618,13 +622,15 @@ export type ContentfulTag = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
-export type ContributingCohorts = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<ContributingCohortsLinkingCollections>;
-  name?: Maybe<Scalars['String']>;
-  studyLink?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
+export type ContributingCohorts = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<ContributingCohortsLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    studyLink?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
 export type ContributingCohortsLinkedFromArgs = {
@@ -760,13 +766,15 @@ export enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
-export type ContributingCohortsMembership = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  contributingCohort?: Maybe<ContributingCohorts>;
-  linkedFrom?: Maybe<ContributingCohortsMembershipLinkingCollections>;
-  role?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
+export type ContributingCohortsMembership = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    contributingCohort?: Maybe<ContributingCohorts>;
+    linkedFrom?: Maybe<ContributingCohortsMembershipLinkingCollections>;
+    role?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
 export type ContributingCohortsMembershipContributingCohortArgs = {
@@ -932,14 +940,16 @@ export enum ContributingCohortsOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
-export type Dashboard = Entry & {
-  announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
-  contentfulMetadata: ContentfulMetadata;
-  guidesCollection?: Maybe<DashboardGuidesCollection>;
-  latestStats?: Maybe<LatestStats>;
-  linkedFrom?: Maybe<DashboardLinkingCollections>;
-  sys: Sys;
-};
+export type Dashboard = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
+    contentfulMetadata: ContentfulMetadata;
+    guidesCollection?: Maybe<DashboardGuidesCollection>;
+    latestStats?: Maybe<LatestStats>;
+    linkedFrom?: Maybe<DashboardLinkingCollections>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
 export type DashboardAnnouncementsCollectionArgs = {
@@ -1090,13 +1100,15 @@ export enum EntryOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
-export type EventSpeakers = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<EventSpeakersLinkingCollections>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-  user?: Maybe<EventSpeakersUser>;
-};
+export type EventSpeakers = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<EventSpeakersLinkingCollections>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+    user?: Maybe<EventSpeakersUser>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
 export type EventSpeakersLinkedFromArgs = {
@@ -1239,39 +1251,41 @@ export type EventSpeakersUserFilter = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
-export type Events = Entry & {
-  calendar?: Maybe<Calendars>;
-  contentfulMetadata: ContentfulMetadata;
-  copyMeetingLink?: Maybe<Scalars['Boolean']>;
-  description?: Maybe<Scalars['String']>;
-  endDate?: Maybe<Scalars['DateTime']>;
-  endDateTimeZone?: Maybe<Scalars['String']>;
-  eventLink?: Maybe<Scalars['String']>;
-  googleId?: Maybe<Scalars['String']>;
-  hidden?: Maybe<Scalars['Boolean']>;
-  hideMeetingLink?: Maybe<Scalars['Boolean']>;
-  linkedFrom?: Maybe<EventsLinkingCollections>;
-  meetingLink?: Maybe<Scalars['String']>;
-  meetingMaterials?: Maybe<Scalars['JSON']>;
-  meetingMaterialsPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
-  notes?: Maybe<EventsNotes>;
-  notesPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
-  notesUpdatedAt?: Maybe<Scalars['DateTime']>;
-  presentation?: Maybe<EventsPresentation>;
-  presentationPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
-  presentationUpdatedAt?: Maybe<Scalars['DateTime']>;
-  speakersCollection?: Maybe<EventsSpeakersCollection>;
-  startDate?: Maybe<Scalars['DateTime']>;
-  startDateTimeZone?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<EventsTagsCollection>;
-  thumbnail?: Maybe<Asset>;
-  title?: Maybe<Scalars['String']>;
-  videoRecording?: Maybe<EventsVideoRecording>;
-  videoRecordingPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
-  videoRecordingUpdatedAt?: Maybe<Scalars['DateTime']>;
-};
+export type Events = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    calendar?: Maybe<Calendars>;
+    contentfulMetadata: ContentfulMetadata;
+    copyMeetingLink?: Maybe<Scalars['Boolean']>;
+    description?: Maybe<Scalars['String']>;
+    endDate?: Maybe<Scalars['DateTime']>;
+    endDateTimeZone?: Maybe<Scalars['String']>;
+    eventLink?: Maybe<Scalars['String']>;
+    googleId?: Maybe<Scalars['String']>;
+    hidden?: Maybe<Scalars['Boolean']>;
+    hideMeetingLink?: Maybe<Scalars['Boolean']>;
+    linkedFrom?: Maybe<EventsLinkingCollections>;
+    meetingLink?: Maybe<Scalars['String']>;
+    meetingMaterials?: Maybe<Scalars['JSON']>;
+    meetingMaterialsPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+    notes?: Maybe<EventsNotes>;
+    notesPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+    notesUpdatedAt?: Maybe<Scalars['DateTime']>;
+    presentation?: Maybe<EventsPresentation>;
+    presentationPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+    presentationUpdatedAt?: Maybe<Scalars['DateTime']>;
+    speakersCollection?: Maybe<EventsSpeakersCollection>;
+    startDate?: Maybe<Scalars['DateTime']>;
+    startDateTimeZone?: Maybe<Scalars['String']>;
+    status?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<EventsTagsCollection>;
+    thumbnail?: Maybe<Asset>;
+    title?: Maybe<Scalars['String']>;
+    videoRecording?: Maybe<EventsVideoRecording>;
+    videoRecordingPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+    videoRecordingUpdatedAt?: Maybe<Scalars['DateTime']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsCalendarArgs = {
@@ -1863,13 +1877,15 @@ export type EventsVideoRecordingResourcesInline = ResourceLink & {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
-export type ExternalUsers = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<ExternalUsersLinkingCollections>;
-  name?: Maybe<Scalars['String']>;
-  orcid?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
+export type ExternalUsers = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<ExternalUsersLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    orcid?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
 export type ExternalUsersLinkedFromArgs = {
@@ -2017,14 +2033,16 @@ export enum ExternalUsersOrder {
 }
 
 /** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
-export type Guide = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  descriptionCollection?: Maybe<GuideDescriptionCollection>;
-  icon?: Maybe<Asset>;
-  linkedFrom?: Maybe<GuideLinkingCollections>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-};
+export type Guide = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    descriptionCollection?: Maybe<GuideDescriptionCollection>;
+    icon?: Maybe<Asset>;
+    linkedFrom?: Maybe<GuideLinkingCollections>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+  };
 
 /** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideDescriptionCollectionArgs = {
@@ -2060,15 +2078,17 @@ export type GuideCollection = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
-export type GuideDescription = Entry & {
-  bodyText?: Maybe<Scalars['String']>;
-  contentfulMetadata: ContentfulMetadata;
-  linkText?: Maybe<Scalars['String']>;
-  linkUrl?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<GuideDescriptionLinkingCollections>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-};
+export type GuideDescription = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    bodyText?: Maybe<Scalars['String']>;
+    contentfulMetadata: ContentfulMetadata;
+    linkText?: Maybe<Scalars['String']>;
+    linkUrl?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<GuideDescriptionLinkingCollections>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
 export type GuideDescriptionBodyTextArgs = {
@@ -2365,14 +2385,16 @@ export type ImageTransformOptions = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
-export type LatestStats = Entry & {
-  articleCount?: Maybe<Scalars['Int']>;
-  cohortCount?: Maybe<Scalars['Int']>;
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<LatestStatsLinkingCollections>;
-  sampleCount?: Maybe<Scalars['Int']>;
-  sys: Sys;
-};
+export type LatestStats = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    articleCount?: Maybe<Scalars['Int']>;
+    cohortCount?: Maybe<Scalars['Int']>;
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<LatestStatsLinkingCollections>;
+    sampleCount?: Maybe<Scalars['Int']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
 export type LatestStatsArticleCountArgs = {
@@ -2486,12 +2508,14 @@ export enum LatestStatsOrder {
 }
 
 /** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
-export type Media = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<MediaLinkingCollections>;
-  sys: Sys;
-  url?: Maybe<Scalars['String']>;
-};
+export type Media = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<MediaLinkingCollections>;
+    sys: Sys;
+    url?: Maybe<Scalars['String']>;
+  };
 
 /** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type MediaLinkedFromArgs = {
@@ -2549,13 +2573,15 @@ export enum MediaOrder {
 }
 
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
-export type Migration = Entry & {
-  contentTypeId?: Maybe<Scalars['String']>;
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<MigrationLinkingCollections>;
-  state?: Maybe<Scalars['JSON']>;
-  sys: Sys;
-};
+export type Migration = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentTypeId?: Maybe<Scalars['String']>;
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<MigrationLinkingCollections>;
+    state?: Maybe<Scalars['JSON']>;
+    sys: Sys;
+  };
 
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationContentTypeIdArgs = {
@@ -2619,15 +2645,17 @@ export enum MigrationOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
-export type Milestones = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  description?: Maybe<Scalars['String']>;
-  externalLink?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<MilestonesLinkingCollections>;
-  status?: Maybe<Scalars['String']>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-};
+export type Milestones = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    externalLink?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<MilestonesLinkingCollections>;
+    status?: Maybe<Scalars['String']>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
 export type MilestonesDescriptionArgs = {
@@ -2805,19 +2833,21 @@ export enum MilestonesOrder {
 }
 
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
-export type News = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  link?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<NewsLinkingCollections>;
-  publishDate?: Maybe<Scalars['DateTime']>;
-  shortText?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<NewsTagsCollection>;
-  thumbnail?: Maybe<Asset>;
-  title?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
+export type News = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    link?: Maybe<Scalars['String']>;
+    linkText?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<NewsLinkingCollections>;
+    publishDate?: Maybe<Scalars['DateTime']>;
+    shortText?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<NewsTagsCollection>;
+    thumbnail?: Maybe<Asset>;
+    title?: Maybe<Scalars['String']>;
+    type?: Maybe<Scalars['String']>;
+  };
 
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkArgs = {
@@ -2982,15 +3012,25 @@ export enum NewsTagsCollectionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
-export type OutputVersion = Entry & {
-  addedDate?: Maybe<Scalars['DateTime']>;
-  contentfulMetadata: ContentfulMetadata;
-  documentType?: Maybe<Scalars['String']>;
-  link?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<OutputVersionLinkingCollections>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
+export type OutputVersion = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    accessionNumber?: Maybe<Scalars['String']>;
+    addedDate?: Maybe<Scalars['DateTime']>;
+    contentfulMetadata: ContentfulMetadata;
+    documentType?: Maybe<Scalars['String']>;
+    doi?: Maybe<Scalars['String']>;
+    link?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<OutputVersionLinkingCollections>;
+    rrid?: Maybe<Scalars['String']>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+    type?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionAccessionNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
@@ -3004,6 +3044,11 @@ export type OutputVersionDocumentTypeArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -3011,6 +3056,11 @@ export type OutputVersionLinkArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
+export type OutputVersionRridArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
@@ -3033,6 +3083,13 @@ export type OutputVersionCollection = {
 export type OutputVersionFilter = {
   AND?: InputMaybe<Array<InputMaybe<OutputVersionFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<OutputVersionFilter>>>;
+  accessionNumber?: InputMaybe<Scalars['String']>;
+  accessionNumber_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  accessionNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  accessionNumber_not?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   addedDate?: InputMaybe<Scalars['DateTime']>;
   addedDate_exists?: InputMaybe<Scalars['Boolean']>;
   addedDate_gt?: InputMaybe<Scalars['DateTime']>;
@@ -3050,6 +3107,13 @@ export type OutputVersionFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi?: InputMaybe<Scalars['String']>;
+  doi_contains?: InputMaybe<Scalars['String']>;
+  doi_exists?: InputMaybe<Scalars['Boolean']>;
+  doi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi_not?: InputMaybe<Scalars['String']>;
+  doi_not_contains?: InputMaybe<Scalars['String']>;
+  doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3057,6 +3121,13 @@ export type OutputVersionFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid?: InputMaybe<Scalars['String']>;
+  rrid_contains?: InputMaybe<Scalars['String']>;
+  rrid_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid_not?: InputMaybe<Scalars['String']>;
+  rrid_not_contains?: InputMaybe<Scalars['String']>;
+  rrid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -3136,12 +3207,18 @@ export enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
 }
 
 export enum OutputVersionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3157,36 +3234,38 @@ export enum OutputVersionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
-export type Outputs = Entry & {
-  accessionNumber?: Maybe<Scalars['String']>;
-  addedDate?: Maybe<Scalars['DateTime']>;
-  adminNotes?: Maybe<Scalars['String']>;
-  authorsCollection?: Maybe<OutputsAuthorsCollection>;
-  contentfulMetadata: ContentfulMetadata;
-  contributingCohortsCollection?: Maybe<OutputsContributingCohortsCollection>;
-  createdBy?: Maybe<Users>;
-  description?: Maybe<Scalars['String']>;
-  documentType?: Maybe<Scalars['String']>;
-  doi?: Maybe<Scalars['String']>;
-  gp2Supported?: Maybe<Scalars['String']>;
-  lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
-  link?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<OutputsLinkingCollections>;
-  publishDate?: Maybe<Scalars['DateTime']>;
-  relatedEntitiesCollection?: Maybe<OutputsRelatedEntitiesCollection>;
-  relatedEventsCollection?: Maybe<OutputsRelatedEventsCollection>;
-  relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
-  rrid?: Maybe<Scalars['String']>;
-  sharingStatus?: Maybe<Scalars['String']>;
-  shortDescription?: Maybe<Scalars['String']>;
-  subtype?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<OutputsTagsCollection>;
-  title?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  updatedBy?: Maybe<Users>;
-  versionsCollection?: Maybe<OutputsVersionsCollection>;
-};
+export type Outputs = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    accessionNumber?: Maybe<Scalars['String']>;
+    addedDate?: Maybe<Scalars['DateTime']>;
+    adminNotes?: Maybe<Scalars['String']>;
+    authorsCollection?: Maybe<OutputsAuthorsCollection>;
+    contentfulMetadata: ContentfulMetadata;
+    contributingCohortsCollection?: Maybe<OutputsContributingCohortsCollection>;
+    createdBy?: Maybe<Users>;
+    description?: Maybe<Scalars['String']>;
+    documentType?: Maybe<Scalars['String']>;
+    doi?: Maybe<Scalars['String']>;
+    gp2Supported?: Maybe<Scalars['String']>;
+    lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
+    link?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<OutputsLinkingCollections>;
+    publishDate?: Maybe<Scalars['DateTime']>;
+    relatedEntitiesCollection?: Maybe<OutputsRelatedEntitiesCollection>;
+    relatedEventsCollection?: Maybe<OutputsRelatedEventsCollection>;
+    relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
+    rrid?: Maybe<Scalars['String']>;
+    sharingStatus?: Maybe<Scalars['String']>;
+    shortDescription?: Maybe<Scalars['String']>;
+    subtype?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<OutputsTagsCollection>;
+    title?: Maybe<Scalars['String']>;
+    type?: Maybe<Scalars['String']>;
+    updatedBy?: Maybe<Users>;
+    versionsCollection?: Maybe<OutputsVersionsCollection>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsAccessionNumberArgs = {
@@ -3811,12 +3890,18 @@ export type OutputsVersionsCollection = {
 };
 
 export enum OutputsVersionsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3832,17 +3917,19 @@ export enum OutputsVersionsCollectionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
-export type Pages = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  link?: Maybe<Scalars['String']>;
-  linkText?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<PagesLinkingCollections>;
-  path?: Maybe<Scalars['String']>;
-  shortText?: Maybe<Scalars['String']>;
-  sys: Sys;
-  text?: Maybe<PagesText>;
-  title?: Maybe<Scalars['String']>;
-};
+export type Pages = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    link?: Maybe<Scalars['String']>;
+    linkText?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<PagesLinkingCollections>;
+    path?: Maybe<Scalars['String']>;
+    shortText?: Maybe<Scalars['String']>;
+    sys: Sys;
+    text?: Maybe<PagesText>;
+    title?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesLinkArgs = {
@@ -4000,13 +4087,15 @@ export type PagesTextResourcesInline = ResourceLink & {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
-export type ProjectMembership = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<ProjectMembershipLinkingCollections>;
-  role?: Maybe<Scalars['String']>;
-  sys: Sys;
-  user?: Maybe<Users>;
-};
+export type ProjectMembership = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<ProjectMembershipLinkingCollections>;
+    role?: Maybe<Scalars['String']>;
+    sys: Sys;
+    user?: Maybe<Users>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
 export type ProjectMembershipLinkedFromArgs = {
@@ -4121,29 +4210,31 @@ export enum ProjectMembershipOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
-export type Projects = Entry & {
-  calendar?: Maybe<Calendars>;
-  contentfulMetadata: ContentfulMetadata;
-  description?: Maybe<Scalars['String']>;
-  endDate?: Maybe<Scalars['DateTime']>;
-  leadEmail?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<ProjectsLinkingCollections>;
-  membersCollection?: Maybe<ProjectsMembersCollection>;
-  milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
-  opportunitiesAvailable?: Maybe<Scalars['Boolean']>;
-  opportunitiesLink?: Maybe<Scalars['String']>;
-  opportunitiesLinkName?: Maybe<Scalars['String']>;
-  opportunitiesShortText?: Maybe<Scalars['String']>;
-  pmEmail?: Maybe<Scalars['String']>;
-  projectProposal?: Maybe<Scalars['String']>;
-  resourcesCollection?: Maybe<ProjectsResourcesCollection>;
-  startDate?: Maybe<Scalars['DateTime']>;
-  status?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<ProjectsTagsCollection>;
-  title?: Maybe<Scalars['String']>;
-  traineeProject?: Maybe<Scalars['Boolean']>;
-};
+export type Projects = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    calendar?: Maybe<Calendars>;
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    endDate?: Maybe<Scalars['DateTime']>;
+    leadEmail?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<ProjectsLinkingCollections>;
+    membersCollection?: Maybe<ProjectsMembersCollection>;
+    milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
+    opportunitiesAvailable?: Maybe<Scalars['Boolean']>;
+    opportunitiesLink?: Maybe<Scalars['String']>;
+    opportunitiesLinkName?: Maybe<Scalars['String']>;
+    opportunitiesShortText?: Maybe<Scalars['String']>;
+    pmEmail?: Maybe<Scalars['String']>;
+    projectProposal?: Maybe<Scalars['String']>;
+    resourcesCollection?: Maybe<ProjectsResourcesCollection>;
+    startDate?: Maybe<Scalars['DateTime']>;
+    status?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<ProjectsTagsCollection>;
+    title?: Maybe<Scalars['String']>;
+    traineeProject?: Maybe<Scalars['Boolean']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsCalendarArgs = {
@@ -5054,15 +5145,17 @@ export type ResourceSys = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
-export type Resources = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  description?: Maybe<Scalars['String']>;
-  externalLink?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<ResourcesLinkingCollections>;
-  sys: Sys;
-  title?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
+export type Resources = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    externalLink?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<ResourcesLinkingCollections>;
+    sys: Sys;
+    title?: Maybe<Scalars['String']>;
+    type?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
 export type ResourcesDescriptionArgs = {
@@ -5243,6 +5336,8 @@ export type Sys = {
   environmentId: Scalars['String'];
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['String'];
+  /** The locale that was requested. */
+  locale?: Maybe<Scalars['String']>;
   publishedAt?: Maybe<Scalars['DateTime']>;
   publishedVersion?: Maybe<Scalars['Int']>;
   spaceId: Scalars['String'];
@@ -5286,12 +5381,14 @@ export type SysFilter = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/tags) */
-export type Tags = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<TagsLinkingCollections>;
-  name?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
+export type Tags = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<TagsLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/tags) */
 export type TagsLinkedFromArgs = {
@@ -5647,50 +5744,52 @@ export enum TagsOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
-export type Users = Entry & {
-  activatedDate?: Maybe<Scalars['DateTime']>;
-  activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
-  activeCampaignId?: Maybe<Scalars['String']>;
-  alternativeEmail?: Maybe<Scalars['String']>;
-  avatar?: Maybe<Asset>;
-  biography?: Maybe<Scalars['String']>;
-  blog?: Maybe<Scalars['String']>;
-  blueSky?: Maybe<Scalars['String']>;
-  city?: Maybe<Scalars['String']>;
-  connections?: Maybe<Array<Maybe<Scalars['String']>>>;
-  contentfulMetadata: ContentfulMetadata;
-  contributingCohortsCollection?: Maybe<UsersContributingCohortsCollection>;
-  country?: Maybe<Scalars['String']>;
-  degrees?: Maybe<Array<Maybe<Scalars['String']>>>;
-  email?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  fundingStreams?: Maybe<Scalars['String']>;
-  github?: Maybe<Scalars['String']>;
-  googleScholar?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<UsersLinkingCollections>;
-  linkedIn?: Maybe<Scalars['String']>;
-  middleName?: Maybe<Scalars['String']>;
-  nickname?: Maybe<Scalars['String']>;
-  onboarded?: Maybe<Scalars['Boolean']>;
-  orcid?: Maybe<Scalars['String']>;
-  orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
-  orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
-  orcidWorks?: Maybe<Scalars['JSON']>;
-  positions?: Maybe<Scalars['JSON']>;
-  questions?: Maybe<Array<Maybe<Scalars['String']>>>;
-  region?: Maybe<Scalars['String']>;
-  researchGate?: Maybe<Scalars['String']>;
-  researcherId?: Maybe<Scalars['String']>;
-  role?: Maybe<Scalars['String']>;
-  stateOrProvince?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<UsersTagsCollection>;
-  telephoneCountryCode?: Maybe<Scalars['String']>;
-  telephoneNumber?: Maybe<Scalars['String']>;
-  threads?: Maybe<Scalars['String']>;
-  twitter?: Maybe<Scalars['String']>;
-};
+export type Users = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    activatedDate?: Maybe<Scalars['DateTime']>;
+    activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
+    activeCampaignId?: Maybe<Scalars['String']>;
+    alternativeEmail?: Maybe<Scalars['String']>;
+    avatar?: Maybe<Asset>;
+    biography?: Maybe<Scalars['String']>;
+    blog?: Maybe<Scalars['String']>;
+    blueSky?: Maybe<Scalars['String']>;
+    city?: Maybe<Scalars['String']>;
+    connections?: Maybe<Array<Maybe<Scalars['String']>>>;
+    contentfulMetadata: ContentfulMetadata;
+    contributingCohortsCollection?: Maybe<UsersContributingCohortsCollection>;
+    country?: Maybe<Scalars['String']>;
+    degrees?: Maybe<Array<Maybe<Scalars['String']>>>;
+    email?: Maybe<Scalars['String']>;
+    firstName?: Maybe<Scalars['String']>;
+    fundingStreams?: Maybe<Scalars['String']>;
+    github?: Maybe<Scalars['String']>;
+    googleScholar?: Maybe<Scalars['String']>;
+    lastName?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<UsersLinkingCollections>;
+    linkedIn?: Maybe<Scalars['String']>;
+    middleName?: Maybe<Scalars['String']>;
+    nickname?: Maybe<Scalars['String']>;
+    onboarded?: Maybe<Scalars['Boolean']>;
+    orcid?: Maybe<Scalars['String']>;
+    orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
+    orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
+    orcidWorks?: Maybe<Scalars['JSON']>;
+    positions?: Maybe<Scalars['JSON']>;
+    questions?: Maybe<Array<Maybe<Scalars['String']>>>;
+    region?: Maybe<Scalars['String']>;
+    researchGate?: Maybe<Scalars['String']>;
+    researcherId?: Maybe<Scalars['String']>;
+    role?: Maybe<Scalars['String']>;
+    stateOrProvince?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<UsersTagsCollection>;
+    telephoneCountryCode?: Maybe<Scalars['String']>;
+    telephoneNumber?: Maybe<Scalars['String']>;
+    threads?: Maybe<Scalars['String']>;
+    twitter?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersActivatedDateArgs = {
@@ -6412,13 +6511,15 @@ export enum UsersTagsCollectionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
-export type WorkingGroupMembership = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<WorkingGroupMembershipLinkingCollections>;
-  role?: Maybe<Scalars['String']>;
-  sys: Sys;
-  user?: Maybe<Users>;
-};
+export type WorkingGroupMembership = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<WorkingGroupMembershipLinkingCollections>;
+    role?: Maybe<Scalars['String']>;
+    sys: Sys;
+    user?: Maybe<Users>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
 export type WorkingGroupMembershipLinkedFromArgs = {
@@ -6520,15 +6621,17 @@ export enum WorkingGroupMembershipOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
-export type WorkingGroupNetwork = Entry & {
-  complexDiseaseCollection?: Maybe<WorkingGroupNetworkComplexDiseaseCollection>;
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<WorkingGroupNetworkLinkingCollections>;
-  monogenicCollection?: Maybe<WorkingGroupNetworkMonogenicCollection>;
-  operationalCollection?: Maybe<WorkingGroupNetworkOperationalCollection>;
-  supportCollection?: Maybe<WorkingGroupNetworkSupportCollection>;
-  sys: Sys;
-};
+export type WorkingGroupNetwork = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    complexDiseaseCollection?: Maybe<WorkingGroupNetworkComplexDiseaseCollection>;
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<WorkingGroupNetworkLinkingCollections>;
+    monogenicCollection?: Maybe<WorkingGroupNetworkMonogenicCollection>;
+    operationalCollection?: Maybe<WorkingGroupNetworkOperationalCollection>;
+    supportCollection?: Maybe<WorkingGroupNetworkSupportCollection>;
+    sys: Sys;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
 export type WorkingGroupNetworkComplexDiseaseCollectionArgs = {
@@ -6740,22 +6843,24 @@ export enum WorkingGroupNetworkSupportCollectionOrder {
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroups = Entry & {
-  calendar?: Maybe<Calendars>;
-  contentfulMetadata: ContentfulMetadata;
-  description?: Maybe<WorkingGroupsDescription>;
-  leadingMembers?: Maybe<Scalars['String']>;
-  linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
-  membersCollection?: Maybe<WorkingGroupsMembersCollection>;
-  milestonesCollection?: Maybe<WorkingGroupsMilestonesCollection>;
-  primaryEmail?: Maybe<Scalars['String']>;
-  resourcesCollection?: Maybe<WorkingGroupsResourcesCollection>;
-  secondaryEmail?: Maybe<Scalars['String']>;
-  shortDescription?: Maybe<Scalars['String']>;
-  sys: Sys;
-  tagsCollection?: Maybe<WorkingGroupsTagsCollection>;
-  title?: Maybe<Scalars['String']>;
-};
+export type WorkingGroups = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    calendar?: Maybe<Calendars>;
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<WorkingGroupsDescription>;
+    leadingMembers?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
+    membersCollection?: Maybe<WorkingGroupsMembersCollection>;
+    milestonesCollection?: Maybe<WorkingGroupsMilestonesCollection>;
+    primaryEmail?: Maybe<Scalars['String']>;
+    resourcesCollection?: Maybe<WorkingGroupsResourcesCollection>;
+    secondaryEmail?: Maybe<Scalars['String']>;
+    shortDescription?: Maybe<Scalars['String']>;
+    sys: Sys;
+    tagsCollection?: Maybe<WorkingGroupsTagsCollection>;
+    title?: Maybe<Scalars['String']>;
+  };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsCalendarArgs = {
@@ -7531,6 +7636,13 @@ export type CfMilestonesNestedFilter = {
 export type CfOutputVersionNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfOutputVersionNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfOutputVersionNestedFilter>>>;
+  accessionNumber?: InputMaybe<Scalars['String']>;
+  accessionNumber_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  accessionNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  accessionNumber_not?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   addedDate?: InputMaybe<Scalars['DateTime']>;
   addedDate_exists?: InputMaybe<Scalars['Boolean']>;
   addedDate_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7548,6 +7660,13 @@ export type CfOutputVersionNestedFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi?: InputMaybe<Scalars['String']>;
+  doi_contains?: InputMaybe<Scalars['String']>;
+  doi_exists?: InputMaybe<Scalars['Boolean']>;
+  doi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi_not?: InputMaybe<Scalars['String']>;
+  doi_not_contains?: InputMaybe<Scalars['String']>;
+  doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7555,6 +7674,13 @@ export type CfOutputVersionNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid?: InputMaybe<Scalars['String']>;
+  rrid_contains?: InputMaybe<Scalars['String']>;
+  rrid_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid_not?: InputMaybe<Scalars['String']>;
+  rrid_not_contains?: InputMaybe<Scalars['String']>;
+  rrid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -10484,7 +10610,13 @@ export type OutputsContentDataFragment = Pick<
         Maybe<
           Pick<
             OutputVersion,
-            'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+            | 'title'
+            | 'documentType'
+            | 'type'
+            | 'addedDate'
+            | 'link'
+            | 'rrid'
+            | 'accessionNumber'
           > & { sys: Pick<Sys, 'id'> }
         >
       >;
@@ -10630,7 +10762,13 @@ export type FetchOutputByIdQuery = {
             Maybe<
               Pick<
                 OutputVersion,
-                'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+                | 'title'
+                | 'documentType'
+                | 'type'
+                | 'addedDate'
+                | 'link'
+                | 'rrid'
+                | 'accessionNumber'
               > & { sys: Pick<Sys, 'id'> }
             >
           >;
@@ -10796,7 +10934,13 @@ export type FetchOutputsQuery = {
                   Maybe<
                     Pick<
                       OutputVersion,
-                      'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+                      | 'title'
+                      | 'documentType'
+                      | 'type'
+                      | 'addedDate'
+                      | 'link'
+                      | 'rrid'
+                      | 'accessionNumber'
                     > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
@@ -10972,6 +11116,8 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                           | 'type'
                           | 'addedDate'
                           | 'link'
+                          | 'rrid'
+                          | 'accessionNumber'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -11149,6 +11295,8 @@ export type FetchOutputsByUserIdQuery = {
                           | 'type'
                           | 'addedDate'
                           | 'link'
+                          | 'rrid'
+                          | 'accessionNumber'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -11326,6 +11474,8 @@ export type FetchOutputsByExternalUserIdQuery = {
                           | 'type'
                           | 'addedDate'
                           | 'link'
+                          | 'rrid'
+                          | 'accessionNumber'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -11503,6 +11653,8 @@ export type FetchOutputsByProjectIdQuery = {
                           | 'type'
                           | 'addedDate'
                           | 'link'
+                          | 'rrid'
+                          | 'accessionNumber'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -11680,6 +11832,8 @@ export type FetchOutputsByEventIdQuery = {
                           | 'type'
                           | 'addedDate'
                           | 'link'
+                          | 'rrid'
+                          | 'accessionNumber'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -15435,6 +15589,11 @@ export const OutputsContentDataFragmentDoc = {
                         name: { kind: 'Name', value: 'addedDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'accessionNumber' },
+                      },
                     ],
                   },
                 },

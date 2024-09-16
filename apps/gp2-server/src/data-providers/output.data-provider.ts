@@ -397,6 +397,8 @@ export const getOutputVersions = (items?: GraphQLOutputVersions) =>
       ),
       documentType: output.documentType as gp2Model.OutputDocumentType,
       addedDate: output?.addedDate || '',
+      rrid: output?.rrid || '',
+      accessionNumber: output?.accessionNumber || '',
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,

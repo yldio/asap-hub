@@ -78,6 +78,8 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       title: 'Version 1',
       documentType: 'Dataset',
       link: 'https://version1.com',
+      rrid: 'RRID',
+      accessionNumber: 'Accession Number',
     },
   ],
   workingGroups: [
@@ -369,6 +371,8 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         title: 'Version 1',
         documentType: 'Dataset',
         link: 'https://version1.com',
+        rrid: 'RRID',
+        accessionNumber: 'Accession Number',
       },
     ],
   },

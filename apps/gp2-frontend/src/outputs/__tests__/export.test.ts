@@ -28,6 +28,28 @@ describe('outputToCSV', () => {
         },
       ],
       contributingCohorts: [{ id: '2', name: 'Cohort' }],
+      relatedOutputs: [
+        { title: 'output title', documentType: 'Article', id: '1' },
+      ],
+      relatedEvents: [
+        { title: 'event title', id: '1', endDate: '2020-10-08T16:35:54Z' },
+      ],
+      publishDate: '2020-10-08T16:35:54Z',
+      rrid: 'rrid',
+      doi: 'doi',
+      accessionNumber: '1234',
+      versions: [
+        {
+          title: 'version title',
+          id: 'version id',
+          type: 'Blog',
+          rrid: 'version rrid',
+          link: 'version link',
+          addedDate: 'added date',
+          documentType: 'Article',
+          accessionNumber: 'version accession',
+        },
+      ],
     };
     expect(outputToCSV(outputResponse)).toEqual({
       title: 'Output 1',
@@ -41,6 +63,22 @@ describe('outputToCSV', () => {
       authors: expect.anything(),
       tags: 'Neurology',
       date: expect.anything(),
+      description: 'An interesting article',
+      shortDescription: 'An article',
+      gp2Supported: 'Yes',
+      lastUpdatedPartial: '2020-11-09T20:36:54Z',
+      sharingStatus: 'GP2 Only',
+      accession: '1234',
+      doi: 'doi',
+      firstVersionAccession: 'version accession',
+      firstVersionLink: 'version link',
+      firstVersionRRID: 'version rrid',
+      firstVersionTitle: 'version title',
+      firstVersionType: 'Blog',
+      publishDate: '2020-10-08T16:35:54Z',
+      relatedEvents: 'event title',
+      relatedResearch: 'output title',
+      rrid: 'rrid',
     });
   });
 

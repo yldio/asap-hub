@@ -65,7 +65,7 @@ describe('outputToCSV', () => {
       date: expect.anything(),
       description: 'An interesting article',
       shortDescription: 'An article',
-      gp2Supported: 'yes',
+      gp2Supported: 'Yes',
       lastUpdatedPartial: '2020-11-09T20:36:54Z',
       sharingStatus: 'GP2 Only',
       accession: '1234',

@@ -312,6 +312,7 @@ export const FETCH_ENGAGEMENT = gql`
                       id
                     }
                     endDate
+                    status
                   }
                 }
               }
@@ -321,6 +322,7 @@ export const FETCH_ENGAGEMENT = gql`
                   sys {
                     id
                   }
+                  onboarded
                   teamsCollection(limit: 3) {
                     items {
                       team {

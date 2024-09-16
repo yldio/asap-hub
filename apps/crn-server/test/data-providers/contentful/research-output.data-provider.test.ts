@@ -1881,6 +1881,8 @@ describe('mapOutputVersions ', () => {
       type: 'Preprint',
       link: 'https://test.com',
       addedDate: '2022-01-01T12:00:00.000Z',
+      rrid: 'RRID',
+      accession: 'Accession',
     };
 
     const versions = mapOutputVersions([
@@ -1911,6 +1913,8 @@ describe('mapOutputVersions ', () => {
         link: '',
         title: '',
         type: undefined,
+        rrid: '',
+        accession: '',
       },
     ]);
   });

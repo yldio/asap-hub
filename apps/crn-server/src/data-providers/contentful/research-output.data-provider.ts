@@ -277,6 +277,8 @@ export const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
           ? output.documentType
           : 'Grant Document',
       addedDate: output?.addedDate || '',
+      rrid: output?.rrid || '',
+      accession: output?.accession || '',
     }));
 
 const mapRelatedResearch = (

@@ -88,6 +88,63 @@ describe('getEngagementItems', () => {
       expect(result[0]!.eventCount).toEqual(1);
     });
 
+    it('returns events that are not Cancelled', () => {
+      const user1 = makeUser({
+        userId: 'user-1',
+        teams: [{ id: 'team-id-0', role: 'Project Manager' }],
+      });
+      const user2 = makeUser({
+        userId: 'user-2',
+        teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+      });
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user1,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-05-23T18:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: user2,
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-3',
+                endDate: '2024-05-15T10:00:00.000Z',
+                status: 'Cancelled',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.eventCount).toEqual(2);
+    });
+
     it('returns the correct number of events', () => {
       const user1 = makeUser({
         userId: 'user-1',

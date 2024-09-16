@@ -11,6 +11,7 @@ import {
   AnalyticsTeamLeadershipDataObject,
   AnalyticsTeamLeadershipResponse,
   EngagementResponse,
+  EventStatus,
   ListAnalyticsTeamLeadershipDataObject,
   ListAnalyticsTeamLeadershipResponse,
   ListEngagementResponse,
@@ -753,12 +754,14 @@ type EngagementEvent = NonNullable<
 type MakeEventProps = {
   eventId?: string;
   endDate?: string;
+  status?: EventStatus;
 };
 export const makeEvent = ({
   eventId = 'event-1',
   endDate = '2024-07-11T13:00:00.000Z',
+  status = 'Confirmed',
 }: MakeEventProps): EngagementEvent => ({
-  items: [{ sys: { id: eventId }, endDate }],
+  items: [{ sys: { id: eventId }, endDate, status }],
 });
 
 export const getEngagementQuery = (): FetchEngagementQuery => ({

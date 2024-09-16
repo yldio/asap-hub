@@ -25,25 +25,29 @@ export const getEngagementItems = (
 
     cleanArray(teamItem.linkedFrom?.eventSpeakersCollection?.items)
       .filter(getFilterEventByRange(rangeKey))
+      .filter(isNotCancelledEvent)
       .forEach((eventSpeakerItem) => {
         const eventId =
           eventSpeakerItem.linkedFrom?.eventsCollection?.items[0]?.sys.id;
         if (eventId) {
           events.add(eventId);
-        }
 
-        if (eventSpeakerItem.user?.__typename === 'Users') {
-          const userRole = cleanArray(
-            eventSpeakerItem.user.teamsCollection?.items,
-          ).find((speaker) => speaker.team?.sys.id === teamItem.sys.id)?.role;
+          if (
+            eventSpeakerItem.user?.__typename === 'Users' &&
+            eventSpeakerItem.user?.onboarded
+          ) {
+            const userRole = cleanArray(
+              eventSpeakerItem.user.teamsCollection?.items,
+            ).find((speaker) => speaker.team?.sys.id === teamItem.sys.id)?.role;
 
-          const userId = eventSpeakerItem.user.sys.id;
+            const userId = eventSpeakerItem.user.sys.id;
 
-          if (userRole) {
-            totalSpeakerCount += 1;
-            uniqueSpeakers.allRoles.add(userId);
-            if (userRole === 'Key Personnel') {
-              uniqueSpeakers.keyPersonnel.add(userId);
+            if (userRole) {
+              totalSpeakerCount += 1;
+              uniqueSpeakers.allRoles.add(userId);
+              if (userRole === 'Key Personnel') {
+                uniqueSpeakers.keyPersonnel.add(userId);
+              }
             }
           }
         }
@@ -95,3 +99,9 @@ export const getFilterEventByRange =
     const endDate = item?.linkedFrom?.eventsCollection?.items[0]?.endDate;
     return !endDate || !filter || endDate >= filter;
   };
+
+export const isNotCancelledEvent = (
+  eventSpeakerItem: EventSpeakersCollectionItem,
+) =>
+  eventSpeakerItem?.linkedFrom?.eventsCollection?.items[0]?.status !==
+  'Cancelled';

@@ -5,7 +5,11 @@ import {
   GetListOptions,
   htmlToCsvText,
 } from '@asap-hub/frontend-utils';
-import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
+import {
+  ListResponse,
+  ResearchOutputResponse,
+  ResearchOutputVersion,
+} from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { Stringifier } from 'csv-stringify/browser/esm';
 
@@ -13,13 +17,51 @@ export const MAX_ALGOLIA_RESULTS = 10000;
 // Max Complexity 11000. Research Outputs are the most complex entity. 554 11000/554 = 19.8. 15 seems safe.
 export const MAX_CONTENTFUL_RESULTS = 15;
 
+type FirstVersionCSV = {
+  firstVersionTitle: string;
+  firstVersionType: string;
+  firstVersionRrid: string;
+  firstVersionAccession: string;
+  firstVersionLink: string;
+};
+
 type ResearchOutputCSV = Record<
-  keyof Omit<
+  keyof (Omit<
     ResearchOutputResponse,
-    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions' | 'shortDescription'
-  >,
+    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions'
+  > &
+    FirstVersionCSV),
   CSVValue
 >;
+
+const getFirstVersionData = (
+  versions: Array<ResearchOutputVersion>,
+): FirstVersionCSV => {
+  if (versions[0]) {
+    const {
+      title,
+      type = '',
+      rrid = '',
+      accession = '',
+      link = '',
+    } = versions[0];
+    return {
+      firstVersionTitle: title,
+      firstVersionType: type,
+      firstVersionRrid: rrid,
+      firstVersionAccession: accession,
+      firstVersionLink: link,
+    };
+  }
+
+  return {
+    firstVersionTitle: '',
+    firstVersionType: '',
+    firstVersionRrid: '',
+    firstVersionAccession: '',
+    firstVersionLink: '',
+  };
+};
 
 export const researchOutputToCSV = (
   output: ResearchOutputResponse,
@@ -81,6 +123,7 @@ export const researchOutputToCSV = (
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
   description: output.descriptionMD || htmlToCsvText(output.description),
+  shortDescription: output.shortDescription,
   usageNotes: output.usageNotesMD || htmlToCsvText(output.usageNotes),
   contactEmails: output.contactEmails
     .map((item) => item)
@@ -96,6 +139,7 @@ export const researchOutputToCSV = (
     : undefined,
   statusChangedAt: output.statusChangedAt,
   isInReview: output.isInReview,
+  ...getFirstVersionData(output.versions),
 });
 
 export const algoliaResultsToStream = async <

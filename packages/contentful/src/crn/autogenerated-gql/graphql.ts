@@ -16848,7 +16848,13 @@ export type ResearchOutputsContentFragment = Pick<
       Maybe<
         Pick<
           ResearchOutputVersions,
-          'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+          | 'title'
+          | 'documentType'
+          | 'type'
+          | 'addedDate'
+          | 'link'
+          | 'rrid'
+          | 'accession'
         > & { sys: Pick<Sys, 'id'> }
       >
     >;
@@ -17081,7 +17087,13 @@ export type FetchResearchOutputByIdQuery = {
           Maybe<
             Pick<
               ResearchOutputVersions,
-              'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+              | 'title'
+              | 'documentType'
+              | 'type'
+              | 'addedDate'
+              | 'link'
+              | 'rrid'
+              | 'accession'
             > & { sys: Pick<Sys, 'id'> }
           >
         >;
@@ -17368,7 +17380,13 @@ export type FetchResearchOutputsQuery = {
                 Maybe<
                   Pick<
                     ResearchOutputVersions,
-                    'title' | 'documentType' | 'type' | 'addedDate' | 'link'
+                    | 'title'
+                    | 'documentType'
+                    | 'type'
+                    | 'addedDate'
+                    | 'link'
+                    | 'rrid'
+                    | 'accession'
                   > & { sys: Pick<Sys, 'id'> }
                 >
               >;
@@ -22787,6 +22805,11 @@ export const ResearchOutputsContentFragmentDoc = {
                         name: { kind: 'Name', value: 'addedDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'accession' },
+                      },
                     ],
                   },
                 },
@@ -26996,7 +27019,7 @@ export const FetchEngagementDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '100' },
+                                  value: { kind: 'IntValue', value: '1000' },
                                 },
                               ],
                               selectionSet: {

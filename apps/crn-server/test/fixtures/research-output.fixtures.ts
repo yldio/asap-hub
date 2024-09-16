@@ -106,6 +106,8 @@ export const getResearchOutputDataObject =
         documentType: 'Article',
         type: 'Preprint',
         link: 'https://version1.com',
+        rrid: 'RRID',
+        accession: 'Accession',
       },
     ],
   });
@@ -475,6 +477,8 @@ export const getContentfulResearchOutputGraphqlResponse =
           documentType: 'Article',
           type: 'Preprint',
           link: 'https://version1.com',
+          rrid: 'RRID',
+          accession: 'Accession',
         },
       ],
     },

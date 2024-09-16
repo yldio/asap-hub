@@ -284,33 +284,33 @@ export const parseUserToResponse = ({
 export const parsePublicUserToResponse = ({
   ...user
 }: PublicUserDataObject): PublicUserResponse => ({
+  avatarUrl: user.avatarUrl,
   biography: user.biography,
-  id: user.id,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  degree: user.degree,
   city: user.city,
   country: user.country,
-  institution: user.institution,
-  labs: user.labs,
-  researchTheme: user.researchTheme,
-  avatarUrl: user.avatarUrl,
   createdDate: user.createdDate,
   lastModifiedDate: user.lastModifiedDate,
+  degree: user.degree,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  id: user.id,
+  institution: user.institution,
+  interestGroups: user.interestGroups.map((ig) => ({
+    name: ig.name,
+  })),
+  labs: user.labs,
+  researchTheme: user.researchTheme,
+  researchOutputs: user.researchOutputs || [],
   tags: user.tags?.map((tag) => tag.name) || [],
   teams: user.teams.map((team) => ({
     displayName: team.displayName || '',
     role: team.role,
   })),
-  researchOutputs: user.researchOutputs || [],
   workingGroups: user.workingGroups
     .filter((wg) => wg.active)
     .map((wg) => ({
       name: wg.name,
       role: wg.role,
     })),
-  interestGroups: user.interestGroups.map((ig) => ({
-    name: ig.name,
-  })),
   ...user.social,
 });

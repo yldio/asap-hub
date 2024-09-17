@@ -19,8 +19,13 @@ describe('getEngagementItems', () => {
   describe('Events', () => {
     it('filters undefined events', () => {
       const engagementQuery = getEngagementQuery().teamsCollection;
+      const speakerItem1 =
+        engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection!
+          .items[0]!;
+
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
         items: [
+          speakerItem1,
           {
             user: makeUser({
               userId: 'user-1',
@@ -30,18 +35,6 @@ describe('getEngagementItems', () => {
               eventsCollection: {
                 items: [],
               },
-            },
-          },
-          {
-            user: makeUser({
-              userId: 'user-2',
-              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
-            }),
-            linkedFrom: {
-              eventsCollection: makeEvent({
-                eventId: 'event-1',
-                endDate: '2024-06-11T13:00:00.000Z',
-              }),
             },
           },
         ],
@@ -54,20 +47,21 @@ describe('getEngagementItems', () => {
 
     it('does not count the same event twice', () => {
       const engagementQuery = getEngagementQuery().teamsCollection;
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.eventCount).toEqual(2);
+    });
+
+    it('returns events that are not Cancelled', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      const speakerItem1 =
+        engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection!
+          .items[0]!;
+
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
         items: [
-          {
-            user: makeUser({
-              userId: 'user-1',
-              teams: [{ id: 'team-id-0', role: 'Project Manager' }],
-            }),
-            linkedFrom: {
-              eventsCollection: makeEvent({
-                eventId: 'event-1',
-                endDate: '2024-06-11T13:00:00.000Z',
-              }),
-            },
-          },
+          speakerItem1,
           {
             user: makeUser({
               userId: 'user-2',
@@ -75,8 +69,9 @@ describe('getEngagementItems', () => {
             }),
             linkedFrom: {
               eventsCollection: makeEvent({
-                eventId: 'event-1',
-                endDate: '2024-06-11T13:00:00.000Z',
+                eventId: 'event-2',
+                endDate: '2024-05-15T10:00:00.000Z',
+                status: 'Cancelled',
               }),
             },
           },
@@ -93,42 +88,15 @@ describe('getEngagementItems', () => {
         userId: 'user-1',
         teams: [{ id: 'team-id-0', role: 'Project Manager' }],
       });
-      const user2 = makeUser({
-        userId: 'user-2',
-        teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
-      });
+
       const engagementQuery = getEngagementQuery().teamsCollection;
+      const speakerItems =
+        engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection!.items;
       engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
         items: [
+          ...speakerItems,
           {
             user: user1,
-            linkedFrom: {
-              eventsCollection: makeEvent({
-                eventId: 'event-1',
-                endDate: '2024-06-11T13:00:00.000Z',
-              }),
-            },
-          },
-          {
-            user: user2,
-            linkedFrom: {
-              eventsCollection: makeEvent({
-                eventId: 'event-1',
-                endDate: '2024-06-11T13:00:00.000Z',
-              }),
-            },
-          },
-          {
-            user: user1,
-            linkedFrom: {
-              eventsCollection: makeEvent({
-                eventId: 'event-2',
-                endDate: '2024-05-23T18:00:00.000Z',
-              }),
-            },
-          },
-          {
-            user: user2,
             linkedFrom: {
               eventsCollection: makeEvent({
                 eventId: 'event-3',
@@ -212,6 +180,27 @@ describe('getEngagementItems', () => {
                 { id: 'not-the-team-analyzed-id-2', role: 'Key Personnel' },
               ],
             }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      const result = getEngagementItems(engagementQuery, 'all');
+
+      expect(result[0]!.totalSpeakerCount).toEqual(0);
+    });
+
+    it('does not count user that is not onboarded', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({ onboarded: false }),
             linkedFrom: {
               eventsCollection: makeEvent({
                 eventId: 'event-1',
@@ -501,6 +490,53 @@ describe('getEngagementItems', () => {
       };
 
       expect(getEngagementItems(engagementQuery, 'current-year')).toEqual([
+        {
+          id: 'team-id-0',
+          inactiveSince: null,
+          memberCount: 4,
+          name: 'Team A',
+          eventCount: 1,
+          totalSpeakerCount: 1,
+          uniqueAllRolesCount: 1,
+          uniqueAllRolesCountPercentage: 100,
+          uniqueKeyPersonnelCount: 1,
+          uniqueKeyPersonnelCountPercentage: 100,
+        },
+      ]);
+    });
+
+    it('does not count upcoming events', () => {
+      const engagementQuery = getEngagementQuery().teamsCollection;
+      engagementQuery!.items[0]!.linkedFrom!.eventSpeakersCollection = {
+        items: [
+          {
+            user: makeUser({
+              userId: 'user-1',
+              teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-1',
+                endDate: '2024-06-11T13:00:00.000Z',
+              }),
+            },
+          },
+          {
+            user: makeUser({
+              userId: 'user-2',
+              teams: [{ id: 'team-id-0', role: 'ASAP Staff' }],
+            }),
+            linkedFrom: {
+              eventsCollection: makeEvent({
+                eventId: 'event-2',
+                endDate: '2024-07-15T13:00:00.000Z',
+              }),
+            },
+          },
+        ],
+      };
+
+      expect(getEngagementItems(engagementQuery, 'all')).toEqual([
         {
           id: 'team-id-0',
           inactiveSince: null,

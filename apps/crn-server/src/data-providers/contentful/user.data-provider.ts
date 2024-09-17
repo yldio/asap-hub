@@ -6,6 +6,7 @@ import {
   isUserDegree,
   isUserRole,
   LabResponse,
+  ListPublicUserDataObject,
   ListUserDataObject,
   OrcidWork,
   UserDataObject,
@@ -19,6 +20,8 @@ import {
 
 import {
   Environment,
+  FetchPublicUsersQuery,
+  FetchPublicUsersQueryVariables,
   FetchUserByIdQuery,
   FetchUserByIdQueryVariables,
   FetchUsersByLabIdQuery,
@@ -27,6 +30,7 @@ import {
   FetchUsersByTeamIdQueryVariables,
   FetchUsersQuery,
   FetchUsersQueryVariables,
+  FETCH_PUBLIC_USERS,
   FETCH_USERS,
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
@@ -54,6 +58,16 @@ export type UserItem = NonNullable<NonNullable<FetchUserByIdQuery['users']>>;
 export type LabsCollection = UserItem['labsCollection'];
 
 export type TeamsCollection = UserItem['teamsCollection'];
+
+export type ResearchOutputsCollection = NonNullable<
+  UserItem['linkedFrom']
+>['researchOutputsCollection'];
+
+export type ResearchOutputItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['researchOutputsCollection']
+  >['items'][number]
+>;
 
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
@@ -96,15 +110,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  private fetchUserById(id: string) {
+  private fetchUserById(id: string, publicUser: boolean = false) {
     return this.contentfulClient.request<
       FetchUserByIdQuery,
       FetchUserByIdQueryVariables
-    >(FETCH_USER_BY_ID, { id });
+    >(FETCH_USER_BY_ID, { id, publicUser });
   }
 
-  async fetchById(id: string): Promise<UserDataObject | null> {
-    const { users } = await this.fetchUserById(id);
+  async fetchById(
+    id: string,
+    publicUser: boolean = false,
+  ): Promise<UserDataObject | null> {
+    const { users } = await this.fetchUserById(id, publicUser);
 
     if (!users) {
       return null;
@@ -121,6 +138,19 @@ export class UserContentfulDataProvider implements UserDataProvider {
       items: result?.items
         .filter((user): user is QueryUserListItem => user !== null)
         .map(parseContentfulGraphQlUserListItem),
+    };
+  }
+
+  async fetchPublicUsers(
+    options: FetchUsersOptions,
+  ): Promise<ListPublicUserDataObject> {
+    const result = await this.fetchPublicUsersData(options);
+
+    return {
+      total: result?.total,
+      items: result?.items
+        .filter((user): user is UserItem => user !== null)
+        .map(parseContentfulGraphQlUsers),
     };
   }
 
@@ -179,6 +209,23 @@ export class UserContentfulDataProvider implements UserDataProvider {
       FetchUsersQuery,
       FetchUsersQueryVariables
     >(FETCH_USERS, {
+      limit: take,
+      skip,
+      where,
+      order: [UsersOrder.LastNameAsc],
+    });
+    return usersCollection || { total: 0, items: [] };
+  }
+
+  private async fetchPublicUsersData(options: FetchUsersOptions) {
+    const { take = 8, skip = 0 } = options;
+
+    const where: UsersFilter = generateFetchQueryFilter(options);
+
+    const { usersCollection } = await this.contentfulClient.request<
+      FetchPublicUsersQuery,
+      FetchPublicUsersQueryVariables
+    >(FETCH_PUBLIC_USERS, {
       limit: take,
       skip,
       where,
@@ -280,6 +327,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
       [],
     );
 
+  const userId = item.sys.id;
   const questions = normaliseArray(item.questions);
   const connections = normaliseArray(item.connections);
 
@@ -318,8 +366,13 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     ...parseLeadersToInterestGroups(interestGroupLeadersCollection),
   ]);
 
+  const researchOutputs = parseResearchOutputsCollection(
+    item?.linkedFrom?.researchOutputsCollection,
+    userId,
+  );
+
   return {
-    id: item.sys.id,
+    id: userId,
     activeCampaignId: item.activeCampaignId || undefined,
     membershipStatus: [
       item.alumniSinceDate
@@ -352,6 +405,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     alumniSinceDate: item.alumniSinceDate ?? undefined,
     reachOut: item.reachOut ?? undefined,
     researchInterests: item.researchInterests ?? undefined,
+    researchOutputs,
     responsibilities: item.responsibilities ?? undefined,
     expertiseAndResourceDescription:
       item.expertiseAndResourceDescription ?? undefined,
@@ -519,6 +573,28 @@ export const parseTeamsCollection = (
           proposal: team.team?.proposal ? team.team.proposal.sys.id : undefined,
         },
       ];
+    },
+    [],
+  );
+
+export const parseResearchOutputsCollection = (
+  researchOutputsCollection: ResearchOutputsCollection,
+  userId: string,
+): string[] =>
+  (researchOutputsCollection?.items || []).reduce(
+    (
+      userResearchOutputs: string[],
+      researchOutput: ResearchOutputItem | null,
+    ): string[] => {
+      const isAuthor = researchOutput?.authorsCollection?.items.some(
+        (author) => author?.__typename === 'Users' && author.sys.id === userId,
+      );
+
+      if (isAuthor && researchOutput?.sys.id) {
+        return [...userResearchOutputs, researchOutput.sys.id];
+      }
+
+      return userResearchOutputs;
     },
     [],
   );

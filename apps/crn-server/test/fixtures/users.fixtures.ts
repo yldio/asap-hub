@@ -9,6 +9,9 @@ import {
   WebhookDetail,
   UserListItemResponse,
   UserListItemDataObject,
+  PublicUserResponse,
+  ListPublicUserResponse,
+  PublicUserDataObject,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -57,6 +60,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   ],
   workingGroups: [],
   interestGroups: [],
+  researchOutputs: [],
   connections: [],
 });
 
@@ -100,6 +104,7 @@ export const getUserResponse = (): UserResponse => ({
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   interestGroups: [],
+  researchOutputs: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
     {
@@ -189,6 +194,41 @@ export const getUserListItemResponse = (): UserListItemResponse => ({
   onboarded: true,
 });
 
+export const getPublicUserResponse = (): PublicUserResponse => ({
+  id: 'user-id-1',
+  biography: 'some bio',
+  createdDate: '2020-09-23T20:45:22.000Z',
+  tags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  institution: 'some institution',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  city: 'London',
+  lastModifiedDate: '2021-09-23T20:45:22.000Z',
+  workingGroups: [{ name: 'Active Working Group 1', role: 'Chair' }],
+  interestGroups: [{ name: 'Interest Group 1' }],
+  orcid: '123-456-789',
+  degree: 'MPH',
+  teams: [
+    {
+      role: 'Lead PI (Core Leadership)',
+      displayName: 'Team A',
+    },
+  ],
+  labs: [
+    { id: 'cd7be4902', name: 'Brighton' },
+    { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchOutputs: ['research-output-id'],
+});
+
 export const fetchExpectation: ListUserResponse = {
   total: 2,
   items: [
@@ -225,6 +265,11 @@ export const fetchExpectation: ListUserResponse = {
 export const getListUserResponse = (): ListUserResponse => ({
   total: 1,
   items: [getUserListItemResponse()],
+});
+
+export const getListPublicUserResponse = (): ListPublicUserResponse => ({
+  total: 1,
+  items: [getPublicUserResponse()],
 });
 
 export const getUserDataObjects = () => [getUserDataObject()];
@@ -277,6 +322,7 @@ export const getUserDataObject = (): UserDataObject => ({
     { id: '5', name: 'expertise 5' },
   ],
   researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchOutputs: [],
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -322,6 +368,26 @@ export const getUserDataObject = (): UserDataObject => ({
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
+  ],
+});
+
+export const getPublicUserDataObject = (): PublicUserDataObject => ({
+  ...getUserDataObject(),
+  researchOutputs: ['research-output-id'],
+  interestGroups: [
+    {
+      id: 'interest-group-1',
+      name: 'Interest Group 1',
+      active: true,
+    },
+  ],
+  workingGroups: [
+    {
+      id: 'working-group-1',
+      name: 'Active Working Group 1',
+      active: true,
+      role: 'Chair',
+    },
   ],
 });
 

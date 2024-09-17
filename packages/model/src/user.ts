@@ -96,6 +96,7 @@ export interface UserDataObject extends Invitee {
   questions: string[];
   reachOut?: string;
   researchInterests?: string;
+  researchOutputs?: string[];
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
@@ -107,11 +108,53 @@ export interface UserDataObject extends Invitee {
   researchTheme?: string[];
 }
 
+export type PublicUserDataObject = Pick<
+  UserDataObject,
+  | 'avatarUrl'
+  | 'biography'
+  | 'city'
+  | 'country'
+  | 'createdDate'
+  | 'degree'
+  | 'firstName'
+  | 'lastName'
+  | 'id'
+  | 'institution'
+  | 'interestGroups'
+  | 'labs'
+  | 'lastModifiedDate'
+  | 'orcid'
+  | 'researchOutputs'
+  | 'researchTheme'
+  | 'social'
+  | 'tags'
+  | 'teams'
+  | 'workingGroups'
+>;
+
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {
   onboarded: boolean;
   displayName: string;
   fullDisplayName: string;
+}
+
+export interface PublicUserTeam {
+  displayName: string;
+  role: TeamRole;
+}
+
+export interface PublicUserResponse
+  extends Omit<
+      PublicUserDataObject,
+      'interestGroups' | 'orcid' | 'social' | 'tags' | 'teams' | 'workingGroups'
+    >,
+    UserSocialLinks {
+  interestGroups: Pick<InterestGroupMembership, 'name'>[];
+  researchOutputs: string[];
+  tags: string[];
+  teams: PublicUserTeam[];
+  workingGroups: Pick<WorkingGroupMembership, 'name' | 'role'>[];
 }
 
 export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
@@ -143,6 +186,7 @@ export type UserListItemDataObject = Pick<
   teams: UserListItemTeam[];
 };
 export type ListUserDataObject = ListResponse<UserListItemDataObject>;
+export type ListPublicUserDataObject = ListResponse<PublicUserDataObject>;
 
 export type UserListItemResponse = UserListItemDataObject & {
   displayName: string;
@@ -217,6 +261,7 @@ export interface UserAvatarPostRequest {
 }
 
 export type ListUserResponse = ListResponse<UserListItemResponse>;
+export type ListPublicUserResponse = ListResponse<PublicUserResponse>;
 
 export type FetchUsersFilter =
   | {

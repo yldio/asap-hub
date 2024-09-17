@@ -6,10 +6,10 @@ import {
 } from '../fixtures/interest-groups.fixtures';
 import { getUserDataObject } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 
 describe('Group controller', () => {
   const interestGroupDataProviderMock = getDataProviderMock();
-  const userDataProviderMock = getDataProviderMock();
   const interestGroupController = new InterestGroups(
     interestGroupDataProviderMock,
     userDataProviderMock,

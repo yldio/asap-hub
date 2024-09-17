@@ -2,7 +2,10 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import {
   FetchUsersOptions,
+  ListPublicUserResponse,
   ListUserResponse,
+  PublicUserDataObject,
+  PublicUserResponse,
   UserDataObject,
   UserResponse,
   UserUpdateDataObject,
@@ -70,8 +73,23 @@ export default class UserController {
     };
   }
 
-  async fetchById(id: string): Promise<UserResponse> {
-    const user = await this.userDataProvider.fetchById(id);
+  async fetchPublicUsers(
+    options: FetchUsersOptions,
+  ): Promise<ListPublicUserResponse> {
+    const { total, items } =
+      await this.userDataProvider.fetchPublicUsers(options);
+
+    return {
+      total,
+      items: items.map(parsePublicUserToResponse),
+    };
+  }
+
+  async fetchById(
+    id: string,
+    publicUser: boolean = false,
+  ): Promise<UserResponse> {
+    const user = await this.userDataProvider.fetchById(id, publicUser);
 
     if (!user) {
       throw new NotFoundError(undefined, `user with id ${id} not found`);
@@ -262,3 +280,37 @@ export const parseUserToResponse = ({
     onboarded,
   };
 };
+
+export const parsePublicUserToResponse = ({
+  ...user
+}: PublicUserDataObject): PublicUserResponse => ({
+  avatarUrl: user.avatarUrl,
+  biography: user.biography,
+  city: user.city,
+  country: user.country,
+  createdDate: user.createdDate,
+  lastModifiedDate: user.lastModifiedDate,
+  degree: user.degree,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  id: user.id,
+  institution: user.institution,
+  interestGroups: user.interestGroups.map((ig) => ({
+    name: ig.name,
+  })),
+  labs: user.labs,
+  researchTheme: user.researchTheme,
+  researchOutputs: user.researchOutputs || [],
+  tags: user.tags?.map((tag) => tag.name) || [],
+  teams: user.teams.map((team) => ({
+    displayName: team.displayName || '',
+    role: team.role,
+  })),
+  workingGroups: user.workingGroups
+    .filter((wg) => wg.active)
+    .map((wg) => ({
+      name: wg.name,
+      role: wg.role,
+    })),
+  ...user.social,
+});

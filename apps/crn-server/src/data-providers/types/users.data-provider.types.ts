@@ -1,6 +1,7 @@
 import {
   DataProvider,
   FetchUsersOptions,
+  ListPublicUserDataObject,
   UserCreateDataObject,
   UserDataObject,
   UserListItemDataObject,
@@ -15,4 +16,12 @@ export type UserDataProvider = DataProvider<
   null,
   UserUpdateDataObject,
   { suppressConflict?: boolean; polling?: boolean }
->;
+> & {
+  fetchPublicUsers: (
+    options: FetchUsersOptions,
+  ) => Promise<ListPublicUserDataObject>;
+  fetchById: (
+    id: string,
+    publicUser: boolean,
+  ) => Promise<UserDataObject | null>;
+};

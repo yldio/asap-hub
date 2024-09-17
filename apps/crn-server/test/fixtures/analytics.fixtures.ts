@@ -712,12 +712,15 @@ type EngagementUser = NonNullable<
 type MakeUserProps = {
   userId?: string;
   teams?: { id: string; role: TeamRole }[];
+  onboarded?: boolean;
 };
 export const makeUser = ({
   userId = 'user-id-1',
   teams = [{ id: 'team-id-1', role: 'Project Manager' }],
+  onboarded = true,
 }: MakeUserProps): EngagementUser => ({
   __typename: 'Users',
+  onboarded,
   sys: { id: userId },
   teamsCollection: {
     items: teams.map((team) => ({
@@ -784,56 +787,58 @@ export const getEngagementQuery = (): FetchEngagementQuery => ({
               makeTeamMembership({ role: 'Key Personnel', onboarded: false }),
             ],
           },
-          eventSpeakersCollection: {
-            items: [
-              {
-                user: makeUser({
-                  userId: 'user-1',
-                  teams: [
-                    { id: 'team-id-0', role: 'Project Manager' },
-                    { id: 'team-id-2', role: 'Key Personnel' },
-                  ],
-                }),
-                linkedFrom: {
-                  eventsCollection: makeEvent({
-                    eventId: 'event-1',
-                    endDate: '2024-06-11T13:00:00.000Z',
-                  }),
-                },
-              },
-              {
-                user: makeUser({
-                  userId: 'user-2',
-                  teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
-                }),
-                linkedFrom: {
-                  eventsCollection: makeEvent({
-                    eventId: 'event-1',
-                    endDate: '2024-06-11T13:00:00.000Z',
-                  }),
-                },
-              },
-              {
-                user: makeUser({
-                  userId: 'user-1',
-                  teams: [
-                    { id: 'team-id-0', role: 'Project Manager' },
-                    { id: 'team-id-2', role: 'Key Personnel' },
-                  ],
-                }),
-                linkedFrom: {
-                  eventsCollection: makeEvent({
-                    eventId: 'event-2',
-                    endDate: '2024-05-28T00:00:00.000Z',
-                  }),
-                },
-              },
-            ],
-          },
+          eventSpeakersCollection: getEventSpeakers(),
         },
       },
     ],
   },
+});
+
+export const getEventSpeakers = () => ({
+  items: [
+    {
+      user: makeUser({
+        userId: 'user-1',
+        teams: [
+          { id: 'team-id-0', role: 'Project Manager' },
+          { id: 'team-id-2', role: 'Key Personnel' },
+        ],
+      }),
+      linkedFrom: {
+        eventsCollection: makeEvent({
+          eventId: 'event-1',
+          endDate: '2024-06-11T13:00:00.000Z',
+        }),
+      },
+    },
+    {
+      user: makeUser({
+        userId: 'user-2',
+        teams: [{ id: 'team-id-0', role: 'Key Personnel' }],
+      }),
+      linkedFrom: {
+        eventsCollection: makeEvent({
+          eventId: 'event-1',
+          endDate: '2024-06-11T13:00:00.000Z',
+        }),
+      },
+    },
+    {
+      user: makeUser({
+        userId: 'user-1',
+        teams: [
+          { id: 'team-id-0', role: 'Project Manager' },
+          { id: 'team-id-2', role: 'Key Personnel' },
+        ],
+      }),
+      linkedFrom: {
+        eventsCollection: makeEvent({
+          eventId: 'event-2',
+          endDate: '2024-05-28T00:00:00.000Z',
+        }),
+      },
+    },
+  ],
 });
 
 export const getEngagementResponse: () => EngagementResponse = () => ({

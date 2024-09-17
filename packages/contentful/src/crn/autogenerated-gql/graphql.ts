@@ -17760,9 +17760,10 @@ export type FetchTeamByIdQuery = {
         >;
       }>;
       supplementGrant?: Maybe<
-        Pick<SupplementGrant, 'title' | 'description'> & {
-          proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-        }
+        Pick<
+          SupplementGrant,
+          'title' | 'description' | 'startDate' | 'endDate'
+        > & { proposal?: Maybe<{ sys: Pick<Sys, 'id'> }> }
       >;
       linkedFrom?: Maybe<{
         manuscriptsCollection?: Maybe<{
@@ -31961,6 +31962,14 @@ export const FetchTeamByIdDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'startDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endDate' },
                       },
                       {
                         kind: 'Field',

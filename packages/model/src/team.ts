@@ -55,6 +55,8 @@ export type TeamSupplementGrant = {
   title: string;
   description?: string;
   proposalURL?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {

@@ -37,6 +37,8 @@ export const FETCH_TEAM_BY_ID = gql`
       supplementGrant {
         title
         description
+        startDate
+        endDate
         proposal {
           sys {
             id

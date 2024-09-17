@@ -1,36 +1,37 @@
 import {
-  LabResponse,
-  TeamDataObject,
-  TeamTool,
-  TeamUpdateDataObject,
-  TeamMember,
-  TeamListItemDataObject,
-  ListTeamDataObject,
-  TeamRole,
-} from '@asap-hub/model';
-
-import {
-  patchAndPublish,
-  GraphQLClient,
-  FETCH_TEAMS,
-  FETCH_TEAM_BY_ID,
+  addLocaleToFields,
+  Environment,
   FetchTeamByIdQuery,
   FetchTeamByIdQueryVariables,
   FetchTeamsQuery,
   FetchTeamsQueryVariables,
+  FETCH_TEAMS,
+  FETCH_TEAM_BY_ID,
+  GraphQLClient,
+  patchAndPublish,
   TeamsOrder,
-  Environment,
-  addLocaleToFields,
 } from '@asap-hub/contentful';
+import {
+  LabResponse,
+  ListTeamDataObject,
+  TeamDataObject,
+  TeamListItemDataObject,
+  TeamMember,
+  TeamRole,
+  TeamSupplementGrant,
+  TeamTool,
+  TeamUpdateDataObject,
+} from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { DateTime } from 'luxon';
 
 import { sortMembers } from '../transformers';
 import {
   FetchTeamsOptions,
   TeamDataProvider,
 } from '../types/teams.data-provider.types';
-import { parseResearchTags } from './research-tag.data-provider';
 import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
+import { parseResearchTags } from './research-tag.data-provider';
 
 export type TeamByIdItem = NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
@@ -293,6 +294,25 @@ export const parseContentfulGraphQlTeam = (
       (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
     ).length;
 
+  const getSupplementGrant = (): TeamSupplementGrant | undefined => {
+    if (!item.supplementGrant) return undefined;
+
+    const { title, description, proposal, startDate, endDate } =
+      item.supplementGrant;
+
+    const hasGrantStarted = DateTime.now() >= DateTime.fromISO(startDate);
+
+    if (!hasGrantStarted) return undefined;
+
+    return {
+      title: title ?? '',
+      description: description ?? '',
+      proposalURL: proposal ? proposal.sys.id : undefined,
+      startDate,
+      endDate,
+    };
+  };
+
   return {
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
@@ -301,15 +321,7 @@ export const parseContentfulGraphQlTeam = (
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(item.researchTagsCollection?.items || []),
     tools,
-    supplementGrant: item.supplementGrant?.title
-      ? {
-          title: item.supplementGrant.title,
-          description: item.supplementGrant?.description ?? undefined,
-          proposalURL: item.supplementGrant?.proposal
-            ? item.supplementGrant.proposal.sys.id
-            : undefined,
-        }
-      : undefined,
+    supplementGrant: getSupplementGrant(),
     manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
       (manuscript): TeamDataObject['manuscripts'][number] => ({
         id: manuscript.sys.id,

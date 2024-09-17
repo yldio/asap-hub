@@ -33,7 +33,7 @@
     "react-router-dom": "5.3.4",
     "storybook": "^8.0.0",
     "storybook-addon-designs": "6.3.1",
-    "vite": "5.0.13"
+    "vite": "5.2.14"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

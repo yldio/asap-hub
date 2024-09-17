@@ -50,7 +50,7 @@
     "use-debounce": "8.0.4",
     "use-deep-compare-effect": "1.6.1",
     "uuid": "8.3.2",
-    "vite": "5.0.13",
+    "vite": "5.2.14",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

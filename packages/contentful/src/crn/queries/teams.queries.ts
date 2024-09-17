@@ -34,6 +34,17 @@ export const FETCH_TEAM_BY_ID = gql`
           name
         }
       }
+      supplementGrant {
+        title
+        description
+        startDate
+        endDate
+        proposal {
+          sys {
+            id
+          }
+        }
+      }
       linkedFrom {
         manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
           items {

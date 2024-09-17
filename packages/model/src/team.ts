@@ -51,6 +51,14 @@ export type TeamManuscript = Pick<
   'id' | 'title' | 'versions'
 >;
 
+export type TeamSupplementGrant = {
+  title: string;
+  description?: string;
+  proposalURL?: string;
+  startDate?: string;
+  endDate?: string;
+};
+
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
   tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
@@ -61,6 +69,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   manuscripts: TeamManuscript[];
   labCount: number;
   inactiveSince?: string;
+  supplementGrant?: TeamSupplementGrant;
 };
 
 export type TeamCreateDataObject = {

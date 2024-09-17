@@ -3444,6 +3444,8 @@ type Query {
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsCollection
   researchTags(id: String!, locale: String, preview: Boolean): ResearchTags
   researchTagsCollection(limit: Int = 100, locale: String, order: [ResearchTagsOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchTagsCollection
+  supplementGrant(id: String!, locale: String, preview: Boolean): SupplementGrant
+  supplementGrantCollection(limit: Int = 100, locale: String, order: [SupplementGrantOrder], preview: Boolean, skip: Int = 0, where: SupplementGrantFilter): SupplementGrantCollection
   teamMembership(id: String!, locale: String, preview: Boolean): TeamMembership
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamMembershipOrder], preview: Boolean, skip: Int = 0, where: TeamMembershipFilter): TeamMembershipCollection
   teams(id: String!, locale: String, preview: Boolean): Teams
@@ -4012,6 +4014,7 @@ enum ResearchOutputsLabsCollectionOrder {
 type ResearchOutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  supplementGrantCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder], preview: Boolean, skip: Int = 0): SupplementGrantCollection
   teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
 }
 
@@ -4058,6 +4061,21 @@ enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
+}
+
+enum ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  startDate_ASC
+  startDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
@@ -4685,6 +4703,104 @@ type ResourceSys {
   urn: String!
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant)"""
+type SupplementGrant implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  endDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): SupplementGrantLinkingCollections
+  proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
+  startDate(locale: String): DateTime
+  sys: Sys!
+  title(locale: String): String
+}
+
+type SupplementGrantCollection {
+  items: [SupplementGrant]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input SupplementGrantFilter {
+  AND: [SupplementGrantFilter]
+  OR: [SupplementGrantFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  proposal: cfResearchOutputsNestedFilter
+  proposal_exists: Boolean
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type SupplementGrantLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [SupplementGrantLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
+}
+
+enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum SupplementGrantOrder {
+  endDate_ASC
+  endDate_DESC
+  startDate_ASC
+  startDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type Sys {
   environmentId: String!
   firstPublishedAt: DateTime
@@ -4881,6 +4997,7 @@ type Teams implements Entry & _Node {
   projectTitle(locale: String): String
   proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
   researchTagsCollection(limit: Int = 100, locale: String, order: [TeamsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): TeamsResearchTagsCollection
+  supplementGrant(locale: String, preview: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
 }
@@ -4937,6 +5054,8 @@ input TeamsFilter {
   proposal_exists: Boolean
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
+  supplementGrant: cfSupplementGrantNestedFilter
+  supplementGrant_exists: Boolean
   sys: SysFilter
   tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
@@ -7687,6 +7806,46 @@ input cfResearchTagsNestedFilter {
   types_exists: Boolean
 }
 
+input cfSupplementGrantNestedFilter {
+  AND: [cfSupplementGrantNestedFilter]
+  OR: [cfSupplementGrantNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  proposal_exists: Boolean
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
 input cfTeamMembershipNestedFilter {
   AND: [cfTeamMembershipNestedFilter]
   OR: [cfTeamMembershipNestedFilter]
@@ -7754,6 +7913,7 @@ input cfTeamsNestedFilter {
   projectTitle_not_in: [String]
   proposal_exists: Boolean
   researchTagsCollection_exists: Boolean
+  supplementGrant_exists: Boolean
   sys: SysFilter
   toolsCollection_exists: Boolean
 }

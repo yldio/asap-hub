@@ -22,7 +22,10 @@ const membersCardStyles = css({
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
-  Pick<TeamResponse, 'pointOfContact' | 'members' | 'inactiveSince'> & {
+  Pick<
+    TeamResponse,
+    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant'
+  > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
   };
@@ -37,10 +40,12 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   proposalURL,
   teamGroupsCard,
   teamListElementId,
+  supplementGrant,
 }) => (
   <div css={styles}>
     {projectTitle ? (
       <TeamProfileOverview
+        supplementGrant={supplementGrant}
         projectTitle={projectTitle}
         projectSummary={projectSummary}
         proposalURL={proposalURL}

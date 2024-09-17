@@ -19,6 +19,7 @@ import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client
 import { TeamContentfulDataProvider } from '../../../src/data-providers/contentful/team.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import { TeamRole } from '@asap-hub/model';
+import { DateTime } from 'luxon';
 
 describe('Teams data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -1126,6 +1127,121 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.pointOfContact).toBeUndefined();
+      });
+    });
+
+    describe('supplementGrant', () => {
+      const startDate = '2024-09-01T00:00:00.000-03:00';
+      const endDate = '2024-09-16T00:00:00.000-03:00';
+      beforeAll(() => {
+        jest.useFakeTimers();
+      });
+
+      afterAll(() => {
+        jest.useRealTimers();
+      });
+
+      beforeEach(async () => {
+        const afterStartDate = DateTime.fromISO(startDate)
+          .plus({ minutes: 1 })
+          .toJSDate();
+        jest.setSystemTime(afterStartDate);
+      });
+
+      test('should return supplementGrant when it exists and it has started', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: 'Grant Title',
+          description: 'Grant Description',
+          startDate,
+          endDate,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toEqual({
+          description: 'Grant Description',
+          proposalURL: undefined,
+          title: 'Grant Title',
+          startDate,
+          endDate,
+        });
+      });
+
+      test('should not return supplementGrant when it exists but it has not started', async () => {
+        const beforeStartDate = DateTime.fromISO(startDate)
+          .minus({ minutes: 1 })
+          .toJSDate();
+        jest.setSystemTime(beforeStartDate);
+
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: 'Grant Title',
+          description: 'Grant Description',
+          startDate,
+          endDate,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toEqual(undefined);
+      });
+
+      test('should return supplementGrant proposal when it exists', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: 'Grant Title',
+          description: 'Grant Description',
+          proposal: {
+            sys: {
+              id: 'proposal-id',
+            },
+          },
+          startDate,
+          endDate,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toEqual({
+          description: 'Grant Description',
+          proposalURL: 'proposal-id',
+          title: 'Grant Title',
+          startDate,
+          endDate,
+        });
+      });
+
+      test('should return supplementGrant as undefined when title is not set', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+        contentfulGraphQLResponse.supplementGrant = {
+          title: null,
+          description: null,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: contentfulGraphQLResponse,
+        });
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.supplementGrant).toBeUndefined();
       });
     });
 

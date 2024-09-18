@@ -185,7 +185,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
 
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
-  userEvent.click(screen.getByText(/Share Manuscript/i));
+  userEvent.click(screen.getByText(/Submit Manuscript/i));
   userEvent.click(screen.getByText(/Yes/i));
 
   userEvent.click(

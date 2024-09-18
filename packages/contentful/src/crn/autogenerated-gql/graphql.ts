@@ -12201,25 +12201,27 @@ export type FetchEngagementQuery = {
                       eventsCollection?: Maybe<{
                         items: Array<
                           Maybe<
-                            Pick<Events, 'endDate'> & { sys: Pick<Sys, 'id'> }
+                            Pick<Events, 'endDate' | 'status'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
                           >
                         >;
                       }>;
                     }>;
                     user?: Maybe<
                       | { __typename: 'ExternalAuthors' }
-                      | ({ __typename: 'Users' } & {
-                          sys: Pick<Sys, 'id'>;
-                          teamsCollection?: Maybe<{
-                            items: Array<
-                              Maybe<
-                                Pick<TeamMembership, 'role'> & {
-                                  team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                                }
-                              >
-                            >;
-                          }>;
-                        })
+                      | ({ __typename: 'Users' } & Pick<Users, 'onboarded'> & {
+                            sys: Pick<Sys, 'id'>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<TeamMembership, 'role'> & {
+                                    team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                  }
+                                >
+                              >;
+                            }>;
+                          })
                     >;
                   }>
                 >;
@@ -27760,6 +27762,13 @@ export const FetchEngagementDocument = {
                                                               value: 'endDate',
                                                             },
                                                           },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'status',
+                                                            },
+                                                          },
                                                         ],
                                                       },
                                                     },
@@ -27811,6 +27820,13 @@ export const FetchEngagementDocument = {
                                                             },
                                                           },
                                                         ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'onboarded',
                                                       },
                                                     },
                                                     {

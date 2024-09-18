@@ -1,6 +1,11 @@
 import { FetchEngagementQuery } from '@asap-hub/contentful';
-import { EngagementDataObject, TimeRangeOption } from '@asap-hub/model';
+import {
+  EngagementDataObject,
+  EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  TimeRangeOption,
+} from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
+import { DateTime } from 'luxon';
 import { getRangeFilterParams } from './common';
 
 type Membership = NonNullable<
@@ -25,25 +30,29 @@ export const getEngagementItems = (
 
     cleanArray(teamItem.linkedFrom?.eventSpeakersCollection?.items)
       .filter(getFilterEventByRange(rangeKey))
+      .filter(isNotCancelledEvent)
       .forEach((eventSpeakerItem) => {
         const eventId =
           eventSpeakerItem.linkedFrom?.eventsCollection?.items[0]?.sys.id;
         if (eventId) {
           events.add(eventId);
-        }
 
-        if (eventSpeakerItem.user?.__typename === 'Users') {
-          const userRole = cleanArray(
-            eventSpeakerItem.user.teamsCollection?.items,
-          ).find((speaker) => speaker.team?.sys.id === teamItem.sys.id)?.role;
+          if (
+            eventSpeakerItem.user?.__typename === 'Users' &&
+            eventSpeakerItem.user?.onboarded
+          ) {
+            const userRole = cleanArray(
+              eventSpeakerItem.user.teamsCollection?.items,
+            ).find((speaker) => speaker.team?.sys.id === teamItem.sys.id)?.role;
 
-          const userId = eventSpeakerItem.user.sys.id;
+            const userId = eventSpeakerItem.user.sys.id;
 
-          if (userRole) {
-            totalSpeakerCount += 1;
-            uniqueSpeakers.allRoles.add(userId);
-            if (userRole === 'Key Personnel') {
-              uniqueSpeakers.keyPersonnel.add(userId);
+            if (userRole) {
+              totalSpeakerCount += 1;
+              uniqueSpeakers.allRoles.add(userId);
+              if (userRole === 'Key Personnel') {
+                uniqueSpeakers.keyPersonnel.add(userId);
+              }
             }
           }
         }
@@ -93,5 +102,17 @@ export const getFilterEventByRange =
   (rangeKey?: TimeRangeOption) => (item: EventSpeakersCollectionItem) => {
     const filter = getRangeFilterParams(rangeKey);
     const endDate = item?.linkedFrom?.eventsCollection?.items[0]?.endDate;
-    return !endDate || !filter || endDate >= filter;
+    return isPastEvent(endDate) && (!filter || endDate >= filter);
   };
+
+const isPastEvent = (endDate: string) =>
+  endDate &&
+  DateTime.fromISO(endDate).plus({
+    hours: EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  }) < DateTime.now();
+
+export const isNotCancelledEvent = (
+  eventSpeakerItem: EventSpeakersCollectionItem,
+) =>
+  eventSpeakerItem?.linkedFrom?.eventsCollection?.items[0]?.status !==
+  'Cancelled';

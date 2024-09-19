@@ -116,7 +116,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
           <Card>
             <div css={complianceContainerStyles}>
               <div css={complianceHeaderStyles}>
-                <Display styleAsHeading={3}>Compliance</Display>
+                <Display styleAsHeading={3}>Compliance Review</Display>
                 <div css={css(manuscriptButtonStyles)}>
                   <Button
                     onClick={handleShareManuscript}
@@ -124,13 +124,14 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                     noMargin
                     small
                   >
-                    {plusIcon} Share Manuscript
+                    {plusIcon} Submit Manuscript
                   </Button>
                 </div>
               </div>
               <Paragraph accent="lead">
-                This directory contains all manuscripts with their compliance
-                reports.
+                Submit your manuscript to receive a report outlining where your
+                work meets ASAP's Open Science Policy and where changes are
+                needed for your work to be compliant
               </Paragraph>
             </div>
             {manuscripts.map((manuscript) => (

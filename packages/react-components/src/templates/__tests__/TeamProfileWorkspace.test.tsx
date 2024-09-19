@@ -58,7 +58,9 @@ describe('compliance section', () => {
     const { getByRole, queryByRole, rerender } = render(
       <TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />,
     );
-    expect(getByRole('heading', { name: 'Compliance' })).toBeInTheDocument();
+    expect(
+      getByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
 
     disable('DISPLAY_MANUSCRIPTS');
     rerender(<TeamProfileWorkspace {...teamWithManuscripts} tools={[]} />);
@@ -198,7 +200,7 @@ describe('compliance section', () => {
       'Do you need to submit a manuscript?',
     );
 
-    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
     expect(container).toHaveTextContent('Do you need to submit a manuscript?');
   });
@@ -208,7 +210,7 @@ describe('compliance section', () => {
       <TeamProfileWorkspace {...team} tools={[]} />,
     );
 
-    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
     expect(container).toHaveTextContent('Do you need to submit a manuscript?');
 
@@ -229,7 +231,7 @@ describe('compliance section', () => {
       </Router>,
     );
 
-    userEvent.click(getByRole('button', { name: /share manuscript/i }));
+    userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 
     userEvent.click(screen.getByText(/Yes/i));
 

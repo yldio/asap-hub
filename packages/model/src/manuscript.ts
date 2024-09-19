@@ -495,11 +495,12 @@ export const quickCheckQuestions: QuickCheckQuestions[] = [
   },
   {
     field: 'codeDeposited',
-    question: 'Deposited all newly generated code and analysis scripts',
+    question:
+      'Deposited all newly generated code and analysis scripts in a public repository',
   },
   {
     field: 'protocolsDeposited',
-    question: 'Deposited all newly generated protocols',
+    question: 'Deposited all newly generated protocols in a public repository',
   },
   {
     field: 'labMaterialsRegistered',

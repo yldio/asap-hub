@@ -5,7 +5,6 @@ import { FC } from 'react';
 import { Avatar } from '../atoms';
 import { lead } from '../colors';
 import { formatDate } from '../date';
-// import { alumniBadgeIcon } from '../icons';
 import { rem } from '../pixels';
 import { ImageLink } from '.';
 import UserTeamInfo from './UserTeamInfo';
@@ -24,22 +23,6 @@ const userContainerStyles = css({
   alignItems: 'center',
   gap: rem(8),
 });
-
-// const userAndTeamContainerStyles = css({ display: 'flex', gap: rem(4) });
-
-// const nameStyles = css({
-//   overflow: 'hidden',
-//   whiteSpace: 'nowrap',
-//   textOverflow: 'ellipsis',
-// });
-
-// const teamStyles = css({
-//   display: 'flex',
-// });
-
-// const iconStyles = css({
-//   display: 'inline-flex',
-// });
 
 const dateStyles = css({
   color: lead.rgb,

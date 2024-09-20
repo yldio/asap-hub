@@ -82,7 +82,7 @@ const apcCoverageLifecycles = [
 type OptionalVersionFields = Array<
   keyof Omit<
     ManuscriptVersion,
-    'type' | 'lifecycle' | 'createdBy' | 'publishedAt'
+    'type' | 'lifecycle' | 'createdBy' | 'createdDate' | 'publishedAt'
   >
 >;
 
@@ -155,6 +155,7 @@ type ManuscriptFormProps = Omit<
   | 'keyResourceTable'
   | 'additionalFiles'
   | 'createdBy'
+  | 'createdDate'
   | 'publishedAt'
   | 'teams'
   | 'labs'

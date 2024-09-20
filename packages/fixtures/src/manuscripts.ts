@@ -27,6 +27,7 @@ export const createManuscriptResponse = (
       lifecycle: 'Draft manuscript (prior to preprint submission)',
       type: 'Original Research',
       createdBy: manuscriptAuthor,
+      createdDate: '2020-12-10T20:36:54Z',
       publishedAt: '2020-12-10T20:36:54Z',
       manuscriptFile: {
         id: `file-id-${itemIndex}`,

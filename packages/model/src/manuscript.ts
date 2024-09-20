@@ -113,6 +113,7 @@ export type ManuscriptVersion = {
   > & {
     teams: { id: string; name: string }[];
   };
+  createdDate: string;
   publishedAt: string;
 };
 
@@ -120,7 +121,9 @@ export const manuscriptFormFieldsMapping: Record<
   ManuscriptType,
   Record<
     ManuscriptLifecycle,
-    Array<keyof Omit<ManuscriptVersion, 'createdBy' | 'publishedAt'>>
+    Array<
+      keyof Omit<ManuscriptVersion, 'createdBy' | 'createdDate' | 'publishedAt'>
+    >
   >
 > = {
   'Original Research': {

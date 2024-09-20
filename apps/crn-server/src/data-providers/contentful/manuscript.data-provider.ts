@@ -211,6 +211,7 @@ export const parseGraphqlManuscriptVersion = (
           name: teamItem?.team?.displayName,
         })),
       },
+      createdDate: version?.sys.firstPublishedAt,
       publishedAt: version?.sys.publishedAt,
       teams: version?.teamsCollection?.items.map((teamItem) => ({
         id: teamItem?.sys.id,

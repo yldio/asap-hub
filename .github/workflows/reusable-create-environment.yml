@@ -10,8 +10,12 @@ on:
       crn-contentful-env:
         description: 'CRN Contentful environment name'
         type: string
-      crn-on-branch-env:
-        description: 'Is CRN branch environment required'
+      crn-contentful-on-branch-env:
+        description: 'Is CRN Contentful branch environment required'
+        required: true
+        type: string
+      crn-algolia-on-branch-env:
+        description: 'Is CRN Algolia branch environment required'
         required: true
         type: string
       crn-contentful-env-exists:
@@ -21,8 +25,12 @@ on:
       gp2-contentful-env:
         description: 'GP2 Contentful environment name'
         type: string
-      gp2-on-branch-env:
-        description: 'Is GP2 branch environment required'
+      gp2-contentful-on-branch-env:
+        description: 'Is GP2 Contentful branch environment required'
+        required: true
+        type: string
+      gp2-algolia-on-branch-env:
+        description: 'Is GP2 Algolia branch environment required'
         required: true
         type: string
       gp2-contentful-env-exists:
@@ -48,7 +56,7 @@ on:
 
 jobs:
   crn-contentful:
-    if: ${{ inputs.environment-name=='Branch' && inputs.crn-on-branch-env == 'true' && inputs.crn-contentful-env-exists == 'false'}}
+    if: ${{ inputs.environment-name=='Branch' && inputs.crn-contentful-on-branch-env == 'true' && inputs.crn-contentful-env-exists == 'false'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -75,7 +83,7 @@ jobs:
           contentful-environment-id: ${{ inputs.crn-contentful-env }}
 
   gp2-contentful:
-    if: ${{ inputs.environment-name=='Branch' && inputs.gp2-on-branch-env == 'true' && inputs.gp2-contentful-env-exists == 'false'}}
+    if: ${{ inputs.environment-name=='Branch' && inputs.gp2-contentful-on-branch-env == 'true' && inputs.gp2-contentful-env-exists == 'false'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -163,7 +171,7 @@ jobs:
           ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ANALYTICS_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
       - name: Copy entity index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.entity-index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.entity-index-exists == 'false' && inputs.crn-algolia-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ENTITY_ALGOLIA_INDEX_DEV $ENTITY_ALGOLIA_INDEX
@@ -174,7 +182,7 @@ jobs:
           ENTITY_ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
           ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Copy analytics index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.analytics-index-exists == 'false' && inputs.crn-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.analytics-index-exists == 'false' && inputs.crn-algolia-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ANALYTICS_ALGOLIA_INDEX_DEV $ANALYTICS_ALGOLIA_INDEX
@@ -237,7 +245,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.gp2-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.gp2-algolia-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX

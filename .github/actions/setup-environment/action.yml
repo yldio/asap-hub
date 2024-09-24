@@ -251,12 +251,18 @@ outputs:
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}
-  crn-on-branch-env:
+  crn-contentful-on-branch-env:
     description: 'Whether the crn Contentful environment being used is a PR environment'
-    value: ${{ steps.vars.outputs.crn-on-branch-env }}
-  gp2-on-branch-env:
+    value: ${{ steps.vars.outputs.crn-contentful-on-branch-env }}
+  crn-algolia-on-branch-env:
+    description: 'Whether the crn Algolia environment being used is a PR environment'
+    value: ${{ steps.vars.outputs.crn-algolia-on-branch-env }}
+  gp2-contentful-on-branch-env:
     description: 'Whether the gp2 Contentful environment being used is a PR environment'
-    value: ${{ steps.vars.outputs.gp2-on-branch-env }}
+    value: ${{ steps.vars.outputs.gp2-contentful-on-branch-env }}
+  gp2-algolia-on-branch-env:
+    description: 'Whether the gp2 Algolia environment being used is a PR environment'
+    value: ${{ steps.vars.outputs.gp2-algolia-on-branch-env }}
 runs:
   using: 'composite'
   steps:
@@ -297,11 +303,14 @@ runs:
           fi
 
           CRN_CREATE_ALGOLIA_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-algolia-environment') || inputs.crn-create-env }}
-          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') || inputs.crn-create-env }}
-          GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
+          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-contentful-environment') || inputs.crn-create-env }}
+          GP2_CREATE_ALGOLIA_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-algolia-environment') || inputs.gp2-create-env }}
+          GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-contentful-environment') || inputs.gp2-create-env }}
 
-          echo "crn-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
-          echo "gp2-on-branch-env=$GP2_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
+          echo "crn-contentful-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
+          echo "crn-algolia-on-branch-env=$CRN_CREATE_ALGOLIA_PR_ENV" >> $GITHUB_OUTPUT
+          echo "gp2-contentful-on-branch-env=$GP2_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
+          echo "gp2-algolia-on-branch-env=$GP2_CREATE_ALGOLIA_PR_ENV" >> $GITHUB_OUTPUT
 
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
@@ -314,13 +323,9 @@ runs:
 
           if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
             echo "setting up dedicated Contentful PR env"
-            # echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-            # echo "crn-analytics-algolia-index=crn-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           else
             echo "setting up PR with Contentful pointing to DEV env"
-            # echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
-            # echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
             echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
           fi
 
@@ -335,11 +340,15 @@ runs:
           fi
 
           if [ "$GP2_CREATE_CONTENTFUL_PR_ENV" = true ]; then
-            echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
           else
-            echo "gp2-algolia-index=gp2-hub_dev" >> $GITHUB_OUTPUT
             echo "gp2-contentful-env-id=Development" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "$GP2_CREATE_ALGOLIA_PR_ENV" = true ]; then
+            echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "gp2-algolia-index=gp2-hub_dev" >> $GITHUB_OUTPUT
           fi
 
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then

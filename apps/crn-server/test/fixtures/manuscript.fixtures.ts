@@ -19,6 +19,7 @@ export const getManuscriptDataObject = (
       lifecycle: 'Preprint, version 1',
       type: 'Original Research',
       createdBy: manuscriptAuthor,
+      createdDate: '2020-09-23T20:45:22.000Z',
       publishedAt: '2020-09-23T20:45:22.000Z',
       manuscriptFile: {
         filename: 'manuscript.pdf',
@@ -72,7 +73,11 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
 > = () => ({
   items: [
     {
-      sys: { id: 'version-1', publishedAt: '2020-09-23T20:45:22.000Z' },
+      sys: {
+        id: 'version-1',
+        publishedAt: '2020-09-23T20:45:22.000Z',
+        firstPublishedAt: '2020-09-23T20:45:22.000Z',
+      },
       type: 'Original Research',
       lifecycle: 'Preprint, version 1',
       manuscriptFile: {
@@ -133,8 +138,9 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
 
   const {
     createdBy: _,
-    publishedAt: __,
-    teams: ___,
+    createdDate: __,
+    publishedAt: ___,
+    teams: ____,
     ...version
   } = versions[0]!;
   return {

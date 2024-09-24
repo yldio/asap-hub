@@ -2,12 +2,12 @@ import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC } from 'react';
 
-import { Avatar, Link } from '../atoms';
+import { Avatar } from '../atoms';
 import { lead } from '../colors';
 import { formatDate } from '../date';
-import { alumniBadgeIcon } from '../icons';
 import { rem } from '../pixels';
 import { ImageLink } from '.';
+import UserTeamInfo from './UserTeamInfo';
 
 const containerStyles = css({
   display: 'flex',
@@ -22,22 +22,6 @@ const userContainerStyles = css({
   flexDirection: 'row',
   alignItems: 'center',
   gap: rem(8),
-});
-
-const userAndTeamContainerStyles = css({ display: 'flex', gap: rem(4) });
-
-const nameStyles = css({
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
-});
-
-const teamStyles = css({
-  display: 'flex',
-});
-
-const iconStyles = css({
-  display: 'inline-flex',
 });
 
 const dateStyles = css({
@@ -77,29 +61,12 @@ const UserCommentHeader: FC<UserCommentHeaderProps> = ({
           imageUrl={avatarUrl}
         />
       </ImageLink>
-      <div css={userAndTeamContainerStyles}>
-        <Link ellipsed href={userHref}>
-          <span css={nameStyles}>{displayName}</span>
-        </Link>
-        {alumniSinceDate && <span css={iconStyles}>{alumniBadgeIcon}</span>}
-        {teams.length === 1 ? (
-          <span css={[teamStyles, nameStyles]}>
-            (
-            <Link ellipsed href={teams[0]?.href}>
-              <span css={nameStyles}>{teams[0]?.name}</span>
-            </Link>
-            )
-          </span>
-        ) : (
-          <span css={[teamStyles, nameStyles]}>
-            (
-            <Link ellipsed href={userHref}>
-              <span css={nameStyles}>Multiple teams</span>
-            </Link>
-            )
-          </span>
-        )}
-      </div>
+      <UserTeamInfo
+        displayName={displayName}
+        userHref={userHref}
+        teams={teams}
+        alumniSinceDate={alumniSinceDate}
+      />
     </div>
     <span> · </span>
     <span css={dateStyles}>{formatDate(new Date(date))}</span>

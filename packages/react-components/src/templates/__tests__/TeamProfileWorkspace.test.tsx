@@ -115,6 +115,7 @@ describe('compliance section', () => {
                 avatarUrl: '',
                 alumniSinceDate: undefined,
               },
+              createdDate: '2020-12-10T20:36:54Z',
               publishedAt: '2020-12-10T20:36:54Z',
               teams: [
                 {
@@ -153,6 +154,7 @@ describe('compliance section', () => {
                 avatarUrl: '',
                 alumniSinceDate: undefined,
               },
+              createdDate: '2020-12-10T20:36:54Z',
               publishedAt: '2020-12-10T20:36:54Z',
               teams: [
                 {

@@ -609,7 +609,14 @@ export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
 
+export type ContentfulMetadataConceptsFilter = {
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type ContentfulMetadataFilter = {
+  concepts?: InputMaybe<ContentfulMetadataConceptsFilter>;
   tags?: InputMaybe<ContentfulMetadataTagsFilter>;
   tags_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -16121,7 +16128,7 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           | 'labMaterialsRegistered'
           | 'labMaterialsRegisteredDetails'
         > & {
-          sys: Pick<Sys, 'id' | 'publishedAt'>;
+          sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
           manuscriptFile?: Maybe<
             Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
           >;
@@ -16206,7 +16213,7 @@ export type FetchManuscriptByIdQuery = {
               | 'labMaterialsRegistered'
               | 'labMaterialsRegisteredDetails'
             > & {
-              sys: Pick<Sys, 'id' | 'publishedAt'>;
+              sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
               manuscriptFile?: Maybe<
                 Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
               >;
@@ -17817,7 +17824,10 @@ export type FetchTeamByIdQuery = {
                         | 'labMaterialsRegistered'
                         | 'labMaterialsRegisteredDetails'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedAt'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedAt' | 'firstPublishedAt'
+                        >;
                         manuscriptFile?: Maybe<
                           Pick<Asset, 'fileName' | 'url'> & {
                             sys: Pick<Sys, 'id'>;
@@ -21496,6 +21506,10 @@ export const ManuscriptsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstPublishedAt' },
                             },
                           ],
                         },

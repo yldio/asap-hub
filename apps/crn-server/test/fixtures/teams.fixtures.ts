@@ -216,6 +216,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           lifecycle: 'Preprint, version 1',
           type: 'Original Research',
           createdBy: manuscriptAuthor,
+          createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
             id: 'file-id',
@@ -245,6 +246,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           lifecycle: 'Preprint, version 1',
           type: 'Original Research',
           createdBy: manuscriptAuthor,
+          createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
             id: 'file-id',

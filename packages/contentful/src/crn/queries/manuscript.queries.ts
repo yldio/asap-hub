@@ -13,6 +13,7 @@ export const manuscriptContentQueryFragment = gql`
         sys {
           id
           publishedAt
+          firstPublishedAt
         }
         type
         lifecycle

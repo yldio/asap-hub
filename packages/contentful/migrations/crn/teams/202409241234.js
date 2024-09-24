@@ -24,6 +24,13 @@ module.exports.up = (migration) => {
     .name('Research Theme')
     .type('Link')
     .localized(false)
+    .validations([
+      {
+        linkContentType: ['researchTheme'],
+        message: 'Only entries from Research Theme model can be selected.',
+      },
+    ])
+
     .required(false)
     .disabled(false)
     .omitted(false)

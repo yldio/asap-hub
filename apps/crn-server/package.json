@@ -67,7 +67,7 @@
     "got": "11.8.6",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
-    "jsonwebtoken": "9.0.0",
+    "jsonwebtoken": "9.0.1",
     "jwt-decode": "2.2.0",
     "lodash": "^4.17.21",
     "lodash.get": "4.4.2",

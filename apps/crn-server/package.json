@@ -60,7 +60,7 @@
     "contentful-management": "10.46.4",
     "cors": "2.8.5",
     "csv-parse": "4.16.3",
-    "debug": "4.3.4",
+    "debug": "4.3.5",
     "express": "4.20.0",
     "express-async-errors": "3.1.1",
     "form-data": "3.0.1",

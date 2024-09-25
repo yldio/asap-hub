@@ -33,7 +33,7 @@
     "async-sema": "3.1.1",
     "aws-sdk": "2.1524.0",
     "csv-parse": "4.16.3",
-    "got": "11.8.6",
+    "got": "12.0.0",
     "jwt-encode": "1.0.1",
     "luxon": "1.28.1",
     "prettier": "3.1.1",

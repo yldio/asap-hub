@@ -90,8 +90,8 @@ To send a new invitation you can remove the values from the `Connections` field.
 
 If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.
 
-- crn-create-environment
-- gp2-create-environment
+- crn-create-contentful-environment
+- gp2-create-contentful-environment
 
 You should create a dedicated environment in Contentful if:
 
@@ -99,6 +99,16 @@ You should create a dedicated environment in Contentful if:
 - you need to develop/test webhook behaviour as part of your PR
 
 When creating a new Contentful environment you will need to ensure that the API keys you are using for local development have permission to access that environment. You can check this by inspecting your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
+
+### Algolia Dedicated Environment
+
+If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to it.
+This will run the github action workflow to create a new environment with a copy of the relevant Algolia indexes.
+
+- crn-create-algolia-environment
+- gp2-create-algolia-environment
+
+To avoid incurring in extra costs you should only use this if you need to make changes in Algolia indexes and make sure they are deleted when you close/merge your PR.
 
 ## Editor setup
 

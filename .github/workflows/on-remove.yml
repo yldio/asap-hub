@@ -165,7 +165,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.gp2-contentful-env-id }}
       - name: Contentful Webhook Teardown
-        if: ${{ steps.setup.outputs.gp2-contentful-on-branch-env == 'true' }}
+        if: ${{ steps.setup.outputs.gp2-on-branch-env == 'true' }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -264,7 +264,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the index
-        if: ${{ steps.setup.outputs.gp2-algolia-on-branch-env == 'true' }}
+        if: ${{ steps.setup.outputs.gp2-on-branch-env == 'true' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:

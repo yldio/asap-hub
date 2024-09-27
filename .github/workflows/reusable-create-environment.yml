@@ -25,12 +25,8 @@ on:
       gp2-contentful-env:
         description: 'GP2 Contentful environment name'
         type: string
-      gp2-contentful-on-branch-env:
+      gp2-on-branch-env:
         description: 'Is GP2 Contentful branch environment required'
-        required: true
-        type: string
-      gp2-algolia-on-branch-env:
-        description: 'Is GP2 Algolia branch environment required'
         required: true
         type: string
       gp2-contentful-env-exists:
@@ -83,7 +79,7 @@ jobs:
           contentful-environment-id: ${{ inputs.crn-contentful-env }}
 
   gp2-contentful:
-    if: ${{ inputs.environment-name=='Branch' && inputs.gp2-contentful-on-branch-env == 'true' && inputs.gp2-contentful-env-exists == 'false'}}
+    if: ${{ inputs.environment-name=='Branch' && inputs.gp2-on-branch-env == 'true' && inputs.gp2-contentful-env-exists == 'false'}}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -245,7 +241,7 @@ jobs:
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
       - name: Copy index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.gp2-algolia-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.index-exists == 'false' && inputs.gp2-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ALGOLIA_INDEX_DEV $ALGOLIA_INDEX

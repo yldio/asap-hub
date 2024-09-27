@@ -89,6 +89,7 @@ To send a new invitation you can remove the values from the `Connections` field.
 ### Contentful Dedicated Environment
 
 If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.
+This will also create a duplication of the core algolia index for you to use during the development.
 
 - crn-create-contentful-environment
 - gp2-create-contentful-environment

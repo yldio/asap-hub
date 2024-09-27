@@ -19,8 +19,7 @@ jobs:
       crn-contentful-env-exists: ${{ steps.get-crn-contentful-state.outputs.contentful-env-exists }}
       crn-contentful-limit-reached: ${{ steps.get-crn-contentful-state.outputs.contentful-limit-reached }}
       gp2-contentful-env: ${{ steps.setup.outputs.gp2-contentful-env-id }}
-      gp2-contentful-on-branch-env: ${{ steps.setup.outputs.gp2-contentful-on-branch-env }}
-      gp2-algolia-on-branch-env: ${{ steps.setup.outputs.gp2-algolia-on-branch-env }}
+      gp2-on-branch-env: ${{ steps.setup.outputs.gp2-on-branch-env }}
       gp2-contentful-env-exists: ${{ steps.get-gp2-contentful-state.outputs.contentful-env-exists }}
       gp2-contentful-limit-reached: ${{ steps.get-gp2-contentful-state.outputs.contentful-limit-reached }}
     steps:
@@ -97,8 +96,7 @@ jobs:
       crn-algolia-on-branch-env: ${{ needs.setup.outputs.crn-algolia-on-branch-env }}
       crn-contentful-env-exists: ${{ needs.setup.outputs.crn-contentful-env-exists }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
-      gp2-contentful-on-branch-env: ${{ needs.setup.outputs.gp2-contentful-on-branch-env }}
-      gp2-algolia-on-branch-env: ${{ needs.setup.outputs.gp2-algolia-on-branch-env }}
+      gp2-on-branch-env: ${{ needs.setup.outputs.gp2-on-branch-env }}
       gp2-contentful-env-exists: ${{ needs.setup.outputs.gp2-contentful-env-exists }}
       gp2-contentful-env: ${{ needs.setup.outputs.gp2-contentful-env }}
     secrets:

@@ -70,7 +70,7 @@ describe('pollContentfulDeliveryApi', () => {
     const response = await pollContentfulDeliveryApi(fetchEntry, 2);
     expect(fetchEntry).toHaveBeenCalledTimes(9);
     expect(response).toEqual(entryDataWithPublishedCounter2);
-  }, 120_000);
+  }, 180_000);
 
   test('throws if polling query does not return a value', async () => {
     const fetchEntry = jest.fn().mockResolvedValueOnce(null);

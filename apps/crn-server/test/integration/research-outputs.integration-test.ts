@@ -374,7 +374,7 @@ describe('research outputs', () => {
             expect(response.body.published).toEqual(true);
             expect(response.body.addedDate).toBeCloseInTimeTo(now);
           });
-        });
+        }, 180_000);
 
         test('cannot publish draft outputs for non pm teams', async () => {
           await supertest(app)

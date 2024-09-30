@@ -254,9 +254,9 @@ outputs:
   crn-contentful-on-branch-env:
     description: 'Whether the crn Contentful environment being used is a PR environment'
     value: ${{ steps.vars.outputs.crn-contentful-on-branch-env }}
-  crn-algolia-on-branch-env:
+  crn-analytics-algolia-on-branch-env:
     description: 'Whether the crn Algolia environment being used is a PR environment'
-    value: ${{ steps.vars.outputs.crn-algolia-on-branch-env }}
+    value: ${{ steps.vars.outputs.crn-analytics-algolia-on-branch-env }}
   gp2-on-branch-env:
     description: 'Whether the gp2 Contentful environment being used is a PR environment'
     value: ${{ steps.vars.outputs.gp2-on-branch-env }}
@@ -299,12 +299,12 @@ runs:
             echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
           fi
 
-          CRN_CREATE_ALGOLIA_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-algolia-environment') || inputs.crn-create-env }}
+          CRN_CREATE_ANALYTICS_ALGOLIA_INDEX=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-analytics-algolia-index') || inputs.crn-create-env }}
           CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-contentful-environment') || inputs.crn-create-env }}
           GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
 
           echo "crn-contentful-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
-          echo "crn-algolia-on-branch-env=($CRN_CREATE_ALGOLIA_PR_ENV || $CRN_CREATE_CONTENTFUL_PR_ENV)" >> $GITHUB_OUTPUT
+          echo "crn-analytics-algolia-on-branch-env=$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" >> $GITHUB_OUTPUT
           echo "gp2-on-branch-env=$GP2_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT
 
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
@@ -317,33 +317,21 @@ runs:
           echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
 
           if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
-            echo "setting up dedicated Contentful PR env"
+            echo "setting up dedicated Contentful PR env and Algolia Entity Index"
             echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
-
-            if [ "$CRN_CREATE_ALGOLIA_PR_ENV" = true ]; then
-              echo "setting up dedicated Algolia Analytics PR env"
-              echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-              echo "crn-analytics-algolia-index=crn-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-            else
-              echo "setting up PR with Algolia Analytics pointing to DEV env"
-              echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-              echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "setting up PR with Contentful pointing to DEV env"
+            echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
+          elif [ "$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" = true ]; then
+            echo "setting up Contentful and Entity Algolia Index pointing to DEV and a dedicated Analytics Algolia Index"
             echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
-
-            if [ "$CRN_CREATE_ALGOLIA_PR_ENV" = true ]; then
-              echo "setting up dedicated Algolia Analytics PR env"
-              echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-              echo "crn-analytics-algolia-index=crn-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
-            else
-              echo "setting up PR with Algolia pointing to DEV env"
-              echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
-              echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
-            fi
+            echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
+            echo "crn-analytics-algolia-index=crn-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "setting up PR pointing to DEV env"
+            echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT
+            echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
+            echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
           fi
-
 
           if [ "$GP2_CREATE_CONTENTFUL_PR_ENV" = true ]; then
             echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT

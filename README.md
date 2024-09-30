@@ -106,7 +106,7 @@ When creating a new Contentful environment you will need to ensure that the API 
 If you require a dedicated environment for your development work, create a PR and add the following label to it.
 This will run the github action workflow to create a new environment with a copy of the relevant Analytics Algolia indexes.
 
-- crn-create-analytics-algolia-environment
+- crn-create-analytics-algolia-index
 
 To avoid incurring in extra costs you should only use this if you need to make changes in Analytics indexes and make sure they are deleted when you close/merge your PR.
 

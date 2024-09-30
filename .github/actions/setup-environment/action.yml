@@ -300,7 +300,7 @@ runs:
           fi
 
           CRN_CREATE_ANALYTICS_ALGOLIA_INDEX=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-analytics-algolia-index') || inputs.crn-create-env }}
-          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-contentful-environment') || inputs.crn-create-env }}
+          CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') || inputs.crn-create-env }}
           GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') || inputs.gp2-create-env }}
 
           echo "crn-contentful-on-branch-env=$CRN_CREATE_CONTENTFUL_PR_ENV" >> $GITHUB_OUTPUT

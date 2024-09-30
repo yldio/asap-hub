@@ -14,7 +14,7 @@ on:
         description: 'Is CRN Contentful branch environment required'
         required: true
         type: string
-      crn-algolia-on-branch-env:
+      crn-analytics-algolia-on-branch-env:
         description: 'Is CRN Algolia branch environment required'
         required: true
         type: string
@@ -167,7 +167,7 @@ jobs:
           ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
           ANALYTICS_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
       - name: Copy entity index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.entity-index-exists == 'false' && inputs.crn-algolia-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.entity-index-exists == 'false' && inputs.crn-contentful-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ENTITY_ALGOLIA_INDEX_DEV $ENTITY_ALGOLIA_INDEX
@@ -178,7 +178,7 @@ jobs:
           ENTITY_ALGOLIA_INDEX_DEV: ${{ steps.setup-dev.outputs.crn-algolia-index }}
           ENTITY_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Copy analytics index from Dev
-        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.analytics-index-exists == 'false' && inputs.crn-algolia-on-branch-env == 'true' }}
+        if: ${{ inputs.environment-name=='Branch' && steps.index-exists.outputs.analytics-index-exists == 'false' && inputs.crn-analytics-algolia-on-branch-env == 'true' }}
         shell: bash
         run: |
           algolia indices copy -y -w $ANALYTICS_ALGOLIA_INDEX_DEV $ANALYTICS_ALGOLIA_INDEX

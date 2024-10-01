@@ -19,7 +19,7 @@ export const Normal = () => (
       { label: 'Dataset', value: '2' },
       { label: 'Bioinformatics', value: '3' },
       { label: 'Protocol', value: '4' },
-      { label: 'Lab Resource', value: '5' },
+      { label: 'Lab Material', value: '5' },
       { label: 'Article', value: '7' },
       { label: 'Other', value: '8' },
     ]}

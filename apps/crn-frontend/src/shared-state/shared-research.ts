@@ -41,8 +41,8 @@ export function paramOutputDocumentTypeToResearchOutputDocumentType(
       return 'Bioinformatics';
     case 'dataset':
       return 'Dataset';
-    case 'lab-resource':
-      return 'Lab Resource';
+    case 'lab-material':
+      return 'Lab Material';
     case 'protocol':
       return 'Protocol';
     case 'report':

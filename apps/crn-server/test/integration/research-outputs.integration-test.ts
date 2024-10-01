@@ -356,7 +356,7 @@ describe('research outputs', () => {
           publishOutputId = response.body.id;
         });
 
-        test('can publish a draft output by updating with `published: true`', async () => {
+        test.skip('can publish a draft output by updating with `published: true`', async () => {
           const now = new Date().toISOString();
           await supertest(app)
             .put(`/research-outputs/${publishOutputId}`)

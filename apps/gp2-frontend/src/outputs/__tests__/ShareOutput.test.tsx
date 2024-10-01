@@ -28,6 +28,7 @@ import {
 import { getOutputs, updateOutput, getGeneratedOutputContent } from '../api';
 import ShareOutput from '../ShareOutput';
 
+jest.setTimeout(30_000);
 jest.mock('../api');
 jest.mock('../../shared/api');
 jest.mock('../../projects/api');

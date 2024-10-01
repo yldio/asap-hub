@@ -33,9 +33,10 @@ module.exports.up = (migration) => {
     from: ['documentType'],
     to: ['documentType'],
     transformEntryForLocale: function (fromFields, currentLocale) {
-      return {
-        documentType: transformType(fromFields.documentType[currentLocale]),
-      };
+      if (fromFields.documentType)
+        return {
+          documentType: transformType(fromFields.documentType[currentLocale]),
+        };
     },
   });
 
@@ -78,9 +79,10 @@ module.exports.up = (migration) => {
     from: ['documentType'],
     to: ['documentType'],
     transformEntryForLocale: function (fromFields, currentLocale) {
-      return {
-        documentType: transformType(fromFields.documentType[currentLocale]),
-      };
+      if (fromFields.documentType)
+        return {
+          documentType: transformType(fromFields.documentType[currentLocale]),
+        };
     },
   });
 
@@ -132,9 +134,10 @@ module.exports.down = (migration) => {
     from: ['documentType'],
     to: ['documentType'],
     transformEntryForLocale: function (fromFields, currentLocale) {
-      return {
-        documentType: transformType(fromFields.documentType[currentLocale]),
-      };
+      if (fromFields.documentType)
+        return {
+          documentType: transformType(fromFields.documentType[currentLocale]),
+        };
     },
   });
 
@@ -177,9 +180,10 @@ module.exports.down = (migration) => {
     from: ['documentType'],
     to: ['documentType'],
     transformEntryForLocale: function (fromFields, currentLocale) {
-      return {
-        documentType: transformType(fromFields.documentType[currentLocale]),
-      };
+      if (fromFields.documentType)
+        return {
+          documentType: transformType(fromFields.documentType[currentLocale]),
+        };
     },
   });
 

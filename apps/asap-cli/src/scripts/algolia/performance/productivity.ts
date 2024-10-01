@@ -108,7 +108,7 @@ export const processTeamProductivityPerformance = async (
         { name: 'Article', documentType: 'article' },
         { name: 'Bioinformatics', documentType: 'bioinformatics' },
         { name: 'Dataset', documentType: 'dataset' },
-        { name: 'Lab Resource', documentType: 'labResource' },
+        { name: 'Lab Material', documentType: 'labMaterial' },
         { name: 'Protocol', documentType: 'protocol' },
       ];
 

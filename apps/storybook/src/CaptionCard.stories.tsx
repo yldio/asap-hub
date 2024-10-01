@@ -42,7 +42,7 @@ export const Normal: Story = {
           aboveAverageMax={10}
         />
         <CaptionItem
-          label="Lab Resources"
+          label="Lab Materials"
           belowAverageMin={2}
           belowAverageMax={5}
           averageMin={6}

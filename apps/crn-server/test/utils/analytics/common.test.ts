@@ -83,11 +83,11 @@ describe('filtering', () => {
       {
         key: 'dataset',
         included: 'Dataset',
-        excluded: 'Lab Resource',
+        excluded: 'Lab Material',
       },
       {
-        key: 'lab-resource',
-        included: 'Lab Resource',
+        key: 'lab-material',
+        included: 'Lab Material',
         excluded: 'Protocol',
       },
       {
@@ -116,7 +116,7 @@ describe('filtering', () => {
         { documentType: 'Article' },
         { documentType: 'Bioinformatics' },
         { documentType: 'Dataset' },
-        { documentType: 'Lab Resource' },
+        { documentType: 'Lab Material' },
         { documentType: 'Protocol' },
       ];
 

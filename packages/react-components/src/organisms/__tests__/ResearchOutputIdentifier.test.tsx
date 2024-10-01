@@ -14,7 +14,7 @@ it('should render Identifier', () => {
 });
 
 it('should render Identifier info with DOI and RRID', () => {
-  render(<ResearchOutputIdentifier {...props} documentType={'Lab Resource'} />);
+  render(<ResearchOutputIdentifier {...props} documentType={'Lab Material'} />);
   const infoButton = screen.getByRole('button', {
     name: /info/i,
   });

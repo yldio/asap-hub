@@ -292,7 +292,7 @@ export const getTeamProductivityDataObject =
     Article: 1,
     Bioinformatics: 1,
     Dataset: 0,
-    'Lab Resource': 0,
+    'Lab Material': 0,
     Protocol: 1,
   });
 
@@ -661,7 +661,7 @@ export const getTeamCollaborationDataObject =
       Article: 1,
       Bioinformatics: 0,
       Dataset: 0,
-      'Lab Resource': 0,
+      'Lab Material': 0,
       Protocol: 0,
     },
     outputsCoProducedAcross: {
@@ -669,7 +669,7 @@ export const getTeamCollaborationDataObject =
         Article: 1,
         Bioinformatics: 0,
         Dataset: 0,
-        'Lab Resource': 0,
+        'Lab Material': 0,
         Protocol: 0,
       },
       byTeam: [
@@ -680,7 +680,7 @@ export const getTeamCollaborationDataObject =
           Article: 1,
           Bioinformatics: 0,
           Dataset: 0,
-          'Lab Resource': 0,
+          'Lab Material': 0,
           Protocol: 0,
         },
       ],

@@ -57,7 +57,7 @@ describe('userCollaborationToCSV', () => {
     ${'article'}        | ${'Article Outputs'}
     ${'bioinformatics'} | ${'Bioinformatic Outputs'}
     ${'dataset'}        | ${'Dataset Outputs'}
-    ${'lab-resource'}   | ${'Lab Resource Outputs'}
+    ${'lab-material'}   | ${'Lab Material Outputs'}
     ${'protocol'}       | ${'Protocol Outputs'}
     ${'not-valid'}      | ${'Outputs'}
   `(
@@ -110,7 +110,7 @@ describe('userCollaborationToCSV', () => {
     ${'article'}        | ${'Article Outputs'}
     ${'bioinformatics'} | ${'Bioinformatic Outputs'}
     ${'dataset'}        | ${'Dataset Outputs'}
-    ${'lab-resource'}   | ${'Lab Resource Outputs'}
+    ${'lab-material'}   | ${'Lab Material Outputs'}
     ${'protocol'}       | ${'Protocol Outputs'}
     ${'not-valid'}      | ${'Outputs'}
   `(
@@ -167,7 +167,7 @@ describe('teamCollaborationWithinTeamToCSV', () => {
       Article: 3,
       Bioinformatics: 3,
       Dataset: 3,
-      'Lab Resource': 3,
+      'Lab Material': 3,
       Protocol: 3,
     },
     outputsCoProducedAcross: {
@@ -175,7 +175,7 @@ describe('teamCollaborationWithinTeamToCSV', () => {
         Article: 5,
         Bioinformatics: 5,
         Dataset: 5,
-        'Lab Resource': 5,
+        'Lab Material': 5,
         Protocol: 5,
       },
       byTeam: [
@@ -186,7 +186,7 @@ describe('teamCollaborationWithinTeamToCSV', () => {
           Article: 4,
           Bioinformatics: 4,
           Dataset: 4,
-          'Lab Resource': 4,
+          'Lab Material': 4,
           Protocol: 4,
         },
         {
@@ -196,7 +196,7 @@ describe('teamCollaborationWithinTeamToCSV', () => {
           Article: 1,
           Bioinformatics: 1,
           Dataset: 1,
-          'Lab Resource': 1,
+          'Lab Material': 1,
           Protocol: 1,
         },
       ],
@@ -207,14 +207,14 @@ describe('teamCollaborationWithinTeamToCSV', () => {
       article: performanceMetric,
       bioinformatics: performanceMetric,
       dataset: performanceMetric,
-      labResource: performanceMetric,
+      labMaterial: performanceMetric,
       protocol: performanceMetric,
     },
     acrossTeam: {
       article: performanceMetric,
       bioinformatics: performanceMetric,
       dataset: performanceMetric,
-      labResource: performanceMetric,
+      labMaterial: performanceMetric,
       protocol: performanceMetric,
     },
   };
@@ -238,8 +238,8 @@ describe('teamCollaborationWithinTeamToCSV', () => {
         [`${prefix} Bioinformatic Output: Average`]: 'Average',
         [`${prefix} Dataset Output: Value`]: 3,
         [`${prefix} Dataset Output: Average`]: 'Average',
-        [`${prefix} Lab Resource Output: Value`]: 3,
-        [`${prefix} Lab Resource Output: Average`]: 'Average',
+        [`${prefix} Lab Material Output: Value`]: 3,
+        [`${prefix} Lab Material Output: Average`]: 'Average',
         [`${prefix} Protocol Output: Value`]: 3,
         [`${prefix} Protocol Output: Average`]: 'Average',
       });
@@ -274,10 +274,10 @@ describe('teamCollaborationWithinTeamToCSV', () => {
         [`${prefix} Dataset Output: No. of teams collaborated with`]: 2,
         [`${prefix} Dataset Output: Name of teams collaborated with`]:
           'Team B, Team C',
-        [`${prefix} Lab Resource Output: Value`]: 5,
-        [`${prefix} Lab Resource Output: Average`]: 'Above',
-        [`${prefix} Lab Resource Output: No. of teams collaborated with`]: 2,
-        [`${prefix} Lab Resource Output: Name of teams collaborated with`]:
+        [`${prefix} Lab Material Output: Value`]: 5,
+        [`${prefix} Lab Material Output: Average`]: 'Above',
+        [`${prefix} Lab Material Output: No. of teams collaborated with`]: 2,
+        [`${prefix} Lab Material Output: Name of teams collaborated with`]:
           'Team B, Team C',
         [`${prefix} Protocol Output: Value`]: 5,
         [`${prefix} Protocol Output: Average`]: 'Above',

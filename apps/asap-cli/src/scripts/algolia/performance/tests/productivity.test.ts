@@ -40,6 +40,11 @@ describe('processUserProductivityPerformance', () => {
               asapPublicOutput: 2,
               ratio: 1,
             },
+            {
+              asapOutput: 2,
+              asapPublicOutput: 2,
+              ratio: 1,
+            },
           ],
           nbPages: 1,
         }),
@@ -66,6 +71,33 @@ describe('processUserProductivityPerformance', () => {
       });
     });
 
+    const userProductivityPerformance = {
+      asapOutput: {
+        aboveAverageMax: -1,
+        aboveAverageMin: -1,
+        averageMax: 2,
+        averageMin: 2,
+        belowAverageMax: 1,
+        belowAverageMin: 1,
+      },
+      asapPublicOutput: {
+        aboveAverageMax: -1,
+        aboveAverageMin: -1,
+        averageMax: 2,
+        averageMin: 1,
+        belowAverageMax: 0,
+        belowAverageMin: 0,
+      },
+      ratio: {
+        aboveAverageMax: -1,
+        aboveAverageMin: -1,
+        averageMax: 1,
+        averageMin: 0.01,
+        belowAverageMax: 0,
+        belowAverageMin: 0,
+      },
+    };
+
     // one for each time range and document category combination
     expect(await mockIndex.saveObject).toHaveBeenCalledTimes(30);
     expect(await mockIndex.saveObject).toHaveBeenCalledWith(
@@ -75,30 +107,7 @@ describe('processUserProductivityPerformance', () => {
           type: 'user-productivity-performance',
           documentCategory: 'protocol',
         },
-        asapOutput: {
-          aboveAverageMax: 2,
-          aboveAverageMin: 3,
-          averageMax: 2,
-          averageMin: 2,
-          belowAverageMax: 1,
-          belowAverageMin: 1,
-        },
-        asapPublicOutput: {
-          aboveAverageMax: 2,
-          aboveAverageMin: 2,
-          averageMax: 1,
-          averageMin: -0,
-          belowAverageMax: -1,
-          belowAverageMin: 0,
-        },
-        ratio: {
-          aboveAverageMax: 1,
-          aboveAverageMin: 0.81,
-          averageMax: 0.8,
-          averageMin: -0.13,
-          belowAverageMax: -0.14,
-          belowAverageMin: 0,
-        },
+        ...userProductivityPerformance,
       },
       { autoGenerateObjectIDIfNotExist: true },
     );
@@ -109,30 +118,7 @@ describe('processUserProductivityPerformance', () => {
           type: 'user-productivity-performance',
           documentCategory: 'article',
         },
-        asapOutput: {
-          aboveAverageMax: 2,
-          aboveAverageMin: 3,
-          averageMax: 2,
-          averageMin: 2,
-          belowAverageMax: 1,
-          belowAverageMin: 1,
-        },
-        asapPublicOutput: {
-          aboveAverageMax: 2,
-          aboveAverageMin: 2,
-          averageMax: 1,
-          averageMin: -0,
-          belowAverageMax: -1,
-          belowAverageMin: 0,
-        },
-        ratio: {
-          aboveAverageMax: 1,
-          aboveAverageMin: 0.81,
-          averageMax: 0.8,
-          averageMin: -0.13,
-          belowAverageMax: -0.14,
-          belowAverageMin: 0,
-        },
+        ...userProductivityPerformance,
       },
       { autoGenerateObjectIDIfNotExist: true },
     );
@@ -157,28 +143,28 @@ describe('processTeamProductivityPerformance', () => {
               Article: 19,
               Bioinformatics: 1,
               Dataset: 2,
-              'Lab Resource': 4,
+              'Lab Material': 4,
               Protocol: 0,
             },
             {
               Article: 20,
               Bioinformatics: 10,
               Dataset: 30,
-              'Lab Resource': 13,
+              'Lab Material': 13,
               Protocol: 10,
             },
             {
               Article: 5,
               Bioinformatics: 7,
               Dataset: 8,
-              'Lab Resource': 20,
+              'Lab Material': 20,
               Protocol: 13,
             },
             {
               Article: 0,
               Bioinformatics: 4,
               Dataset: 5,
-              'Lab Resource': 7,
+              'Lab Material': 7,
               Protocol: 9,
             },
           ],
@@ -207,6 +193,48 @@ describe('processTeamProductivityPerformance', () => {
       });
     });
 
+    const teamProductivityPerformance = {
+      article: {
+        aboveAverageMax: 20,
+        aboveAverageMin: 20,
+        averageMax: 19,
+        averageMin: 3,
+        belowAverageMax: 2,
+        belowAverageMin: 0,
+      },
+      bioinformatics: {
+        aboveAverageMax: 10,
+        aboveAverageMin: 9,
+        averageMax: 8,
+        averageMin: 3,
+        belowAverageMax: 2,
+        belowAverageMin: 1,
+      },
+      dataset: {
+        aboveAverageMax: 30,
+        aboveAverageMin: 20,
+        averageMax: 19,
+        averageMin: 4,
+        belowAverageMax: 3,
+        belowAverageMin: 2,
+      },
+      labMaterial: {
+        aboveAverageMax: 20,
+        aboveAverageMin: 17,
+        averageMax: 16,
+        averageMin: 6,
+        belowAverageMax: 5,
+        belowAverageMin: 4,
+      },
+      protocol: {
+        aboveAverageMax: 13,
+        aboveAverageMin: 12,
+        averageMax: 11,
+        averageMin: 5,
+        belowAverageMax: 4,
+        belowAverageMin: 0,
+      },
+    };
     // one for each time range
     expect(await mockIndex.saveObject).toHaveBeenCalledTimes(10);
     expect(await mockIndex.saveObject).toHaveBeenCalledWith(
@@ -216,46 +244,7 @@ describe('processTeamProductivityPerformance', () => {
           type: 'team-productivity-performance',
           outputType: 'all',
         },
-        article: {
-          aboveAverageMax: 20,
-          aboveAverageMin: 20,
-          averageMax: 19,
-          averageMin: 3,
-          belowAverageMax: 2,
-          belowAverageMin: 0,
-        },
-        bioinformatics: {
-          aboveAverageMax: 10,
-          aboveAverageMin: 9,
-          averageMax: 8,
-          averageMin: 3,
-          belowAverageMax: 2,
-          belowAverageMin: 1,
-        },
-        dataset: {
-          aboveAverageMax: 30,
-          aboveAverageMin: 23,
-          averageMax: 22,
-          averageMin: 1,
-          belowAverageMax: 0,
-          belowAverageMin: 2,
-        },
-        labResource: {
-          aboveAverageMax: 20,
-          aboveAverageMin: 18,
-          averageMax: 17,
-          averageMin: 5,
-          belowAverageMax: 4,
-          belowAverageMin: 4,
-        },
-        protocol: {
-          aboveAverageMax: 13,
-          aboveAverageMin: 13,
-          averageMax: 12,
-          averageMin: 4,
-          belowAverageMax: 3,
-          belowAverageMin: 0,
-        },
+        ...teamProductivityPerformance,
       },
       { autoGenerateObjectIDIfNotExist: true },
     );
@@ -266,46 +255,7 @@ describe('processTeamProductivityPerformance', () => {
           type: 'team-productivity-performance',
           outputType: 'public',
         },
-        article: {
-          aboveAverageMax: 20,
-          aboveAverageMin: 20,
-          averageMax: 19,
-          averageMin: 3,
-          belowAverageMax: 2,
-          belowAverageMin: 0,
-        },
-        bioinformatics: {
-          aboveAverageMax: 10,
-          aboveAverageMin: 9,
-          averageMax: 8,
-          averageMin: 3,
-          belowAverageMax: 2,
-          belowAverageMin: 1,
-        },
-        dataset: {
-          aboveAverageMax: 30,
-          aboveAverageMin: 23,
-          averageMax: 22,
-          averageMin: 1,
-          belowAverageMax: 0,
-          belowAverageMin: 2,
-        },
-        labResource: {
-          aboveAverageMax: 20,
-          aboveAverageMin: 18,
-          averageMax: 17,
-          averageMin: 5,
-          belowAverageMax: 4,
-          belowAverageMin: 4,
-        },
-        protocol: {
-          aboveAverageMax: 13,
-          aboveAverageMin: 13,
-          averageMax: 12,
-          averageMin: 4,
-          belowAverageMax: 3,
-          belowAverageMin: 0,
-        },
+        ...teamProductivityPerformance,
       },
       { autoGenerateObjectIDIfNotExist: true },
     );

@@ -49,7 +49,7 @@ const data: ListTeamProductivityAlgoliaResponse = {
       Article: 1,
       Bioinformatics: 2,
       Dataset: 3,
-      'Lab Resource': 4,
+      'Lab Material': 4,
       Protocol: 5,
     },
     {
@@ -60,7 +60,7 @@ const data: ListTeamProductivityAlgoliaResponse = {
       Article: 0,
       Bioinformatics: 0,
       Dataset: 2,
-      'Lab Resource': 0,
+      'Lab Material': 0,
       Protocol: 1,
     },
   ],

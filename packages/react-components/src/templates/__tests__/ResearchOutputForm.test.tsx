@@ -814,10 +814,10 @@ describe('on submit', () => {
     });
   });
 
-  it('can submit labCatalogNumber for lab resource', async () => {
+  it('can submit labCatalogNumber for lab material', async () => {
     await setupForm({
       data: { ...expectedRequest, type: 'Animal Model' },
-      documentType: 'Lab Resource',
+      documentType: 'Lab Material',
     });
     fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
       target: { value: 'abc123' },
@@ -826,7 +826,7 @@ describe('on submit', () => {
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
       type: 'Animal Model',
-      documentType: 'Lab Resource',
+      documentType: 'Lab Material',
       labCatalogNumber: 'abc123',
     });
   });

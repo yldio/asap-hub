@@ -560,10 +560,10 @@ describe('/research-outputs/ route', () => {
         ${'Bioinformatics'} | ${validRRID}      | ${400}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${201}
-        ${'Lab Resource'}   | ${validDOI}       | ${201}
-        ${'Lab Resource'}   | ${validRRID}      | ${201}
-        ${'Lab Resource'}   | ${validAccession} | ${400}
-        ${'Lab Resource'}   | ${noIdentifier}   | ${201}
+        ${'Lab Material'}   | ${validDOI}       | ${201}
+        ${'Lab Material'}   | ${validRRID}      | ${201}
+        ${'Lab Material'}   | ${validAccession} | ${400}
+        ${'Lab Material'}   | ${noIdentifier}   | ${201}
         ${'Dataset'}        | ${validDOI}       | ${201}
         ${'Dataset'}        | ${validRRID}      | ${400}
         ${'Dataset'}        | ${validAccession} | ${201}
@@ -655,7 +655,7 @@ describe('/research-outputs/ route', () => {
           .post('/research-outputs/')
           .send({
             ...researchOutput,
-            documentType: 'Lab Resource',
+            documentType: 'Lab Material',
             ...validRRID,
           });
         expect(response.status).toBe(201);
@@ -1054,10 +1054,10 @@ describe('/research-outputs/ route', () => {
         ${'Bioinformatics'} | ${validRRID}      | ${400}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${200}
-        ${'Lab Resource'}   | ${validDOI}       | ${200}
-        ${'Lab Resource'}   | ${validRRID}      | ${200}
-        ${'Lab Resource'}   | ${validAccession} | ${400}
-        ${'Lab Resource'}   | ${noIdentifier}   | ${200}
+        ${'Lab Material'}   | ${validDOI}       | ${200}
+        ${'Lab Material'}   | ${validRRID}      | ${200}
+        ${'Lab Material'}   | ${validAccession} | ${400}
+        ${'Lab Material'}   | ${noIdentifier}   | ${200}
         ${'Dataset'}        | ${validDOI}       | ${200}
         ${'Dataset'}        | ${validRRID}      | ${400}
         ${'Dataset'}        | ${validAccession} | ${200}
@@ -1148,7 +1148,7 @@ describe('/research-outputs/ route', () => {
           .put('/research-outputs/abc123')
           .send({
             ...researchOutputPutRequest,
-            documentType: 'Lab Resource',
+            documentType: 'Lab Material',
             ...validRRID,
           });
         expect(response.status).toBe(200);

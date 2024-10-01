@@ -24,7 +24,7 @@ it.each<{
   { param: 'article', outputType: 'Article' },
   { param: 'bioinformatics', outputType: 'Bioinformatics' },
   { param: 'dataset', outputType: 'Dataset' },
-  { param: 'lab-resource', outputType: 'Lab Resource' },
+  { param: 'lab-material', outputType: 'Lab Material' },
   { param: 'protocol', outputType: 'Protocol' },
   { param: 'protocol', outputType: 'Protocol' },
   { param: 'report', outputType: 'Report' },

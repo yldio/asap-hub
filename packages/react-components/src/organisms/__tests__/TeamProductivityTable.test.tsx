@@ -33,7 +33,7 @@ describe('TeamProductivityTable', () => {
     Article: 9,
     Bioinformatics: 7,
     Dataset: 5,
-    'Lab Resource': 1,
+    'Lab Material': 1,
     Protocol: 3,
   };
 
@@ -50,10 +50,10 @@ describe('TeamProductivityTable', () => {
     const { getByText, getAllByTitle } = render(
       <TeamProductivityTable {...defaultProps} data={data} />,
     );
-    expect(getByText('Article:')).toBeVisible();
+    expect(getByText('Articles:')).toBeVisible();
     expect(getByText('Bioinformatics:')).toBeVisible();
     expect(getByText('Datasets:')).toBeVisible();
-    expect(getByText('Lab Resources:')).toBeVisible();
+    expect(getByText('Lab Materials:')).toBeVisible();
     expect(getByText('Protocols:')).toBeVisible();
     expect(getAllByTitle('Below Average').length).toEqual(6);
     expect(getAllByTitle('Average').length).toEqual(8);
@@ -87,9 +87,9 @@ describe('TeamProductivityTable', () => {
     ${'team_desc'}           | ${{ ...teamProductivityInitialSortingDirection, dataset: 'desc' }}        | ${'Dataset Inactive Numerical Descending Sort Icon'}        | ${'dataset_desc'}        | ${{ ...teamProductivityInitialSortingDirection, dataset: 'desc' }}
     ${'dataset_asc'}         | ${{ ...teamProductivityInitialSortingDirection, dataset: 'asc' }}         | ${'Dataset Active Numerical Ascending Sort Icon'}           | ${'dataset_desc'}        | ${{ ...teamProductivityInitialSortingDirection, dataset: 'desc' }}
     ${'dataset_desc'}        | ${{ ...teamProductivityInitialSortingDirection, dataset: 'desc' }}        | ${'Dataset Active Numerical Descending Sort Icon'}          | ${'dataset_asc'}         | ${{ ...teamProductivityInitialSortingDirection, dataset: 'asc' }}
-    ${'team_desc'}           | ${{ ...teamProductivityInitialSortingDirection, labResource: 'desc' }}    | ${'Lab Resource Inactive Numerical Descending Sort Icon'}   | ${'lab_resource_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labResource: 'desc' }}
-    ${'lab_resource_asc'}    | ${{ ...teamProductivityInitialSortingDirection, labResource: 'asc' }}     | ${'Lab Resource Active Numerical Ascending Sort Icon'}      | ${'lab_resource_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labResource: 'desc' }}
-    ${'lab_resource_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labResource: 'desc' }}    | ${'Lab Resource Active Numerical Descending Sort Icon'}     | ${'lab_resource_asc'}    | ${{ ...teamProductivityInitialSortingDirection, labResource: 'asc' }}
+    ${'team_desc'}           | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'desc' }}    | ${'Lab Material Inactive Numerical Descending Sort Icon'}   | ${'lab_material_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'desc' }}
+    ${'lab_material_asc'}    | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'asc' }}     | ${'Lab Material Active Numerical Ascending Sort Icon'}      | ${'lab_material_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'desc' }}
+    ${'lab_material_desc'}   | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'desc' }}    | ${'Lab Material Active Numerical Descending Sort Icon'}     | ${'lab_material_asc'}    | ${{ ...teamProductivityInitialSortingDirection, labMaterial: 'asc' }}
     ${'team_desc'}           | ${{ ...teamProductivityInitialSortingDirection, protocol: 'desc' }}       | ${'Protocol Inactive Numerical Descending Sort Icon'}       | ${'protocol_desc'}       | ${{ ...teamProductivityInitialSortingDirection, protocol: 'desc' }}
     ${'protocol_asc'}        | ${{ ...teamProductivityInitialSortingDirection, protocol: 'asc' }}        | ${'Protocol Active Numerical Ascending Sort Icon'}          | ${'protocol_desc'}       | ${{ ...teamProductivityInitialSortingDirection, protocol: 'desc' }}
     ${'protocol_desc'}       | ${{ ...teamProductivityInitialSortingDirection, protocol: 'desc' }}       | ${'Protocol Active Numerical Descending Sort Icon'}         | ${'protocol_asc'}        | ${{ ...teamProductivityInitialSortingDirection, protocol: 'asc' }}

@@ -505,9 +505,9 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
-      describe('For document type = "Lab Resource"', () => {
+      describe('For document type = "Lab Material"', () => {
         const researchOutputEmptyLinkRequest = getResearchOutputCreateData();
-        researchOutputEmptyLinkRequest.documentType = 'Lab Resource';
+        researchOutputEmptyLinkRequest.documentType = 'Lab Material';
         researchOutputEmptyLinkRequest.link = undefined;
 
         test('Should not validate the unique link condition when no link is passed', async () => {
@@ -1529,7 +1529,7 @@ describe('ResearchOutputs controller', () => {
         expect.anything(),
         {
           newVersion: {
-            documentType: 'Lab Resource',
+            documentType: 'Lab Material',
             link: undefined,
             title: 'Test Proposal 1234',
             type: '3D Printing',

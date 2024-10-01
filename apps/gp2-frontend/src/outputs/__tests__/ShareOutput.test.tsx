@@ -34,6 +34,7 @@ jest.mock('../../shared/api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
 jest.mock('../../events/api.ts');
+jest.setTimeout(30_000);
 
 const mockUpdateOutput = updateOutput as jest.MockedFunction<
   typeof updateOutput

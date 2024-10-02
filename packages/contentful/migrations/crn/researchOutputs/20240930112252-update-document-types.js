@@ -2,13 +2,14 @@ module.exports.description =
   'Update Lab Resource document type to Lab Material';
 
 module.exports.up = (migration) => {
-  const transformType = (fieldValue) => {
-    switch (fieldValue) {
-      case 'Lab Resource':
-        return 'Lab Material';
-      default:
-        return fieldValue;
-    }
+  const transformType = (fromFields, currentLocale) => {
+    if (
+      fromFields.documentType &&
+      fromFields.documentType[currentLocale] === 'Lab Resource'
+    )
+      return {
+        documentType: 'Lab Material',
+      };
   };
 
   const researchOutputs = migration.editContentType('researchOutputs');
@@ -32,12 +33,7 @@ module.exports.up = (migration) => {
     contentType: 'researchOutputs',
     from: ['documentType'],
     to: ['documentType'],
-    transformEntryForLocale: function (fromFields, currentLocale) {
-      if (fromFields.documentType)
-        return {
-          documentType: transformType(fromFields.documentType[currentLocale]),
-        };
-    },
+    transformEntryForLocale: transformType,
   });
 
   researchOutputs.editField('documentType').validations([
@@ -78,12 +74,7 @@ module.exports.up = (migration) => {
     contentType: 'researchOutputVersions',
     from: ['documentType'],
     to: ['documentType'],
-    transformEntryForLocale: function (fromFields, currentLocale) {
-      if (fromFields.documentType)
-        return {
-          documentType: transformType(fromFields.documentType[currentLocale]),
-        };
-    },
+    transformEntryForLocale: transformType,
   });
 
   researchOutputVersions.editField('documentType').validations([
@@ -103,13 +94,14 @@ module.exports.up = (migration) => {
 };
 
 module.exports.down = (migration) => {
-  const transformType = (fieldValue) => {
-    switch (fieldValue) {
-      case 'Lab Material':
-        return 'Lab Resource';
-      default:
-        return fieldValue;
-    }
+  const transformType = (fromFields, currentLocale) => {
+    if (
+      fromFields.documentType &&
+      fromFields.documentType[currentLocale] === 'Lab Material'
+    )
+      return {
+        documentType: 'Lab Resource',
+      };
   };
 
   const researchOutputs = migration.editContentType('researchOutputs');
@@ -133,12 +125,7 @@ module.exports.down = (migration) => {
     contentType: 'researchOutputs',
     from: ['documentType'],
     to: ['documentType'],
-    transformEntryForLocale: function (fromFields, currentLocale) {
-      if (fromFields.documentType)
-        return {
-          documentType: transformType(fromFields.documentType[currentLocale]),
-        };
-    },
+    transformEntryForLocale: transformType,
   });
 
   researchOutputs.editField('documentType').validations([
@@ -179,12 +166,7 @@ module.exports.down = (migration) => {
     contentType: 'researchOutputVersions',
     from: ['documentType'],
     to: ['documentType'],
-    transformEntryForLocale: function (fromFields, currentLocale) {
-      if (fromFields.documentType)
-        return {
-          documentType: transformType(fromFields.documentType[currentLocale]),
-        };
-    },
+    transformEntryForLocale: transformType,
   });
 
   researchOutputVersions.editField('documentType').validations([

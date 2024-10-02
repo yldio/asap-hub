@@ -42,6 +42,7 @@ getTeamSuggestions.mockResolvedValue([
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   onSave: jest.fn(() => Promise.resolve()),
+  getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
@@ -62,6 +63,13 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   codeDeposited: 'Yes',
   protocolsDeposited: 'Yes',
   labMaterialsRegistered: 'Yes',
+  description: 'Some description',
+  firstAuthors: [
+    {
+      label: 'Author 1',
+      value: 'author-1',
+    },
+  ],
 };
 
 it('renders the form', async () => {
@@ -137,6 +145,10 @@ it('data is sent on form submission', async () => {
 
           teams: ['1'],
           labs: [],
+
+          description: 'Some description',
+          firstAuthors: [],
+          additionalAuthors: [],
         },
       ],
       teamId,
@@ -221,6 +233,10 @@ test.each`
 
           teams: ['1'],
           labs: [],
+
+          description: 'Some description',
+          firstAuthors: [],
+          additionalAuthors: [],
         },
       ],
       teamId,
@@ -312,6 +328,10 @@ test.each`
 
             teams: ['1'],
             labs: [],
+
+            description: 'Some description',
+            firstAuthors: [],
+            additionalAuthors: [],
           },
         ],
         teamId,
@@ -581,6 +601,220 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
   });
 });
 
+describe('authors', () => {
+  it.each`
+    section                   | submittedValue
+    ${/Corresponding Author/} | ${{ correspondingAuthor: { userId: 'author-1' } }}
+    ${/Additional Authors/}   | ${{ additionalAuthors: [{ userId: 'author-1' }] }}
+  `(
+    'submits an existing internal author in $section',
+    async ({ section, submittedValue }) => {
+      const onSave = jest.fn();
+
+      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+        {
+          author: {
+            id: 'author-1',
+            firstName: 'Author',
+            lastName: 'One',
+            displayName: 'Author One',
+            __meta: {
+              type: 'user',
+            },
+          },
+          label: 'Author One',
+          value: 'author-1',
+        },
+      ]);
+
+      render(
+        <StaticRouter>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onSave={onSave}
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </StaticRouter>,
+      );
+      const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+      userEvent.click(screen.getByLabelText(section));
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+      userEvent.click(screen.getByText('Author One'));
+
+      userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({
+            versions: [expect.objectContaining(submittedValue)],
+          }),
+        );
+      });
+    },
+  );
+
+  it.each`
+    section                   | submittedValue
+    ${/Corresponding Author/} | ${{ correspondingAuthor: { externalAuthorEmail: 'external@author.com', externalAuthorId: 'external-author-1', externalAuthorName: 'External Author One' } }}
+    ${/Additional Authors/}   | ${{ additionalAuthors: [{ externalAuthorEmail: 'external@author.com', externalAuthorId: 'external-author-1', externalAuthorName: 'External Author One' }] }}
+  `(
+    'submits an existing external author in $section',
+    async ({ section, submittedValue }) => {
+      const onSave = jest.fn();
+
+      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+        {
+          author: {
+            id: 'external-author-1',
+            displayName: 'External Author One',
+            __meta: {
+              type: 'external-author',
+            },
+          },
+          label: 'External Author One',
+          value: 'external-author-1',
+        },
+      ]);
+
+      render(
+        <StaticRouter>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onSave={onSave}
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </StaticRouter>,
+      );
+      const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+      userEvent.click(screen.getByLabelText(section));
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+      userEvent.click(screen.getByText(/External Author One \(Non CRN\)/));
+      userEvent.type(
+        screen.getByLabelText(/External Author One Email/i),
+        'external@author.com',
+      );
+
+      userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({
+            versions: [expect.objectContaining(submittedValue)],
+          }),
+        );
+      });
+    },
+  );
+
+  it.each`
+    section                   | submittedValue
+    ${/Corresponding Author/} | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
+    ${/Additional Authors/}   | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
+  `(
+    'submits a non existing external author in $section',
+    async ({ section, submittedValue }) => {
+      const onSave = jest.fn();
+
+      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+        {
+          author: {
+            id: 'author-1',
+            firstName: 'Author',
+            lastName: 'One',
+            displayName: 'Author One',
+            __meta: {
+              type: 'user',
+            },
+          },
+          label: 'Author One',
+          value: 'author-1',
+        },
+      ]);
+
+      render(
+        <StaticRouter>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onSave={onSave}
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </StaticRouter>,
+      );
+      const submitButton = screen.getByRole('button', { name: /Submit/i });
+
+      userEvent.type(screen.getByLabelText(section), 'Jane Doe');
+
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+
+      userEvent.click(screen.getByText(/Jane Doe/, { selector: 'strong' }));
+      userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
+      userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({
+            versions: [expect.objectContaining(submittedValue)],
+          }),
+        );
+      });
+    },
+  );
+});
+
 describe('preprintDoi', () => {
   it.each([
     { lifecycle: 'Preprint, version 1', status: 'required' },
@@ -645,8 +879,11 @@ describe('renders the necessary fields', () => {
     protocolsDepositedDetails: 'Please provide details',
     labMaterialsRegisteredDetails: 'Please provide details',
 
+    description: 'Please provide a description',
+
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
+    firstAuthors: '',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(

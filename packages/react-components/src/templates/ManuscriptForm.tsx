@@ -1,10 +1,13 @@
 import {
   ApcCoverageOption,
+  AuthorEmailField,
+  AuthorSelectOption,
   ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptFormData,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
+  ManuscriptPostAuthor,
   ManuscriptPostRequest,
   ManuscriptResponse,
   ManuscriptType,
@@ -14,17 +17,21 @@ import {
   QuestionChecksOption,
   quickCheckQuestions,
 } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import {
+  AuthorSelect,
   FormCard,
   LabeledDropdown,
   LabeledFileField,
   LabeledMultiSelect,
   LabeledRadioButtonGroup,
+  LabeledTextArea,
   LabeledTextField,
+  ManuscriptAuthors,
 } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -106,6 +113,58 @@ const optionalVersionFields: OptionalVersionFields = [
   'labMaterialsRegistered',
 ];
 
+export const getPostAuthors = (
+  authorSelectOptions: AuthorSelectOption[] | AuthorSelectOption,
+  authorEmailFields: AuthorEmailField[],
+): ManuscriptPostAuthor[] => {
+  if (
+    Array.isArray(authorSelectOptions) &&
+    authorSelectOptions.length &&
+    Array.isArray(authorEmailFields)
+  ) {
+    const users = authorSelectOptions.reduce(
+      (internalAuthors: { userId: string }[], { value, author }) => {
+        if (author && isInternalUser(author)) {
+          internalAuthors.push({ userId: value });
+        }
+        return internalAuthors;
+      },
+      [],
+    );
+
+    const externalUsers = (authorEmailFields || []).map(
+      ({ id, name, email }) => ({
+        externalAuthorId: id,
+        externalAuthorName: name,
+        externalAuthorEmail: email,
+      }),
+    );
+
+    return [...users, ...externalUsers];
+  }
+
+  if (
+    authorSelectOptions &&
+    !Array.isArray(authorSelectOptions) &&
+    // eslint-disable-next-line no-underscore-dangle
+    authorSelectOptions.author?.__meta.type === 'user'
+  ) {
+    return [{ userId: authorSelectOptions.value }];
+  }
+
+  if (authorEmailFields[0]) {
+    return [
+      {
+        externalAuthorId: authorEmailFields[0].id,
+        externalAuthorName: authorEmailFields[0].name,
+        externalAuthorEmail: authorEmailFields[0].email,
+      },
+    ];
+  }
+
+  return [];
+};
+
 const getFieldsToReset = (
   fieldsList: OptionalVersionFields,
   manuscriptType: ManuscriptType,
@@ -154,6 +213,7 @@ type ManuscriptFormProps = Omit<
   | 'manuscriptFile'
   | 'keyResourceTable'
   | 'additionalFiles'
+  | 'description'
   | 'createdBy'
   | 'createdDate'
   | 'publishedAt'
@@ -166,6 +226,7 @@ type ManuscriptFormProps = Omit<
     manuscriptFile?: ManuscriptFileResponse;
     keyResourceTable?: ManuscriptFileResponse;
     additionalFiles?: ManuscriptFileResponse[];
+    description?: string | '';
     eligibilityReasons: Set<string>;
     onSave: (
       output: ManuscriptPostRequest,
@@ -184,6 +245,12 @@ type ManuscriptFormProps = Omit<
     getLabSuggestions?: ComponentProps<
       typeof LabeledMultiSelect
     >['loadOptions'];
+    getAuthorSuggestions: NonNullable<
+      ComponentProps<typeof AuthorSelect>['loadOptions']
+    >;
+    firstAuthors?: AuthorSelectOption[];
+    correspondingAuthor?: AuthorSelectOption[];
+    additionalAuthors?: AuthorSelectOption[];
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -219,6 +286,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getTeamSuggestions,
   selectedTeams,
   getLabSuggestions,
+  getAuthorSuggestions,
+  description,
+  firstAuthors,
+  correspondingAuthor,
+  additionalAuthors,
 }) => {
   const history = useHistory();
 
@@ -252,6 +324,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           protocolsDepositedDetails: protocolsDepositedDetails || '',
           labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
           teams: selectedTeams || [],
+          description: description || '',
+          firstAuthors: firstAuthors || [],
+          firstAuthorsEmails: [],
+          correspondingAuthor: correspondingAuthor || [],
+          correspondingAuthorEmails: [],
+          additionalAuthors: additionalAuthors || [],
+          additionalAuthorsEmails: [],
         },
       ],
     },
@@ -274,7 +353,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     setError,
     reset,
     resetField,
+    trigger,
   } = methods;
+
+  const commonManuscriptAuthorProps = {
+    control,
+    getAuthorSuggestions,
+    getValues,
+    isSubmitting,
+    trigger,
+  };
 
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
@@ -322,18 +410,26 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     const versionData = data.versions[0];
 
     if (versionData?.type && versionData.lifecycle) {
+      const {
+        firstAuthorsEmails,
+        correspondingAuthorEmails,
+        additionalAuthorsEmails,
+        ...postRequestVersionData
+      } = versionData;
+
       await onSave({
         ...data,
         teamId,
         eligibilityReasons: [...eligibilityReasons],
         versions: [
           {
-            ...versionData,
+            ...postRequestVersionData,
             publicationDoi: versionData?.publicationDoi || undefined,
             preprintDoi: versionData?.preprintDoi || undefined,
             otherDetails: versionData?.otherDetails || undefined,
             requestingApcCoverage:
               versionData?.requestingApcCoverage || undefined,
+            description: versionData.description || '',
 
             acknowledgedGrantNumber:
               versionData.acknowledgedGrantNumber || undefined,
@@ -377,6 +473,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
             teams: versionData.teams.map((team) => team.value),
             labs: versionData.labs.map((lab) => lab.value),
+            firstAuthors: getPostAuthors(
+              versionData.firstAuthors,
+              firstAuthorsEmails,
+            ),
+            correspondingAuthor: getPostAuthors(
+              versionData.correspondingAuthor,
+              correspondingAuthorEmails,
+            )?.[0],
+            additionalAuthors: getPostAuthors(
+              versionData.additionalAuthors,
+              additionalAuthorsEmails,
+            ),
           },
         ],
       });
@@ -818,6 +926,36 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 )}
               />
             )}
+            <Controller
+              name="versions.0.description"
+              control={control}
+              rules={{
+                required: 'Please enter the description.',
+              }}
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <LabeledTextArea
+                  title="Manuscript Description"
+                  subtitle="(required)"
+                  tip={
+                    <span>
+                      Please provide a description of the outcomes of your paper
+                      and how it relates to your ASAP project (view example{' '}
+                      <Link href="https://docs.google.com/document/d/1dU8VLqKjyJM_tBNWpxAAJyoALknQgbRlKm5PdqopFUM/edit">
+                        here
+                      </Link>
+                      ).
+                    </span>
+                  }
+                  customValidationMessage={error?.message}
+                  value={value || ''}
+                  onChange={onChange}
+                  enabled={!isSubmitting}
+                />
+              )}
+            />
           </FormCard>
 
           <FormCard key="contributors" title="Who were the contributors?">
@@ -845,6 +983,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               )}
             />
 
+            <ManuscriptAuthors
+              isMultiSelect
+              isRequired
+              fieldName="firstAuthors"
+              fieldTitle="First Author Full Name"
+              fieldDescription="Add the name of the first author(s). First authors will receive updates. First authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+              fieldEmailDescription="Provide a valid email address for the Non-CRN first author."
+              {...commonManuscriptAuthorProps}
+            />
+
             <Controller
               name="versions.0.labs"
               control={control}
@@ -864,6 +1012,23 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   }
                 />
               )}
+            />
+
+            <ManuscriptAuthors
+              fieldName="correspondingAuthor"
+              fieldTitle="Corresponding Author"
+              fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+              fieldEmailDescription="Provide a valid email address for the Non-CRN corresponding author."
+              {...commonManuscriptAuthorProps}
+            />
+
+            <ManuscriptAuthors
+              isMultiSelect
+              fieldName="additionalAuthors"
+              fieldTitle="Additional Authors"
+              fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+              fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
+              {...commonManuscriptAuthorProps}
             />
           </FormCard>
 

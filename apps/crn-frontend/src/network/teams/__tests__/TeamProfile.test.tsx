@@ -230,6 +230,22 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.click(screen.getByText(/Non CRN/i));
+
+  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   within(quickChecks)
     .getAllByText('Yes')

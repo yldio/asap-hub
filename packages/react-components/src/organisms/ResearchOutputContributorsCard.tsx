@@ -1,4 +1,7 @@
 import { ComponentPropsWithRef } from 'react';
+import { OptionsType } from 'react-select';
+import { MultiSelectOptionsType } from '../atoms';
+import { MultiSelectOnChange } from '../atoms/MultiSelect';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { noop } from '../utils';
@@ -59,8 +62,8 @@ const ResearchOutputContributorsCard: React.FC<
       enabled={!isSaving || !isEditMode}
       placeholder="Start typing..."
       loadOptions={getTeamSuggestions}
-      onChange={onChangeTeams}
-      values={teams}
+      onChange={onChangeTeams as MultiSelectOnChange<MultiSelectOptionsType>}
+      values={teams as OptionsType<MultiSelectOptionsType>}
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no teams match ${inputValue}`
       }
@@ -72,8 +75,8 @@ const ResearchOutputContributorsCard: React.FC<
       enabled={!isSaving}
       placeholder="Start typing..."
       loadOptions={getLabSuggestions}
-      onChange={onChangeLabs}
-      values={labs}
+      onChange={onChangeLabs as MultiSelectOnChange<MultiSelectOptionsType>}
+      values={labs as OptionsType<MultiSelectOptionsType>}
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no labs match ${inputValue}`
       }

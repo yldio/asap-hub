@@ -1,4 +1,8 @@
-import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
+import {
+  AuthorResponse,
+  gp2 as gp2Model,
+  ValidationErrorResponse,
+} from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
@@ -19,6 +23,8 @@ import {
   ajvErrors,
   OutputVersions,
   OutputShortDescriptionCard,
+  MultiSelectOptionsType,
+  OptionsType,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
@@ -153,7 +159,9 @@ type OutputFormProps = {
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
 ) =>
-  authors?.map(({ value, author }) => {
+  (
+    authors as OptionsType<MultiSelectOptionsType & { author?: AuthorResponse }>
+  )?.map(({ value, author }) => {
     if (author) {
       return isInternalUser(author)
         ? { userId: value }
@@ -388,7 +396,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(projects, newProjects) ||
     isArrayDirty(tags, newTags) ||
     isArrayDirty(contributingCohorts, newCohorts) ||
-    isArrayDirty(authors, newAuthors) ||
+    isArrayDirty(authors, newAuthors as OptionsType<MultiSelectOptionsType>) ||
     isArrayDirty(relatedOutputs, newRelatedOutputs) ||
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (

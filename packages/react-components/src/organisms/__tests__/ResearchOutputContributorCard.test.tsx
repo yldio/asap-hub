@@ -56,9 +56,10 @@ describe('Labs', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('One Lab'));
-    expect(mockOnChange).toHaveBeenCalledWith([
-      { label: 'One Lab', value: '1' },
-    ]);
+    expect(mockOnChange).toHaveBeenCalledWith(
+      [{ label: 'One Lab', value: '1' }],
+      expect.anything(),
+    );
   });
   it('should be able to select author from the list of options', async () => {
     const loadOptions = jest.fn();
@@ -80,9 +81,10 @@ describe('Labs', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('Author One'));
-    expect(mockOnChange).toHaveBeenCalledWith([
-      { author: createUserResponse(), label: 'Author One', value: '1' },
-    ]);
+    expect(mockOnChange).toHaveBeenCalledWith(
+      [{ author: createUserResponse(), label: 'Author One', value: '1' }],
+      expect.anything(),
+    );
   });
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();

@@ -141,12 +141,15 @@ export const reactSelectStyles = (
   }),
 });
 
-export const reactMultiSelectStyles = <T extends MultiSelectOptionsType>(
+export const reactMultiSelectStyles = <
+  T extends MultiSelectOptionsType,
+  M extends boolean = true,
+>(
   {
     colors: { primary100 = mint, primary500 = fern, primary900 = pine } = {},
   }: Theme,
   isInvalid: boolean,
-): StylesConfig<T, true> => ({
+): StylesConfig<T, M> => ({
   ...baseSelectStyles,
   option: (provided, { isFocused }) => ({
     ...provided,

@@ -1,7 +1,9 @@
 import { NotFoundError, GenericError } from '@asap-hub/errors';
-import { ManuscriptFileType } from '@asap-hub/model';
+import { ManuscriptFileType, ManuscriptPostAuthor } from '@asap-hub/model';
+import { when } from 'jest-when';
 import ManuscriptController from '../../src/controllers/manuscript.controller';
 import { AssetContentfulDataProvider } from '../../src/data-providers/contentful/asset.data-provider';
+import { ExternalAuthorContentfulDataProvider } from '../../src/data-providers/contentful/external-author.data-provider';
 import {
   AssetCreateData,
   ManuscriptDataProvider,
@@ -11,16 +13,21 @@ import {
   getManuscriptResponse,
   getManuscriptCreateDataObject,
   getManuscriptFileResponse,
+  getManuscriptCreateControllerDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Manuscript controller', () => {
   const manuscriptDataProviderMock: jest.Mocked<ManuscriptDataProvider> =
     getDataProviderMock();
+  const externalAuthorDataProviderMock =
+    getDataProviderMock() as unknown as jest.Mocked<ExternalAuthorContentfulDataProvider>;
+
   const assetDataProviderMock =
     getDataProviderMock() as unknown as jest.Mocked<AssetContentfulDataProvider>;
   const manuscriptController = new ManuscriptController(
     manuscriptDataProviderMock,
+    externalAuthorDataProviderMock,
     assetDataProviderMock,
   );
 
@@ -44,13 +51,15 @@ describe('Manuscript controller', () => {
   });
 
   describe('Create method', () => {
+    beforeEach(jest.clearAllMocks);
+
     test('Should throw when fails to create the manuscript', async () => {
       manuscriptDataProviderMock.create.mockRejectedValueOnce(
         new GenericError(),
       );
 
       await expect(
-        manuscriptController.create(getManuscriptCreateDataObject()),
+        manuscriptController.create(getManuscriptCreateControllerDataObject()),
       ).rejects.toThrow(GenericError);
     });
 
@@ -62,13 +71,171 @@ describe('Manuscript controller', () => {
       );
 
       const result = await manuscriptController.create(
-        getManuscriptCreateDataObject(),
+        getManuscriptCreateControllerDataObject(),
       );
 
       expect(result).toEqual(getManuscriptResponse());
       expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith(
         getManuscriptCreateDataObject(),
       );
+    });
+
+    test('Should create a new external author', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const externalAuthor1 = {
+        name: 'External One',
+        email: 'external@one.com',
+      };
+
+      const externalAuthor2 = {
+        name: 'External Two',
+        email: 'external@two.com',
+      };
+
+      manuscriptDataProviderMock.create.mockResolvedValueOnce(manuscriptId);
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptResponse(),
+      );
+
+      when(externalAuthorDataProviderMock.create)
+        .calledWith(externalAuthor1)
+        .mockResolvedValue('external-1');
+
+      when(externalAuthorDataProviderMock.create)
+        .calledWith(externalAuthor2)
+        .mockResolvedValue('external-2');
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.versions[0]!.firstAuthors = [
+        { userId: 'author-1' },
+        {
+          externalAuthorName: externalAuthor1.name,
+          externalAuthorEmail: externalAuthor1.email,
+        },
+      ];
+      payload.versions[0]!.correspondingAuthor = {
+        externalAuthorName: externalAuthor2.name,
+        externalAuthorEmail: externalAuthor2.email,
+      };
+
+      const result = await manuscriptController.create(payload);
+
+      expect(result).toEqual(getManuscriptResponse());
+
+      expect(externalAuthorDataProviderMock.create).toHaveBeenNthCalledWith(
+        1,
+        externalAuthor1,
+      );
+
+      expect(externalAuthorDataProviderMock.create).toHaveBeenNthCalledWith(
+        2,
+        externalAuthor2,
+      );
+      expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith({
+        ...getManuscriptCreateDataObject(),
+        versions: [
+          {
+            ...getManuscriptCreateDataObject().versions[0],
+            firstAuthors: ['author-1', 'external-1'],
+            correspondingAuthor: ['external-2'],
+          },
+        ],
+      });
+    });
+
+    test('Should update an existing external author', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.create.mockResolvedValueOnce(manuscriptId);
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptResponse(),
+      );
+      externalAuthorDataProviderMock.create.mockResolvedValueOnce(
+        'existing-external-1',
+      );
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.versions[0]!.firstAuthors = [
+        {
+          userId: 'author-1',
+        },
+        {
+          externalAuthorId: 'existing-external-1',
+          externalAuthorName: 'Existing External',
+          externalAuthorEmail: 'existing@external.com',
+        },
+      ];
+      const result = await manuscriptController.create(payload);
+
+      expect(result).toEqual(getManuscriptResponse());
+
+      expect(externalAuthorDataProviderMock.update).toHaveBeenCalledWith(
+        'existing-external-1',
+        {
+          email: 'existing@external.com',
+        },
+      );
+      expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith({
+        ...getManuscriptCreateDataObject(),
+        versions: [
+          {
+            ...getManuscriptCreateDataObject().versions[0],
+            firstAuthors: ['author-1', 'existing-external-1'],
+          },
+        ],
+      });
+    });
+
+    test('Should filter non valid authors', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.create.mockResolvedValueOnce(manuscriptId);
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptResponse(),
+      );
+      externalAuthorDataProviderMock.create.mockResolvedValueOnce('external-1');
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.versions[0]!.firstAuthors = [
+        {
+          userId: 'author-1',
+        },
+        {
+          externalAuthorEmail: 'external@person.com',
+        } as unknown as ManuscriptPostAuthor,
+      ];
+      const result = await manuscriptController.create(payload);
+
+      expect(result).toEqual(getManuscriptResponse());
+
+      expect(externalAuthorDataProviderMock.create).not.toHaveBeenCalled();
+      expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith({
+        ...getManuscriptCreateDataObject(),
+        versions: [
+          {
+            ...getManuscriptCreateDataObject().versions[0],
+            firstAuthors: ['author-1'],
+          },
+        ],
+      });
+    });
+
+    test('Should create with empty version', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.create.mockResolvedValueOnce(manuscriptId);
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptResponse(),
+      );
+
+      const payload = getManuscriptCreateControllerDataObject();
+      payload.versions = [];
+
+      const result = await manuscriptController.create(payload);
+
+      expect(result).toEqual(getManuscriptResponse());
+
+      expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith({
+        ...getManuscriptCreateDataObject(),
+        versions: [],
+      });
     });
   });
 

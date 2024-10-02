@@ -590,7 +590,7 @@ describe('Teams data provider', () => {
       const result = await teamDataProvider.fetchById(id);
 
       expect(result).toEqual(getTeamDataObject());
-      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
           id,

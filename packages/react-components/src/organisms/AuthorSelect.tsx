@@ -4,8 +4,10 @@ import { css } from '@emotion/react';
 import { ReactElement, ReactNode } from 'react';
 import { components } from 'react-select';
 import { Avatar } from '../atoms';
-import { userPlaceholderIcon, plusIcon } from '../icons';
 import { MultiSelectOptionsType } from '../atoms/MultiSelect';
+import { paper, steel } from '../colors';
+import { borderWidth } from '../form';
+import { crossIcon, plusIcon, userPlaceholderIcon } from '../icons';
 import LabeledMultiSelect, {
   LabeledMultiSelectProps,
 } from '../molecules/LabeledMultiSelect';
@@ -32,6 +34,7 @@ const LabelWithAvatar = ({
         firstName={author.firstName}
         lastName={author.lastName}
         imageUrl={author.avatarUrl}
+        overrideStyles={css({ margin: 0 })}
       />
       <span>{children}</span>
     </>
@@ -51,23 +54,69 @@ const optionStyles = css({
   gridColumnGap: `${8 / perRem}em`,
 });
 
-type AuthorOption = {
+const singleValueStyles = css({
+  padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em ${8 / perRem}em`,
+  margin: `${5 / perRem}em ${6 / perRem}em ${5 / perRem}em`,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  borderStyle: 'solid',
+  borderWidth: `${borderWidth}px`,
+  borderColor: steel.rgb,
+  borderRadius: `${18 / perRem}em`,
+  backgroundColor: paper.rgb,
+});
+
+const singleValuesRemoveStyles = css({
+  display: 'inline-flex',
+  height: `${24 / perRem}em`,
+  width: `${12 / perRem}em`,
+  cursor: 'pointer',
+
+  svg: {
+    strokeWidth: 2.5,
+  },
+});
+
+export type AuthorOption = {
   author?: AuthorResponse;
 } & MultiSelectOptionsType;
 
-type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption> & {
+type AuthorSelectProps = LabeledMultiSelectProps<AuthorOption, boolean> & {
   externalLabel?: string;
 };
 
 const AuthorSelect: React.FC<AuthorSelectProps> = ({
   externalLabel = 'Non CRN',
+  isMulti,
   ...props
 }) => (
-  <LabeledMultiSelect<AuthorOption>
+  <LabeledMultiSelect<AuthorOption, boolean>
     {...props}
+    isMulti={isMulti}
     creatable={true}
     getValidationMessage={() => 'Please select at least one author.'}
     components={{
+      SingleValue: (singleValueLabelProps) => (
+        <components.SingleValue {...singleValueLabelProps}>
+          <div css={[optionStyles, singleValueStyles]}>
+            <LabelWithAvatar
+              author={singleValueLabelProps.data.author}
+              externalLabel={externalLabel}
+            >
+              {singleValueLabelProps.children}
+            </LabelWithAvatar>
+            <div
+              role="button"
+              onClick={singleValueLabelProps.clearValue}
+              css={singleValuesRemoveStyles}
+            >
+              {crossIcon}
+            </div>
+          </div>
+        </components.SingleValue>
+      ),
       MultiValueContainer: (multiValueContainerProps) => (
         <div
           css={{

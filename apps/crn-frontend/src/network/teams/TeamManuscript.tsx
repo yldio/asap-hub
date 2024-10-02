@@ -7,7 +7,11 @@ import {
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useSetRecoilState } from 'recoil';
-import { useLabSuggestions, useTeamSuggestions } from '../../shared-state';
+import {
+  useAuthorSuggestions,
+  useLabSuggestions,
+  useTeamSuggestions,
+} from '../../shared-state';
 import {
   refreshTeamState,
   usePostManuscript,
@@ -32,6 +36,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const handleFileUpload = useUploadManuscriptFile();
   const getTeamSuggestions = useTeamSuggestions();
   const getLabSuggestions = useLabSuggestions();
+  const getAuthorSuggestions = useAuthorSuggestions();
 
   const pushFromHere = usePushFromHere();
 
@@ -63,6 +68,15 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
           getTeamSuggestions={getTeamSuggestions}
           selectedTeams={selectedTeams}
           getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={(input) =>
+            getAuthorSuggestions(input).then((authors) =>
+              authors.map((author) => ({
+                author,
+                label: author.displayName,
+                value: author.id,
+              })),
+            )
+          }
         />
       </Frame>
     </FormProvider>

@@ -7,3 +7,18 @@ export type AuthorResponse =
       'email' | 'id' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName'
     >
   | ExternalAuthorResponse;
+
+export type AuthorAlgoliaResponse =
+  | (Pick<
+      UserResponse,
+      'email' | 'id' | 'avatarUrl' | 'displayName' | 'firstName' | 'lastName'
+    > & {
+      __meta: {
+        type: 'user';
+      };
+    })
+  | (ExternalAuthorResponse & {
+      __meta: {
+        type: 'external-author';
+      };
+    });

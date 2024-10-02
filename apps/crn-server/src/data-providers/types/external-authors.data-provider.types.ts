@@ -9,5 +9,7 @@ export type ExternalAuthorDataProvider = DataProvider<
   ExternalAuthorDataObject,
   ExternalAuthorDataObject,
   FetchOptions,
-  ExternalAuthorCreateDataObject
+  ExternalAuthorCreateDataObject,
+  null,
+  Partial<ExternalAuthorCreateDataObject>
 >;

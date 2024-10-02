@@ -534,8 +534,7 @@ describe('on submit', () => {
       },
       {
         author: {
-          ...createUserResponse(),
-          email: undefined,
+          id: 'external-chris',
           displayName: 'Chris Reed',
         },
         label: 'Chris Reed (Non CRN)',

@@ -73,6 +73,22 @@ export class ExternalAuthorContentfulDataProvider
     return parseGraphQLExternalAuthor(externalAuthors);
   }
 
+  async update(
+    id: string,
+    input: Partial<ExternalAuthorCreateDataObject>,
+  ): Promise<void> {
+    const environment = await this.getRestClient();
+
+    const existingExternalAuthor = await environment.getEntry(id);
+
+    existingExternalAuthor.fields.email = {
+      'en-US': input.email,
+    };
+
+    await existingExternalAuthor.update();
+    await existingExternalAuthor.publish();
+  }
+
   async create(input: ExternalAuthorCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 

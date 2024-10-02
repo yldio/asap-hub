@@ -316,12 +316,17 @@ runs:
           echo "gp2-app-url=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
           echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
 
-          if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
+          if [[ "$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" = true && "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]]; then
+            echo "setting up dedicated Contentful PR env, Entity Algolia Index and Analytics Algolia Index"
+            echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "crn-analytics-algolia-index=crn-analytics_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          elif [[ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true  && "$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" = false ]]; then
             echo "setting up dedicated Contentful PR env and Algolia Entity Index"
             echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
             echo "crn-analytics-algolia-index=crn-analytics_dev" >> $GITHUB_OUTPUT
-          elif [ "$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" = true ]; then
+          elif [[ "$CRN_CREATE_ANALYTICS_ALGOLIA_INDEX" = true && "$CRN_CREATE_CONTENTFUL_PR_ENV" = false ]]; then
             echo "setting up Contentful and Entity Algolia Index pointing to DEV and a dedicated Analytics Algolia Index"
             echo "crn-contentful-env-id=Development" >> $GITHUB_OUTPUT
             echo "crn-algolia-index=asap-hub_dev" >> $GITHUB_OUTPUT

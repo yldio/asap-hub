@@ -14,7 +14,8 @@ jobs:
     environment: Branch
     outputs:
       crn-contentful-env: ${{ steps.setup.outputs.crn-contentful-env-id }}
-      crn-on-branch-env: ${{ steps.setup.outputs.crn-on-branch-env }}
+      crn-contentful-on-branch-env: ${{ steps.setup.outputs.crn-contentful-on-branch-env }}
+      crn-analytics-algolia-on-branch-env: ${{ steps.setup.outputs.crn-analytics-algolia-on-branch-env }}
       crn-contentful-env-exists: ${{ steps.get-crn-contentful-state.outputs.contentful-env-exists }}
       crn-contentful-limit-reached: ${{ steps.get-crn-contentful-state.outputs.contentful-limit-reached }}
       gp2-contentful-env: ${{ steps.setup.outputs.gp2-contentful-env-id }}
@@ -91,7 +92,8 @@ jobs:
     uses: ./.github/workflows/reusable-create-environment.yml
     with:
       environment-name: Branch
-      crn-on-branch-env: ${{ needs.setup.outputs.crn-on-branch-env }}
+      crn-contentful-on-branch-env: ${{ needs.setup.outputs.crn-contentful-on-branch-env }}
+      crn-analytics-algolia-on-branch-env: ${{ needs.setup.outputs.crn-analytics-algolia-on-branch-env }}
       crn-contentful-env-exists: ${{ needs.setup.outputs.crn-contentful-env-exists }}
       crn-contentful-env: ${{ needs.setup.outputs.crn-contentful-env }}
       gp2-on-branch-env: ${{ needs.setup.outputs.gp2-on-branch-env }}

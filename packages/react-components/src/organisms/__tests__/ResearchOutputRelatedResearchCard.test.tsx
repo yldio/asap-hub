@@ -77,14 +77,26 @@ describe('Related Research Multiselect', () => {
     );
     expect(getByText(/preprint/i)).toBeVisible();
     userEvent.click(getByText('First Related Research'));
-    expect(mockOnChange).toHaveBeenCalledWith([
+    expect(mockOnChange).toHaveBeenCalledWith(
+      [
+        {
+          label: 'First Related Research',
+          value: '1',
+          type: '3D Printing',
+          documentType: 'Report',
+        },
+      ],
       {
-        label: 'First Related Research',
-        value: '1',
-        type: '3D Printing',
-        documentType: 'Report',
+        action: 'select-option',
+        name: undefined,
+        option: {
+          documentType: 'Report',
+          label: 'First Related Research',
+          type: '3D Printing',
+          value: '1',
+        },
       },
-    ]);
+    );
   });
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();

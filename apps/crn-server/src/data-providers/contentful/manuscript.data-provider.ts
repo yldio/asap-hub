@@ -88,6 +88,9 @@ export class ManuscriptContentfulDataProvider
         fields: addLocaleToFields({
           ...version,
           teams: getLinkEntities(version.teams),
+          firstAuthors: getLinkEntities(version.firstAuthors),
+          correspondingAuthor: getLinkEntities(version.correspondingAuthor),
+          additionalAuthors: getLinkEntities(version.additionalAuthors),
           labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           keyResourceTable: version.keyResourceTable

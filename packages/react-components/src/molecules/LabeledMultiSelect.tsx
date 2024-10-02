@@ -18,18 +18,24 @@ const descriptionStyles = css({
   color: lead.rgb,
 });
 
-export type LabeledMultiSelectProps<T extends MultiSelectOptionsType> = {
+export type LabeledMultiSelectProps<
+  T extends MultiSelectOptionsType,
+  M extends boolean = true,
+> = {
   readonly title: ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly description?: ReactNode;
-} & Exclude<MultiSelectProps<T>, 'id'>;
+} & Exclude<MultiSelectProps<T, M>, 'id'>;
 
-const LabeledMultiSelect = <T extends MultiSelectOptionsType>({
+const LabeledMultiSelect = <
+  T extends MultiSelectOptionsType,
+  M extends boolean = true,
+>({
   title,
   subtitle,
   description,
   ...multiSelectProps
-}: LabeledMultiSelectProps<T>): ReactElement => (
+}: LabeledMultiSelectProps<T, M>): ReactElement => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
       <Paragraph noMargin>

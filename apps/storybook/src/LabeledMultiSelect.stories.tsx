@@ -1,5 +1,9 @@
-import { LabeledMultiSelect, searchIcon } from '@asap-hub/react-components';
-import { ComponentPropsWithRef } from 'react';
+import {
+  LabeledMultiSelect,
+  MultiSelectOptionsType,
+  OptionsType,
+  searchIcon,
+} from '@asap-hub/react-components';
 
 import { number, text, boolean } from './knobs';
 
@@ -65,9 +69,7 @@ export const loadOptionsMock = (suggestions: string[], delay = 2000) => {
   const options = suggestions.map((value) => ({ label: value, value }));
   return (
     inputValue = '',
-  ): Promise<
-    NonNullable<ComponentPropsWithRef<typeof LabeledMultiSelect>['values']>
-  > =>
+  ): Promise<NonNullable<OptionsType<MultiSelectOptionsType>>> =>
     new Promise((resolve) => {
       setTimeout(() => {
         resolve(

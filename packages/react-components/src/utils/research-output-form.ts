@@ -11,11 +11,12 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
-import AuthorSelect from '../organisms/AuthorSelect';
-import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
-import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
+import { OptionsType } from 'react-select';
 import { MultiSelectOptionsType } from '../atoms';
 import { ResearchOutputRelatedEventsCard } from '../organisms';
+import AuthorSelect, { AuthorOption } from '../organisms/AuthorSelect';
+import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
+import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 
 export type getTeamState = {
   team: TeamResponse | undefined;
@@ -72,7 +73,7 @@ export const getIdentifierType = (
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
 ) =>
-  authors?.map(({ value, author }) => {
+  (authors as OptionsType<AuthorOption>)?.map(({ value, author }) => {
     if (author) {
       return isInternalUser(author)
         ? { userId: value }
@@ -195,8 +196,10 @@ export const getPayload = ({
   title,
   type: type as ResearchOutputPostRequest['type'],
   authors: getPostAuthors(authors),
-  labs: labs.map(({ value }) => value),
-  teams: teams.map(({ value }) => value),
+  labs: (labs as OptionsType<MultiSelectOptionsType>).map(({ value }) => value),
+  teams: (teams as OptionsType<MultiSelectOptionsType>).map(
+    ({ value }) => value,
+  ),
   relatedResearch: relatedResearch.map(({ value }) => value),
   usageNotes,
   asapFunded: convertDecisionToBoolean(asapFunded),

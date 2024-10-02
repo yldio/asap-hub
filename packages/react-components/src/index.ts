@@ -6,6 +6,7 @@ import * as text from './text';
 import * as utils from './utils';
 import * as colors from './colors';
 
+export type { OptionsType } from 'react-select';
 export * from './button';
 export * from './event-mapper';
 export * from './appearance';
@@ -44,6 +45,7 @@ export {
   StateTag,
   ScrollToTop,
 } from './atoms';
+export type { MultiSelectOptionsType, MultiSelectProps } from './atoms';
 export * from './colors';
 export { borderWidth } from './form';
 export * from './hooks';
@@ -139,6 +141,7 @@ export {
   JoinEvent,
   LeadershipMembershipTable,
   MainNavigation,
+  ManuscriptAuthors,
   ManuscriptHeader,
   MenuHeader,
   NewsCard,

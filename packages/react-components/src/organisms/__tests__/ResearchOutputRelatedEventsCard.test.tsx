@@ -60,5 +60,5 @@ it('Can select an option', async () => {
   userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   userEvent.click(getByText('Event 1'));
-  expect(mockOnChange).toHaveBeenCalledWith(result);
+  expect(mockOnChange).toHaveBeenCalledWith(result, expect.anything());
 });

@@ -14,5 +14,6 @@ export type ListExternalAuthorResponse = ListResponse<ExternalAuthorResponse>;
 
 export type ExternalAuthorCreateDataObject = {
   name: string;
+  email?: string;
   orcid?: string | undefined;
 };

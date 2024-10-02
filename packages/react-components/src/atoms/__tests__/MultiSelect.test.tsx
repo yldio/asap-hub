@@ -140,9 +140,14 @@ it('opens a menu to select from on click', () => {
 
   userEvent.click(getByRole('textbox'));
   userEvent.click(getByText('LGW'));
-  expect(handleChange).toHaveBeenLastCalledWith([
-    { label: 'LGW', value: 'LGW' },
-  ]);
+  expect(handleChange).toHaveBeenLastCalledWith(
+    [{ label: 'LGW', value: 'LGW' }],
+    {
+      action: 'select-option',
+      name: undefined,
+      option: { label: 'LGW', value: 'LGW' },
+    },
+  );
 });
 
 it('does not open a menu when clicking a value', () => {
@@ -179,9 +184,14 @@ it('opens a filtered menu to select from when typing', () => {
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
   userEvent.click(getByText('LTN'));
-  expect(handleChange).toHaveBeenLastCalledWith([
-    { label: 'LTN', value: 'LTN' },
-  ]);
+  expect(handleChange).toHaveBeenLastCalledWith(
+    [{ label: 'LTN', value: 'LTN' }],
+    {
+      action: 'select-option',
+      name: undefined,
+      option: { label: 'LTN', value: 'LTN' },
+    },
+  );
 });
 
 it('does not allow non-suggested input', () => {
@@ -303,25 +313,38 @@ describe('Async', () => {
     );
     expect(getByText(/no options/i)).toBeVisible();
   });
-  it('opens a menu to select from on click', async () => {
-    const loadOptions = jest.fn().mockResolvedValue([
-      { label: 'One', value: '1' },
-      { label: 'Two', value: '2' },
-    ]);
-    const handleChange = jest.fn();
-    const { getByText, getByRole, queryByText } = render(
-      <MultiSelect loadOptions={loadOptions} onChange={handleChange} />,
-    );
 
-    userEvent.click(getByRole('textbox'));
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-    userEvent.click(getByText('One'));
-    expect(handleChange).toHaveBeenLastCalledWith([
-      { label: 'One', value: '1' },
-    ]);
-  });
+  it.each`
+    isMulti  | calledWith
+    ${true}  | ${[{ label: 'One', value: '1' }]}
+    ${false} | ${{ label: 'One', value: '1' }}
+  `(
+    'opens a menu to select from on click when isMulti is $isMulti',
+    async ({ isMulti, calledWith }) => {
+      const loadOptions = jest.fn().mockResolvedValue([
+        { label: 'One', value: '1' },
+        { label: 'Two', value: '2' },
+      ]);
+      const handleChange = jest.fn();
+      const { getByText, getByRole, queryByText } = render(
+        <MultiSelect
+          loadOptions={loadOptions}
+          onChange={handleChange}
+          isMulti={isMulti}
+        />,
+      );
+
+      userEvent.click(getByRole('textbox'));
+      await waitFor(() =>
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+      userEvent.click(getByText('One'));
+      expect(handleChange).toHaveBeenLastCalledWith(
+        calledWith,
+        expect.anything(),
+      );
+    },
+  );
 
   it('Will not remove a fixed item with backspace', async () => {
     const mockOnChange = jest.fn();
@@ -345,7 +368,13 @@ describe('Async', () => {
     );
     fireEvent.keyDown(getByDisplayValue(''), { key: 'Delete' });
 
-    await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
+    await waitFor(() =>
+      expect(mockOnChange).toHaveBeenCalledWith([], {
+        action: 'pop-value',
+        name: undefined,
+        removedValue: { label: 'Example', value: '123' },
+      }),
+    );
   });
 
   it('Will not remove a fixed item using remove button', async () => {
@@ -370,7 +399,13 @@ describe('Async', () => {
     );
     fireEvent.click(getByTitle('Close').closest('svg')!);
 
-    await waitFor(() => expect(mockOnChange).toHaveBeenCalledWith([]));
+    await waitFor(() =>
+      expect(mockOnChange).toHaveBeenCalledWith([], {
+        action: 'remove-value',
+        name: undefined,
+        removedValue: { label: 'Example', value: '123' },
+      }),
+    );
   });
 
   it('shows an error message when required field not filled', () => {
@@ -378,6 +413,7 @@ describe('Async', () => {
     const { rerender, getByRole, getByText, queryByText } = render(
       <MultiSelect
         {...asyncProps}
+        values={[]}
         onChange={mockOnChange}
         getValidationMessage={() => 'Please fill out this field.'}
         required
@@ -453,12 +489,19 @@ describe('Async', () => {
     userEvent.click(getAllByText('Test')[1]!);
 
     await waitFor(() => {
-      expect(mockOnChange).toHaveBeenCalledWith([
-        expect.objectContaining({
-          value: 'Test',
-          label: 'Test',
-        }),
-      ]);
+      expect(mockOnChange).toHaveBeenCalledWith(
+        [
+          expect.objectContaining({
+            value: 'Test',
+            label: 'Test',
+          }),
+        ],
+        {
+          action: 'create-option',
+          name: undefined,
+          option: { __isNew__: true, label: 'Test', value: 'Test' },
+        },
+      );
     });
   });
 });

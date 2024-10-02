@@ -85,9 +85,14 @@ describe('Labs Multiselect', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('One Lab'));
-    expect(mockOnChange).toHaveBeenCalledWith([
-      { label: 'One Lab', value: '1' },
-    ]);
+    expect(mockOnChange).toHaveBeenCalledWith(
+      [{ label: 'One Lab', value: '1' }],
+      {
+        action: 'select-option',
+        name: undefined,
+        option: { label: 'One Lab', value: '1' },
+      },
+    );
   });
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();
@@ -167,9 +172,14 @@ describe('Teams Multiselect', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
     userEvent.click(getByText('One Team'));
-    expect(mockOnChange).toHaveBeenCalledWith([
-      { label: 'One Team', value: '1' },
-    ]);
+    expect(mockOnChange).toHaveBeenCalledWith(
+      [{ label: 'One Team', value: '1' }],
+      {
+        action: 'select-option',
+        name: undefined,
+        option: { label: 'One Team', value: '1' },
+      },
+    );
   });
   it('should render message when there is no match', async () => {
     const loadOptions = jest.fn();

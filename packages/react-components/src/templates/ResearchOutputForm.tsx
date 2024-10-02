@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import {
   DecisionOption,
   EventResponse,
@@ -8,14 +7,18 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
+import { css } from '@emotion/react';
+import { OptionsType } from 'react-select';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
-import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
+import React, { ComponentProps, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 
+import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import {
   ConfirmModal,
   Form,
@@ -23,11 +26,9 @@ import {
   ResearchOutputFormSharingCard,
   ResearchOutputRelatedEventsCard,
 } from '../organisms';
-import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
-import { mobileScreen, perRem } from '../pixels';
-import { Button, Link } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
+import { mobileScreen, perRem } from '../pixels';
 
 import {
   getDecision,
@@ -280,7 +281,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     network({})
       .teams({})
       .team({
-        teamId: teams[0]?.value || '',
+        teamId: (teams as OptionsType<MultiSelectOptionsType>)[0]?.value || '',
       })
       .createOutput({
         outputDocumentType: 'article',

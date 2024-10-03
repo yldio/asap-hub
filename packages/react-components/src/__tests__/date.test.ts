@@ -1,6 +1,10 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { addSeconds, subSeconds } from 'date-fns';
-import { formatDateToTimezone, useDateHasPassed } from '../date';
+import {
+  formatDateToTimezone,
+  useDateHasPassed,
+  formatDateAndWeekday,
+} from '../date';
 import { getLocalTimezone } from '../localization';
 
 jest.useFakeTimers();
@@ -11,6 +15,14 @@ const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
 >;
 beforeEach(() => {
   mockGetLocalTimezone.mockReturnValue('UTC');
+});
+
+describe('formatDateAndWeekday', () => {
+  it('returns day of the week and date', () => {
+    expect(formatDateAndWeekday(new Date('2024-10-01'))).toEqual(
+      'Tue, 1st October 2024',
+    );
+  });
 });
 
 describe('formatDateToTimezone', () => {

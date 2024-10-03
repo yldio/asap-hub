@@ -43,6 +43,8 @@ export const manuscriptContentQueryFragment = gql`
         preprintDoi
         publicationDoi
         requestingApcCoverage
+        submitterName
+        submissionDate
         otherDetails
         acknowledgedGrantNumber
         acknowledgedGrantNumberDetails

@@ -280,6 +280,7 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               ],
             },
+            submissionDate: { 'en-US': undefined },
             correspondingAuthor: { 'en-US': [] },
             additionalAuthors: { 'en-US': [] },
             teams: {
@@ -440,6 +441,7 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               ],
             },
+            submissionDate: { 'en-US': undefined },
             correspondingAuthor: { 'en-US': [] },
             additionalAuthors: { 'en-US': [] },
             teams: {

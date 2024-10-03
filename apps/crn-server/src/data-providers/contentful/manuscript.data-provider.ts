@@ -168,6 +168,8 @@ export const parseGraphqlManuscriptVersion = (
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,
+      submitterName: version?.submitterName,
+      submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
       acknowledgedGrantNumberDetails:
         version?.acknowledgedGrantNumber === 'No'

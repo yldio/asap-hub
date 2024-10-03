@@ -79,6 +79,8 @@ export type ManuscriptVersion = {
   preprintDoi?: string;
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
+  submitterName?: string;
+  submissionDate?: Date;
   otherDetails?: string;
   manuscriptFile: ManuscriptFile;
   keyResourceTable?: ManuscriptFile;
@@ -303,6 +305,8 @@ export type ManuscriptPostRequest = Pick<
     preprintDoi?: ManuscriptVersion['preprintDoi'];
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    submitterName?: ManuscriptVersion['submitterName'];
+    submissionDate?: string;
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     description: string;
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
@@ -359,6 +363,8 @@ export type ManuscriptFormData = Pick<
     preprintDoi?: ManuscriptVersion['preprintDoi'];
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    submitterName?: ManuscriptVersion['submitterName'];
+    submissionDate?: ManuscriptVersion['submissionDate'];
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable: ManuscriptVersion['keyResourceTable'];
@@ -438,6 +444,13 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               type: 'string',
               nullable: true,
             },
+            submitterName: { type: 'string', nullable: true },
+            submissionDate: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+
             otherDetails: { type: 'string', nullable: true },
             description: { type: 'string' },
             manuscriptFile: {

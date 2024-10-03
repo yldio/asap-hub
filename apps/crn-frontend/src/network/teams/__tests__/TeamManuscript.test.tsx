@@ -122,6 +122,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
+  const apcCoverage = screen.getByRole('group', {
+    name: /Will you be requesting APC coverage/i,
+  });
+
+  userEvent.click(within(apcCoverage).getByRole('radio', { name: /no/i }));
+
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
@@ -185,7 +191,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
               url: 'https://example.com/manuscript.pdf',
               id: 'file-id',
             },
-            requestingApcCoverage: 'Already submitted',
+            requestingApcCoverage: 'No',
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',
             manuscriptLicense: 'Yes',

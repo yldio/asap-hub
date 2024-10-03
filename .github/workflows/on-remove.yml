@@ -214,7 +214,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
       - name: Delete the entity index
-        if: ${{ steps.setup.outputs.crn-contentful-on-branch-env == 'true' && (steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' || steps.setup.outputs.crn-algolia-index != 'asap-hub_prod')}}
+        if: ${{ steps.setup.outputs.crn-contentful-on-branch-env == 'true' && steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' && steps.setup.outputs.crn-algolia-index != 'asap-hub_prod' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
         env:
@@ -222,7 +222,7 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
       - name: Delete the analytics index
-        if: ${{ steps.setup.outputs.crn-analytics-algolia-on-branch-env == 'true' && (steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_dev' || steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_prod')}}
+        if: ${{ steps.setup.outputs.crn-analytics-algolia-on-branch-env == 'true' && steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_dev' && steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_prod' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX
         env:

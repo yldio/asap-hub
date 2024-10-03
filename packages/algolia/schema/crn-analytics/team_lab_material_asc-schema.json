@@ -1,6 +1,7 @@
 {
   "ranking": [
-    "desc(outputsCoProducedAcross.byDocumentType.Lab Resource)",
+    "asc(Lab Material)",
+    "asc(outputsCoProducedWithin.Lab Material)",
     "typo",
     "geo",
     "words",

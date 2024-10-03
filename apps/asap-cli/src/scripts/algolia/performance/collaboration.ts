@@ -18,7 +18,7 @@ type DocumentMetric = {
   Article: number;
   Bioinformatics: number;
   Dataset: number;
-  'Lab Resource': number;
+  'Lab Material': number;
   Protocol: number;
 };
 
@@ -106,7 +106,7 @@ export const processTeamCollaborationPerformance = async (
         { name: 'Article', documentType: 'article' },
         { name: 'Bioinformatics', documentType: 'bioinformatics' },
         { name: 'Dataset', documentType: 'dataset' },
-        { name: 'Lab Resource', documentType: 'labResource' },
+        { name: 'Lab Material', documentType: 'labMaterial' },
         { name: 'Protocol', documentType: 'protocol' },
       ];
 

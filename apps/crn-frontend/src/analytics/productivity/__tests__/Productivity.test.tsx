@@ -146,7 +146,7 @@ const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   Article: 50,
   Bioinformatics: 0,
   Dataset: 0,
-  'Lab Resource': 0,
+  'Lab Material': 0,
   Protocol: 0,
 };
 

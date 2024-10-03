@@ -79,7 +79,7 @@ export type OutputDocumentTypeParameter =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
-  | 'lab-resource'
+  | 'lab-material'
   | 'protocol'
   | 'report';
 

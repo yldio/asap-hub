@@ -80,7 +80,7 @@ const researchOutputFormProps: ComponentProps<typeof ResearchOutputForm> = {
             label: 'Research 5',
             value: '5',
             type: 'Preprint',
-            documentType: 'Lab Resource',
+            documentType: 'Lab Material',
           },
           {
             label: 'Research 6',

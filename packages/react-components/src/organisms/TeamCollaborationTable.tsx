@@ -95,7 +95,7 @@ export type TeamCollaborationMetric = {
   Article: number;
   Bioinformatics: number;
   Dataset: number;
-  'Lab Resource': number;
+  'Lab Material': number;
   Protocol: number;
   collaborationByTeam: Omit<
     TeamCollaborationMetric,
@@ -129,7 +129,7 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
   const isArticleSortActive = sort.includes('article');
   const isBioinformaticsSortActive = sort.includes('bioinformatics');
   const isDatasetSortActive = sort.includes('dataset');
-  const isLabResourceSortActive = sort.includes('lab_resource');
+  const isLabMaterialSortActive = sort.includes('lab_material');
   const isProtocolSortActive = sort.includes('protocol');
 
   const collaborationType = type === 'within-team' ? '' : 'across_';
@@ -248,27 +248,27 @@ const TeamCollaborationTable: React.FC<TeamCollaborationTableProps> = ({
               </button>
             </span>
             <span css={titleStyles}>
-              Lab Resources
+              Lab Materials
               <button
                 css={buttonStyles}
                 onClick={() => {
-                  const newDirection = isLabResourceSortActive
-                    ? sortingDirection.labResource === 'asc'
+                  const newDirection = isLabMaterialSortActive
+                    ? sortingDirection.labMaterial === 'asc'
                       ? 'desc'
                       : 'asc'
                     : 'desc';
 
-                  setSort(`lab_resource_${collaborationType}${newDirection}`);
+                  setSort(`lab_material_${collaborationType}${newDirection}`);
                   setSortingDirection({
                     ...teamCollaborationInitialSortingDirection,
-                    labResource: newDirection,
+                    labMaterial: newDirection,
                   });
                 }}
               >
                 <NumericalSortingIcon
-                  active={isLabResourceSortActive}
-                  ascending={sortingDirection.labResource === 'asc'}
-                  description={'Lab Resource'}
+                  active={isLabMaterialSortActive}
+                  ascending={sortingDirection.labMaterial === 'asc'}
+                  description={'Lab Material'}
                 />
               </button>
             </span>

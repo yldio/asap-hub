@@ -25,7 +25,7 @@ describe('TeamCollaborationTable', () => {
     Article: 1,
     Bioinformatics: 2,
     Dataset: 3,
-    'Lab Resource': 4,
+    'Lab Material': 4,
     Protocol: 5,
     collaborationByTeam: [
       {
@@ -35,7 +35,7 @@ describe('TeamCollaborationTable', () => {
         Article: 1,
         Bioinformatics: 2,
         Dataset: 3,
-        'Lab Resource': 4,
+        'Lab Material': 4,
         Protocol: 5,
       },
     ],
@@ -93,9 +93,9 @@ describe('TeamCollaborationTable', () => {
     ${'team_desc'}           | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'desc' }}        | ${'Dataset Inactive Numerical Descending Sort Icon'}        | ${'dataset_desc'}        | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'desc' }}
     ${'dataset_asc'}         | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'asc' }}         | ${'Dataset Active Numerical Ascending Sort Icon'}           | ${'dataset_desc'}        | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'desc' }}
     ${'dataset_desc'}        | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'desc' }}        | ${'Dataset Active Numerical Descending Sort Icon'}          | ${'dataset_asc'}         | ${{ ...teamCollaborationInitialSortingDirection, dataset: 'asc' }}
-    ${'team_desc'}           | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'desc' }}    | ${'Lab Resource Inactive Numerical Descending Sort Icon'}   | ${'lab_resource_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'desc' }}
-    ${'lab_resource_asc'}    | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'asc' }}     | ${'Lab Resource Active Numerical Ascending Sort Icon'}      | ${'lab_resource_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'desc' }}
-    ${'lab_resource_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'desc' }}    | ${'Lab Resource Active Numerical Descending Sort Icon'}     | ${'lab_resource_asc'}    | ${{ ...teamCollaborationInitialSortingDirection, labResource: 'asc' }}
+    ${'team_desc'}           | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'desc' }}    | ${'Lab Material Inactive Numerical Descending Sort Icon'}   | ${'lab_material_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'desc' }}
+    ${'lab_material_asc'}    | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'asc' }}     | ${'Lab Material Active Numerical Ascending Sort Icon'}      | ${'lab_material_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'desc' }}
+    ${'lab_material_desc'}   | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'desc' }}    | ${'Lab Material Active Numerical Descending Sort Icon'}     | ${'lab_material_asc'}    | ${{ ...teamCollaborationInitialSortingDirection, labMaterial: 'asc' }}
     ${'team_desc'}           | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'desc' }}       | ${'Protocol Inactive Numerical Descending Sort Icon'}       | ${'protocol_desc'}       | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'desc' }}
     ${'protocol_asc'}        | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'asc' }}        | ${'Protocol Active Numerical Ascending Sort Icon'}          | ${'protocol_desc'}       | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'desc' }}
     ${'protocol_desc'}       | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'desc' }}       | ${'Protocol Active Numerical Descending Sort Icon'}         | ${'protocol_asc'}        | ${{ ...teamCollaborationInitialSortingDirection, protocol: 'asc' }}

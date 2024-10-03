@@ -55,7 +55,7 @@ it('should trigger an onChange event when a text is being typed into access inst
   expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
 });
 
-it('should show lab catalogue number for lab resources', async () => {
+it('should show lab catalogue number for lab materials', async () => {
   const { rerender } = render(
     <ResearchOutputExtraInformationCard {...props} documentType={'Article'} />,
   );
@@ -64,7 +64,7 @@ it('should show lab catalogue number for lab resources', async () => {
   rerender(
     <ResearchOutputExtraInformationCard
       {...props}
-      documentType={'Lab Resource'}
+      documentType={'Lab Material'}
     />,
   );
   expect(screen.queryByLabelText(/Catalog Number/i)).toBeVisible();

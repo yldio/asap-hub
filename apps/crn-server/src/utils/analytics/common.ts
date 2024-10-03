@@ -64,7 +64,7 @@ const documentCategoryMap: Record<DocumentCategoryOption, string | null> = {
   article: 'Article',
   bioinformatics: 'Bioinformatics',
   dataset: 'Dataset',
-  'lab-resource': 'Lab Resource',
+  'lab-material': 'Lab Material',
   protocol: 'Protocol',
 };
 

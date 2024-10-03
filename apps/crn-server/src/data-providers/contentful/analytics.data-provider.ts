@@ -339,7 +339,7 @@ const getTeamProductivityItems = (
       Article: 0,
       Bioinformatics: 0,
       Dataset: 0,
-      'Lab Resource': 0,
+      'Lab Material': 0,
       Protocol: 0,
     };
 
@@ -369,7 +369,7 @@ const getTeamProductivityItems = (
       Article: documentTypesCount.Article,
       Bioinformatics: documentTypesCount.Bioinformatics,
       Dataset: documentTypesCount.Dataset,
-      'Lab Resource': documentTypesCount['Lab Resource'],
+      'Lab Material': documentTypesCount['Lab Material'],
       Protocol: documentTypesCount.Protocol,
     };
   });

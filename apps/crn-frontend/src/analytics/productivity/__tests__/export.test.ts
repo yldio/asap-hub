@@ -65,19 +65,19 @@ describe('teamProductivityToCSV', () => {
       Article: 1,
       Bioinformatics: 2,
       Dataset: 3,
-      'Lab Resource': 4,
+      'Lab Material': 4,
       Protocol: 5,
     };
     const performance: TeamProductivityPerformance = {
       article: performanceMetric,
       bioinformatics: performanceMetric,
       dataset: performanceMetric,
-      labResource: performanceMetric,
+      labMaterial: performanceMetric,
       protocol: performanceMetric,
     };
     expect(teamProductivityToCSV(performance)(data)).toEqual({
-      ASAPALabResourceAverage: 'Above',
-      ASAPALabResourceValue: 4,
+      ASAPALabMaterialAverage: 'Above',
+      ASAPALabMaterialValue: 4,
       ASAPArticleOutputAverage: 'Below',
       ASAPArticleOutputValue: 1,
       ASAPBioinformaticOutputAverage: 'Below',

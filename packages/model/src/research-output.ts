@@ -12,7 +12,7 @@ export const researchOutputDocumentTypes = [
   'Dataset',
   'Bioinformatics',
   'Protocol',
-  'Lab Resource',
+  'Lab Material',
   'Article',
   'Report',
 ] as const;
@@ -106,7 +106,7 @@ export const researchOutputDocumentTypeToType: Record<
     'Sequencing',
     'Shipment Procedure',
   ]),
-  'Lab Resource': new Set<ResearchOutputType>([
+  'Lab Material': new Set<ResearchOutputType>([
     'Animal Model',
     'Antibody',
     'Assay',
@@ -166,7 +166,7 @@ export const researchOutputToIdentifierType: Record<
     ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
   ],
-  'Lab Resource': [
+  'Lab Material': [
     ResearchOutputIdentifierType.None,
     ResearchOutputIdentifierType.DOI,
     ResearchOutputIdentifierType.RRID,

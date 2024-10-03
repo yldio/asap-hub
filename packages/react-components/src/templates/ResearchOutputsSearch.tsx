@@ -22,7 +22,7 @@ export const researchOutputFilters: ReadonlyArray<
   { label: 'CRN Report', value: 'Report' },
   { label: 'Dataset', value: 'Dataset' },
   { label: 'Grant Document', value: 'Grant Document' },
-  { label: 'Lab Resource', value: 'Lab Resource' },
+  { label: 'Lab Material', value: 'Lab Material' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },
 ];

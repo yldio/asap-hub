@@ -181,7 +181,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             typeOptions={Array.from(
               researchOutputDocumentTypeToType[documentType],
             )}
-            urlRequired={documentType !== 'Lab Resource'}
+            urlRequired={documentType !== 'Lab Material'}
             selectedTeams={(researchOutputData?.teams ?? [team]).map(
               (selectedTeam, index) => ({
                 label: selectedTeam.displayName,

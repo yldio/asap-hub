@@ -123,7 +123,7 @@ describe('getUserCollaboration', () => {
     ${'Article'}        | ${'article'}
     ${'Bioinformatics'} | ${'bioinformatics'}
     ${'Dataset'}        | ${'dataset'}
-    ${'Lab Resource'}   | ${'lab-resource'}
+    ${'Lab Material'}   | ${'lab-material'}
     ${'Protocol'}       | ${'protocol'}
     ${'All'}            | ${'all'}
   `(
@@ -303,7 +303,7 @@ describe('getUserCollaborationPerformance', () => {
     ${'Article'}        | ${'article'}
     ${'Bioinformatics'} | ${'bioinformatics'}
     ${'Dataset'}        | ${'dataset'}
-    ${'Lab Resource'}   | ${'lab-resource'}
+    ${'Lab Material'}   | ${'lab-material'}
     ${'Protocol'}       | ${'protocol'}
     ${'All'}            | ${'all'}
   `(

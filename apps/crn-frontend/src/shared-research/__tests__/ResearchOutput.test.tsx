@@ -168,7 +168,7 @@ describe('a grant document research output', () => {
     await renderComponent(researchOutputRoute.editResearchOutput({}).$);
 
     expect(
-      screen.getByRole('heading', { name: /Share bioinformatics/i }),
+      screen.getByRole('heading', { name: /Share Team Bioinformatics/i }),
     ).toBeInTheDocument();
     expect(screen.getByText('Save')).toBeVisible();
   });

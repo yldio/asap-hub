@@ -19,8 +19,8 @@ const PerformanceCard: React.FC<PerformanceCardProps> = ({
     return (
       <CaptionCard>
         <>
-          <CaptionItem label="Article" {...data.article} />
-          <CaptionItem label="Lab Resources" {...data.labResource} />
+          <CaptionItem label="Articles" {...data.article} />
+          <CaptionItem label="Lab Materials" {...data.labMaterial} />
           <CaptionItem label="Bioinformatics" {...data.bioinformatics} />
           <CaptionItem label="Protocols" {...data.protocol} />
           <CaptionItem label="Datasets" {...data.dataset} />

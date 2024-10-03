@@ -12,7 +12,7 @@ import {
   dataset,
   InactiveBadgeIcon,
   LabIcon,
-  labResource,
+  labMaterial,
   plusIcon,
   protocol,
 } from '../icons';
@@ -231,9 +231,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 href: route.createOutput({ outputDocumentType: 'dataset' }).$,
               }}
               {{
-                item: <>{labResource} Lab Resource</>,
+                item: <>{labMaterial} Lab Material</>,
                 href: route.createOutput({
-                  outputDocumentType: 'lab-resource',
+                  outputDocumentType: 'lab-material',
                 }).$,
               }}
               {{

@@ -125,7 +125,7 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
   const isArticleSortActive = sort.includes('article');
   const isBioinformaticsSortActive = sort.includes('bioinformatics');
   const isDatasetSortActive = sort.includes('dataset');
-  const isLabResourceSortActive = sort.includes('lab_resource');
+  const isLabMaterialSortActive = sort.includes('lab_material');
   const isProtocolSortActive = sort.includes('protocol');
 
   return (
@@ -234,27 +234,27 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
               </button>
             </span>
             <span css={titleStyles}>
-              Lab Resources
+              Lab Materials
               <button
                 css={buttonStyles}
                 onClick={() => {
-                  const newDirection = isLabResourceSortActive
-                    ? sortingDirection.labResource === 'asc'
+                  const newDirection = isLabMaterialSortActive
+                    ? sortingDirection.labMaterial === 'asc'
                       ? 'desc'
                       : 'asc'
                     : 'desc';
 
-                  setSort(`lab_resource_${newDirection}`);
+                  setSort(`lab_material_${newDirection}`);
                   setSortingDirection({
                     ...teamProductivityInitialSortingDirection,
-                    labResource: newDirection,
+                    labMaterial: newDirection,
                   });
                 }}
               >
                 <NumericalSortingIcon
-                  active={isLabResourceSortActive}
-                  ascending={sortingDirection.labResource === 'asc'}
-                  description={'Lab Resource'}
+                  active={isLabMaterialSortActive}
+                  ascending={sortingDirection.labMaterial === 'asc'}
+                  description={'Lab Material'}
                 />
               </button>
             </span>
@@ -312,12 +312,12 @@ const TeamProductivityTable: React.FC<TeamProductivityTableProps> = ({
                 {row.Dataset}{' '}
                 {getPerformanceIcon(row.Dataset, performance.dataset)}
               </p>
-              <span css={[titleStyles, rowTitleStyles]}>Lab Resources</span>
+              <span css={[titleStyles, rowTitleStyles]}>Lab Materials</span>
               <p css={rowValueStyles}>
-                {row['Lab Resource']}{' '}
+                {row['Lab Material']}{' '}
                 {getPerformanceIcon(
-                  row['Lab Resource'],
-                  performance.labResource,
+                  row['Lab Material'],
+                  performance.labMaterial,
                 )}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Protocols</span>

@@ -1,5 +1,6 @@
 import { JSONSchemaType } from 'ajv';
 import { AuthorAlgoliaResponse } from './authors';
+import { ComplianceReport } from './compliance-report';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -109,6 +110,7 @@ export type ManuscriptVersion = {
   };
   createdDate: string;
   publishedAt: string;
+  complianceReport?: ComplianceReport;
 };
 
 export const manuscriptFormFieldsMapping: Record<

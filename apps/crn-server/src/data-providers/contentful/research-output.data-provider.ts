@@ -241,6 +241,7 @@ export class ResearchOutputContentfulDataProvider
       }
       const published = await toPublish.publish();
 
+      console.log('published', published);
       const fetchOutputById = () => this.fetchOutputById(id);
 
       await pollContentfulGql<FetchResearchOutputByIdQuery>(

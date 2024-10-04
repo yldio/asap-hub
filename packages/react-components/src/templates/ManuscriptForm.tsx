@@ -84,7 +84,12 @@ const apcCoverageLifecycles = [
 type OptionalVersionFields = Array<
   keyof Omit<
     ManuscriptVersion,
-    'type' | 'lifecycle' | 'createdBy' | 'createdDate' | 'publishedAt'
+    | 'type'
+    | 'lifecycle'
+    | 'complianceReport'
+    | 'createdBy'
+    | 'createdDate'
+    | 'publishedAt'
   >
 >;
 

@@ -118,7 +118,10 @@ export const manuscriptFormFieldsMapping: Record<
   Record<
     ManuscriptLifecycle,
     Array<
-      keyof Omit<ManuscriptVersion, 'createdBy' | 'createdDate' | 'publishedAt'>
+      keyof Omit<
+        ManuscriptVersion,
+        'complianceReport' | 'createdBy' | 'createdDate' | 'publishedAt'
+      >
     >
   >
 > = {

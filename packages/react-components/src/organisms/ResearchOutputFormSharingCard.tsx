@@ -16,7 +16,7 @@ import {
   LabeledDateField,
   LabeledDropdown,
   LabeledRadioButtonGroup,
-  LabeledTextArea,
+  LabeledTextEditor,
   LabeledTextField,
 } from '../molecules';
 import { noop } from '../utils';
@@ -203,14 +203,16 @@ const ResearchOutputFormSharingCard: React.FC<
           placeholder="Select subtype"
         />
       )}
-      <LabeledTextArea
+      <LabeledTextEditor
         title="Description"
         subtitle="(required)"
         tip="Add an abstract or a summary that describes this work."
         onChange={onChangeDescription}
-        getValidationMessage={() => 'Please enter a description'}
+        getValidationMessage={(validationState) => {
+          console.log(validationState);
+          return 'Please enter a description';
+        }}
         required
-        enabled={!isSaving}
         value={descriptionMD}
         info={
           <Markdown

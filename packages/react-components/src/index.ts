@@ -38,6 +38,7 @@ export {
   TabLink,
   TabButton,
   TextArea,
+  TextEditor,
   Toggle,
   Tooltip,
   MaterialAvailability,

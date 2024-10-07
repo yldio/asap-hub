@@ -275,12 +275,14 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = (
                           {version.requestingApcCoverage}
                         </span>
                       </li>
-                      <li css={additionalInformationEntryStyles}>
-                        <strong>Submitter's Name</strong>
-                        <span css={additionalInformationValueStyles}>
-                          {version.submitterName}
-                        </span>
-                      </li>
+                      {version?.submitterName ? (
+                        <li css={additionalInformationEntryStyles}>
+                          <strong>Submitter's Name</strong>
+                          <span css={additionalInformationValueStyles}>
+                            {version.submitterName}
+                          </span>
+                        </li>
+                      ) : null}
                       {version?.submissionDate ? (
                         <li css={additionalInformationEntryStyles}>
                           <strong>Submission Date</strong>

@@ -730,7 +730,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     required: "Please enter the submitter's name.",
                     maxLength: {
                       value: 256,
-                      message: 'This title cannot exceed 256 characters.',
+                      message: 'The name cannot exceed 256 characters.',
                     },
                   }}
                   render={({

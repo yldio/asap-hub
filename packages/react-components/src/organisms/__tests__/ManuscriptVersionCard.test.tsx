@@ -210,6 +210,25 @@ it('renders key resource table file details and download link', () => {
   );
 });
 
+it("does not display Submitter's Name and Submission Date if submitterName and submissionDate are not defined", () => {
+  const { getByRole, getByText, queryByText } = render(
+    <ManuscriptVersionCard
+      {...props}
+      requestingApcCoverage="No"
+      submissionDate={undefined}
+      submitterName={undefined}
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
+  expect(getByText(/No/i)).toBeInTheDocument();
+
+  expect(queryByText(/Submitter's Name/i)).not.toBeInTheDocument();
+
+  expect(queryByText(/Submission Date/i)).not.toBeInTheDocument();
+});
+
 it('displays apc coverage information', () => {
   const { getByRole, getByText } = render(
     <ManuscriptVersionCard

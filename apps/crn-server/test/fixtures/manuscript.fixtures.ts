@@ -157,6 +157,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
         firstAuthors: [{ userId: 'author-1' }],
         correspondingAuthor: undefined,
         additionalAuthors: [],
+        submissionDate: undefined,
       },
     ],
   };
@@ -204,6 +205,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
         firstAuthors: ['author-1'],
         correspondingAuthor: [],
         additionalAuthors: [],
+        submissionDate: undefined,
       },
     ],
     userId: 'user-id-0',

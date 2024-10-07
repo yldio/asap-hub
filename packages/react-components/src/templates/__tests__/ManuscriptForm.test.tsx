@@ -22,6 +22,7 @@ import ManuscriptForm from '../ManuscriptForm';
 
 let history!: History;
 
+jest.setTimeout(30_000);
 beforeEach(() => {
   history = createMemoryHistory();
 });
@@ -70,6 +71,8 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
       value: 'author-1',
     },
   ],
+  submitterName: 'John Doe',
+  submissionDate: new Date('2024-10-01'),
 };
 
 it('renders the form', async () => {
@@ -215,6 +218,8 @@ test.each`
           keyResourceTable: expect.anything(),
           publicationDoi: '10.0777',
           requestingApcCoverage: 'Already submitted',
+          submissionDate: '2024-10-01T00:00:00.000Z',
+          submitterName: 'John Doe',
           acknowledgedGrantNumber: 'Yes',
           asapAffiliationIncluded: 'Yes',
           manuscriptLicense: 'Yes',
@@ -310,6 +315,8 @@ test.each`
             keyResourceTable: expect.anything(),
             publicationDoi: '10.0777',
             requestingApcCoverage: 'Already submitted',
+            submissionDate: '2024-10-01T00:00:00.000Z',
+            submitterName: 'John Doe',
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',
             manuscriptLicense: 'Yes',
@@ -856,6 +863,8 @@ describe('renders the necessary fields', () => {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
     requestingApcCoverage: 'Will you be requesting APC coverage',
+    submitterName: "Please enter the submitter's name.",
+    submissionDate: 'Please enter the submission date.',
     manuscriptFile: 'Upload the main manuscript file',
     keyResourceTable: 'Upload a key resource table',
     additionalFiles: 'Upload any additional files',

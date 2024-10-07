@@ -219,6 +219,12 @@ it('displays manuscript success toast message and user can dismiss toast', async
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
+  const apcCoverage = screen.getByRole('group', {
+    name: /Will you be requesting APC coverage/i,
+  });
+
+  userEvent.click(within(apcCoverage).getByRole('radio', { name: /no/i }));
+
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });

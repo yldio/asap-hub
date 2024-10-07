@@ -25,6 +25,7 @@ import { useHistory } from 'react-router-dom';
 import {
   AuthorSelect,
   FormCard,
+  LabeledDateField,
   LabeledDropdown,
   LabeledFileField,
   LabeledMultiSelect,
@@ -266,6 +267,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   additionalFiles,
   eligibilityReasons,
   requestingApcCoverage,
+  submitterName,
+  submissionDate,
   preprintDoi,
   publicationDoi,
   otherDetails,
@@ -304,6 +307,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           lifecycle: lifecycle || '',
           preprintDoi: preprintDoi || '',
           requestingApcCoverage: requestingApcCoverage || '',
+          submitterName: submitterName || undefined,
+          submissionDate: submissionDate || undefined,
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
           manuscriptFile: manuscriptFile || undefined,
@@ -398,6 +403,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               manuscriptFile: undefined,
               keyResourceTable: undefined,
               additionalFiles: undefined,
+              submissionDate: undefined,
+              submitterName: undefined,
             },
           ],
         },
@@ -430,6 +437,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             requestingApcCoverage:
               versionData?.requestingApcCoverage || undefined,
             description: versionData.description || '',
+            submitterName:
+              versionData?.requestingApcCoverage === 'Already submitted' &&
+              versionData?.submitterName
+                ? versionData.submitterName
+                : undefined,
+            submissionDate:
+              versionData?.requestingApcCoverage === 'Already submitted' &&
+              versionData.submissionDate
+                ? versionData.submissionDate.toISOString()
+                : undefined,
 
             acknowledgedGrantNumber:
               versionData.acknowledgedGrantNumber || undefined,
@@ -703,6 +720,54 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 />
               )}
 
+            {watch('versions.0.requestingApcCoverage') ===
+            'Already submitted' ? (
+              <>
+                <Controller
+                  name="versions.0.submitterName"
+                  control={control}
+                  rules={{
+                    required: "Please enter the submitter's name.",
+                    maxLength: {
+                      value: 256,
+                      message: 'The name cannot exceed 256 characters.',
+                    },
+                  }}
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledTextField
+                      title="Submitter’s Name"
+                      subtitle="(required)"
+                      customValidationMessage={error?.message}
+                      value={value || ''}
+                      onChange={onChange}
+                      enabled={!isSubmitting}
+                    />
+                  )}
+                />
+                <Controller
+                  name="versions.0.submissionDate"
+                  control={control}
+                  rules={{
+                    required: 'Please enter the submission date.',
+                  }}
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDateField
+                      customValidationMessage={error?.message}
+                      title="Submission Date"
+                      subtitle="(required)"
+                      onChange={onChange}
+                      value={value}
+                    />
+                  )}
+                />
+              </>
+            ) : null}
             {watchType &&
               watchLifecycle &&
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(

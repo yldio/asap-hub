@@ -912,6 +912,13 @@ input EventSpeakersUserFilter {
   AND: [EventSpeakersUserFilter]
   OR: [EventSpeakersUserFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   orcid: String
   orcid_contains: String
   orcid_exists: Boolean
@@ -1412,6 +1419,7 @@ type EventsVideoRecordingResourcesInline implements ResourceLink {
 type ExternalAuthors implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  email(locale: String): String
   linkedFrom(allowedLocales: [String]): ExternalAuthorsLinkingCollections
   name(locale: String): String
   orcid(locale: String): String
@@ -1429,6 +1437,13 @@ input ExternalAuthorsFilter {
   AND: [ExternalAuthorsFilter]
   OR: [ExternalAuthorsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   name: String
   name_contains: String
   name_exists: Boolean
@@ -1449,6 +1464,7 @@ input ExternalAuthorsFilter {
 type ExternalAuthorsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
@@ -1462,6 +1478,61 @@ enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  acknowledgedGrantNumberDetails_ASC
+  acknowledgedGrantNumberDetails_DESC
+  acknowledgedGrantNumber_ASC
+  acknowledgedGrantNumber_DESC
+  asapAffiliationIncludedDetails_ASC
+  asapAffiliationIncludedDetails_DESC
+  asapAffiliationIncluded_ASC
+  asapAffiliationIncluded_DESC
+  codeDepositedDetails_ASC
+  codeDepositedDetails_DESC
+  codeDeposited_ASC
+  codeDeposited_DESC
+  datasetsDepositedDetails_ASC
+  datasetsDepositedDetails_DESC
+  datasetsDeposited_ASC
+  datasetsDeposited_DESC
+  labMaterialsRegisteredDetails_ASC
+  labMaterialsRegisteredDetails_DESC
+  labMaterialsRegistered_ASC
+  labMaterialsRegistered_DESC
+  lifecycle_ASC
+  lifecycle_DESC
+  manuscriptLicenseDetails_ASC
+  manuscriptLicenseDetails_DESC
+  manuscriptLicense_ASC
+  manuscriptLicense_DESC
+  otherDetails_ASC
+  otherDetails_DESC
+  preprintDoi_ASC
+  preprintDoi_DESC
+  protocolsDepositedDetails_ASC
+  protocolsDepositedDetails_DESC
+  protocolsDeposited_ASC
+  protocolsDeposited_DESC
+  publicationDoi_ASC
+  publicationDoi_DESC
+  requestingApcCoverage_ASC
+  requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -1541,6 +1612,8 @@ enum ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder {
 }
 
 enum ExternalAuthorsOrder {
+  email_ASC
+  email_DESC
   name_ASC
   name_DESC
   orcid_ASC
@@ -2389,6 +2462,10 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   publicationDoi_DESC
   requestingApcCoverage_ASC
   requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2537,15 +2614,19 @@ type ManuscriptVersions implements Entry & _Node {
   _id: ID!
   acknowledgedGrantNumber(locale: String): String
   acknowledgedGrantNumberDetails(locale: String): String
+  additionalAuthorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsAdditionalAuthorsFilter): ManuscriptVersionsAdditionalAuthorsCollection
   additionalFilesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): AssetCollection
   asapAffiliationIncluded(locale: String): String
   asapAffiliationIncludedDetails(locale: String): String
   codeDeposited(locale: String): String
   codeDepositedDetails(locale: String): String
   contentfulMetadata: ContentfulMetadata!
+  correspondingAuthorCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsCorrespondingAuthorFilter): ManuscriptVersionsCorrespondingAuthorCollection
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   datasetsDeposited(locale: String): String
   datasetsDepositedDetails(locale: String): String
+  description(locale: String): String
+  firstAuthorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsFirstAuthorsFilter): ManuscriptVersionsFirstAuthorsCollection
   keyResourceTable(locale: String, preview: Boolean): Asset
   labMaterialsRegistered(locale: String): String
   labMaterialsRegisteredDetails(locale: String): String
@@ -2561,10 +2642,42 @@ type ManuscriptVersions implements Entry & _Node {
   protocolsDepositedDetails(locale: String): String
   publicationDoi(locale: String): String
   requestingApcCoverage(locale: String): String
+  submissionDate(locale: String): DateTime
+  submitterName(locale: String): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
 }
+
+type ManuscriptVersionsAdditionalAuthorsCollection {
+  items: [ManuscriptVersionsAdditionalAuthorsItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ManuscriptVersionsAdditionalAuthorsFilter {
+  AND: [ManuscriptVersionsAdditionalAuthorsFilter]
+  OR: [ManuscriptVersionsAdditionalAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+union ManuscriptVersionsAdditionalAuthorsItem = ExternalAuthors | Users
 
 type ManuscriptVersionsCollection {
   items: [ManuscriptVersions]!
@@ -2572,6 +2685,36 @@ type ManuscriptVersionsCollection {
   skip: Int!
   total: Int!
 }
+
+type ManuscriptVersionsCorrespondingAuthorCollection {
+  items: [ManuscriptVersionsCorrespondingAuthorItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ManuscriptVersionsCorrespondingAuthorFilter {
+  AND: [ManuscriptVersionsCorrespondingAuthorFilter]
+  OR: [ManuscriptVersionsCorrespondingAuthorFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+union ManuscriptVersionsCorrespondingAuthorItem = ExternalAuthors | Users
 
 input ManuscriptVersionsFilter {
   AND: [ManuscriptVersionsFilter]
@@ -2590,6 +2733,8 @@ input ManuscriptVersionsFilter {
   acknowledgedGrantNumber_not: String
   acknowledgedGrantNumber_not_contains: String
   acknowledgedGrantNumber_not_in: [String]
+  additionalAuthors: cfadditionalAuthorsMultiTypeNestedFilter
+  additionalAuthorsCollection_exists: Boolean
   additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
   asapAffiliationIncludedDetails: String
@@ -2620,6 +2765,8 @@ input ManuscriptVersionsFilter {
   codeDeposited_not_contains: String
   codeDeposited_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
+  correspondingAuthor: cfcorrespondingAuthorMultiTypeNestedFilter
+  correspondingAuthorCollection_exists: Boolean
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
   datasetsDeposited: String
@@ -2636,6 +2783,15 @@ input ManuscriptVersionsFilter {
   datasetsDeposited_not: String
   datasetsDeposited_not_contains: String
   datasetsDeposited_not_in: [String]
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  firstAuthors: cffirstAuthorsMultiTypeNestedFilter
+  firstAuthorsCollection_exists: Boolean
   keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
   labMaterialsRegisteredDetails: String
@@ -2717,6 +2873,22 @@ input ManuscriptVersionsFilter {
   requestingApcCoverage_not: String
   requestingApcCoverage_not_contains: String
   requestingApcCoverage_not_in: [String]
+  submissionDate: DateTime
+  submissionDate_exists: Boolean
+  submissionDate_gt: DateTime
+  submissionDate_gte: DateTime
+  submissionDate_in: [DateTime]
+  submissionDate_lt: DateTime
+  submissionDate_lte: DateTime
+  submissionDate_not: DateTime
+  submissionDate_not_in: [DateTime]
+  submitterName: String
+  submitterName_contains: String
+  submitterName_exists: Boolean
+  submitterName_in: [String]
+  submitterName_not: String
+  submitterName_not_contains: String
+  submitterName_not_in: [String]
   sys: SysFilter
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean
@@ -2728,6 +2900,36 @@ input ManuscriptVersionsFilter {
   type_not_contains: String
   type_not_in: [String]
 }
+
+type ManuscriptVersionsFirstAuthorsCollection {
+  items: [ManuscriptVersionsFirstAuthorsItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ManuscriptVersionsFirstAuthorsFilter {
+  AND: [ManuscriptVersionsFirstAuthorsFilter]
+  OR: [ManuscriptVersionsFirstAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+union ManuscriptVersionsFirstAuthorsItem = ExternalAuthors | Users
 
 type ManuscriptVersionsLabsCollection {
   items: [Labs]!
@@ -2806,6 +3008,10 @@ enum ManuscriptVersionsOrder {
   publicationDoi_DESC
   requestingApcCoverage_ASC
   requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2970,6 +3176,10 @@ enum ManuscriptsVersionsCollectionOrder {
   publicationDoi_DESC
   requestingApcCoverage_ASC
   requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3451,6 +3661,8 @@ type Query {
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsCollection
   researchTags(id: String!, locale: String, preview: Boolean): ResearchTags
   researchTagsCollection(limit: Int = 100, locale: String, order: [ResearchTagsOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchTagsCollection
+  researchTheme(id: String!, locale: String, preview: Boolean): ResearchTheme
+  researchThemeCollection(limit: Int = 100, locale: String, order: [ResearchThemeOrder], preview: Boolean, skip: Int = 0, where: ResearchThemeFilter): ResearchThemeCollection
   supplementGrant(id: String!, locale: String, preview: Boolean): SupplementGrant
   supplementGrantCollection(limit: Int = 100, locale: String, order: [SupplementGrantOrder], preview: Boolean, skip: Int = 0, where: SupplementGrantFilter): SupplementGrantCollection
   teamMembership(id: String!, locale: String, preview: Boolean): TeamMembership
@@ -3694,6 +3906,13 @@ input ResearchOutputsAuthorsFilter {
   AND: [ResearchOutputsAuthorsFilter]
   OR: [ResearchOutputsAuthorsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   orcid: String
   orcid_contains: String
   orcid_exists: Boolean
@@ -4701,6 +4920,71 @@ enum ResearchTagsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTheme)"""
+type ResearchTheme implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ResearchThemeLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type ResearchThemeCollection {
+  items: [ResearchTheme]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ResearchThemeFilter {
+  AND: [ResearchThemeFilter]
+  OR: [ResearchThemeFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type ResearchThemeLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [ResearchThemeLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
+}
+
+enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ResearchThemeOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 interface ResourceLink {
   sys: ResourceSys!
 }
@@ -5004,6 +5288,7 @@ type Teams implements Entry & _Node {
   projectTitle(locale: String): String
   proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
   researchTagsCollection(limit: Int = 100, locale: String, order: [TeamsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): TeamsResearchTagsCollection
+  researchTheme(locale: String, preview: Boolean, where: ResearchThemeFilter): ResearchTheme
   supplementGrant(locale: String, preview: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
@@ -5061,6 +5346,8 @@ input TeamsFilter {
   proposal_exists: Boolean
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
+  researchTheme: cfResearchThemeNestedFilter
+  researchTheme_exists: Boolean
   supplementGrant: cfSupplementGrantNestedFilter
   supplementGrant_exists: Boolean
   sys: SysFilter
@@ -5162,6 +5449,10 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   publicationDoi_DESC
   requestingApcCoverage_ASC
   requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5377,6 +5668,13 @@ input TutorialsAuthorsFilter {
   AND: [TutorialsAuthorsFilter]
   OR: [TutorialsAuthorsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   orcid: String
   orcid_contains: String
   orcid_exists: Boolean
@@ -6203,6 +6501,10 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   publicationDoi_DESC
   requestingApcCoverage_ASC
   requestingApcCoverage_DESC
+  submissionDate_ASC
+  submissionDate_DESC
+  submitterName_ASC
+  submitterName_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7300,6 +7602,7 @@ input cfManuscriptVersionsNestedFilter {
   acknowledgedGrantNumber_not: String
   acknowledgedGrantNumber_not_contains: String
   acknowledgedGrantNumber_not_in: [String]
+  additionalAuthorsCollection_exists: Boolean
   additionalFilesCollection_exists: Boolean
   asapAffiliationIncluded: String
   asapAffiliationIncludedDetails: String
@@ -7330,6 +7633,7 @@ input cfManuscriptVersionsNestedFilter {
   codeDeposited_not_contains: String
   codeDeposited_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
+  correspondingAuthorCollection_exists: Boolean
   createdBy_exists: Boolean
   datasetsDeposited: String
   datasetsDepositedDetails: String
@@ -7345,6 +7649,14 @@ input cfManuscriptVersionsNestedFilter {
   datasetsDeposited_not: String
   datasetsDeposited_not_contains: String
   datasetsDeposited_not_in: [String]
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  firstAuthorsCollection_exists: Boolean
   keyResourceTable_exists: Boolean
   labMaterialsRegistered: String
   labMaterialsRegisteredDetails: String
@@ -7425,6 +7737,22 @@ input cfManuscriptVersionsNestedFilter {
   requestingApcCoverage_not: String
   requestingApcCoverage_not_contains: String
   requestingApcCoverage_not_in: [String]
+  submissionDate: DateTime
+  submissionDate_exists: Boolean
+  submissionDate_gt: DateTime
+  submissionDate_gte: DateTime
+  submissionDate_in: [DateTime]
+  submissionDate_lt: DateTime
+  submissionDate_lte: DateTime
+  submissionDate_not: DateTime
+  submissionDate_not_in: [DateTime]
+  submitterName: String
+  submitterName_contains: String
+  submitterName_exists: Boolean
+  submitterName_in: [String]
+  submitterName_not: String
+  submitterName_not_contains: String
+  submitterName_not_in: [String]
   sys: SysFilter
   teamsCollection_exists: Boolean
   type: String
@@ -7813,6 +8141,20 @@ input cfResearchTagsNestedFilter {
   types_exists: Boolean
 }
 
+input cfResearchThemeNestedFilter {
+  AND: [cfResearchThemeNestedFilter]
+  OR: [cfResearchThemeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
 input cfSupplementGrantNestedFilter {
   AND: [cfSupplementGrantNestedFilter]
   OR: [cfSupplementGrantNestedFilter]
@@ -7920,6 +8262,7 @@ input cfTeamsNestedFilter {
   projectTitle_not_in: [String]
   proposal_exists: Boolean
   researchTagsCollection_exists: Boolean
+  researchTheme_exists: Boolean
   supplementGrant_exists: Boolean
   sys: SysFilter
   toolsCollection_exists: Boolean
@@ -8376,10 +8719,80 @@ input cfWorkingGroupsNestedFilter {
   title_not_in: [String]
 }
 
+input cfadditionalAuthorsMultiTypeNestedFilter {
+  AND: [cfadditionalAuthorsMultiTypeNestedFilter]
+  OR: [cfadditionalAuthorsMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
 input cfauthorsMultiTypeNestedFilter {
   AND: [cfauthorsMultiTypeNestedFilter]
   OR: [cfauthorsMultiTypeNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+input cfcorrespondingAuthorMultiTypeNestedFilter {
+  AND: [cfcorrespondingAuthorMultiTypeNestedFilter]
+  OR: [cfcorrespondingAuthorMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+input cffirstAuthorsMultiTypeNestedFilter {
+  AND: [cffirstAuthorsMultiTypeNestedFilter]
+  OR: [cffirstAuthorsMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   orcid: String
   orcid_contains: String
   orcid_exists: Boolean
@@ -8411,6 +8824,13 @@ input cfuserMultiTypeNestedFilter {
   AND: [cfuserMultiTypeNestedFilter]
   OR: [cfuserMultiTypeNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
   orcid: String
   orcid_contains: String
   orcid_exists: Boolean

@@ -186,7 +186,7 @@ export default function ToolbarPlugin() {
       setIsUnderline(selection.hasFormat('underline'));
       setIsStrikethrough(selection.hasFormat('strikethrough'));
     }
-  }, [activeEditor, editor]);
+  }, [activeEditor]);
 
   useEffect(
     () =>

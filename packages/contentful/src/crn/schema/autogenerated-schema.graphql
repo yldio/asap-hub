@@ -375,14 +375,7 @@ type ContentfulMetadata {
   tags: [ContentfulTag]!
 }
 
-input ContentfulMetadataConceptsFilter {
-  id_contains_all: [String]
-  id_contains_none: [String]
-  id_contains_some: [String]
-}
-
 input ContentfulMetadataFilter {
-  concepts: ContentfulMetadataConceptsFilter
   tags: ContentfulMetadataTagsFilter
   tags_exists: Boolean
 }

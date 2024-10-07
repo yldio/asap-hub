@@ -46,7 +46,6 @@ export const usersContentQueryFragment = gql`
     website1
     website2
     role
-    researchTheme
     responsibilities
     researchInterests
     reachOut
@@ -69,6 +68,9 @@ export const usersContentQueryFragment = gql`
           }
           displayName
           inactiveSince
+          researchTheme {
+            name
+          }
           proposal {
             sys {
               id
@@ -140,6 +142,7 @@ export const usersContentQueryFragment = gql`
       }
       interestGroupLeadersCollection(limit: 10) {
         items {
+          role
           linkedFrom {
             interestGroupsCollection(limit: 1) {
               items {

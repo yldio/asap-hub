@@ -412,7 +412,7 @@ describe('Research Outputs Data Provider', () => {
 
     test('Should default missing research theme to an empty array', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
-      researchOutputs.researchTheme = null;
+      researchOutputs.teamsCollection!.items[0]!.researchTheme = null;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
@@ -705,36 +705,6 @@ describe('Research Outputs Data Provider', () => {
           name: 'lab name',
         },
       ]);
-    });
-
-    test('Should return the research output without the team', async () => {
-      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
-      researchOutputs.teamsCollection!.items = [];
-      researchOutputs.workingGroup = { sys: { id: '1' }, title: 'wg' };
-      researchOutputs.researchTheme = [
-        'PD Functional Genomics',
-        'Neuro-Immune Interactions',
-      ];
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        researchOutputs,
-      });
-
-      const result = await researchOutputDataProvider.fetchById('1');
-
-      const expectedResult = getResearchOutputDataObject();
-      expectedResult.usageNotesMD = researchOutputs.usageNotes as string;
-      expectedResult.usageNotes = undefined;
-      expectedResult.authors = [];
-      expectedResult.teams = [];
-      expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
-      expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
-      expectedResult.publishingEntity = 'Working Group';
-      expectedResult.researchTheme = [
-        'PD Functional Genomics',
-        'Neuro-Immune Interactions',
-      ];
-
-      expect(result).toEqual(expectedResult);
     });
 
     test('Should return a mix of internal and external authors', async () => {

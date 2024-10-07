@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
@@ -13,9 +14,11 @@ import {
   ListNode,
 } from '@lexical/list';
 
-import { $setBlocksType } from '@lexical/selection';
-
+import { $setBlocksType, $isAtNodeEnd } from '@lexical/selection';
 import {
+  ElementNode,
+  RangeSelection,
+  TextNode,
   $createParagraphNode,
   $getSelection,
   $isRangeSelection,
@@ -31,7 +34,7 @@ import {
   INDENT_CONTENT_COMMAND,
   OUTDENT_CONTENT_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useRef, useState } from 'react';
+
 import {
   arrowClockwise,
   arrowCounterclockwise,
@@ -46,17 +49,13 @@ import {
   typeBold,
   typeItalic,
   typeUnderline,
+  typeStrikethrough,
 } from '../icons/editor';
-import typeStrikeThrough from '../icons/editor/type-strikethrough';
-
-import { $isAtNodeEnd } from '@lexical/selection';
-import { ElementNode, RangeSelection, TextNode } from 'lexical';
 
 export function getSelectedNode(
   selection: RangeSelection,
 ): TextNode | ElementNode {
-  const anchor = selection.anchor;
-  const focus = selection.focus;
+  const { anchor, focus } = selection;
   const anchorNode = selection.anchor.getNode();
   const focusNode = selection.focus.getNode();
   if (anchorNode === focusNode) {
@@ -65,9 +64,8 @@ export function getSelectedNode(
   const isBackward = selection.isBackward();
   if (isBackward) {
     return $isAtNodeEnd(focus) ? anchorNode : focusNode;
-  } else {
-    return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
   }
+  return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
 }
 
 const dividerStyles = css({
@@ -109,9 +107,8 @@ const toolbarItemStyles = ({
     },
   });
 
-const Divider = () => {
-  return <div css={dividerStyles} />;
-};
+const Divider = () => <div css={dividerStyles} />;
+
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
   h1: 'Heading 1',
@@ -191,17 +188,19 @@ export default function ToolbarPlugin() {
     }
   }, [activeEditor, editor]);
 
-  useEffect(() => {
-    return editor.registerCommand(
-      SELECTION_CHANGE_COMMAND,
-      (_payload, newEditor) => {
-        setActiveEditor(newEditor);
-        $updateToolbar();
-        return false;
-      },
-      COMMAND_PRIORITY_CRITICAL,
-    );
-  }, [editor, $updateToolbar]);
+  useEffect(
+    () =>
+      editor.registerCommand(
+        SELECTION_CHANGE_COMMAND,
+        (_payload, newEditor) => {
+          setActiveEditor(newEditor);
+          $updateToolbar();
+          return false;
+        },
+        COMMAND_PRIORITY_CRITICAL,
+      ),
+    [$updateToolbar],
+  );
 
   useEffect(() => {
     activeEditor.getEditorState().read(() => {
@@ -209,31 +208,33 @@ export default function ToolbarPlugin() {
     });
   }, [activeEditor, $updateToolbar]);
 
-  useEffect(() => {
-    return mergeRegister(
-      activeEditor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          $updateToolbar();
-        });
-      }),
-      activeEditor.registerCommand<boolean>(
-        CAN_UNDO_COMMAND,
-        (payload) => {
-          setCanUndo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
+  useEffect(
+    () =>
+      mergeRegister(
+        activeEditor.registerUpdateListener(({ editorState }) => {
+          editorState.read(() => {
+            $updateToolbar();
+          });
+        }),
+        activeEditor.registerCommand<boolean>(
+          CAN_UNDO_COMMAND,
+          (payload) => {
+            setCanUndo(payload);
+            return false;
+          },
+          COMMAND_PRIORITY_CRITICAL,
+        ),
+        activeEditor.registerCommand<boolean>(
+          CAN_REDO_COMMAND,
+          (payload) => {
+            setCanRedo(payload);
+            return false;
+          },
+          COMMAND_PRIORITY_CRITICAL,
+        ),
       ),
-      activeEditor.registerCommand<boolean>(
-        CAN_REDO_COMMAND,
-        (payload) => {
-          setCanRedo(payload);
-          return false;
-        },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
-    );
-  }, [$updateToolbar, activeEditor, editor]);
+    [$updateToolbar, activeEditor, editor],
+  );
 
   const formatParagraph = () => {
     editor.update(() => {
@@ -323,7 +324,7 @@ export default function ToolbarPlugin() {
         css={toolbarItemStyles({ spaced: true, active: isStrikethrough })}
         aria-label="Format Strikethrough"
       >
-        {typeStrikeThrough}
+        {typeStrikethrough}
       </button>
       <Divider />
       <button

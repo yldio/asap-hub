@@ -208,10 +208,7 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle="(required)"
         tip="Add an abstract or a summary that describes this work."
         onChange={onChangeDescription}
-        getValidationMessage={(validationState) => {
-          console.log(validationState);
-          return 'Please enter a description';
-        }}
+        getValidationMessage={() => 'Please enter a description'}
         required
         value={descriptionMD}
         info={

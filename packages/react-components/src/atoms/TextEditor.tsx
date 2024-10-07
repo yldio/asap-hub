@@ -216,6 +216,7 @@ const TextEditor = ({
     namespace: 'Editor',
     nodes: [AutoLinkNode, LinkNode, ListNode, ListItemNode, HeadingNode],
     theme,
+    // eslint-disable-next-line no-console
     onError: console.error,
   };
 

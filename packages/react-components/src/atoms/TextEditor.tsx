@@ -231,6 +231,7 @@ const TextEditor = ({
           />
           <textarea
             {...validationTargetProps}
+            onChange={noop}
             css={{ display: 'none' }}
             required={required}
             value={value}

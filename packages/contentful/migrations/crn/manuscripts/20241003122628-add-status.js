@@ -15,12 +15,12 @@ module.exports.up = (migration) => {
           'Waiting for Report',
           'Review Compliance Report',
           'Waiting for ASAP Reply',
-          'Waiting for Grantee\'s Reply',
+          "Waiting for Grantee's Reply",
           'Manuscript Resubmitted',
           'Submit Final Publication',
           'Addendum Required',
           'Compliant',
-          'Closed (other)'
+          'Closed (other)',
         ],
       },
     ])

@@ -19,7 +19,7 @@ import {
 import ToolbarPlugin from './TextEditorToolbar';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
-import { ember, rose } from '../colors';
+import { ember } from '../colors';
 
 const theme = {
   paragraph: 'editor-paragraph',

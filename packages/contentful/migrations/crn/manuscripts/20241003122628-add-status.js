@@ -1,7 +1,7 @@
 module.exports.description = 'Add status to manuscript';
 
 module.exports.up = (migration) => {
-  const manuscript = migration.editContentType('manuscript');
+  const manuscript = migration.editContentType('manuscripts');
 
   manuscript
     .createField('status')
@@ -29,6 +29,6 @@ module.exports.up = (migration) => {
 };
 
 module.exports.down = (migration) => {
-  const manuscript = migration.editContentType('manuscript');
+  const manuscript = migration.editContentType('manuscripts');
   manuscript.deleteField('status');
 };

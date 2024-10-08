@@ -1,6 +1,6 @@
 import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, waitFor } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
@@ -105,16 +105,33 @@ it.each`
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
 });
 
-it.each`
-  field                  | label                   | prop
-  ${'Description'}       | ${/^description/i}      | ${'onChangeDescription'}
-  ${'Short Description'} | ${/short description/i} | ${'onChangeShortDescription'}
-`('triggers an onchange event for $field', async ({ label, prop }) => {
+it('triggers an onchange event for Description', async () => {
   const onChangeFn = jest.fn();
   render(
-    <ResearchOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
+    <ResearchOutputFormSharingCard
+      {...props}
+      onChangeDescription={onChangeFn}
+    />,
   );
-  const input = screen.getByRole('textbox', { name: label });
+  const input = screen.getByTestId('editor');
+
+  userEvent.click(input);
+  userEvent.tab();
+  fireEvent.input(input, { data: 'test' });
+
+  await waitFor(() => {
+    expect(onChangeFn).toHaveBeenLastCalledWith('test');
+  });
+});
+
+it('triggers an onchange event for Short Description', async () => {
+  const onChangeFn = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard
+      {...{ ...props, onChangeShortDescription: onChangeFn }}
+    />,
+  );
+  const input = screen.getByRole('textbox', { name: /short description/i });
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
 });

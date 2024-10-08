@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
@@ -18,9 +17,9 @@ import {
   TRANSFORMERS,
 } from '@lexical/markdown';
 import ToolbarPlugin from './TextEditorToolbar';
-import { useValidation } from '../form';
-import { ember } from '../colors';
-import { perRem } from '../pixels';
+import { useValidation, styles, validationMessageStyles } from '../form';
+import { noop } from '../utils';
+import { ember, rose } from '../colors';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -126,16 +125,14 @@ const innerStyles = css({
   background: '#fff',
   position: 'relative',
 });
-const inputStyles = css({
+const inputStyles = {
   minHeight: '150px',
-  resize: 'none',
   fontSize: '15px',
   caretColor: 'rgb(5, 5, 5)',
-  position: 'relative',
   tabSize: 1,
   outline: 0,
   padding: '15px 10px',
-});
+};
 
 const placeholderStyles = css({
   color: '#999',
@@ -148,19 +145,6 @@ const placeholderStyles = css({
   userSelect: 'none',
   display: 'inline-block',
   pointerEvents: 'none',
-});
-
-const validationMessageStyles = css({
-  ':empty': {
-    display: 'none',
-  },
-  whiteSpace: 'pre-wrap',
-
-  paddingTop: `${6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
-
-  color: ember.rgb,
-  borderColor: ember.rgb,
 });
 
 const onChangeHandler = (
@@ -177,38 +161,19 @@ export type TextEditorProps = {
   onChange: (content: string) => void;
 };
 const TextEditor = ({
+  id,
+  value,
+  onChange = noop,
+  required,
   customValidationMessage = '',
   getValidationMessage,
-  value,
-  onChange,
-  required = false,
 }: TextEditorProps) => {
-  const { validationMessage, validationTargetProps, validate } =
-    useValidation<HTMLInputElement>(
+  const { validationMessage, validationTargetProps } =
+    useValidation<HTMLTextAreaElement>(
       customValidationMessage,
       getValidationMessage,
     );
-
-  const initialRender = useRef(false);
-  const checkValidation = useCallback(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
-      validate();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (required === false) {
-      checkValidation();
-    }
-  }, [required, checkValidation]);
-
-  useEffect(() => {
-    checkValidation();
-  }, [value, checkValidation]);
-
+  const {} = validationTargetProps;
   const initialConfig = {
     editorState: () => {
       $convertFromMarkdownString(value, TRANSFORMERS);
@@ -232,17 +197,44 @@ const TextEditor = ({
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                css={inputStyles}
-                {...validationTargetProps}
-                onBlur={() => {
-                  validate();
-                }}
+                data-testid={'editor'}
+                id={id}
+                required={required}
+                css={({ colors }) => [
+                  styles,
+                  inputStyles,
+                  validationMessage && {
+                    borderColor: ember.rgb,
+                  },
+                  colors?.primary500 && {
+                    ':focus': {
+                      borderColor: colors?.primary500.rgba,
+                    },
+                  },
+                ]}
               />
             }
-            placeholder={<div css={placeholderStyles}>Enter some text...</div>}
+            placeholder={
+              <div
+                css={[
+                  placeholderStyles,
+                  validationMessage && {
+                    color: ember.rgb,
+                    opacity: 0.4,
+                  },
+                ]}
+              >
+                Enter some text...
+              </div>
+            }
             ErrorBoundary={LexicalErrorBoundary}
           />
-          <input css={css({ display: 'none' })} value={value} />
+          <textarea
+            {...validationTargetProps}
+            css={{ display: 'none' }}
+            required={required}
+            value={value}
+          />
           <ListPlugin />
           <HistoryPlugin />
           <AutoFocusPlugin />

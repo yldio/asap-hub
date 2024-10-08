@@ -15,7 +15,7 @@ it('displays manuscript version card when expanded', () => {
 
   expect(queryByText(/Original Research/i)).not.toBeInTheDocument();
 
-  expect(queryByText(/Preprint, version 1/i)).not.toBeInTheDocument();
+  expect(queryByText(/Preprint/i)).not.toBeInTheDocument();
 
   userEvent.click(getByRole('button'));
 
@@ -26,12 +26,12 @@ it('displays manuscript version card when expanded', () => {
         {
           ...props.versions[0]!,
           type: 'Original Research',
-          lifecycle: 'Preprint, version 1',
+          lifecycle: 'Preprint',
         },
       ]}
     />,
   );
 
   expect(getByText(/Original Research/i)).toBeVisible();
-  expect(getByText(/Preprint, version 1/i)).toBeVisible();
+  expect(getByText(/Preprint/i)).toBeVisible();
 });

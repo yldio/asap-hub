@@ -433,6 +433,9 @@ export const getContentfulResearchOutputGraphqlResponse =
             id: 'team-id-0',
           },
           displayName: 'Team A',
+          researchTheme: {
+            name: 'PD Functional Genomics',
+          },
         },
       ],
     },

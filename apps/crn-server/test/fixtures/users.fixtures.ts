@@ -138,7 +138,7 @@ export const getUserResponse = (): UserResponse => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
-  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchTheme: ['PD Functional Genomics'],
 });
 
 export const getUserListItemDataObject = (): UserListItemDataObject => ({
@@ -225,7 +225,7 @@ export const getPublicUserResponse = (): PublicUserResponse => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
-  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchTheme: ['PD Functional Genomics'],
   researchOutputs: ['research-output-id'],
 });
 
@@ -321,7 +321,7 @@ export const getUserDataObject = (): UserDataObject => ({
     { id: '4', name: 'expertise 4' },
     { id: '5', name: 'expertise 5' },
   ],
-  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
+  researchTheme: ['PD Functional Genomics'],
   researchOutputs: [],
   institution: 'some institution',
   jobTitle: 'some job title',
@@ -472,7 +472,6 @@ export const getContentfulGraphqlUser = (
       { sys: { id: '5' }, name: 'expertise 5' },
     ],
   },
-  researchTheme: ['PD Functional Genomics', 'Neuro-Immune Interactions'],
   institution: 'some institution',
   jobTitle: 'some job title',
   reachOut: 'some reach out',
@@ -515,6 +514,9 @@ export const getContentfulGraphqlUser = (
           displayName: 'Team A',
           linkedFrom: {
             interestGroupsCollection: getInterestGroupsCollection(),
+          },
+          researchTheme: {
+            name: 'PD Functional Genomics',
           },
           proposal: {
             sys: {
@@ -669,25 +671,31 @@ const getWorkingGroupCollection = () => ({
   ],
 });
 
-const getInterestGroupLeadersCollection = () => ({
-  items: [
-    {
-      linkedFrom: {
-        interestGroupsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'interest-group-leader-1',
+type InterestGroupLeadersCollection = NonNullable<
+  NonNullable<NonNullable<FetchUserByIdQuery>['users']>['linkedFrom']
+>['interestGroupLeadersCollection'];
+
+const getInterestGroupLeadersCollection: () => InterestGroupLeadersCollection =
+  () => ({
+    items: [
+      {
+        role: 'Project Manager',
+        linkedFrom: {
+          interestGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'interest-group-leader-1',
+                },
+                active: true,
+                name: 'Interest Group Leader 1',
               },
-              active: true,
-              name: 'Interest Group Leader 1',
-            },
-          ],
+            ],
+          },
         },
       },
-    },
-  ],
-});
+    ],
+  });
 
 export const getUserContentfulWebhookDetail = (
   id: string,

@@ -609,14 +609,7 @@ export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
 
-export type ContentfulMetadataConceptsFilter = {
-  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
 export type ContentfulMetadataFilter = {
-  concepts?: InputMaybe<ContentfulMetadataConceptsFilter>;
   tags?: InputMaybe<ContentfulMetadataTagsFilter>;
   tags_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -17588,7 +17581,6 @@ export type ResearchOutputsContentFragment = Pick<
   | 'asapFunded'
   | 'usedInAPublication'
   | 'type'
-  | 'researchTheme'
   | 'publishDate'
   | 'usageNotes'
   | 'statusChangedAt'
@@ -17693,6 +17685,7 @@ export type ResearchOutputsContentFragment = Pick<
       Maybe<
         Pick<Teams, 'displayName'> & {
           sys: Pick<Sys, 'id'>;
+          researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
           linkedFrom?: Maybe<{
             teamMembershipCollection?: Maybe<{
               items: Array<
@@ -17815,7 +17808,6 @@ export type FetchResearchOutputByIdQuery = {
       | 'asapFunded'
       | 'usedInAPublication'
       | 'type'
-      | 'researchTheme'
       | 'publishDate'
       | 'usageNotes'
       | 'statusChangedAt'
@@ -17934,6 +17926,7 @@ export type FetchResearchOutputByIdQuery = {
           Maybe<
             Pick<Teams, 'displayName'> & {
               sys: Pick<Sys, 'id'>;
+              researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
               linkedFrom?: Maybe<{
                 teamMembershipCollection?: Maybe<{
                   items: Array<
@@ -18068,7 +18061,6 @@ export type FetchResearchOutputsQuery = {
             | 'asapFunded'
             | 'usedInAPublication'
             | 'type'
-            | 'researchTheme'
             | 'publishDate'
             | 'usageNotes'
             | 'statusChangedAt'
@@ -18220,6 +18212,7 @@ export type FetchResearchOutputsQuery = {
                 Maybe<
                   Pick<Teams, 'displayName'> & {
                     sys: Pick<Sys, 'id'>;
+                    researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                     linkedFrom?: Maybe<{
                       teamMembershipCollection?: Maybe<{
                         items: Array<
@@ -19118,7 +19111,6 @@ export type UsersContentFragment = Pick<
   | 'website1'
   | 'website2'
   | 'role'
-  | 'researchTheme'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -19138,6 +19130,7 @@ export type UsersContentFragment = Pick<
           team?: Maybe<
             Pick<Teams, 'displayName' | 'inactiveSince'> & {
               sys: Pick<Sys, 'id'>;
+              researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
               proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               linkedFrom?: Maybe<{
                 interestGroupsCollection?: Maybe<{
@@ -19202,19 +19195,21 @@ export type UsersContentFragment = Pick<
     }>;
     interestGroupLeadersCollection?: Maybe<{
       items: Array<
-        Maybe<{
-          linkedFrom?: Maybe<{
-            interestGroupsCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<InterestGroups, 'active' | 'name'> & {
-                    sys: Pick<Sys, 'id'>;
-                  }
-                >
-              >;
+        Maybe<
+          Pick<InterestGroupLeaders, 'role'> & {
+            linkedFrom?: Maybe<{
+              interestGroupsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<InterestGroups, 'active' | 'name'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
+                  >
+                >;
+              }>;
             }>;
-          }>;
-        }>
+          }
+        >
       >;
     }>;
     researchOutputsCollection?: Maybe<{
@@ -19286,7 +19281,6 @@ export type FetchPublicUsersQuery = {
             | 'website1'
             | 'website2'
             | 'role'
-            | 'researchTheme'
             | 'responsibilities'
             | 'researchInterests'
             | 'reachOut'
@@ -19308,6 +19302,7 @@ export type FetchPublicUsersQuery = {
                     team?: Maybe<
                       Pick<Teams, 'displayName' | 'inactiveSince'> & {
                         sys: Pick<Sys, 'id'>;
+                        researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                         proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         linkedFrom?: Maybe<{
                           interestGroupsCollection?: Maybe<{
@@ -19374,19 +19369,21 @@ export type FetchPublicUsersQuery = {
               }>;
               interestGroupLeadersCollection?: Maybe<{
                 items: Array<
-                  Maybe<{
-                    linkedFrom?: Maybe<{
-                      interestGroupsCollection?: Maybe<{
-                        items: Array<
-                          Maybe<
-                            Pick<InterestGroups, 'active' | 'name'> & {
-                              sys: Pick<Sys, 'id'>;
-                            }
-                          >
-                        >;
+                  Maybe<
+                    Pick<InterestGroupLeaders, 'role'> & {
+                      linkedFrom?: Maybe<{
+                        interestGroupsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<InterestGroups, 'active' | 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                       }>;
-                    }>;
-                  }>
+                    }
+                  >
                 >;
               }>;
               researchOutputsCollection?: Maybe<{
@@ -19457,7 +19454,6 @@ export type FetchUserByIdQuery = {
       | 'website1'
       | 'website2'
       | 'role'
-      | 'researchTheme'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -19479,6 +19475,7 @@ export type FetchUserByIdQuery = {
               team?: Maybe<
                 Pick<Teams, 'displayName' | 'inactiveSince'> & {
                   sys: Pick<Sys, 'id'>;
+                  researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                   proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                   linkedFrom?: Maybe<{
                     interestGroupsCollection?: Maybe<{
@@ -19543,19 +19540,21 @@ export type FetchUserByIdQuery = {
         }>;
         interestGroupLeadersCollection?: Maybe<{
           items: Array<
-            Maybe<{
-              linkedFrom?: Maybe<{
-                interestGroupsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<InterestGroups, 'active' | 'name'> & {
-                        sys: Pick<Sys, 'id'>;
-                      }
-                    >
-                  >;
+            Maybe<
+              Pick<InterestGroupLeaders, 'role'> & {
+                linkedFrom?: Maybe<{
+                  interestGroupsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<InterestGroups, 'active' | 'name'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }>;
                 }>;
-              }>;
-            }>
+              }
+            >
           >;
         }>;
         researchOutputsCollection?: Maybe<{
@@ -22979,7 +22978,6 @@ export const ResearchOutputsContentFragmentDoc = {
             name: { kind: 'Name', value: 'usedInAPublication' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'researchTheme' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
           {
             kind: 'Field',
@@ -23296,6 +23294,19 @@ export const ResearchOutputsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'researchTheme' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -24644,7 +24655,6 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'researchTheme' } },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
@@ -24742,6 +24752,19 @@ export const UsersContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'inactiveSince' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'researchTheme' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                ],
+                              },
                             },
                             {
                               kind: 'Field',
@@ -25168,6 +25191,10 @@ export const UsersContentFragmentDoc = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'linkedFrom' },

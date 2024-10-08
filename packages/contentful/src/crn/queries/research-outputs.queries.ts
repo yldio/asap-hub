@@ -24,7 +24,6 @@ export const researchOutputContentQueryFragment = gql`
     asapFunded
     usedInAPublication
     type
-    researchTheme
     publishDate
     description {
       json
@@ -98,6 +97,9 @@ export const researchOutputContentQueryFragment = gql`
           id
         }
         displayName
+        researchTheme {
+          name
+        }
         linkedFrom {
           teamMembershipCollection @include(if: $fetchPMs) {
             items {

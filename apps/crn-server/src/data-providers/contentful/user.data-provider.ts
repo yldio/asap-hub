@@ -385,7 +385,12 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     interestGroups,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,
     email: item.email ?? '',
-    researchTheme: item.researchTheme ? cleanArray(item.researchTheme) : [],
+    researchTheme: teamsCollection
+      .map((teamItem) => teamItem.team?.researchTheme?.name)
+      .filter(
+        (researchThemeName): researchThemeName is string =>
+          researchThemeName !== undefined,
+      ),
     contactEmail: item.contactEmail ?? undefined,
     firstName: item.firstName ?? '',
     middleName: item.middleName || undefined,
@@ -650,6 +655,7 @@ const parseLeadersToInterestGroups = (
         id: group?.sys.id,
         active: group?.active,
         name: group?.name,
+        role: leader.role,
       } as InterestGroupMembership);
 
       return interestGroups;

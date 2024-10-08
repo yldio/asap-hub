@@ -157,12 +157,12 @@ export type TextEditorProps = {
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
   readonly id?: string;
   readonly required?: boolean;
-  readonly value: string;
-  onChange: (content: string) => void;
+  readonly value?: string;
+  onChange?: (content: string) => void;
 };
 const TextEditor = ({
   id,
-  value,
+  value = '',
   onChange = noop,
   required,
   customValidationMessage = '',
@@ -173,7 +173,7 @@ const TextEditor = ({
       customValidationMessage,
       getValidationMessage,
     );
-  const {} = validationTargetProps;
+
   const initialConfig = {
     editorState: () => {
       $convertFromMarkdownString(value, TRANSFORMERS);

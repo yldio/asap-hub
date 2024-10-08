@@ -199,7 +199,7 @@ export default function ToolbarPlugin() {
         },
         COMMAND_PRIORITY_CRITICAL,
       ),
-    [$updateToolbar],
+    [editor, $updateToolbar],
   );
 
   useEffect(() => {

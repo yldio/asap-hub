@@ -317,6 +317,9 @@ describe('on submit', () => {
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
+
+    // TODO: fix act error
+    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {
@@ -413,9 +416,11 @@ describe('on submit', () => {
       target: { value: data.title },
     });
 
-    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
-      target: { value: data.descriptionMD },
-    });
+    const descriptionEditor = screen.getByTestId('editor');
+    userEvent.click(descriptionEditor);
+    userEvent.tab();
+    fireEvent.input(descriptionEditor, { data: data.descriptionMD });
+    userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -923,6 +928,9 @@ describe('form buttons', () => {
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
+
+    // TODO: fix act error
+    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {

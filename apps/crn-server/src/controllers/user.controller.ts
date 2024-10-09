@@ -297,6 +297,7 @@ export const parsePublicUserToResponse = ({
   institution: user.institution,
   interestGroups: user.interestGroups.map((ig) => ({
     name: ig.name,
+    role: ig.role,
   })),
   labs: user.labs,
   researchTheme: user.researchTheme,

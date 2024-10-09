@@ -1002,7 +1002,7 @@ it('maintains values provided when lifecycle changes but field is still visible'
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication');
+  userEvent.type(lifecycleTextbox, 'Publication with addendum or corrigendum');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 

@@ -84,6 +84,7 @@ const apcCoverageLifecycles = [
 type OptionalVersionFields = Array<
   keyof Omit<
     ManuscriptVersion,
+    | 'id'
     | 'type'
     | 'lifecycle'
     | 'complianceReport'
@@ -208,6 +209,7 @@ const setDefaultFieldValues = (
 
 type ManuscriptFormProps = Omit<
   ManuscriptVersion,
+  | 'id'
   | 'type'
   | 'lifecycle'
   | 'manuscriptFile'

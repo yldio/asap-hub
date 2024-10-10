@@ -92,7 +92,16 @@ const team = (() => {
   const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
   const createManuscript = route('/create-manuscript', {}, {});
-  const workspace = route('/workspace', {}, { tools, createManuscript });
+  const createComplianceReport = route(
+    '/create-compliance-report/:manuscriptId',
+    { manuscriptId: stringParser },
+    {},
+  );
+  const workspace = route(
+    '/workspace',
+    {},
+    { tools, createManuscript, createComplianceReport },
+  );
   const createOutput = route(
     '/create-output/:outputDocumentType',
     { outputDocumentType: outputDocumentTypeParser },

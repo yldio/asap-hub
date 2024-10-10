@@ -7,7 +7,9 @@ import {
   ManuscriptPostRequest,
   ManuscriptResponse,
   ManuscriptFileType,
+  ComplianceReportPostRequest,
 } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   atom,
   atomFamily,
@@ -22,7 +24,9 @@ import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import {
+  createComplianceReport,
   createManuscript,
+  getManuscript,
   getTeam,
   getTeams,
   patchTeam,
@@ -154,13 +158,30 @@ export const refreshManuscriptState = atomFamily<number, string>({
   default: 0,
 });
 
+const fetchManuscriptState = selectorFamily<
+  ManuscriptResponse | undefined,
+  string
+>({
+  key: 'fetchManuscript',
+  get:
+    (id) =>
+    ({ get }) => {
+      get(refreshManuscriptState(id));
+      const authorization = get(authorizationState);
+      return getManuscript(id, authorization);
+    },
+});
+
 export const manuscriptState = atomFamily<
   ManuscriptResponse | undefined,
   string
 >({
   key: 'manuscript',
-  default: undefined,
+  default: fetchManuscriptState,
 });
+
+export const useManuscriptById = (id: string) =>
+  useRecoilValue(manuscriptState(id));
 
 export const useSetManuscriptItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
@@ -178,6 +199,22 @@ export const usePostManuscript = () => {
     setManuscriptItem(manuscript);
     return manuscript;
   };
+};
+
+export const usePostComplianceReport = () => {
+  const authorization = useRecoilValue(authorizationState);
+  return async (payload: ComplianceReportPostRequest) => {
+    const complianceReport = await createComplianceReport(
+      payload,
+      authorization,
+    );
+    return complianceReport;
+  };
+};
+
+export const useCanCreateComplianceReport = (): boolean => {
+  const { role } = useCurrentUserCRN() ?? {};
+  return role === 'Staff';
 };
 
 export const useUploadManuscriptFile = () => {

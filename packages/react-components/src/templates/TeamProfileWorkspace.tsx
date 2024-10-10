@@ -136,7 +136,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
             </div>
             {manuscripts.map((manuscript) => (
               <div key={manuscript.id}>
-                <ManuscriptCard {...manuscript} />
+                <ManuscriptCard {...manuscript} teamId={id} />
               </div>
             ))}
           </Card>

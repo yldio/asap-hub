@@ -32,6 +32,7 @@ export { default as TabLink } from './TabLink';
 export { default as TabButton } from './TabButton';
 export { default as Tag } from './Tag';
 export { default as TextArea } from './TextArea';
+export { default as TextEditor } from './TextEditor';
 export { default as TextField } from './TextField';
 export { default as Toggle } from './Toggle';
 export { default as Tooltip } from './Tooltip';

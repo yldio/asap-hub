@@ -9,7 +9,7 @@ export const manuscriptTypes = [
 export type ManuscriptType = (typeof manuscriptTypes)[number];
 
 export const manuscriptLifecycles = [
-  'Draft Manuscript(prior to Publication)',
+  'Draft Manuscript (prior to Publication)',
   'Preprint',
   'Typeset proof',
   'Publication',
@@ -23,7 +23,7 @@ export const manuscriptTypeLifecycles: {
   types: ManuscriptType[];
 }[] = [
   {
-    lifecycle: 'Draft Manuscript(prior to Publication)',
+    lifecycle: 'Draft Manuscript (prior to Publication)',
     types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
   },
   { lifecycle: 'Preprint', types: ['Original Research'] },
@@ -121,7 +121,7 @@ export const manuscriptFormFieldsMapping: Record<
   >
 > = {
   'Original Research': {
-    'Draft Manuscript(prior to Publication)': [
+    'Draft Manuscript (prior to Publication)': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'datasetsDeposited',
@@ -191,7 +191,7 @@ export const manuscriptFormFieldsMapping: Record<
     ],
   },
   'Review / Op-Ed / Letter / Hot Topic': {
-    'Draft Manuscript(prior to Publication)': [
+    'Draft Manuscript (prior to Publication)': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
     ],

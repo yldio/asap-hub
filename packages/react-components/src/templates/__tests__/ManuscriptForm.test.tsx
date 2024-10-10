@@ -95,7 +95,7 @@ it('data is sent on form submission', async () => {
         {...defaultProps}
         title="manuscript title"
         type="Original Research"
-        lifecycle="Draft Manuscript(prior to Publication)"
+        lifecycle="Draft Manuscript (prior to Publication)"
         manuscriptFile={{
           id: '123',
           filename: 'test.pdf',
@@ -119,7 +119,7 @@ it('data is sent on form submission', async () => {
       versions: [
         {
           type: 'Original Research',
-          lifecycle: 'Draft Manuscript(prior to Publication)',
+          lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             id: '123',
             filename: 'test.pdf',
@@ -952,7 +952,7 @@ it('resets form fields to default values when no longer visible', async () => {
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(lifecycleTextbox, 'Draft Manuscript(prior to Publication)');
+  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 

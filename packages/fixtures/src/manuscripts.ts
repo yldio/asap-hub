@@ -24,7 +24,7 @@ export const createManuscriptResponse = (
   teamId: 'team-1',
   versions: [
     {
-      lifecycle: 'Draft Manuscript(prior to Publication)',
+      lifecycle: 'Draft Manuscript (prior to Publication)',
       type: 'Original Research',
       createdBy: manuscriptAuthor,
       createdDate: '2020-12-10T20:36:54Z',

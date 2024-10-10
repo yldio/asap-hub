@@ -74,7 +74,7 @@ describe('Compliance Reports Contentful Data Provider', () => {
 
   describe('Fetch by ID', () => {
     test('should throw an error', async () => {
-      await expect(complianceReportDataProvider.fetch()).rejects.toThrow(
+      await expect(complianceReportDataProvider.fetchById()).rejects.toThrow(
         'Method not implemented.',
       );
     });

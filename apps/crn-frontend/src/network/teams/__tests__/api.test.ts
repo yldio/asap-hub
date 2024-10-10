@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
+  ComplianceReportPostRequest,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ResearchOutputPostRequest,
@@ -16,6 +17,7 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../../config';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import {
+  createComplianceReport,
   createManuscript,
   createResearchOutput,
   getLabs,
@@ -414,6 +416,35 @@ describe('Manuscript', () => {
       );
 
       expect(handleErrorMock).toHaveBeenCalledWith('Validation Error');
+    });
+  });
+});
+
+describe('Compliance Report', () => {
+  describe('POST', () => {
+    const payload: ComplianceReportPostRequest = {
+      url: 'https://compliancereport.com',
+      description: 'Compliance report description',
+      manuscriptVersionId: 'manuscript-version-1',
+    };
+
+    it('makes an authorized POST request to create a compliance report', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .post('/compliance-reports', payload)
+        .reply(201, { id: 123 });
+
+      await createComplianceReport(payload, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('errors for an error status', async () => {
+      nock(API_BASE_URL).post('/compliance-reports').reply(500, {});
+
+      await expect(
+        createComplianceReport(payload, 'Bearer x'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to create compliance report. Expected status 201. Received status 500."`,
+      );
     });
   });
 });

@@ -1,6 +1,6 @@
 import { JSONSchemaType } from 'ajv';
 import { AuthorAlgoliaResponse } from './authors';
-import { ComplianceReport } from './compliance-report';
+import { ComplianceReportDataObject } from './compliance-report';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -75,6 +75,7 @@ const manuscriptFileTypes = [
 export type ManuscriptFileType = (typeof manuscriptFileTypes)[number];
 
 export type ManuscriptVersion = {
+  id: string;
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
   preprintDoi?: string;
@@ -119,7 +120,7 @@ export type ManuscriptVersion = {
   };
   createdDate: string;
   publishedAt: string;
-  complianceReport?: ComplianceReport;
+  complianceReport?: ComplianceReportDataObject;
 };
 
 export const manuscriptFormFieldsMapping: Record<
@@ -129,7 +130,7 @@ export const manuscriptFormFieldsMapping: Record<
     Array<
       keyof Omit<
         ManuscriptVersion,
-        'complianceReport' | 'createdBy' | 'createdDate' | 'publishedAt'
+        'complianceReport' | 'createdBy' | 'createdDate' | 'id' | 'publishedAt'
       >
     >
   >

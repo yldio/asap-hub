@@ -4,7 +4,8 @@ module.exports.up = (migration) => {
   const complianceReports = migration
     .createContentType('complianceReports')
     .name('Compliance Reports')
-    .description('');
+    .description('')
+    .displayField('url');
 
   complianceReports
     .createField('url')

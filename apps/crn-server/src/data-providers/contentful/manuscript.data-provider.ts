@@ -25,6 +25,14 @@ import { parseUserDisplayName } from '@asap-hub/server-common';
 import { ManuscriptDataProvider } from '../types';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
+// type ComplianceReport = NonNullable<NonNullable<NonNullable<NonNullable<NonNullable<NonNullable<ManuscriptItem['versionsCollection']>['items']>[number]>['linkedFrom']>['complianceReportsCollection']>['items'][number]>;
+type ComplianceReport = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<ManuscriptItem['versionsCollection']>['items'][number]
+    >['linkedFrom']
+  >['complianceReportsCollection']
+>['items'][number];
 
 export class ManuscriptContentfulDataProvider
   implements ManuscriptDataProvider
@@ -144,6 +152,7 @@ export const parseGraphqlManuscriptVersion = (
 ): ManuscriptVersion[] =>
   versions
     .map((version) => ({
+      id: version?.sys.id,
       type: version?.type,
       lifecycle: version?.lifecycle,
       manuscriptFile: {
@@ -227,6 +236,9 @@ export const parseGraphqlManuscriptVersion = (
         id: labItem?.sys.id,
         name: labItem?.name,
       })),
+      complianceReport: parseComplianceReport(
+        version?.linkedFrom?.complianceReportsCollection?.items[0],
+      ),
     }))
     .filter(
       (version) =>
@@ -239,3 +251,11 @@ export const parseGraphqlManuscriptVersion = (
           )) ||
         false,
     ) as ManuscriptVersion[];
+
+const parseComplianceReport = (
+  complianceReport: ComplianceReport | undefined,
+) =>
+  complianceReport && {
+    url: complianceReport.url,
+    description: complianceReport.description,
+  };

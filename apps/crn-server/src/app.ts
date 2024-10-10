@@ -33,6 +33,7 @@ import {
 } from './config';
 import AnalyticsController from './controllers/analytics.controller';
 import CalendarController from './controllers/calendar.controller';
+import ComplianceReportController from './controllers/compliance-report.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
 import EventController from './controllers/event.controller';
@@ -51,6 +52,7 @@ import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
+import { ComplianceReportContentfulDataProvider } from './data-providers/contentful/compliance-report.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
@@ -71,6 +73,7 @@ import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 import {
   AssetDataProvider,
+  ComplianceReportDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
   GuideDataProvider,
@@ -113,6 +116,7 @@ import { ExternalAuthorDataProvider } from './data-providers/types/external-auth
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
 import { GenerativeContentDataProvider } from './data-providers/contentful/generative-content.data-provider';
+import { complianceReportRouteFactory } from './routes/compliance-report.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -204,6 +208,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const complianceReportDataProvider =
+    libs.complianceReportDataProvider ||
+    new ComplianceReportContentfulDataProvider(getContentfulRestClientFactory);
+
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
     new WorkingGroupContentfulDataProvider(
@@ -263,6 +271,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
   const calendarController =
     libs.calendarController || new CalendarController(calendarDataProvider);
+  const complianceReportController =
+    libs.complianceReportController ||
+    new ComplianceReportController(complianceReportDataProvider);
   const dashboardController =
     libs.dashboardController || new DashboardController(dashboardDataProvider);
   const newsController =
@@ -331,6 +342,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const analyticsRoutes = analyticsRouteFactory(analyticsController);
   const calendarRoutes = calendarRouteFactory(calendarController);
+  const complianceReportRoutes = complianceReportRouteFactory(
+    complianceReportController,
+  );
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
   const guideRoutes = guideRouteFactory(guideController);
@@ -399,6 +413,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   app.use(analyticsRoutes);
   app.use(calendarRoutes);
+  app.use(complianceReportRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
   app.use(guideRoutes);
@@ -436,6 +451,7 @@ export type Libs = {
   analyticsDataProvider?: AnalyticsContentfulDataProvider;
   analyticsController?: AnalyticsController;
   calendarController?: CalendarController;
+  complianceReportController?: ComplianceReportController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
   guideController?: GuideController;
@@ -454,6 +470,7 @@ export type Libs = {
   workingGroupController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarDataProvider;
+  complianceReportDataProvider?: ComplianceReportDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
   discoverDataProvider?: DiscoverDataProvider;
   guideDataProvider?: GuideDataProvider;

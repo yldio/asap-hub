@@ -19,9 +19,10 @@ import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
 import { ManuscriptToastProvider } from './ManuscriptToastProvider';
-import { useTeamById } from './state';
+import { useCanCreateComplianceReport, useTeamById } from './state';
 import TeamManuscript from './TeamManuscript';
 import { EligibilityReasonProvider } from './EligibilityReasonProvider';
+import TeamComplianceReport from './TeamComplianceReport';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -89,6 +90,8 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const canDuplicateResearchOutput = useCanDuplicateResearchOutput('teams', [
     teamId,
   ]);
+
+  const canCreateComplianceReport = useCanCreateComplianceReport();
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
   });
@@ -147,6 +150,18 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   <TeamManuscript teamId={teamId} />
                 </Frame>
               </Route>
+              {canCreateComplianceReport && (
+                <Route
+                  path={
+                    workspace({}).$ +
+                    workspace({}).createComplianceReport.template
+                  }
+                >
+                  <Frame title="Create Compliance Report">
+                    <TeamComplianceReport teamId={teamId} />
+                  </Frame>
+                </Route>
+              )}
               {canShareResearchOutput && (
                 <Route path={path + createOutput.template}>
                   <Frame title="Share Output">

@@ -1,11 +1,23 @@
 import { TeamManuscript } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { Button, colors, minusRectIcon, plusRectIcon, Subtitle } from '..';
+import { useHistory } from 'react-router-dom';
+import {
+  Button,
+  colors,
+  complianceReportIcon,
+  minusRectIcon,
+  plusRectIcon,
+  Subtitle,
+} from '..';
 import { mobileScreen, perRem, rem } from '../pixels';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
-type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'>;
+type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'> & {
+  teamId: string;
+};
 
 const manuscriptContainerStyles = css({
   marginTop: rem(12),
@@ -47,8 +59,27 @@ const toastHeaderStyles = css({
   },
 });
 
-const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
+const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
+  id,
+  title,
+  versions,
+  teamId,
+}) => {
   const [expanded, setExpanded] = useState(false);
+  const history = useHistory();
+
+  const complianceReportRoute = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({})
+    .createComplianceReport({ manuscriptId: id }).$;
+
+  const handleShareComplianceReport = () => {
+    history.push(complianceReportRoute);
+  };
+
+  const { role } = useCurrentUserCRN() ?? {};
+  const hasActiveComplianceReport = !!versions[0]?.complianceReport;
 
   return (
     <div css={manuscriptContainerStyles}>
@@ -66,6 +97,21 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({ title, versions }) => {
           </span>
           <Subtitle noMargin>{title}</Subtitle>
         </span>
+        {role === 'Staff' && (
+          <span>
+            <Button
+              primary
+              small
+              noMargin
+              onClick={handleShareComplianceReport}
+              enabled={!hasActiveComplianceReport}
+            >
+              <span css={{ '> svg': { stroke: 'none' } }}>
+                {complianceReportIcon}
+              </span>
+            </Button>
+          </span>
+        )}
       </div>
 
       {expanded && (

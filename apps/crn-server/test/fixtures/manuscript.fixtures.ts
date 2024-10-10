@@ -17,6 +17,7 @@ export const getManuscriptDataObject = (
   teamId: 'team-1',
   versions: [
     {
+      id: 'version-1',
       lifecycle: 'Preprint, version 1',
       type: 'Original Research',
       createdBy: manuscriptAuthor,

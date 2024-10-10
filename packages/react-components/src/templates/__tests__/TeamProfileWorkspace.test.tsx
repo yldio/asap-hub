@@ -99,6 +99,7 @@ describe('compliance section', () => {
           title: 'Nice manuscript',
           versions: [
             {
+              id: 'version-1',
               type: 'Original Research',
               lifecycle: 'Draft manuscript (prior to preprint submission)',
               manuscriptFile: {
@@ -138,6 +139,7 @@ describe('compliance section', () => {
           title: 'A Good Manuscript',
           versions: [
             {
+              id: 'version-1',
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint, version 1',
               manuscriptFile: {

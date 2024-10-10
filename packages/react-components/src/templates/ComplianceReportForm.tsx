@@ -113,7 +113,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   message:
                     'Please enter a valid URL, starting with http:// or https://',
                 },
-                required: 'Please enter the url.',
+                required: 'Please enter a url.',
               }}
               render={({
                 field: { value, onChange },
@@ -136,7 +136,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
               name="description"
               control={control}
               rules={{
-                required: 'Please enter the description.',
+                required: 'Please enter a description.',
               }}
               render={({
                 field: { value, onChange },

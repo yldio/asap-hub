@@ -63,4 +63,20 @@ describe('Compliance Reports Contentful Data Provider', () => {
       expect(result).toEqual(complianceReportId);
     });
   });
+
+  describe('Fetch', () => {
+    test('should throw an error', async () => {
+      await expect(complianceReportDataProvider.fetch()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
+
+  describe('Fetch by ID', () => {
+    test('should throw an error', async () => {
+      await expect(complianceReportDataProvider.fetch()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

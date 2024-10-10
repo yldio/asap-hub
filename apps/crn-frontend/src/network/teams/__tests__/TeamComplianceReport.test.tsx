@@ -15,7 +15,7 @@ import { ComponentProps, Suspense } from 'react';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { createComplianceReport } from '../api';
+import { createComplianceReport, getManuscript } from '../api';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamComplianceReport from '../TeamComplianceReport';
@@ -28,22 +28,15 @@ const manuscriptResponse = {
 const complianceReportResponse = { id: 'compliance-report-1' };
 
 const teamId = '42';
-const history = createMemoryHistory({
-  initialEntries: [
-    network({})
-      .teams({})
-      .team({ teamId })
-      .workspace({})
-      .createComplianceReport({ manuscriptId: manuscriptResponse.id }).$,
-  ],
-});
-
-jest.mock('../../users/api');
 
 jest.mock('../api', () => ({
   createComplianceReport: jest.fn().mockResolvedValue(complianceReportResponse),
   getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
 }));
+
+const mockGetManuscript = getManuscript as jest.MockedFunction<
+  typeof getManuscript
+>;
 
 beforeEach(() => {
   jest.resetModules();
@@ -51,6 +44,15 @@ beforeEach(() => {
 
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
+  history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .teams({})
+        .team({ teamId })
+        .workspace({})
+        .createComplianceReport({ manuscriptId: manuscriptResponse.id }).$,
+    ],
+  }),
 ) => {
   const path =
     network.template +
@@ -97,8 +99,17 @@ it('renders compliance report form page', async () => {
 it('can publish a form when the data is valid and navigates to team workspace', async () => {
   const url = 'https://compliancereport.com';
   const description = 'compliance report description';
+  const history = createMemoryHistory({
+    initialEntries: [
+      network({})
+        .teams({})
+        .team({ teamId })
+        .workspace({})
+        .createComplianceReport({ manuscriptId: manuscriptResponse.id }).$,
+    ],
+  });
 
-  await renderPage();
+  await renderPage({}, history);
 
   userEvent.type(screen.getByRole('textbox', { name: /url/i }), url);
 
@@ -126,4 +137,13 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       `/network/teams/${teamId}/workspace`,
     );
   });
+});
+
+it('renders not found when the manuscript hook does not return a manuscript with a version', async () => {
+  mockGetManuscript.mockResolvedValue(undefined);
+  await renderPage();
+
+  expect(screen.getByRole('heading').textContent).toContain(
+    'Sorry! We can’t seem to find that page.',
+  );
 });

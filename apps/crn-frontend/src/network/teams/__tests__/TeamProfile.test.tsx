@@ -5,6 +5,7 @@ import {
 import {
   createListEventResponse,
   createListResearchOutputResponse,
+  createManuscriptResponse,
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
@@ -490,18 +491,17 @@ describe('Duplicate Output', () => {
 });
 
 describe('Create Compliance Report', () => {
-  it('allows a user who is an ASAP staff to create a compliance report', async () => {
+  it('allows a user who is an ASAP staff to view Submit Compliance Report button', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
+
+    teamResponse.manuscripts = [createManuscriptResponse()];
     userResponse.role = 'Staff';
 
     const history = createMemoryHistory({
       initialEntries: [
-        network({})
-          .teams({})
-          .team({ teamId: teamResponse.id })
-          .workspace({})
-          .createComplianceReport({ manuscriptId: manuscriptResponse.id }).$,
+        network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
       ],
     });
     await renderPage(
@@ -521,13 +521,52 @@ describe('Create Compliance Report', () => {
     );
 
     expect(
-      screen.getByText(
+      screen.getByRole('button', { name: /Submit Compliance Report Icon/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('allows a user who is an ASAP staff to create a compliance report', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    const teamResponse = createTeamResponse();
+    const userResponse = createUserResponse({}, 1);
+    const teamManuscript = createManuscriptResponse();
+    teamResponse.manuscripts = [teamManuscript];
+    userResponse.role = 'Staff';
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
+      ],
+    });
+    await renderPage(
+      teamResponse,
+      { teamId: teamResponse.id, currentTime: new Date() },
+      {
+        ...userResponse,
+        teams: [
+          {
+            ...userResponse.teams[0],
+            id: teamResponse.id,
+            role: 'Key Personnel',
+          },
+        ],
+      },
+      history,
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: /Submit Compliance Report Icon/ }),
+    );
+
+    // expect(await screen.findByText(/Output 1/i)).toBeVisible();
+    expect(
+      await screen.findByText(
         /Share the compliance report associated with this manuscript./,
       ),
     ).toBeInTheDocument();
 
     expect(history.location.pathname).toEqual(
-      `/network/teams/${teamResponse.id}/workspace/create-compliance-report/${manuscriptResponse.id}`,
+      `/network/teams/${teamResponse.id}/workspace/create-compliance-report/${teamManuscript.id}`,
     );
   });
 });

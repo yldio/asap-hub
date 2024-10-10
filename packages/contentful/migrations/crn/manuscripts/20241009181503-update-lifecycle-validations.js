@@ -6,7 +6,7 @@ module.exports.up = (migration) => {
   manuscriptVersions.editField('lifecycle').validations([
     {
       in: [
-        'Draft Manuscript(prior to Publication)',
+        'Draft Manuscript (prior to Publication)',
         'Preprint',
         'Typeset proof',
         'Publication',

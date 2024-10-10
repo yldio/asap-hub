@@ -55,6 +55,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
       </FormProvider>
     );
   }
+
   return <NotFoundPage />;
 };
 export default TeamComplianceReport;

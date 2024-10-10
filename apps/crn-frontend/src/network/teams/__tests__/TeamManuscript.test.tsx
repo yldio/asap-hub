@@ -2,7 +2,6 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-
 import { network } from '@asap-hub/routing';
 import {
   render,
@@ -31,6 +30,9 @@ const history = createMemoryHistory({
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript({}).$,
   ],
 });
+
+jest.mock('../../users/api');
+
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
   uploadManuscriptFile: jest.fn().mockResolvedValue({
@@ -120,6 +122,12 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
+  const apcCoverage = screen.getByRole('group', {
+    name: /Will you be requesting APC coverage/i,
+  });
+
+  userEvent.click(within(apcCoverage).getByRole('radio', { name: /no/i }));
+
   const testFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
@@ -127,6 +135,22 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   const keyResourceTableInput = screen.getByLabelText(
     /Upload Key Resource Table/i,
   );
+
+  const descriptionTextbox = screen.getByRole('textbox', {
+    name: /Manuscript Description/i,
+  });
+  userEvent.type(descriptionTextbox, 'Some description');
+
+  userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
+
+  userEvent.click(screen.getByText(/Non CRN/i));
+
+  expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
+  userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
@@ -167,7 +191,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
               url: 'https://example.com/manuscript.pdf',
               id: 'file-id',
             },
-            requestingApcCoverage: 'Already submitted',
+            requestingApcCoverage: 'No',
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',
             manuscriptLicense: 'Yes',
@@ -185,6 +209,14 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
             teams: ['42'],
             labs: [],
+            description: 'Some description',
+            firstAuthors: [
+              {
+                externalAuthorEmail: 'jane@doe.com',
+                externalAuthorName: 'Jane Doe',
+              },
+            ],
+            additionalAuthors: [],
           },
         ],
       },
@@ -194,4 +226,4 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       `/network/teams/${teamId}/workspace`,
     );
   });
-});
+}, 180_000);

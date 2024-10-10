@@ -3,24 +3,25 @@ import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import {
+  article,
+  AssociationList,
   Button,
+  Caption,
+  Divider,
+  formatDate,
+  formatDateAndWeekday,
+  lead,
+  Link,
   minusRectIcon,
   Pill,
   plusRectIcon,
   Subtitle,
-  article,
-  Divider,
-  Link,
-  lead,
-  AssociationList,
-  formatDate,
-  Caption,
 } from '..';
 import { paddingStyles } from '../card';
 import { UserCommentHeader } from '../molecules';
-import { mobileScreen, perRem, rem } from '../pixels';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
+import { mobileScreen, perRem, rem } from '../pixels';
 
 type ManuscriptVersionCardProps = ManuscriptVersion;
 
@@ -269,11 +270,29 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = (
                         <Divider />
                       )}
                       <li css={additionalInformationEntryStyles}>
-                        <strong>Requesting APC Coverage?</strong>
+                        <strong>Requested APC Coverage?</strong>
                         <span css={additionalInformationValueStyles}>
                           {version.requestingApcCoverage}
                         </span>
                       </li>
+                      {version?.submitterName ? (
+                        <li css={additionalInformationEntryStyles}>
+                          <strong>Submitter's Name</strong>
+                          <span css={additionalInformationValueStyles}>
+                            {version.submitterName}
+                          </span>
+                        </li>
+                      ) : null}
+                      {version?.submissionDate ? (
+                        <li css={additionalInformationEntryStyles}>
+                          <strong>Submission Date</strong>
+                          <span css={additionalInformationValueStyles}>
+                            {formatDateAndWeekday(
+                              new Date(version.submissionDate),
+                            )}
+                          </span>
+                        </li>
+                      ) : null}
                     </>
                   )}
                   {version.otherDetails && (

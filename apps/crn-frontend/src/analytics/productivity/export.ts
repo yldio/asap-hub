@@ -48,10 +48,10 @@ export const teamProductivityToCSV =
       data.Dataset,
       performance.dataset,
     ),
-    ASAPALabResourceValue: data['Lab Resource'],
-    ASAPALabResourceAverage: utils.getPerformanceText(
-      data['Lab Resource'],
-      performance.labResource,
+    ASAPALabMaterialValue: data['Lab Material'],
+    ASAPALabMaterialAverage: utils.getPerformanceText(
+      data['Lab Material'],
+      performance.labMaterial,
     ),
     ASAPProtocolValue: data.Protocol,
     ASAPProtocolAverage: utils.getPerformanceText(

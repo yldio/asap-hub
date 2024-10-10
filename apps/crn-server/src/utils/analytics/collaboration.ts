@@ -207,7 +207,7 @@ const getTeamCollaborationAcrossData = (
             Article: 0,
             Bioinformatics: 0,
             Dataset: 0,
-            'Lab Resource': 0,
+            'Lab Material': 0,
             Protocol: 0,
             [outputData.documentType]: 1,
           });
@@ -228,7 +228,7 @@ const getTeamCollaborationAcrossData = (
         Article: 0,
         Bioinformatics: 0,
         Dataset: 0,
-        'Lab Resource': 0,
+        'Lab Material': 0,
         Protocol: 0,
       },
       byTeam: [] as TeamCollaborationAcrossOutputData['byTeam'],
@@ -250,7 +250,7 @@ const getTeamCollaborationWithinData = (
       Article: 0,
       Bioinformatics: 0,
       Dataset: 0,
-      'Lab Resource': 0,
+      'Lab Material': 0,
       Protocol: 0,
     },
   );

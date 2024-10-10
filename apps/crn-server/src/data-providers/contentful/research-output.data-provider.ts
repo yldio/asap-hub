@@ -27,7 +27,7 @@ import {
   ResearchOutputsOrder,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { parseUserDisplayName } from '@asap-hub/server-common';
 import { isSharingStatus } from '../transformers/research-output';
 import {
   CreateResearchOutputOptions,
@@ -333,9 +333,9 @@ const parseGraphQLResearchOutput = (
   return {
     id: researchOutputs.sys.id,
     title: researchOutputs.title || '',
-    researchTheme: researchOutputs.researchTheme
-      ? cleanArray(researchOutputs.researchTheme)
-      : [],
+    researchTheme: (researchOutputs.teamsCollection?.items || [])
+      .map((teamItem) => teamItem?.researchTheme?.name)
+      .filter((item): item is string => item !== undefined),
     description: researchOutputs.description
       ? parseRichText(researchOutputs.description as RichTextFromQuery)
       : undefined,

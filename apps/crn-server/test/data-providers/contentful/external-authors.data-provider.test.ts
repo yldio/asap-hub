@@ -205,4 +205,27 @@ describe('External Authors Contentful Data Provider', () => {
       ).rejects.toThrow(GenericError);
     });
   });
+
+  describe('Update method', () => {
+    test('Should update an external author', async () => {
+      const externalAuthorMock = getEntry(
+        {
+          name: {
+            'en-US': 'External',
+          },
+        },
+        { id: 'external-author-1' },
+      );
+      environmentMock.getEntry.mockResolvedValue(externalAuthorMock);
+
+      await externalAuthorsDataProvider.update('external-author-1', {
+        email: 'external@gmail.com',
+      });
+
+      expect(externalAuthorMock.update).toHaveBeenCalled();
+      expect(externalAuthorMock.fields.email).toEqual({
+        'en-US': 'external@gmail.com',
+      });
+    });
+  });
 });

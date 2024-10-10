@@ -1,6 +1,7 @@
 import { FetchManuscriptByIdQuery } from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
+  ManuscriptCreateControllerDataObject,
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
   ManuscriptFileResponse,
@@ -147,19 +148,66 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
     title,
     teamId,
     eligibilityReasons: [],
-    versions: [{ ...version, teams: ['team-1'], labs: [] }],
+    versions: [
+      {
+        ...version,
+        teams: ['team-1'],
+        labs: [],
+        description: '',
+        firstAuthors: [{ userId: 'author-1' }],
+        correspondingAuthor: undefined,
+        additionalAuthors: [],
+        submissionDate: undefined,
+      },
+    ],
   };
 };
 
+export const getManuscriptCreateControllerDataObject =
+  (): ManuscriptCreateControllerDataObject => {
+    const { versions, ...rest } = getManuscriptCreateDataObject();
+
+    const { firstAuthors, correspondingAuthor, additionalAuthors, ...version } =
+      versions[0]!;
+
+    return {
+      ...rest,
+      versions: [
+        {
+          ...version,
+          firstAuthors: [{ userId: 'author-1' }],
+          correspondingAuthor: undefined,
+          additionalAuthors: [],
+        },
+      ],
+    };
+  };
+
 export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
   const { title, teamId, versions } = getManuscriptDataObject();
-  const { teams: _, ...version } = versions[0]!;
+  const {
+    teams: _,
+    publishedAt: __,
+    createdDate: ___,
+    ...version
+  } = versions[0]!;
 
   return {
     title,
     teamId,
     eligibilityReasons: [],
-    versions: [{ ...version, teams: ['team-1'], labs: [] }],
+    versions: [
+      {
+        ...version,
+        teams: ['team-1'],
+        labs: [],
+        description: 'nice description',
+        firstAuthors: ['author-1'],
+        correspondingAuthor: [],
+        additionalAuthors: [],
+        submissionDate: undefined,
+      },
+    ],
     userId: 'user-id-0',
   };
 };

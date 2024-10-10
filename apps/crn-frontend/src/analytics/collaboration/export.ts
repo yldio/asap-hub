@@ -15,8 +15,8 @@ const getOutputPrefix = (documentCategory: DocumentCategoryOption) => {
       return 'Bioinformatic Outputs';
     case 'dataset':
       return 'Dataset Outputs';
-    case 'lab-resource':
-      return 'Lab Resource Outputs';
+    case 'lab-material':
+      return 'Lab Material Outputs';
     case 'protocol':
       return 'Protocol Outputs';
     case 'all':
@@ -128,12 +128,12 @@ export const teamCollaborationWithinTeamToCSV =
         dataByDocumentType.Dataset,
         performanceByDocumentType.dataset,
       ),
-      [`${fieldPreffix} Lab Resource Output: Value`]:
-        dataByDocumentType['Lab Resource'],
-      [`${fieldPreffix} Lab Resource Output: Average`]:
+      [`${fieldPreffix} Lab Material Output: Value`]:
+        dataByDocumentType['Lab Material'],
+      [`${fieldPreffix} Lab Material Output: Average`]:
         utils.getPerformanceText(
-          dataByDocumentType['Lab Resource'],
-          performanceByDocumentType.labResource,
+          dataByDocumentType['Lab Material'],
+          performanceByDocumentType.labMaterial,
         ),
       [`${fieldPreffix} Protocol Output: Value`]: dataByDocumentType.Protocol,
       [`${fieldPreffix} Protocol Output: Average`]: utils.getPerformanceText(
@@ -161,8 +161,8 @@ export const teamCollaborationAcrossTeamToCSV =
           bioinformaticsTeams: string[];
           dataset: number;
           datasetTeams: string[];
-          labResource: number;
-          labResourceTeams: string[];
+          labMaterial: number;
+          labMaterialTeams: string[];
           protocol: number;
           protocolTeams: string[];
         },
@@ -184,9 +184,9 @@ export const teamCollaborationAcrossTeamToCSV =
           newByTeamByDocumentType.datasetTeams.push(teamData.name);
         }
 
-        if (teamData['Lab Resource'] > 0) {
-          newByTeamByDocumentType.labResource += 1;
-          newByTeamByDocumentType.labResourceTeams.push(teamData.name);
+        if (teamData['Lab Material'] > 0) {
+          newByTeamByDocumentType.labMaterial += 1;
+          newByTeamByDocumentType.labMaterialTeams.push(teamData.name);
         }
 
         if (teamData.Protocol > 0) {
@@ -204,8 +204,8 @@ export const teamCollaborationAcrossTeamToCSV =
         bioinformaticsTeams: [],
         dataset: 0,
         datasetTeams: [],
-        labResource: 0,
-        labResourceTeams: [],
+        labMaterial: 0,
+        labMaterialTeams: [],
         protocol: 0,
         protocolTeams: [],
       },
@@ -244,17 +244,17 @@ export const teamCollaborationAcrossTeamToCSV =
         acrossTeamData.dataset,
       [`${fieldPreffix} Dataset Output: Name of teams collaborated with`]:
         acrossTeamData.datasetTeams.join(', '),
-      [`${fieldPreffix} Lab Resource Output: Value`]:
-        dataByDocumentType['Lab Resource'],
-      [`${fieldPreffix} Lab Resource Output: Average`]:
+      [`${fieldPreffix} Lab Material Output: Value`]:
+        dataByDocumentType['Lab Material'],
+      [`${fieldPreffix} Lab Material Output: Average`]:
         utils.getPerformanceText(
-          dataByDocumentType['Lab Resource'],
-          performanceByDocumentType.labResource,
+          dataByDocumentType['Lab Material'],
+          performanceByDocumentType.labMaterial,
         ),
-      [`${fieldPreffix} Lab Resource Output: No. of teams collaborated with`]:
-        acrossTeamData.labResource,
-      [`${fieldPreffix} Lab Resource Output: Name of teams collaborated with`]:
-        acrossTeamData.labResourceTeams.join(', '),
+      [`${fieldPreffix} Lab Material Output: No. of teams collaborated with`]:
+        acrossTeamData.labMaterial,
+      [`${fieldPreffix} Lab Material Output: Name of teams collaborated with`]:
+        acrossTeamData.labMaterialTeams.join(', '),
       [`${fieldPreffix} Protocol Output: Value`]: dataByDocumentType.Protocol,
       [`${fieldPreffix} Protocol Output: Average`]: utils.getPerformanceText(
         dataByDocumentType.Protocol,

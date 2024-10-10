@@ -26,7 +26,7 @@ import {
   article,
   bioinformatics,
   dataset,
-  labResource,
+  labMaterial,
   plusIcon,
   protocol,
   successIcon,
@@ -253,9 +253,9 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                 }).$,
               }}
               {{
-                item: <>{labResource} Lab Resource</>,
+                item: <>{labMaterial} Lab Material</>,
                 href: route.createOutput({
-                  outputDocumentType: 'lab-resource',
+                  outputDocumentType: 'lab-material',
                 }).$,
               }}
               {{

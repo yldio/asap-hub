@@ -18,7 +18,7 @@ import {
   bioinformatics,
   crnReportIcon,
   dataset,
-  labResource,
+  labMaterial,
   plusIcon,
   protocol,
   TeamIcon,
@@ -211,9 +211,9 @@ export const SharedOutputDropdownWrapper: React.FC<
       href: routeLink(selectedAssociation, 'dataset'),
     },
     {
-      item: <>{labResource} Lab Resource</>,
+      item: <>{labMaterial} Lab Material</>,
       type: 'inner' as ItemType,
-      href: routeLink(selectedAssociation, 'lab-resource'),
+      href: routeLink(selectedAssociation, 'lab-material'),
     },
     {
       item: <>{protocol} Protocol</>,

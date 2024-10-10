@@ -6,7 +6,7 @@ import {
   bioinformatics,
   dataset,
   grantDocument,
-  labResource,
+  labMaterial,
   protocol,
 } from '../icons';
 
@@ -15,7 +15,7 @@ const icons: Record<ResearchOutputDocumentType, EmotionJSX.Element> = {
   Article: article,
   Dataset: dataset,
   Bioinformatics: bioinformatics,
-  'Lab Resource': labResource,
+  'Lab Material': labMaterial,
   'Grant Document': grantDocument,
   Presentation: protocol,
   Report: protocol,

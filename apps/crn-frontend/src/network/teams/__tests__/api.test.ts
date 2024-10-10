@@ -271,6 +271,8 @@ describe('Manuscript', () => {
           },
           teams: ['42'],
           labs: [],
+          description: '',
+          firstAuthors: [],
         },
       ],
     };

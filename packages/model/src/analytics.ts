@@ -20,7 +20,7 @@ export type PerformanceMetricByDocumentType = {
   article: PerformanceMetrics;
   bioinformatics: PerformanceMetrics;
   dataset: PerformanceMetrics;
-  labResource: PerformanceMetrics;
+  labMaterial: PerformanceMetrics;
   protocol: PerformanceMetrics;
 };
 
@@ -136,7 +136,7 @@ export const documentCategories = [
   'article',
   'bioinformatics',
   'dataset',
-  'lab-resource',
+  'lab-material',
   'protocol',
 ] as const;
 
@@ -215,8 +215,8 @@ export type SortTeamProductivity =
   | 'bioinformatics_desc'
   | 'dataset_asc'
   | 'dataset_desc'
-  | 'lab_resource_asc'
-  | 'lab_resource_desc'
+  | 'lab_material_asc'
+  | 'lab_material_desc'
   | 'protocol_asc'
   | 'protocol_desc';
 
@@ -233,7 +233,7 @@ export type TeamProductivityFields =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
-  | 'labResource'
+  | 'labMaterial'
   | 'protocol';
 
 export type TeamProductivitySortingDirection = {
@@ -258,7 +258,7 @@ export const teamProductivityInitialSortingDirection = {
   article: descending,
   bioinformatics: descending,
   dataset: descending,
-  labResource: descending,
+  labMaterial: descending,
   protocol: descending,
 };
 
@@ -284,7 +284,7 @@ export const teamOutputDocumentTypes = [
   'Article',
   'Bioinformatics',
   'Dataset',
-  'Lab Resource',
+  'Lab Material',
   'Protocol',
 ] as const;
 
@@ -297,7 +297,7 @@ export type TeamProductivityDataObject = {
   Article: number;
   Bioinformatics: number;
   Dataset: number;
-  'Lab Resource': number;
+  'Lab Material': number;
   Protocol: number;
 };
 
@@ -355,7 +355,7 @@ export type TeamCollaborationWithinOutputData = {
   Article: number;
   Bioinformatics: number;
   Dataset: number;
-  'Lab Resource': number;
+  'Lab Material': number;
   Protocol: number;
 };
 export type TeamCollaborationAcrossOutputData = {
@@ -407,8 +407,8 @@ export type SortTeamCollaboration =
   | 'bioinformatics_desc'
   | 'dataset_asc'
   | 'dataset_desc'
-  | 'lab_resource_asc'
-  | 'lab_resource_desc'
+  | 'lab_material_asc'
+  | 'lab_material_desc'
   | 'protocol_asc'
   | 'protocol_desc'
   | 'article_across_asc'
@@ -417,8 +417,8 @@ export type SortTeamCollaboration =
   | 'bioinformatics_across_desc'
   | 'dataset_across_asc'
   | 'dataset_across_desc'
-  | 'lab_resource_across_asc'
-  | 'lab_resource_across_desc'
+  | 'lab_material_across_asc'
+  | 'lab_material_across_desc'
   | 'protocol_across_asc'
   | 'protocol_across_desc';
 
@@ -433,7 +433,7 @@ export type TeamCollaborationFields =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
-  | 'labResource'
+  | 'labMaterial'
   | 'protocol';
 
 export type TeamCollaborationSortingDirection = {
@@ -456,7 +456,7 @@ export const teamCollaborationInitialSortingDirection = {
   article: descending,
   bioinformatics: descending,
   dataset: descending,
-  labResource: descending,
+  labMaterial: descending,
   protocol: descending,
 };
 

@@ -351,7 +351,7 @@ export default class ResearchOutputController {
     researchOutputId?: string,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     if (
-      researchOutputData.documentType === 'Lab Resource' &&
+      researchOutputData.documentType === 'Lab Material' &&
       !researchOutputData.link
     ) {
       return null;

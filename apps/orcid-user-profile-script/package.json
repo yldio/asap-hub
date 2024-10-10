@@ -13,7 +13,7 @@
     "test:coverage": "WORKSPACE_PATH=apps/orcid-user-profile-script; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
   },
   "dependencies": {
-    "jsonwebtoken": "9.0.0"
+    "jsonwebtoken": "9.0.1"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",

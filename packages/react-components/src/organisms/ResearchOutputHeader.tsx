@@ -66,9 +66,9 @@ const subheaderRecord: Record<ResearchOutputDocumentType, ReactNode | null> = {
       Github) before sharing on the Hub.
     </>
   ),
-  'Lab Resource': (
+  'Lab Material': (
     <>
-      Add your lab resource to a repository (e.g. Addgene or WiCell) before
+      Add your lab material to a repository (e.g. Addgene or WiCell) before
       sharing on the Hub, if possible. Alternatively, find out{' '}
       <Link
         href={
@@ -98,23 +98,23 @@ const headerTextMap: Record<
 > = {
   WorkingGroup: {
     Article: 'Share a Working Group Article',
-    Bioinformatics: 'Share a Working Group Bioinformatics',
+    Bioinformatics: 'Share Working Group Bioinformatics',
     Dataset: 'Share a Working Group Dataset',
     Protocol: 'Share a Working Group Protocol',
-    'Lab Resource': 'Share a Working Group Lab Resource',
+    'Lab Material': 'Share a Working Group Lab Material',
     Report: 'Share a Working Group CRN Report',
     'Grant Document': 'Share a Working Group Grant Document',
     Presentation: 'Share a Working Group Presentation',
   },
   Team: {
-    Protocol: 'Share a protocol',
-    Dataset: 'Share a dataset',
-    Bioinformatics: 'Share bioinformatics',
-    'Lab Resource': 'Share a lab resource',
-    Article: 'Share an article',
-    'Grant Document': 'Share a grant document',
-    Presentation: 'Share a presentation',
-    Report: 'Share a report',
+    Protocol: 'Share a Team Protocol',
+    Dataset: 'Share a Team Dataset',
+    Bioinformatics: 'Share Team Bioinformatics',
+    'Lab Material': 'Share a Team Lab Material',
+    Article: 'Share a Team Article',
+    'Grant Document': 'Share a Team Grant Document',
+    Presentation: 'Share a Team Presentation',
+    Report: 'Share a Team Report',
   },
 };
 

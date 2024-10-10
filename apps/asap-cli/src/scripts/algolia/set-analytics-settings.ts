@@ -63,8 +63,8 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_team_bioinformatics_desc`,
     `${indexName}_team_dataset_asc`,
     `${indexName}_team_dataset_desc`,
-    `${indexName}_team_lab_resource_asc`,
-    `${indexName}_team_lab_resource_desc`,
+    `${indexName}_team_lab_material_asc`,
+    `${indexName}_team_lab_material_desc`,
     `${indexName}_team_protocol_asc`,
     `${indexName}_team_protocol_desc`,
 
@@ -89,8 +89,8 @@ export const setAlgoliaAnalyticsSettings = async ({
     `${indexName}_team_bioinformatics_across_desc`,
     `${indexName}_team_dataset_across_asc`,
     `${indexName}_team_dataset_across_desc`,
-    `${indexName}_team_lab_resource_across_asc`,
-    `${indexName}_team_lab_resource_across_desc`,
+    `${indexName}_team_lab_material_across_asc`,
+    `${indexName}_team_lab_material_across_desc`,
     `${indexName}_team_protocol_across_asc`,
     `${indexName}_team_protocol_across_desc`,
   ];

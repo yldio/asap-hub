@@ -69,7 +69,7 @@ export { default as infoInfoIcon } from './info-info';
 export { default as informationIcon } from './information';
 export { default as InterestGroupsIcon } from './interest-groups';
 export { default as LabIcon } from './lab';
-export { default as labResource } from './lab-resource';
+export { default as labMaterial } from './lab-material';
 export { default as lastPageIcon } from './last-page';
 export { default as LeadershipIcon } from './leadership';
 export { default as learnIcon } from './learn';

@@ -82,6 +82,7 @@ describe('User data provider', () => {
             name: 'interest-group-2',
           },
           {
+            role: 'Project Manager',
             active: true,
             id: 'interest-group-leader-1',
             name: 'Interest Group Leader 1',
@@ -383,10 +384,11 @@ describe('User data provider', () => {
 
     test('Should default missing research theme to an empty array', async () => {
       const id = 'user-id-1';
+      const contentfulUser = getContentfulGraphqlUser();
+      contentfulUser.teamsCollection!.items[0]!.team!.researchTheme = null;
+
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: getContentfulGraphqlUser({
-          researchTheme: null,
-        }),
+        users: contentfulUser,
       });
 
       const response = await userDataProvider.fetchById(id);
@@ -740,6 +742,7 @@ describe('User data provider', () => {
           },
           {
             active: true,
+            role: 'Project Manager',
             id: 'interest-group-leader-1',
             name: 'Interest Group Leader 1',
           },

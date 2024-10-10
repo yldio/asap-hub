@@ -49,7 +49,7 @@
     "form-data": "3.0.1",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
-    "jsonwebtoken": "9.0.0",
+    "jsonwebtoken": "9.0.1",
     "limiter": "^2.1.0",
     "luxon": "1.28.1",
     "mime-types": "2.1.35",

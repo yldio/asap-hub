@@ -112,11 +112,11 @@ it('renders a divider between fields in Additional Information section and files
 });
 
 it.each`
-  field                      | title                         | newValue
-  ${'preprintDoi'}           | ${'Preprint DOI'}             | ${'10.1101/gr.10.12.1841'}
-  ${'publicationDoi'}        | ${'Publication DOI'}          | ${'10.1101/gr.10.12.1841'}
-  ${'requestingApcCoverage'} | ${'Requesting APC Coverage?'} | ${'Yes'}
-  ${'otherDetails'}          | ${'Other details'}            | ${'new details'}
+  field                      | title                        | newValue
+  ${'preprintDoi'}           | ${'Preprint DOI'}            | ${'10.1101/gr.10.12.1841'}
+  ${'publicationDoi'}        | ${'Publication DOI'}         | ${'10.1101/gr.10.12.1841'}
+  ${'requestingApcCoverage'} | ${'Requested APC Coverage?'} | ${'Yes'}
+  ${'otherDetails'}          | ${'Other details'}           | ${'new details'}
 `(`displays field $field when present`, async ({ field, title, newValue }) => {
   const { getByRole, getByText, queryByText, rerender } = render(
     <ManuscriptVersionCard {...props} />,
@@ -208,6 +208,46 @@ it('renders key resource table file details and download link', () => {
     'href',
     'https://example.com/key_resource_table.csv',
   );
+});
+
+it("does not display Submitter's Name and Submission Date if submitterName and submissionDate are not defined", () => {
+  const { getByRole, getByText, queryByText } = render(
+    <ManuscriptVersionCard
+      {...props}
+      requestingApcCoverage="No"
+      submissionDate={undefined}
+      submitterName={undefined}
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
+  expect(getByText(/No/i)).toBeInTheDocument();
+
+  expect(queryByText(/Submitter's Name/i)).not.toBeInTheDocument();
+
+  expect(queryByText(/Submission Date/i)).not.toBeInTheDocument();
+});
+
+it('displays apc coverage information', () => {
+  const { getByRole, getByText } = render(
+    <ManuscriptVersionCard
+      {...props}
+      requestingApcCoverage="Already submitted"
+      submissionDate={new Date('2024-10-03')}
+      submitterName="Janet Doe"
+    />,
+  );
+  userEvent.click(getByRole('button'));
+
+  expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
+  expect(getByText(/Already submitted/i)).toBeInTheDocument();
+
+  expect(getByText(/Submitter's Name/i)).toBeInTheDocument();
+  expect(getByText(/Janet Doe/i)).toBeInTheDocument();
+
+  expect(getByText(/Submission Date/i)).toBeInTheDocument();
+  expect(getByText(/Thu, 3rd October 2024/i)).toBeInTheDocument();
 });
 
 it('renders additional files details and download link when provided', () => {

@@ -155,7 +155,7 @@ const ResearchOutputExtraInformationCard: React.FC<
             identifierType={identifierType}
             setIdentifierType={setIdentifierType}
           />
-          {documentType === 'Lab Resource' && (
+          {documentType === 'Lab Material' && (
             <LabeledTextField
               title="Catalog Number (Vendor/Lab)"
               subtitle="(optional)"

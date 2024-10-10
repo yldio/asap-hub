@@ -60,7 +60,7 @@ export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
         Article: 1,
         Bioinformatics: 0,
         Dataset: 0,
-        'Lab Resource': 0,
+        'Lab Material': 0,
         Protocol: 1,
       },
       outputsCoProducedAcross: {
@@ -68,7 +68,7 @@ export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
           Article: 1,
           Bioinformatics: 0,
           Dataset: 0,
-          'Lab Resource': 0,
+          'Lab Material': 0,
           Protocol: 1,
         },
         byTeam: [
@@ -79,7 +79,7 @@ export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
             Article: 1,
             Bioinformatics: 0,
             Dataset: 0,
-            'Lab Resource': 0,
+            'Lab Material': 0,
             Protocol: 1,
           },
         ],
@@ -97,7 +97,7 @@ export const teamProductivityResponse: TeamProductivityAlgoliaResponse = {
   Article: 1,
   Bioinformatics: 2,
   Dataset: 3,
-  'Lab Resource': 4,
+  'Lab Material': 4,
   Protocol: 5,
 };
 
@@ -126,7 +126,7 @@ export const teamProductivityPerformance: TeamProductivityPerformance = {
     aboveAverageMin: 10,
     aboveAverageMax: 12,
   },
-  labResource: {
+  labMaterial: {
     belowAverageMin: 0,
     belowAverageMax: 2,
     averageMin: 3,
@@ -214,7 +214,7 @@ export const performanceByDocumentType: PerformanceMetricByDocumentType = {
     aboveAverageMin: 10,
     aboveAverageMax: 12,
   },
-  labResource: {
+  labMaterial: {
     belowAverageMin: 0,
     belowAverageMax: 2,
     averageMin: 3,

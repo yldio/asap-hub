@@ -141,8 +141,8 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
           {getPerformanceIcon(rowItem.Dataset, performance.dataset)}
         </p>
         <p css={rowValueStyles}>
-          {rowItem['Lab Resource']}{' '}
-          {getPerformanceIcon(rowItem['Lab Resource'], performance.labResource)}
+          {rowItem['Lab Material']}{' '}
+          {getPerformanceIcon(rowItem['Lab Material'], performance.labMaterial)}
         </p>
         <p css={rowValueStyles}>
           {rowItem.Protocol}{' '}
@@ -162,7 +162,7 @@ const TeamCollaborationRow: React.FC<TeamCollaborationProps> = ({
             <p>{team.Article}</p>
             <p>{team.Bioinformatics}</p>
             <p>{team.Dataset}</p>
-            <p>{team['Lab Resource']}</p>
+            <p>{team['Lab Material']}</p>
             <p>{team.Protocol}</p>
           </div>
         ))}

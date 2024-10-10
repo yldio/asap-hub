@@ -161,7 +161,7 @@ it('Renders the research output', async () => {
   });
 
   expect(
-    screen.getByRole('heading', { name: /Share bioinformatics/i }),
+    screen.getByRole('heading', { name: /Share Team Bioinformatics/i }),
   ).toBeInTheDocument();
 });
 
@@ -219,7 +219,7 @@ it('switches research output type based on parameter', async () => {
   await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
   expect(
-    screen.getByRole('heading', { name: /Share an article/i }),
+    screen.getByRole('heading', { name: /Share a Team Article/i }),
   ).toBeInTheDocument();
 });
 
@@ -232,7 +232,7 @@ it('can publish a form when the data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
+  await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
   const { publish } = await mandatoryFields({
     link,
@@ -253,7 +253,7 @@ it('can publish a form when the data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Lab Resource',
+      documentType: 'Lab Material',
       sharingStatus: 'Network Only',
       teams: [teamId],
       link,
@@ -296,7 +296,7 @@ it('can save draft when form data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
+  await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
   const { saveDraft } = await mandatoryFields({
     link,
@@ -317,7 +317,7 @@ it('can save draft when form data is valid', async () => {
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
     {
       doi,
-      documentType: 'Lab Resource',
+      documentType: 'Lab Material',
       sharingStatus: 'Network Only',
       teams: [teamId],
       link,

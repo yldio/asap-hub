@@ -88,6 +88,9 @@ export class ManuscriptContentfulDataProvider
         fields: addLocaleToFields({
           ...version,
           teams: getLinkEntities(version.teams),
+          firstAuthors: getLinkEntities(version.firstAuthors),
+          correspondingAuthor: getLinkEntities(version.correspondingAuthor),
+          additionalAuthors: getLinkEntities(version.additionalAuthors),
           labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           keyResourceTable: version.keyResourceTable
@@ -165,6 +168,8 @@ export const parseGraphqlManuscriptVersion = (
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       requestingApcCoverage: version?.requestingApcCoverage,
+      submitterName: version?.submitterName,
+      submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
       acknowledgedGrantNumberDetails:
         version?.acknowledgedGrantNumber === 'No'

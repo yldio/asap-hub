@@ -14,7 +14,6 @@ import {
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
-  getManuscriptPostBody,
 } from '../../fixtures/manuscript.fixtures';
 import { getUsersTeamsCollection } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -211,7 +210,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     test('can create a manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';
-      const manuscriptCreateDataObject = getManuscriptPostBody();
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
 
       const publish = jest.fn();
@@ -267,7 +266,23 @@ describe('Manuscripts Contentful Data Provider', () => {
             additionalFiles: {
               'en-US': null,
             },
+            description: { 'en-US': 'nice description' },
             labs: { 'en-US': [] },
+            firstAuthors: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'author-1',
+
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+            submissionDate: { 'en-US': undefined },
+            correspondingAuthor: { 'en-US': [] },
+            additionalAuthors: { 'en-US': [] },
             teams: {
               'en-US': [
                 {
@@ -332,7 +347,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     test('can create a manuscript with key resource table and additional files', async () => {
       const manuscriptId = 'manuscript-id-1';
       const manuscriptVersionId = 'manuscript-version-id-1';
-      const manuscriptCreateDataObject = getManuscriptPostBody();
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.additionalFiles = [
         {
           filename: 'manuscript.csv',
@@ -412,7 +427,23 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               ],
             },
+            description: { 'en-US': 'nice description' },
             labs: { 'en-US': [] },
+            firstAuthors: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'author-1',
+
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+            submissionDate: { 'en-US': undefined },
+            correspondingAuthor: { 'en-US': [] },
+            additionalAuthors: { 'en-US': [] },
             teams: {
               'en-US': [
                 {

@@ -132,13 +132,25 @@ type RefType<T extends MultiSelectOptionsType> =
     }
   | null;
 
-export type MultiSelectProps<T extends MultiSelectOptionsType> = {
+export type MultiSelectOnChange<T extends MultiSelectOptionsType> = (
+  newValues: OptionsType<T>,
+) => void;
+export type SingleSelectOnChange<T extends MultiSelectOptionsType> = (
+  newValues: T,
+) => void;
+
+export type MultiSelectProps<
+  T extends MultiSelectOptionsType,
+  M extends boolean = true,
+> = {
   readonly customValidationMessage?: string;
   readonly id?: string;
   readonly enabled?: boolean;
   readonly placeholder?: string;
-  readonly onChange?: (newValues: OptionsType<T>) => void;
-  readonly values?: OptionsType<T>;
+  readonly onChange?: M extends true
+    ? MultiSelectOnChange<T>
+    : SingleSelectOnChange<T>;
+  readonly values?: M extends true ? OptionsType<T> : T;
   readonly sortable?: boolean;
   readonly creatable?: boolean;
   readonly required?: boolean;
@@ -146,6 +158,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly maxMenuHeight?: number;
   readonly leftIndicator?: ReactNode;
   readonly noMargin?: boolean;
+  readonly isMulti?: M;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -160,7 +173,15 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
     })
 );
 
-const MultiSelect = <T extends MultiSelectOptionsType>({
+const getValues = <T extends MultiSelectOptionsType, M extends boolean>(
+  isMulti: M,
+): M extends true ? OptionsType<T> : T =>
+  (isMulti ? [] : {}) as M extends true ? OptionsType<T> : T;
+
+const MultiSelect = <
+  T extends MultiSelectOptionsType,
+  M extends boolean = true,
+>({
   customValidationMessage = '',
   loadOptions,
   id,
@@ -170,7 +191,6 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   placeholder = '',
   maxMenuHeight,
   noOptionsMessage,
-  values = [],
   onChange = noop,
   sortable = true,
   creatable = false,
@@ -178,7 +198,9 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   getValidationMessage,
   leftIndicator,
   noMargin = false,
-}: MultiSelectProps<T>): ReactElement => {
+  isMulti = true as M,
+  values = getValues<T, M>(isMulti),
+}: MultiSelectProps<T, M>): ReactElement => {
   const theme = useTheme();
   // This is to handle a bug with Select where the right click would make it impossible to write
   let inputRef: RefType<T> = null;
@@ -209,10 +231,10 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
 
   let sortableProps: SortableContainerProps | undefined;
 
-  if (sortable) {
+  if (sortable && isMulti && Array.isArray(values)) {
     const onSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
       const newValue = arrayMove(values, oldIndex, newIndex);
-      onChange(newValue);
+      (onChange as (newValues: OptionsType<T>) => void)(newValue);
     };
 
     sortableProps = {
@@ -224,12 +246,14 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     };
   }
 
-  const commonProps: Props<T, true> & Partial<SortableContainerProps> = {
+  const commonProps: Props<T, M> & Partial<SortableContainerProps> = {
     ...sortableProps,
     inputId: id,
     isDisabled: !enabled,
-    isMulti: true as const,
+    isMulti,
     placeholder,
+    backspaceRemovesValue: true,
+    isClearable: true,
     value: values,
     components: {
       MultiValueRemove,
@@ -256,7 +280,10 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
     },
     onFocus: checkValidation,
     onBlur: checkValidation,
-    onChange: (options: OptionsType<T>, actionMeta: ActionMeta<T>) => {
+    onChange: (
+      options: M extends true ? OptionsType<T> : T | null,
+      actionMeta: ActionMeta<T>,
+    ) => {
       switch (actionMeta.action) {
         case 'remove-value':
         case 'pop-value':
@@ -265,7 +292,19 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
           }
           break;
       }
-      onChange(options);
+      if (isMulti && Array.isArray(options)) {
+        (
+          onChange as (
+            newValues: OptionsType<T>,
+            actionMeta: ActionMeta<T>,
+          ) => void
+        )(options, actionMeta);
+      } else {
+        (onChange as (newValues: T | null, actionMeta: ActionMeta<T>) => void)(
+          options as T | null,
+          actionMeta,
+        );
+      }
     },
     ...(creatable && {
       createOptionPosition: 'first',
@@ -283,13 +322,13 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   return (
     <div css={containerStyles(noMargin)} onContextMenu={handleOnContextMenu}>
       {suggestions ? (
-        <SelectComponent<T, true>
+        <SelectComponent<T, typeof isMulti>
           {...commonProps}
           options={suggestions}
           maxMenuHeight={maxMenuHeight}
         />
       ) : (
-        <AsyncSelectComponent<T, true>
+        <AsyncSelectComponent<T, typeof isMulti>
           {...commonProps}
           loadOptions={loadOptions}
           cacheOptions
@@ -301,7 +340,13 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
         tabIndex={-1}
         autoComplete="off"
         onChange={noop}
-        value={values.map((value) => value.label).join('')}
+        value={
+          Array.isArray(values)
+            ? values.map((value) => value.label).join(',')
+            : values && 'label' in values
+              ? values?.label || ''
+              : undefined
+        }
         required={required}
         disabled={!enabled}
         hidden

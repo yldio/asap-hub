@@ -1,4 +1,5 @@
 import { JSONSchemaType } from 'ajv';
+import { AuthorAlgoliaResponse } from './authors';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -78,6 +79,8 @@ export type ManuscriptVersion = {
   preprintDoi?: string;
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;
+  submitterName?: string;
+  submissionDate?: Date;
   otherDetails?: string;
   manuscriptFile: ManuscriptFile;
   keyResourceTable?: ManuscriptFile;
@@ -277,6 +280,20 @@ export type ManuscriptDataObject = {
 
 export type ManuscriptResponse = ManuscriptDataObject;
 
+export type ManuscriptPostInternalAuthor = {
+  userId: string;
+};
+
+export type ManuscriptPostExternalAuthor = {
+  externalAuthorId?: string;
+  externalAuthorName: string;
+  externalAuthorEmail: string;
+};
+
+export type ManuscriptPostAuthor =
+  | ManuscriptPostInternalAuthor
+  | ManuscriptPostExternalAuthor;
+
 export type ManuscriptPostRequest = Pick<
   ManuscriptDataObject,
   'title' | 'teamId'
@@ -288,7 +305,10 @@ export type ManuscriptPostRequest = Pick<
     preprintDoi?: ManuscriptVersion['preprintDoi'];
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    submitterName?: ManuscriptVersion['submitterName'];
+    submissionDate?: string;
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
+    description: string;
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable?: ManuscriptVersion['keyResourceTable'];
     additionalFiles?: ManuscriptVersion['additionalFiles'];
@@ -311,6 +331,9 @@ export type ManuscriptPostRequest = Pick<
 
     teams: string[];
     labs?: string[];
+    firstAuthors: ManuscriptPostAuthor[];
+    correspondingAuthor?: ManuscriptPostAuthor;
+    additionalAuthors?: ManuscriptPostAuthor[];
   }[];
 };
 
@@ -318,6 +341,16 @@ type MultiselectOption = {
   label: string;
   value: string;
   isFixed?: boolean;
+};
+
+export type AuthorSelectOption = {
+  author?: AuthorAlgoliaResponse;
+} & MultiselectOption;
+
+export type AuthorEmailField = {
+  id?: string;
+  email: string;
+  name: string;
 };
 
 export type ManuscriptFormData = Pick<
@@ -330,10 +363,13 @@ export type ManuscriptFormData = Pick<
     preprintDoi?: ManuscriptVersion['preprintDoi'];
     publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
     requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
+    submitterName?: ManuscriptVersion['submitterName'];
+    submissionDate?: ManuscriptVersion['submissionDate'];
     otherDetails?: ManuscriptVersion['otherDetails'] | '';
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable: ManuscriptVersion['keyResourceTable'];
     additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
+    description: string;
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
     asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
@@ -353,11 +389,32 @@ export type ManuscriptFormData = Pick<
 
     teams: MultiselectOption[];
     labs: MultiselectOption[];
+    firstAuthors: AuthorSelectOption[];
+    firstAuthorsEmails: AuthorEmailField[];
+    correspondingAuthor: AuthorSelectOption[];
+    correspondingAuthorEmails: AuthorEmailField[];
+    additionalAuthors: AuthorSelectOption[];
+    additionalAuthorsEmails: AuthorEmailField[];
   }[];
 };
 
-export type ManuscriptCreateDataObject = ManuscriptPostRequest & {
+export type ManuscriptCreateControllerDataObject = ManuscriptPostRequest & {
   userId: string;
+};
+
+export type ManuscriptCreateDataObject = Omit<
+  ManuscriptPostRequest,
+  'versions'
+> & {
+  userId: string;
+  versions: (Omit<
+    ManuscriptPostRequest['versions'][number],
+    'firstAuthors' | 'correspondingAuthor' | 'additionalAuthors'
+  > & {
+    firstAuthors: string[];
+    correspondingAuthor: string[];
+    additionalAuthors: string[];
+  })[];
 };
 
 export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> =
@@ -387,7 +444,15 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
               type: 'string',
               nullable: true,
             },
+            submitterName: { type: 'string', nullable: true },
+            submissionDate: {
+              type: 'string',
+              format: 'date-time',
+              nullable: true,
+            },
+
             otherDetails: { type: 'string', nullable: true },
+            description: { type: 'string' },
             manuscriptFile: {
               type: 'object',
               properties: {
@@ -439,6 +504,76 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
 
             teams: { type: 'array', minItems: 1, items: { type: 'string' } },
             labs: { type: 'array', nullable: true, items: { type: 'string' } },
+            firstAuthors: {
+              type: 'array',
+              items: {
+                oneOf: [
+                  {
+                    type: 'object',
+                    properties: {
+                      userId: { type: 'string' },
+                    },
+                    required: ['userId'],
+                  },
+                  {
+                    type: 'object',
+                    properties: {
+                      externalAuthorId: { type: 'string', nullable: true },
+                      externalAuthorName: { type: 'string' },
+                      externalAuthorEmail: { type: 'string' },
+                    },
+                    required: ['externalAuthorName', 'externalAuthorEmail'],
+                  },
+                ],
+              },
+            },
+            correspondingAuthor: {
+              type: 'object',
+              nullable: true,
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    userId: { type: 'string' },
+                  },
+                  required: ['userId'],
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    externalAuthorId: { type: 'string', nullable: true },
+                    externalAuthorName: { type: 'string' },
+                    externalAuthorEmail: { type: 'string' },
+                  },
+                  required: ['externalAuthorName', 'externalAuthorEmail'],
+                },
+              ],
+            },
+            additionalAuthors: {
+              type: 'array',
+              nullable: true,
+
+              items: {
+                oneOf: [
+                  {
+                    type: 'object',
+                    properties: {
+                      userId: { type: 'string' },
+                    },
+                    required: ['userId'],
+                  },
+                  {
+                    type: 'object',
+                    properties: {
+                      externalAuthorId: { type: 'string', nullable: true },
+                      externalAuthorName: { type: 'string' },
+                      externalAuthorEmail: { type: 'string' },
+                    },
+                    required: ['externalAuthorName', 'externalAuthorEmail'],
+                  },
+                ],
+              },
+            },
           },
           required: ['type', 'lifecycle'],
           additionalProperties: false,

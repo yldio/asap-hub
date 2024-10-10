@@ -124,7 +124,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: ${{ steps.setup.outputs.crn-contentful-env-id }}
       - name: Contentful Webhook Teardown
-        if: ${{ steps.setup.outputs.crn-on-branch-env == 'true' }}
+        if: ${{ steps.setup.outputs.crn-contentful-on-branch-env == 'true' }}
         id: contentful-webhook-teardown
         shell: bash
         run: yarn workspace @asap-hub/contentful space:remove-webhook
@@ -213,15 +213,21 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-      - name: Delete the index
-        if: ${{ steps.setup.outputs.crn-on-branch-env == 'true'}}
+      - name: Delete the entity index
+        if: ${{ steps.setup.outputs.crn-contentful-on-branch-env == 'true' && steps.setup.outputs.crn-algolia-index != 'asap-hub_dev' && steps.setup.outputs.crn-algolia-index != 'asap-hub_prod' }}
         run: |
           yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
-          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+      - name: Delete the analytics index
+        if: ${{ steps.setup.outputs.crn-analytics-algolia-on-branch-env == 'true' && steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_dev' && steps.setup.outputs.crn-analytics-algolia-index != 'crn-analytics_prod' }}
+        run: |
+          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_ANALYTICS_INDEX
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ANALYTICS_INDEX: ${{ steps.setup.outputs.crn-analytics-algolia-index }}
 
   gp2-algolia-index:

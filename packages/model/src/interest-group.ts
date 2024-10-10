@@ -74,4 +74,5 @@ export type InterestGroupMembership = {
   id: string;
   name: string;
   active: boolean;
+  role?: string;
 };

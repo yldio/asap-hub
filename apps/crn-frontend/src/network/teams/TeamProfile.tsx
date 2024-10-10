@@ -69,7 +69,6 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
-
   const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
 

@@ -25,7 +25,6 @@ import { parseUserDisplayName } from '@asap-hub/server-common';
 import { ManuscriptDataProvider } from '../types';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
-// type ComplianceReport = NonNullable<NonNullable<NonNullable<NonNullable<NonNullable<NonNullable<ManuscriptItem['versionsCollection']>['items']>[number]>['linkedFrom']>['complianceReportsCollection']>['items'][number]>;
 type ComplianceReport = NonNullable<
   NonNullable<
     NonNullable<

@@ -201,7 +201,7 @@ describe('/manuscripts/ route', () => {
       test('Should return 400 when more than a single version is sent', async () => {
         const createManuscriptRequest = getManuscriptCreateDataObject();
         createManuscriptRequest.versions.push({
-          lifecycle: 'Preprint, version 2',
+          lifecycle: 'Preprint',
           type: 'Original Research',
           manuscriptFile: {
             url: 'http://example.com/file.pdf',

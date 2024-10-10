@@ -213,7 +213,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       title: 'Manuscript 1',
       versions: [
         {
-          lifecycle: 'Preprint, version 1',
+          lifecycle: 'Preprint',
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
@@ -243,7 +243,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       title: 'Manuscript 2',
       versions: [
         {
-          lifecycle: 'Preprint, version 1',
+          lifecycle: 'Preprint',
           type: 'Original Research',
           createdBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',

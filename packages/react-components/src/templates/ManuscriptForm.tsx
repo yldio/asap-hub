@@ -75,12 +75,6 @@ const buttonsInnerContainerStyles = css({
   },
 });
 
-const preprintLifecycles = [
-  'Preprint, version 1',
-  'Preprint, version 2',
-  'Preprint, version 3+',
-];
-
 const apcCoverageLifecycles = [
   'Typeset proof',
   'Publication',
@@ -623,7 +617,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       message: 'Your preprint DOI must start with 10.',
                     },
                     required:
-                      preprintLifecycles.includes(watchLifecycle) &&
+                      watchLifecycle === 'Preprint' &&
                       'Please enter a Preprint DOI',
                   }}
                   render={({
@@ -633,7 +627,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     <LabeledTextField
                       title="Preprint DOI"
                       subtitle={
-                        preprintLifecycles.includes(watchLifecycle)
+                        watchLifecycle === 'Preprint'
                           ? '(required)'
                           : '(optional)'
                       }

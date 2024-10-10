@@ -371,6 +371,64 @@ enum CalendarsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports)"""
+type ComplianceReports implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  linkedFrom(allowedLocales: [String]): ComplianceReportsLinkingCollections
+  manuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
+  sys: Sys!
+  url(locale: String): String
+}
+
+type ComplianceReportsCollection {
+  items: [ComplianceReports]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ComplianceReportsFilter {
+  AND: [ComplianceReportsFilter]
+  OR: [ComplianceReportsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  manuscriptVersion: cfManuscriptVersionsNestedFilter
+  manuscriptVersion_exists: Boolean
+  sys: SysFilter
+  url: String
+  url_contains: String
+  url_exists: Boolean
+  url_in: [String]
+  url_not: String
+  url_not_contains: String
+  url_not_in: [String]
+}
+
+type ComplianceReportsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ComplianceReportsOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
+}
+
 type ContentfulMetadata {
   tags: [ContentfulTag]!
 }
@@ -2945,8 +3003,22 @@ enum ManuscriptVersionsLabsCollectionOrder {
 }
 
 type ManuscriptVersionsLinkingCollections {
+  complianceReportsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder], preview: Boolean, skip: Int = 0): ComplianceReportsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptsCollection
+}
+
+enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
 }
 
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
@@ -3609,6 +3681,8 @@ type Query {
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
+  complianceReports(id: String!, locale: String, preview: Boolean): ComplianceReports
+  complianceReportsCollection(limit: Int = 100, locale: String, order: [ComplianceReportsOrder], preview: Boolean, skip: Int = 0, where: ComplianceReportsFilter): ComplianceReportsCollection
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   discover(id: String!, locale: String, preview: Boolean): Discover

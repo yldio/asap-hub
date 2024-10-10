@@ -4,6 +4,8 @@ import {
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import {
+  ComplianceReportPostRequest,
+  ComplianceReportResponse,
   ListLabsResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
@@ -234,4 +236,28 @@ export const uploadManuscriptFile = async (
   }
 
   return resp.json();
+};
+
+export const createComplianceReport = async (
+  complianceReport: ComplianceReportPostRequest,
+  authorization: string,
+): Promise<ComplianceReportResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/compliance-reports`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(complianceReport),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create compliance report. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
 };

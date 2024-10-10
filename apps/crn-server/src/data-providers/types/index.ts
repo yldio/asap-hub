@@ -1,5 +1,6 @@
 export * from './analytics.data-provider.types';
 export * from './assets.data-provider.types';
+export * from './compliance-report.data-provider.types';
 export * from './dashboard.data-provider.types';
 export * from './discover.data-provider.types';
 export * from './guide.data-provider.types';

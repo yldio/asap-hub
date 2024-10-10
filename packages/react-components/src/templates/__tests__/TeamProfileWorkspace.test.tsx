@@ -20,6 +20,7 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
   setEligibilityReasons: jest.fn(),
   tools: [],
+  canShareComplianceReport: false,
 };
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
@@ -99,6 +100,7 @@ describe('compliance section', () => {
           title: 'Nice manuscript',
           versions: [
             {
+              id: 'version-1',
               type: 'Original Research',
               lifecycle: 'Draft manuscript (prior to preprint submission)',
               manuscriptFile: {
@@ -138,6 +140,7 @@ describe('compliance section', () => {
           title: 'A Good Manuscript',
           versions: [
             {
+              id: 'version-1',
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint, version 1',
               manuscriptFile: {

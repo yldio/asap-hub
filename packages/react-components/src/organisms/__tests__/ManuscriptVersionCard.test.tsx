@@ -277,3 +277,25 @@ it('renders additional files details and download link when provided', () => {
     'https://example.com/additional-file.pdf',
   );
 });
+
+it('displays compliance report section when present', () => {
+  const { getByRole, queryByRole, rerender } = render(
+    <ManuscriptVersionCard {...props} />,
+  );
+  userEvent.click(getByRole('button'));
+  expect(
+    queryByRole('heading', { name: /Compliance Report/i }),
+  ).not.toBeInTheDocument();
+
+  rerender(
+    <ManuscriptVersionCard
+      {...props}
+      complianceReport={{
+        url: 'http://example.com',
+        description: 'compliance report description',
+      }}
+    />,
+  );
+
+  expect(getByRole('heading', { name: /Compliance Report/i })).toBeVisible();
+});

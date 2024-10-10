@@ -22,6 +22,7 @@ import { UserCommentHeader } from '../molecules';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
+import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = ManuscriptVersion;
 
@@ -124,6 +125,9 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = (
 
   return (
     <div>
+      {version.complianceReport && (
+        <ComplianceReportCard {...version.complianceReport} />
+      )}
       <div css={toastStyles}>
         <span css={toastHeaderStyles}>
           <span css={[iconStyles]}>

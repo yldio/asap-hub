@@ -99,6 +99,14 @@ export const manuscriptContentQueryFragment = gql`
             }
           }
         }
+        linkedFrom {
+          complianceReportsCollection(limit: 1) {
+            items {
+              url
+              description
+            }
+          }
+        }
       }
     }
   }

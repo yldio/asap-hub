@@ -191,6 +191,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     teams: _,
     publishedAt: __,
     createdDate: ___,
+    id: ____,
     ...version
   } = versions[0]!;
 

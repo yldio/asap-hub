@@ -2,7 +2,7 @@
 
 const complianceReportIcon = (
   <svg width={24} height={24} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <title>Submit Compliance Report Icon</title>
+    <title>Share Compliance Report Icon</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

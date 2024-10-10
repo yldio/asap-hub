@@ -80,6 +80,8 @@ export type TeamCreateDataObject = {
   projectSummary?: string;
   projectTitle: string;
   tools?: TeamTool[];
+  teamId: string;
+  grantId: string;
 };
 
 export type TeamResponse = TeamDataObject;

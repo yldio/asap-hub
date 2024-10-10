@@ -10,6 +10,8 @@ export const getTeamFixture = (
     displayName: chance.animal(),
     applicationNumber: chance.guid(),
     projectTitle: 'Project title',
+    teamId: 'team-id',
+    grantId: 'grant-id',
     ...props,
   };
 };

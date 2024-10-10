@@ -491,7 +491,7 @@ describe('Duplicate Output', () => {
 });
 
 describe('Create Compliance Report', () => {
-  it('allows a user who is an ASAP staff to view Submit Compliance Report button', async () => {
+  it('allows a user who is an ASAP staff to view Share Compliance Report button', async () => {
     enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
@@ -521,7 +521,7 @@ describe('Create Compliance Report', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: /Submit Compliance Report Icon/ }),
+      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
     ).toBeInTheDocument();
   });
 
@@ -555,10 +555,9 @@ describe('Create Compliance Report', () => {
     );
 
     userEvent.click(
-      screen.getByRole('button', { name: /Submit Compliance Report Icon/ }),
+      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
     );
 
-    // expect(await screen.findByText(/Output 1/i)).toBeVisible();
     expect(
       await screen.findByText(
         /Share the compliance report associated with this manuscript./,

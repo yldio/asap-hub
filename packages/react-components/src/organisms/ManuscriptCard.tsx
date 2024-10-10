@@ -1,5 +1,4 @@
 import { TeamManuscript } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -17,6 +16,7 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'> & {
   teamId: string;
+  canShareComplianceReport: boolean;
 };
 
 const manuscriptContainerStyles = css({
@@ -64,6 +64,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   title,
   versions,
   teamId,
+  canShareComplianceReport = false,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const history = useHistory();
@@ -78,7 +79,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     history.push(complianceReportRoute);
   };
 
-  const { role } = useCurrentUserCRN() ?? {};
   const hasActiveComplianceReport = !!versions[0]?.complianceReport;
 
   return (
@@ -97,7 +97,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           </span>
           <Subtitle noMargin>{title}</Subtitle>
         </span>
-        {role === 'Staff' && (
+        {canShareComplianceReport && (
           <span>
             <Button
               primary

@@ -248,7 +248,7 @@ it('shows the sorry not found page when the working group does not exist', async
   });
   expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
-it.only('can submit a form when form data is valid', async () => {
+it('can submit a form when form data is valid', async () => {
   const workingGroupId = 'wg1';
   const link = 'https://example42.com';
   const title = 'example42 title';

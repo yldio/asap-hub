@@ -9,4 +9,13 @@ const outputDir = path.resolve(
 );
 const config: Configuration = configFactory(appOrigin, outputDir);
 
+config.resolve = {
+  ...config.resolve,
+  fallback: {
+    ...config.resolve?.fallback,
+    'react/jsx-runtime': 'react/jsx-runtime.js',
+    'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
+  },
+};
+
 export default config;

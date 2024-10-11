@@ -64,7 +64,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   title,
   versions,
   teamId,
-  canShareComplianceReport = false,
+  canShareComplianceReport,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const history = useHistory();

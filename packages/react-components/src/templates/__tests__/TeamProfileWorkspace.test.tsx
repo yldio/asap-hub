@@ -20,7 +20,6 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
   setEligibilityReasons: jest.fn(),
   tools: [],
-  canShareComplianceReport: false,
 };
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);

@@ -24,7 +24,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
 }) => {
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const manuscript = useManuscriptById(manuscriptId);
-  const { setShowSuccessBanner, setComplianceFormType } = useManuscriptToast();
+  const { setShowSuccessBanner, setFormType } = useManuscriptToast();
 
   const pushFromHere = usePushFromHere();
 
@@ -36,7 +36,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
     const onSuccess = () => {
       const path = network({}).teams({}).team({ teamId }).workspace({}).$;
       setShowSuccessBanner(true);
-      setComplianceFormType('compliance-report');
+      setFormType('compliance-report');
       setRefreshTeamState((value) => value + 1);
       pushFromHere(path);
     };

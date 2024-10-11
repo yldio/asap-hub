@@ -10,6 +10,7 @@ import {
   crnReportIcon,
   colors,
   externalLinkIcon,
+  Markdown,
 } from '..';
 import { paddingStyles } from '../card';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -64,7 +65,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
       {expanded && (
         <div>
           <div css={[paddingStyles, toastContentStyles]}>
-            <div>{description}</div>
+            <Markdown value={description}></Markdown>
             <div>
               <Link buttonStyle small primary href={url}>
                 {externalLinkIcon} View Report

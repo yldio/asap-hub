@@ -1,13 +1,11 @@
 import { Toast } from '@asap-hub/react-components';
 import React, { createContext, useState } from 'react';
 
-type ComplianceFormType = 'manuscript' | 'compliance-report' | '';
+type FormType = 'manuscript' | 'compliance-report' | '';
 
 type ManuscriptToastContextData = {
   setShowSuccessBanner: React.Dispatch<React.SetStateAction<boolean>>;
-  setComplianceFormType: React.Dispatch<
-    React.SetStateAction<ComplianceFormType>
-  >;
+  setFormType: React.Dispatch<React.SetStateAction<FormType>>;
 };
 
 export const ManuscriptToastContext = createContext<ManuscriptToastContextData>(
@@ -20,26 +18,24 @@ export const ManuscriptToastProvider = ({
   children: React.ReactNode;
 }) => {
   const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(false);
-  const [complianceFormType, setComplianceFormType] =
-    useState<ComplianceFormType>('');
+  const [formType, setFormType] = useState<FormType>('');
 
-  const complianceFormTypeMapping = {
+  const formTypeMapping = {
     manuscript: 'Manuscript',
     'compliance-report': 'Compliance Report',
   };
 
   return (
     <ManuscriptToastContext.Provider
-      value={{ setShowSuccessBanner, setComplianceFormType }}
+      value={{ setShowSuccessBanner, setFormType }}
     >
       <>
-        {showSuccessBanner && !!complianceFormType && (
+        {showSuccessBanner && !!formType && (
           <Toast
             accent="successLarge"
             onClose={() => setShowSuccessBanner(false)}
           >
-            {complianceFormTypeMapping[complianceFormType]} submitted
-            successfully.
+            {formTypeMapping[formType]} submitted successfully.
           </Toast>
         )}
         {children}

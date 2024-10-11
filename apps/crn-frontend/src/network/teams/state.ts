@@ -212,7 +212,7 @@ export const usePostComplianceReport = () => {
   };
 };
 
-export const useCanCreateComplianceReport = (): boolean => {
+export const useCanShareComplianceReport = (): boolean => {
   const { role } = useCurrentUserCRN() ?? {};
   return role === 'Staff';
 };

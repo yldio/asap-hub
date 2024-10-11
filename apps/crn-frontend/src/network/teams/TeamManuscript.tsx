@@ -30,7 +30,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const team = useTeamById(teamId);
 
   const { eligibilityReasons } = useEligibilityReason();
-  const { setShowSuccessBanner, setComplianceFormType } = useManuscriptToast();
+  const { setShowSuccessBanner, setFormType } = useManuscriptToast();
   const form = useForm();
   const createManuscript = usePostManuscript();
   const handleFileUpload = useUploadManuscriptFile();
@@ -43,7 +43,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({ teamId }) => {
   const onSuccess = () => {
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setShowSuccessBanner(true);
-    setComplianceFormType('manuscript');
+    setFormType('manuscript');
     setRefreshTeamState((value) => value + 1);
     pushFromHere(path);
   };

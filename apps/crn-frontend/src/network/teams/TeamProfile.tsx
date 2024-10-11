@@ -19,7 +19,7 @@ import { useUpcomingAndPastEvents } from '../events';
 import ProfileSwitch from '../ProfileSwitch';
 
 import { ManuscriptToastProvider } from './ManuscriptToastProvider';
-import { useCanCreateComplianceReport, useTeamById } from './state';
+import { useCanShareComplianceReport, useTeamById } from './state';
 import TeamManuscript from './TeamManuscript';
 import { EligibilityReasonProvider } from './EligibilityReasonProvider';
 import TeamComplianceReport from './TeamComplianceReport';
@@ -90,7 +90,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     teamId,
   ]);
 
-  const canCreateComplianceReport = useCanCreateComplianceReport();
+  const canCreateComplianceReport = useCanShareComplianceReport();
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
   });

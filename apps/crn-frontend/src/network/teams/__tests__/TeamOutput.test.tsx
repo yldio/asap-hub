@@ -547,7 +547,6 @@ it('will toast server side errors for unknown errors', async () => {
 
   await publish();
 
-  screen.debug();
   expect(mockCreateResearchOutput).toHaveBeenCalled();
   expect(
     screen.queryByText(

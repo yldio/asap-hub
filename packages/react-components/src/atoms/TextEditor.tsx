@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
@@ -238,7 +237,6 @@ const TextEditor = ({
           />
           <ListPlugin />
           <HistoryPlugin />
-          <AutoFocusPlugin />
         </div>
       </div>
       <div css={validationMessageStyles}>{validationMessage}</div>

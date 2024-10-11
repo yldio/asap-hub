@@ -9,11 +9,8 @@ export const manuscriptTypes = [
 export type ManuscriptType = (typeof manuscriptTypes)[number];
 
 export const manuscriptLifecycles = [
-  'Draft manuscript (prior to preprint submission)',
-  'Revised Draft Manuscript (prior to preprint submission)',
-  'Preprint, version 1',
-  'Preprint, version 2',
-  'Preprint, version 3+',
+  'Draft Manuscript (prior to Publication)',
+  'Preprint',
   'Typeset proof',
   'Publication',
   'Publication with addendum or corrigendum',
@@ -26,16 +23,10 @@ export const manuscriptTypeLifecycles: {
   types: ManuscriptType[];
 }[] = [
   {
-    lifecycle: 'Draft manuscript (prior to preprint submission)',
+    lifecycle: 'Draft Manuscript (prior to Publication)',
     types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
   },
-  {
-    lifecycle: 'Revised Draft Manuscript (prior to preprint submission)',
-    types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
-  },
-  { lifecycle: 'Preprint, version 1', types: ['Original Research'] },
-  { lifecycle: 'Preprint, version 2', types: ['Original Research'] },
-  { lifecycle: 'Preprint, version 3+', types: ['Original Research'] },
+  { lifecycle: 'Preprint', types: ['Original Research'] },
   {
     lifecycle: 'Typeset proof',
     types: ['Original Research', 'Review / Op-Ed / Letter / Hot Topic'],
@@ -130,7 +121,7 @@ export const manuscriptFormFieldsMapping: Record<
   >
 > = {
   'Original Research': {
-    'Draft manuscript (prior to preprint submission)': [
+    'Draft Manuscript (prior to Publication)': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'datasetsDeposited',
@@ -139,38 +130,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'keyResourceTable',
     ],
-    'Revised Draft Manuscript (prior to preprint submission)': [
-      'acknowledgedGrantNumber',
-      'asapAffiliationIncluded',
-      'datasetsDeposited',
-      'codeDeposited',
-      'protocolsDeposited',
-      'labMaterialsRegistered',
-      'keyResourceTable',
-    ],
-    'Preprint, version 1': [
-      'preprintDoi',
-      'acknowledgedGrantNumber',
-      'asapAffiliationIncluded',
-      'manuscriptLicense',
-      'datasetsDeposited',
-      'codeDeposited',
-      'protocolsDeposited',
-      'labMaterialsRegistered',
-      'keyResourceTable',
-    ],
-    'Preprint, version 2': [
-      'preprintDoi',
-      'acknowledgedGrantNumber',
-      'asapAffiliationIncluded',
-      'manuscriptLicense',
-      'datasetsDeposited',
-      'codeDeposited',
-      'protocolsDeposited',
-      'labMaterialsRegistered',
-      'keyResourceTable',
-    ],
-    'Preprint, version 3+': [
+    Preprint: [
       'preprintDoi',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
@@ -231,17 +191,11 @@ export const manuscriptFormFieldsMapping: Record<
     ],
   },
   'Review / Op-Ed / Letter / Hot Topic': {
-    'Draft manuscript (prior to preprint submission)': [
+    'Draft Manuscript (prior to Publication)': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
     ],
-    'Revised Draft Manuscript (prior to preprint submission)': [
-      'acknowledgedGrantNumber',
-      'asapAffiliationIncluded',
-    ],
-    'Preprint, version 1': [],
-    'Preprint, version 2': [],
-    'Preprint, version 3+': [],
+    Preprint: [],
     'Typeset proof': [
       'requestingApcCoverage',
       'acknowledgedGrantNumber',

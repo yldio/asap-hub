@@ -95,7 +95,7 @@ it('data is sent on form submission', async () => {
         {...defaultProps}
         title="manuscript title"
         type="Original Research"
-        lifecycle="Draft manuscript (prior to preprint submission)"
+        lifecycle="Draft Manuscript (prior to Publication)"
         manuscriptFile={{
           id: '123',
           filename: 'test.pdf',
@@ -119,7 +119,7 @@ it('data is sent on form submission', async () => {
       versions: [
         {
           type: 'Original Research',
-          lifecycle: 'Draft manuscript (prior to preprint submission)',
+          lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             id: '123',
             filename: 'test.pdf',
@@ -824,9 +824,7 @@ describe('authors', () => {
 
 describe('preprintDoi', () => {
   it.each([
-    { lifecycle: 'Preprint, version 1', status: 'required' },
-    { lifecycle: 'Preprint, version 2', status: 'required' },
-    { lifecycle: 'Preprint, version 3+', status: 'required' },
+    { lifecycle: 'Preprint', status: 'required' },
     { lifecycle: 'Publication', status: 'optional' },
     {
       lifecycle: 'Publication with addendum or corrigendum',
@@ -954,10 +952,7 @@ it('resets form fields to default values when no longer visible', async () => {
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(
-    lifecycleTextbox,
-    'Draft manuscript (prior to preprint submission)',
-  );
+  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
@@ -1007,7 +1002,7 @@ it('maintains values provided when lifecycle changes but field is still visible'
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication');
+  userEvent.type(lifecycleTextbox, 'Publication with addendum or corrigendum');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 
@@ -1027,7 +1022,7 @@ it('maintains values provided when lifecycle changes but field is still visible'
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
-  userEvent.type(lifecycleTextbox, 'Preprint, version 1');
+  userEvent.type(lifecycleTextbox, 'Preprint');
   userEvent.type(lifecycleTextbox, specialChars.enter);
   lifecycleTextbox.blur();
 

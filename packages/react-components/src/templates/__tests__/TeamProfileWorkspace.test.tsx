@@ -100,7 +100,7 @@ describe('compliance section', () => {
           versions: [
             {
               type: 'Original Research',
-              lifecycle: 'Draft manuscript (prior to preprint submission)',
+              lifecycle: 'Draft Manuscript (prior to Publication)',
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',
                 filename: 'file.pdf',
@@ -139,7 +139,7 @@ describe('compliance section', () => {
           versions: [
             {
               type: 'Review / Op-Ed / Letter / Hot Topic',
-              lifecycle: 'Preprint, version 1',
+              lifecycle: 'Preprint',
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',
                 filename: 'file.pdf',
@@ -180,7 +180,7 @@ describe('compliance section', () => {
 
     expect(container).not.toHaveTextContent('Original Research');
     expect(container).not.toHaveTextContent(
-      'Draft manuscript (prior to preprint submission)',
+      'Draft Manuscript (prior to Publication)',
     );
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
@@ -189,7 +189,7 @@ describe('compliance section', () => {
 
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(
-      'Draft manuscript (prior to preprint submission)',
+      'Draft Manuscript (prior to Publication)',
     );
   });
 

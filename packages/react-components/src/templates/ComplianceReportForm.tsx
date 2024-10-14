@@ -83,7 +83,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
   } = methods;
 
   const onSubmit = async (data: ComplianceReportFormData) => {
@@ -172,7 +172,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 primary
                 noMargin
                 submit
-                enabled={!isSubmitting}
+                enabled={!isSubmitting && isValid}
                 preventDefault={false}
               >
                 Share

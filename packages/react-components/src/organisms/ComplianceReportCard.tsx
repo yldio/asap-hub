@@ -43,6 +43,21 @@ const toastContentStyles = css({
   paddingTop: rem(15),
 });
 
+const externalIconStyle = css({
+  display: 'flex',
+  alignSelf: 'center',
+  gap: rem(8),
+  paddingRight: rem(8),
+  textWrap: 'nowrap',
+});
+
+const buttonStyles = css({
+  width: rem(151),
+  '> a': {
+    height: rem(40),
+  },
+});
+
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   url,
   description,
@@ -66,9 +81,11 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
         <div>
           <div css={[paddingStyles, toastContentStyles]}>
             <Markdown value={description}></Markdown>
-            <div>
-              <Link buttonStyle small primary href={url}>
-                {externalLinkIcon} View Report
+            <div css={buttonStyles}>
+              <Link buttonStyle fullWidth small primary href={url}>
+                <span css={externalIconStyle}>
+                  {externalLinkIcon} View Report
+                </span>
               </Link>
             </div>
           </div>

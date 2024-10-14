@@ -106,7 +106,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               onClick={handleShareComplianceReport}
               enabled={!hasActiveComplianceReport}
             >
-              <span css={{ '> svg': { stroke: 'none' } }}>
+              <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
                 {complianceReportIcon}
               </span>
             </Button>

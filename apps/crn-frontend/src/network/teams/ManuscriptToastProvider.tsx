@@ -4,7 +4,6 @@ import React, { createContext, useState } from 'react';
 type FormType = 'manuscript' | 'compliance-report' | '';
 
 type ManuscriptToastContextData = {
-  setShowSuccessBanner: React.Dispatch<React.SetStateAction<boolean>>;
   setFormType: React.Dispatch<React.SetStateAction<FormType>>;
 };
 
@@ -17,7 +16,6 @@ export const ManuscriptToastProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [showSuccessBanner, setShowSuccessBanner] = useState<boolean>(false);
   const [formType, setFormType] = useState<FormType>('');
 
   const formTypeMapping = {
@@ -26,15 +24,10 @@ export const ManuscriptToastProvider = ({
   };
 
   return (
-    <ManuscriptToastContext.Provider
-      value={{ setShowSuccessBanner, setFormType }}
-    >
+    <ManuscriptToastContext.Provider value={{ setFormType }}>
       <>
-        {showSuccessBanner && !!formType && (
-          <Toast
-            accent="successLarge"
-            onClose={() => setShowSuccessBanner(false)}
-          >
+        {!!formType && (
+          <Toast accent="successLarge" onClose={() => setFormType('')}>
             {formTypeMapping[formType]} submitted successfully.
           </Toast>
         )}

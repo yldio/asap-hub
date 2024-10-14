@@ -55,7 +55,7 @@ it('displays share compliance report button if user has permission', () => {
   ).toBeVisible();
 });
 
-it('redirects to manuscript form when user clicks on share compliance report button', () => {
+it('redirects to compliance report form when user clicks on share compliance report button', () => {
   const history = createMemoryHistory({});
   const { getByRole } = render(
     <Router history={history}>

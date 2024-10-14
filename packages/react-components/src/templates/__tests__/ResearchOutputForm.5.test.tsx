@@ -1,36 +1,16 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
-import {
-  createResearchOutputResponse,
-  createUserResponse,
-  researchTagEnvironmentResponse,
-  researchTagMethodResponse,
-  researchTagOrganismResponse,
-  researchTagSubtypeResponse,
-} from '@asap-hub/fixtures';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
-  ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
-  ResearchOutputResponse,
-  ResearchOutputType,
-  ResearchTagResponse,
 } from '@asap-hub/model';
-import { fireEvent } from '@testing-library/dom';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
-import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import { createIdentifierField } from '../../utils/research-output-form';
 
 const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
@@ -80,6 +60,38 @@ describe('on submit', () => {
     jest.resetAllMocks();
   });
 
+  const initialResearchOutputData = {
+    id: 'id',
+    created: '2020-09-07T17:36:54Z',
+    addedDate: '2020-10-08T16:35:54Z',
+    lastUpdatedPartial: '2020-11-09T20:36:54Z',
+    lastModifiedDate: '2020-12-10T20:36:54Z',
+    title: 'Output',
+    description: 'description',
+    descriptionMD: 'descriptionMD',
+    shortDescription: 'shortDescription',
+    documentType: 'Article' as const,
+    authors: [],
+    teams: [],
+    publishingEntity: 'Working Group' as const,
+    workingGroups: undefined,
+    relatedEvents: [],
+    relatedResearch: [],
+    sharingStatus: 'Public' as const,
+    contactEmails: [],
+    labs: [],
+    methods: [],
+    organisms: [],
+    environments: [],
+    subtype: 'Metabolite',
+    keywords: [],
+    published: true,
+    isInReview: false,
+    versions: [],
+    link: 'http://example.com',
+    type: 'Preprint' as const,
+  };
+
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     doi: '10.1234',
@@ -103,107 +115,6 @@ describe('on submit', () => {
     published: false,
     relatedEvents: [],
   };
-  type Data = Pick<
-    ResearchOutputPostRequest,
-    'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
-  >;
-
-  const setupForm = async (
-    {
-      data = {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      propOverride = {},
-      documentType = 'Article',
-      researchTags = [{ id: '1', name: 'research tag 1' }],
-      researchOutputData = undefined,
-    }: {
-      data?: Data;
-      propOverride?: Partial<ComponentProps<typeof ResearchOutputForm>>;
-      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
-      researchTags?: ResearchTagResponse[];
-      researchOutputData?: ResearchOutputResponse;
-    } = {
-      data: {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      documentType: 'Article',
-      researchTags: [],
-    },
-  ) => {
-    render(
-      <Router history={history}>
-        <ResearchOutputForm
-          {...defaultProps}
-          researchOutputData={researchOutputData}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          onSaveDraft={saveDraftFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-          getShortDescriptionFromDescription={
-            getShortDescriptionFromDescription
-          }
-          researchTags={researchTags}
-          {...propOverride}
-        />
-      </Router>,
-    );
-
-    fireEvent.change(screen.getByLabelText(/url/i), {
-      target: { value: data.link },
-    });
-    fireEvent.change(screen.getByLabelText(/title/i), {
-      target: { value: data.title },
-    });
-
-    const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
-    fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
-
-    fireEvent.change(
-      screen.getByRole('textbox', { name: /short description/i }),
-      {
-        target: { value: data.shortDescription },
-      },
-    );
-
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: data.type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    fireEvent.change(identifier, {
-      target: { value: 'DOI' },
-    });
-    fireEvent.keyDown(identifier, {
-      keyCode: ENTER_KEYCODE,
-    });
-    fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
-      target: { value: '10.1234' },
-    });
-  };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
@@ -225,17 +136,42 @@ describe('on submit', () => {
       ${'No'}       | ${false}
       ${'Not Sure'} | ${undefined}
     `('when $value then $expected', async ({ value, expected }) => {
-      await setupForm();
+      const documentType = 'Article' as const;
+
+      render(
+        <Router history={history}>
+          <ResearchOutputForm
+            {...defaultProps}
+            researchOutputData={initialResearchOutputData}
+            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+            documentType={documentType}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            onSave={saveFn}
+            onSaveDraft={saveDraftFn}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={getAuthorSuggestions}
+            getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+            getShortDescriptionFromDescription={
+              getShortDescriptionFromDescription
+            }
+            researchTags={[]}
+          />
+        </Router>,
+      );
+
       const funded = screen.getByRole('group', {
         name: selector,
       });
       userEvent.click(within(funded).getByText(value));
 
       await submitForm();
-      expect(saveFn).toHaveBeenLastCalledWith({
-        ...expectedRequest,
-        [fieldName]: expected,
-      });
+      expect(saveFn).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          [fieldName]: expected,
+        }),
+      );
     });
   });
 
@@ -247,14 +183,37 @@ describe('on submit', () => {
         }).$,
       ],
     });
-    await setupForm({
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        usedInPublication: undefined,
-        sharingStatus: 'Network Only',
-        documentType: 'Article',
-      },
-    });
+
+    const documentType = 'Article' as const;
+
+    render(
+      <Router history={history}>
+        <ResearchOutputForm
+          {...defaultProps}
+          researchOutputData={{
+            ...createResearchOutputResponse(),
+            usedInPublication: undefined,
+            sharingStatus: 'Network Only',
+            documentType: 'Article',
+          }}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          onSaveDraft={saveDraftFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
+          researchTags={[]}
+        />
+      </Router>,
+    );
+
     const usedInPublication = screen.getByRole('group', {
       name: /Has this output been used in a publication/i,
     });

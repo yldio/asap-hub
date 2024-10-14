@@ -138,10 +138,9 @@ type TextFieldProps = {
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
-  readonly onBlur?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'max'
+  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'max' | 'onBlur'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',
@@ -163,7 +162,7 @@ const TextField: React.FC<TextFieldProps> = ({
 
   value,
   onChange = noop,
-  onBlur = noop,
+  onBlur,
 
   ...props
 }) => {
@@ -188,7 +187,6 @@ const TextField: React.FC<TextFieldProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        onBlur={({ currentTarget: { value: newValue } }) => onBlur(newValue)}
         css={({ colors }) => [
           styles,
           textFieldStyles(colors),
@@ -208,6 +206,7 @@ const TextField: React.FC<TextFieldProps> = ({
             ':focus': { borderColor: colors.primary500.rgba },
           },
         ]}
+        {...(onBlur ? { onBlur } : {})}
       />
 
       {labelIndicator && (

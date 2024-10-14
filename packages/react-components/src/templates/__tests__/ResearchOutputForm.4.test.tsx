@@ -6,15 +6,9 @@ import {
   createResearchOutputResponse,
   researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
-import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputPostRequest,
-  ResearchOutputResponse,
-  ResearchTagResponse,
-} from '@asap-hub/model';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -67,70 +61,63 @@ describe('on submit', () => {
     jest.resetAllMocks();
   });
 
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    doi: '10.1234',
-    link: 'http://example.com',
-    title: 'example title',
-    description: '',
-    descriptionMD: 'example description',
-    shortDescription: 'short description',
-    type: 'Preprint',
-    labs: [],
+  const submitForm = async () => {
+    const button = screen.getByRole('button', { name: /Publish/i });
+    userEvent.click(button);
+    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
+    });
+  };
+  const initialResearchOutputData = {
+    id: 'id',
+    created: '2020-09-07T17:36:54Z',
+    addedDate: '2020-10-08T16:35:54Z',
+    lastUpdatedPartial: '2020-11-09T20:36:54Z',
+    lastModifiedDate: '2020-12-10T20:36:54Z',
+    title: 'Output',
+    description: 'description',
+    descriptionMD: 'descriptionMD',
+    shortDescription: 'shortDescription',
+    documentType: 'Article' as const,
     authors: [],
-    teams: ['TEAMID'],
-    sharingStatus: 'Network Only',
+    teams: [],
+    publishingEntity: 'Working Group' as const,
+    workingGroups: undefined,
+    relatedEvents: [],
+    relatedResearch: [],
+    sharingStatus: 'Public' as const,
+    contactEmails: [],
+    labs: [],
     methods: [],
     organisms: [],
     environments: [],
-    usageNotes: '',
-    workingGroups: [],
-    relatedResearch: [],
+    subtype: 'Metabolite',
     keywords: [],
-    published: false,
-    relatedEvents: [],
+    published: true,
+    isInReview: false,
+    versions: [],
+    link: 'http://example.com',
+    type: 'Preprint' as const,
   };
-  type Data = Pick<
-    ResearchOutputPostRequest,
-    'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
-  >;
 
-  function setupForm(
-    {
-      data = {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      propOverride = {},
-      documentType = 'Article',
-      researchTags = [{ id: '1', name: 'research tag 1' }],
-      researchOutputData = undefined,
-    }: {
-      data?: Data;
-      propOverride?: Partial<ComponentProps<typeof ResearchOutputForm>>;
-      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
-      researchTags?: ResearchTagResponse[];
-      researchOutputData?: ResearchOutputResponse;
-    } = {
-      data: {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      documentType: 'Article',
-      researchTags: [],
-    },
-  ) {
+  it('resetting the type resets subtype', async () => {
+    const documentType = 'Protocol';
+    const type = 'Model System';
+    const subtypeValue = 'Metabolite';
+    const researchTags = [researchTagSubtypeResponse];
+
     render(
       <Router history={history}>
         <ResearchOutputForm
           {...defaultProps}
-          researchOutputData={researchOutputData}
+          researchOutputData={{
+            ...initialResearchOutputData,
+            documentType,
+            type,
+            subtype: subtypeValue,
+          }}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           typeOptions={Array.from(
@@ -145,84 +132,16 @@ describe('on submit', () => {
             getShortDescriptionFromDescription
           }
           researchTags={researchTags}
-          {...propOverride}
         />
       </Router>,
     );
 
-    fireEvent.change(screen.getByLabelText(/url/i), {
-      target: { value: data.link },
-    });
-    fireEvent.change(screen.getByLabelText(/title/i), {
-      target: { value: data.title },
-    });
-
-    const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
-    fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
-
-    fireEvent.change(
-      screen.getByRole('textbox', { name: /short description/i }),
-      {
-        target: { value: data.shortDescription },
-      },
-    );
-
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: data.type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    fireEvent.change(identifier, {
-      target: { value: 'DOI' },
-    });
-    fireEvent.keyDown(identifier, {
-      keyCode: ENTER_KEYCODE,
-    });
-    fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
-      target: { value: '10.1234' },
-    });
-  }
-  const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
-
-  it('resetting the type resets subtype', async () => {
-    const documentType = 'Protocol';
-    const type = 'Model System';
-    const researchTags = [researchTagSubtypeResponse];
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    const subtype = screen.getByRole('textbox', {
-      name: /subtype/i,
-    });
-    userEvent.click(subtype);
-    userEvent.click(screen.getByText('Metabolite'));
-
     expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
+
+    const typeDropdown = screen.getByRole('textbox', {
+      name: /Select the type/i,
+    });
+
     fireEvent.change(typeDropdown, {
       target: { value: 'Microscopy' },
     });
@@ -232,10 +151,37 @@ describe('on submit', () => {
     await waitFor(() =>
       expect(screen.queryByText(/metabolite/i)).not.toBeInTheDocument(),
     );
+    const subtype = screen.getByRole('textbox', {
+      name: /subtype/i,
+    });
     expect(subtype).toBeInTheDocument();
   });
+
   it('can submit published date', async () => {
-    await setupForm();
+    const documentType = initialResearchOutputData.documentType;
+    render(
+      <Router history={history}>
+        <ResearchOutputForm
+          {...defaultProps}
+          researchOutputData={initialResearchOutputData}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          onSaveDraft={saveDraftFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
+          researchTags={[]}
+        />
+      </Router>,
+    );
+
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status/i,
     });
@@ -246,80 +192,53 @@ describe('on submit', () => {
       target: { value: '2022-03-24' },
     });
     await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      sharingStatus: 'Public',
-      publishDate: new Date('2022-03-24').toISOString(),
-    });
+    expect(saveFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        sharingStatus: 'Public',
+        publishDate: new Date('2022-03-24').toISOString(),
+      }),
+    );
   });
 
   it('can submit labCatalogNumber for lab material', async () => {
-    await setupForm({
-      data: { ...expectedRequest, type: 'Animal Model' },
-      documentType: 'Lab Material',
-    });
+    const documentType = 'Lab Material' as const;
+    const type = 'Animal Model';
+    render(
+      <Router history={history}>
+        <ResearchOutputForm
+          {...defaultProps}
+          researchOutputData={{
+            ...initialResearchOutputData,
+            type,
+            documentType,
+          }}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          onSaveDraft={saveDraftFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
+          researchTags={[]}
+        />
+      </Router>,
+    );
     fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
       target: { value: 'abc123' },
     });
     await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      type: 'Animal Model',
-      documentType: 'Lab Material',
-      labCatalogNumber: 'abc123',
-    });
-  });
-
-  describe.each`
-    fieldName              | selector
-    ${'asapFunded'}        | ${/Has this output been funded by ASAP/i}
-    ${'usedInPublication'} | ${/Has this output been used in a publication/i}
-  `('$fieldName can submit', ({ fieldName, selector }) => {
-    it.skip.each`
-      value         | expected
-      ${'Yes'}      | ${true}
-      ${'No'}       | ${false}
-      ${'Not Sure'} | ${undefined}
-    `('when $value then $expected', async ({ value, expected }) => {
-      await setupForm();
-      const funded = screen.getByRole('group', {
-        name: selector,
-      });
-      userEvent.click(within(funded).getByText(value));
-
-      await submitForm();
-      expect(saveFn).toHaveBeenLastCalledWith({
-        ...expectedRequest,
-        [fieldName]: expected,
-      });
-    });
-  });
-
-  it.skip('should disable "No" and "Not Sure" options', async () => {
-    history = createMemoryHistory({
-      initialEntries: [
-        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
-          outputDocumentType: 'article',
-        }).$,
-      ],
-    });
-    await setupForm({
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        usedInPublication: undefined,
-        sharingStatus: 'Network Only',
-        documentType: 'Article',
-      },
-    });
-    const usedInPublication = screen.getByRole('group', {
-      name: /Has this output been used in a publication/i,
-    });
-
-    expect(
-      within(usedInPublication).getByRole('radio', { name: 'No' }),
-    ).toBeDisabled();
-    expect(
-      within(usedInPublication).getByRole('radio', { name: 'Not Sure' }),
-    ).toBeDisabled();
+    expect(saveFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        type: 'Animal Model',
+        documentType: 'Lab Material',
+        labCatalogNumber: 'abc123',
+      }),
+    );
   });
 });

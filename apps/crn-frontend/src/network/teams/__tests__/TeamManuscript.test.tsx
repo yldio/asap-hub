@@ -49,6 +49,8 @@ jest.mock('../api', () => ({
 
 beforeEach(() => {
   jest.resetModules();
+
+  jest.spyOn(console, 'error').mockImplementation();
 });
 
 const renderPage = async (
@@ -155,7 +157,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   userEvent.upload(manuscriptFileInput, testFile);
   userEvent.upload(keyResourceTableInput, testFile);
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();

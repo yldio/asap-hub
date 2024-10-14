@@ -162,7 +162,7 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
-it.skip('pre populates the form with markdown value of usageNotes if it is defined', async () => {
+it('pre populates the form with markdown value of usageNotes if it is defined', async () => {
   jest.spyOn(console, 'error').mockImplementation();
 
   const researchOutputData = {
@@ -185,7 +185,7 @@ it.skip('pre populates the form with markdown value of usageNotes if it is defin
   expect(screen.getByText('markdown')).toBeVisible();
 });
 
-it.skip('displays keywords suggestions', async () => {
+it('displays keywords suggestions', async () => {
   await render(
     <StaticRouter>
       <ResearchOutputForm
@@ -202,7 +202,7 @@ it.skip('displays keywords suggestions', async () => {
   expect(screen.getByText('Adrenal')).toBeVisible();
 });
 
-it.skip('displays selected teams', async () => {
+it('displays selected teams', async () => {
   await render(
     <StaticRouter>
       <ResearchOutputForm
@@ -214,7 +214,7 @@ it.skip('displays selected teams', async () => {
   expect(screen.getByText('Team 1')).toBeVisible();
 });
 
-it.skip('displays error message when no author is found', async () => {
+it('displays error message when no author is found', async () => {
   const getAuthorSuggestions = jest.fn().mockResolvedValue([]);
   await render(
     <StaticRouter>
@@ -229,7 +229,7 @@ it.skip('displays error message when no author is found', async () => {
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
-it.skip('displays error message when no lab is found', async () => {
+it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
   await render(
     <StaticRouter>
@@ -243,7 +243,7 @@ it.skip('displays error message when no lab is found', async () => {
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
-it.skip('displays error message when no related research is found', async () => {
+it('displays error message when no related research is found', async () => {
   const getRelatedResearchSuggestions = jest.fn().mockResolvedValue([]);
   await render(
     <StaticRouter>
@@ -257,7 +257,7 @@ it.skip('displays error message when no related research is found', async () => 
   expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
 });
 
-it.skip('displays current team within the form', async () => {
+it('displays current team within the form', async () => {
   render(
     <StaticRouter>
       <ResearchOutputForm
@@ -269,7 +269,7 @@ it.skip('displays current team within the form', async () => {
   expect(screen.getByText('example team')).toBeVisible();
 });
 
-it.skip('can generate short description when description is present', async () => {
+it('can generate short description when description is present', async () => {
   const getShortDescriptionFromDescription = jest
     .fn()
     .mockResolvedValue('An interesting article');
@@ -468,7 +468,7 @@ describe('on submit', () => {
     });
   };
 
-  it.skip('can submit a form with minimum data', async () => {
+  it('can submit a form with minimum data', async () => {
     await setupForm();
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
@@ -477,7 +477,7 @@ describe('on submit', () => {
     );
   });
 
-  it.skip('can update a published form with minimum data', async () => {
+  it('can update a published form with minimum data', async () => {
     await setupForm({ propOverride: { published: true } });
     await saveForm();
     expect(saveFn).toHaveBeenLastCalledWith({
@@ -487,7 +487,7 @@ describe('on submit', () => {
     expect(history.location.pathname).toEqual(`/shared-research/${id}`);
   });
 
-  it.skip('will show you confirmation dialog and allow you to cancel it', async () => {
+  it('will show you confirmation dialog and allow you to cancel it', async () => {
     await setupForm();
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
@@ -499,7 +499,7 @@ describe('on submit', () => {
     expect(saveFn).not.toHaveBeenCalled();
   });
 
-  it.skip('can submit a lab', async () => {
+  it('can submit a lab', async () => {
     getLabSuggestions.mockResolvedValue([
       { label: 'One Lab', value: '1' },
       { label: 'Two Lab', value: '2' },

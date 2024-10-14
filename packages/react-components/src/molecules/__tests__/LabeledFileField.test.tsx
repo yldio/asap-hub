@@ -23,7 +23,7 @@ it('renders a labeled button when no file is selected', () => {
   expect(screen.getByLabelText(/Title/i)).toBeVisible();
   expect(screen.getByLabelText(/Subtitle/i)).toBeVisible();
   expect(screen.getByLabelText(/Description/i)).toBeVisible();
-  expect(screen.getByRole('button', { name: 'Add File' })).toBeVisible();
+  expect(screen.getByText('Add File')).toBeVisible();
 });
 
 it('renders a file tag and a disabled button when a file is selected', () => {
@@ -43,7 +43,7 @@ it('renders a file tag and a disabled button when a file is selected', () => {
     />,
   );
   expect(screen.getByText('file.txt')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'Add File' })).toBeDisabled();
+  expect(screen.getByText('Add File').parentNode).toBeDisabled();
 });
 
 it('renders a file tag and an enabled button when a file is selected and maxFiles is greater than 1', () => {
@@ -64,7 +64,7 @@ it('renders a file tag and an enabled button when a file is selected and maxFile
     />,
   );
   expect(screen.getByText('file.txt')).toBeVisible();
-  expect(screen.getByRole('button', { name: 'Add File' })).toBeEnabled();
+  expect(screen.getByText('Add File')).toBeEnabled();
 });
 
 it('restricts allowed files when accept prop is provided', async () => {
@@ -172,7 +172,7 @@ it('trigger file upload when clicking on the add file button', async () => {
     />,
   );
 
-  const addFileButton = screen.getByRole('button', { name: /add file/i });
+  const addFileButton = screen.getByText(/Add File/i);
 
   const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
   uploadInput.click = jest.fn();

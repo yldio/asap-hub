@@ -193,7 +193,7 @@ describe('on submit', () => {
     });
   };
 
-  it.skip('resetting the type resets organisms', async () => {
+  it('resetting the type resets organisms', async () => {
     const researchTags = [researchTagOrganismResponse];
     const documentType = 'Protocol';
     const type = 'Model System';
@@ -253,7 +253,7 @@ describe('on submit', () => {
     expect(environments).toBeInTheDocument();
   });
 
-  it.skip('resetting the type resets environment', async () => {
+  it('resetting the type resets environment', async () => {
     const documentType = 'Protocol';
     const type = 'Model System';
     const researchTags = [researchTagEnvironmentResponse];

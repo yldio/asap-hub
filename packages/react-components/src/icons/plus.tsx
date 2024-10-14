@@ -7,6 +7,7 @@ const plusIcon = (
     viewBox="0 0 24 24"
     fill="none"
   >
+    <title>plus</title>
     <path
       d="M12 6v12M6 12h12"
       stroke="currentColor"

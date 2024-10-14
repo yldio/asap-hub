@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -61,25 +61,20 @@ it('displays error message when url is missing', async () => {
   );
 
   const input = screen.getByRole('textbox', { name: /url/i });
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-
-  userEvent.click(shareButton);
+  fireEvent.blur(input);
 
   await waitFor(() => {
-    expect(shareButton).toBeEnabled();
+    expect(
+      screen.getAllByText(/Please enter a url/i).length,
+    ).toBeGreaterThanOrEqual(1);
   });
-  expect(
-    screen.getAllByText(/Please enter a url/i).length,
-  ).toBeGreaterThanOrEqual(1);
 
   userEvent.type(input, 'http://example.com');
-
-  userEvent.click(shareButton);
+  fireEvent.blur(input);
 
   await waitFor(() => {
-    expect(shareButton).toBeEnabled();
+    expect(screen.queryByText(/Please enter a url/i)).toBeNull();
   });
-  expect(screen.queryByText(/Please enter a url/i)).toBeNull();
 });
 
 it('displays error message when description is missing', async () => {
@@ -92,25 +87,20 @@ it('displays error message when description is missing', async () => {
   const input = screen.getByRole('textbox', {
     name: /compliance report description/i,
   });
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-
-  userEvent.click(shareButton);
+  fireEvent.blur(input);
 
   await waitFor(() => {
-    expect(shareButton).toBeEnabled();
+    expect(
+      screen.getAllByText(/Please enter a description/i).length,
+    ).toBeGreaterThanOrEqual(1);
   });
-  expect(
-    screen.getAllByText(/Please enter a description/i).length,
-  ).toBeGreaterThanOrEqual(1);
 
   userEvent.type(input, 'manuscription description');
-
-  userEvent.click(shareButton);
+  fireEvent.blur(input);
 
   await waitFor(() => {
-    expect(shareButton).toBeEnabled();
+    expect(screen.queryByText(/Please enter a description/i)).toBeNull();
   });
-  expect(screen.queryByText(/Please enter a description/i)).toBeNull();
 });
 
 it('should go back when cancel button is clicked', () => {

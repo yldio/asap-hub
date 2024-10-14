@@ -68,6 +68,7 @@ type TextAreaProps = {
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
+  readonly onBlur?: (newValue: string) => void;
 
   readonly extras?: React.ReactNode;
 } & Pick<
@@ -85,6 +86,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   value,
   onChange = noop,
+  onBlur = noop,
 
   extras,
 
@@ -111,6 +113,7 @@ const TextArea: React.FC<TextAreaProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
+        onBlur={({ currentTarget: { value: newValue } }) => onBlur(newValue)}
         css={({ colors }) => [
           styles,
           textareaStyles,

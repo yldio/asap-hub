@@ -116,13 +116,14 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 required: 'Please enter a url.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
                 <LabeledTextField
                   title="URL"
                   subtitle={'(required)'}
                   onChange={onChange}
+                  onBlur={onBlur}
                   customValidationMessage={error?.message}
                   value={value || ''}
                   enabled={!isSubmitting}
@@ -139,7 +140,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 required: 'Please enter a description.',
               }}
               render={({
-                field: { value, onChange },
+                field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
                 <LabeledTextArea
@@ -154,6 +155,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   customValidationMessage={error?.message}
                   value={value || ''}
                   onChange={onChange}
+                  onBlur={onBlur}
                   enabled={!isSubmitting}
                 />
               )}

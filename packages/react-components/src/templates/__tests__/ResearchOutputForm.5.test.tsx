@@ -1,36 +1,20 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
-import {
-  createResearchOutputResponse,
-  createUserResponse,
-  researchTagEnvironmentResponse,
-  researchTagMethodResponse,
-  researchTagOrganismResponse,
-  researchTagSubtypeResponse,
-} from '@asap-hub/fixtures';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
-  ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
-import { createIdentifierField } from '../../utils/research-output-form';
 
 const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   onSave: jest.fn(() => Promise.resolve()),
@@ -108,7 +92,7 @@ describe('on submit', () => {
     'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
   >;
 
-  const setupForm = async (
+  function setupForm(
     {
       data = {
         descriptionMD: 'example description',
@@ -138,7 +122,7 @@ describe('on submit', () => {
       documentType: 'Article',
       researchTags: [],
     },
-  ) => {
+  ) {
     render(
       <Router history={history}>
         <ResearchOutputForm
@@ -203,8 +187,9 @@ describe('on submit', () => {
     fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
       target: { value: '10.1234' },
     });
-  };
-  const submitForm = async () => {
+  }
+
+  async function submitForm() {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);
     userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
@@ -212,7 +197,7 @@ describe('on submit', () => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
     });
-  };
+  }
 
   describe.each`
     fieldName              | selector

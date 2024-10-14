@@ -7,12 +7,7 @@ import {
   researchTagEnvironmentResponse,
   researchTagOrganismResponse,
 } from '@asap-hub/fixtures';
-import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputPostRequest,
-  ResearchOutputResponse,
-  ResearchTagResponse,
-} from '@asap-hub/model';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, History } from 'history';
@@ -40,7 +35,7 @@ const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
 
 jest.setTimeout(60000);
 
-describe.skip('on submit', () => {
+describe('on submit', () => {
   let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
@@ -58,56 +53,61 @@ describe.skip('on submit', () => {
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
-
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  type Data = Pick<
-    ResearchOutputPostRequest,
-    'link' | 'title' | 'descriptionMD' | 'shortDescription' | 'type'
-  >;
+  const initialResearchOutputData = {
+    id: 'id',
+    created: '2020-09-07T17:36:54Z',
+    addedDate: '2020-10-08T16:35:54Z',
+    lastUpdatedPartial: '2020-11-09T20:36:54Z',
+    lastModifiedDate: '2020-12-10T20:36:54Z',
+    title: 'Output',
+    description: 'description',
+    descriptionMD: 'descriptionMD',
+    shortDescription: 'shortDescription',
+    documentType: 'Article' as const,
+    authors: [],
+    teams: [],
+    publishingEntity: 'Working Group' as const,
+    workingGroups: undefined,
+    relatedEvents: [],
+    relatedResearch: [],
+    sharingStatus: 'Public' as const,
+    contactEmails: [],
+    labs: [],
+    methods: [],
+    organisms: [],
+    environments: [],
+    subtype: 'Metabolite',
+    keywords: [],
+    published: true,
+    isInReview: false,
+    versions: [],
+    link: 'http://example.com',
+    type: 'Preprint' as const,
+  };
 
-  const setupForm = async (
-    {
-      data = {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      propOverride = {},
-      documentType = 'Article',
-      researchTags = [{ id: '1', name: 'research tag 1' }],
-      researchOutputData = undefined,
-    }: {
-      data?: Data;
-      propOverride?: Partial<ComponentProps<typeof ResearchOutputForm>>;
-      documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
-      researchTags?: ResearchTagResponse[];
-      researchOutputData?: ResearchOutputResponse;
-    } = {
-      data: {
-        descriptionMD: 'example description',
-        shortDescription: 'short description',
-        title: 'example title',
-        type: 'Preprint',
-        link: 'http://example.com',
-      },
-      documentType: 'Article',
-      researchTags: [],
-    },
-  ) => {
+  it('resetting the type resets organisms', async () => {
+    const researchTags = [
+      researchTagOrganismResponse,
+      researchTagEnvironmentResponse,
+    ];
+    const documentType = 'Protocol';
+    const type = 'Model System';
+
     render(
       <Router history={history}>
         <ResearchOutputForm
           {...defaultProps}
-          researchOutputData={researchOutputData}
+          researchOutputData={{
+            ...initialResearchOutputData,
+            documentType,
+            type,
+          }}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           typeOptions={Array.from(
@@ -122,73 +122,12 @@ describe.skip('on submit', () => {
             getShortDescriptionFromDescription
           }
           researchTags={researchTags}
-          {...propOverride}
         />
       </Router>,
     );
 
-    fireEvent.change(screen.getByLabelText(/url/i), {
-      target: { value: data.link },
-    });
-    fireEvent.change(screen.getByLabelText(/title/i), {
-      target: { value: data.title },
-    });
-
-    const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
-    fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
-
-    fireEvent.change(
-      screen.getByRole('textbox', { name: /short description/i }),
-      {
-        target: { value: data.shortDescription },
-      },
-    );
-
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: data.type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
-    fireEvent.change(identifier, {
-      target: { value: 'DOI' },
-    });
-    fireEvent.keyDown(identifier, {
-      keyCode: ENTER_KEYCODE,
-    });
-    fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
-      target: { value: '10.1234' },
-    });
-  };
-
-  it('resetting the type resets organisms', async () => {
-    const researchTags = [researchTagOrganismResponse];
-    const documentType = 'Protocol';
-    const type = 'Model System';
-
-    await setupForm({
-      researchTags,
-      documentType,
-      // researchOutputData: { ...createResearchOutputResponse(), type },
-    });
-
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
     });
 
     const organisms = await screen.findByRole('textbox', {
@@ -198,10 +137,10 @@ describe.skip('on submit', () => {
     userEvent.click(screen.getByText('Rat'));
 
     expect(screen.getByText('Rat')).toBeInTheDocument();
-    await fireEvent.change(typeDropdown, {
+    fireEvent.change(typeDropdown, {
       target: { value: 'Microscopy' },
     });
-    await fireEvent.keyDown(typeDropdown, {
+    fireEvent.keyDown(typeDropdown, {
       keyCode: ENTER_KEYCODE,
     });
 
@@ -209,31 +148,40 @@ describe.skip('on submit', () => {
       expect(screen.queryByText('Rat')).not.toBeInTheDocument(),
     );
     expect(organisms).toBeInTheDocument();
-
-    const environments = await screen.findByRole('textbox', {
-      name: /environments/i,
-    });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
-
-    expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    await waitFor(() =>
-      expect(screen.queryByText(/In Vitro/i)).not.toBeInTheDocument(),
-    );
-    expect(environments).toBeInTheDocument();
   });
 
   it('resetting the type resets environment', async () => {
     const documentType = 'Protocol';
     const type = 'Model System';
     const researchTags = [researchTagEnvironmentResponse];
-    await setupForm({ researchTags, documentType });
+
+    render(
+      <Router history={history}>
+        <ResearchOutputForm
+          {...defaultProps}
+          researchOutputData={{
+            ...initialResearchOutputData,
+            documentType,
+            type,
+          }}
+          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+          documentType={documentType}
+          typeOptions={Array.from(
+            researchOutputDocumentTypeToType[documentType],
+          )}
+          onSave={saveFn}
+          onSaveDraft={saveDraftFn}
+          getLabSuggestions={getLabSuggestions}
+          getAuthorSuggestions={getAuthorSuggestions}
+          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          getShortDescriptionFromDescription={
+            getShortDescriptionFromDescription
+          }
+          researchTags={researchTags}
+        />
+      </Router>,
+    );
+
     const typeDropdown = screen.getByRole('textbox', {
       name: /Select the type/i,
     });

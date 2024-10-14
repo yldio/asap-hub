@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 
 import ToolModal from '../ToolModal';
 
@@ -13,16 +13,20 @@ const props: ComponentProps<typeof ToolModal> = {
   url: 'https://example.com/tool',
 };
 it('renders the title', () => {
-  const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} title="ModalTitle" />
+    </StaticRouter>,
+  );
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
-  const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} title="ModalTitle" />
+    </StaticRouter>,
+  );
 
   [
     { title: 'Add URL', subtitle: 'Required' },
@@ -35,13 +39,14 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
-    <ToolModal
-      {...props}
-      name="LinkName"
-      description="LinkDescription"
-      url="http://example.com"
-    />,
-    { wrapper: StaticRouter },
+    <StaticRouter>
+      <ToolModal
+        {...props}
+        name="LinkName"
+        description="LinkDescription"
+        url="http://example.com"
+      />
+    </StaticRouter>,
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -54,9 +59,12 @@ it('renders default values into inputs', () => {
 });
 
 it('allows url with https protocol', () => {
-  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByLabelText, queryByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} />
+    </StaticRouter>,
+    {},
+  );
   const inputUrl = getByLabelText(/Add URL/i);
 
   expect(inputUrl).toBeValid();
@@ -65,9 +73,12 @@ it('allows url with https protocol', () => {
   ).toBeNull();
 });
 it('allows url with http protocol', () => {
-  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByLabelText, queryByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} />
+    </StaticRouter>,
+    {},
+  );
 
   const inputUrl = getByLabelText(/Add URL/i);
 
@@ -83,9 +94,11 @@ it('allows url with http protocol', () => {
 });
 
 it('does not allow any other uri scheme', () => {
-  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByLabelText, queryByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} />
+    </StaticRouter>,
+  );
   const inputUrl = getByLabelText(/Add URL/i);
   fireEvent.change(inputUrl, {
     target: { value: 'slack://tool' },
@@ -101,14 +114,15 @@ it('does not allow any other uri scheme', () => {
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <ToolModal
-      {...props}
-      name="toolName"
-      url="http://example.com"
-      description="toolDescription"
-      onSave={jestFn}
-    />,
-    { wrapper: MemoryRouter },
+    <StaticRouter>
+      <ToolModal
+        {...props}
+        name="toolName"
+        url="http://example.com"
+        description="toolDescription"
+        onSave={jestFn}
+      />
+    </StaticRouter>,
   );
 
   userEvent.click(getByText(/save/i));
@@ -129,9 +143,11 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(<ToolModal {...props} onSave={handleSave} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <StaticRouter>
+      <ToolModal {...props} onSave={handleSave} />
+    </StaticRouter>,
+  );
 
   userEvent.click(getByText(/save/i));
 

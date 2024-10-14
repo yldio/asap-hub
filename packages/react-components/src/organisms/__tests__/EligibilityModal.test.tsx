@@ -1,9 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import EligibilityModal from '../EligibilityModal';
+
+const renderModal = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('EligibilityModal', () => {
   const defaultProps: ComponentProps<typeof EligibilityModal> = {
@@ -13,9 +16,7 @@ describe('EligibilityModal', () => {
   };
 
   it('renders title, description and asap funded question', () => {
-    const { container } = render(<EligibilityModal {...defaultProps} />, {
-      wrapper: MemoryRouter,
-    });
+    const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
     expect(container).toHaveTextContent('Do you need to submit a manuscript?');
     expect(container).toHaveTextContent(
@@ -27,9 +28,7 @@ describe('EligibilityModal', () => {
   });
 
   it('renders funding reason question when user selects Yes in the asap funded question', () => {
-    const { container } = render(<EligibilityModal {...defaultProps} />, {
-      wrapper: MemoryRouter,
-    });
+    const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
     const fundingReasonQuestionText =
       'Select the option that describes why the submitted manuscript should be considered an ASAP-funded article';
@@ -43,9 +42,7 @@ describe('EligibilityModal', () => {
 
   it('calls onDismiss when user clicks on "Cancel" button', () => {
     const onDismiss = jest.fn();
-    render(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
 
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
@@ -54,9 +51,7 @@ describe('EligibilityModal', () => {
 
   it('calls onDismiss when user clicks on "Close" button', () => {
     const onDismiss = jest.fn();
-    render(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
 
     userEvent.click(screen.getByTitle(/close/i));
 
@@ -65,9 +60,7 @@ describe('EligibilityModal', () => {
 
   describe('Continue button', () => {
     it('becomes enabled when user selects "No" in the asap funded question', () => {
-      render(<EligibilityModal {...defaultProps} />, {
-        wrapper: MemoryRouter,
-      });
+      renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
@@ -76,9 +69,7 @@ describe('EligibilityModal', () => {
     });
 
     it('remains disabled when user selects "Yes" in the asap funded question but have not select a funding reason yet', () => {
-      render(<EligibilityModal {...defaultProps} />, {
-        wrapper: MemoryRouter,
-      });
+      renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
@@ -87,9 +78,7 @@ describe('EligibilityModal', () => {
     });
 
     it('becomes enabled when user selects "Yes" in the asap funded question and selects a funding reason yet', () => {
-      render(<EligibilityModal {...defaultProps} />, {
-        wrapper: MemoryRouter,
-      });
+      renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
@@ -105,9 +94,7 @@ describe('EligibilityModal', () => {
 
   describe('Not ASAP funded flow', () => {
     it('changes title, description and buttons when not asap funded', () => {
-      const { container } = render(<EligibilityModal {...defaultProps} />, {
-        wrapper: MemoryRouter,
-      });
+      const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
       expect(container).not.toHaveTextContent(
         /Manuscript is not part of ASAP Compliance Review/i,
@@ -141,9 +128,7 @@ describe('EligibilityModal', () => {
     });
 
     it('goes back to first message when user clicks go back', () => {
-      const { container } = render(<EligibilityModal {...defaultProps} />, {
-        wrapper: MemoryRouter,
-      });
+      const { container } = renderModal(<EligibilityModal {...defaultProps} />);
       userEvent.click(screen.getByText('No'));
       userEvent.click(screen.getByRole('button', { name: /continue/i }));
       userEvent.click(screen.getByRole('button', { name: /go back/i }));
@@ -158,9 +143,7 @@ describe('EligibilityModal', () => {
 
     it('calls onDismiss when user clicks go to team page', () => {
       const onDismiss = jest.fn();
-      render(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />, {
-        wrapper: MemoryRouter,
-      });
+      renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
       userEvent.click(screen.getByText('No'));
       userEvent.click(screen.getByRole('button', { name: /continue/i }));
       userEvent.click(screen.getByRole('button', { name: /go to team page/i }));
@@ -172,14 +155,11 @@ describe('EligibilityModal', () => {
   describe('ASAP funded flow', () => {
     it('calls onGoToManuscriptForm when user clicks Continue after selecting asap funded and funding reason', () => {
       const onGoToManuscriptForm = jest.fn();
-      render(
+      renderModal(
         <EligibilityModal
           {...defaultProps}
           onGoToManuscriptForm={onGoToManuscriptForm}
         />,
-        {
-          wrapper: MemoryRouter,
-        },
       );
 
       userEvent.click(screen.getByText('Yes'));
@@ -196,14 +176,11 @@ describe('EligibilityModal', () => {
 
     it('calls setEligibilityReasons with funding reasons when user clicks Continue after selecting asap funded and funding reason', () => {
       const setEligibilityReasons = jest.fn();
-      render(
+      renderModal(
         <EligibilityModal
           {...defaultProps}
           setEligibilityReasons={setEligibilityReasons}
         />,
-        {
-          wrapper: MemoryRouter,
-        },
       );
 
       userEvent.click(screen.getByText('Yes'));
@@ -228,14 +205,11 @@ describe('EligibilityModal', () => {
 
     it('removes a funding reason when user clicks on it twice', () => {
       const setEligibilityReasons = jest.fn();
-      render(
+      renderModal(
         <EligibilityModal
           {...defaultProps}
           setEligibilityReasons={setEligibilityReasons}
         />,
-        {
-          wrapper: MemoryRouter,
-        },
       );
 
       userEvent.click(screen.getByText('Yes'));

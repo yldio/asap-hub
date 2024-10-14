@@ -19,9 +19,11 @@ describe('FundingProviderModal', () => {
   const renderFundingProvider = (
     overrides: Partial<FundingProviderModalProps> = {},
   ) =>
-    render(<FundingProviderModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    render(
+      <MemoryRouter>
+        <FundingProviderModal {...defaultProps} {...overrides} />
+      </MemoryRouter>,
+    );
 
   it('renders a dialog with the right title', () => {
     renderFundingProvider();

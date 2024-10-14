@@ -1,7 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import EditUserModal from '../EditUserModal';
+
+const renderModal = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('EditUserModal', () => {
   const defaultProps = {
@@ -11,13 +15,12 @@ describe('EditUserModal', () => {
     dirty: false,
   };
   it('renders a dialog with the given title and description', () => {
-    render(
+    renderModal(
       <EditUserModal
         {...defaultProps}
         title="Modal Title"
         description="Modal Description"
       />,
-      { wrapper: MemoryRouter },
     );
 
     expect(screen.getByRole('dialog')).toContainElement(
@@ -29,13 +32,12 @@ describe('EditUserModal', () => {
   });
 
   it('renders buttonText if provided', () => {
-    const { rerender, getByRole, queryByRole } = render(
+    const { rerender, getByRole, queryByRole } = renderModal(
       <EditUserModal
         {...defaultProps}
         title="Modal Title"
         description="Modal Description"
       />,
-      { wrapper: MemoryRouter },
     );
 
     expect(getByRole('dialog')).toContainElement(
@@ -53,22 +55,19 @@ describe('EditUserModal', () => {
     );
   });
   it('renders a dialog with given children', () => {
-    render(<EditUserModal {...defaultProps}>{() => 'Content'}</EditUserModal>, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <EditUserModal {...defaultProps}>{() => 'Content'}</EditUserModal>,
+    );
     expect(screen.getByRole('dialog')).toContainElement(
       screen.getByText('Content'),
     );
   });
   it('calls the onSave function when the save button is pressed', async () => {
     const handleSave = jest.fn();
-    render(
+    renderModal(
       <EditUserModal {...defaultProps} onSave={handleSave}>
         {() => 'content'}
       </EditUserModal>,
-      {
-        wrapper: MemoryRouter,
-      },
     );
     const saveButton = screen.getByRole('button', { name: 'Save' });
     userEvent.click(saveButton);

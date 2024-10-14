@@ -3,10 +3,7 @@ import { ComponentProps } from 'react';
 import { Router } from 'react-router-dom';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import {
-  researchOutputDocumentTypeToType,
-  ResearchOutputPostRequest,
-} from '@asap-hub/model';
+import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
@@ -92,29 +89,6 @@ describe('on submit', () => {
     type: 'Preprint' as const,
   };
 
-  const expectedRequest: ResearchOutputPostRequest = {
-    documentType: 'Article',
-    doi: '10.1234',
-    link: 'http://example.com',
-    title: 'example title',
-    description: '',
-    descriptionMD: 'example description',
-    shortDescription: 'short description',
-    type: 'Preprint',
-    labs: [],
-    authors: [],
-    teams: ['TEAMID'],
-    sharingStatus: 'Network Only',
-    methods: [],
-    organisms: [],
-    environments: [],
-    usageNotes: '',
-    workingGroups: [],
-    relatedResearch: [],
-    keywords: [],
-    published: false,
-    relatedEvents: [],
-  };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
     userEvent.click(button);

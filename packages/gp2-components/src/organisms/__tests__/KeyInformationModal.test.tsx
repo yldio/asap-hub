@@ -25,9 +25,11 @@ describe('KeyInformationModal', () => {
   const renderKeyInformation = (
     overrides: Partial<KeyInformationModalProps> = {},
   ) =>
-    render(<KeyInformationModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    render(
+      <MemoryRouter>
+        <KeyInformationModal {...defaultProps} {...overrides} />
+      </MemoryRouter>,
+    );
 
   it('renders a dialog with the right title', () => {
     renderKeyInformation();

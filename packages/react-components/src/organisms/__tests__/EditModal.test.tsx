@@ -1,5 +1,5 @@
-import { ComponentProps } from 'react';
-import { Router, MemoryRouter, StaticRouter } from 'react-router-dom';
+import { ComponentProps, ReactNode } from 'react';
+import { Router, MemoryRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -13,18 +13,18 @@ const props: ComponentProps<typeof EditModal> = {
   children: () => null,
 };
 beforeEach(jest.resetAllMocks);
+const renderModal = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 it('renders a dialog with given title', () => {
-  render(<EditModal {...props} title="Title" />, { wrapper: MemoryRouter });
+  renderModal(<EditModal {...props} title="Title" />);
   expect(screen.getByRole('dialog')).toContainElement(
     screen.getByText('Title'),
   );
 });
 
 it('renders a dialog with given children', () => {
-  render(<EditModal {...props}>{() => 'Content'}</EditModal>, {
-    wrapper: MemoryRouter,
-  });
+  renderModal(<EditModal {...props}>{() => 'Content'}</EditModal>);
   expect(screen.getByRole('dialog')).toContainElement(
     screen.getByText('Content'),
   );
@@ -33,7 +33,7 @@ it('renders a dialog with given children', () => {
 it('initially does not prompt when trying to leave', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
   const history = createMemoryHistory({ getUserConfirmation });
-  render(
+  renderModal(
     <Router history={history}>
       <EditModal {...props} />
     </Router>,
@@ -45,7 +45,7 @@ it('initially does not prompt when trying to leave', () => {
 it('prompts when trying to leave after making edits', () => {
   const getUserConfirmation = jest.fn((_message, cb) => cb(true));
   const history = createMemoryHistory({ getUserConfirmation });
-  render(
+  renderModal(
     <Router history={history}>
       <EditModal {...props} dirty />
     </Router>,
@@ -59,11 +59,10 @@ describe('when saving', () => {
   describe('and the form is invalid', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
-      render(
+      renderModal(
         <EditModal {...props} onSave={handleSave} dirty>
           {() => <input type="text" required />}
         </EditModal>,
-        { wrapper: MemoryRouter },
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
@@ -74,7 +73,7 @@ describe('when saving', () => {
     it('does not call onSave when parent validation fails', () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
-      render(
+      renderModal(
         <EditModal
           {...props}
           validate={handleValidate}
@@ -83,7 +82,6 @@ describe('when saving', () => {
         >
           {() => <input type="text" />}
         </EditModal>,
-        { wrapper: StaticRouter },
       );
 
       const saveButton = screen.getByRole('button', { name: 'Save' });
@@ -98,7 +96,7 @@ describe('when saving', () => {
     const renderEditModal = ({ handleSave = jest.fn() } = {}) => {
       const getUserConfirmation = jest.fn((_message, cb) => cb(true));
       const history = createMemoryHistory({ getUserConfirmation });
-      const { rerender } = render(
+      const { rerender } = renderModal(
         <Router history={history}>
           <EditModal {...props} backHref="/back" onSave={handleSave} dirty />
         </Router>,

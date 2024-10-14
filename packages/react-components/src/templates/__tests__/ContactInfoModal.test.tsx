@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -5,18 +6,18 @@ import { UserResponse } from '@asap-hub/model';
 
 import ContactInfoModal from '../ContactInfoModal';
 
+const renderModal = (children: ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
 it('renders a form to edit the contact info', () => {
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
   );
   expect(getByText(/contact/i, { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are optional', () => {
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
   );
 
   [
@@ -37,34 +38,31 @@ it('indicates which fields are optional', () => {
 });
 
 it('shows the fallback email', () => {
-  const { container } = render(
+  const { container } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
-    { wrapper: StaticRouter },
   );
   expect(container.textContent).toContain('fallback@example.com');
 });
 
 it('renders a text field containing the email', () => {
-  const { getByLabelText } = render(
+  const { getByLabelText } = renderModal(
     <ContactInfoModal
       fallbackEmail="fallback@example.com"
       email="contact@example.com"
       backHref="#"
     />,
-    { wrapper: StaticRouter },
   );
   expect(getByLabelText(/email/i)).toHaveValue('contact@example.com');
 });
 
 it('fires onSave when submitting', async () => {
   const handleSave = jest.fn();
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText, getByText } = renderModal(
     <ContactInfoModal
       fallbackEmail="fallback@example.com"
       backHref="#"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -80,13 +78,12 @@ it('fires onSave when submitting', async () => {
 });
 it('does not fire onSave when the email is invalid', async () => {
   const handleSave = jest.fn();
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText, getByText } = renderModal(
     <ContactInfoModal
       fallbackEmail="fallback@example.com"
       backHref="#"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -101,14 +98,13 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <ContactInfoModal
       backHref="#"
       email="contact@example.com"
       fallbackEmail="fallback@example.com"
       onSave={handleSave}
     />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));
@@ -145,14 +141,13 @@ it.each`
     website1: 'website1',
     website2: 'website2',
   };
-  const { getByLabelText } = render(
+  const { getByLabelText } = renderModal(
     <ContactInfoModal
       fallbackEmail="fallback@example.com"
       email="contact@example.com"
       social={social}
       backHref="#"
     />,
-    { wrapper: StaticRouter },
   );
   const input = getByLabelText(new RegExp(label));
   expect(input).toHaveValue(value);
@@ -166,9 +161,8 @@ it.each`
 `(
   'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {
-    const { getByLabelText, findByText } = render(
+    const { getByLabelText, findByText } = renderModal(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
-      { wrapper: StaticRouter },
     );
     const input = getByLabelText(new RegExp(label));
     fireEvent.change(input, {

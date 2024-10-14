@@ -94,12 +94,13 @@ describe.each`
 describe('for an internal link with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <Anchor
-        href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
-      >
-        text
-      </Anchor>,
-      { wrapper: StaticRouter },
+      <StaticRouter>
+        <Anchor
+          href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
+        >
+          text
+        </Anchor>
+      </StaticRouter>,
     );
     const anchor = getByRole('link') as HTMLAnchorElement;
     expect(fireEvent.click(anchor)).toBe(false);
@@ -107,11 +108,10 @@ describe('for an internal link with a router', () => {
 
   it('smoothly scrolls the anchor referenced by the fragment into view', async () => {
     const { getByRole } = render(
-      <>
+      <StaticRouter>
         <Anchor href={`#fragment`}>text</Anchor>
         <main id="fragment">text</main>
-      </>,
-      { wrapper: StaticRouter },
+      </StaticRouter>,
     );
     const main = getByRole('main');
     const spyScrollIntoView = jest.spyOn(main, 'scrollIntoView');

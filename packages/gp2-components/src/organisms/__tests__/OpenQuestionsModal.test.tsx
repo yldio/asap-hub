@@ -16,9 +16,11 @@ describe('OpenQuestionsModal', () => {
   const renderOpenQuestions = (
     overrides: Partial<OpenQuestionsModalProps> = {},
   ) =>
-    render(<OpenQuestionsModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    render(
+      <MemoryRouter>
+        <OpenQuestionsModal {...defaultProps} {...overrides} />
+      </MemoryRouter>,
+    );
 
   beforeEach(jest.resetAllMocks);
 

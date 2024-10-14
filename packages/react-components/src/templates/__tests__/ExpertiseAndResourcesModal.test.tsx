@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -15,19 +15,18 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
   suggestions: [],
   backHref: '/wrong',
 };
+
+const renderModal = (children: React.ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
 it('renders the title', () => {
-  const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(
     getByText('Expertise, Resources and Tags', { selector: 'h3' }),
   ).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
-  const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
 
   [
     { title: 'Tags', subtitle: 'required' },
@@ -38,12 +37,11 @@ it('indicates which fields are required or optional', () => {
 });
 
 it('renders default values into text inputs', () => {
-  const { getByLabelText } = render(
+  const { getByLabelText } = renderModal(
     <ExpertiseAndResourcesModal
       {...props}
       expertiseAndResourceDescription="example description"
     />,
-    { wrapper: StaticRouter },
   );
   expect(getByLabelText(/expertise and resources/i)).toHaveValue(
     'example description',
@@ -52,14 +50,13 @@ it('renders default values into text inputs', () => {
 
 it('triggers the save function', async () => {
   const handleSave = jest.fn();
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText, getByText } = renderModal(
     <ExpertiseAndResourcesModal
       {...props}
       tags={mapTags(['1', '2', '3', '4'])}
       suggestions={mapTags(['1', '2', '3', '4', '5'])}
       onSave={handleSave}
     />,
-    { wrapper: MemoryRouter },
   );
 
   userEvent.type(
@@ -87,15 +84,12 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <ExpertiseAndResourcesModal
       {...props}
       tags={mapTags(['1', '2', '3', '4', '5'])}
       onSave={handleSave}
     />,
-    {
-      wrapper: StaticRouter,
-    },
   );
 
   userEvent.click(getByText(/save/i));
@@ -112,9 +106,8 @@ it('disables the form elements while submitting', async () => {
 
 describe('tags selection', () => {
   it('displays a no options message', async () => {
-    const { getByLabelText, getByText } = render(
+    const { getByLabelText, getByText } = renderModal(
       <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
-      { wrapper: StaticRouter },
     );
 
     userEvent.type(getByLabelText(/tags/i), 'def');
@@ -123,15 +116,12 @@ describe('tags selection', () => {
 
   it('displays an error message when not enough tags have been selected on save', () => {
     const handleSave = jest.fn();
-    const { getByText, getByLabelText } = render(
+    const { getByText, getByLabelText } = renderModal(
       <ExpertiseAndResourcesModal
         {...props}
         tags={mapTags(['1', '2', '3', '4'])}
         onSave={handleSave}
       />,
-      {
-        wrapper: StaticRouter,
-      },
     );
     const input = getByLabelText(/tags/i);
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
@@ -146,16 +136,13 @@ describe('tags selection', () => {
 
   it('removes error message when enough tags are selected', () => {
     const handleSave = jest.fn();
-    const { getByLabelText, getByText, queryByText } = render(
+    const { getByLabelText, getByText, queryByText } = renderModal(
       <ExpertiseAndResourcesModal
         {...props}
         tags={mapTags(['1', '2', '3'])}
         suggestions={mapTags(['1', '2', '3', '4', '5'])}
         onSave={handleSave}
       />,
-      {
-        wrapper: StaticRouter,
-      },
     );
 
     const input = getByLabelText(/tags/i);

@@ -1,9 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import ExportAnalyticsModal from '../ExportAnalyticsModal';
+
+const renderModal = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('ExportAnalyticsModal', () => {
   const defaultProps: ComponentProps<typeof ExportAnalyticsModal> = {
@@ -12,9 +15,9 @@ describe('ExportAnalyticsModal', () => {
   };
 
   it('renders title, data range and metrics to export', () => {
-    const { container } = render(<ExportAnalyticsModal {...defaultProps} />, {
-      wrapper: MemoryRouter,
-    });
+    const { container } = renderModal(
+      <ExportAnalyticsModal {...defaultProps} />,
+    );
 
     expect(container).toHaveTextContent(/Export XLSX/i);
     expect(container).toHaveTextContent(/Select data range/i);
@@ -23,9 +26,9 @@ describe('ExportAnalyticsModal', () => {
 
   it('calls onDismiss when user clicks on "Cancel" button', () => {
     const onDismiss = jest.fn();
-    render(<ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
+    );
 
     userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
@@ -34,9 +37,9 @@ describe('ExportAnalyticsModal', () => {
 
   it('calls onDismiss when user clicks on "Close" button', () => {
     const onDismiss = jest.fn();
-    render(<ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
+    );
 
     userEvent.click(screen.getByTitle(/close/i));
 
@@ -46,15 +49,12 @@ describe('ExportAnalyticsModal', () => {
   it('calls onDismiss after downloading the data', async () => {
     const onDismiss = jest.fn();
     const onDownload = jest.fn();
-    render(
+    renderModal(
       <ExportAnalyticsModal
         {...defaultProps}
         onDownload={onDownload}
         onDismiss={onDismiss}
       />,
-      {
-        wrapper: MemoryRouter,
-      },
     );
 
     userEvent.click(screen.getByText(/Choose a data range/i));
@@ -77,9 +77,7 @@ describe('ExportAnalyticsModal', () => {
   });
 
   it('the export button becomes enabled when user selects time range and at least one metric to export', async () => {
-    render(<ExportAnalyticsModal {...defaultProps} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(<ExportAnalyticsModal {...defaultProps} />);
 
     const exportButton = screen.getByRole('button', { name: /export/i });
     expect(exportButton).toBeDisabled();
@@ -97,9 +95,9 @@ describe('ExportAnalyticsModal', () => {
 
   it('unselects metric option if user clicks on it twice', async () => {
     const onDownload = jest.fn();
-    render(<ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
+    );
     const exportButton = screen.getByRole('button', { name: /export/i });
 
     userEvent.click(screen.getByText(/Choose a data range/i));
@@ -119,9 +117,9 @@ describe('ExportAnalyticsModal', () => {
 
   it('calls onDownload with selected options', async () => {
     const onDownload = jest.fn();
-    render(<ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
+    );
 
     userEvent.click(screen.getByText(/Choose a data range/i));
     userEvent.click(screen.getByText(/This year/i));
@@ -159,9 +157,9 @@ describe('ExportAnalyticsModal', () => {
 
   it('changes the text to "Exporting..." and disables buttons while downloading', async () => {
     const onDownload = jest.fn(() => Promise.resolve());
-    render(<ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />, {
-      wrapper: MemoryRouter,
-    });
+    renderModal(
+      <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
+    );
 
     userEvent.click(screen.getByText(/Choose a data range/i));
     userEvent.click(screen.getByText(/Since Hub Launch/i));

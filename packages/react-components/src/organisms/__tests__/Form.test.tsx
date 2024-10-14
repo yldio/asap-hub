@@ -2,14 +2,8 @@ import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
-import { ComponentProps } from 'react';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Router,
-  StaticRouter,
-} from 'react-router-dom';
+import { ComponentProps, ReactNode } from 'react';
+import { Link, Route, Router, StaticRouter } from 'react-router-dom';
 import { Button } from '../../atoms';
 import Form from '../Form';
 
@@ -27,16 +21,16 @@ beforeEach(() => {
   getUserConfirmation = jest.fn((_message, cb) => cb(true));
   history = createMemoryHistory({ getUserConfirmation });
 });
+const renderForm = (children: ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
 
 it('renders a form with given children', () => {
-  const { getByText } = render(<Form {...props}>{() => 'Content'}</Form>, {
-    wrapper: MemoryRouter,
-  });
+  const { getByText } = renderForm(<Form {...props}>{() => 'Content'}</Form>);
   expect(getByText('Content')).toBeVisible();
 });
 
 it('initially does not prompt when trying to leave', () => {
-  const { getByText } = render(
+  const { getByText } = renderForm(
     <Router history={history}>
       <Form {...props}>
         {() => <Link to={'/another-url'}>Navigate away</Link>}
@@ -48,7 +42,7 @@ it('initially does not prompt when trying to leave', () => {
   expect(getUserConfirmation).not.toHaveBeenCalled();
 });
 it('prompts when trying to leave after making edits', () => {
-  const { getByText } = render(
+  const { getByText } = renderForm(
     <InnerToastContext.Provider value={jest.fn()}>
       <Router history={history}>
         <Form {...props} dirty>
@@ -64,7 +58,7 @@ it('prompts when trying to leave after making edits', () => {
 
 describe('on cancel', () => {
   it('prompts after making edits', () => {
-    const { getByText } = render(
+    const { getByText } = renderForm(
       <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Form {...props} dirty>
@@ -79,14 +73,13 @@ describe('on cancel', () => {
           </Form>
         </Router>
       </InnerToastContext.Provider>,
-      { wrapper: MemoryRouter },
     );
 
     userEvent.click(getByText(/^cancel/i));
     expect(getUserConfirmation).toHaveBeenCalled();
   });
   it('goes to the root route if previous navigation is not available', () => {
-    const { getByText } = render(
+    const { getByText } = renderForm(
       <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Form {...props} dirty>
@@ -101,7 +94,6 @@ describe('on cancel', () => {
           </Form>
         </Router>
       </InnerToastContext.Provider>,
-      { wrapper: MemoryRouter },
     );
 
     userEvent.click(getByText(/^cancel/i));
@@ -109,7 +101,7 @@ describe('on cancel', () => {
   });
 
   it('goes back in browser history if previous navigation is available', () => {
-    const { getByText } = render(
+    const { getByText } = renderForm(
       <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Route path="/form">
@@ -126,7 +118,6 @@ describe('on cancel', () => {
           </Route>
         </Router>
       </InnerToastContext.Provider>,
-      { wrapper: MemoryRouter },
     );
 
     history.push('/another-url');
@@ -141,7 +132,7 @@ describe('when saving', () => {
   describe('and the form is invalid', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
-      const { getByText } = render(
+      const { getByText } = renderForm(
         <InnerToastContext.Provider value={jest.fn()}>
           <Form {...props} dirty>
             {({ getWrappedOnSave }) => (
@@ -154,7 +145,6 @@ describe('when saving', () => {
             )}
           </Form>
         </InnerToastContext.Provider>,
-        { wrapper: MemoryRouter },
       );
 
       userEvent.click(getByText(/^save/i));
@@ -164,7 +154,7 @@ describe('when saving', () => {
     it('does not call onSave when parent validation fails', () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
-      const { getByText } = render(
+      const { getByText } = renderForm(
         <InnerToastContext.Provider value={jest.fn()}>
           <Form {...props} validate={handleValidate} dirty>
             {({ getWrappedOnSave }) => (
@@ -177,7 +167,6 @@ describe('when saving', () => {
             )}
           </Form>
         </InnerToastContext.Provider>,
-        { wrapper: StaticRouter },
       );
 
       userEvent.click(getByText(/^save/i));
@@ -189,7 +178,7 @@ describe('when saving', () => {
     it('can use base toast', async () => {
       const mockToast = jest.fn();
       const handleValidate = jest.fn(() => false);
-      const { getByText } = render(
+      const { getByText } = renderForm(
         <ToastContext.Provider value={mockToast}>
           <Router history={history}>
             <Form
@@ -236,7 +225,7 @@ describe('when saving', () => {
         }),
       );
       history = createMemoryHistory({ getUserConfirmation });
-      result = render(
+      result = renderForm(
         <InnerToastContext.Provider value={innerMockToast}>
           <Router history={history}>
             <Form {...props} dirty>

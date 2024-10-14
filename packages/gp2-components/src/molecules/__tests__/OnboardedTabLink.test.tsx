@@ -5,12 +5,11 @@ import OnboardedTabLink from '../OnboardedTabLink';
 describe('OnboardedTabLink', () => {
   it('should display the link when enabled', () => {
     render(
-      <OnboardedTabLink index={1} href={'/test'}>
-        Link Test
-      </OnboardedTabLink>,
-      {
-        wrapper: StaticRouter,
-      },
+      <StaticRouter>
+        <OnboardedTabLink index={1} href={'/test'}>
+          Link Test
+        </OnboardedTabLink>
+      </StaticRouter>,
     );
     const link = screen.getByRole('link', { name: /link test/i });
     expect(link).toBeVisible();
@@ -19,10 +18,11 @@ describe('OnboardedTabLink', () => {
 
   it('should not display the link when disabled', () => {
     render(
-      <OnboardedTabLink index={1} disabled href={'/test'}>
-        Link Test
-      </OnboardedTabLink>,
-      { wrapper: StaticRouter },
+      <StaticRouter>
+        <OnboardedTabLink index={1} disabled href={'/test'}>
+          Link Test
+        </OnboardedTabLink>
+      </StaticRouter>,
     );
     expect(
       screen.queryByRole('link', { name: /link test/i }),

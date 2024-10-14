@@ -19,9 +19,11 @@ describe('UserPositions', () => {
   };
 
   const renderUserPositions = (overrides: Partial<UserPositionsProps> = {}) =>
-    render(<UserPositions {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    render(
+      <MemoryRouter>
+        <UserPositions {...defaultProps} {...overrides} />
+      </MemoryRouter>,
+    );
 
   it('renders a dialog with the right title', () => {
     renderUserPositions({

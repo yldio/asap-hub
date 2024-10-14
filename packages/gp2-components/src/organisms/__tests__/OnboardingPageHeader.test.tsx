@@ -1,19 +1,21 @@
 import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import OnboardingPageHeader from '../OnboardingPageHeader';
 
+const renderWithRouter = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
+
 describe('OnboardingPageHeader', () => {
   it('renders the header title', () => {
-    render(<OnboardingPageHeader steps={[]} />, {
-      wrapper: MemoryRouter,
-    });
+    renderWithRouter(<OnboardingPageHeader steps={[]} />);
     expect(
       screen.getByRole('heading', { name: /registration/i }),
     ).toBeVisible();
   });
 
   it('renders the progression levels', async () => {
-    render(
+    renderWithRouter(
       <OnboardingPageHeader
         steps={[
           {
@@ -24,9 +26,6 @@ describe('OnboardingPageHeader', () => {
           },
         ]}
       />,
-      {
-        wrapper: MemoryRouter,
-      },
     );
     expect(screen.getByRole('link', { name: /core details/i })).toBeVisible();
   });

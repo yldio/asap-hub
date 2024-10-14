@@ -1067,12 +1067,13 @@ it('does not submit when required values are missing', async () => {
 
 it('should go back when cancel button is clicked', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Route path="/form">
-        <ManuscriptForm {...defaultProps} />
-      </Route>
-    </Router>,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <Router history={history}>
+        <Route path="/form">
+          <ManuscriptForm {...defaultProps} />
+        </Route>
+      </Router>
+    </MemoryRouter>,
   );
 
   history.push('/another-url');

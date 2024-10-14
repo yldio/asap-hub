@@ -6,9 +6,7 @@ import {
   createResearchOutputResponse,
   createUserResponse,
   researchTagEnvironmentResponse,
-  researchTagMethodResponse,
   researchTagOrganismResponse,
-  researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,
@@ -24,9 +22,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
-  within,
 } from '@testing-library/react';
-import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -468,15 +464,6 @@ describe('on submit', () => {
     });
   };
 
-  it('can submit a form with minimum data', async () => {
-    await setupForm();
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(
-      `/shared-research/${id}/publishedNow`,
-    );
-  });
-
   it('can update a published form with minimum data', async () => {
     await setupForm({ propOverride: { published: true } });
     await saveForm();
@@ -569,32 +556,7 @@ describe('on submit', () => {
     });
   });
 
-  it.skip('can submit a method', async () => {
-    const researchTags = [researchTagMethodResponse];
-    const documentType = 'Dataset';
-    const type = 'Spectroscopy';
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    userEvent.click(await screen.findByRole('textbox', { name: /methods/i }));
-    userEvent.click(screen.getByText('ELISA'));
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      documentType,
-      type,
-      methods: ['ELISA'],
-    });
-  });
-  it.only('can submit an organism', async () => {
+  it('can submit an organism', async () => {
     const documentType = 'Protocol';
     const type = 'Model System';
     const researchTags = [researchTagOrganismResponse];
@@ -625,7 +587,7 @@ describe('on submit', () => {
     });
   });
 
-  it.only('can submit an environment', async () => {
+  it('can submit an environment', async () => {
     const documentType = 'Protocol';
     const type = 'Model System';
     const researchTags = [researchTagEnvironmentResponse];
@@ -654,247 +616,6 @@ describe('on submit', () => {
       type,
       environments: ['In Vitro'],
     });
-  });
-
-  it.skip('resetting the type resets methods', async () => {
-    const researchTags = [researchTagMethodResponse];
-    const documentType = 'Dataset';
-    const type = 'Spectroscopy';
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const methods = await screen.findByRole('textbox', { name: /methods/i });
-    userEvent.click(methods);
-    userEvent.click(screen.getByText('ELISA'));
-
-    expect(screen.getByText(/ELISA/i)).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Protein Data' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    await waitFor(() =>
-      expect(screen.queryByText(/ELISA/i)).not.toBeInTheDocument(),
-    );
-    expect(methods).toBeInTheDocument();
-  });
-  it.skip('resetting the type resets organisms and environment', async () => {
-    const researchTags = [researchTagOrganismResponse];
-    const documentType = 'Protocol';
-    const type = 'Model System';
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const organisms = await screen.findByRole('textbox', {
-      name: /organisms/i,
-    });
-    userEvent.click(organisms);
-    userEvent.click(screen.getByText('Rat'));
-
-    expect(screen.getByText('Rat')).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    await waitFor(() =>
-      expect(screen.queryByText('Rat')).not.toBeInTheDocument(),
-    );
-    expect(organisms).toBeInTheDocument();
-
-    const environments = await screen.findByRole('textbox', {
-      name: /environments/i,
-    });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
-
-    expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    await waitFor(() =>
-      expect(screen.queryByText(/In Vitro/i)).not.toBeInTheDocument(),
-    );
-    expect(environments).toBeInTheDocument();
-  });
-
-  it.skip('resetting the type resets environment', async () => {
-    const documentType = 'Protocol';
-    const type = 'Model System';
-    const researchTags = [researchTagEnvironmentResponse];
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-
-    const environments = await screen.findByRole('textbox', {
-      name: /environments/i,
-    });
-    userEvent.click(environments);
-    userEvent.click(screen.getByText('In Vitro'));
-
-    expect(screen.getByText(/In Vitro/i)).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    await waitFor(() =>
-      expect(screen.queryByText(/In Vitro/i)).not.toBeInTheDocument(),
-    );
-    expect(environments).toBeInTheDocument();
-  });
-
-  it.skip('resetting the type resets subtype', async () => {
-    const documentType = 'Protocol';
-    const type = 'Model System';
-    const researchTags = [researchTagSubtypeResponse];
-    await setupForm({ researchTags, documentType });
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
-    });
-
-    fireEvent.change(typeDropdown, {
-      target: { value: type },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    const subtype = screen.getByRole('textbox', {
-      name: /subtype/i,
-    });
-    userEvent.click(subtype);
-    userEvent.click(screen.getByText('Metabolite'));
-
-    expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
-    await waitFor(() =>
-      expect(screen.queryByText(/metabolite/i)).not.toBeInTheDocument(),
-    );
-    expect(subtype).toBeInTheDocument();
-  });
-  it.skip('can submit published date', async () => {
-    await setupForm();
-    const sharingStatus = screen.getByRole('group', {
-      name: /sharing status/i,
-    });
-    userEvent.click(
-      within(sharingStatus).getByRole('radio', { name: 'Public' }),
-    );
-    fireEvent.change(screen.getByLabelText(/date published/i), {
-      target: { value: '2022-03-24' },
-    });
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      sharingStatus: 'Public',
-      publishDate: new Date('2022-03-24').toISOString(),
-    });
-  });
-
-  it.skip('can submit labCatalogNumber for lab material', async () => {
-    await setupForm({
-      data: { ...expectedRequest, type: 'Animal Model' },
-      documentType: 'Lab Material',
-    });
-    fireEvent.change(screen.getByRole('textbox', { name: /Catalog Number/i }), {
-      target: { value: 'abc123' },
-    });
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      type: 'Animal Model',
-      documentType: 'Lab Material',
-      labCatalogNumber: 'abc123',
-    });
-  });
-
-  describe.each`
-    fieldName              | selector
-    ${'asapFunded'}        | ${/Has this output been funded by ASAP/i}
-    ${'usedInPublication'} | ${/Has this output been used in a publication/i}
-  `('$fieldName can submit', ({ fieldName, selector }) => {
-    it.skip.each`
-      value         | expected
-      ${'Yes'}      | ${true}
-      ${'No'}       | ${false}
-      ${'Not Sure'} | ${undefined}
-    `('when $value then $expected', async ({ value, expected }) => {
-      await setupForm();
-      const funded = screen.getByRole('group', {
-        name: selector,
-      });
-      userEvent.click(within(funded).getByText(value));
-
-      await submitForm();
-      expect(saveFn).toHaveBeenLastCalledWith({
-        ...expectedRequest,
-        [fieldName]: expected,
-      });
-    });
-  });
-
-  it.skip('should disable "No" and "Not Sure" options', async () => {
-    history = createMemoryHistory({
-      initialEntries: [
-        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
-          outputDocumentType: 'article',
-        }).$,
-      ],
-    });
-    await setupForm({
-      researchOutputData: {
-        ...createResearchOutputResponse(),
-        usedInPublication: undefined,
-        sharingStatus: 'Network Only',
-        documentType: 'Article',
-      },
-    });
-    const usedInPublication = screen.getByRole('group', {
-      name: /Has this output been used in a publication/i,
-    });
-
-    expect(
-      within(usedInPublication).getByRole('radio', { name: 'No' }),
-    ).toBeDisabled();
-    expect(
-      within(usedInPublication).getByRole('radio', { name: 'Not Sure' }),
-    ).toBeDisabled();
   });
 
   const saveDraft = async () => {

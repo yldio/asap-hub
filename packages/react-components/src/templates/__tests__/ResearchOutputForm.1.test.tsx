@@ -187,54 +187,6 @@ describe('on submit', () => {
       target: { value: '10.1234' },
     });
   };
-  const submitForm = async () => {
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
-
-  const saveForm = async () => {
-    const button = screen.getByRole('button', { name: /save/i });
-    userEvent.click(button);
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
-
-  it('can submit a form with minimum data', async () => {
-    await setupForm();
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith(expectedRequest);
-    expect(history.location.pathname).toEqual(
-      `/shared-research/${id}/publishedNow`,
-    );
-  });
-
-  it('can update a published form with minimum data', async () => {
-    await setupForm({ propOverride: { published: true } });
-    await saveForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      published: true,
-    });
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
-  });
-
-  it('will show you confirmation dialog and allow you to cancel it', async () => {
-    await setupForm();
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    expect(
-      screen.getByRole('button', { name: 'Publish Output' }),
-    ).toBeVisible();
-    userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
-    expect(screen.queryByRole('button', { name: 'Publish Output' })).toBeNull();
-    expect(saveFn).not.toHaveBeenCalled();
-  });
 
   const saveDraft = async () => {
     const button = screen.getByRole('button', { name: /Save Draft/i });

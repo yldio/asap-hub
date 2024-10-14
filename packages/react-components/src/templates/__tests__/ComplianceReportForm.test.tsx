@@ -41,7 +41,9 @@ it('data is sent on form submission', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Share/i }));
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
+  userEvent.click(shareButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       url: 'http://example.com',

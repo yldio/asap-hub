@@ -121,6 +121,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   );
 
   const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled());
 
   userEvent.click(shareButton);
 

@@ -44,7 +44,11 @@ describe('EditUserModal', () => {
       getByRole('button', { name: 'Save' }),
     );
 
-    rerender(<EditUserModal {...defaultProps} buttonText="Publish" />);
+    rerender(
+      <MemoryRouter>
+        <EditUserModal {...defaultProps} buttonText="Publish" />
+      </MemoryRouter>,
+    );
 
     expect(getByRole('dialog')).toContainElement(
       getByRole('button', { name: 'Publish' }),

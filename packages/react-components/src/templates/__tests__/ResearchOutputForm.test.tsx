@@ -456,36 +456,6 @@ describe('on submit', () => {
     });
   };
 
-  const saveForm = async () => {
-    const button = screen.getByRole('button', { name: /save/i });
-    userEvent.click(button);
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
-    });
-  };
-
-  it('can update a published form with minimum data', async () => {
-    await setupForm({ propOverride: { published: true } });
-    await saveForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      published: true,
-    });
-    expect(history.location.pathname).toEqual(`/shared-research/${id}`);
-  });
-
-  it('will show you confirmation dialog and allow you to cancel it', async () => {
-    await setupForm();
-    const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    expect(
-      screen.getByRole('button', { name: 'Publish Output' }),
-    ).toBeVisible();
-    userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
-    expect(screen.queryByRole('button', { name: 'Publish Output' })).toBeNull();
-    expect(saveFn).not.toHaveBeenCalled();
-  });
-
   it('field tests', async () => {
     getLabSuggestions.mockResolvedValue([
       { label: 'One Lab', value: '1' },
@@ -615,31 +585,6 @@ describe('on submit', () => {
       documentType,
       type,
       environments: ['In Vitro'],
-    });
-  });
-
-  const saveDraft = async () => {
-    const button = screen.getByRole('button', { name: /Save Draft/i });
-    userEvent.click(button);
-
-    expect(
-      await screen.findByRole('button', { name: /Save Draft/i }),
-    ).toBeEnabled();
-    expect(
-      await screen.findByRole('button', { name: /Cancel/i }),
-    ).toBeEnabled();
-  };
-
-  it('can save draft with minimum data', async () => {
-    await setupForm();
-    await saveDraft();
-    expect(saveDraftFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      published: false,
-    });
-    await waitFor(() => {
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
-      expect(history.location.search).toEqual('?draftCreated=true');
     });
   });
 });

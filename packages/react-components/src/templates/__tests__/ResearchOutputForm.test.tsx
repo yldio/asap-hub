@@ -499,38 +499,15 @@ describe('on submit', () => {
     expect(saveFn).not.toHaveBeenCalled();
   });
 
-  it('can submit a lab', async () => {
+  it('field tests', async () => {
     getLabSuggestions.mockResolvedValue([
       { label: 'One Lab', value: '1' },
       { label: 'Two Lab', value: '2' },
     ]);
-    await setupForm();
-
-    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
-    userEvent.click(screen.getByText('One Lab'));
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      labs: ['1'],
-    });
-  });
-
-  it.skip('can submit a related research', async () => {
     getRelatedResearchSuggestions.mockResolvedValue([
       { label: 'First Related Research', value: '1' },
       { label: 'Second Related Research', value: '2' },
     ]);
-    await setupForm();
-
-    userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
-    userEvent.click(screen.getByText('First Related Research'));
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
-      relatedResearch: ['1'],
-    });
-  });
-  it.skip('can submit existing internal and external and create a new external author', async () => {
     getAuthorSuggestions.mockResolvedValue([
       {
         author: { ...createUserResponse(), displayName: 'Chris Blue' },
@@ -546,8 +523,19 @@ describe('on submit', () => {
         value: 'u1',
       },
     ]);
+
     await setupForm();
 
+    // can submit a lab
+
+    userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    userEvent.click(screen.getByText('One Lab'));
+
+    // related research
+    userEvent.click(screen.getByRole('textbox', { name: /Related Outputs/i }));
+    userEvent.click(screen.getByText('First Related Research'));
+
+    // authors
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
     userEvent.click(screen.getByText(/Chris Reed/i));
@@ -558,9 +546,18 @@ describe('on submit', () => {
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
 
+    // access instructions
+    userEvent.type(
+      screen.getByRole('textbox', { name: /usage notes/i }),
+      'Access Instructions',
+    );
+
     await submitForm();
+
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,
+      labs: ['1'],
+      relatedResearch: ['1'],
       authors: [
         {
           externalAuthorId: 'u1',
@@ -568,21 +565,10 @@ describe('on submit', () => {
         { userId: 'u2' },
         { externalAuthorName: 'Alex White' },
       ],
-    });
-  });
-
-  it.skip('can submit access instructions', async () => {
-    await setupForm();
-    userEvent.type(
-      screen.getByRole('textbox', { name: /usage notes/i }),
-      'Access Instructions',
-    );
-    await submitForm();
-    expect(saveFn).toHaveBeenLastCalledWith({
-      ...expectedRequest,
       usageNotes: 'Access Instructions',
     });
   });
+
   it.skip('can submit a method', async () => {
     const researchTags = [researchTagMethodResponse];
     const documentType = 'Dataset';

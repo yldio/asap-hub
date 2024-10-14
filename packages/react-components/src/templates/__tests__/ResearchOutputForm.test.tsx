@@ -486,7 +486,7 @@ describe('on submit', () => {
     expect(saveFn).not.toHaveBeenCalled();
   });
 
-  it.only('field tests', async () => {
+  it('field tests', async () => {
     getLabSuggestions.mockResolvedValue([
       { label: 'One Lab', value: '1' },
       { label: 'Two Lab', value: '2' },

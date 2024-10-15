@@ -39,16 +39,12 @@ import {
   arrowClockwise,
   arrowCounterclockwise,
   indent,
-  justify,
   listOL,
   listUL,
   outdent,
-  textCenter,
   textLeft,
-  textRight,
   typeBold,
   typeItalic,
-  typeUnderline,
   typeStrikethrough,
 } from '../icons/editor';
 
@@ -136,7 +132,6 @@ export default function ToolbarPlugin() {
 
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
 
   const $updateToolbar = useCallback(() => {
@@ -183,7 +178,6 @@ export default function ToolbarPlugin() {
       // Update text format
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
-      setIsUnderline(selection.hasFormat('underline'));
       setIsStrikethrough(selection.hasFormat('strikethrough'));
     }
   }, [activeEditor]);
@@ -309,16 +303,6 @@ export default function ToolbarPlugin() {
       <button
         onClick={(e) => {
           e.preventDefault();
-          editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-        }}
-        css={toolbarItemStyles({ spaced: true, active: isUnderline })}
-        aria-label="Format Underline"
-      >
-        {typeUnderline}
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
         }}
         css={toolbarItemStyles({ spaced: true, active: isStrikethrough })}
@@ -389,36 +373,6 @@ export default function ToolbarPlugin() {
       >
         {textLeft}
       </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
-        }}
-        css={toolbarItemStyles({ spaced: true })}
-        aria-label="Center Align"
-      >
-        {textCenter}
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
-        }}
-        css={toolbarItemStyles({ spaced: true })}
-        aria-label="Right Align"
-      >
-        {textRight}
-      </button>
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
-        }}
-        css={toolbarItemStyles({})}
-        aria-label="Justify Align"
-      >
-        {justify}
-      </button>{' '}
     </div>
   );
 }

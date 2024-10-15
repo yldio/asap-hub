@@ -4,4 +4,4 @@ export default {
   title: 'Atoms / TextEditor',
 };
 
-export const Normal = () => <TextEditor />;
+export const Normal = () => <TextEditor onChange={console.log} value={''} />;

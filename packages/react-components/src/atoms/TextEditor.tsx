@@ -157,13 +157,13 @@ export type TextEditorProps = {
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
   readonly id?: string;
   readonly required?: boolean;
-  readonly value?: string;
-  onChange?: (content: string) => void;
+  readonly value: string;
+  onChange: (content: string) => void;
 };
 const TextEditor = ({
   id,
-  value = '',
-  onChange = noop,
+  value,
+  onChange,
   required,
   customValidationMessage = '',
   getValidationMessage,

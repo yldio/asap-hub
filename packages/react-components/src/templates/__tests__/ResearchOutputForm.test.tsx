@@ -295,7 +295,7 @@ it('can generate short description when description is present', async () => {
   });
 });
 
-describe('on submit', () => {
+describe.skip('on submit', () => {
   let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();

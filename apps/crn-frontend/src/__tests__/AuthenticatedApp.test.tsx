@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';

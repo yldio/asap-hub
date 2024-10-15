@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -20,6 +21,7 @@ import ToolbarPlugin from './TextEditorToolbar';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember } from '../colors';
+import { useEffect } from 'react';
 
 const theme = {
   paragraph: 'editor-paragraph',
@@ -158,14 +160,25 @@ export type TextEditorProps = {
   readonly id?: string;
   readonly required?: boolean;
   readonly value: string;
+  readonly enabled?: boolean;
   onChange: (content: string) => void;
 };
+
+const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    editor.setEditable(enabled);
+  }, [enabled]);
+  return <></>;
+};
+
 const TextEditor = ({
   id,
   value,
   onChange,
   required,
   customValidationMessage = '',
+  enabled = true,
   getValidationMessage,
 }: TextEditorProps) => {
   const { validationMessage, validationTargetProps } =
@@ -192,7 +205,7 @@ const TextEditor = ({
         <OnChangePlugin
           onChange={(editorState) => onChangeHandler(editorState, onChange)}
         />
-
+        <EnablePlugin enabled={enabled} />
         <div css={innerStyles}>
           <RichTextPlugin
             contentEditable={

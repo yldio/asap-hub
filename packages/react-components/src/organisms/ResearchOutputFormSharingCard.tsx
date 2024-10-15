@@ -211,6 +211,7 @@ const ResearchOutputFormSharingCard: React.FC<
         getValidationMessage={() => 'Please enter a description'}
         required
         value={descriptionMD}
+        enabled={!isSaving}
         info={
           <Markdown
             value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Superscript:** ^<p>Your Text</p>^\n\n**Subscript:** ~<p>Your Text</p>~\n\n**Hyperlink:** \\[your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.

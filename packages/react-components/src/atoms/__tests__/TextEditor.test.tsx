@@ -3,6 +3,41 @@ import userEvent from '@testing-library/user-event';
 
 import TextEditor from '../TextEditor';
 
+describe('EnablePlugin', () => {
+  const onChange = jest.fn();
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('allows edits when editable', async () => {
+    const { getByTestId } = render(
+      <TextEditor onChange={onChange} value="" enabled={true} />,
+    );
+    const editor = getByTestId('editor');
+    await act(async () => {
+      userEvent.click(editor);
+      userEvent.tab();
+      fireEvent.input(editor, { data: 'text' });
+      userEvent.tab();
+    });
+    expect(onChange).toHaveBeenCalledWith('text');
+  });
+
+  it('block edits when non editable', async () => {
+    const { getByTestId } = render(
+      <TextEditor onChange={onChange} value="" enabled={false} />,
+    );
+    const editor = getByTestId('editor');
+    await act(async () => {
+      userEvent.click(editor);
+      userEvent.tab();
+      fireEvent.input(editor, { data: 'text' });
+      userEvent.tab();
+    });
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+});
 describe('TextEditorToolbar', () => {
   describe('actions', () => {
     const onChange = jest.fn();

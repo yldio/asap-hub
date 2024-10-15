@@ -120,6 +120,12 @@ describe('TextEditorToolbar', () => {
           userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('- text');
+
+        // removing list
+        await act(async () => {
+          await userEvent.click(button);
+        });
+        expect(onChange).toHaveBeenLastCalledWith('text');
       });
 
       it('numbered', async () => {
@@ -139,6 +145,12 @@ describe('TextEditorToolbar', () => {
           userEvent.tab();
         });
         expect(onChange).toHaveBeenCalledWith('1. text');
+
+        // removing list
+        await act(async () => {
+          await userEvent.click(button);
+        });
+        expect(onChange).toHaveBeenLastCalledWith('text');
       });
 
       it('outdent / indent', async () => {

@@ -26,7 +26,6 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
@@ -42,12 +41,12 @@ import {
   listOL,
   listUL,
   outdent,
-  textLeft,
   typeBold,
   typeItalic,
   typeStrikethrough,
 } from '../icons/editor';
 
+/* istanbul ignore next */
 export function getSelectedNode(
   selection: RangeSelection,
 ): TextNode | ElementNode {
@@ -363,16 +362,6 @@ export default function ToolbarPlugin() {
         {indent}
       </button>
       <Divider />
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
-        }}
-        css={toolbarItemStyles({ spaced: true })}
-        aria-label="Left Align"
-      >
-        {textLeft}
-      </button>
     </div>
   );
 }

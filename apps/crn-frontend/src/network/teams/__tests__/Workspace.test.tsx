@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -25,32 +25,33 @@ const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot>
-    <Suspense fallback="loading">
-      <Auth0Provider user={{}}>
-        <WhenReady>
-          <MemoryRouter
-            initialEntries={[
-              network({}).teams({}).team({ teamId: id }).workspace({}).$,
-            ]}
-          >
-            <Route
-              path={
-                network.template +
-                network({}).teams.template +
-                network({}).teams({}).team.template +
-                network({}).teams({}).team({ teamId: id }).workspace.template
-              }
+const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
+  render(
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({}).teams({}).team({ teamId: id }).workspace({}).$,
+              ]}
             >
-              {children}
-            </Route>
-          </MemoryRouter>
-        </WhenReady>
-      </Auth0Provider>
-    </Suspense>
-  </RecoilRoot>
-);
+              <Route
+                path={
+                  network.template +
+                  network({}).teams.template +
+                  network({}).teams({}).team.template +
+                  network({}).teams({}).team({ teamId: id }).workspace.template
+                }
+              >
+                {children}
+              </Route>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
 
 const mockPatchTeamImpl = mockPatchTeam.getMockImplementation();
 afterEach(() => {
@@ -61,7 +62,7 @@ describe('a tool', () => {
   const { mockConfirm } = mockAlert();
 
   it('can be deleted', async () => {
-    const { findByText } = render(
+    const { findByText } = renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -75,7 +76,6 @@ describe('a tool', () => {
           ],
         }}
       />,
-      { wrapper },
     );
 
     userEvent.click(await findByText(/delete/i));
@@ -88,7 +88,7 @@ describe('a tool', () => {
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
-    const { findByText } = render(
+    const { findByText } = renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -102,7 +102,6 @@ describe('a tool', () => {
           ],
         }}
       />,
-      { wrapper },
     );
 
     mockConfirm.mockReturnValue(false);
@@ -114,7 +113,7 @@ describe('a tool', () => {
 
   it('warns when its deletion failed', async () => {
     const mockToast = jest.fn();
-    const { findByText } = render(
+    const { findByText } = renderWithWrapper(
       <ToastContext.Provider value={mockToast}>
         <Workspace
           team={{
@@ -130,7 +129,6 @@ describe('a tool', () => {
           }}
         />
       </ToastContext.Provider>,
-      { wrapper },
     );
 
     mockPatchTeam.mockRejectedValue(new Error('Nope'));
@@ -140,7 +138,7 @@ describe('a tool', () => {
   });
 
   it('can not be deleted while another tool is being deleted', async () => {
-    const { queryByText, findByText, findAllByText } = render(
+    const { queryByText, findByText, findAllByText } = renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -159,7 +157,6 @@ describe('a tool', () => {
           ],
         }}
       />,
-      { wrapper },
     );
     let resolvePatchTeam!: (team: TeamResponse) => void;
     mockPatchTeam.mockImplementation(
@@ -185,10 +182,10 @@ describe('a tool', () => {
 
 describe('the add tool dialog', () => {
   it('goes back when closed', async () => {
-    const { getByText, queryByTitle, findByText, findByTitle } = render(
-      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
-      { wrapper },
-    );
+    const { getByText, queryByTitle, findByText, findByTitle } =
+      renderWithWrapper(
+        <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
+      );
     userEvent.click(await findByText(/add/i));
 
     userEvent.click(await findByTitle(/close/i));
@@ -198,9 +195,9 @@ describe('the add tool dialog', () => {
 
   it('saves the new tool and goes back', async () => {
     const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
-      render(<Workspace team={{ ...createTeamResponse(), id, tools: [] }} />, {
-        wrapper,
-      });
+      renderWithWrapper(
+        <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
+      );
     userEvent.click(await findByText(/add/i));
     userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
     userEvent.type(await findByLabelText(/description/i), 'description');
@@ -229,22 +226,22 @@ describe('the add tool dialog', () => {
 
 describe('the edit tool dialog', () => {
   it('goes back when closed', async () => {
-    const { getByText, queryByTitle, findByText, findByTitle } = render(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [
-            {
-              name: 'tool',
-              description: 'desc',
-              url: 'http://example.com/tool',
-            },
-          ],
-        }}
-      />,
-      { wrapper },
-    );
+    const { getByText, queryByTitle, findByText, findByTitle } =
+      renderWithWrapper(
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            tools: [
+              {
+                name: 'tool',
+                description: 'desc',
+                url: 'http://example.com/tool',
+              },
+            ],
+          }}
+        />,
+      );
     userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
 
     userEvent.click(await findByTitle(/close/i));
@@ -254,7 +251,7 @@ describe('the edit tool dialog', () => {
 
   it('saves the changes and goes back', async () => {
     const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
-      render(
+      renderWithWrapper(
         <Workspace
           team={{
             ...createTeamResponse(),
@@ -273,7 +270,6 @@ describe('the edit tool dialog', () => {
             ],
           }}
         />,
-        { wrapper },
       );
     userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),

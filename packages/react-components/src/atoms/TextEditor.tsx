@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
@@ -21,7 +22,6 @@ import ToolbarPlugin from './TextEditorToolbar';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember } from '../colors';
-import { useEffect } from 'react';
 
 const theme = {
   paragraph: 'editor-paragraph',

@@ -1,4 +1,4 @@
-import { createElement, FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import {
   createListInterestGroupResponse,
@@ -24,29 +24,29 @@ mockConsoleError();
 
 const userId = 'u42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
-  >
-    <Suspense fallback="loading">
-      <Auth0Provider user={{ id: '42' }}>
-        <WhenReady>
-          <StaticRouter>{children}</StaticRouter>
-        </WhenReady>
-      </Auth0Provider>
-    </Suspense>
-  </RecoilRoot>
-);
+const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
+  render(
+    <RecoilRoot
+      initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: '42' }}>
+          <WhenReady>
+            <StaticRouter>{children}</StaticRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
 
 it('is not rendered when there are no groups', async () => {
   mockGetUserInterestGroups.mockResolvedValue(
     createListInterestGroupResponse(0),
   );
-  const { queryByText } = render(
+  const { queryByText } = renderWithWrapper(
     <InterestGroupsCard
       user={{ ...createUserResponse({}, 0), id: userId, firstName: 'test' }}
     />,
-    { wrapper },
   );
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -61,11 +61,10 @@ it('is rendered when there are groups', async () => {
   mockGetUserInterestGroups.mockResolvedValue(
     createListInterestGroupResponse(1),
   );
-  const { queryByText } = render(
+  const { queryByText } = renderWithWrapper(
     <InterestGroupsCard
       user={{ ...createUserResponse({}, 1), id: userId, firstName: 'test' }}
     />,
-    { wrapper },
   );
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -75,13 +74,10 @@ it('is rendered when there are groups', async () => {
 
 it('throws if the user does not exist', async () => {
   mockGetUserInterestGroups.mockResolvedValue(undefined);
-  const errorWrapper: FC = ({ children }) =>
-    createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
-  const { findByText } = render(
-    <InterestGroupsCard user={{ ...createUserResponse(), id: userId }} />,
-    {
-      wrapper: errorWrapper,
-    },
+  const { findByText } = renderWithWrapper(
+    <ErrorBoundary>
+      <InterestGroupsCard user={{ ...createUserResponse(), id: userId }} />
+    </ErrorBoundary>,
   );
   expect(await findByText(/failed.+user.+exist/i)).toBeVisible();
 });

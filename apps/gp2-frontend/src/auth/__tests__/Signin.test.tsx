@@ -73,7 +73,11 @@ afterEach(() => {
 });
 
 it('renders a button to signin', async () => {
-  const { getByRole } = render(<Signin />, { wrapper: StaticRouter });
+  const { getByRole } = render(
+    <StaticRouter>
+      <Signin />
+    </StaticRouter>,
+  );
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);
 });
 

@@ -9,7 +9,7 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
+import { createMemoryHistory } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
 
@@ -66,7 +66,6 @@ const initialResearchOutputData = {
 };
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -75,7 +74,7 @@ describe('on submit', () => {
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
 
-  history = createMemoryHistory();
+  const history = createMemoryHistory();
   saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
   getLabSuggestions.mockResolvedValue([]);

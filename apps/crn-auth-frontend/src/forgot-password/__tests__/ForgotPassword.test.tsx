@@ -22,8 +22,9 @@ beforeEach(() => {
 
 it('renders the email in an input field', () => {
   const { getByLabelText } = render(
-    <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />
+    </MemoryRouter>,
   );
   expect(getByLabelText(/e-?mail/i)).toHaveValue('john.doe@example.com');
 });
@@ -31,8 +32,9 @@ it('renders the email in an input field', () => {
 it('emits email change events', async () => {
   const handleEmailChange = jest.fn();
   const { getByLabelText } = render(
-    <ForgotPassword email="" setEmail={handleEmailChange} />,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <ForgotPassword email="" setEmail={handleEmailChange} />
+    </MemoryRouter>,
   );
 
   fireEvent.change(getByLabelText(/e-?mail/i), {
@@ -62,8 +64,9 @@ describe('when clicking the reset button', () => {
   let result!: RenderResult;
   beforeEach(() => {
     result = render(
-      <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />,
-      { wrapper: MemoryRouter },
+      <MemoryRouter>
+        <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />
+      </MemoryRouter>,
     );
   });
 

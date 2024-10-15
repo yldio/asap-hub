@@ -158,7 +158,7 @@ describe('on submit', () => {
   });
 
   it('can submit published date', async () => {
-    const documentType = initialResearchOutputData.documentType;
+    const { documentType } = initialResearchOutputData;
     render(
       <Router history={history}>
         <ResearchOutputForm

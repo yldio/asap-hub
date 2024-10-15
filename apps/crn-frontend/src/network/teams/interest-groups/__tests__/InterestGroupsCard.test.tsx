@@ -1,4 +1,4 @@
-import { createElement, FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
@@ -21,26 +21,27 @@ mockConsoleError();
 
 const id = 't42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
-  >
-    <Suspense fallback="loading">
-      <Auth0Provider user={{ id: 'u42' }}>
-        <WhenReady>
-          <StaticRouter>{children}</StaticRouter>
-        </WhenReady>
-      </Auth0Provider>
-    </Suspense>
-  </RecoilRoot>
-);
+const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
+  render(
+    <RecoilRoot
+      initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: 'u42' }}>
+          <WhenReady>
+            <StaticRouter>{children}</StaticRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
 
 afterEach(() => {
   mockGetTeamInterestGroups.mockClear();
 });
 
 it('requests groups for the given team id', async () => {
-  render(<InterestGroupsCard id={id} />, { wrapper });
+  renderWithWrapper(<InterestGroupsCard id={id} />);
   await waitFor(() =>
     expect(mockGetTeamInterestGroups).toHaveBeenCalledWith(
       id,
@@ -51,9 +52,9 @@ it('requests groups for the given team id', async () => {
 
 it('render nothing when there are no groups and the group is active', async () => {
   mockGetTeamInterestGroups.mockResolvedValue({ total: 0, items: [] });
-  const { container, queryByText } = render(<InterestGroupsCard id={id} />, {
-    wrapper,
-  });
+  const { container, queryByText } = renderWithWrapper(
+    <InterestGroupsCard id={id} />,
+  );
   await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
   expect(queryByText(/team groups/i)).not.toBeInTheDocument();
 });
@@ -63,9 +64,8 @@ it('render the team groups tabbed component when isInactive has a value', async 
     total: 0,
     items: [],
   });
-  const { findByText } = render(
+  const { findByText } = renderWithWrapper(
     <InterestGroupsCard id={id} isInactive={new Date().toISOString()} />,
-    { wrapper },
   );
   expect(await findByText(/Team Interest Groups/i)).toBeVisible();
 });
@@ -75,7 +75,7 @@ it('renders the card when there are groups', async () => {
     total: 1,
     items: [{ ...createInterestGroupResponse() }],
   });
-  const { findByText } = render(<InterestGroupsCard id={id} />, { wrapper });
+  const { findByText } = renderWithWrapper(<InterestGroupsCard id={id} />);
   expect(await findByText(/Team Interest Groups/i)).toBeVisible();
 });
 
@@ -84,9 +84,9 @@ it('links to the group', async () => {
     total: 1,
     items: [{ ...createInterestGroupResponse(), id: 'g1', name: 'Group 1' }],
   });
-  const { findByText, getByText } = render(<InterestGroupsCard id={id} />, {
-    wrapper,
-  });
+  const { findByText, getByText } = renderWithWrapper(
+    <InterestGroupsCard id={id} />,
+  );
   expect(await findByText(/Team Interest Groups/i)).toBeVisible();
   expect(getByText('Group 1').closest('a')).toHaveAttribute(
     'href',
@@ -96,10 +96,10 @@ it('links to the group', async () => {
 
 it('throws if the team does not exist', async () => {
   mockGetTeamInterestGroups.mockResolvedValue(undefined);
-  const errorWrapper: FC = ({ children }) =>
-    createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
-  const { findByText } = render(<InterestGroupsCard id={id} />, {
-    wrapper: errorWrapper,
-  });
+  const { findByText } = renderWithWrapper(
+    <ErrorBoundary>
+      <InterestGroupsCard id={id} />
+    </ErrorBoundary>,
+  );
   expect(await findByText(/failed.+team.+exist/i)).toBeVisible();
 });

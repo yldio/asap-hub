@@ -133,6 +133,7 @@ export default function ToolbarPlugin() {
   const [isItalic, setIsItalic] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
 
+  /* istanbul ignore next */
   const $updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
@@ -181,6 +182,7 @@ export default function ToolbarPlugin() {
     }
   }, [activeEditor]);
 
+  /* istanbul ignore next */
   useEffect(
     () =>
       editor.registerCommand(

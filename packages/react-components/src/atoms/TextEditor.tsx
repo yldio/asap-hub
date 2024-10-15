@@ -168,7 +168,7 @@ const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     editor.setEditable(enabled);
-  }, [enabled]);
+  }, [enabled, editor]);
   return <></>;
 };
 

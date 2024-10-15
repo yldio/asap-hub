@@ -5,7 +5,6 @@ import { Router } from 'react-router-dom';
 import {
   createResearchOutputResponse,
   createUserResponse,
-  researchTagEnvironmentResponse,
 } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypeToType,

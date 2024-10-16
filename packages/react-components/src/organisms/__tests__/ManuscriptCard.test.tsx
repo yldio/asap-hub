@@ -87,9 +87,7 @@ it('allows to change the manuscript status if canShareComplianceReport is true',
 });
 
 it('does not allow to change the manuscript status if canShareComplianceReport is false', () => {
-  const { getByTestId } = render(
-    <ManuscriptCard {...props} />,
-  );
+  const { getByTestId } = render(<ManuscriptCard {...props} />);
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeDisabled();

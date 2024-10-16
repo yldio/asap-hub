@@ -73,3 +73,24 @@ it('redirects to compliance report form when user clicks on share compliance rep
     `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`,
   );
 });
+
+it('allows to change the manuscript status if canShareComplianceReport is true', () => {
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard {...props} canShareComplianceReport />,
+  );
+
+  const statusButton = getByTestId('status-button');
+  expect(statusButton).toBeEnabled();
+  userEvent.click(statusButton);
+  userEvent.click(getByRole('button', { name: /Compliant/i }));
+  expect(statusButton.textContent).toContain('Compliant');
+});
+
+it('does not allow to change the manuscript status if canShareComplianceReport is false', () => {
+  const { getByTestId } = render(
+    <ManuscriptCard {...props} />,
+  );
+
+  const statusButton = getByTestId('status-button');
+  expect(statusButton).toBeDisabled();
+});

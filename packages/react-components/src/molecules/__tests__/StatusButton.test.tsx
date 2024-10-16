@@ -53,8 +53,8 @@ it('renders items on modal and hides it on outside click', () => {
       <h1>Element</h1>
       <StatusButton buttonChildren={() => <>test</>} canEdit={true}>
         {{ item: '1', onClick: jest.fn() }}
-        {{ item: '2', onClick: jest.fn() }}
-        {{ item: '3', onClick: jest.fn() }}
+        {{ item: '2', onClick: jest.fn(), type: 'warning' }}
+        {{ item: '3', onClick: jest.fn(), type: 'final' }}
       </StatusButton>
     </>,
   );

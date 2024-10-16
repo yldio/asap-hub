@@ -164,7 +164,6 @@ type ButtonItemData = {
 type StatusButtonProps = {
   children?: ReadonlyArray<ButtonItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
-  dropdownHeight?: number;
   alignLeft?: boolean;
   canEdit?: boolean;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
@@ -174,19 +173,11 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   buttonChildren,
   alignLeft = false,
   primary,
-  dropdownHeight,
   canEdit = false,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
   const [menuShown, setMenuShown] = useState(false);
-
-  const trimmedListStyles = dropdownHeight
-    ? css({
-        overflowY: 'auto',
-        maxHeight: `${dropdownHeight / perRem}em`,
-      })
-    : null;
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -207,6 +198,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   return (
     <div css={containerStyles} ref={reference}>
       <Button
+        data-testid="status-button"
         small
         noMargin
         primary={primary}
@@ -224,7 +216,6 @@ const StatusButton: React.FC<StatusButtonProps> = ({
           css={[
             menuContainerStyles,
             menuShown && showMenuStyles,
-            trimmedListStyles,
             alignLeft && alignLeftStyles,
           ]}
         >

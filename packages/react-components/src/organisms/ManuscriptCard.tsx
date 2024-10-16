@@ -1,5 +1,4 @@
 import { TeamManuscript, manuscriptStatus } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -79,7 +78,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(status || '');
-  const canEditStatus = useCurrentUserCRN()?.role === 'Staff';
   const history = useHistory();
 
   const complianceReportRoute = network({})
@@ -117,7 +115,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
         <span css={buttonsContainerStyles}>
           <StatusButton
             buttonChildren={() => <span>{selectedStatus}</span>}
-            canEdit={canEditStatus}
+            canEdit={canShareComplianceReport}
           >
             {manuscriptStatus.map((statusItem) => ({
               item: statusItem,

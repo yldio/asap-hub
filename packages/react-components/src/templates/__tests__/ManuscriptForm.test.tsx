@@ -64,6 +64,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   codeDeposited: 'Yes',
   protocolsDeposited: 'Yes',
   labMaterialsRegistered: 'Yes',
+  availabilityStatement: 'Yes',
   description: 'Some description',
   firstAuthors: [
     {
@@ -137,6 +138,7 @@ it('data is sent on form submission', async () => {
           codeDeposited: 'Yes',
           protocolsDeposited: 'Yes',
           labMaterialsRegistered: 'Yes',
+          availabilityStatement: 'Yes',
 
           acknowledgedGrantNumberDetails: '',
           asapAffiliationIncludedDetails: '',
@@ -145,6 +147,7 @@ it('data is sent on form submission', async () => {
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+          availabilityStatementDetails: '',
 
           teams: ['1'],
           labs: [],
@@ -227,6 +230,7 @@ test.each`
           codeDeposited: 'Yes',
           protocolsDeposited: 'Yes',
           labMaterialsRegistered: 'Yes',
+          availabilityStatement: 'Yes',
 
           acknowledgedGrantNumberDetails: '',
           asapAffiliationIncludedDetails: '',
@@ -235,6 +239,7 @@ test.each`
           codeDepositedDetails: '',
           protocolsDepositedDetails: '',
           labMaterialsRegisteredDetails: '',
+          availabilityStatementDetails: '',
 
           teams: ['1'],
           labs: [],
@@ -324,6 +329,7 @@ test.each`
             codeDeposited: 'Yes',
             protocolsDeposited: 'Yes',
             labMaterialsRegistered: 'Yes',
+            availabilityStatement: 'Yes',
 
             acknowledgedGrantNumberDetails: '',
             asapAffiliationIncludedDetails: '',
@@ -332,6 +338,7 @@ test.each`
             codeDepositedDetails: '',
             protocolsDepositedDetails: '',
             labMaterialsRegisteredDetails: '',
+            availabilityStatementDetails: '',
 
             teams: ['1'],
             labs: [],
@@ -877,6 +884,7 @@ describe('renders the necessary fields', () => {
     codeDeposited: getQuickCheckQuestion('codeDeposited'),
     protocolsDeposited: getQuickCheckQuestion('protocolsDeposited'),
     labMaterialsRegistered: getQuickCheckQuestion('labMaterialsRegistered'),
+    availabilityStatement: getQuickCheckQuestion('availabilityStatement'),
 
     acknowledgedGrantNumberDetails: 'Please provide details',
     asapAffiliationIncludedDetails: 'Please provide details',
@@ -885,6 +893,7 @@ describe('renders the necessary fields', () => {
     codeDepositedDetails: 'Please provide details',
     protocolsDepositedDetails: 'Please provide details',
     labMaterialsRegisteredDetails: 'Please provide details',
+    availabilityStatementDetails: 'Please provide details',
 
     description: 'Please provide a description',
 

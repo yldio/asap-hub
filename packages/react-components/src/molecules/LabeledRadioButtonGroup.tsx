@@ -7,10 +7,12 @@ import { noop } from '../utils';
 import { LabeledRadioButton } from '.';
 import { mobileScreen, perRem } from '../pixels';
 import { validationMessageStyles } from '../form';
+import { lead } from '../colors';
 
 export type LabeledRadioButtonGroupProps<V extends string> = {
   readonly title?: string;
   readonly subtitle?: string;
+  readonly description?: React.ReactNode;
   readonly options: ReadonlyArray<Option<V>>;
   readonly validationMessage?: string;
 
@@ -36,9 +38,14 @@ const subtitleStyles = css({
   paddingLeft: `${6 / perRem}em`,
 });
 
+const descriptionStyles = css({
+  color: lead.rgb,
+});
+
 export default function LabeledRadioButtonGroup<V extends string>({
   title,
   subtitle,
+  description,
   options,
   value,
   onChange = noop,
@@ -48,10 +55,12 @@ export default function LabeledRadioButtonGroup<V extends string>({
   const groupName = useRef(uuidV4());
   return (
     <fieldset css={containerStyles}>
-      {title || subtitle ? (
+      {title || subtitle || description ? (
         <legend>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
+          <br />
+          <span css={[descriptionStyles]}>{description}</span>
         </legend>
       ) : null}
       <div css={optionListStyles}>

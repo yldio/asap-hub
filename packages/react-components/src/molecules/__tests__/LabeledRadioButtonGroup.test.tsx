@@ -19,6 +19,19 @@ it('renders a section subtitle', () => {
   expect(screen.getByText(/Group description/i)).toBeVisible();
 });
 
+it('renders description if there is any', () => {
+  render(
+    <LabeledRadioButtonGroup
+      description="A description about this radio button field"
+      options={[]}
+      value=""
+    />,
+  );
+  expect(
+    screen.getByText('A description about this radio button field'),
+  ).toBeInTheDocument();
+});
+
 it('renders a radio button for each option', () => {
   const { getByLabelText } = render(
     <LabeledRadioButtonGroup

@@ -86,6 +86,7 @@ export type ManuscriptVersion = {
   codeDeposited?: string;
   protocolsDeposited?: string;
   labMaterialsRegistered?: string;
+  availabilityStatement?: string;
 
   acknowledgedGrantNumberDetails?: string;
   asapAffiliationIncludedDetails?: string;
@@ -94,6 +95,7 @@ export type ManuscriptVersion = {
   codeDepositedDetails?: string;
   protocolsDepositedDetails?: string;
   labMaterialsRegisteredDetails?: string;
+  availabilityStatementDetails?: string;
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string }[];
@@ -134,6 +136,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
     Preprint: [
@@ -145,6 +148,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
     'Typeset proof': [
@@ -156,6 +160,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
     Publication: [
@@ -169,6 +174,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
     'Publication with addendum or corrigendum': [
@@ -182,6 +188,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
     Other: [
@@ -193,6 +200,7 @@ export const manuscriptFormFieldsMapping: Record<
       'codeDeposited',
       'protocolsDeposited',
       'labMaterialsRegistered',
+      'availabilityStatement',
       'keyResourceTable',
     ],
   },
@@ -280,6 +288,7 @@ export type ManuscriptPostRequest = Pick<
     codeDeposited?: ManuscriptVersion['codeDeposited'];
     protocolsDeposited?: ManuscriptVersion['protocolsDeposited'];
     labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
+    availabilityStatement?: ManuscriptVersion['availabilityStatement'];
 
     acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
     asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
@@ -288,6 +297,7 @@ export type ManuscriptPostRequest = Pick<
     codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
     protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
     labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
+    availabilityStatementDetails?: ManuscriptVersion['availabilityStatementDetails'];
 
     teams: string[];
     labs?: string[];
@@ -317,35 +327,37 @@ export type ManuscriptFormData = Pick<
   ManuscriptPostRequest,
   'title' | 'teamId' | 'eligibilityReasons'
 > & {
-  versions: {
-    type: ManuscriptVersion['type'] | '';
-    lifecycle: ManuscriptVersion['lifecycle'] | '';
-    preprintDoi?: ManuscriptVersion['preprintDoi'];
-    publicationDoi?: ManuscriptVersion['publicationDoi'] | '';
-    requestingApcCoverage?: ManuscriptVersion['requestingApcCoverage'] | '';
-    submitterName?: ManuscriptVersion['submitterName'];
+  versions: (Pick<
+    ManuscriptPostRequest['versions'][number],
+    | 'type'
+    | 'lifecycle'
+    | 'preprintDoi'
+    | 'publicationDoi'
+    | 'requestingApcCoverage'
+    | 'submitterName'
+    | 'otherDetails'
+    | 'description'
+    | 'manuscriptFile'
+    | 'acknowledgedGrantNumber'
+    | 'asapAffiliationIncluded'
+    | 'manuscriptLicense'
+    | 'datasetsDeposited'
+    | 'codeDeposited'
+    | 'protocolsDeposited'
+    | 'labMaterialsRegistered'
+    | 'availabilityStatement'
+    | 'acknowledgedGrantNumberDetails'
+    | 'asapAffiliationIncludedDetails'
+    | 'manuscriptLicenseDetails'
+    | 'datasetsDepositedDetails'
+    | 'codeDepositedDetails'
+    | 'protocolsDepositedDetails'
+    | 'labMaterialsRegisteredDetails'
+    | 'availabilityStatementDetails'
+  > & {
     submissionDate?: ManuscriptVersion['submissionDate'];
-    otherDetails?: ManuscriptVersion['otherDetails'] | '';
-    manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable: ManuscriptVersion['keyResourceTable'];
     additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
-    description: string;
-
-    acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
-    asapAffiliationIncluded?: ManuscriptVersion['asapAffiliationIncluded'];
-    manuscriptLicense?: ManuscriptVersion['manuscriptLicense'];
-    datasetsDeposited?: ManuscriptVersion['datasetsDeposited'];
-    codeDeposited?: ManuscriptVersion['codeDeposited'];
-    protocolsDeposited?: ManuscriptVersion['protocolsDeposited'];
-    labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
-
-    acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
-    asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
-    manuscriptLicenseDetails?: ManuscriptVersion['manuscriptLicenseDetails'];
-    datasetsDepositedDetails?: ManuscriptVersion['datasetsDepositedDetails'];
-    codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
-    protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
-    labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
 
     teams: MultiselectOption[];
     labs: MultiselectOption[];
@@ -355,7 +367,7 @@ export type ManuscriptFormData = Pick<
     correspondingAuthorEmails: AuthorEmailField[];
     additionalAuthors: AuthorSelectOption[];
     additionalAuthorsEmails: AuthorEmailField[];
-  }[];
+  })[];
 };
 
 export type ManuscriptCreateControllerDataObject = ManuscriptPostRequest & {
@@ -454,6 +466,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
             codeDeposited: { type: 'string', nullable: true },
             protocolsDeposited: { type: 'string', nullable: true },
             labMaterialsRegistered: { type: 'string', nullable: true },
+            availabilityStatement: { type: 'string', nullable: true },
             acknowledgedGrantNumberDetails: { type: 'string', nullable: true },
             asapAffiliationIncludedDetails: { type: 'string', nullable: true },
             manuscriptLicenseDetails: { type: 'string', nullable: true },
@@ -461,6 +474,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
             codeDepositedDetails: { type: 'string', nullable: true },
             protocolsDepositedDetails: { type: 'string', nullable: true },
             labMaterialsRegisteredDetails: { type: 'string', nullable: true },
+            availabilityStatementDetails: { type: 'string', nullable: true },
 
             teams: { type: 'array', minItems: 1, items: { type: 'string' } },
             labs: { type: 'array', nullable: true, items: { type: 'string' } },
@@ -555,7 +569,8 @@ export type QuickCheck =
   | 'datasetsDeposited'
   | 'codeDeposited'
   | 'protocolsDeposited'
-  | 'labMaterialsRegistered';
+  | 'labMaterialsRegistered'
+  | 'availabilityStatement';
 
 export type QuickCheckDetails =
   | 'acknowledgedGrantNumberDetails'
@@ -564,7 +579,8 @@ export type QuickCheckDetails =
   | 'datasetsDepositedDetails'
   | 'codeDepositedDetails'
   | 'protocolsDepositedDetails'
-  | 'labMaterialsRegisteredDetails';
+  | 'labMaterialsRegisteredDetails'
+  | 'availabilityStatementDetails';
 
 interface QuickCheckQuestions {
   field: QuickCheck;
@@ -603,6 +619,10 @@ export const quickCheckQuestions: QuickCheckQuestions[] = [
   {
     field: 'labMaterialsRegistered',
     question: 'Registered all newly generated lab materials',
+  },
+  {
+    field: 'availabilityStatement',
+    question: 'Included an Availability Statement?',
   },
 ];
 

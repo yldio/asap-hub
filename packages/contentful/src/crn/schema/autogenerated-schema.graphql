@@ -713,6 +713,8 @@ enum DiscoverMembersCollectionOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -804,6 +806,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -1540,6 +1544,10 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -1735,6 +1743,8 @@ enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -1745,6 +1755,8 @@ enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 enum ExternalToolsOrder {
@@ -2422,6 +2434,8 @@ enum InterestGroupsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -2432,6 +2446,8 @@ enum InterestGroupsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 """The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
@@ -2483,6 +2499,10 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -2617,6 +2637,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -2669,6 +2691,8 @@ type ManuscriptVersions implements Entry & _Node {
   additionalFilesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): AssetCollection
   asapAffiliationIncluded(locale: String): String
   asapAffiliationIncludedDetails(locale: String): String
+  availabilityStatement(locale: String): String
+  availabilityStatementDetails(locale: String): String
   codeDeposited(locale: String): String
   codeDepositedDetails(locale: String): String
   contentfulMetadata: ContentfulMetadata!
@@ -2801,6 +2825,20 @@ input ManuscriptVersionsFilter {
   asapAffiliationIncluded_not: String
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
+  availabilityStatement: String
+  availabilityStatementDetails: String
+  availabilityStatementDetails_contains: String
+  availabilityStatementDetails_exists: Boolean
+  availabilityStatementDetails_in: [String]
+  availabilityStatementDetails_not: String
+  availabilityStatementDetails_not_contains: String
+  availabilityStatementDetails_not_in: [String]
+  availabilityStatement_contains: String
+  availabilityStatement_exists: Boolean
+  availabilityStatement_in: [String]
+  availabilityStatement_not: String
+  availabilityStatement_not_contains: String
+  availabilityStatement_not_in: [String]
   codeDeposited: String
   codeDepositedDetails: String
   codeDepositedDetails_contains: String
@@ -3022,6 +3060,8 @@ enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3043,6 +3083,10 @@ enum ManuscriptVersionsOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -3101,6 +3145,8 @@ enum ManuscriptVersionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -3111,6 +3157,8 @@ enum ManuscriptVersionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts)"""
@@ -3119,6 +3167,7 @@ type Manuscripts implements Entry & _Node {
   contentfulMetadata: ContentfulMetadata!
   eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
+  status(locale: String): String
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptsTeamsCollection
   title(locale: String): String
@@ -3140,6 +3189,13 @@ input ManuscriptsFilter {
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
   eligibilityReasons_exists: Boolean
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
   sys: SysFilter
   teams: cfTeamsNestedFilter
   teamsCollection_exists: Boolean
@@ -3159,6 +3215,8 @@ type ManuscriptsLinkingCollections {
 }
 
 enum ManuscriptsOrder {
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3183,6 +3241,8 @@ enum ManuscriptsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -3193,6 +3253,8 @@ enum ManuscriptsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 type ManuscriptsVersionsCollection {
@@ -3211,6 +3273,10 @@ enum ManuscriptsVersionsCollectionOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -3943,7 +4009,6 @@ type ResearchOutputs implements Entry & _Node {
   publishDate(locale: String): DateTime
   relatedEventsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): ResearchOutputsRelatedEventsCollection
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
-  researchTheme(locale: String): [String]
   rrid(locale: String): String
   sharingStatus(locale: String): String
   shortDescription(locale: String): String
@@ -4181,10 +4246,6 @@ input ResearchOutputsFilter {
   relatedEventsCollection_exists: Boolean
   relatedResearch: cfResearchOutputsNestedFilter
   relatedResearchCollection_exists: Boolean
-  researchTheme_contains_all: [String]
-  researchTheme_contains_none: [String]
-  researchTheme_contains_some: [String]
-  researchTheme_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -4376,6 +4437,8 @@ enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -4386,6 +4449,8 @@ enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 type ResearchOutputsMethodsCollection {
@@ -4597,6 +4662,8 @@ enum ResearchOutputsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -4607,6 +4674,8 @@ enum ResearchOutputsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 type ResearchOutputsVersionsCollection {
@@ -4837,6 +4906,8 @@ enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -4847,6 +4918,8 @@ enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -4923,6 +4996,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -5027,6 +5102,8 @@ enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -5037,6 +5114,8 @@ enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 enum ResearchThemeOrder {
@@ -5132,6 +5211,8 @@ enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -5142,6 +5223,8 @@ enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 enum SupplementGrantOrder {
@@ -5298,6 +5381,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -5349,6 +5434,7 @@ type Teams implements Entry & _Node {
   applicationNumber(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   displayName(locale: String): String
+  grantId(locale: String): String
   inactiveSince(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): TeamsLinkingCollections
   projectSummary(locale: String): String
@@ -5358,6 +5444,7 @@ type Teams implements Entry & _Node {
   researchTheme(locale: String, preview: Boolean, where: ResearchThemeFilter): ResearchTheme
   supplementGrant(locale: String, preview: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
+  teamId(locale: String): String
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
 }
 
@@ -5386,6 +5473,13 @@ input TeamsFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
+  grantId: String
+  grantId_contains: String
+  grantId_exists: Boolean
+  grantId_in: [String]
+  grantId_not: String
+  grantId_not_contains: String
+  grantId_not_in: [String]
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -5418,6 +5512,13 @@ input TeamsFilter {
   supplementGrant: cfSupplementGrantNestedFilter
   supplementGrant_exists: Boolean
   sys: SysFilter
+  teamId: String
+  teamId_contains: String
+  teamId_exists: Boolean
+  teamId_in: [String]
+  teamId_not: String
+  teamId_not_contains: String
+  teamId_not_in: [String]
   tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
 }
@@ -5486,6 +5587,10 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -5533,6 +5638,8 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -5641,6 +5748,8 @@ enum TeamsOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -5651,6 +5760,8 @@ enum TeamsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 type TeamsResearchTagsCollection {
@@ -6053,6 +6164,8 @@ enum TutorialsTeamsCollectionOrder {
   applicationNumber_DESC
   displayName_ASC
   displayName_DESC
+  grantId_ASC
+  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   sys_firstPublishedAt_ASC
@@ -6063,6 +6176,8 @@ enum TutorialsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  teamId_ASC
+  teamId_DESC
 }
 
 type TutorialsText {
@@ -6138,6 +6253,7 @@ type Users implements Entry & _Node {
   middleName(locale: String): String
   nickname(locale: String): String
   onboarded(locale: String): Boolean
+  openScienceTeamMember(locale: String): Boolean
   orcid(locale: String): String
   orcidLastModifiedDate(locale: String): DateTime
   orcidLastSyncDate(locale: String): DateTime
@@ -6147,7 +6263,6 @@ type Users implements Entry & _Node {
   researchGate(locale: String): String
   researchInterests(locale: String): String
   researchTagsCollection(limit: Int = 100, locale: String, order: [UsersResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): UsersResearchTagsCollection
-  researchTheme(locale: String): [String]
   researcherId(locale: String): String
   responsibilities(locale: String): String
   role(locale: String): String
@@ -6352,6 +6467,9 @@ input UsersFilter {
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
+  openScienceTeamMember: Boolean
+  openScienceTeamMember_exists: Boolean
+  openScienceTeamMember_not: Boolean
   orcid: String
   orcidLastModifiedDate: DateTime
   orcidLastModifiedDate_exists: Boolean
@@ -6402,10 +6520,6 @@ input UsersFilter {
   researchInterests_not_in: [String]
   researchTags: cfResearchTagsNestedFilter
   researchTagsCollection_exists: Boolean
-  researchTheme_contains_all: [String]
-  researchTheme_contains_none: [String]
-  researchTheme_contains_some: [String]
-  researchTheme_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean
@@ -6538,6 +6652,10 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   asapAffiliationIncludedDetails_DESC
   asapAffiliationIncluded_ASC
   asapAffiliationIncluded_DESC
+  availabilityStatementDetails_ASC
+  availabilityStatementDetails_DESC
+  availabilityStatement_ASC
+  availabilityStatement_DESC
   codeDepositedDetails_ASC
   codeDepositedDetails_DESC
   codeDeposited_ASC
@@ -6733,6 +6851,8 @@ enum UsersOrder {
   nickname_DESC
   onboarded_ASC
   onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
   orcidLastModifiedDate_ASC
   orcidLastModifiedDate_DESC
   orcidLastSyncDate_ASC
@@ -7685,6 +7805,20 @@ input cfManuscriptVersionsNestedFilter {
   asapAffiliationIncluded_not: String
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
+  availabilityStatement: String
+  availabilityStatementDetails: String
+  availabilityStatementDetails_contains: String
+  availabilityStatementDetails_exists: Boolean
+  availabilityStatementDetails_in: [String]
+  availabilityStatementDetails_not: String
+  availabilityStatementDetails_not_contains: String
+  availabilityStatementDetails_not_in: [String]
+  availabilityStatement_contains: String
+  availabilityStatement_exists: Boolean
+  availabilityStatement_in: [String]
+  availabilityStatement_not: String
+  availabilityStatement_not_contains: String
+  availabilityStatement_not_in: [String]
   codeDeposited: String
   codeDepositedDetails: String
   codeDepositedDetails_contains: String
@@ -8108,10 +8242,6 @@ input cfResearchOutputsNestedFilter {
   publishDate_not_in: [DateTime]
   relatedEventsCollection_exists: Boolean
   relatedResearchCollection_exists: Boolean
-  researchTheme_contains_all: [String]
-  researchTheme_contains_none: [String]
-  researchTheme_contains_some: [String]
-  researchTheme_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -8304,6 +8434,13 @@ input cfTeamsNestedFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
+  grantId: String
+  grantId_contains: String
+  grantId_exists: Boolean
+  grantId_in: [String]
+  grantId_not: String
+  grantId_not_contains: String
+  grantId_not_in: [String]
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -8332,6 +8469,13 @@ input cfTeamsNestedFilter {
   researchTheme_exists: Boolean
   supplementGrant_exists: Boolean
   sys: SysFilter
+  teamId: String
+  teamId_contains: String
+  teamId_exists: Boolean
+  teamId_in: [String]
+  teamId_not: String
+  teamId_not_contains: String
+  teamId_not_in: [String]
   toolsCollection_exists: Boolean
 }
 
@@ -8612,6 +8756,9 @@ input cfUsersNestedFilter {
   onboarded: Boolean
   onboarded_exists: Boolean
   onboarded_not: Boolean
+  openScienceTeamMember: Boolean
+  openScienceTeamMember_exists: Boolean
+  openScienceTeamMember_not: Boolean
   orcid: String
   orcidLastModifiedDate: DateTime
   orcidLastModifiedDate_exists: Boolean
@@ -8661,10 +8808,6 @@ input cfUsersNestedFilter {
   researchInterests_not_contains: String
   researchInterests_not_in: [String]
   researchTagsCollection_exists: Boolean
-  researchTheme_contains_all: [String]
-  researchTheme_contains_none: [String]
-  researchTheme_contains_some: [String]
-  researchTheme_exists: Boolean
   researcherId: String
   researcherId_contains: String
   researcherId_exists: Boolean

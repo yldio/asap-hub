@@ -20,10 +20,7 @@ const meta: Meta<typeof StatusButton> = {
   component: ({ canEdit }) => {
     const [selectedStatus, setSelectedStatus] = useState(statusItems[0]);
     return (
-      <StatusButton
-        buttonChildren={() => selectedStatus}
-        canEdit={canEdit}
-      >
+      <StatusButton buttonChildren={() => selectedStatus} canEdit={canEdit}>
         {statusItems.map((statusItem) => ({
           item: statusItem,
           onClick: () => {

@@ -16,7 +16,10 @@ import {
 import { mobileScreen, perRem, rem } from '../pixels';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
-type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions' | 'status'> & {
+type ManuscriptCardProps = Pick<
+  TeamManuscript,
+  'id' | 'title' | 'versions' | 'status'
+> & {
   teamId: string;
   canShareComplianceReport: boolean;
 };
@@ -75,7 +78,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   canShareComplianceReport,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(status || 'No Status');
+  const [selectedStatus, setSelectedStatus] = useState(status || '');
   const canEditStatus = useCurrentUserCRN()?.role === 'Staff';
   const history = useHistory();
 

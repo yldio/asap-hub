@@ -207,6 +207,10 @@ export const parseGraphqlManuscriptVersion = (
         version?.labMaterialsRegistered === 'No'
           ? version?.labMaterialsRegisteredDetails
           : undefined,
+      availabilityStatementDetails:
+        version?.availabilityStatement === 'No'
+          ? version?.availabilityStatementDetails
+          : undefined,
       createdBy: {
         id: version?.createdBy?.sys.id,
         firstName: version?.createdBy?.firstName || '',

@@ -1056,6 +1056,8 @@ export enum DiscoverMembersCollectionOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -1147,6 +1149,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -2189,6 +2193,10 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -2422,6 +2430,8 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -2432,6 +2442,8 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export enum ExternalToolsOrder {
@@ -3387,6 +3399,8 @@ export enum InterestGroupsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3397,6 +3411,8 @@ export enum InterestGroupsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/labs) */
@@ -3493,6 +3509,10 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -3627,6 +3647,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -3680,6 +3702,8 @@ export type ManuscriptVersions = Entry &
     additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
     asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
+    availabilityStatement?: Maybe<Scalars['String']>;
+    availabilityStatementDetails?: Maybe<Scalars['String']>;
     codeDeposited?: Maybe<Scalars['String']>;
     codeDepositedDetails?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
@@ -3745,6 +3769,16 @@ export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAvailabilityStatementArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAvailabilityStatementDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4024,6 +4058,26 @@ export type ManuscriptVersionsFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  availabilityStatement?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatementDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatement_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  availabilityStatement_not?: InputMaybe<Scalars['String']>;
+  availabilityStatement_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatement_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   codeDeposited?: InputMaybe<Scalars['String']>;
   codeDepositedDetails?: InputMaybe<Scalars['String']>;
   codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
@@ -4299,6 +4353,8 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
 }
 
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4320,6 +4376,10 @@ export enum ManuscriptVersionsOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -4378,6 +4438,8 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -4388,6 +4450,8 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -4397,6 +4461,7 @@ export type Manuscripts = Entry &
     contentfulMetadata: ContentfulMetadata;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
+    status?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
     title?: Maybe<Scalars['String']>;
@@ -4411,6 +4476,11 @@ export type ManuscriptsEligibilityReasonsArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -4459,6 +4529,13 @@ export type ManuscriptsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   eligibilityReasons_exists?: InputMaybe<Scalars['Boolean']>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   teams?: InputMaybe<CfTeamsNestedFilter>;
   teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4485,6 +4562,8 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ManuscriptsOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4509,6 +4588,8 @@ export enum ManuscriptsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -4519,6 +4600,8 @@ export enum ManuscriptsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export type ManuscriptsVersionsCollection = {
@@ -4537,6 +4620,10 @@ export enum ManuscriptsVersionsCollectionOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -6056,7 +6143,6 @@ export type ResearchOutputs = Entry &
     publishDate?: Maybe<Scalars['DateTime']>;
     relatedEventsCollection?: Maybe<ResearchOutputsRelatedEventsCollection>;
     relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
-    researchTheme?: Maybe<Array<Maybe<Scalars['String']>>>;
     rrid?: Maybe<Scalars['String']>;
     sharingStatus?: Maybe<Scalars['String']>;
     shortDescription?: Maybe<Scalars['String']>;
@@ -6242,11 +6328,6 @@ export type ResearchOutputsRelatedResearchCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchOutputsFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
-export type ResearchOutputsResearchThemeArgs = {
-  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -6563,14 +6644,6 @@ export type ResearchOutputsFilter = {
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearch?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchTheme_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6803,6 +6876,8 @@ export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -6813,6 +6888,8 @@ export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export type ResearchOutputsMethodsCollection = {
@@ -7024,6 +7101,8 @@ export enum ResearchOutputsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7034,6 +7113,8 @@ export enum ResearchOutputsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export type ResearchOutputsVersionsCollection = {
@@ -7378,6 +7459,8 @@ export enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7388,6 +7471,8 @@ export enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -7464,6 +7549,8 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -7596,6 +7683,8 @@ export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7606,6 +7695,8 @@ export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export enum ResearchThemeOrder {
@@ -7751,6 +7842,8 @@ export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7761,6 +7854,8 @@ export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export enum SupplementGrantOrder {
@@ -7957,6 +8052,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -8009,6 +8106,7 @@ export type Teams = Entry &
     applicationNumber?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     displayName?: Maybe<Scalars['String']>;
+    grantId?: Maybe<Scalars['String']>;
     inactiveSince?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<TeamsLinkingCollections>;
     projectSummary?: Maybe<Scalars['String']>;
@@ -8018,6 +8116,7 @@ export type Teams = Entry &
     researchTheme?: Maybe<ResearchTheme>;
     supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
+    teamId?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<TeamsToolsCollection>;
   };
 
@@ -8028,6 +8127,11 @@ export type TeamsApplicationNumberArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsDisplayNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsGrantIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -8083,6 +8187,11 @@ export type TeamsSupplementGrantArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsTeamIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsToolsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -8117,6 +8226,13 @@ export type TeamsFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId?: InputMaybe<Scalars['String']>;
+  grantId_contains?: InputMaybe<Scalars['String']>;
+  grantId_exists?: InputMaybe<Scalars['Boolean']>;
+  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId_not?: InputMaybe<Scalars['String']>;
+  grantId_not_contains?: InputMaybe<Scalars['String']>;
+  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -8149,6 +8265,13 @@ export type TeamsFilter = {
   supplementGrant?: InputMaybe<CfSupplementGrantNestedFilter>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  teamId?: InputMaybe<Scalars['String']>;
+  teamId_contains?: InputMaybe<Scalars['String']>;
+  teamId_exists?: InputMaybe<Scalars['Boolean']>;
+  teamId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamId_not?: InputMaybe<Scalars['String']>;
+  teamId_not_contains?: InputMaybe<Scalars['String']>;
+  teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   tools?: InputMaybe<CfExternalToolsNestedFilter>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -8304,6 +8427,10 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -8351,6 +8478,8 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -8459,6 +8588,8 @@ export enum TeamsOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8469,6 +8600,8 @@ export enum TeamsOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export type TeamsResearchTagsCollection = {
@@ -9006,6 +9139,8 @@ export enum TutorialsTeamsCollectionOrder {
   ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9016,6 +9151,8 @@ export enum TutorialsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamIdAsc = 'teamId_ASC',
+  TeamIdDesc = 'teamId_DESC',
 }
 
 export type TutorialsText = {
@@ -9092,6 +9229,7 @@ export type Users = Entry &
     middleName?: Maybe<Scalars['String']>;
     nickname?: Maybe<Scalars['String']>;
     onboarded?: Maybe<Scalars['Boolean']>;
+    openScienceTeamMember?: Maybe<Scalars['Boolean']>;
     orcid?: Maybe<Scalars['String']>;
     orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
     orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
@@ -9101,7 +9239,6 @@ export type Users = Entry &
     researchGate?: Maybe<Scalars['String']>;
     researchInterests?: Maybe<Scalars['String']>;
     researchTagsCollection?: Maybe<UsersResearchTagsCollection>;
-    researchTheme?: Maybe<Array<Maybe<Scalars['String']>>>;
     researcherId?: Maybe<Scalars['String']>;
     responsibilities?: Maybe<Scalars['String']>;
     role?: Maybe<Scalars['String']>;
@@ -9265,6 +9402,11 @@ export type UsersOnboardedArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersOpenScienceTeamMemberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersOrcidArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -9312,11 +9454,6 @@ export type UsersResearchTagsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchTagsFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
-export type UsersResearchThemeArgs = {
-  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -9565,6 +9702,9 @@ export type UsersFilter = {
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember_exists?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember_not?: InputMaybe<Scalars['Boolean']>;
   orcid?: InputMaybe<Scalars['String']>;
   orcidLastModifiedDate?: InputMaybe<Scalars['DateTime']>;
   orcidLastModifiedDate_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9617,14 +9757,6 @@ export type UsersFilter = {
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchTheme_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9846,6 +9978,10 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
   CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
@@ -10041,6 +10177,8 @@ export enum UsersOrder {
   NicknameDesc = 'nickname_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
   OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
   OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
   OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
@@ -11228,6 +11366,26 @@ export type CfManuscriptVersionsNestedFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  availabilityStatement?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatementDetails_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  availabilityStatement_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
+  availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  availabilityStatement_not?: InputMaybe<Scalars['String']>;
+  availabilityStatement_not_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatement_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
   codeDeposited?: InputMaybe<Scalars['String']>;
   codeDepositedDetails?: InputMaybe<Scalars['String']>;
   codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
@@ -11675,14 +11833,6 @@ export type CfResearchOutputsNestedFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchTheme_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -11875,6 +12025,13 @@ export type CfTeamsNestedFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId?: InputMaybe<Scalars['String']>;
+  grantId_contains?: InputMaybe<Scalars['String']>;
+  grantId_exists?: InputMaybe<Scalars['Boolean']>;
+  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId_not?: InputMaybe<Scalars['String']>;
+  grantId_not_contains?: InputMaybe<Scalars['String']>;
+  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -11903,6 +12060,13 @@ export type CfTeamsNestedFilter = {
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
+  teamId?: InputMaybe<Scalars['String']>;
+  teamId_contains?: InputMaybe<Scalars['String']>;
+  teamId_exists?: InputMaybe<Scalars['Boolean']>;
+  teamId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  teamId_not?: InputMaybe<Scalars['String']>;
+  teamId_not_contains?: InputMaybe<Scalars['String']>;
+  teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12191,6 +12355,9 @@ export type CfUsersNestedFilter = {
   onboarded?: InputMaybe<Scalars['Boolean']>;
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember_exists?: InputMaybe<Scalars['Boolean']>;
+  openScienceTeamMember_not?: InputMaybe<Scalars['Boolean']>;
   orcid?: InputMaybe<Scalars['String']>;
   orcidLastModifiedDate?: InputMaybe<Scalars['DateTime']>;
   orcidLastModifiedDate_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12242,14 +12409,6 @@ export type CfUsersNestedFilter = {
   researchInterests_not_contains?: InputMaybe<Scalars['String']>;
   researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTheme_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  researchTheme_contains_none?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_contains_some?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   researcherId?: InputMaybe<Scalars['String']>;
   researcherId_contains?: InputMaybe<Scalars['String']>;
   researcherId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -16902,6 +17061,8 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           | 'protocolsDepositedDetails'
           | 'labMaterialsRegistered'
           | 'labMaterialsRegisteredDetails'
+          | 'availabilityStatement'
+          | 'availabilityStatementDetails'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
           manuscriptFile?: Maybe<
@@ -16996,6 +17157,8 @@ export type FetchManuscriptByIdQuery = {
               | 'protocolsDepositedDetails'
               | 'labMaterialsRegistered'
               | 'labMaterialsRegisteredDetails'
+              | 'availabilityStatement'
+              | 'availabilityStatementDetails'
             > & {
               sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
               manuscriptFile?: Maybe<
@@ -18648,6 +18811,8 @@ export type FetchTeamByIdQuery = {
                         | 'protocolsDepositedDetails'
                         | 'labMaterialsRegistered'
                         | 'labMaterialsRegisteredDetails'
+                        | 'availabilityStatement'
+                        | 'availabilityStatementDetails'
                       > & {
                         sys: Pick<
                           Sys,
@@ -22594,6 +22759,17 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'labMaterialsRegisteredDetails',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'availabilityStatement' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'availabilityStatementDetails',
                         },
                       },
                       {

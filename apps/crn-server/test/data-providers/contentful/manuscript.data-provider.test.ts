@@ -78,6 +78,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       ${'codeDeposited'}           | ${'codeDepositedDetails'}
       ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
       ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+      ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
     `(
       'should return $fieldDetails value if $field is No',
       async ({
@@ -110,6 +111,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       ${'codeDeposited'}           | ${'codeDepositedDetails'}
       ${'protocolsDeposited'}      | ${'protocolsDepositedDetails'}
       ${'labMaterialsRegistered'}  | ${'labMaterialsRegisteredDetails'}
+      ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
     `(
       'should return $fieldDetails as undefined if $field is Yes',
       async ({

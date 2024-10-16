@@ -60,6 +60,8 @@ export const manuscriptContentQueryFragment = gql`
         protocolsDepositedDetails
         labMaterialsRegistered
         labMaterialsRegisteredDetails
+        availabilityStatement
+        availabilityStatementDetails
         teamsCollection(limit: 10) {
           items {
             sys {

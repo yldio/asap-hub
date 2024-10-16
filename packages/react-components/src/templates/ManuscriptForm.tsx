@@ -15,6 +15,7 @@ import {
   manuscriptTypes,
   ManuscriptVersion,
   QuestionChecksOption,
+  QuickCheck,
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
@@ -166,6 +167,22 @@ export const getPostAuthors = (
   return [];
 };
 
+const getQuickCheckDescription = (quickCheck: QuickCheck) => {
+  if (quickCheck === 'availabilityStatement') {
+    return (
+      <>
+        Review the{' '}
+        <Link href="https://docs.google.com/document/d/1rkAsm9UrElP8OhXCdxQXKxNGWz4HsOAIXrYtfxAn7kI/edit">
+          compliance checklist
+        </Link>{' '}
+        for more information.
+      </>
+    );
+  }
+
+  return null;
+};
+
 const getFieldsToReset = (
   fieldsList: OptionalVersionFields,
   manuscriptType: ManuscriptType,
@@ -280,6 +297,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   codeDeposited,
   protocolsDeposited,
   labMaterialsRegistered,
+  availabilityStatement,
   acknowledgedGrantNumberDetails,
   asapAffiliationIncludedDetails,
   manuscriptLicenseDetails,
@@ -287,6 +305,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   codeDepositedDetails,
   protocolsDepositedDetails,
   labMaterialsRegisteredDetails,
+  availabilityStatementDetails,
   getTeamSuggestions,
   selectedTeams,
   getLabSuggestions,
@@ -322,6 +341,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           codeDeposited: codeDeposited || '',
           protocolsDeposited: protocolsDeposited || '',
           labMaterialsRegistered: labMaterialsRegistered || '',
+          availabilityStatement: availabilityStatement || '',
           acknowledgedGrantNumberDetails: acknowledgedGrantNumberDetails || '',
           asapAffiliationIncludedDetails: asapAffiliationIncludedDetails || '',
           manuscriptLicenseDetails: manuscriptLicenseDetails || '',
@@ -329,6 +349,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           codeDepositedDetails: codeDepositedDetails || '',
           protocolsDepositedDetails: protocolsDepositedDetails || '',
           labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
+          availabilityStatementDetails: availabilityStatementDetails || '',
           teams: selectedTeams || [],
           description: description || '',
           firstAuthors: firstAuthors || [],
@@ -1123,6 +1144,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           <LabeledRadioButtonGroup<QuestionChecksOption | ''>
                             title={question}
                             subtitle="(required)"
+                            description={getQuickCheckDescription(field)}
                             options={[
                               {
                                 value: 'Yes',

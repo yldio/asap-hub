@@ -605,6 +605,94 @@ export enum CalendarsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReports = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
+    manuscriptVersion?: Maybe<ManuscriptVersions>;
+    sys: Sys;
+    url?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsManuscriptVersionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsUrlArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ComplianceReportsCollection = {
+  items: Array<Maybe<ComplianceReports>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ComplianceReportsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  manuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
+  manuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  url?: InputMaybe<Scalars['String']>;
+  url_contains?: InputMaybe<Scalars['String']>;
+  url_exists?: InputMaybe<Scalars['Boolean']>;
+  url_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  url_not?: InputMaybe<Scalars['String']>;
+  url_not_contains?: InputMaybe<Scalars['String']>;
+  url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ComplianceReportsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ComplianceReportsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ComplianceReportsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
@@ -4160,9 +4248,23 @@ export enum ManuscriptVersionsLabsCollectionOrder {
 }
 
 export type ManuscriptVersionsLinkingCollections = {
+  complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
 };
+
+export type ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder>
+      >
+    >;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
 
 export type ManuscriptVersionsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -4182,6 +4284,19 @@ export type ManuscriptVersionsLinkingCollectionsManuscriptsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
 
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -5057,6 +5172,8 @@ export type Query = {
   assetCollection?: Maybe<AssetCollection>;
   calendars?: Maybe<Calendars>;
   calendarsCollection?: Maybe<CalendarsCollection>;
+  complianceReports?: Maybe<ComplianceReports>;
+  complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
   discover?: Maybe<Discover>;
@@ -5173,6 +5290,21 @@ export type QueryCalendarsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<CalendarsFilter>;
+};
+
+export type QueryComplianceReportsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryComplianceReportsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ComplianceReportsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ComplianceReportsFilter>;
 };
 
 export type QueryDashboardArgs = {
@@ -12903,6 +13035,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Calendars' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ComplianceReports' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Dashboard' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -13044,6 +13179,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Calendars' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ComplianceReports' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Dashboard' } & {
@@ -13213,6 +13351,9 @@ export type FetchDiscoverQuery = {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'ComplianceReports' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
                     | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'EventSpeakers' } & {
@@ -13381,6 +13522,7 @@ export type EventsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -13451,6 +13593,7 @@ export type EventsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -13521,6 +13664,7 @@ export type EventsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -13708,6 +13852,9 @@ export type FetchEventByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -13790,6 +13937,9 @@ export type FetchEventByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -13872,6 +14022,9 @@ export type FetchEventByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -14090,6 +14243,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ComplianceReports' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14202,6 +14358,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ComplianceReports' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14312,6 +14471,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -14577,6 +14739,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -14706,6 +14871,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -14833,6 +15001,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ComplianceReports' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Dashboard' } & {
@@ -15140,6 +15311,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15269,6 +15443,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15396,6 +15573,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ComplianceReports' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Dashboard' } & {
@@ -15703,6 +15883,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15832,6 +16015,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ComplianceReports' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Dashboard' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15959,6 +16145,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ComplianceReports' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Dashboard' } & {
@@ -16756,6 +16945,13 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
               }>;
             }
           >;
+          linkedFrom?: Maybe<{
+            complianceReportsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+              >;
+            }>;
+          }>;
         }
       >
     >;
@@ -16847,6 +17043,13 @@ export type FetchManuscriptByIdQuery = {
                   }>;
                 }
               >;
+              linkedFrom?: Maybe<{
+                complianceReportsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+                  >;
+                }>;
+              }>;
             }
           >
         >;
@@ -16869,6 +17072,7 @@ export type NewsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -16954,6 +17158,9 @@ export type FetchNewsByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -17068,6 +17275,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -17193,6 +17403,7 @@ export type PageContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -17278,6 +17489,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -17595,6 +17809,7 @@ export type ResearchOutputsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -17822,6 +18037,9 @@ export type FetchResearchOutputByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -18077,6 +18295,9 @@ export type FetchResearchOutputsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -18488,6 +18709,15 @@ export type FetchTeamByIdQuery = {
                             }>;
                           }
                         >;
+                        linkedFrom?: Maybe<{
+                          complianceReportsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<ComplianceReports, 'url' | 'description'>
+                              >
+                            >;
+                          }>;
+                        }>;
                       }
                     >
                   >;
@@ -18609,6 +18839,7 @@ export type TutorialsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -18743,6 +18974,9 @@ export type FetchTutorialByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -18906,6 +19140,9 @@ export type FetchTutorialsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -19825,6 +20062,7 @@ export type WorkingGroupsContentFragment = Pick<
             Maybe<
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -19988,6 +20226,9 @@ export type FetchWorkingGroupByIdQuery = {
                 Maybe<
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ComplianceReports' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
@@ -20177,6 +20418,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ComplianceReports' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Dashboard' } & {
@@ -22546,6 +22790,54 @@ export const ManuscriptsContentFragmentDoc = {
                                                 },
                                               },
                                             ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'complianceReportsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'description',
                                           },
                                         },
                                       ],

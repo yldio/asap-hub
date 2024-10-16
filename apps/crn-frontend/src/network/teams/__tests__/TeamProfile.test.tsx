@@ -5,6 +5,7 @@ import {
 import {
   createListEventResponse,
   createListResearchOutputResponse,
+  createManuscriptResponse,
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
@@ -38,6 +39,12 @@ import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
+const manuscriptResponse = {
+  id: 'manuscript-1',
+  title: 'The Manuscript',
+  versions: [{ id: 'manuscript-version-1' }],
+};
+
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getTeam: jest.fn(),
@@ -50,6 +57,7 @@ jest.mock('../api', () => ({
   createManuscript: jest
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),
+  getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
 }));
 
 jest.mock('../interest-groups/api');
@@ -287,6 +295,7 @@ it('does not allow navigating to the workspace tab when team tools are not avail
     screen.queryByText(/workspace/i, { selector: 'nav *' }),
   ).not.toBeInTheDocument();
 });
+
 describe('Share Output', () => {
   it('shows share outputs button and page when the user has permissions user clicks an option', async () => {
     const teamResponse = createTeamResponse();
@@ -478,6 +487,86 @@ describe('Duplicate Output', () => {
       history,
     );
     expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+  });
+});
+
+describe('Create Compliance Report', () => {
+  it('allows a user who is an ASAP staff to view Share Compliance Report button', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    const teamResponse = createTeamResponse();
+    const userResponse = createUserResponse({}, 1);
+
+    teamResponse.manuscripts = [createManuscriptResponse()];
+    userResponse.role = 'Staff';
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
+      ],
+    });
+    await renderPage(
+      teamResponse,
+      { teamId: teamResponse.id, currentTime: new Date() },
+      {
+        ...userResponse,
+        teams: [
+          {
+            ...userResponse.teams[0],
+            id: teamResponse.id,
+            role: 'Key Personnel',
+          },
+        ],
+      },
+      history,
+    );
+
+    expect(
+      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('allows a user who is an ASAP staff to create a compliance report', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    const teamResponse = createTeamResponse();
+    const userResponse = createUserResponse({}, 1);
+    const teamManuscript = createManuscriptResponse();
+    teamResponse.manuscripts = [teamManuscript];
+    userResponse.role = 'Staff';
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
+      ],
+    });
+    await renderPage(
+      teamResponse,
+      { teamId: teamResponse.id, currentTime: new Date() },
+      {
+        ...userResponse,
+        teams: [
+          {
+            ...userResponse.teams[0],
+            id: teamResponse.id,
+            role: 'Key Personnel',
+          },
+        ],
+      },
+      history,
+    );
+
+    userEvent.click(
+      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
+    );
+
+    expect(
+      await screen.findByText(
+        /Share the compliance report associated with this manuscript./,
+      ),
+    ).toBeInTheDocument();
+
+    expect(history.location.pathname).toEqual(
+      `/network/teams/${teamResponse.id}/workspace/create-compliance-report/${teamManuscript.id}`,
+    );
   });
 });
 

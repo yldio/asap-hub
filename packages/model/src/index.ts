@@ -3,6 +3,7 @@ export * from './authors';
 export * from './calendar';
 export * from './calendar-common';
 export * from './common';
+export * from './compliance-report';
 export * from './controllers';
 export * from './dashboard';
 export * from './data-providers';

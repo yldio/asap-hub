@@ -23,6 +23,7 @@ export { default as chevronLeftIcon } from './chevron-left';
 export { default as chevronRightIcon } from './chevron-right';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
+export { default as complianceReportIcon } from './compliance-report';
 export { default as confidentialIcon } from './confidential';
 export { default as copyIcon } from './copy-icon';
 export { default as crnReportIcon } from './crnReport';

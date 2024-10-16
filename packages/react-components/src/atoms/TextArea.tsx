@@ -72,7 +72,7 @@ type TextAreaProps = {
   readonly extras?: React.ReactNode;
 } & Pick<
   InputHTMLAttributes<HTMLTextAreaElement>,
-  'id' | 'placeholder' | 'required' | 'maxLength'
+  'id' | 'placeholder' | 'required' | 'maxLength' | 'onBlur'
 >;
 const TextArea: React.FC<TextAreaProps> = ({
   enabled = true,
@@ -85,6 +85,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   value,
   onChange = noop,
+  onBlur,
 
   extras,
 
@@ -122,6 +123,7 @@ const TextArea: React.FC<TextAreaProps> = ({
             },
           },
         ]}
+        {...(onBlur ? { onBlur } : {})}
       />
       <div>
         <div css={validationMessageStyles}>

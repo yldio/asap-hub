@@ -162,6 +162,7 @@ const TextField: React.FC<TextFieldProps> = ({
 
   value,
   onChange = noop,
+  onBlur,
 
   ...props
 }) => {
@@ -205,6 +206,7 @@ const TextField: React.FC<TextFieldProps> = ({
             ':focus': { borderColor: colors.primary500.rgba },
           },
         ]}
+        {...(onBlur ? { onBlur } : {})}
       />
 
       {labelIndicator && (

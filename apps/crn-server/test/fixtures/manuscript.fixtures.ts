@@ -17,6 +17,7 @@ export const getManuscriptDataObject = (
   teamId: 'team-1',
   versions: [
     {
+      id: 'version-1',
       lifecycle: 'Preprint',
       type: 'Original Research',
       createdBy: manuscriptAuthor,
@@ -140,8 +141,9 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
   const {
     createdBy: _,
     createdDate: __,
-    publishedAt: ___,
-    teams: ____,
+    id: ___,
+    publishedAt: ____,
+    teams: _____,
     ...version
   } = versions[0]!;
   return {
@@ -189,6 +191,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     teams: _,
     publishedAt: __,
     createdDate: ___,
+    id: ____,
     ...version
   } = versions[0]!;
 

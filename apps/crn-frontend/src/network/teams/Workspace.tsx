@@ -9,7 +9,7 @@ import { TeamTool, TeamResponse } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
-import { usePatchTeamById } from './state';
+import { useCanShareComplianceReport, usePatchTeamById } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 
 interface WorkspaceProps {
@@ -19,6 +19,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
   const { path } = useRouteMatch();
   const { setEligibilityReasons } = useEligibilityReason();
+  const canShareComplianceReport = useCanShareComplianceReport();
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
@@ -50,6 +51,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                   setDeleting(false);
                 }
           }
+          canShareComplianceReport={canShareComplianceReport}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

@@ -17032,7 +17032,10 @@ export type FetchLabsQuery = {
   >;
 };
 
-export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
+export type ManuscriptsContentFragment = Pick<
+  Manuscripts,
+  'title' | 'status'
+> & {
   sys: Pick<Sys, 'id'>;
   versionsCollection?: Maybe<{
     items: Array<
@@ -17125,7 +17128,7 @@ export type FetchManuscriptByIdQueryVariables = Exact<{
 
 export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
-    Pick<Manuscripts, 'title'> & {
+    Pick<Manuscripts, 'title' | 'status'> & {
       teamsCollection?: Maybe<{
         items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
       }>;
@@ -18782,7 +18785,7 @@ export type FetchTeamByIdQuery = {
         manuscriptsCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Manuscripts, 'title'> & {
+              Pick<Manuscripts, 'title' | 'status'> & {
                 sys: Pick<Sys, 'id'>;
                 versionsCollection?: Maybe<{
                   items: Array<
@@ -22498,6 +22501,7 @@ export const ManuscriptsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'versionsCollection' },

@@ -16,6 +16,7 @@ import {
   ManuscriptDataObject,
   ManuscriptLifecycle,
   manuscriptLifecycles,
+  manuscriptMapStatus,
   ManuscriptType,
   manuscriptTypes,
   ManuscriptVersion,
@@ -139,6 +140,7 @@ const parseGraphQLManuscript = (
   id: manuscripts.sys.id,
   title: manuscripts.title || '',
   teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
+  status: manuscriptMapStatus(manuscripts.status) || undefined,
   versions: parseGraphqlManuscriptVersion(
     manuscripts.versionsCollection?.items || [],
   ),

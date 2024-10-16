@@ -105,12 +105,13 @@ it('displays error message when description is missing', async () => {
 
 it('should go back when cancel button is clicked', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Route path="/form">
-        <ComplianceReportForm {...defaultProps} />
-      </Route>
-    </Router>,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <Router history={history}>
+        <Route path="/form">
+          <ComplianceReportForm {...defaultProps} />
+        </Route>
+      </Router>
+    </MemoryRouter>,
   );
 
   history.push('/another-url');

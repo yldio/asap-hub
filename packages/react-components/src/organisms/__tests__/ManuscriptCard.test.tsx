@@ -12,7 +12,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
 };
 
 it('displays manuscript version card when expanded', () => {
-  const { getByText, queryByText, getByRole, rerender } = render(
+  const { getByText, queryByText, getByTestId, rerender } = render(
     <ManuscriptCard {...props} />,
   );
 
@@ -20,7 +20,7 @@ it('displays manuscript version card when expanded', () => {
 
   expect(queryByText(/Preprint/i)).not.toBeInTheDocument();
 
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByTestId('collapsible-button'));
 
   rerender(
     <ManuscriptCard

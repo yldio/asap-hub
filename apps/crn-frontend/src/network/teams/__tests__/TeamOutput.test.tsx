@@ -14,6 +14,7 @@ import {
 } from '@asap-hub/model';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -39,6 +40,8 @@ jest.mock('../../../shared-research/api');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
+  // TODO: fix act error
+  jest.spyOn(console, 'error').mockImplementation();
 });
 
 const baseUser = createUserResponse();
@@ -76,10 +79,13 @@ const mandatoryFields = async (
 
   userEvent.type(screen.getByRole('textbox', { name: url }), link);
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-  userEvent.type(
-    screen.getByRole('textbox', { name: /^description/i }),
-    descriptionMD,
-  );
+
+  const descriptionEditor = screen.getByTestId('editor');
+  userEvent.click(descriptionEditor);
+  userEvent.tab();
+  fireEvent.input(descriptionEditor, { data: descriptionMD });
+  userEvent.tab();
+
   userEvent.type(
     screen.getByRole('textbox', { name: /short description/i }),
     shortDescription,

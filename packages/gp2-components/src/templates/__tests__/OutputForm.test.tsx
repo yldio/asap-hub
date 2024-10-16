@@ -11,11 +11,15 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
+import { ReactNode } from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
 jest.setTimeout(95_000);
+
+const renderWithRouter = (children: ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -377,7 +381,7 @@ describe('OutputForm', () => {
         projects: [{ id: '1', title: 'a project' }],
         workingGroups: undefined,
       };
-      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+      renderWithRouter(<OutputForm {...output} />);
 
       expect(
         screen.getByRole('textbox', { name: /working groups/i }),
@@ -392,9 +396,8 @@ describe('OutputForm', () => {
     });
 
     it('does not render cohort', () => {
-      render(
+      renderWithRouter(
         <OutputForm {...defaultProps} documentType="Training Materials" />,
-        { wrapper: StaticRouter },
       );
 
       expect(
@@ -446,16 +449,13 @@ describe('OutputForm', () => {
       createVersion = true,
       versions: gp2.OutputVersion[] = [],
     ) =>
-      render(
+      renderWithRouter(
         <OutputForm
           {...defaultProps}
           title={outputTitle}
           createVersion={createVersion}
           versions={versions}
         />,
-        {
-          wrapper: StaticRouter,
-        },
       );
 
     it('does not display version history card when editing an output with no previous versions', () => {
@@ -548,17 +548,15 @@ describe('OutputForm', () => {
 
   describe('Article', () => {
     it('renders type', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
       expect(screen.getByRole('textbox', { name: /^type/i })).toBeVisible();
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%s does not render subtype',
       (type) => {
-        render(<OutputForm {...defaultProps} documentType="Article" />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(
+          <OutputForm {...defaultProps} documentType="Article" />,
+        );
         userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
         userEvent.click(screen.getByText(type));
         expect(
@@ -567,9 +565,7 @@ describe('OutputForm', () => {
       },
     );
     it.each<gp2.OutputType>(['Research'])('%s renders subtype', (type) => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
       userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText(type));
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
@@ -636,9 +632,9 @@ describe('OutputForm', () => {
       `(
         'is not displayed when document type is $documentType',
         ({ documentType }) => {
-          render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
-          });
+          renderWithRouter(
+            <OutputForm {...defaultProps} documentType={documentType} />,
+          );
 
           expect(
             screen.queryByRole('group', {
@@ -657,9 +653,9 @@ describe('OutputForm', () => {
       `(
         'is $gp2SupportedValue by default when document type is $documentType',
         ({ gp2SupportedValue, documentType }) => {
-          render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
-          });
+          renderWithRouter(
+            <OutputForm {...defaultProps} documentType={documentType} />,
+          );
 
           const gp2Supported = screen.getByRole('group', {
             name: /has this output been supported by gp2?/i,
@@ -682,11 +678,8 @@ describe('OutputForm', () => {
       `(
         'is $gp2SupportedValue by default when type is $type',
         ({ gp2SupportedValue, type }) => {
-          render(
+          renderWithRouter(
             <OutputForm {...defaultProps} documentType="Article" type={type} />,
-            {
-              wrapper: StaticRouter,
-            },
           );
 
           const gp2Supported = screen.getByRole('group', {
@@ -701,11 +694,8 @@ describe('OutputForm', () => {
       );
 
       test("is set to 'Yes' and make the gp2 supported disabled when type Blog is selected", () => {
-        render(
+        renderWithRouter(
           <OutputForm {...defaultProps} type="Blog" documentType="Article" />,
-          {
-            wrapper: StaticRouter,
-          },
         );
 
         const gp2Supported = screen.getByRole('group', {
@@ -738,9 +728,9 @@ describe('OutputForm', () => {
       `(
         'is $sharingStatus by default when document type is $documentType',
         ({ sharingStatus, documentType }) => {
-          render(<OutputForm {...defaultProps} documentType={documentType} />, {
-            wrapper: StaticRouter,
-          });
+          renderWithRouter(
+            <OutputForm {...defaultProps} documentType={documentType} />,
+          );
 
           const sharingStatusElement = screen.getByRole('group', {
             name: /sharing status?/i,
@@ -756,9 +746,7 @@ describe('OutputForm', () => {
     it.each<gp2.OutputDocumentType>(['GP2 Reports', 'Training Materials'])(
       'should not render identifier textbox when docType = %d',
       (type) => {
-        render(<OutputForm {...defaultProps} documentType={type} />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(<OutputForm {...defaultProps} documentType={type} />);
 
         expect(
           screen.queryByRole('textbox', { name: /identifier type/i }),
@@ -780,15 +768,12 @@ describe('OutputForm', () => {
         suggestions = defaultSuggestions,
         tags = defaultTags,
       ) =>
-        render(
+        renderWithRouter(
           <OutputForm
             {...defaultProps}
             tagSuggestions={suggestions}
             tags={tags}
           />,
-          {
-            wrapper: StaticRouter,
-          },
         );
 
       it('displays tags empty', () => {
@@ -847,35 +832,27 @@ describe('OutputForm', () => {
 
     describe('identifierType', () => {
       it('returns DOI when doi is present', () => {
-        render(<OutputForm {...defaultProps} doi="123" />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(<OutputForm {...defaultProps} doi="123" />);
 
         expect(screen.getByDisplayValue(/doi/i)).toBeTruthy();
       });
       it('returns RRID when rrid is present', () => {
-        render(<OutputForm {...defaultProps} rrid="123" />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(<OutputForm {...defaultProps} rrid="123" />);
         expect(screen.getByDisplayValue(/rrid/i)).toBeTruthy();
       });
       it('returns Accession Number when accession is present', () => {
-        render(<OutputForm {...defaultProps} accessionNumber="123" />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(
+          <OutputForm {...defaultProps} accessionNumber="123" />,
+        );
         expect(screen.getByDisplayValue(/accession number/i)).toBeTruthy();
       });
       it('returns empty for create mode', () => {
-        render(<OutputForm {...defaultProps} />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(<OutputForm {...defaultProps} />);
 
         expect(screen.getByText(/choose an identifier.../i)).toBeVisible();
       });
       it('return none for edit mode', () => {
-        render(<OutputForm {...defaultProps} title="Output Title" />, {
-          wrapper: StaticRouter,
-        });
+        renderWithRouter(<OutputForm {...defaultProps} title="Output Title" />);
         expect(screen.getByDisplayValue(/none/i)).toBeTruthy();
       });
     });
@@ -894,15 +871,12 @@ describe('OutputForm', () => {
         suggestions = defaultCohortSuggestions,
         cohorts = defaultCohorts,
       ) =>
-        render(
+        renderWithRouter(
           <OutputForm
             {...defaultProps}
             cohortSuggestions={suggestions}
             contributingCohorts={cohorts}
           />,
-          {
-            wrapper: StaticRouter,
-          },
         );
 
       it('displays cohorts empty', () => {
@@ -944,15 +918,12 @@ describe('OutputForm', () => {
         suggestions = defaultWorkingGroupsSuggestions,
         workingGroups = defaultWorkingGroups,
       ) =>
-        render(
+        renderWithRouter(
           <OutputForm
             {...defaultProps}
             workingGroupSuggestions={suggestions}
             workingGroups={workingGroups}
           />,
-          {
-            wrapper: StaticRouter,
-          },
         );
 
       it('displays working groups empty', () => {
@@ -1005,16 +976,13 @@ describe('OutputForm', () => {
         suggestions = defaultProjectsSuggestions,
         projects = defaultProjects,
       ) =>
-        render(
+        renderWithRouter(
           <OutputForm
             {...defaultProps}
             entityType="project"
             projectSuggestions={suggestions}
             projects={projects}
           />,
-          {
-            wrapper: StaticRouter,
-          },
         );
 
       it('displays projects empty', () => {
@@ -1059,16 +1027,14 @@ describe('OutputForm', () => {
 
   describe('Validation', () => {
     it('shows error message for missing value title', () => {
-      render(<OutputForm {...defaultProps} />, {
-        wrapper: StaticRouter,
-      });
+      renderWithRouter(<OutputForm {...defaultProps} />);
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
       expect(screen.getByText('Please enter a title.')).toBeVisible();
     });
 
     it('shows the custom error message for a date in the future', async () => {
-      render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
+      renderWithRouter(<OutputForm {...defaultProps} />);
 
       const sharingStatus = screen.getByRole('group', {
         name: /sharing status?/i,

@@ -36,6 +36,7 @@ export { default as LabeledPasswordField } from './LabeledPasswordField';
 export { default as LabeledRadioButton } from './LabeledRadioButton';
 export { default as LabeledRadioButtonGroup } from './LabeledRadioButtonGroup';
 export { default as LabeledTextArea } from './LabeledTextArea';
+export { default as LabeledTextEditor } from './LabeledTextEditor';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as LabeledTypeahead } from './LabeledTypeahead';
 export { default as LinkHeadline } from './LinkHeadline';

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import OpenQuestionsModal from '../OpenQuestionsModal';
@@ -10,17 +10,16 @@ const props: ComponentProps<typeof OpenQuestionsModal> = {
   ...createUserResponse(),
   backHref: '/wrong',
 };
+
+const renderModal = (children: React.ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
 it('renders the title', () => {
-  const { getByText } = render(<OpenQuestionsModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = renderModal(<OpenQuestionsModal {...props} />);
   expect(getByText('Open Questions', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders which fields are mandatory/optional', () => {
-  const { getByText } = render(<OpenQuestionsModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = renderModal(<OpenQuestionsModal {...props} />);
 
   [
     { title: 'Open Question 1', subtitle: 'required' },
@@ -35,9 +34,8 @@ it('renders which fields are mandatory/optional', () => {
 it('renders default values into text inputs', () => {
   const questions = ['1', '2', '3', '4'];
 
-  const { container } = render(
+  const { container } = renderModal(
     <OpenQuestionsModal {...props} questions={questions} />,
-    { wrapper: StaticRouter },
   );
 
   container.querySelectorAll('textbox').forEach((elem, idx) => {
@@ -49,9 +47,8 @@ describe('triggers the save function', () => {
   let jestFn: jest.Mock;
   const testSave = async (questions: { [id: string]: string }) => {
     jestFn = jest.fn();
-    const { getByLabelText, getByText } = render(
+    const { getByLabelText, getByText } = renderModal(
       <OpenQuestionsModal {...props} onSave={jestFn} />,
-      { wrapper: MemoryRouter },
     );
 
     const answerQuestion = (index: number) =>
@@ -102,13 +99,12 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <OpenQuestionsModal
       {...props}
       onSave={handleSave}
       questions={['a', 'b']}
     />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

@@ -5,12 +5,13 @@ import ListControls from '../ListControls';
 
 it('passes through links', () => {
   const { getAllByText, getByText, getByRole } = render(
-    <ListControls
-      cardViewHref="/card?123"
-      listViewHref="/list?321"
-      isListView={false}
-    />,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <ListControls
+        cardViewHref="/card?123"
+        listViewHref="/list?321"
+        isListView={false}
+      />
+    </MemoryRouter>,
   );
   fireEvent.click(getByRole('button'));
   expect(getByText(/list/i).closest('a')).toHaveAttribute('href', '/list?321');
@@ -22,12 +23,13 @@ it('passes through links', () => {
 
 it('indicates which option is selected', () => {
   const { getByRole, rerender } = render(
-    <ListControls
-      cardViewHref="/card?123"
-      listViewHref="/list?321"
-      isListView={false}
-    />,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <ListControls
+        cardViewHref="/card?123"
+        listViewHref="/list?321"
+        isListView={false}
+      />
+    </MemoryRouter>,
   );
   expect(getByRole('button').closest('span')).toHaveTextContent(/card/i);
   rerender(

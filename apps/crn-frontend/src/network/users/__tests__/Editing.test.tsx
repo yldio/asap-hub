@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
@@ -22,13 +22,14 @@ const mockGetInstitutions = getInstitutions as jest.MockedFunction<
 
 const id = '42';
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot>
-    <Suspense fallback="loading">
-      <Auth0Provider user={{ id }}>{children}</Auth0Provider>
-    </Suspense>
-  </RecoilRoot>
-);
+const renderWithRoot = (children: ReactNode): ReturnType<typeof render> =>
+  render(
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id }}>{children}</Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
 const aboutRoute = network({}).users({}).user({ userId: id }).about;
 const aboutPath =
   network.template +
@@ -41,7 +42,7 @@ beforeEach(() => jest.resetAllMocks());
 
 describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   it('goes back when closed', async () => {
-    const { findByText, findByTitle } = render(
+    const { findByText, findByTitle } = renderWithRoot(
       <MemoryRouter initialEntries={[route({}).$]}>
         <Route path={aboutPath}>
           <Route exact path={aboutPath}>
@@ -50,7 +51,6 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
           <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
-      { wrapper },
     );
 
     userEvent.click(await findByTitle(/close/i));
@@ -58,7 +58,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   });
 
   it('goes back when saved', async () => {
-    const { findByText } = render(
+    const { findByText } = renderWithRoot(
       <MemoryRouter initialEntries={[route({}).$]}>
         <Route path={aboutPath}>
           <Route exact path={aboutPath}>
@@ -67,7 +67,6 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
           <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
-      { wrapper },
     );
 
     userEvent.click(await findByText(/save/i));
@@ -95,7 +94,7 @@ describe('the personal info modal', () => {
         },
       ],
     });
-    const { findByDisplayValue, findByText } = render(
+    const { findByDisplayValue, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
           <Route path={aboutPath}>
@@ -109,7 +108,6 @@ describe('the personal info modal', () => {
           </Route>
         </MemoryRouter>
       </Auth0Provider>,
-      { wrapper },
     );
 
     userEvent.type(await findByDisplayValue('NCU'), ' 1');
@@ -126,7 +124,7 @@ describe('the personal info modal', () => {
       getByDisplayValue,
       queryByText,
       queryByDisplayValue,
-    } = render(
+    } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
           <Route path={aboutPath}>
@@ -141,7 +139,6 @@ describe('the personal info modal', () => {
           </Route>
         </MemoryRouter>
       </Auth0Provider>,
-      { wrapper },
     );
 
     userEvent.type(await findByLabelText(/city/i), 'don');
@@ -164,7 +161,7 @@ describe('the personal info modal', () => {
 
 describe('the contact info modal', () => {
   it('passes user data to contact info modal', async () => {
-    const { findByDisplayValue } = render(
+    const { findByDisplayValue } = renderWithRoot(
       <MemoryRouter initialEntries={[editContactInfo({}).$]}>
         <Route path={aboutPath}>
           <Editing
@@ -176,12 +173,11 @@ describe('the contact info modal', () => {
           />
         </Route>
       </MemoryRouter>,
-      { wrapper },
     );
     expect(await findByDisplayValue('github')).toBeVisible();
   });
   it('uses the contact email as the email value', async () => {
-    const { findByLabelText } = render(
+    const { findByLabelText } = renderWithRoot(
       <MemoryRouter initialEntries={[editContactInfo({}).$]}>
         <Route path={aboutPath}>
           <Editing
@@ -193,7 +189,6 @@ describe('the contact info modal', () => {
           />
         </Route>
       </MemoryRouter>,
-      { wrapper },
     );
 
     expect(await findByLabelText(/e-?mail/i)).toHaveValue(
@@ -208,7 +203,7 @@ describe('the contact info modal', () => {
       getByDisplayValue,
       queryByText,
       queryByDisplayValue,
-    } = render(
+    } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
           <Route path="/profile">
@@ -223,7 +218,6 @@ describe('the contact info modal', () => {
           </Route>
         </MemoryRouter>
       </Auth0Provider>,
-      { wrapper },
     );
 
     userEvent.type(await findByLabelText(/e-?mail/i), 'm');
@@ -244,7 +238,7 @@ describe('the contact info modal', () => {
 
 describe('the onboarded modal', () => {
   it('saves changes', async () => {
-    const { findByText } = render(
+    const { findByText } = renderWithRoot(
       <Auth0Provider user={{ id, onboarded: false }}>
         <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
           <Route path="/profile">
@@ -259,7 +253,6 @@ describe('the onboarded modal', () => {
           </Route>
         </MemoryRouter>
       </Auth0Provider>,
-      { wrapper },
     );
 
     userEvent.click(await findByText(/publish profile/i));
@@ -283,7 +276,7 @@ describe('the onboarded modal', () => {
       .user({ userId: user.id })
       .about({});
 
-    const { findByText } = render(
+    const { findByText } = renderWithRoot(
       <Auth0Provider
         user={user}
         auth0Overrides={() => ({
@@ -314,7 +307,6 @@ describe('the onboarded modal', () => {
           </CheckOnboarded>
         </MemoryRouter>
       </Auth0Provider>,
-      { wrapper },
     );
 
     userEvent.click(await findByText(/publish profile/i));

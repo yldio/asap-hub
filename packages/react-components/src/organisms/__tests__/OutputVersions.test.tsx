@@ -64,7 +64,7 @@ it('displays the correct message when versionAction is truthy', () => {
   );
   expect(
     getByText(
-      /list with all previous output versions that contributed to this one/gi,
+      /list with all previous output versions that contributed to this one/i,
     ),
   ).toBeVisible();
 });
@@ -73,7 +73,7 @@ it('displays the correct message when versionAction is undefined', () => {
   const { getByText } = render(<OutputVersions {...baseProps} />);
   expect(
     getByText(
-      /find all previous output versions that contributed to this one/gi,
+      /find all previous output versions that contributed to this one/i,
     ),
   ).toBeVisible();
 });

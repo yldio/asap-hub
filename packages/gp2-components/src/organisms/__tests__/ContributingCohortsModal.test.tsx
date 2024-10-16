@@ -28,9 +28,11 @@ describe('ContributingCohortsModal', () => {
   const renderContributingCohorts = (
     overrides: Partial<ContributingCohortsModalProps> = {},
   ) =>
-    render(<ContributingCohortsModal {...defaultProps} {...overrides} />, {
-      wrapper: StaticRouter,
-    });
+    render(
+      <StaticRouter>
+        <ContributingCohortsModal {...defaultProps} {...overrides} />
+      </StaticRouter>,
+    );
 
   beforeEach(jest.resetAllMocks);
 

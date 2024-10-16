@@ -22,9 +22,11 @@ describe('ContactInformationModal', () => {
   const renderContactInformation = (
     overrides: Partial<ContactInformationModalProps> = {},
   ) =>
-    render(<ContactInformationModal {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    render(
+      <MemoryRouter>
+        <ContactInformationModal {...defaultProps} {...overrides} />
+      </MemoryRouter>,
+    );
 
   it('renders a dialog with the right title', () => {
     renderContactInformation();

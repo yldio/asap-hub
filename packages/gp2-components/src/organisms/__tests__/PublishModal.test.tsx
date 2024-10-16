@@ -10,7 +10,11 @@ describe('PublishModal', () => {
     onSave: jest.fn(),
   };
   it('renders the title', () => {
-    render(<PublishModal {...defaultProps} />, { wrapper: StaticRouter });
+    render(
+      <StaticRouter>
+        <PublishModal {...defaultProps} />
+      </StaticRouter>,
+    );
     expect(
       screen.getByRole('heading', { name: /publish profile/i }),
     ).toBeVisible();

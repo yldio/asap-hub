@@ -21,9 +21,11 @@ describe('OutputForm', () => {
 
   describe('validation', () => {
     it('shows error message for missing value identifier type', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      render(
+        <StaticRouter>
+          <OutputForm {...defaultProps} documentType="Article" />
+        </StaticRouter>,
+      );
 
       const input = screen.getByLabelText(/identifier type/i, {
         selector: 'input',

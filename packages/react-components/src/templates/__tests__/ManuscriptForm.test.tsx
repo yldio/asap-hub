@@ -85,7 +85,7 @@ it('renders the form', async () => {
   expect(
     screen.getByRole('heading', { name: /What are you sharing/i }),
   ).toBeVisible();
-  expect(screen.getByRole('button', { name: /Submit/i })).toBeVisible();
+  expect(screen.getByRole('button', { name: /Submit/ })).toBeVisible();
 });
 
 it('data is sent on form submission', async () => {
@@ -112,7 +112,7 @@ it('data is sent on form submission', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -209,7 +209,7 @@ test.each`
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+    userEvent.click(screen.getByRole('button', { name: /Submit/ }));
     const payload = {
       title: 'manuscript title',
       eligibilityReasons: [],
@@ -306,7 +306,7 @@ test.each`
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+    userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith({
@@ -382,7 +382,7 @@ it('displays an error message when user selects no in a quick check and does not
     screen.queryByText(/Please enter the details./i),
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     expect(
@@ -395,7 +395,7 @@ it('displays an error message when user selects no in a quick check and does not
     'Some details',
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
   await waitFor(() => {
     expect(
@@ -455,7 +455,7 @@ it('displays error message when manuscript title is missing', async () => {
   );
 
   const input = screen.getByRole('textbox', { name: /Title of Manuscript/i });
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(submitButton);
 
@@ -526,7 +526,7 @@ it('displays error message when manuscript title is bigger than 256 characters',
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
   );
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(submitButton);
 
@@ -559,7 +559,7 @@ it('displays error message when other details is bigger than 256 characters', as
     "Advancements in Parkinson's Disease Research: Investigating the Role of Genetic Mutations and DNA Sequencing Technologies in Unraveling the Molecular Mechanisms, Identifying Biomarkers, and Developing Targeted Therapies for Improved Diagnosis and Treatment of Parkinson Disease",
   );
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(submitButton);
 
@@ -596,7 +596,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/i }));
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -665,7 +665,7 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/i });
+      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.click(screen.getByLabelText(section));
       await waitFor(() =>
@@ -732,7 +732,7 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/i });
+      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.click(screen.getByLabelText(section));
       await waitFor(() =>
@@ -805,7 +805,7 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/i });
+      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.type(screen.getByLabelText(section), 'Jane Doe');
 
@@ -976,7 +976,7 @@ it('resets form fields to default values when no longer visible', async () => {
     }),
   ).not.toBeInTheDocument();
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(submitButton);
   await waitFor(() => {
@@ -1055,7 +1055,7 @@ it('does not submit when required values are missing', async () => {
     </StaticRouter>,
   );
 
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(submitButton);
 
@@ -1071,12 +1071,13 @@ it('does not submit when required values are missing', async () => {
 
 it('should go back when cancel button is clicked', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Route path="/form">
-        <ManuscriptForm {...defaultProps} />
-      </Route>
-    </Router>,
-    { wrapper: MemoryRouter },
+    <MemoryRouter>
+      <Router history={history}>
+        <Route path="/form">
+          <ManuscriptForm {...defaultProps} />
+        </Route>
+      </Router>
+    </MemoryRouter>,
   );
 
   history.push('/another-url');
@@ -1547,7 +1548,7 @@ it('user can add teams', async () => {
       />
     </StaticRouter>,
   );
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
@@ -1606,7 +1607,7 @@ it('user can add labs', async () => {
       />
     </StaticRouter>,
   );
-  const submitButton = screen.getByRole('button', { name: /Submit/i });
+  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   await waitFor(() => {

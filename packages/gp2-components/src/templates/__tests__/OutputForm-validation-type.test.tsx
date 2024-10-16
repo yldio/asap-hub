@@ -21,9 +21,11 @@ describe('OutputForm', () => {
 
   describe('validation', () => {
     it('shows error message for missing value type', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      render(
+        <StaticRouter>
+          <OutputForm {...defaultProps} documentType="Article" />
+        </StaticRouter>,
+      );
 
       const input = screen.getByLabelText(/^type/i);
       fireEvent.focusOut(input);

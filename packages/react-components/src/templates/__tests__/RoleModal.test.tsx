@@ -2,7 +2,7 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -12,28 +12,31 @@ const props: ComponentProps<typeof RoleModal> = {
 };
 
 it('renders the title', () => {
-  const { getByText } = render(<RoleModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <StaticRouter>
+      <RoleModal {...props} />
+    </StaticRouter>,
+  );
   expect(getByText('Role', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders teams and lan names into inputs', async () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <RoleModal
-      {...props}
-      researchInterests={undefined}
-      responsibilities={undefined}
-      labs={[
-        { name: 'Lab 1', id: 'lab-1' },
-        { name: 'Lab 2', id: 'lab-2' },
-      ]}
-      teams={[
-        { displayName: 'Team 1', id: 'team-1', role: 'Collaborating PI' },
-        { displayName: 'Team 2', id: 'team-2', role: 'Collaborating PI' },
-      ]}
-    />,
-    { wrapper: StaticRouter },
+    <StaticRouter>
+      <RoleModal
+        {...props}
+        researchInterests={undefined}
+        responsibilities={undefined}
+        labs={[
+          { name: 'Lab 1', id: 'lab-1' },
+          { name: 'Lab 2', id: 'lab-2' },
+        ]}
+        teams={[
+          { displayName: 'Team 1', id: 'team-1', role: 'Collaborating PI' },
+          { displayName: 'Team 2', id: 'team-2', role: 'Collaborating PI' },
+        ]}
+      />
+    </StaticRouter>,
   );
   expect(getByLabelText(/main.+interests/i)).toHaveValue('');
   expect(getByLabelText(/responsibilities/i)).toHaveValue('');
@@ -48,9 +51,11 @@ it('renders teams and lan names into inputs', async () => {
 
 describe('User Role', () => {
   it('indicates which fields are required or optional', () => {
-    const { getByText } = render(<RoleModal {...props} />, {
-      wrapper: StaticRouter,
-    });
+    const { getByText } = render(
+      <StaticRouter>
+        <RoleModal {...props} />
+      </StaticRouter>,
+    );
     expect(getByText(/research interests/i).nextSibling).toHaveTextContent(
       'required',
     );
@@ -62,14 +67,15 @@ describe('User Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByDisplayValue } = render(
-      <RoleModal
-        {...props}
-        reachOut={undefined}
-        researchInterests="interests"
-        responsibilities="responsibilities"
-        onSave={mockSaveFn}
-      />,
-      { wrapper: MemoryRouter },
+      <StaticRouter>
+        <RoleModal
+          {...props}
+          reachOut={undefined}
+          researchInterests="interests"
+          responsibilities="responsibilities"
+          onSave={mockSaveFn}
+        />
+      </StaticRouter>,
     );
 
     userEvent.type(getByDisplayValue('interests'), ' 1');
@@ -87,13 +93,14 @@ describe('User Role', () => {
 
   it('disables the form elements while submitting', async () => {
     render(
-      <RoleModal
-        {...props}
-        researchInterests="researchInterests"
-        responsibilities="responsibilities"
-        onSave={() => Promise.resolve()}
-      />,
-      { wrapper: StaticRouter },
+      <StaticRouter>
+        <RoleModal
+          {...props}
+          researchInterests="researchInterests"
+          responsibilities="responsibilities"
+          onSave={() => Promise.resolve()}
+        />
+      </StaticRouter>,
     );
 
     const saveButton = screen.getByRole('button', { name: /save/i });
@@ -108,10 +115,9 @@ describe('User Role', () => {
 
   it('shows validation message for invalid research interests', async () => {
     const { getByLabelText, findByText } = render(
-      <RoleModal {...props} researchInterests="" />,
-      {
-        wrapper: StaticRouter,
-      },
+      <StaticRouter>
+        <RoleModal {...props} researchInterests="" />
+      </StaticRouter>,
     );
     fireEvent.focusOut(getByLabelText(/main.+interests/i));
 
@@ -122,10 +128,9 @@ describe('User Role', () => {
 
   it('shows validation message for invalid responsibilities', async () => {
     const { getByLabelText, findByText } = render(
-      <RoleModal {...props} responsibilities="abc" researchInterests="123" />,
-      {
-        wrapper: StaticRouter,
-      },
+      <StaticRouter>
+        <RoleModal {...props} responsibilities="abc" researchInterests="123" />
+      </StaticRouter>,
     );
     fireEvent.change(getByLabelText(/responsibilities/i), {
       target: { value: '' },
@@ -139,15 +144,16 @@ describe('Staff Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByLabelText } = render(
-      <RoleModal
-        {...props}
-        role="Staff"
-        researchInterests={undefined}
-        reachOut={'1'}
-        responsibilities={'e'}
-        onSave={mockSaveFn}
-      />,
-      { wrapper: MemoryRouter },
+      <StaticRouter>
+        <RoleModal
+          {...props}
+          role="Staff"
+          researchInterests={undefined}
+          reachOut={'1'}
+          responsibilities={'e'}
+          onSave={mockSaveFn}
+        />
+      </StaticRouter>,
     );
 
     userEvent.type(getByLabelText(/responsibilities/i), 'xample');
@@ -166,14 +172,15 @@ describe('Staff Role', () => {
 
   it('disables the form elements while submitting', async () => {
     const { getByText } = render(
-      <RoleModal
-        {...props}
-        role="Staff"
-        responsibilities="responsibilities"
-        reachOut="reachOut"
-        onSave={() => Promise.resolve()}
-      />,
-      { wrapper: StaticRouter },
+      <StaticRouter>
+        <RoleModal
+          {...props}
+          role="Staff"
+          responsibilities="responsibilities"
+          reachOut="reachOut"
+          onSave={() => Promise.resolve()}
+        />
+      </StaticRouter>,
     );
 
     userEvent.click(getByText(/save/i));

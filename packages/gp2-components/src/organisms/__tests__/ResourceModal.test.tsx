@@ -45,9 +45,11 @@ describe('ResourceModal', () => {
   const renderResourseModal = (
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
-    render(<ResourceModal {...defaultProps} {...props} />, {
-      wrapper: StaticRouter,
-    });
+    render(
+      <StaticRouter>
+        <ResourceModal {...defaultProps} {...props} />
+      </StaticRouter>,
+    );
   };
   describe('dialog', () => {
     beforeEach(jest.resetAllMocks);

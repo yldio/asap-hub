@@ -1,4 +1,4 @@
-import { FC, Suspense } from 'react';
+import { Suspense } from 'react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
@@ -17,26 +17,24 @@ beforeEach(() => {
   MockDashboard.mockReset().mockReturnValue(null);
 });
 
-const wrapper: FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot>
-    <authTestUtils.UserAuth0Provider>
-      <authTestUtils.UserLoggedIn user={{}}>
-        <StaticRouter>
-          <Suspense fallback="loading">{children}</Suspense>
-        </StaticRouter>
-      </authTestUtils.UserLoggedIn>
-    </authTestUtils.UserAuth0Provider>
-  </RecoilRoot>
-);
-
 it('syncs the auth state to recoil', async () => {
   MockDashboard.mockImplementation(() => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { queryByText, getByText } = render(<AuthenticatedApp />, {
-    wrapper,
-  });
+  const { queryByText, getByText } = render(
+    <RecoilRoot>
+      <authTestUtils.UserAuth0Provider>
+        <authTestUtils.UserLoggedIn user={{}}>
+          <StaticRouter>
+            <Suspense fallback="loading">
+              <AuthenticatedApp />
+            </Suspense>
+          </StaticRouter>
+        </authTestUtils.UserLoggedIn>
+      </authTestUtils.UserAuth0Provider>
+    </RecoilRoot>,
+  );
   await waitFor(
     () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();

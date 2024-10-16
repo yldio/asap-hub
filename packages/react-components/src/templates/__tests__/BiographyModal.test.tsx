@@ -1,20 +1,21 @@
+import { ReactNode } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
+const renderModal = (children: ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
+
 it('renders a form to edit the biography', () => {
-  const { getByRole } = render(<BiographyModal backHref="#" />, {
-    wrapper: StaticRouter,
-  });
+  const { getByRole } = renderModal(<BiographyModal backHref="#" />);
   expect(getByRole('heading')).toHaveTextContent(/bio/i);
 });
 
 it('renders a text field containing the biography, marked as mandatory', () => {
-  const { getByDisplayValue, container } = render(
+  const { getByDisplayValue, container } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" />,
-    { wrapper: StaticRouter },
   );
   expect(container.querySelector('label')?.textContent).toContain('required');
   expect(getByDisplayValue('My Bio')).toBeEnabled();
@@ -22,9 +23,8 @@ it('renders a text field containing the biography, marked as mandatory', () => {
 
 it('fires onSave when submitting', async () => {
   const handleSave = jest.fn();
-  const { getByDisplayValue, getByText } = render(
+  const { getByDisplayValue, getByText } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.type(getByDisplayValue('My Bio'), ' 2');
@@ -37,9 +37,8 @@ it('fires onSave when submitting', async () => {
 });
 it('does not fire onSave when the bio is missing', () => {
   const handleSave = jest.fn();
-  const { getByDisplayValue, getByText } = render(
+  const { getByDisplayValue, getByText } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByDisplayValue('My Bio'));
@@ -53,9 +52,8 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
+  const { getByText } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

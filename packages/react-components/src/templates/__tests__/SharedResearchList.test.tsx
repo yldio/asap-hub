@@ -17,10 +17,9 @@ const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
 
 it('renders multiple shared outputs cards in card view', () => {
   const { queryAllByRole, getByRole } = render(
-    <SharedResearchList {...props} isListView={false} />,
-    {
-      wrapper: StaticRouter,
-    },
+    <StaticRouter>
+      <SharedResearchList {...props} isListView={false} />
+    </StaticRouter>,
   );
   expect(getByRole('button').closest('span')).toHaveTextContent(/card/i);
   expect(
@@ -30,10 +29,9 @@ it('renders multiple shared outputs cards in card view', () => {
 
 it('renders multiple research outputs in list view', () => {
   const { queryAllByRole, getByRole } = render(
-    <SharedResearchList {...props} isListView />,
-    {
-      wrapper: StaticRouter,
-    },
+    <StaticRouter>
+      <SharedResearchList {...props} isListView />
+    </StaticRouter>,
   );
 
   expect(getByRole('button').closest('span')).toHaveTextContent(/list/i);

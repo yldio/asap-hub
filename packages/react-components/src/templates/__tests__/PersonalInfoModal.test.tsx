@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -12,30 +12,28 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
   loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
+
+const renderModal = (children: React.ReactNode) =>
+  render(<StaticRouter>{children}</StaticRouter>);
+
 it('renders the title', () => {
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       loadInstitutionOptions={() => Promise.resolve([])}
       backHref="/wrong"
     />,
-    {
-      wrapper: StaticRouter,
-    },
   );
   expect(screen.getByText('Main details', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
-  render(
+  renderModal(
     <PersonalInfoModal
       countrySuggestions={[]}
       loadInstitutionOptions={() => Promise.resolve([])}
       backHref="/wrong"
     />,
-    {
-      wrapper: StaticRouter,
-    },
   );
 
   [
@@ -56,7 +54,7 @@ it('indicates which fields are required or optional', () => {
 });
 
 it('renders default values into text inputs', () => {
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
@@ -70,7 +68,6 @@ it('renders default values into text inputs', () => {
       jobTitle="jobTitle"
       institution="institution"
     />,
-    { wrapper: StaticRouter },
   );
   expect(
     screen
@@ -93,15 +90,12 @@ it('renders default values into text inputs', () => {
 });
 
 it('renders a country selector', () => {
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
       country=""
     />,
-    {
-      wrapper: StaticRouter,
-    },
   );
 
   userEvent.click(screen.getByText('Start Typing...'));
@@ -113,7 +107,7 @@ it('renders a country selector', () => {
   expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       country=""
@@ -122,9 +116,6 @@ it('shows validation message country when it not selected', async () => {
       city="Madrid"
       jobTitle="Assistant Professor"
     />,
-    {
-      wrapper: StaticRouter,
-    },
   );
   const field = screen.getByRole('textbox', { name: /country/i });
   userEvent.click(field);
@@ -146,7 +137,7 @@ it.each`
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, message }) => {
-    render(
+    renderModal(
       <PersonalInfoModal
         {...props}
         country="Spain"
@@ -155,9 +146,6 @@ it.each`
         city="Madrid"
         jobTitle="Assistant Professor"
       />,
-      {
-        wrapper: StaticRouter,
-      },
     );
     const field = screen.getByLabelText(label);
     const input = field.closest('input') || field;
@@ -176,7 +164,7 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       onSave={handleSave}
@@ -184,7 +172,6 @@ it('disables the form elements while submitting', async () => {
       stateOrProvince="Yucatán"
       country="Mexico"
     />,
-    { wrapper: StaticRouter },
   );
 
   userEvent.click(screen.getByText(/save/i));
@@ -200,7 +187,7 @@ it('disables the form elements while submitting', async () => {
 });
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
-  render(
+  renderModal(
     <PersonalInfoModal
       {...props}
       countrySuggestions={['United States', 'Mexico']}
@@ -216,7 +203,6 @@ it('triggers the save function', async () => {
       degree="MPH"
       onSave={jestFn}
     />,
-    { wrapper: MemoryRouter },
   );
 
   userEvent.click(screen.getByText('Save'));

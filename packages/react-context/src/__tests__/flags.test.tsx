@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { render, fireEvent } from '@testing-library/react';
 import { isEnabled, disable } from '@asap-hub/flags';
@@ -95,10 +96,11 @@ describe('LiveFlagsProvider', () => {
     );
   };
 
+  const renderWithProvider = (children: ReactNode) =>
+    render(<LiveFlagsProvider>{children}</LiveFlagsProvider>);
+
   it('updates a component on disable', () => {
-    const { getByText } = render(<TestComponent />, {
-      wrapper: LiveFlagsProvider,
-    });
+    const { getByText } = renderWithProvider(<TestComponent />);
     expect(getByText('enabled: true')).toBeVisible();
 
     fireEvent.click(getByText('disable'));
@@ -106,9 +108,7 @@ describe('LiveFlagsProvider', () => {
   });
 
   it('updates a component on enable', () => {
-    const { getByText } = render(<TestComponent />, {
-      wrapper: LiveFlagsProvider,
-    });
+    const { getByText } = renderWithProvider(<TestComponent />);
 
     fireEvent.click(getByText('disable'));
     expect(getByText('enabled: false')).toBeVisible();
@@ -119,9 +119,7 @@ describe('LiveFlagsProvider', () => {
 
   it('updates a component on reset', () => {
     disable('PERSISTENT_EXAMPLE');
-    const { getByText } = render(<TestComponent />, {
-      wrapper: LiveFlagsProvider,
-    });
+    const { getByText } = renderWithProvider(<TestComponent />);
     expect(getByText('enabled: false')).toBeVisible();
 
     fireEvent.click(getByText('reset'));

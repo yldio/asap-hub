@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import OnboardingPageFooter from '../OnboardingPageFooter';
+
+const renderWithRouter = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('OnboardingPageFooter', () => {
   const defaultProps = {
@@ -8,16 +12,13 @@ describe('OnboardingPageFooter', () => {
     publishHref: '/publish',
   };
   it('renders the links with the right props', () => {
-    render(
+    renderWithRouter(
       <OnboardingPageFooter
         {...defaultProps}
         previousHref="/previous"
         continueHref="/next"
         isContinueEnabled
       />,
-      {
-        wrapper: MemoryRouter,
-      },
     );
     const links = screen.getAllByRole('link') as HTMLAnchorElement[];
     expect(links.map(({ textContent }) => textContent)).toMatchObject([
@@ -32,15 +33,12 @@ describe('OnboardingPageFooter', () => {
     ]);
   });
   it('renders publish button if theres no continueHref', () => {
-    render(
+    renderWithRouter(
       <OnboardingPageFooter
         {...defaultProps}
         continueHref={undefined}
         isContinueEnabled
       />,
-      {
-        wrapper: MemoryRouter,
-      },
     );
     expect(
       screen.queryByRole('link', { name: 'Continue' }),

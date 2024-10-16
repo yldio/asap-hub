@@ -402,7 +402,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -430,7 +430,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -457,7 +457,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -485,7 +485,7 @@ __metadata:
     "@contentful/field-editor-date": ^1.6.2
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -513,7 +513,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -540,7 +540,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -568,7 +568,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -597,7 +597,7 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -626,7 +626,7 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -654,7 +654,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.3.0
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -682,7 +682,7 @@ __metadata:
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -711,7 +711,7 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -738,7 +738,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -765,7 +765,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.4
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -794,7 +794,7 @@ __metadata:
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@tsconfig/create-react-app": 2.0.4
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -865,7 +865,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.23.8
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
     "@types/jest": 29.5.12
@@ -918,7 +918,7 @@ __metadata:
     "@sentry/tracing": 6.19.7
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/file-saver": ^2
@@ -1237,7 +1237,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.23.8
     "@sentry/react": 6.19.7
     "@testing-library/dom": 9.3.4
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@types/history": 4.7.11
     "@types/jest": 29.5.12
     "@types/node": 20.10.5
@@ -1285,7 +1285,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.23.8
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
     "@types/jest": 29.5.12
@@ -1336,7 +1336,7 @@ __metadata:
     "@emotion/react": 11.11.1
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/asap-hub__assets": "workspace:*"
@@ -1402,7 +1402,7 @@ __metadata:
     "@sentry/tracing": 6.19.7
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
@@ -1658,9 +1658,16 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
     "@emotion/serialize": 1.1.2
+    "@lexical/link": 0.18.0
+    "@lexical/list": 0.18.0
+    "@lexical/markdown": 0.18.0
+    "@lexical/react": 0.18.0
+    "@lexical/rich-text": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/utils": 0.18.0
     "@testing-library/dom": 9.3.4
     "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/asap-hub__assets": "workspace:*"
@@ -1689,6 +1696,7 @@ __metadata:
     hast-util-sanitize: 3.0.2
     history: 4.10.1
     ismounted: ^0.1.8
+    lexical: 0.18.0
     ramda: 0.27.1
     react: 17.0.2
     react-dom: 17.0.2
@@ -1736,7 +1744,7 @@ __metadata:
     "@babel/core": 7.23.7
     "@babel/preset-react": 7.23.3
     "@babel/runtime-corejs3": 7.23.8
-    "@testing-library/react": 11.2.7
+    "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.12
     "@types/react": 17.0.65
@@ -12518,19 +12526,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^26.6.2":
-  version: 26.6.2
-  resolution: "@jest/types@npm:26.6.2"
-  dependencies:
-    "@types/istanbul-lib-coverage": "npm:^2.0.0"
-    "@types/istanbul-reports": "npm:^3.0.0"
-    "@types/node": "npm:*"
-    "@types/yargs": "npm:^15.0.0"
-    chalk: "npm:^4.0.0"
-  checksum: a0bd3d2f22f26ddb23f41fddf6e6a30bf4fab2ce79ec1cb6ce6fdfaf90a72e00f4c71da91ec61e13db3b10c41de22cf49d07c57ff2b59171d64b29f909c1d8d6
-  languageName: node
-  linkType: hard
-
 "@jest/types@npm:^27.5.1":
   version: 27.5.1
   resolution: "@jest/types@npm:27.5.1"
@@ -12863,6 +12858,259 @@ __metadata:
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
   checksum: 468de1f04d33de6d300892683d7c8aecbf96d1e2c5fe084f95f816e50a054d45b7c1ebfb141a1447d844b86a948733f6eebd92234da8581c84a1ad4de2946a2d
+  languageName: node
+  linkType: hard
+
+"@lexical/clipboard@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/clipboard@npm:0.18.0"
+  dependencies:
+    "@lexical/html": 0.18.0
+    "@lexical/list": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 17bda2f86553a4f71fef323b52ecfe025dd701478b34cd550fb4614cef25966bea73a355b54686d685ec23ff36f925d05d889115a32835739d405a9db08121b6
+  languageName: node
+  linkType: hard
+
+"@lexical/code@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/code@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+    prismjs: ^1.27.0
+  checksum: d553712bac2d97a89a4e96c8b32c07a48f25761dffe53849ecffde125a7b7d643a577df3fce47b6964a8aab994f014e98860cd796bfd32f3614d6dd6c819b243
+  languageName: node
+  linkType: hard
+
+"@lexical/devtools-core@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/devtools-core@npm:0.18.0"
+  dependencies:
+    "@lexical/html": 0.18.0
+    "@lexical/link": 0.18.0
+    "@lexical/mark": 0.18.0
+    "@lexical/table": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  peerDependencies:
+    react: ">=17.x"
+    react-dom: ">=17.x"
+  checksum: bfb7817e3a69acda11b3a904c64ac888b0c46caf2bdafcbabbb81529e1be3e2e6db3d94a05e1a06694c2114dd0fa23e26dd153b0f8aaa59f9047404889ab62a5
+  languageName: node
+  linkType: hard
+
+"@lexical/dragon@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/dragon@npm:0.18.0"
+  dependencies:
+    lexical: 0.18.0
+  checksum: 0485e2a3c57977fa6ffc03e0e9e89c07723c5d14ac653f14c58a42732316ea8171109a4a6ac7a82883f0ce7aac6012eca922c972c95ad7e172802f75091aad6e
+  languageName: node
+  linkType: hard
+
+"@lexical/hashtag@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/hashtag@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 79ac72fa7a759e66faef6fba5acd73b5bea2c7f2040baff7662260dad8414f3909f72e049b10066c238e706feca4a302fb6080f7ceda4388c29ee1a00baeba36
+  languageName: node
+  linkType: hard
+
+"@lexical/history@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/history@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: b15271b853d9e4c8ebbb6117151eabc8b230ff4ee92205916d4bb5fd0db4610bf875ebc82c56a9c37aa7cda71d0e3e808a1227c747ef7c019a616398c5a82c45
+  languageName: node
+  linkType: hard
+
+"@lexical/html@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/html@npm:0.18.0"
+  dependencies:
+    "@lexical/selection": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: d70e3530fae78c6c8c916614147a5973d3babe891d54d4616b01abee5c8c612229ab31c7a1a33948d3c0ba38c31a113147e9b212127e1a6a199ae814be7596a3
+  languageName: node
+  linkType: hard
+
+"@lexical/link@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/link@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 7ffbef4589ba3a5fc3f548db69cfce75a9ee15c47136d154d34026c6def17c424941ce3ddc6f7ccd70a0e4a5d15e766fad4e20266fb344fb018c65fe48dc73ed
+  languageName: node
+  linkType: hard
+
+"@lexical/list@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/list@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: ee9798b0906cb33f31f9bec23f174fa7febd7175e70905c9a51951d5684341f68248cd62406ee3c5e00e048b412ff46144fd6b30a9da9bc60e636645fa0f96d6
+  languageName: node
+  linkType: hard
+
+"@lexical/mark@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/mark@npm:0.18.0"
+  dependencies:
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: b8d29d7ea63345fa36005c000248631ff2b877f80f8c674d18bdac6243ed1d426e48a2ede0c711755cf48c2546247f091b4c1004833bb7b11ead188ac6d9e904
+  languageName: node
+  linkType: hard
+
+"@lexical/markdown@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/markdown@npm:0.18.0"
+  dependencies:
+    "@lexical/code": 0.18.0
+    "@lexical/link": 0.18.0
+    "@lexical/list": 0.18.0
+    "@lexical/rich-text": 0.18.0
+    "@lexical/text": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 156b9885fb3cca9be751f7336b32d0d2ee015599bd0823ec2dbcc2457eed7c794a1b56803dbaafb01a63e2ffa98fef48e581536df9a9ee00d9c08bf1fbde9c4e
+  languageName: node
+  linkType: hard
+
+"@lexical/offset@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/offset@npm:0.18.0"
+  dependencies:
+    lexical: 0.18.0
+  checksum: f4d7e9b23f007e174c6e0d41c6c9c882686f134554d2e9c3c20457818ad26a941e234b8df2b793556cab4856fd311f0718edf72d9f5a26e270cbb32055dfbc8d
+  languageName: node
+  linkType: hard
+
+"@lexical/overflow@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/overflow@npm:0.18.0"
+  dependencies:
+    lexical: 0.18.0
+  checksum: aadfd59d690ae159d853c624236955c01b69a560c9f54832d9f94673de168784a81b1fa545d37f8937577db5fd2fe416badf8829070c2874044c04a39e77c0be
+  languageName: node
+  linkType: hard
+
+"@lexical/plain-text@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/plain-text@npm:0.18.0"
+  dependencies:
+    "@lexical/clipboard": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 4a6512974180e76a4375b3388af43380a7075d50641a57e54c899235b5ef9ff10788f1f05ae2e4133d6fee4aa41d930c56dff8936388eb69999119176de39dd7
+  languageName: node
+  linkType: hard
+
+"@lexical/react@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/react@npm:0.18.0"
+  dependencies:
+    "@lexical/clipboard": 0.18.0
+    "@lexical/code": 0.18.0
+    "@lexical/devtools-core": 0.18.0
+    "@lexical/dragon": 0.18.0
+    "@lexical/hashtag": 0.18.0
+    "@lexical/history": 0.18.0
+    "@lexical/link": 0.18.0
+    "@lexical/list": 0.18.0
+    "@lexical/mark": 0.18.0
+    "@lexical/markdown": 0.18.0
+    "@lexical/overflow": 0.18.0
+    "@lexical/plain-text": 0.18.0
+    "@lexical/rich-text": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/table": 0.18.0
+    "@lexical/text": 0.18.0
+    "@lexical/utils": 0.18.0
+    "@lexical/yjs": 0.18.0
+    lexical: 0.18.0
+    react-error-boundary: ^3.1.4
+  peerDependencies:
+    react: ">=17.x"
+    react-dom: ">=17.x"
+  checksum: 721894ee9dd344aaac0a3fca6eb4b87577efde7b9872b0c92ab299b4205b1537ac1a93662610fce56bbe3e1773ee3245f4aa351ac4a84e7c322ea67fa955e9aa
+  languageName: node
+  linkType: hard
+
+"@lexical/rich-text@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/rich-text@npm:0.18.0"
+  dependencies:
+    "@lexical/clipboard": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 453495d0806eb08ab62151fd1f0625cb064ba5e7e8567c2a2dc4583ebd28c83655a4c750401d30e64a3fd1ba52188c79b6c24d7afe7429bacbdd15826dfcc989
+  languageName: node
+  linkType: hard
+
+"@lexical/selection@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/selection@npm:0.18.0"
+  dependencies:
+    lexical: 0.18.0
+  checksum: 98d4ce7f0da967a73c7cfcccbdd0ec04ed419dfc06edaa787c9d0edcc104e53c559c7c2c3d342814bb0cfd32acdc288f9368f83e7dd54ce49c0cc1999892c6f2
+  languageName: node
+  linkType: hard
+
+"@lexical/table@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/table@npm:0.18.0"
+  dependencies:
+    "@lexical/clipboard": 0.18.0
+    "@lexical/utils": 0.18.0
+    lexical: 0.18.0
+  checksum: 0317f45bac3942d230e8871a053e3d2e4ec1953024684e1a9e48c91fb23a6c131d0f2aba258806272affb6c17484e41e78e3d8c5b34745055d754911d9257dc6
+  languageName: node
+  linkType: hard
+
+"@lexical/text@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/text@npm:0.18.0"
+  dependencies:
+    lexical: 0.18.0
+  checksum: 4532e8c455c20b2d7d7582a623dff46fd00f2e5500648145b6b5fe05d9a936c1409476a54f2db57449bec9e634b358e8504332bfec5ae4dccbe985cc8b4e337c
+  languageName: node
+  linkType: hard
+
+"@lexical/utils@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/utils@npm:0.18.0"
+  dependencies:
+    "@lexical/list": 0.18.0
+    "@lexical/selection": 0.18.0
+    "@lexical/table": 0.18.0
+    lexical: 0.18.0
+  checksum: 4cc468e2395aa7c61b78b022d5c5a290fe0f890f5271f6fcb311d4a7cdd4bdb729331cc76c013c9118382887ec715c7d9d599ca83d6133aa410f81097c2e72be
+  languageName: node
+  linkType: hard
+
+"@lexical/yjs@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@lexical/yjs@npm:0.18.0"
+  dependencies:
+    "@lexical/offset": 0.18.0
+    "@lexical/selection": 0.18.0
+    lexical: 0.18.0
+  peerDependencies:
+    yjs: ">=13.5.22"
+  checksum: 509d996961ef274025245c34e9c6670c5ac62308c08fcc374fba64479568a2c45657319165fb20134a549afa80e5c4eec7ed32dc606cbb3cbdaf8089fad07b8f
   languageName: node
   linkType: hard
 
@@ -15984,19 +16232,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.28.1":
-  version: 7.29.4
-  resolution: "@testing-library/dom@npm:7.29.4"
+"@testing-library/dom@npm:^8.0.0":
+  version: 8.20.1
+  resolution: "@testing-library/dom@npm:8.20.1"
   dependencies:
-    "@babel/code-frame": "npm:^7.10.4"
-    "@babel/runtime": "npm:^7.12.5"
-    "@types/aria-query": "npm:^4.2.0"
-    aria-query: "npm:^4.2.2"
-    chalk: "npm:^4.1.0"
-    dom-accessibility-api: "npm:^0.5.4"
-    lz-string: "npm:^1.4.4"
-    pretty-format: "npm:^26.6.2"
-  checksum: 205d125e1e8d5f711f2592f2f3d25994f481641f6bad17724f8e077431042c3204ae585a8c7df483d84ea8562e75229bf915cb6090a4657c5897fbd3f742a3b9
+    "@babel/code-frame": ^7.10.4
+    "@babel/runtime": ^7.12.5
+    "@types/aria-query": ^5.0.1
+    aria-query: 5.1.3
+    chalk: ^4.1.0
+    dom-accessibility-api: ^0.5.9
+    lz-string: ^1.5.0
+    pretty-format: ^27.0.2
+  checksum: 06fc8dc67849aadb726cbbad0e7546afdf8923bd39acb64c576d706249bd7d0d05f08e08a31913fb621162e3b9c2bd0dce15964437f030f9fa4476326fdd3007
   languageName: node
   linkType: hard
 
@@ -16072,16 +16320,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:11.2.7":
-  version: 11.2.7
-  resolution: "@testing-library/react@npm:11.2.7"
+"@testing-library/react@npm:12.1.4":
+  version: 12.1.4
+  resolution: "@testing-library/react@npm:12.1.4"
   dependencies:
-    "@babel/runtime": "npm:^7.12.5"
-    "@testing-library/dom": "npm:^7.28.1"
+    "@babel/runtime": ^7.12.5
+    "@testing-library/dom": ^8.0.0
+    "@types/react-dom": "*"
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 64e07cb96e40dbdbd3c46a09c47bed14446b30efafaa65a5d4fed5a7553878990cda108578f2b114422a775f31c635d51fd50b752f6163ddd6b8474e0e5fc2ce
+  checksum: 944c5f8d4abb22c0650c25c7ae499651828c37c0e741ff67a4635d4cd99b307d486dabec05b372aba638bd359d29cd2af97393b5055ea294a201d80b4bc384b8
   languageName: node
   linkType: hard
 
@@ -16183,13 +16432,6 @@ __metadata:
   resolution: "@types/apr-intercept@workspace:@types/apr-intercept"
   languageName: unknown
   linkType: soft
-
-"@types/aria-query@npm:^4.2.0":
-  version: 4.2.1
-  resolution: "@types/aria-query@npm:4.2.1"
-  checksum: cf60cc7aa0ed52514e8c7289776de9bb3321217d48f54c95d63e1e1eb9940689c1fd3e39d68da5eaee1541108363f0113007f67d6e32e7fbc983526f08e5f0ce
-  languageName: node
-  linkType: hard
 
 "@types/aria-query@npm:^5.0.1":
   version: 5.0.1
@@ -24989,13 +25231,6 @@ __metadata:
   version: 1.1.0
   resolution: "doctypes@npm:1.1.0"
   checksum: 6e6c2d1a80f2072dc4831994c914c44455e341c5ab18c16797368a0afd59d7c22f3335805ba2c1dd2931e9539d1ba8b613b7650dc63f6ab56b77b8d888055de8
-  languageName: node
-  linkType: hard
-
-"dom-accessibility-api@npm:^0.5.4":
-  version: 0.5.4
-  resolution: "dom-accessibility-api@npm:0.5.4"
-  checksum: 1fb22b351984564212b41bd7265ad1288322ad72e7367753f589facaeb98c2e3515502396acf2463f71dbaa1e238d6e006ec144a6217f1cd42e962b9bebd2dee
   languageName: node
   linkType: hard
 
@@ -34501,6 +34736,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lexical@npm:0.18.0":
+  version: 0.18.0
+  resolution: "lexical@npm:0.18.0"
+  checksum: 647976e8b785704942f3751edf449deabd20da28c704263de99a7144fa005aaf5086dc41f4c2a003bf5df00bd20e89e6d13ea203c8ab8eb3ccef95d820b7d2dd
+  languageName: node
+  linkType: hard
+
 "lie@npm:~3.3.0":
   version: 3.3.0
   resolution: "lie@npm:3.3.0"
@@ -35200,15 +35442,6 @@ __metadata:
   version: 3.2.1
   resolution: "luxon@npm:3.2.1"
   checksum: 3fa3def2c5f5d3032b4c46220c4da8aeb467ac979888fc9d2557adcd22195f93516b4ad5909a75862bec8dc6ddc0953b0f38e6d2f4a8ab8450ddc531a83cf20d
-  languageName: node
-  linkType: hard
-
-"lz-string@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "lz-string@npm:1.4.4"
-  bin:
-    lz-string: bin/bin.js
-  checksum: 54e31238a61a84d8f664d9860a9fba7310c5b97a52c444f80543069bc084815eff40b8d4474ae1d93992fdf6c252dca37cf27f6adbeb4dbc3df2f3ac773d0e61
   languageName: node
   linkType: hard
 
@@ -39163,18 +39396,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.6.2":
-  version: 26.6.2
-  resolution: "pretty-format@npm:26.6.2"
-  dependencies:
-    "@jest/types": "npm:^26.6.2"
-    ansi-regex: "npm:^5.0.0"
-    ansi-styles: "npm:^4.0.0"
-    react-is: "npm:^17.0.1"
-  checksum: e3b808404d7e1519f0df1aa1f25cee0054ab475775c6b2b8c5568ff23194a92d54bf93274139b6f584ca70fd773be4eaa754b0e03f12bb0a8d1426b07f079976
-  languageName: node
-  linkType: hard
-
 "pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
@@ -39244,6 +39465,13 @@ __metadata:
   bin:
     printj: ./bin/printj.njs
   checksum: 1c0c66844545415e339356ad62009cdc467819817b1e0341aba428087a1414d46b84089edb4e77ef24705829f8aae6349724b9c7bd89d8690302b2de7a89b315
+  languageName: node
+  linkType: hard
+
+"prismjs@npm:^1.27.0":
+  version: 1.29.0
+  resolution: "prismjs@npm:1.29.0"
+  checksum: 007a8869d4456ff8049dc59404e32d5666a07d99c3b0e30a18bd3b7676dfa07d1daae9d0f407f20983865fd8da56de91d09cb08e6aa61f5bc420a27c0beeaf93
   languageName: node
   linkType: hard
 
@@ -40088,7 +40316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:3.1.4, react-error-boundary@npm:^3.1.0":
+"react-error-boundary@npm:3.1.4, react-error-boundary@npm:^3.1.0, react-error-boundary@npm:^3.1.4":
   version: 3.1.4
   resolution: "react-error-boundary@npm:3.1.4"
   dependencies:

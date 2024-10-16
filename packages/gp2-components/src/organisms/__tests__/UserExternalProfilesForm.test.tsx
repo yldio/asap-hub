@@ -1,9 +1,12 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import UserExternalProfilesForm from '../UserExternalProfilesForm';
+
+const renderWithRouter = (children: ReactNode) =>
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('UserExternalProfilesForm', () => {
   beforeEach(jest.resetAllMocks);
@@ -21,9 +24,9 @@ describe('UserExternalProfilesForm', () => {
   const renderExternalProfiles = (
     overrides: Partial<UserExternalProfilesFormProps> = {},
   ) =>
-    render(<UserExternalProfilesForm {...defaultProps} {...overrides} />, {
-      wrapper: MemoryRouter,
-    });
+    renderWithRouter(
+      <UserExternalProfilesForm {...defaultProps} {...overrides} />,
+    );
 
   it('renders a heading with the right title', () => {
     renderExternalProfiles();

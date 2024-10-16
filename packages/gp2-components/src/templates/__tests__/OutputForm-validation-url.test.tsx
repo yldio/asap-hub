@@ -21,9 +21,11 @@ describe('OutputForm', () => {
 
   describe('validation', () => {
     it('shows error message for missing value URL', () => {
-      render(<OutputForm {...defaultProps} documentType="Article" />, {
-        wrapper: StaticRouter,
-      });
+      render(
+        <StaticRouter>
+          <OutputForm {...defaultProps} documentType="Article" />
+        </StaticRouter>,
+      );
 
       const input = screen.getByLabelText(/url/i);
       fireEvent.focusOut(input);

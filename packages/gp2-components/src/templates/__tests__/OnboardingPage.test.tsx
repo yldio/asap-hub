@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { OnboardingPage } from '..';
 
@@ -8,18 +9,21 @@ describe('OnboardingPage', () => {
     publishHref: '/publish',
     isContinueEnabled: false,
   };
+  const renderWithRouter = (children: ReactNode) =>
+    render(<MemoryRouter>{children}</MemoryRouter>);
+
   it('renders the header', () => {
-    render(<OnboardingPage {...defaultProps} />, { wrapper: MemoryRouter });
+    renderWithRouter(<OnboardingPage {...defaultProps} />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
   it('renders the children', () => {
-    render(<OnboardingPage {...defaultProps}>Children</OnboardingPage>, {
-      wrapper: MemoryRouter,
-    });
+    renderWithRouter(
+      <OnboardingPage {...defaultProps}>Children</OnboardingPage>,
+    );
     expect(screen.getByText('Children')).toBeVisible();
   });
   it('renders the footer', () => {
-    render(<OnboardingPage {...defaultProps} />, { wrapper: MemoryRouter });
+    renderWithRouter(<OnboardingPage {...defaultProps} />);
     expect(screen.getByRole('contentinfo')).toBeVisible();
   });
 });

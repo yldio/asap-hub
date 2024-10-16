@@ -13,6 +13,12 @@ const configFactory = (
     libraryTarget: 'commonjs',
     path: outputDir,
   },
+  resolve: {
+    alias: {
+      'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
+      'react/jsx-runtime': 'react/jsx-runtime.js',
+    },
+  },
   module: {
     rules: [
       {

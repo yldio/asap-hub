@@ -446,7 +446,10 @@ jobs:
 
       - name: Deploy CRN PR
         if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.auth0-label == 'true' }}
-        run: yarn workspace @asap-hub/auth0 deploy --debug
+        run: |
+          echo "AUTH0_DOMAIN: $AUTH0_DOMAIN"
+          echo "BASE_PR_APP_DOMAIN: $BASE_PR_APP_DOMAIN"
+          yarn workspace @asap-hub/auth0 deploy --debug
         env:
           AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_PR_AUTH0_CLIENT_SECRET  }}
           AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}

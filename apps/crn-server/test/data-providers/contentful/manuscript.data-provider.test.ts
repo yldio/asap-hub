@@ -90,7 +90,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
         manuscript.versionsCollection!.items[0]![field] = 'No';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = 'Explanation';
+        manuscript.versionsCollection!.items[0]![fieldDetails]!['message']![
+          'text'
+        ] = 'Explanation';
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -123,7 +125,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
         manuscript.versionsCollection!.items[0]![field] = 'Yes';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = 'Explanation';
+        manuscript.versionsCollection!.items[0]![fieldDetails]!['message']![
+          'text'
+        ] = 'Explanation';
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,

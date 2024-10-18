@@ -108,6 +108,7 @@ const optionalVersionFields: OptionalVersionFields = [
 
   'acknowledgedGrantNumber',
   'asapAffiliationIncluded',
+  'availabilityStatement',
   'manuscriptLicense',
   'datasetsDeposited',
   'codeDeposited',
@@ -474,6 +475,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               versionData.acknowledgedGrantNumber || undefined,
             asapAffiliationIncluded:
               versionData.asapAffiliationIncluded || undefined,
+            availabilityStatement:
+              versionData.availabilityStatement || undefined,
             manuscriptLicense: versionData.manuscriptLicense || undefined,
             datasetsDeposited: versionData.datasetsDeposited || undefined,
             codeDeposited: versionData.codeDeposited || undefined,
@@ -488,6 +491,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             asapAffiliationIncludedDetails:
               versionData?.asapAffiliationIncluded === 'No'
                 ? versionData.asapAffiliationIncludedDetails
+                : '',
+            availabilityStatementDetails:
+              versionData?.availabilityStatement === 'No'
+                ? versionData.availabilityStatementDetails
                 : '',
             manuscriptLicenseDetails:
               versionData?.manuscriptLicense === 'No'

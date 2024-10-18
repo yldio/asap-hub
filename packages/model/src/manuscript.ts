@@ -617,6 +617,18 @@ interface QuickCheckQuestions {
   question: string;
 }
 
+export type QuickCheckDetailsObject = Pick<
+  ManuscriptVersion,
+  | 'acknowledgedGrantNumberDetails'
+  | 'asapAffiliationIncludedDetails'
+  | 'availabilityStatementDetails'
+  | 'codeDepositedDetails'
+  | 'datasetsDepositedDetails'
+  | 'labMaterialsRegisteredDetails'
+  | 'manuscriptLicenseDetails'
+  | 'protocolsDepositedDetails'
+>;
+
 export const quickCheckQuestions: QuickCheckQuestions[] = [
   {
     field: 'acknowledgedGrantNumber',

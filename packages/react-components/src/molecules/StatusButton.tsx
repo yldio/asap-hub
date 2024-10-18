@@ -132,6 +132,7 @@ const statusButtonStyles = css({
   },
   paddingLeft: `${16 / perRem}em`,
   paddingRight: `${8 / perRem}em !important`,
+  textWrap: 'nowrap',
   maxWidth: 'fit-content',
 });
 
@@ -143,6 +144,7 @@ const statusTagStyles = css({
   color: info500.rgba,
   paddingLeft: `${16 / perRem}em`,
   paddingRight: `${16 / perRem}em`,
+  textWrap: 'nowrap',
   maxWidth: 'fit-content',
 });
 

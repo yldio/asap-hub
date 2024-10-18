@@ -157,6 +157,7 @@ export const getContentfulGraphqlManuscripts = (): NonNullable<
     {
       sys: { id: '1' },
       title: 'Manuscript 1',
+      status: 'Compliant',
       versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
     {
@@ -211,6 +212,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
     {
       id: '1',
       title: 'Manuscript 1',
+      status: 'Compliant',
       versions: [
         {
           id: 'version-1',

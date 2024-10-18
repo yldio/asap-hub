@@ -8,6 +8,7 @@ export const manuscriptContentQueryFragment = gql`
       id
     }
     title
+    status
     versionsCollection(limit: 20, order: sys_publishedAt_DESC) {
       items {
         sys {

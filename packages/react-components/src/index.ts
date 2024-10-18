@@ -97,6 +97,7 @@ export {
   PageControls,
   PillList,
   SearchField,
+  StatusButton,
   TabbedCard,
   TabNav,
   TagList,
@@ -295,7 +296,7 @@ export {
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant } from './atoms';
-export type { ItemType } from './molecules';
+export type { ItemType, StatusType } from './molecules';
 export type {
   Association,
   UserCollaborationMetric,

@@ -187,7 +187,7 @@ describe('compliance section', () => {
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
     const manuscriptCard = manuscriptTitle.closest('div');
-    userEvent.click(within(manuscriptCard!).getByRole('button'));
+    userEvent.click(within(manuscriptCard!).getByTestId('collapsible-button'));
 
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(

@@ -18758,7 +18758,12 @@ export type FetchTeamByIdQuery = {
   teams?: Maybe<
     Pick<
       Teams,
-      'displayName' | 'inactiveSince' | 'projectSummary' | 'projectTitle'
+      | 'displayName'
+      | 'teamId'
+      | 'grantId'
+      | 'inactiveSince'
+      | 'projectSummary'
+      | 'projectTitle'
     > & {
       sys: Pick<Sys, 'id' | 'publishedAt'>;
       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -33347,6 +33352,8 @@ export const FetchTeamByIdDocument = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'displayName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'teamId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'grantId' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'inactiveSince' },

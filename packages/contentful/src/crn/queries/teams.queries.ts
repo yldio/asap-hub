@@ -11,6 +11,8 @@ export const FETCH_TEAM_BY_ID = gql`
         publishedAt
       }
       displayName
+      teamId
+      grantId
       inactiveSince
       projectSummary
       projectTitle

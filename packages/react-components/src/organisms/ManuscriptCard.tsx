@@ -16,6 +16,8 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'> & {
   teamId: string;
+  teamIdCode: string;
+  grantId: string;
   canShareComplianceReport: boolean;
 };
 
@@ -64,6 +66,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   title,
   versions,
   teamId,
+  teamIdCode,
+  grantId,
   canShareComplianceReport,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -117,7 +121,12 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       {expanded && (
         <div>
           {versions.map((version, index) => (
-            <ManuscriptVersionCard {...version} key={index} />
+            <ManuscriptVersionCard
+              key={index}
+              version={version}
+              teamId={teamIdCode}
+              grantId={grantId}
+            />
           ))}
         </div>
       )}

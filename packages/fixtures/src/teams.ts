@@ -23,6 +23,8 @@ const teamTool = (id: number): TeamTool => ({
 
 const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
   displayName: 'Abu-Remaileh, M',
+  teamId: 'AR1',
+  grantId: '000123',
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
   tags: [],

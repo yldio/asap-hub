@@ -61,6 +61,8 @@ export type TeamSupplementGrant = {
 
 export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   id: string;
+  teamId: string;
+  grantId: string;
   tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   members: TeamMember[];
   lastModifiedDate: string;

@@ -62,7 +62,12 @@ const toolContainerStyles = css({
 type TeamProfileWorkspaceProps = Readonly<
   Pick<
     TeamResponse,
-    'id' | 'pointOfContact' | 'lastModifiedDate' | 'manuscripts'
+    | 'id'
+    | 'pointOfContact'
+    | 'lastModifiedDate'
+    | 'manuscripts'
+    | 'teamId'
+    | 'grantId'
   >
 > & {
   readonly tools: ReadonlyArray<TeamTool>;
@@ -73,6 +78,8 @@ type TeamProfileWorkspaceProps = Readonly<
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
+  teamId,
+  grantId,
   pointOfContact,
   lastModifiedDate,
   manuscripts,
@@ -141,6 +148,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                 <ManuscriptCard
                   {...manuscript}
                   teamId={id}
+                  teamIdCode={teamId}
+                  grantId={grantId}
                   canShareComplianceReport={canShareComplianceReport}
                 />
               </div>

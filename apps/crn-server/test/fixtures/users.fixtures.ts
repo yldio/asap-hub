@@ -41,6 +41,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   reachOut: 'some reach out',
   responsibilities: 'some responsibilities',
   role: 'Grantee',
+  openScienceTeamMember: false,
   social: {
     orcid: '363-98-9330',
   },
@@ -134,6 +135,7 @@ export const getUserResponse = (): UserResponse => ({
     },
   ],
   role: 'Grantee',
+  openScienceTeamMember: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
@@ -171,6 +173,7 @@ export const getUserListItemDataObject = (): UserListItemDataObject => ({
   nickname: 'Iron Man',
   onboarded: true,
   role: 'Grantee',
+  openScienceTeamMember: false,
   _tags: [
     'expertise 1',
     'expertise 2',
@@ -257,6 +260,7 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
+      openScienceTeamMember: false,
       labs: [],
     },
   ],
@@ -365,6 +369,7 @@ export const getUserDataObject = (): UserDataObject => ({
     },
   ],
   role: 'Grantee',
+  openScienceTeamMember: false,
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },

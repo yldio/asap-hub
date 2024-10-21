@@ -56,11 +56,13 @@ const parseUserMetadata = ({
   workingGroups,
   interestGroups,
   role,
+  openScienceTeamMember,
 }: UserMetadataResponse) => ({
   teams: teams.map(parseTeam),
   workingGroups,
   interestGroups,
   role,
+  openScienceTeamMember,
 });
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
   ...parseCommonUserMetadata(response),

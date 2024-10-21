@@ -212,9 +212,9 @@ export const usePostComplianceReport = () => {
   };
 };
 
-export const useCanShareComplianceReport = (): boolean => {
-  const { role } = useCurrentUserCRN() ?? {};
-  return role === 'Staff';
+export const useIsComplianceReviewer = (): boolean => {
+  const { role, openScienceTeamMember } = useCurrentUserCRN() ?? {};
+  return role === 'Staff' && !!openScienceTeamMember;
 };
 
 export const useUploadManuscriptFile = () => {

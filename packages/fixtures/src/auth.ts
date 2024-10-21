@@ -32,6 +32,7 @@ export const createAuthUser = (): User => ({
     },
   ],
   role: 'Grantee',
+  openScienceTeamMember: false,
 });
 
 export const getJwtPayload = (): JwtPayload => ({

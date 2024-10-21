@@ -24,6 +24,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   stateOrProvince: 'Capital Region of Denmark',
   city: 'Copenhagen',
   role: 'Grantee',
+  openScienceTeamMember: false,
   onboarded: true,
   teams: [],
   labs: [],

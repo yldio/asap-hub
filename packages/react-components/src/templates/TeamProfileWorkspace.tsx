@@ -68,7 +68,7 @@ type TeamProfileWorkspaceProps = Readonly<
   readonly tools: ReadonlyArray<TeamTool>;
   readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
   readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
-  readonly canShareComplianceReport?: boolean;
+  readonly isComplianceReviewer?: boolean;
 };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
@@ -79,7 +79,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   tools,
   onDeleteTool,
   setEligibilityReasons,
-  canShareComplianceReport = false,
+  isComplianceReviewer = false,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
@@ -141,7 +141,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                 <ManuscriptCard
                   {...manuscript}
                   teamId={id}
-                  canShareComplianceReport={canShareComplianceReport}
+                  isComplianceReviewer={isComplianceReviewer}
                 />
               </div>
             ))}

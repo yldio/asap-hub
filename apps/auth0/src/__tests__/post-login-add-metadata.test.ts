@@ -205,6 +205,7 @@ describe('For a CRN login', () => {
     workingGroups: [],
     interestGroups: [],
     role: 'Grantee',
+    openScienceTeamMember: false,
     algoliaApiKey: 'test-api-key',
   };
   it('adds the user metadata on successful fetch for crn', async () => {

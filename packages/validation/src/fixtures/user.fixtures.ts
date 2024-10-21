@@ -40,6 +40,7 @@ export const getUserResponse = (): UserResponse => ({
   questions: ['Question 1', 'Question 2'],
   avatarUrl: `https://test.com/api/assets/asap-dev/contentful-asset-id`,
   role: 'Grantee',
+  openScienceTeamMember: false,
   biography: 'Biography',
   labs: [
     { id: 'cd7be4902', name: 'Barcelona' },

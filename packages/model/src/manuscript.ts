@@ -69,6 +69,7 @@ export type ManuscriptVersion = {
   id: string;
   type: ManuscriptType;
   lifecycle: ManuscriptLifecycle;
+  description: string;
   preprintDoi?: string;
   publicationDoi?: string;
   requestingApcCoverage?: ApcCoverageOption;

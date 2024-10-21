@@ -7,7 +7,6 @@ export { default as EditableCard } from './EditableCard';
 export { default as EmptyState } from './EmptyState';
 export { default as EventOwner } from './EventOwner';
 export { default as EventSpeakers } from './EventSpeakers';
-export { default as ExpandableText } from './ExpandableText';
 export { default as HeaderLogo } from './HeaderLogo';
 export { default as IconWithLabel } from './IconWithLabel';
 export { default as NavigationLink } from './NavigationLink';

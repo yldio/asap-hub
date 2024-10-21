@@ -4,7 +4,7 @@ import {
   colorWithTransparency,
   lead,
   pixels,
-} from '@asap-hub/react-components';
+} from '../';
 
 import { css } from '@emotion/react';
 import React, { useLayoutEffect, useState } from 'react';

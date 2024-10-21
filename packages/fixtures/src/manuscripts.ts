@@ -28,6 +28,7 @@ export const createManuscriptResponse = (
       id: 'version-1',
       lifecycle: 'Draft Manuscript (prior to Publication)',
       type: 'Original Research',
+      description: 'A good description',
       createdBy: manuscriptAuthor,
       createdDate: '2020-12-10T20:36:54Z',
       publishedAt: '2020-12-10T20:36:54Z',

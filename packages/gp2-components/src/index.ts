@@ -9,7 +9,6 @@ export {
   EmptyState,
   EventOwner,
   EventSpeakers,
-  ExpandableText,
   HeaderLogo,
   IconWithLabel,
   NavigationLink,

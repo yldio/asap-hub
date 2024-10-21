@@ -2,8 +2,25 @@ import { createManuscriptResponse } from '@asap-hub/fixtures';
 import { ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { ComponentProps } from 'react';
 import ManuscriptVersionCard from '../ManuscriptVersionCard';
+
+const setScrollHeightMock = (height: number) => {
+  const ref = { current: { scrollHeight: height } };
+
+  Object.defineProperty(ref, 'current', {
+    set(_current) {
+      this.mockedCurrent = _current;
+    },
+    get() {
+      return { scrollHeight: height };
+    },
+  });
+  jest.spyOn(React, 'useRef').mockReturnValue(ref);
+};
+
+afterAll(jest.clearAllMocks);
 
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
   ...(createManuscriptResponse().versions[0] as ManuscriptVersion),
@@ -298,4 +315,22 @@ it('displays compliance report section when present', () => {
   );
 
   expect(getByRole('heading', { name: /Compliance Report/i })).toBeVisible();
+});
+
+it('displays manuscript description', () => {
+  const shortDescription = 'A nice short description';
+  const longDescription = 'A veeery long description.'.repeat(200);
+
+  setScrollHeightMock(100);
+  const { getByRole, rerender, getByText, queryByRole } = render(
+    <ManuscriptVersionCard {...props} description={shortDescription} />,
+  );
+  userEvent.click(getByRole('button'));
+  expect(getByText(shortDescription)).toBeInTheDocument();
+  expect(queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
+
+  setScrollHeightMock(300);
+  rerender(<ManuscriptVersionCard {...props} description={longDescription} />);
+
+  expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
 });

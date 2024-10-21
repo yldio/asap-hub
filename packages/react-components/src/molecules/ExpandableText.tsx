@@ -7,7 +7,7 @@ import {
   colorWithTransparency,
   lead,
   pixels,
-} from '../';
+} from '..';
 
 const { rem, lineHeight } = pixels;
 

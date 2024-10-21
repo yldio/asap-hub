@@ -20,7 +20,7 @@ type ManuscriptCardProps = Pick<
   'id' | 'title' | 'versions' | 'status'
 > & {
   teamId: string;
-  canShareComplianceReport: boolean;
+  isComplianceReviewer: boolean;
 };
 
 const manuscriptContainerStyles = css({
@@ -74,7 +74,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   versions,
   status,
   teamId,
-  canShareComplianceReport,
+  isComplianceReviewer,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(status || '');
@@ -115,7 +115,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
         <span css={buttonsContainerStyles}>
           <StatusButton
             buttonChildren={() => <span>{selectedStatus}</span>}
-            canEdit={canShareComplianceReport}
+            canEdit={isComplianceReviewer}
           >
             {manuscriptStatus.map((statusItem) => ({
               item: statusItem,
@@ -124,7 +124,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               },
             }))}
           </StatusButton>
-          {canShareComplianceReport && (
+          {isComplianceReviewer && (
             <span>
               <Button
                 primary

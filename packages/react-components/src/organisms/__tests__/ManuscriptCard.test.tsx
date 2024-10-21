@@ -8,7 +8,7 @@ import ManuscriptCard from '../ManuscriptCard';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
-  canShareComplianceReport: false,
+  isComplianceReviewer: false,
 };
 
 it('displays manuscript version card when expanded', () => {
@@ -48,7 +48,7 @@ it('displays share compliance report button if user has permission', () => {
     queryByRole('button', { name: /Share Compliance Report Icon/i }),
   ).not.toBeInTheDocument();
 
-  rerender(<ManuscriptCard {...props} canShareComplianceReport />);
+  rerender(<ManuscriptCard {...props} isComplianceReviewer />);
 
   expect(
     getByRole('button', { name: /Share Compliance Report Icon/i }),
@@ -60,7 +60,7 @@ it('redirects to compliance report form when user clicks on share compliance rep
   const { getByRole } = render(
     <Router history={history}>
       <Route path="">
-        <ManuscriptCard {...props} canShareComplianceReport />
+        <ManuscriptCard {...props} isComplianceReviewer />
       </Route>
     </Router>,
   );
@@ -74,9 +74,9 @@ it('redirects to compliance report form when user clicks on share compliance rep
   );
 });
 
-it('allows to change the manuscript status if canShareComplianceReport is true', () => {
+it('allows to change the manuscript status if isComplianceReviewer is true', () => {
   const { getByRole, getByTestId } = render(
-    <ManuscriptCard {...props} canShareComplianceReport />,
+    <ManuscriptCard {...props} isComplianceReviewer />,
   );
 
   const statusButton = getByTestId('status-button');
@@ -86,7 +86,7 @@ it('allows to change the manuscript status if canShareComplianceReport is true',
   expect(statusButton.textContent).toContain('Compliant');
 });
 
-it('does not allow to change the manuscript status if canShareComplianceReport is false', () => {
+it('does not allow to change the manuscript status if isComplianceReviewer is false', () => {
   const { getByTestId } = render(<ManuscriptCard {...props} />);
 
   const statusButton = getByTestId('status-button');

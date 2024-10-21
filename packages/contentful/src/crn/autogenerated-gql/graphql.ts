@@ -19516,6 +19516,7 @@ export type UsersContentFragment = Pick<
   | 'website1'
   | 'website2'
   | 'role'
+  | 'openScienceTeamMember'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -19686,6 +19687,7 @@ export type FetchPublicUsersQuery = {
             | 'website1'
             | 'website2'
             | 'role'
+            | 'openScienceTeamMember'
             | 'responsibilities'
             | 'researchInterests'
             | 'reachOut'
@@ -19859,6 +19861,7 @@ export type FetchUserByIdQuery = {
       | 'website1'
       | 'website2'
       | 'role'
+      | 'openScienceTeamMember'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -20000,6 +20003,7 @@ export type UserListItemContentFragment = Pick<
   | 'onboarded'
   | 'dismissedGettingStarted'
   | 'role'
+  | 'openScienceTeamMember'
 > & {
   avatar?: Maybe<Pick<Asset, 'url'>>;
   sys: Pick<Sys, 'id'>;
@@ -20050,6 +20054,7 @@ export type FetchUsersQuery = {
             | 'onboarded'
             | 'dismissedGettingStarted'
             | 'role'
+            | 'openScienceTeamMember'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
             sys: Pick<Sys, 'id'>;
@@ -20114,6 +20119,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'onboarded'
                     | 'dismissedGettingStarted'
                     | 'role'
+                    | 'openScienceTeamMember'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                     sys: Pick<Sys, 'id'>;
@@ -20184,6 +20190,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'onboarded'
                 | 'dismissedGettingStarted'
                 | 'role'
+                | 'openScienceTeamMember'
               > & {
                 avatar?: Maybe<Pick<Asset, 'url'>>;
                 sys: Pick<Sys, 'id'>;
@@ -25127,6 +25134,10 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'openScienceTeamMember' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
@@ -25961,6 +25972,10 @@ export const UserListItemContentFragmentDoc = {
             name: { kind: 'Name', value: 'dismissedGettingStarted' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'openScienceTeamMember' },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'researchTagsCollection' },

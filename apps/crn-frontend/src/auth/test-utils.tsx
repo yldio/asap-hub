@@ -45,6 +45,7 @@ const createAuth0 = (
       workingGroups: [],
       interestGroups: [],
       role: 'Grantee',
+      openScienceTeamMember: false,
       ...user,
     };
     auth0User = {

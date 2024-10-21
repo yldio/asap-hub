@@ -1,6 +1,6 @@
 import { PeopleCard } from '@asap-hub/react-components';
 
-import { text, date, number, select } from './knobs';
+import { text, boolean, date, number, select } from './knobs';
 
 export default {
   title: 'Organisms / Network / People Card',
@@ -40,6 +40,7 @@ const props = {
     'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
   ),
   role: select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee'),
+  openScienceTeamMember: boolean('Open Science Team Member', false),
   labs: Array.from({ length: number('Labs', 0, { min: 0 }) }).map((_, i) => ({
     id: `${i}`,
     name: `${i}`,

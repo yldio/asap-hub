@@ -28,6 +28,7 @@ const members = [
     firstName: 'Daniel',
     lastName: 'Ramirez',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -37,6 +38,7 @@ const members = [
     firstName: 'Peter',
     lastName: 'Venkman',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -46,6 +48,7 @@ const members = [
     firstName: 'Tess',
     lastName: 'Goetz',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -55,6 +58,7 @@ const members = [
     firstName: 'Robin',
     lastName: 'Peploe',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -64,6 +68,7 @@ const members = [
     firstName: 'Alice',
     lastName: 'Lane',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -73,6 +78,7 @@ const members = [
     firstName: 'Philip',
     lastName: 'Mars',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
   {
     ...baseMemberProps,
@@ -82,6 +88,7 @@ const members = [
     firstName: 'Emanuel',
     lastName: 'Depay',
     role: 'Staff' as const,
+    openScienceTeamMember: false,
   },
 ];
 const props = (): ComponentProps<typeof DiscoverPageBody> => ({

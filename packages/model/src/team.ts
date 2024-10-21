@@ -48,7 +48,7 @@ export interface TeamMember {
 
 export type TeamManuscript = Pick<
   ManuscriptResponse,
-  'id' | 'title' | 'versions'
+  'id' | 'title' | 'versions' | 'status'
 >;
 
 export type TeamSupplementGrant = {

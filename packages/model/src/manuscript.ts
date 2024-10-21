@@ -239,9 +239,37 @@ export const manuscriptFormFieldsMapping: Record<
   },
 };
 
+export const manuscriptStatus = [
+  'Waiting for Report',
+  'Review Compliance Report',
+  'Waiting for ASAP Reply',
+  "Waiting for Grantee's Reply",
+  'Manuscript Resubmitted',
+  'Submit Final Publication',
+  'Addendum Required',
+  'Compliant',
+  'Closed (other)',
+] as const;
+
+export type ManuscriptStatus = (typeof manuscriptStatus)[number];
+
+export const isManuscriptStatus = (type: string): type is ManuscriptStatus =>
+  (manuscriptStatus as ReadonlyArray<string>).includes(type);
+
+export const manuscriptMapStatus = (
+  status?: string | null,
+): ManuscriptStatus | null => {
+  if (status && isManuscriptStatus(status)) {
+    return status;
+  }
+
+  return null;
+};
+
 export type ManuscriptDataObject = {
   id: string;
   title: string;
+  status?: ManuscriptStatus;
   teamId: string;
   versions: ManuscriptVersion[];
 };

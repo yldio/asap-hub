@@ -83,6 +83,7 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
       },
       type: 'Original Research',
       lifecycle: 'Preprint',
+      description: 'A good description',
       manuscriptFile: {
         sys: { id: 'file-id' },
         fileName: 'manuscript.pdf',

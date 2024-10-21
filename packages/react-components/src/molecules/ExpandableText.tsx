@@ -1,3 +1,6 @@
+import { css } from '@emotion/react';
+import React, { useLayoutEffect, useState } from 'react';
+
 import {
   Button,
   chevronCircleDownIcon,
@@ -5,9 +8,6 @@ import {
   lead,
   pixels,
 } from '../';
-
-import { css } from '@emotion/react';
-import React, { useLayoutEffect, useState } from 'react';
 
 const { rem, lineHeight } = pixels;
 

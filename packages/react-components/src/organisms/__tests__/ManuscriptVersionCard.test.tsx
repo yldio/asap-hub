@@ -2,8 +2,7 @@ import { createManuscriptResponse } from '@asap-hub/fixtures';
 import { ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import ManuscriptVersionCard from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {

@@ -250,7 +250,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           id: 'version-1',
           lifecycle: 'Preprint',
           type: 'Original Research',
-          description: 'A nice description',
+          description: 'A good description',
           createdBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',

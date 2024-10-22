@@ -567,5 +567,228 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(publish).toHaveBeenCalled();
       expect(result).toEqual(manuscriptId);
     });
+
+    describe('quick check details', () => {
+      it.each`
+        quickCheckDetail                    | value
+        ${`acknowledgedGrantNumberDetails`} | ${`Lead PI (Core Leadership)`}
+        ${`asapAffiliationIncludedDetails`} | ${'Co-PI (Core Leadership)'}
+        ${`availabilityStatementDetails`}   | ${'Collaborating PI'}
+        ${`codeDepositedDetails`}           | ${`Key Personnel`}
+        ${`datasetsDepositedDetails`}       | ${`Scientific Advisory Board`}
+        ${`labMaterialsRegisteredDetails`}  | ${'Collaborating PI'}
+        ${`manuscriptLicenseDetails`}       | ${`Key Personnel`}
+        ${`protocolsDepositedDetails`}      | ${`Scientific Advisory Board`}
+      `(
+        `Should create the manuscript when $quickCheckDetail is present`,
+        async ({
+          quickCheckDetail,
+          value,
+        }: {
+          quickCheckDetail: QuickCheckDetails;
+          value: string;
+        }) => {
+          const manuscriptId = 'manuscript-id-1';
+          const manuscriptVersionId = 'manuscript-version-id-1';
+          const messageId = 'message-id-1';
+          const discussionId = 'discussion-id-1';
+          const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+          manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+          manuscriptCreateDataObject.versions[0]![quickCheckDetail] = value;
+
+          const publish = jest.fn();
+
+          when(environmentMock.createEntry)
+            .calledWith('messages', expect.anything())
+            .mockResolvedValue({
+              sys: { id: messageId },
+              publish,
+            } as unknown as Entry);
+          when(environmentMock.createEntry)
+            .calledWith('discussions', expect.anything())
+            .mockResolvedValue({
+              sys: { id: discussionId },
+              publish,
+            } as unknown as Entry);
+          when(environmentMock.createEntry)
+            .calledWith('manuscriptVersions', expect.anything())
+            .mockResolvedValue({
+              sys: { id: manuscriptVersionId },
+              publish,
+            } as unknown as Entry);
+          when(environmentMock.createEntry)
+            .calledWith('manuscripts', expect.anything())
+            .mockResolvedValue({
+              sys: { id: manuscriptId },
+              publish,
+            } as unknown as Entry);
+          const assetMock = {
+            sys: { id: manuscriptId },
+            publish: jest.fn(),
+          } as unknown as Asset;
+          when(environmentMock.getAsset)
+            .calledWith(
+              manuscriptCreateDataObject.versions[0]!.manuscriptFile.id,
+            )
+            .mockResolvedValue(assetMock);
+
+          const result = await manuscriptDataProvider.create({
+            ...manuscriptCreateDataObject,
+            userId: 'user-id-0',
+          });
+
+          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+            1,
+            'messages',
+            {
+              fields: {
+                text: {
+                  'en-US': value,
+                },
+                createdBy: {
+                  'en-US': {
+                    sys: {
+                      id: 'user-id-0',
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  },
+                },
+              },
+            },
+          );
+          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+            2,
+            'discussions',
+            {
+              fields: {
+                message: {
+                  'en-US': {
+                    sys: {
+                      id: messageId,
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  },
+                },
+              },
+            },
+          );
+          expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+            3,
+            'manuscriptVersions',
+            {
+              fields: {
+                type: {
+                  'en-US': manuscriptCreateDataObject.versions[0]!.type,
+                },
+                lifecycle: {
+                  'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
+                },
+                manuscriptFile: {
+                  'en-US': {
+                    sys: {
+                      type: 'Link',
+                      linkType: 'Asset',
+                      id: 'file-id',
+                    },
+                  },
+                },
+                keyResourceTable: {
+                  'en-US': null,
+                },
+                additionalFiles: {
+                  'en-US': null,
+                },
+                description: { 'en-US': 'nice description' },
+                labs: { 'en-US': [] },
+                firstAuthors: {
+                  'en-US': [
+                    {
+                      sys: {
+                        id: 'author-1',
+
+                        linkType: 'Entry',
+                        type: 'Link',
+                      },
+                    },
+                  ],
+                },
+                submissionDate: { 'en-US': undefined },
+                correspondingAuthor: { 'en-US': [] },
+                additionalAuthors: { 'en-US': [] },
+                teams: {
+                  'en-US': [
+                    {
+                      sys: {
+                        id: 'team-1',
+
+                        linkType: 'Entry',
+                        type: 'Link',
+                      },
+                    },
+                  ],
+                },
+                createdBy: {
+                  'en-US': {
+                    sys: {
+                      id: 'user-id-0',
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  },
+                },
+                ...quickCheckDetailsCreateObject,
+                [quickCheckDetail]: {
+                  'en-US': {
+                    sys: {
+                      id: discussionId,
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  },
+                },
+              },
+            },
+          );
+          expect(environmentMock.createEntry).toHaveBeenCalledWith(
+            'manuscripts',
+            {
+              fields: {
+                title: {
+                  'en-US': 'Manuscript Title',
+                },
+                teams: {
+                  'en-US': [
+                    {
+                      sys: {
+                        id: 'team-1',
+                        linkType: 'Entry',
+                        type: 'Link',
+                      },
+                    },
+                  ],
+                },
+                eligibilityReasons: {
+                  'en-US': [],
+                },
+                versions: {
+                  'en-US': [
+                    {
+                      sys: {
+                        id: manuscriptVersionId,
+                        linkType: 'Entry',
+                        type: 'Link',
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          );
+          expect(result).toEqual(manuscriptId);
+        },
+      );
+    });
   });
 });

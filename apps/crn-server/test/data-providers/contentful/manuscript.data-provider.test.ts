@@ -4,7 +4,12 @@ import {
   Environment,
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
-import { QuickCheck, QuickCheckDetails } from '@asap-hub/model';
+import {
+  ManuscriptLifecycle,
+  ManuscriptType,
+  QuickCheck,
+  QuickCheckDetails,
+} from '@asap-hub/model';
 import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
 
@@ -226,32 +231,133 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('Create', () => {
-    const quickCheckDetailsCreateObject = {
-      asapAffiliationIncludedDetails: {
-        'en-US': null,
+    const manuscriptId = 'manuscript-id-1';
+    const manuscriptVersionId = 'manuscript-version-id-1';
+    const getManuscriptVersionCreateGraphQlObject = (
+      versionType: ManuscriptType,
+      versionLifeCycle: ManuscriptLifecycle,
+    ) => {
+      return {
+        type: {
+          'en-US': versionType,
+        },
+        lifecycle: {
+          'en-US': versionLifeCycle,
+        },
+        manuscriptFile: {
+          'en-US': {
+            sys: {
+              type: 'Link',
+              linkType: 'Asset',
+              id: 'file-id',
+            },
+          },
+        },
+        keyResourceTable: {
+          'en-US': null,
+        },
+        additionalFiles: {
+          'en-US': null,
+        },
+        description: { 'en-US': 'nice description' },
+        labs: { 'en-US': [] },
+        firstAuthors: {
+          'en-US': [
+            {
+              sys: {
+                id: 'author-1',
+
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+        submissionDate: { 'en-US': undefined },
+        correspondingAuthor: { 'en-US': [] },
+        count: { 'en-US': 1 },
+        additionalAuthors: { 'en-US': [] },
+        teams: {
+          'en-US': [
+            {
+              sys: {
+                id: 'team-1',
+
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+        createdBy: {
+          'en-US': {
+            sys: {
+              id: 'user-id-0',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        },
+        asapAffiliationIncludedDetails: {
+          'en-US': null,
+        },
+        acknowledgedGrantNumberDetails: {
+          'en-US': null,
+        },
+        availabilityStatementDetails: {
+          'en-US': null,
+        },
+        codeDepositedDetails: {
+          'en-US': null,
+        },
+        datasetsDepositedDetails: {
+          'en-US': null,
+        },
+        labMaterialsRegisteredDetails: {
+          'en-US': null,
+        },
+        manuscriptLicenseDetails: {
+          'en-US': null,
+        },
+        protocolsDepositedDetails: {
+          'en-US': null,
+        },
+      };
+    };
+    const manuscriptCreateGraphQlObject = {
+      title: {
+        'en-US': 'Manuscript Title',
       },
-      acknowledgedGrantNumberDetails: {
-        'en-US': null,
+      teams: {
+        'en-US': [
+          {
+            sys: {
+              id: 'team-1',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
       },
-      availabilityStatementDetails: {
-        'en-US': null,
+      eligibilityReasons: {
+        'en-US': [],
       },
-      codeDepositedDetails: {
-        'en-US': null,
+      count: {
+        'en-US': 3,
       },
-      datasetsDepositedDetails: {
-        'en-US': null,
-      },
-      labMaterialsRegisteredDetails: {
-        'en-US': null,
-      },
-      manuscriptLicenseDetails: {
-        'en-US': null,
-      },
-      protocolsDepositedDetails: {
-        'en-US': null,
+      versions: {
+        'en-US': [
+          {
+            sys: {
+              id: manuscriptVersionId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
       },
     };
+
     test('should throw if no versions are provided', async () => {
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions = [];
@@ -261,10 +367,13 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('can create a manuscript', async () => {
-      const manuscriptId = 'manuscript-id-1';
-      const manuscriptVersionId = 'manuscript-version-id-1';
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+
+      const manuscriptType = manuscriptCreateDataObject.versions[0]!
+        .type as ManuscriptType;
+      const manuscriptLifecycle = manuscriptCreateDataObject.versions[0]!
+        .lifecycle as ManuscriptLifecycle;
 
       const publish = jest.fn();
 
@@ -298,103 +407,16 @@ describe('Manuscripts Contentful Data Provider', () => {
         'manuscriptVersions',
         {
           fields: {
-            type: {
-              'en-US': manuscriptCreateDataObject.versions[0]!.type,
-            },
-            lifecycle: {
-              'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
-            },
-            manuscriptFile: {
-              'en-US': {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Asset',
-                  id: 'file-id',
-                },
-              },
-            },
-            keyResourceTable: {
-              'en-US': null,
-            },
-            additionalFiles: {
-              'en-US': null,
-            },
-            description: { 'en-US': 'nice description' },
-            labs: { 'en-US': [] },
-            firstAuthors: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'author-1',
-
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-            submissionDate: { 'en-US': undefined },
-            correspondingAuthor: { 'en-US': [] },
-            count: { 'en-US': 1 },
-            additionalAuthors: { 'en-US': [] },
-            teams: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'team-1',
-
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-            createdBy: {
-              'en-US': {
-                sys: {
-                  id: 'user-id-0',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            },
-            ...quickCheckDetailsCreateObject,
+            ...getManuscriptVersionCreateGraphQlObject(
+              manuscriptType,
+              manuscriptLifecycle,
+            ),
           },
         },
       );
       expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
         fields: {
-          title: {
-            'en-US': 'Manuscript Title',
-          },
-          teams: {
-            'en-US': [
-              {
-                sys: {
-                  id: 'team-1',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            ],
-          },
-          eligibilityReasons: {
-            'en-US': [],
-          },
-          count: {
-            'en-US': 3,
-          },
-          versions: {
-            'en-US': [
-              {
-                sys: {
-                  id: manuscriptVersionId,
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            ],
-          },
+          ...manuscriptCreateGraphQlObject,
         },
       });
       expect(assetMock.publish).toHaveBeenCalled();
@@ -403,8 +425,6 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('can create a manuscript with key resource table and additional files', async () => {
-      const manuscriptId = 'manuscript-id-1';
-      const manuscriptVersionId = 'manuscript-version-id-1';
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.additionalFiles = [
         {
@@ -413,6 +433,12 @@ describe('Manuscripts Contentful Data Provider', () => {
           id: 'file-table-id',
         },
       ];
+
+      const manuscriptType = manuscriptCreateDataObject.versions[0]!
+        .type as ManuscriptType;
+      const manuscriptLifecycle = manuscriptCreateDataObject.versions[0]!
+        .lifecycle as ManuscriptLifecycle;
+
       const publish = jest.fn();
 
       when(environmentMock.createEntry)
@@ -450,21 +476,10 @@ describe('Manuscripts Contentful Data Provider', () => {
         'manuscriptVersions',
         {
           fields: {
-            type: {
-              'en-US': manuscriptCreateDataObject.versions[0]!.type,
-            },
-            lifecycle: {
-              'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
-            },
-            manuscriptFile: {
-              'en-US': {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Asset',
-                  id: 'file-id',
-                },
-              },
-            },
+            ...getManuscriptVersionCreateGraphQlObject(
+              manuscriptType,
+              manuscriptLifecycle,
+            ),
             keyResourceTable: {
               'en-US': {
                 sys: {
@@ -485,82 +500,12 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               ],
             },
-            description: { 'en-US': 'nice description' },
-            labs: { 'en-US': [] },
-            firstAuthors: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'author-1',
-
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-            submissionDate: { 'en-US': undefined },
-            correspondingAuthor: { 'en-US': [] },
-            count: { 'en-US': 1 },
-            additionalAuthors: { 'en-US': [] },
-            teams: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'team-1',
-
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-            createdBy: {
-              'en-US': {
-                sys: {
-                  id: 'user-id-0',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            },
-            ...quickCheckDetailsCreateObject,
           },
         },
       );
       expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
         fields: {
-          title: {
-            'en-US': 'Manuscript Title',
-          },
-          count: {
-            'en-US': 3,
-          },
-          teams: {
-            'en-US': [
-              {
-                sys: {
-                  id: 'team-1',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            ],
-          },
-          eligibilityReasons: {
-            'en-US': [],
-          },
-          versions: {
-            'en-US': [
-              {
-                sys: {
-                  id: manuscriptVersionId,
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-            ],
-          },
+          ...manuscriptCreateGraphQlObject,
         },
       });
       expect(assetMock.publish).toHaveBeenCalled();
@@ -570,31 +515,33 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     describe('quick check details', () => {
       it.each`
-        quickCheckDetail                    | value
-        ${`acknowledgedGrantNumberDetails`} | ${`Lead PI (Core Leadership)`}
-        ${`asapAffiliationIncludedDetails`} | ${'Co-PI (Core Leadership)'}
-        ${`availabilityStatementDetails`}   | ${'Collaborating PI'}
-        ${`codeDepositedDetails`}           | ${`Key Personnel`}
-        ${`datasetsDepositedDetails`}       | ${`Scientific Advisory Board`}
-        ${`labMaterialsRegisteredDetails`}  | ${'Collaborating PI'}
-        ${`manuscriptLicenseDetails`}       | ${`Key Personnel`}
-        ${`protocolsDepositedDetails`}      | ${`Scientific Advisory Board`}
+        quickCheckDetail
+        ${`acknowledgedGrantNumberDetails`}
+        ${`asapAffiliationIncludedDetails`}
+        ${`availabilityStatementDetails`}
+        ${`codeDepositedDetails`}
+        ${`datasetsDepositedDetails`}
+        ${`labMaterialsRegisteredDetails`}
+        ${`manuscriptLicenseDetails`}
+        ${`protocolsDepositedDetails`}
       `(
         `Should create the manuscript when $quickCheckDetail is present`,
         async ({
           quickCheckDetail,
-          value,
         }: {
           quickCheckDetail: QuickCheckDetails;
-          value: string;
         }) => {
-          const manuscriptId = 'manuscript-id-1';
-          const manuscriptVersionId = 'manuscript-version-id-1';
           const messageId = 'message-id-1';
           const discussionId = 'discussion-id-1';
           const manuscriptCreateDataObject = getManuscriptCreateDataObject();
           manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
-          manuscriptCreateDataObject.versions[0]![quickCheckDetail] = value;
+          manuscriptCreateDataObject.versions[0]![quickCheckDetail] =
+            'Explanation';
+
+          const manuscriptType = manuscriptCreateDataObject.versions[0]!
+            .type as ManuscriptType;
+          const manuscriptLifecycle = manuscriptCreateDataObject.versions[0]!
+            .lifecycle as ManuscriptLifecycle;
 
           const publish = jest.fn();
 
@@ -632,7 +579,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             )
             .mockResolvedValue(assetMock);
 
-          const result = await manuscriptDataProvider.create({
+          const result = await manuscriptDataProviderMockGraphql.create({
             ...manuscriptCreateDataObject,
             userId: 'user-id-0',
           });
@@ -643,7 +590,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             {
               fields: {
                 text: {
-                  'en-US': value,
+                  'en-US': 'Explanation',
                 },
                 createdBy: {
                   'en-US': {
@@ -674,71 +621,16 @@ describe('Manuscripts Contentful Data Provider', () => {
               },
             },
           );
+
           expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
             3,
             'manuscriptVersions',
             {
               fields: {
-                type: {
-                  'en-US': manuscriptCreateDataObject.versions[0]!.type,
-                },
-                lifecycle: {
-                  'en-US': manuscriptCreateDataObject.versions[0]!.lifecycle,
-                },
-                manuscriptFile: {
-                  'en-US': {
-                    sys: {
-                      type: 'Link',
-                      linkType: 'Asset',
-                      id: 'file-id',
-                    },
-                  },
-                },
-                keyResourceTable: {
-                  'en-US': null,
-                },
-                additionalFiles: {
-                  'en-US': null,
-                },
-                description: { 'en-US': 'nice description' },
-                labs: { 'en-US': [] },
-                firstAuthors: {
-                  'en-US': [
-                    {
-                      sys: {
-                        id: 'author-1',
-
-                        linkType: 'Entry',
-                        type: 'Link',
-                      },
-                    },
-                  ],
-                },
-                submissionDate: { 'en-US': undefined },
-                correspondingAuthor: { 'en-US': [] },
-                additionalAuthors: { 'en-US': [] },
-                teams: {
-                  'en-US': [
-                    {
-                      sys: {
-                        id: 'team-1',
-
-                        linkType: 'Entry',
-                        type: 'Link',
-                      },
-                    },
-                  ],
-                },
-                createdBy: {
-                  'en-US': {
-                    sys: {
-                      id: 'user-id-0',
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  },
-                },
-                ...quickCheckDetailsCreateObject,
+                ...getManuscriptVersionCreateGraphQlObject(
+                  manuscriptType,
+                  manuscriptLifecycle,
+                ),
                 [quickCheckDetail]: {
                   'en-US': {
                     sys: {
@@ -747,41 +639,6 @@ describe('Manuscripts Contentful Data Provider', () => {
                       type: 'Link',
                     },
                   },
-                },
-              },
-            },
-          );
-          expect(environmentMock.createEntry).toHaveBeenCalledWith(
-            'manuscripts',
-            {
-              fields: {
-                title: {
-                  'en-US': 'Manuscript Title',
-                },
-                teams: {
-                  'en-US': [
-                    {
-                      sys: {
-                        id: 'team-1',
-                        linkType: 'Entry',
-                        type: 'Link',
-                      },
-                    },
-                  ],
-                },
-                eligibilityReasons: {
-                  'en-US': [],
-                },
-                versions: {
-                  'en-US': [
-                    {
-                      sys: {
-                        id: manuscriptVersionId,
-                        linkType: 'Entry',
-                        type: 'Link',
-                      },
-                    },
-                  ],
                 },
               },
             },

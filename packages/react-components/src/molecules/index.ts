@@ -19,6 +19,7 @@ export { default as EventNumberOfSpeakers } from './EventNumberOfSpeakers';
 export { default as EventOwner } from './EventOwner';
 export { default as EventTeams } from './EventTeams';
 export { default as EventTime } from './EventTime';
+export { default as ExpandableText } from './ExpandableText';
 export { default as ExportButton } from './ExportButton';
 export { default as ExternalLink } from './ExternalLink';
 export { default as FormCard } from './FormCard';

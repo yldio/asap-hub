@@ -3,6 +3,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   Card,
   crossQuery,
+  ExpandableText,
   Headline3,
   MembersList,
   Paragraph,
@@ -12,7 +13,6 @@ import {
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
-import ExpandableText from '../molecules/ExpandableText';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
 import { Milestones } from '../organisms';

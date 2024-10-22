@@ -73,6 +73,7 @@ export {
   EventTeams,
   EventTime,
   ExternalLink,
+  ExpandableText,
   FormCard,
   GoogleSigninButton,
   Header,

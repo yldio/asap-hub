@@ -65,6 +65,13 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('FetchCountByTeamId', () => {
+    it('Should return 0 when team does not exist', async () => {
+      const teamId = 'team-id-2';
+      const result =
+        await manuscriptDataProviderMockGraphql.fetchCountByTeamId(teamId);
+      expect(result).toBe(0);
+    });
+
     it('Should fetch the count of existing manuscripts for a given team', async () => {
       const teamId = 'team-id-1';
       const result =

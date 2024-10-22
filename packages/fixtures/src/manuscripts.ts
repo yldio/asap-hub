@@ -23,6 +23,7 @@ export const createManuscriptResponse = (
   title: `Manuscript ${itemIndex + 1}`,
   teamId: 'team-1',
   status: 'Waiting for Report',
+  count: 1,
   versions: [
     {
       id: 'version-1',

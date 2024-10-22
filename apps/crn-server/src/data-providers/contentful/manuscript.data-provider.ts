@@ -54,13 +54,11 @@ export class ManuscriptContentfulDataProvider
       FetchManuscriptByIdQueryVariables
     >(FETCH_MANUSCRIPTS_BY_TEAM_ID, { id });
 
-    if (!teams) {
-      return 0;
-    }
-
-    return teams.linkedFrom?.manuscriptsCollection?.items.filter(
-      (item) => item?.teamsCollection?.items[0]?.sys.id === id,
-    ).length;
+    return (
+      teams?.linkedFrom?.manuscriptsCollection?.items.filter(
+        (item) => item?.teamsCollection?.items[0]?.sys.id === id,
+      ).length || 0
+    );
   }
 
   async fetchById(id: string): Promise<ManuscriptDataObject | null> {

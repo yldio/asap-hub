@@ -15,6 +15,7 @@ export const getManuscriptDataObject = (
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
   teamId: 'team-1',
+  count: 1,
   versions: [
     {
       id: 'version-1',
@@ -62,6 +63,7 @@ export const getContentfulGraphqlManuscript = (
     id: 'manuscript-id-1',
   },
   title: 'Manuscript Title',
+  count: 1,
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },

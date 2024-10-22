@@ -273,6 +273,7 @@ export type ManuscriptDataObject = {
   status?: ManuscriptStatus;
   teamId: string;
   versions: ManuscriptVersion[];
+  count: number;
 };
 
 export type ManuscriptResponse = ManuscriptDataObject;

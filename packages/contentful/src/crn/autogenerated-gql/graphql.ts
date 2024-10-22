@@ -694,10 +694,26 @@ export enum ComplianceReportsOrder {
 }
 
 export type ContentfulMetadata = {
+  concepts: Array<Maybe<TaxonomyConcept>>;
   tags: Array<Maybe<ContentfulTag>>;
 };
 
+export type ContentfulMetadataConceptsDescendantsFilter = {
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ContentfulMetadataConceptsFilter = {
+  descendants?: InputMaybe<ContentfulMetadataConceptsDescendantsFilter>;
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type ContentfulMetadataFilter = {
+  concepts?: InputMaybe<ContentfulMetadataConceptsFilter>;
+  concepts_exists?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<ContentfulMetadataTagsFilter>;
   tags_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -8185,6 +8201,14 @@ export type SysFilter = {
   publishedVersion_lte?: InputMaybe<Scalars['Float']>;
   publishedVersion_not?: InputMaybe<Scalars['Float']>;
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+};
+
+/**
+ * Represents a tag entity for finding and organizing content easily.
+ *         Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
+ */
+export type TaxonomyConcept = {
+  id?: Maybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership) */
@@ -17452,7 +17476,7 @@ export type FetchLabsQuery = {
 
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
-  'title' | 'status'
+  'title' | 'status' | 'count'
 > & {
   sys: Pick<Sys, 'id'>;
   versionsCollection?: Maybe<{
@@ -17547,7 +17571,7 @@ export type FetchManuscriptByIdQueryVariables = Exact<{
 
 export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
-    Pick<Manuscripts, 'title' | 'status'> & {
+    Pick<Manuscripts, 'title' | 'status' | 'count'> & {
       teamsCollection?: Maybe<{
         items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
       }>;
@@ -17642,6 +17666,26 @@ export type FetchManuscriptByIdQuery = {
       }>;
     }
   >;
+};
+
+export type FetchManuscriptsByTeamIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchManuscriptsByTeamIdQuery = {
+  teams?: Maybe<{
+    linkedFrom?: Maybe<{
+      manuscriptsCollection?: Maybe<{
+        items: Array<
+          Maybe<{
+            teamsCollection?: Maybe<{
+              items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+            }>;
+          }>
+        >;
+      }>;
+    }>;
+  }>;
 };
 
 export type NewsContentFragment = Pick<
@@ -19233,7 +19277,7 @@ export type FetchTeamByIdQuery = {
         manuscriptsCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Manuscripts, 'title' | 'status'> & {
+              Pick<Manuscripts, 'title' | 'status' | 'count'> & {
                 sys: Pick<Sys, 'id'>;
                 versionsCollection?: Maybe<{
                   items: Array<
@@ -22978,6 +23022,7 @@ export const ManuscriptsContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'count' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'versionsCollection' },
@@ -31961,6 +32006,133 @@ export const FetchManuscriptByIdDocument = {
 } as unknown as DocumentNode<
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables
+>;
+export const FetchManuscriptsByTeamIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchManuscriptsByTeamId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teams' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '500' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamsCollection',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchManuscriptsByTeamIdQuery,
+  FetchManuscriptsByTeamIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

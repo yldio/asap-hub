@@ -3,6 +3,8 @@ import {
   Environment,
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
+  FetchManuscriptsByTeamIdQuery,
+  FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   getLinkAsset,
   getLinkAssets,
@@ -44,6 +46,21 @@ export class ManuscriptContentfulDataProvider
 
   async fetch(): Promise<ListResponse<ManuscriptDataObject>> {
     throw new Error('Method not implemented.');
+  }
+
+  async fetchCountByTeamId(id: string) {
+    const { teams } = await this.contentfulClient.request<
+      FetchManuscriptsByTeamIdQuery,
+      FetchManuscriptByIdQueryVariables
+    >(FETCH_MANUSCRIPTS_BY_TEAM_ID, { id });
+
+    if (!teams) {
+      return 0;
+    }
+
+    return teams.linkedFrom?.manuscriptsCollection?.items.filter(
+      (item) => item?.teamsCollection?.items[0]?.sys.id === id,
+    ).length;
   }
 
   async fetchById(id: string): Promise<ManuscriptDataObject | null> {
@@ -95,6 +112,7 @@ export class ManuscriptContentfulDataProvider
       {
         fields: addLocaleToFields({
           ...version,
+          count: 1,
           teams: getLinkEntities(version.teams),
           firstAuthors: getLinkEntities(version.firstAuthors),
           correspondingAuthor: getLinkEntities(version.correspondingAuthor),
@@ -120,9 +138,12 @@ export class ManuscriptContentfulDataProvider
 
     const { id: manuscriptVersionId } = manuscriptVersionEntry.sys;
 
+    const currentCount = (await this.fetchCountByTeamId(teamId)) || 0;
+
     const manuscriptEntry = await environment.createEntry('manuscripts', {
       fields: addLocaleToFields({
         ...plainFields,
+        count: currentCount + 1,
         teams: getLinkEntities([teamId]),
         versions: getLinkEntities([manuscriptVersionId]),
       }),
@@ -138,6 +159,7 @@ const parseGraphQLManuscript = (
   manuscripts: ManuscriptItem,
 ): ManuscriptDataObject => ({
   id: manuscripts.sys.id,
+  count: manuscripts.count || 0,
   title: manuscripts.title || '',
   teamId: manuscripts.teamsCollection?.items[0]?.sys.id || '',
   status: manuscriptMapStatus(manuscripts.status) || undefined,

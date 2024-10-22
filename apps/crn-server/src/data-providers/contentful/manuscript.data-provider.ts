@@ -107,18 +107,20 @@ export class ManuscriptContentfulDataProvider
       await additionalFileAsset.publish();
     });
 
+    const quickCheckDetails = {
+      asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
+      acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
+      availabilityStatementDetails: version.availabilityStatementDetails,
+      codeDepositedDetails: version.codeDepositedDetails,
+      datasetsDepositedDetails: version.datasetsDepositedDetails,
+      labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails,
+      manuscriptLicenseDetails: version.manuscriptLicenseDetails,
+      protocolsDepositedDetails: version.protocolsDepositedDetails,
+    };
+
     const createdDiscussions = await createQuickCheckDiscussions(
       environment,
-      {
-        asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
-        acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
-        availabilityStatementDetails: version.availabilityStatementDetails,
-        codeDepositedDetails: version.codeDepositedDetails,
-        datasetsDepositedDetails: version.datasetsDepositedDetails,
-        labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails,
-        manuscriptLicenseDetails: version.manuscriptLicenseDetails,
-        protocolsDepositedDetails: version.protocolsDepositedDetails,
-      },
+      quickCheckDetails,
       userId,
     );
     const quickCheckDiscussions =

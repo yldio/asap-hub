@@ -110,9 +110,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
         manuscript.versionsCollection!.items[0]![field] = 'No';
-        manuscript.versionsCollection!.items[0]![fieldDetails]!['message']![
-          'text'
-        ] = 'Explanation';
+        manuscript.versionsCollection!.items[0]![fieldDetails] = {
+          message: { text: 'Explanation' },
+        };
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -145,9 +145,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
         manuscript.versionsCollection!.items[0]![field] = 'Yes';
-        manuscript.versionsCollection!.items[0]![fieldDetails]!['message']![
-          'text'
-        ] = 'Explanation';
+        manuscript.versionsCollection!.items[0]![fieldDetails] = {
+          message: { text: 'Explanation' },
+        };
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -226,6 +226,32 @@ describe('Manuscripts Contentful Data Provider', () => {
   });
 
   describe('Create', () => {
+    const quickCheckDetailsCreateObject = {
+      asapAffiliationIncludedDetails: {
+        'en-US': null,
+      },
+      acknowledgedGrantNumberDetails: {
+        'en-US': null,
+      },
+      availabilityStatementDetails: {
+        'en-US': null,
+      },
+      codeDepositedDetails: {
+        'en-US': null,
+      },
+      datasetsDepositedDetails: {
+        'en-US': null,
+      },
+      labMaterialsRegisteredDetails: {
+        'en-US': null,
+      },
+      manuscriptLicenseDetails: {
+        'en-US': null,
+      },
+      protocolsDepositedDetails: {
+        'en-US': null,
+      },
+    };
     test('should throw if no versions are provided', async () => {
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions = [];
@@ -332,6 +358,7 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               },
             },
+            ...quickCheckDetailsCreateObject,
           },
         },
       );
@@ -497,6 +524,7 @@ describe('Manuscripts Contentful Data Provider', () => {
                 },
               },
             },
+            ...quickCheckDetailsCreateObject,
           },
         },
       );

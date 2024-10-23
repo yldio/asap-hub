@@ -17,7 +17,7 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 type ManuscriptCardProps = Pick<
   TeamManuscript,
-  'id' | 'title' | 'versions' | 'status'
+  'id' | 'title' | 'versions' | 'status' | 'count'
 > & {
   teamId: string;
   teamIdCode: string;
@@ -74,6 +74,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
   title,
   versions,
+  count,
   status,
   teamId,
   teamIdCode,
@@ -154,6 +155,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               version={version}
               teamId={teamIdCode}
               grantId={grantId}
+              manuscriptCount={count}
             />
           ))}
         </div>

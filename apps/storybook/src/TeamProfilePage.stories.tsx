@@ -14,6 +14,8 @@ export default {
 
 const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   id: '42',
+  teamId: 'TI1',
+  grantId: '000123',
   displayName: 'Ramirez, T',
   projectTitle:
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent steam cell brain organoids.',

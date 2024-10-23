@@ -148,8 +148,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                 <ManuscriptCard
                   {...manuscript}
                   teamId={id}
-                  teamIdCode={teamId}
-                  grantId={grantId}
+                  teamIdCode={teamId || ''}
+                  grantId={grantId || ''}
                   isComplianceReviewer={isComplianceReviewer}
                 />
               </div>

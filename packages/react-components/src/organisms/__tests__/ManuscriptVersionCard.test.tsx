@@ -1,9 +1,12 @@
 import { createManuscriptResponse } from '@asap-hub/fixtures';
-import { ManuscriptVersion } from '@asap-hub/model';
+import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { ComponentProps } from 'react';
-import ManuscriptVersionCard from '../ManuscriptVersionCard';
+import ManuscriptVersionCard, {
+  getLifecycleCode,
+  getManuscriptversionUID,
+} from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {
   const ref = { current: { scrollHeight: height } };
@@ -21,8 +24,12 @@ const setScrollHeightMock = (height: number) => {
 
 afterAll(jest.clearAllMocks);
 
+const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
-  ...(createManuscriptResponse().versions[0] as ManuscriptVersion),
+  version: baseVersion,
+  grantId: '000123',
+  teamId: 'TI1',
+  manuscriptCount: 1,
 };
 
 it('displays quick checks when present', () => {
@@ -37,8 +44,8 @@ it('displays quick checks when present', () => {
     ),
   ).not.toBeInTheDocument();
 
-  const updatedProps = {
-    ...props,
+  const updatedVersion = {
+    ...baseVersion,
     asapAffiliationIncludedDetails:
       "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.",
     codeDepositedDetails:
@@ -59,7 +66,7 @@ it('displays quick checks when present', () => {
     publishedAt: '2024-06-21T11:06:58.899Z',
   };
 
-  rerender(<ManuscriptVersionCard {...updatedProps} />);
+  rerender(<ManuscriptVersionCard {...props} version={updatedVersion} />);
 
   expect(
     getByText(
@@ -104,7 +111,10 @@ it('displays Additional Information section when present', () => {
   ).not.toBeInTheDocument();
 
   rerender(
-    <ManuscriptVersionCard {...props} otherDetails={'Necessary info'} />,
+    <ManuscriptVersionCard
+      {...props}
+      version={{ ...baseVersion, otherDetails: 'Necessary info' }}
+    />,
   );
 
   expect(
@@ -116,10 +126,13 @@ it('renders a divider between fields in Additional Information section and files
   const { getByRole, queryAllByRole } = render(
     <ManuscriptVersionCard
       {...props}
-      preprintDoi={'10.1101/gr.10.12.1841'}
-      publicationDoi={'10.1101/gr.10.12.1842'}
-      requestingApcCoverage={'Already submitted'}
-      otherDetails={'Necessary info'}
+      version={{
+        ...baseVersion,
+        preprintDoi: '10.1101/gr.10.12.1841',
+        publicationDoi: '10.1101/gr.10.12.1842',
+        requestingApcCoverage: 'Already submitted',
+        otherDetails: 'Necessary info',
+      }}
     />,
   );
 
@@ -140,12 +153,12 @@ it.each`
   userEvent.click(getByRole('button'));
   expect(queryByText(title)).not.toBeInTheDocument();
 
-  const updatedProps = {
-    ...props,
+  const updatedVersion = {
+    ...baseVersion,
     [field]: newValue,
   };
 
-  rerender(<ManuscriptVersionCard {...updatedProps} />);
+  rerender(<ManuscriptVersionCard {...props} version={updatedVersion} />);
 
   expect(getByText(title)).toBeVisible();
   expect(getByText(newValue)).toBeVisible();
@@ -164,8 +177,11 @@ it('builds the correct href for doi fields', () => {
   const { getByText, getByRole } = render(
     <ManuscriptVersionCard
       {...props}
-      preprintDoi={preprintDoiValue}
-      publicationDoi={publicationDoiValue}
+      version={{
+        ...baseVersion,
+        preprintDoi: preprintDoiValue,
+        publicationDoi: publicationDoiValue,
+      }}
     />,
   );
   userEvent.click(getByRole('button'));
@@ -184,12 +200,15 @@ it('renders manuscript main file details and download link', () => {
   const { getByText, getByRole } = render(
     <ManuscriptVersionCard
       {...props}
-      manuscriptFile={{
-        filename: 'manuscript_file.pdf',
-        url: 'https://example.com/main-file.pdf',
-        id: 'file-1',
+      version={{
+        ...baseVersion,
+        manuscriptFile: {
+          filename: 'manuscript_file.pdf',
+          url: 'https://example.com/main-file.pdf',
+          id: 'file-1',
+        },
+        keyResourceTable: undefined,
       }}
-      keyResourceTable={undefined}
     />,
   );
   userEvent.click(getByRole('button'));
@@ -205,15 +224,18 @@ it('renders key resource table file details and download link', () => {
   const { getAllByText, getByText, getByRole } = render(
     <ManuscriptVersionCard
       {...props}
-      manuscriptFile={{
-        filename: 'manuscript_file.pdf',
-        url: 'https://example.com/main-file.pdf',
-        id: 'file-1',
-      }}
-      keyResourceTable={{
-        filename: 'key_resource_table.csv',
-        url: 'https://example.com/key_resource_table.csv',
-        id: 'file-2',
+      version={{
+        ...baseVersion,
+        manuscriptFile: {
+          filename: 'manuscript_file.pdf',
+          url: 'https://example.com/main-file.pdf',
+          id: 'file-1',
+        },
+        keyResourceTable: {
+          filename: 'key_resource_table.csv',
+          url: 'https://example.com/key_resource_table.csv',
+          id: 'file-2',
+        },
       }}
     />,
   );
@@ -230,9 +252,12 @@ it("does not display Submitter's Name and Submission Date if submitterName and s
   const { getByRole, getByText, queryByText } = render(
     <ManuscriptVersionCard
       {...props}
-      requestingApcCoverage="No"
-      submissionDate={undefined}
-      submitterName={undefined}
+      version={{
+        ...baseVersion,
+        requestingApcCoverage: 'No',
+        submissionDate: undefined,
+        submitterName: undefined,
+      }}
     />,
   );
   userEvent.click(getByRole('button'));
@@ -249,9 +274,12 @@ it('displays apc coverage information', () => {
   const { getByRole, getByText } = render(
     <ManuscriptVersionCard
       {...props}
-      requestingApcCoverage="Already submitted"
-      submissionDate={new Date('2024-10-03')}
-      submitterName="Janet Doe"
+      version={{
+        ...baseVersion,
+        requestingApcCoverage: 'Already submitted',
+        submissionDate: new Date('2024-10-03'),
+        submitterName: 'Janet Doe',
+      }}
     />,
   );
   userEvent.click(getByRole('button'));
@@ -270,19 +298,22 @@ it('renders additional files details and download link when provided', () => {
   const { getAllByText, getByText, getByRole } = render(
     <ManuscriptVersionCard
       {...props}
-      manuscriptFile={{
-        filename: 'manuscript_file.pdf',
-        url: 'https://example.com/main-file.pdf',
-        id: 'file-1',
-      }}
-      keyResourceTable={undefined}
-      additionalFiles={[
-        {
-          filename: 'additional_file.pdf',
-          url: 'https://example.com/additional-file.pdf',
-          id: 'additional-file-1',
+      version={{
+        ...baseVersion,
+        manuscriptFile: {
+          filename: 'manuscript_file.pdf',
+          url: 'https://example.com/main-file.pdf',
+          id: 'file-1',
         },
-      ]}
+        keyResourceTable: undefined,
+        additionalFiles: [
+          {
+            filename: 'additional_file.pdf',
+            url: 'https://example.com/additional-file.pdf',
+            id: 'additional-file-1',
+          },
+        ],
+      }}
     />,
   );
   userEvent.click(getByRole('button'));
@@ -306,9 +337,12 @@ it('displays compliance report section when present', () => {
   rerender(
     <ManuscriptVersionCard
       {...props}
-      complianceReport={{
-        url: 'http://example.com',
-        description: 'compliance report description',
+      version={{
+        ...baseVersion,
+        complianceReport: {
+          url: 'http://example.com',
+          description: 'compliance report description',
+        },
       }}
     />,
   );
@@ -322,14 +356,85 @@ it('displays manuscript description', () => {
 
   setScrollHeightMock(100);
   const { getByRole, rerender, getByText, queryByRole } = render(
-    <ManuscriptVersionCard {...props} description={shortDescription} />,
+    <ManuscriptVersionCard
+      {...props}
+      version={{
+        ...baseVersion,
+        description: shortDescription,
+      }}
+    />,
   );
   userEvent.click(getByRole('button'));
   expect(getByText(shortDescription)).toBeInTheDocument();
   expect(queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
 
   setScrollHeightMock(300);
-  rerender(<ManuscriptVersionCard {...props} description={longDescription} />);
+  rerender(
+    <ManuscriptVersionCard
+      {...props}
+      version={{
+        ...baseVersion,
+        description: longDescription,
+      }}
+    />,
+  );
 
   expect(getByRole('button', { name: /show more/i })).toBeInTheDocument();
+});
+
+describe('getLifecycleCode', () => {
+  it('returns all appropriate values for Original Research', () => {
+    const type = 'Original Research';
+    const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
+      { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
+      { name: 'Preprint', value: 'P' },
+      { name: 'Publication', value: 'D' },
+      { name: 'Publication with addendum or corrigendum', value: 'C' },
+      { name: 'Typeset proof', value: 'T' },
+      { name: 'Other', value: 'O' },
+    ];
+    lifecyclePairs.forEach(({ name, value }) => {
+      expect(getLifecycleCode({ type, lifecycle: name })).toBe(value);
+    });
+  });
+  it('returns all appropriate values for Review / Op-Ed / Letter / Hot Topic', () => {
+    const type = 'Review / Op-Ed / Letter / Hot Topic';
+    const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
+      { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
+      { name: 'Typeset proof', value: 'T' },
+      { name: 'Publication', value: 'D' },
+      { name: 'Publication with addendum or corrigendum', value: 'C' },
+      { name: 'Other', value: 'O' },
+    ];
+    lifecyclePairs.forEach(({ name, value }) => {
+      expect(getLifecycleCode({ type, lifecycle: name })).toBe(value);
+    });
+  });
+});
+
+describe('getManuscriptversionUID ', () => {
+  it('outputs a manuscript ID in the required format', () => {
+    expect(
+      getManuscriptversionUID({
+        version: { type: 'Original Research', lifecycle: 'Preprint' },
+        grantId: '000AAA',
+        teamId: 'AT1',
+        manuscriptVersionCount: 9,
+        manuscriptCount: 234,
+      }),
+    ).toBe('AT1-000AAA-234-org-P-9');
+
+    expect(
+      getManuscriptversionUID({
+        version: {
+          type: 'Review / Op-Ed / Letter / Hot Topic',
+          lifecycle: 'Preprint',
+        },
+        grantId: '000AAA',
+        teamId: 'AT1',
+        manuscriptVersionCount: 9,
+        manuscriptCount: 234,
+      }),
+    ).toBe('AT1-000AAA-234-rev-P-9');
+  });
 });

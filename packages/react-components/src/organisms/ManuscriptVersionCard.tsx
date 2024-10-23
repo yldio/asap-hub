@@ -29,6 +29,7 @@ type ManuscriptVersionCardProps = {
   version: ManuscriptVersion;
   grantId: string;
   teamId: string;
+  manuscriptCount: number;
 };
 
 const toastStyles = css({
@@ -112,37 +113,23 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.requestingApcCoverage ||
   version.otherDetails;
 
-export const getLifecycleCode = (version: ManuscriptVersion) => {
-  if (version.type === 'Original Research') {
-    switch (version.lifecycle) {
-      case 'Draft Manuscript (prior to Publication)':
-        return 'G';
-      case 'Preprint':
-        return 'P';
-      case 'Publication':
-        return 'D';
-      case 'Publication with addendum or corrigendum':
-        return 'C';
-      case 'Typeset proof':
-        return 'T';
-      case 'Other':
-      default:
-        return 'O';
-    }
-  } else {
-    switch (version.lifecycle) {
-      case 'Draft Manuscript (prior to Publication)':
-        return 'G';
-      case 'Typeset proof':
-        return 'T';
-      case 'Publication':
-        return 'D';
-      case 'Publication with addendum or corrigendum':
-        return 'C';
-      case 'Other':
-      default:
-        return 'O';
-    }
+export const getLifecycleCode = (
+  version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>,
+) => {
+  switch (version.lifecycle) {
+    case 'Draft Manuscript (prior to Publication)':
+      return 'G';
+    case 'Preprint':
+      return 'P';
+    case 'Publication':
+      return 'D';
+    case 'Publication with addendum or corrigendum':
+      return 'C';
+    case 'Typeset proof':
+      return 'T';
+    case 'Other':
+    default:
+      return 'O';
   }
 };
 
@@ -150,22 +137,27 @@ export const getManuscriptversionUID = ({
   version,
   teamId,
   grantId,
+  manuscriptCount,
+  manuscriptVersionCount,
 }: {
-  version: ManuscriptVersion;
+  version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>;
   teamId: string;
   grantId: string;
+  manuscriptCount: number;
+  manuscriptVersionCount: number;
 }) => {
   const manuscriptTypeCode =
     version.type === 'Original Research' ? 'org' : 'rev';
 
   const lifecycleCode = getLifecycleCode(version);
-  return `${teamId}-${grantId}-[Manuscript #]-${manuscriptTypeCode}-${lifecycleCode}-[Version]`;
+  return `${teamId}-${grantId}-${manuscriptCount}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   version,
   teamId,
   grantId,
+  manuscriptCount,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -206,7 +198,13 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
           <Pill accent="gray">{version.type}</Pill>
           <Pill accent="gray">{version.lifecycle}</Pill>
           <Pill accent="blue">
-            {getManuscriptversionUID({ version, teamId, grantId })}
+            {getManuscriptversionUID({
+              version,
+              teamId,
+              grantId,
+              manuscriptCount,
+              manuscriptVersionCount: 1,
+            })}
           </Pill>
         </div>
       </div>

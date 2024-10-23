@@ -412,7 +412,7 @@ describe('getLifecycleCode', () => {
   });
 });
 
-describe('getManuscriptversionUID ', () => {
+describe('getManuscriptversionUID', () => {
   it('outputs a manuscript ID in the required format', () => {
     expect(
       getManuscriptversionUID({

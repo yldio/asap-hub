@@ -430,10 +430,26 @@ enum ComplianceReportsOrder {
 }
 
 type ContentfulMetadata {
+  concepts: [TaxonomyConcept]!
   tags: [ContentfulTag]!
 }
 
+input ContentfulMetadataConceptsDescendantsFilter {
+  id_contains_all: [String]
+  id_contains_none: [String]
+  id_contains_some: [String]
+}
+
+input ContentfulMetadataConceptsFilter {
+  descendants: ContentfulMetadataConceptsDescendantsFilter
+  id_contains_all: [String]
+  id_contains_none: [String]
+  id_contains_some: [String]
+}
+
 input ContentfulMetadataFilter {
+  concepts: ContentfulMetadataConceptsFilter
+  concepts_exists: Boolean
   tags: ContentfulMetadataTagsFilter
   tags_exists: Boolean
 }
@@ -836,6 +852,69 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   website1_DESC
   website2_ASC
   website2_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions)"""
+type Discussions implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): DiscussionsLinkingCollections
+  message(locale: String, preview: Boolean, where: MessagesFilter): Messages
+  repliesCollection(limit: Int = 100, locale: String, order: [DiscussionsRepliesCollectionOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): DiscussionsRepliesCollection
+  sys: Sys!
+}
+
+type DiscussionsCollection {
+  items: [Discussions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input DiscussionsFilter {
+  AND: [DiscussionsFilter]
+  OR: [DiscussionsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  message: cfMessagesNestedFilter
+  message_exists: Boolean
+  replies: cfMessagesNestedFilter
+  repliesCollection_exists: Boolean
+  sys: SysFilter
+}
+
+type DiscussionsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum DiscussionsOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type DiscussionsRepliesCollection {
+  items: [Messages]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscussionsRepliesCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  text_ASC
+  text_DESC
 }
 
 interface Entry {
@@ -1552,6 +1631,8 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -2507,6 +2588,8 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -2697,6 +2780,7 @@ type ManuscriptVersions implements Entry & _Node {
   codeDepositedDetails(locale: String): String
   contentfulMetadata: ContentfulMetadata!
   correspondingAuthorCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ManuscriptVersionsCorrespondingAuthorFilter): ManuscriptVersionsCorrespondingAuthorCollection
+  count(locale: String): Int
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   datasetsDeposited(locale: String): String
   datasetsDepositedDetails(locale: String): String
@@ -2856,6 +2940,15 @@ input ManuscriptVersionsFilter {
   contentfulMetadata: ContentfulMetadataFilter
   correspondingAuthor: cfcorrespondingAuthorMultiTypeNestedFilter
   correspondingAuthorCollection_exists: Boolean
+  count: Int
+  count_exists: Boolean
+  count_gt: Int
+  count_gte: Int
+  count_in: [Int]
+  count_lt: Int
+  count_lte: Int
+  count_not: Int
+  count_not_in: [Int]
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
   datasetsDeposited: String
@@ -3060,6 +3153,8 @@ enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
 }
 
 enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  count_ASC
+  count_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -3091,6 +3186,8 @@ enum ManuscriptVersionsOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -3165,6 +3262,7 @@ enum ManuscriptVersionsTeamsCollectionOrder {
 type Manuscripts implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  count(locale: String): Int
   eligibilityReasons(locale: String): [String]
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   status(locale: String): String
@@ -3185,6 +3283,15 @@ input ManuscriptsFilter {
   AND: [ManuscriptsFilter]
   OR: [ManuscriptsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  count: Int
+  count_exists: Boolean
+  count_gt: Int
+  count_gte: Int
+  count_in: [Int]
+  count_lt: Int
+  count_lte: Int
+  count_not: Int
+  count_not_in: [Int]
   eligibilityReasons_contains_all: [String]
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
@@ -3215,6 +3322,8 @@ type ManuscriptsLinkingCollections {
 }
 
 enum ManuscriptsOrder {
+  count_ASC
+  count_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -3281,6 +3390,8 @@ enum ManuscriptsVersionsCollectionOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -3368,6 +3479,68 @@ enum MediaOrder {
   sys_publishedVersion_DESC
   url_ASC
   url_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages)"""
+type Messages implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  linkedFrom(allowedLocales: [String]): MessagesLinkingCollections
+  sys: Sys!
+  text(locale: String): String
+}
+
+type MessagesCollection {
+  items: [Messages]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input MessagesFilter {
+  AND: [MessagesFilter]
+  OR: [MessagesFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  createdBy: cfUsersNestedFilter
+  createdBy_exists: Boolean
+  sys: SysFilter
+  text: String
+  text_contains: String
+  text_exists: Boolean
+  text_in: [String]
+  text_not: String
+  text_not_contains: String
+  text_not_in: [String]
+}
+
+type MessagesLinkingCollections {
+  discussionsCollection(limit: Int = 100, locale: String, order: [MessagesLinkingCollectionsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0): DiscussionsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum MessagesOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  text_ASC
+  text_DESC
 }
 
 """Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration)"""
@@ -3753,6 +3926,8 @@ type Query {
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   discover(id: String!, locale: String, preview: Boolean): Discover
   discoverCollection(limit: Int = 100, locale: String, order: [DiscoverOrder], preview: Boolean, skip: Int = 0, where: DiscoverFilter): DiscoverCollection
+  discussions(id: String!, locale: String, preview: Boolean): Discussions
+  discussionsCollection(limit: Int = 100, locale: String, order: [DiscussionsOrder], preview: Boolean, skip: Int = 0, where: DiscussionsFilter): DiscussionsCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
@@ -3782,6 +3957,8 @@ type Query {
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ManuscriptsOrder], preview: Boolean, skip: Int = 0, where: ManuscriptsFilter): ManuscriptsCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
+  messages(id: String!, locale: String, preview: Boolean): Messages
+  messagesCollection(limit: Int = 100, locale: String, order: [MessagesOrder], preview: Boolean, skip: Int = 0, where: MessagesFilter): MessagesCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
   migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
   news(id: String!, locale: String, preview: Boolean): News
@@ -5290,6 +5467,14 @@ input SysFilter {
   publishedVersion_not_in: [Float]
 }
 
+"""
+Represents a tag entity for finding and organizing content easily.
+        Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
+"""
+type TaxonomyConcept {
+  id: String
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership)"""
 type TeamMembership implements Entry & _Node {
   _id: ID!
@@ -5595,6 +5780,8 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -5638,6 +5825,8 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  count_ASC
+  count_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -6600,6 +6789,7 @@ type UsersLinkingCollections {
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptVersionsCollectionOrder], preview: Boolean, skip: Int = 0): ManuscriptVersionsCollection
+  messagesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCollectionOrder], preview: Boolean, skip: Int = 0): MessagesCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
@@ -6660,6 +6850,8 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDepositedDetails_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDepositedDetails_ASC
   datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
@@ -6700,6 +6892,19 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   sys_publishedVersion_DESC
   type_ASC
   type_DESC
+}
+
+enum UsersLinkingCollectionsMessagesCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  text_ASC
+  text_DESC
 }
 
 enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
@@ -7835,6 +8040,15 @@ input cfManuscriptVersionsNestedFilter {
   codeDeposited_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
   correspondingAuthorCollection_exists: Boolean
+  count: Int
+  count_exists: Boolean
+  count_gt: Int
+  count_gte: Int
+  count_in: [Int]
+  count_lt: Int
+  count_lte: Int
+  count_not: Int
+  count_not_in: [Int]
   createdBy_exists: Boolean
   datasetsDeposited: String
   datasetsDepositedDetails: String
@@ -7963,6 +8177,21 @@ input cfManuscriptVersionsNestedFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+}
+
+input cfMessagesNestedFilter {
+  AND: [cfMessagesNestedFilter]
+  OR: [cfMessagesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  createdBy_exists: Boolean
+  sys: SysFilter
+  text: String
+  text_contains: String
+  text_exists: Boolean
+  text_in: [String]
+  text_not: String
+  text_not_contains: String
+  text_not_in: [String]
 }
 
 input cfNewsNestedFilter {

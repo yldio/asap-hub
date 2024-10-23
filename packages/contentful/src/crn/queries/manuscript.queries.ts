@@ -8,6 +8,8 @@ export const manuscriptContentQueryFragment = gql`
       id
     }
     title
+    status
+    count
     versionsCollection(limit: 20, order: sys_publishedAt_DESC) {
       items {
         sys {
@@ -17,6 +19,7 @@ export const manuscriptContentQueryFragment = gql`
         }
         type
         lifecycle
+        description
         manuscriptFile {
           sys {
             id
@@ -128,4 +131,24 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
     }
   }
   ${manuscriptContentQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
+  query FetchManuscriptsByTeamId($id: String!) {
+    teams(id: $id) {
+      linkedFrom {
+        manuscriptsCollection(limit: 500) {
+          items {
+            teamsCollection {
+              items {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `;

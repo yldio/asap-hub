@@ -157,6 +157,7 @@ export const getContentfulGraphqlManuscripts = (): NonNullable<
     {
       sys: { id: '1' },
       title: 'Manuscript 1',
+      status: 'Compliant',
       versionsCollection: getContentfulGraphqlManuscriptVersions(),
     },
     {
@@ -211,11 +212,13 @@ export const getTeamDataObject = (): TeamDataObject => ({
     {
       id: '1',
       title: 'Manuscript 1',
+      status: 'Compliant',
       versions: [
         {
           id: 'version-1',
           lifecycle: 'Preprint',
           type: 'Original Research',
+          description: 'A good description',
           createdBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',
@@ -247,6 +250,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           id: 'version-1',
           lifecycle: 'Preprint',
           type: 'Original Research',
+          description: 'A good description',
           createdBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',

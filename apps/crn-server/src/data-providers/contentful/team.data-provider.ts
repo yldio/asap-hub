@@ -14,6 +14,7 @@ import {
 import {
   LabResponse,
   ListTeamDataObject,
+  manuscriptMapStatus,
   TeamDataObject,
   TeamListItemDataObject,
   TeamMember,
@@ -326,6 +327,7 @@ export const parseContentfulGraphQlTeam = (
       (manuscript): TeamDataObject['manuscripts'][number] => ({
         id: manuscript.sys.id,
         title: manuscript.title || '',
+        status: manuscriptMapStatus(manuscript.status) || undefined,
         versions: parseGraphqlManuscriptVersion(
           manuscript.versionsCollection?.items || [],
         ),

@@ -1,13 +1,13 @@
+import { css } from '@emotion/react';
+import React, { useLayoutEffect, useState } from 'react';
+
 import {
   Button,
   chevronCircleDownIcon,
   colorWithTransparency,
   lead,
   pixels,
-} from '@asap-hub/react-components';
-
-import { css } from '@emotion/react';
-import React, { useLayoutEffect, useState } from 'react';
+} from '..';
 
 const { rem, lineHeight } = pixels;
 

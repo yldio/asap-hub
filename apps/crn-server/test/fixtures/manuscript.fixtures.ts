@@ -15,11 +15,13 @@ export const getManuscriptDataObject = (
   id: 'manuscript-id-1',
   title: 'Manuscript Title',
   teamId: 'team-1',
+  count: 1,
   versions: [
     {
       id: 'version-1',
       lifecycle: 'Preprint',
       type: 'Original Research',
+      description: 'A good description',
       createdBy: manuscriptAuthor,
       createdDate: '2020-09-23T20:45:22.000Z',
       publishedAt: '2020-09-23T20:45:22.000Z',
@@ -61,6 +63,7 @@ export const getContentfulGraphqlManuscript = (
     id: 'manuscript-id-1',
   },
   title: 'Manuscript Title',
+  count: 1,
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
@@ -82,6 +85,7 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
       },
       type: 'Original Research',
       lifecycle: 'Preprint',
+      description: 'A good description',
       manuscriptFile: {
         sys: { id: 'file-id' },
         fileName: 'manuscript.pdf',

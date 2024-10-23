@@ -102,6 +102,7 @@ describe('compliance section', () => {
               id: 'version-1',
               type: 'Original Research',
               lifecycle: 'Draft Manuscript (prior to Publication)',
+              description: 'A description',
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',
                 filename: 'file.pdf',
@@ -142,6 +143,7 @@ describe('compliance section', () => {
               id: 'version-1',
               type: 'Review / Op-Ed / Letter / Hot Topic',
               lifecycle: 'Preprint',
+              description: 'Another description',
               manuscriptFile: {
                 url: 'http://example.com/file.pdf',
                 filename: 'file.pdf',
@@ -187,7 +189,7 @@ describe('compliance section', () => {
 
     const manuscriptTitle = screen.getByText('Nice manuscript');
     const manuscriptCard = manuscriptTitle.closest('div');
-    userEvent.click(within(manuscriptCard!).getByRole('button'));
+    userEvent.click(within(manuscriptCard!).getByTestId('collapsible-button'));
 
     expect(container).toHaveTextContent('Original Research');
     expect(container).toHaveTextContent(

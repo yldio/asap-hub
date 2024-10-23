@@ -1,7 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { UserProfilePlaceholderCard } from '@asap-hub/react-components';
+import {
+  UserProfilePlaceholderCard,
+  ExpandableText,
+} from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { ExpandableText } from '../molecules';
 import EditableCard from '../molecules/EditableCard';
 
 type UserBiographyProps = Pick<gp2.UserResponse, 'biography'> &

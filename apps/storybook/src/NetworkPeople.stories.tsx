@@ -37,6 +37,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
       ],
       onboarded: true,
       role: 'Grantee' as const,
+      openScienceTeamMember: false,
       _tags: [],
       tags: [],
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),

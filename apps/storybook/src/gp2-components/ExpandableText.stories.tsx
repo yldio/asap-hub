@@ -1,4 +1,4 @@
-import { ExpandableText } from '@asap-hub/gp2-components';
+import { ExpandableText } from '@asap-hub/react-components';
 
 import { text } from '../knobs';
 

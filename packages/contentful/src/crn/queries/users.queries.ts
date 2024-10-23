@@ -46,6 +46,7 @@ export const usersContentQueryFragment = gql`
     website1
     website2
     role
+    openScienceTeamMember
     responsibilities
     researchInterests
     reachOut
@@ -236,6 +237,7 @@ export const userListItemContentQueryFragment = gql`
     onboarded
     dismissedGettingStarted
     role
+    openScienceTeamMember
     researchTagsCollection(limit: 20) {
       items {
         sys {

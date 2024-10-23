@@ -22,11 +22,14 @@ export const createManuscriptResponse = (
   id: `manuscript_${itemIndex}`,
   title: `Manuscript ${itemIndex + 1}`,
   teamId: 'team-1',
+  status: 'Waiting for Report',
+  count: 1,
   versions: [
     {
       id: 'version-1',
       lifecycle: 'Draft Manuscript (prior to Publication)',
       type: 'Original Research',
+      description: 'A good description',
       createdBy: manuscriptAuthor,
       createdDate: '2020-12-10T20:36:54Z',
       publishedAt: '2020-12-10T20:36:54Z',

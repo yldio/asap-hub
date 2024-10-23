@@ -17,6 +17,6 @@ export const Normal = () => (
         description: 'Tool Description',
       },
     ]}
-    canShareComplianceReport={false}
+    isComplianceReviewer={false}
   />
 );

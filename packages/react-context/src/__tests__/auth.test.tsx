@@ -112,6 +112,7 @@ describe('useCurrentUser', () => {
           workingGroups: [],
           interestGroups: [],
           role: 'Grantee',
+          openScienceTeamMember: false,
         },
       }),
     });
@@ -325,6 +326,7 @@ describe('useCurrentUserTeamRoles', () => {
           workingGroups: [],
           interestGroups: [],
           role: 'Grantee',
+          openScienceTeamMember: false,
         },
       }),
     });

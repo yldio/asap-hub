@@ -491,13 +491,14 @@ describe('Duplicate Output', () => {
 });
 
 describe('Create Compliance Report', () => {
-  it('allows a user who is an ASAP staff to view Share Compliance Report button', async () => {
+  it('allows a user who is an ASAP staff and an Open Science Team Member to view Share Compliance Report button', async () => {
     enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
     teamResponse.manuscripts = [createManuscriptResponse()];
     userResponse.role = 'Staff';
+    userResponse.openScienceTeamMember = true;
 
     const history = createMemoryHistory({
       initialEntries: [
@@ -525,13 +526,14 @@ describe('Create Compliance Report', () => {
     ).toBeInTheDocument();
   });
 
-  it('allows a user who is an ASAP staff to create a compliance report', async () => {
+  it('allows a user who is an ASAP staff and an Open Science Team Member to create a compliance report', async () => {
     enable('DISPLAY_MANUSCRIPTS');
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const teamManuscript = createManuscriptResponse();
     teamResponse.manuscripts = [teamManuscript];
     userResponse.role = 'Staff';
+    userResponse.openScienceTeamMember = true;
 
     const history = createMemoryHistory({
       initialEntries: [

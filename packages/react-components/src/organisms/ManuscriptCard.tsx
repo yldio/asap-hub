@@ -1,4 +1,4 @@
-import { TeamManuscript } from '@asap-hub/model';
+import { TeamManuscript, manuscriptStatus } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import {
   Button,
   colors,
+  StatusButton,
   complianceReportIcon,
   minusRectIcon,
   plusRectIcon,
@@ -14,11 +15,14 @@ import {
 import { mobileScreen, perRem, rem } from '../pixels';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
-type ManuscriptCardProps = Pick<TeamManuscript, 'id' | 'title' | 'versions'> & {
+type ManuscriptCardProps = Pick<
+  TeamManuscript,
+  'id' | 'title' | 'versions' | 'status'
+> & {
   teamId: string;
   teamIdCode: string;
   grantId: string;
-  canShareComplianceReport: boolean;
+  isComplianceReviewer: boolean;
 };
 
 const manuscriptContainerStyles = css({
@@ -61,16 +65,23 @@ const toastHeaderStyles = css({
   },
 });
 
+const buttonsContainerStyles = css({
+  display: 'flex',
+  gap: `${16 / perRem}em`,
+});
+
 const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   id,
   title,
   versions,
+  status,
   teamId,
   teamIdCode,
   grantId,
-  canShareComplianceReport,
+  isComplianceReviewer,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(status || '');
   const history = useHistory();
 
   const complianceReportRoute = network({})
@@ -95,27 +106,44 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       >
         <span css={toastHeaderStyles}>
           <span css={[iconStyles]}>
-            <Button linkStyle onClick={() => setExpanded(!expanded)}>
+            <Button
+              data-testid="collapsible-button"
+              linkStyle
+              onClick={() => setExpanded(!expanded)}
+            >
               <span>{expanded ? minusRectIcon : plusRectIcon}</span>
             </Button>
           </span>
           <Subtitle noMargin>{title}</Subtitle>
         </span>
-        {canShareComplianceReport && (
-          <span>
-            <Button
-              primary
-              small
-              noMargin
-              onClick={handleShareComplianceReport}
-              enabled={!hasActiveComplianceReport}
-            >
-              <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
-                {complianceReportIcon}
-              </span>
-            </Button>
-          </span>
-        )}
+        <span css={buttonsContainerStyles}>
+          <StatusButton
+            buttonChildren={() => <span>{selectedStatus}</span>}
+            canEdit={isComplianceReviewer}
+          >
+            {manuscriptStatus.map((statusItem) => ({
+              item: statusItem,
+              onClick: () => {
+                setSelectedStatus(statusItem);
+              },
+            }))}
+          </StatusButton>
+          {isComplianceReviewer && (
+            <span>
+              <Button
+                primary
+                small
+                noMargin
+                onClick={handleShareComplianceReport}
+                enabled={!hasActiveComplianceReport}
+              >
+                <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
+                  {complianceReportIcon}
+                </span>
+              </Button>
+            </span>
+          )}
+        </span>
       </div>
 
       {expanded && (

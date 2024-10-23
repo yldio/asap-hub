@@ -15,7 +15,10 @@ import {
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
 } from '../../fixtures/manuscript.fixtures';
-import { getUsersTeamsCollection } from '../../fixtures/teams.fixtures';
+import {
+  getContentfulGraphql,
+  getUsersTeamsCollection,
+} from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -32,6 +35,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
+      ...getContentfulGraphql(),
       UsersTeamsCollection: () => getUsersTeamsCollection(),
       Manuscripts: () => getContentfulGraphqlManuscript(),
       ManuscriptsVersionsCollection: () =>
@@ -57,6 +61,22 @@ describe('Manuscripts Contentful Data Provider', () => {
       await expect(manuscriptDataProvider.fetch()).rejects.toThrow(
         'Method not implemented.',
       );
+    });
+  });
+
+  describe('FetchCountByTeamId', () => {
+    it('Should return 0 when team does not exist', async () => {
+      const teamId = 'team-id-2';
+      const result =
+        await manuscriptDataProviderMockGraphql.fetchCountByTeamId(teamId);
+      expect(result).toBe(0);
+    });
+
+    it('Should fetch the count of existing manuscripts for a given team', async () => {
+      const teamId = 'team-id-1';
+      const result =
+        await manuscriptDataProviderMockGraphql.fetchCountByTeamId(teamId);
+      expect(result).toBe(0);
     });
   });
 
@@ -148,6 +168,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       const result = await manuscriptDataProvider.fetchById('1');
       expect(result).toEqual({
         id: 'manuscript-id-1',
+        count: 1,
         teamId: '',
         title: '',
         versions: [],
@@ -237,7 +258,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
         .mockResolvedValue(assetMock);
 
-      const result = await manuscriptDataProvider.create({
+      const result = await manuscriptDataProviderMockGraphql.create({
         ...manuscriptCreateDataObject,
         userId: 'user-id-0',
       });
@@ -284,6 +305,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             },
             submissionDate: { 'en-US': undefined },
             correspondingAuthor: { 'en-US': [] },
+            count: { 'en-US': 1 },
             additionalAuthors: { 'en-US': [] },
             teams: {
               'en-US': [
@@ -327,6 +349,9 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
           eligibilityReasons: {
             'en-US': [],
+          },
+          count: {
+            'en-US': 3,
           },
           versions: {
             'en-US': [
@@ -384,7 +409,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         )
         .mockResolvedValue(assetMock);
 
-      const result = await manuscriptDataProvider.create({
+      const result = await manuscriptDataProviderMockGraphql.create({
         ...manuscriptCreateDataObject,
         userId: 'user-id-0',
       });
@@ -445,6 +470,7 @@ describe('Manuscripts Contentful Data Provider', () => {
             },
             submissionDate: { 'en-US': undefined },
             correspondingAuthor: { 'en-US': [] },
+            count: { 'en-US': 1 },
             additionalAuthors: { 'en-US': [] },
             teams: {
               'en-US': [
@@ -474,6 +500,9 @@ describe('Manuscripts Contentful Data Provider', () => {
         fields: {
           title: {
             'en-US': 'Manuscript Title',
+          },
+          count: {
+            'en-US': 3,
           },
           teams: {
             'en-US': [

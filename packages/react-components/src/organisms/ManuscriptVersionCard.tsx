@@ -8,6 +8,7 @@ import {
   Button,
   Caption,
   Divider,
+  ExpandableText,
   formatDate,
   formatDateAndWeekday,
   lead,
@@ -236,6 +237,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                 }))}
               />
             </div>
+            <ExpandableText>{version.description}</ExpandableText>
             <div>
               <ManuscriptFileSection
                 filename={version.manuscriptFile.filename}

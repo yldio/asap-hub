@@ -71,7 +71,7 @@ export const usersContentQueryFragment = gql`
       }
     }
     linkedFrom {
-      projectMembershipCollection(limit: 10) {
+      projectMembershipCollection(limit: 30) {
         items {
           user {
             sys {
@@ -118,7 +118,7 @@ export const usersContentQueryFragment = gql`
                   id
                 }
                 title
-                membersCollection(limit: 25) {
+                membersCollection(limit: 50) {
                   items {
                     role
                     user {

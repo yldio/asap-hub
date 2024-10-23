@@ -8,11 +8,11 @@ import ManuscriptCard from '../ManuscriptCard';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
-  canShareComplianceReport: false,
+  isComplianceReviewer: false,
 };
 
 it('displays manuscript version card when expanded', () => {
-  const { getByText, queryByText, getByRole, rerender } = render(
+  const { getByText, queryByText, getByTestId, rerender } = render(
     <ManuscriptCard {...props} />,
   );
 
@@ -20,7 +20,7 @@ it('displays manuscript version card when expanded', () => {
 
   expect(queryByText(/Preprint/i)).not.toBeInTheDocument();
 
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByTestId('collapsible-button'));
 
   rerender(
     <ManuscriptCard
@@ -48,7 +48,7 @@ it('displays share compliance report button if user has permission', () => {
     queryByRole('button', { name: /Share Compliance Report Icon/i }),
   ).not.toBeInTheDocument();
 
-  rerender(<ManuscriptCard {...props} canShareComplianceReport />);
+  rerender(<ManuscriptCard {...props} isComplianceReviewer />);
 
   expect(
     getByRole('button', { name: /Share Compliance Report Icon/i }),
@@ -60,7 +60,7 @@ it('redirects to compliance report form when user clicks on share compliance rep
   const { getByRole } = render(
     <Router history={history}>
       <Route path="">
-        <ManuscriptCard {...props} canShareComplianceReport />
+        <ManuscriptCard {...props} isComplianceReviewer />
       </Route>
     </Router>,
   );
@@ -72,4 +72,23 @@ it('redirects to compliance report form when user clicks on share compliance rep
   expect(history.location.pathname).toBe(
     `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`,
   );
+});
+
+it('allows to change the manuscript status if isComplianceReviewer is true', () => {
+  const { getByRole, getByTestId } = render(
+    <ManuscriptCard {...props} isComplianceReviewer />,
+  );
+
+  const statusButton = getByTestId('status-button');
+  expect(statusButton).toBeEnabled();
+  userEvent.click(statusButton);
+  userEvent.click(getByRole('button', { name: /Compliant/i }));
+  expect(statusButton.textContent).toContain('Compliant');
+});
+
+it('does not allow to change the manuscript status if isComplianceReviewer is false', () => {
+  const { getByTestId } = render(<ManuscriptCard {...props} />);
+
+  const statusButton = getByTestId('status-button');
+  expect(statusButton).toBeDisabled();
 });

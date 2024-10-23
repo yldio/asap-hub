@@ -694,10 +694,26 @@ export enum ComplianceReportsOrder {
 }
 
 export type ContentfulMetadata = {
+  concepts: Array<Maybe<TaxonomyConcept>>;
   tags: Array<Maybe<ContentfulTag>>;
 };
 
+export type ContentfulMetadataConceptsDescendantsFilter = {
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ContentfulMetadataConceptsFilter = {
+  descendants?: InputMaybe<ContentfulMetadataConceptsDescendantsFilter>;
+  id_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  id_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type ContentfulMetadataFilter = {
+  concepts?: InputMaybe<ContentfulMetadataConceptsFilter>;
+  concepts_exists?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<ContentfulMetadataTagsFilter>;
   tags_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1179,6 +1195,99 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   Website1Desc = 'website1_DESC',
   Website2Asc = 'website2_ASC',
   Website2Desc = 'website2_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type Discussions = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    linkedFrom?: Maybe<DiscussionsLinkingCollections>;
+    message?: Maybe<Messages>;
+    repliesCollection?: Maybe<DiscussionsRepliesCollection>;
+    sys: Sys;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsMessageArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MessagesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsRepliesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscussionsRepliesCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MessagesFilter>;
+};
+
+export type DiscussionsCollection = {
+  items: Array<Maybe<Discussions>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type DiscussionsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DiscussionsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  message?: InputMaybe<CfMessagesNestedFilter>;
+  message_exists?: InputMaybe<Scalars['Boolean']>;
+  replies?: InputMaybe<CfMessagesNestedFilter>;
+  repliesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type DiscussionsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum DiscussionsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type DiscussionsRepliesCollection = {
+  items: Array<Maybe<Messages>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum DiscussionsRepliesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TextAsc = 'text_ASC',
+  TextDesc = 'text_DESC',
 }
 
 export type Entry = {
@@ -2201,6 +2310,8 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -3517,6 +3628,8 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -3708,6 +3821,7 @@ export type ManuscriptVersions = Entry &
     codeDepositedDetails?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     correspondingAuthorCollection?: Maybe<ManuscriptVersionsCorrespondingAuthorCollection>;
+    count?: Maybe<Scalars['Int']>;
     createdBy?: Maybe<Users>;
     datasetsDeposited?: Maybe<Scalars['String']>;
     datasetsDepositedDetails?: Maybe<Scalars['String']>;
@@ -3799,6 +3913,11 @@ export type ManuscriptVersionsCorrespondingAuthorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ManuscriptVersionsCorrespondingAuthorFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4097,6 +4216,15 @@ export type ManuscriptVersionsFilter = {
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   correspondingAuthor?: InputMaybe<CfcorrespondingAuthorMultiTypeNestedFilter>;
   correspondingAuthorCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_exists?: InputMaybe<Scalars['Boolean']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
@@ -4353,6 +4481,8 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
 }
 
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -4384,6 +4514,8 @@ export enum ManuscriptVersionsOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -4459,6 +4591,7 @@ export type Manuscripts = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    count?: Maybe<Scalars['Int']>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
     status?: Maybe<Scalars['String']>;
@@ -4467,6 +4600,11 @@ export type Manuscripts = Entry &
     title?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsEligibilityReasonsArgs = {
@@ -4519,6 +4657,15 @@ export type ManuscriptsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_exists?: InputMaybe<Scalars['Boolean']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   eligibilityReasons_contains_all?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
@@ -4562,6 +4709,8 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ManuscriptsOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -4628,6 +4777,8 @@ export enum ManuscriptsVersionsCollectionOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -4733,6 +4884,103 @@ export enum MediaOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type Messages = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    createdBy?: Maybe<Users>;
+    linkedFrom?: Maybe<MessagesLinkingCollections>;
+    sys: Sys;
+    text?: Maybe<Scalars['String']>;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type MessagesCreatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type MessagesLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type MessagesTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type MessagesCollection = {
+  items: Array<Maybe<Messages>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type MessagesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<MessagesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<MessagesFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  createdBy?: InputMaybe<CfUsersNestedFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  text?: InputMaybe<Scalars['String']>;
+  text_contains?: InputMaybe<Scalars['String']>;
+  text_exists?: InputMaybe<Scalars['Boolean']>;
+  text_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  text_not?: InputMaybe<Scalars['String']>;
+  text_not_contains?: InputMaybe<Scalars['String']>;
+  text_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type MessagesLinkingCollections = {
+  discussionsCollection?: Maybe<DiscussionsCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type MessagesLinkingCollectionsDiscussionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MessagesLinkingCollectionsDiscussionsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type MessagesLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum MessagesOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TextAsc = 'text_ASC',
+  TextDesc = 'text_DESC',
 }
 
 /** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/migration) */
@@ -5265,6 +5513,8 @@ export type Query = {
   dashboardCollection?: Maybe<DashboardCollection>;
   discover?: Maybe<Discover>;
   discoverCollection?: Maybe<DiscoverCollection>;
+  discussions?: Maybe<Discussions>;
+  discussionsCollection?: Maybe<DiscussionsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakers?: Maybe<EventSpeakers>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
@@ -5294,6 +5544,8 @@ export type Query = {
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
+  messages?: Maybe<Messages>;
+  messagesCollection?: Maybe<MessagesCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
   news?: Maybe<News>;
@@ -5422,6 +5674,21 @@ export type QueryDiscoverCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<DiscoverFilter>;
+};
+
+export type QueryDiscussionsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryDiscussionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscussionsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 export type QueryEntryCollectionArgs = {
@@ -5641,6 +5908,21 @@ export type QueryMediaCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<MediaFilter>;
+};
+
+export type QueryMessagesArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryMessagesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MessagesOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MessagesFilter>;
 };
 
 export type QueryMigrationArgs = {
@@ -7921,6 +8203,14 @@ export type SysFilter = {
   publishedVersion_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
 };
 
+/**
+ * Represents a tag entity for finding and organizing content easily.
+ *         Find out more here: https://www.contentful.com/developers/docs/references/content-delivery-api/#/reference/content-concepts
+ */
+export type TaxonomyConcept = {
+  id?: Maybe<Scalars['String']>;
+};
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership) */
 export type TeamMembership = Entry &
   _Node & {
@@ -8435,6 +8725,8 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -8478,6 +8770,8 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9837,6 +10131,7 @@ export type UsersLinkingCollections = {
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  messagesCollection?: Maybe<MessagesCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
@@ -9887,6 +10182,16 @@ export type UsersLinkingCollectionsManuscriptVersionsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsManuscriptVersionsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsMessagesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsMessagesCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -9986,6 +10291,8 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
@@ -10026,6 +10333,19 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+}
+
+export enum UsersLinkingCollectionsMessagesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TextAsc = 'text_ASC',
+  TextDesc = 'text_DESC',
 }
 
 export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
@@ -11404,6 +11724,15 @@ export type CfManuscriptVersionsNestedFilter = {
   codeDeposited_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   correspondingAuthorCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_exists?: InputMaybe<Scalars['Boolean']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
   datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
@@ -11552,6 +11881,21 @@ export type CfManuscriptVersionsNestedFilter = {
   type_not?: InputMaybe<Scalars['String']>;
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfMessagesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfMessagesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfMessagesNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  text?: InputMaybe<Scalars['String']>;
+  text_contains?: InputMaybe<Scalars['String']>;
+  text_exists?: InputMaybe<Scalars['Boolean']>;
+  text_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  text_not?: InputMaybe<Scalars['String']>;
+  text_not_contains?: InputMaybe<Scalars['String']>;
+  text_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfNewsNestedFilter = {
@@ -13203,6 +13547,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Discover' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Discussions' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'EventSpeakers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -13245,6 +13592,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                                   sys: Pick<Sys, 'id'>;
                                 })
+                            | ({ __typename: 'Messages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Migration' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -13349,6 +13699,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Discover' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Discussions' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'EventSpeakers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -13391,6 +13744,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                                   sys: Pick<Sys, 'id'>;
                                 })
+                            | ({ __typename: 'Messages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Migration' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -13515,6 +13871,7 @@ export type FetchDiscoverQuery = {
                       })
                     | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'EventSpeakers' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -13547,6 +13904,7 @@ export type FetchDiscoverQuery = {
                     | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                           sys: Pick<Sys, 'id'>;
                         })
+                    | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -13684,6 +14042,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -13704,6 +14063,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -13755,6 +14115,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -13775,6 +14136,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -13826,6 +14188,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -13846,6 +14209,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -14016,6 +14380,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -14042,6 +14407,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -14101,6 +14467,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -14127,6 +14494,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -14186,6 +14554,7 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -14212,6 +14581,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -14411,6 +14781,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14445,6 +14818,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14526,6 +14902,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14560,6 +14939,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14641,6 +15023,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14675,6 +15060,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -14907,6 +15295,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -14950,6 +15341,9 @@ export type FetchEventsByUserIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15039,6 +15433,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15082,6 +15479,9 @@ export type FetchEventsByUserIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15171,6 +15571,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15214,6 +15617,9 @@ export type FetchEventsByUserIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15479,6 +15885,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15522,6 +15931,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15611,6 +16023,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15654,6 +16069,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15743,6 +16161,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -15786,6 +16207,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16051,6 +16475,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16094,6 +16521,9 @@ export type FetchEventsByTeamIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16183,6 +16613,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16226,6 +16659,9 @@ export type FetchEventsByTeamIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16315,6 +16751,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Discover' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Discussions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -16358,6 +16797,9 @@ export type FetchEventsByTeamIdQuery = {
                                         Media,
                                         'url'
                                       > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Messages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Migration' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -17032,7 +17474,10 @@ export type FetchLabsQuery = {
   >;
 };
 
-export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
+export type ManuscriptsContentFragment = Pick<
+  Manuscripts,
+  'title' | 'status' | 'count'
+> & {
   sys: Pick<Sys, 'id'>;
   versionsCollection?: Maybe<{
     items: Array<
@@ -17041,6 +17486,7 @@ export type ManuscriptsContentFragment = Pick<Manuscripts, 'title'> & {
           ManuscriptVersions,
           | 'type'
           | 'lifecycle'
+          | 'description'
           | 'preprintDoi'
           | 'publicationDoi'
           | 'requestingApcCoverage'
@@ -17125,7 +17571,7 @@ export type FetchManuscriptByIdQueryVariables = Exact<{
 
 export type FetchManuscriptByIdQuery = {
   manuscripts?: Maybe<
-    Pick<Manuscripts, 'title'> & {
+    Pick<Manuscripts, 'title' | 'status' | 'count'> & {
       teamsCollection?: Maybe<{
         items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
       }>;
@@ -17137,6 +17583,7 @@ export type FetchManuscriptByIdQuery = {
               ManuscriptVersions,
               | 'type'
               | 'lifecycle'
+              | 'description'
               | 'preprintDoi'
               | 'publicationDoi'
               | 'requestingApcCoverage'
@@ -17221,6 +17668,26 @@ export type FetchManuscriptByIdQuery = {
   >;
 };
 
+export type FetchManuscriptsByTeamIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchManuscriptsByTeamIdQuery = {
+  teams?: Maybe<{
+    linkedFrom?: Maybe<{
+      manuscriptsCollection?: Maybe<{
+        items: Array<
+          Maybe<{
+            teamsCollection?: Maybe<{
+              items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+            }>;
+          }>
+        >;
+      }>;
+    }>;
+  }>;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -17238,6 +17705,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -17258,6 +17726,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -17326,6 +17795,7 @@ export type FetchNewsByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -17352,6 +17822,7 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -17449,6 +17920,9 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -17483,6 +17957,9 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -17569,6 +18046,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -17589,6 +18067,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -17663,6 +18142,9 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -17697,6 +18179,9 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -17975,6 +18460,7 @@ export type ResearchOutputsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -17995,6 +18481,7 @@ export type ResearchOutputsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -18205,6 +18692,7 @@ export type FetchResearchOutputByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -18231,6 +18719,7 @@ export type FetchResearchOutputByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -18469,6 +18958,9 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -18503,6 +18995,9 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -18787,7 +19282,7 @@ export type FetchTeamByIdQuery = {
         manuscriptsCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Manuscripts, 'title'> & {
+              Pick<Manuscripts, 'title' | 'status' | 'count'> & {
                 sys: Pick<Sys, 'id'>;
                 versionsCollection?: Maybe<{
                   items: Array<
@@ -18796,6 +19291,7 @@ export type FetchTeamByIdQuery = {
                         ManuscriptVersions,
                         | 'type'
                         | 'lifecycle'
+                        | 'description'
                         | 'preprintDoi'
                         | 'publicationDoi'
                         | 'requestingApcCoverage'
@@ -19012,6 +19508,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -19032,6 +19529,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -19149,6 +19647,7 @@ export type FetchTutorialByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -19175,6 +19674,7 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -19321,6 +19821,9 @@ export type FetchTutorialsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -19355,6 +19858,9 @@ export type FetchTutorialsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -19518,6 +20024,7 @@ export type UsersContentFragment = Pick<
   | 'website1'
   | 'website2'
   | 'role'
+  | 'openScienceTeamMember'
   | 'responsibilities'
   | 'researchInterests'
   | 'reachOut'
@@ -19688,6 +20195,7 @@ export type FetchPublicUsersQuery = {
             | 'website1'
             | 'website2'
             | 'role'
+            | 'openScienceTeamMember'
             | 'responsibilities'
             | 'researchInterests'
             | 'reachOut'
@@ -19861,6 +20369,7 @@ export type FetchUserByIdQuery = {
       | 'website1'
       | 'website2'
       | 'role'
+      | 'openScienceTeamMember'
       | 'responsibilities'
       | 'researchInterests'
       | 'reachOut'
@@ -20002,6 +20511,7 @@ export type UserListItemContentFragment = Pick<
   | 'onboarded'
   | 'dismissedGettingStarted'
   | 'role'
+  | 'openScienceTeamMember'
 > & {
   avatar?: Maybe<Pick<Asset, 'url'>>;
   sys: Pick<Sys, 'id'>;
@@ -20052,6 +20562,7 @@ export type FetchUsersQuery = {
             | 'onboarded'
             | 'dismissedGettingStarted'
             | 'role'
+            | 'openScienceTeamMember'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
             sys: Pick<Sys, 'id'>;
@@ -20116,6 +20627,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'onboarded'
                     | 'dismissedGettingStarted'
                     | 'role'
+                    | 'openScienceTeamMember'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                     sys: Pick<Sys, 'id'>;
@@ -20186,6 +20698,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'onboarded'
                 | 'dismissedGettingStarted'
                 | 'role'
+                | 'openScienceTeamMember'
               > & {
                 avatar?: Maybe<Pick<Asset, 'url'>>;
                 sys: Pick<Sys, 'id'>;
@@ -20235,6 +20748,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'ComplianceReports' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
@@ -20255,6 +20769,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
+              | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -20401,6 +20916,7 @@ export type FetchWorkingGroupByIdQuery = {
                     })
                   | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Discover' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Discussions' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalAuthors' } & {
@@ -20427,6 +20943,7 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
+                  | ({ __typename: 'Messages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
@@ -20599,6 +21116,9 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'Discover' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Discussions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'EventSpeakers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -20633,6 +21153,9 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
+                        | ({ __typename: 'Messages' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -22503,6 +23026,8 @@ export const ManuscriptsContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'count' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'versionsCollection' },
@@ -22552,6 +23077,10 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'lifecycle' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
                       },
                       {
                         kind: 'Field',
@@ -25128,6 +25657,10 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'openScienceTeamMember' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'responsibilities' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchInterests' } },
           { kind: 'Field', name: { kind: 'Name', value: 'reachOut' } },
@@ -25962,6 +26495,10 @@ export const UserListItemContentFragmentDoc = {
             name: { kind: 'Name', value: 'dismissedGettingStarted' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'openScienceTeamMember' },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'researchTagsCollection' },
@@ -31474,6 +32011,133 @@ export const FetchManuscriptByIdDocument = {
 } as unknown as DocumentNode<
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables
+>;
+export const FetchManuscriptsByTeamIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchManuscriptsByTeamId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teams' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'manuscriptsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '500' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamsCollection',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchManuscriptsByTeamIdQuery,
+  FetchManuscriptsByTeamIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

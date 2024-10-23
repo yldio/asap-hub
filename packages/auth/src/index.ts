@@ -18,6 +18,7 @@ export type User = Pick<
   | 'workingGroups'
   | 'interestGroups'
   | 'role'
+  | 'openScienceTeamMember'
 > & {
   teams: ReadonlyArray<UserResponse['teams'][0]>;
 };

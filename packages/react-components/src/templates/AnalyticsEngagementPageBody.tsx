@@ -106,9 +106,8 @@ const AnalyticsEngagementPageBody: React.FC<
         <div css={captionLegend}>
           <PercentageIcon title="percentage" color={lead.rgb} />
           <Paragraph>
-            'Unique Speakers: All Roles' percentage is based on 'Total Speakers'
-            and 'Unique Speakers: Key Personnel' is based on 'Unique Speakers:
-            All Roles'
+            'Unique Speakers: All Roles' and 'Unique Speakers: Key Personnel'
+            percentage is based on 'Members'
           </Paragraph>
         </div>
       </>

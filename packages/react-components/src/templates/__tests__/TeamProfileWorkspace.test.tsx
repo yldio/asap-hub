@@ -44,11 +44,13 @@ describe('compliance section', () => {
       manuscripts: [
         {
           id: '1',
+          count: 1,
           title: 'Nice manuscript',
           versions: [],
         },
         {
           id: '2',
+          count: 2,
           title: 'A Good Manuscript',
           versions: [],
         },
@@ -73,11 +75,13 @@ describe('compliance section', () => {
       manuscripts: [
         {
           id: '1',
+          count: 1,
           title: 'Nice manuscript',
           versions: [],
         },
         {
           id: '2',
+          count: 2,
           title: 'A Good Manuscript',
           versions: [],
         },
@@ -96,6 +100,7 @@ describe('compliance section', () => {
       manuscripts: [
         {
           id: '1',
+          count: 1,
           title: 'Nice manuscript',
           versions: [
             {
@@ -137,6 +142,7 @@ describe('compliance section', () => {
         },
         {
           id: '2',
+          count: 2,
           title: 'A Good Manuscript',
           versions: [
             {

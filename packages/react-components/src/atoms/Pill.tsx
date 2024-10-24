@@ -18,7 +18,7 @@ const styles = css({
   borderRadius: `${6 / perRem}em`,
 });
 
-const grayStyles = css({
+const modernStyles = css({
   borderRadius: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   margin: 0,
@@ -32,7 +32,8 @@ export type AccentVariant =
   | 'neutral'
   | 'success'
   | 'warning'
-  | 'gray';
+  | 'gray'
+  | 'blue';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -75,6 +76,11 @@ export const accents: Record<AccentVariant, CSSObject> = {
     backgroundColor: colors.silver.rgb,
     border: 'transparent',
   },
+  blue: {
+    color: colors.info500.rgb,
+    backgroundColor: colors.info100.rgb,
+    border: 'transparent',
+  },
 };
 
 type PillProps = {
@@ -93,7 +99,7 @@ const Pill: React.FC<PillProps> = ({
       styles,
       components?.Pill?.styles,
       accents[accent],
-      ...(accent === 'gray' ? [grayStyles] : []),
+      ...(accent === 'gray' || accent === 'blue' ? [modernStyles] : []),
     ]}
   >
     <Ellipsis>{small ? <small>{children}</small> : children}</Ellipsis>

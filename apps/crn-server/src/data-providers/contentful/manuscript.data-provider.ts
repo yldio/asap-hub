@@ -344,7 +344,10 @@ const createQuickCheckDiscussions = async (
   quickCheckDetails: QuickCheckDetailsObject,
   userId: string,
 ) => {
-  const generatedDiscussions = {} as QuickCheckDetailsObject;
+  const generatedDiscussions = {} as Record<
+    QuickCheckDetails,
+    Link<'Entry'> | null
+  >;
   await Promise.all(
     Object.entries(quickCheckDetails).map(
       async ([quickCheckDetail, fieldValue]) => {
@@ -369,7 +372,9 @@ const createQuickCheckDiscussions = async (
           await discussionEntry.publish();
 
           generatedDiscussions[quickCheckDetail as QuickCheckDetails] =
-            discussionEntry.sys.id;
+            getLinkEntity(discussionEntry.sys.id);
+        } else {
+          generatedDiscussions[quickCheckDetail as QuickCheckDetails] = null;
         }
       },
     ),

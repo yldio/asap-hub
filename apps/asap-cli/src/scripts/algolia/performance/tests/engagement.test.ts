@@ -55,8 +55,8 @@ describe('processEngagementPerformance', () => {
         attributesToRetrieve: [
           'eventCount',
           'totalSpeakerCount',
-          'uniqueAllRolesCount',
-          'uniqueKeyPersonnelCount',
+          'uniqueAllRolesCountPercentage',
+          'uniqueKeyPersonnelCountPercentage',
         ],
         page: expect.any(Number),
         hitsPerPage: 50,

@@ -93,17 +93,21 @@ const AnalyticsEngagementPageBody: React.FC<
       <>
         <CaptionItem label="Events" {...performance.events} />
         <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
-        <CaptionItem label="U.S.: All Roles" {...performance.uniqueAllRoles} />
+        <CaptionItem
+          label="U.S.: All Roles"
+          percentage
+          {...performance.uniqueAllRoles}
+        />
         <CaptionItem
           label="U.S.: Key Personnel"
+          percentage
           {...performance.uniqueKeyPersonnel}
         />
         <div css={captionLegend}>
           <PercentageIcon title="percentage" color={lead.rgb} />
           <Paragraph>
-            'Unique Speakers: All Roles' percentage is based on 'Total Speakers'
-            and 'Unique Speakers: Key Personnel' is based on 'Unique Speakers:
-            All Roles'
+            'Unique Speakers: All Roles' and 'Unique Speakers: Key Personnel'
+            percentage is based on 'Members'
           </Paragraph>
         </div>
       </>

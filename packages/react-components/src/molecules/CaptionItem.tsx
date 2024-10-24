@@ -32,6 +32,7 @@ export type CaptionItemProps = {
   averageMax: number;
   aboveAverageMin: number;
   aboveAverageMax: number;
+  percentage?: boolean;
 };
 
 const CaptionItem: React.FC<CaptionItemProps> = ({
@@ -42,11 +43,12 @@ const CaptionItem: React.FC<CaptionItemProps> = ({
   averageMax,
   aboveAverageMin,
   aboveAverageMax,
+  percentage = false,
 }) => {
   // Sometimes belowAverageMax can be negative, in this case,
   // below average will not have any number
   const getCaption = (min: number, max: number) =>
-    min < 0 ? `- - -` : `${min} - ${max}`;
+    min < 0 ? `- - -` : percentage ? `${min}% - ${max}%` : `${min} - ${max}`;
 
   return (
     <div css={containerStyles}>

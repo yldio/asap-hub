@@ -64,3 +64,21 @@ it('renders above average without numbers when range is negative', () => {
   expect(screen.getByTitle('Above Average')).toBeInTheDocument();
   expect(screen.getByText('- - -')).toBeVisible();
 });
+
+it('renders percentage when percentage is enabled', () => {
+  render(
+    <CaptionItem
+      label="ASAP % Output"
+      percentage
+      belowAverageMin={0}
+      belowAverageMax={10}
+      averageMin={11}
+      averageMax={40}
+      aboveAverageMin={41}
+      aboveAverageMax={100}
+    />,
+  );
+  expect(screen.getByText('0% - 10%')).toBeVisible();
+  expect(screen.getByText('11% - 40%')).toBeVisible();
+  expect(screen.getByText('41% - 100%')).toBeVisible();
+});

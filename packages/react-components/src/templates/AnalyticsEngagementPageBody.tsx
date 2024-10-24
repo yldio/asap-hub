@@ -93,9 +93,14 @@ const AnalyticsEngagementPageBody: React.FC<
       <>
         <CaptionItem label="Events" {...performance.events} />
         <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
-        <CaptionItem label="U.S.: All Roles" {...performance.uniqueAllRoles} />
+        <CaptionItem
+          label="U.S.: All Roles"
+          percentage
+          {...performance.uniqueAllRoles}
+        />
         <CaptionItem
           label="U.S.: Key Personnel"
+          percentage
           {...performance.uniqueKeyPersonnel}
         />
         <div css={captionLegend}>

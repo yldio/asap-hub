@@ -12,8 +12,8 @@ import {
 type EngagementHit = Hit & {
   eventCount: number;
   totalSpeakerCount: number;
-  uniqueAllRolesCount: number;
-  uniqueKeyPersonnelCount: number;
+  uniqueAllRolesCountPercentage: number;
+  uniqueKeyPersonnelCountPercentage: number;
 };
 
 export const processEngagementPerformance = async (index: SearchIndex) => {
@@ -28,8 +28,8 @@ export const processEngagementPerformance = async (index: SearchIndex) => {
         attributesToRetrieve: [
           'eventCount',
           'totalSpeakerCount',
-          'uniqueAllRolesCount',
-          'uniqueKeyPersonnelCount',
+          'uniqueAllRolesCountPercentage',
+          'uniqueKeyPersonnelCountPercentage',
         ],
         page,
         hitsPerPage: 50,
@@ -44,10 +44,10 @@ export const processEngagementPerformance = async (index: SearchIndex) => {
           hits.map((hit) => hit.totalSpeakerCount),
         ),
         uniqueAllRoles: getPerformanceMetrics(
-          hits.map((hit) => hit.uniqueAllRolesCount),
+          hits.map((hit) => hit.uniqueAllRolesCountPercentage),
         ),
         uniqueKeyPersonnel: getPerformanceMetrics(
-          hits.map((hit) => hit.uniqueKeyPersonnelCount),
+          hits.map((hit) => hit.uniqueKeyPersonnelCountPercentage),
         ),
         __meta: {
           range,

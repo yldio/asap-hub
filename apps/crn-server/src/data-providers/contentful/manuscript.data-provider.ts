@@ -11,6 +11,7 @@ import {
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
+  Link,
 } from '@asap-hub/contentful';
 import {
   ListResponse,
@@ -118,13 +119,11 @@ export class ManuscriptContentfulDataProvider
       protocolsDepositedDetails: version.protocolsDepositedDetails,
     };
 
-    const createdDiscussions = await createQuickCheckDiscussions(
+    const quickCheckDiscussions = await createQuickCheckDiscussions(
       environment,
       quickCheckDetails,
       userId,
     );
-    const quickCheckDiscussions =
-      parseQuickCheckDiscussions(createdDiscussions);
 
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
@@ -307,37 +306,6 @@ const parseComplianceReport = (
     url: complianceReport.url,
     description: complianceReport.description,
   };
-
-const parseQuickCheckDiscussions = (
-  quickCheckDetails: QuickCheckDetailsObject,
-) => ({
-  acknowledgedGrantNumberDetails:
-    quickCheckDetails.acknowledgedGrantNumberDetails
-      ? getLinkEntity(quickCheckDetails.acknowledgedGrantNumberDetails)
-      : null,
-  asapAffiliationIncludedDetails:
-    quickCheckDetails.asapAffiliationIncludedDetails
-      ? getLinkEntity(quickCheckDetails.asapAffiliationIncludedDetails)
-      : null,
-  availabilityStatementDetails: quickCheckDetails.availabilityStatementDetails
-    ? getLinkEntity(quickCheckDetails.availabilityStatementDetails)
-    : null,
-  codeDepositedDetails: quickCheckDetails.codeDepositedDetails
-    ? getLinkEntity(quickCheckDetails.codeDepositedDetails)
-    : null,
-  datasetsDepositedDetails: quickCheckDetails.datasetsDepositedDetails
-    ? getLinkEntity(quickCheckDetails.datasetsDepositedDetails)
-    : null,
-  labMaterialsRegisteredDetails: quickCheckDetails.labMaterialsRegisteredDetails
-    ? getLinkEntity(quickCheckDetails.labMaterialsRegisteredDetails)
-    : null,
-  manuscriptLicenseDetails: quickCheckDetails.manuscriptLicenseDetails
-    ? getLinkEntity(quickCheckDetails.manuscriptLicenseDetails)
-    : null,
-  protocolsDepositedDetails: quickCheckDetails.protocolsDepositedDetails
-    ? getLinkEntity(quickCheckDetails.protocolsDepositedDetails)
-    : null,
-});
 
 const createQuickCheckDiscussions = async (
   environment: Environment,

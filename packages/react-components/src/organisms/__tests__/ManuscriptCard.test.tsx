@@ -153,4 +153,46 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
     }),
   ).not.toBeInTheDocument();
   expect(queryByText('Addendum Required')).not.toBeVisible();
+  expect(statusButton).toBeEnabled();
 });
+
+it.each`
+  newStatus           | submissionButtonText
+  ${'Compliant'}      | ${'Set to Compliant and Notify'}
+  ${'Closed (other)'} | ${'Set to Closed (other) and Notify'}
+`(
+  'user cannot change the status anymore if they set status to $newStatus',
+  async ({ newStatus, submissionButtonText }) => {
+    const onUpdateManuscript = jest.fn();
+
+    const { getByRole, getByTestId, queryByRole } = render(
+      <ManuscriptCard
+        {...props}
+        isComplianceReviewer
+        status="Addendum Required"
+        id="manuscript-1"
+        onUpdateManuscript={onUpdateManuscript}
+      />,
+    );
+
+    const statusButton = getByTestId('status-button');
+    userEvent.click(statusButton);
+    userEvent.click(getByRole('button', { name: newStatus }));
+
+    await act(async () => {
+      userEvent.click(
+        getByRole('button', {
+          name: submissionButtonText,
+        }),
+      );
+    });
+
+    expect(
+      queryByRole('button', {
+        name: submissionButtonText,
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(statusButton).toBeDisabled();
+  },
+);

@@ -121,7 +121,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       setSelectedStatus(newSelectedStatus);
     }
   };
-
   return (
     <>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
@@ -155,7 +154,10 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <span css={buttonsContainerStyles}>
             <StatusButton
               buttonChildren={() => <span>{selectedStatus}</span>}
-              canEdit={isComplianceReviewer}
+              canEdit={
+                isComplianceReviewer &&
+                !['Closed (other)', 'Compliant'].includes(selectedStatus)
+              }
             >
               {manuscriptStatus.map((statusItem) => ({
                 item: statusItem,

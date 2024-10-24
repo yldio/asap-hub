@@ -7,6 +7,7 @@ import {
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptResponse,
+  ManuscriptUpdateDataObject,
 } from '@asap-hub/model';
 
 export const getManuscriptDataObject = (
@@ -216,5 +217,14 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
       },
     ],
     userId: 'user-id-0',
+  };
+};
+
+export const getManuscriptUpdateDataObject = (
+  overrides?: Partial<ManuscriptUpdateDataObject>,
+): ManuscriptUpdateDataObject => {
+  return {
+    status: 'Manuscript Resubmitted',
+    ...overrides,
   };
 };

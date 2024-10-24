@@ -1,14 +1,15 @@
 import {
   createListLabsResponse,
   createListTeamResponse,
-  createTeamResponse,
   createManuscriptResponse,
+  createTeamResponse,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
+  ManuscriptPutRequest,
   ResearchOutputPostRequest,
   TeamResponse,
 } from '@asap-hub/model';
@@ -25,6 +26,7 @@ import {
   getTeam,
   getTeams,
   patchTeam,
+  updateManuscript,
   updateTeamResearchOutput,
   uploadManuscriptFile,
 } from '../api';
@@ -294,6 +296,31 @@ describe('Manuscript', () => {
         createManuscript(payload, 'Bearer x'),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to create manuscript. Expected status 201. Received status 500."`,
+      );
+    });
+  });
+
+  describe('PUT', () => {
+    const manuscriptId = 'manuscript-1';
+    const payload: ManuscriptPutRequest = {
+      status: 'Waiting for ASAP Reply',
+    };
+    it('makes an authorized PUT request to update a manuscript', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .put(`/manuscripts/${manuscriptId}`, payload)
+        .reply(200, createManuscriptResponse());
+
+      await updateManuscript(manuscriptId, payload, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('errors for an error status', async () => {
+      nock(API_BASE_URL).put(`/manuscripts/${manuscriptId}`).reply(500, {});
+
+      await expect(
+        updateManuscript(manuscriptId, payload, 'Bearer x'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to update manuscript with id manuscript-1. Expected status 200. Received status 500."`,
       );
     });
   });

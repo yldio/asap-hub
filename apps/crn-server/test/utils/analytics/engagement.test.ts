@@ -451,7 +451,7 @@ describe('getEngagementItems', () => {
           eventCount: 1,
           totalSpeakerCount: 1,
           uniqueAllRolesCount: 1,
-          uniqueAllRolesCountPercentage: 100,
+          uniqueAllRolesCountPercentage: 25,
           uniqueKeyPersonnelCount: 0,
           uniqueKeyPersonnelCountPercentage: 0,
         },
@@ -498,9 +498,9 @@ describe('getEngagementItems', () => {
           eventCount: 1,
           totalSpeakerCount: 1,
           uniqueAllRolesCount: 1,
-          uniqueAllRolesCountPercentage: 100,
+          uniqueAllRolesCountPercentage: 25,
           uniqueKeyPersonnelCount: 1,
-          uniqueKeyPersonnelCountPercentage: 100,
+          uniqueKeyPersonnelCountPercentage: 25,
         },
       ]);
     });
@@ -545,9 +545,9 @@ describe('getEngagementItems', () => {
           eventCount: 1,
           totalSpeakerCount: 1,
           uniqueAllRolesCount: 1,
-          uniqueAllRolesCountPercentage: 100,
+          uniqueAllRolesCountPercentage: 25,
           uniqueKeyPersonnelCount: 1,
-          uniqueKeyPersonnelCountPercentage: 100,
+          uniqueKeyPersonnelCountPercentage: 25,
         },
       ]);
     });

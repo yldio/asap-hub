@@ -80,12 +80,12 @@ export const getEngagementItems = (
       eventCount: events.size || 0,
       totalSpeakerCount,
       uniqueAllRolesCount,
-      uniqueAllRolesCountPercentage: totalSpeakerCount
-        ? Math.round((uniqueAllRolesCount / totalSpeakerCount) * 100)
+      uniqueAllRolesCountPercentage: memberCount
+        ? Math.round((uniqueAllRolesCount / memberCount) * 100)
         : 0,
       uniqueKeyPersonnelCount,
-      uniqueKeyPersonnelCountPercentage: totalSpeakerCount
-        ? Math.round((uniqueKeyPersonnelCount / totalSpeakerCount) * 100)
+      uniqueKeyPersonnelCountPercentage: memberCount
+        ? Math.round((uniqueKeyPersonnelCount / memberCount) * 100)
         : 0,
     };
   });

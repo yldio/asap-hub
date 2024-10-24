@@ -2,11 +2,14 @@ import {
   ManuscriptCreateDataObject,
   ManuscriptDataObject,
   DataProvider,
+  ManuscriptUpdateDataObject,
 } from '@asap-hub/model';
 
 export type ManuscriptDataProvider = DataProvider<
   ManuscriptDataObject,
   ManuscriptDataObject,
   null,
-  ManuscriptCreateDataObject
+  ManuscriptCreateDataObject,
+  null,
+  ManuscriptUpdateDataObject
 >;

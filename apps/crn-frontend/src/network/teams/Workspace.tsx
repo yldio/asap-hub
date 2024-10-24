@@ -5,11 +5,15 @@ import {
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import { TeamTool, TeamResponse } from '@asap-hub/model';
+import { TeamTool, TeamResponse, ManuscriptPutRequest } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
-import { useIsComplianceReviewer, usePatchTeamById } from './state';
+import {
+  useIsComplianceReviewer,
+  usePatchTeamById,
+  usePutManuscript,
+} from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 
 interface WorkspaceProps {
@@ -23,6 +27,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
+  const updateManuscript = usePutManuscript();
   const toast = useContext(ToastContext);
 
   return (
@@ -32,6 +37,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           {...team}
           setEligibilityReasons={setEligibilityReasons}
           tools={team.tools}
+          onUpdateManuscript={(
+            manuscriptId: string,
+            payload: ManuscriptPutRequest,
+          ) => updateManuscript(manuscriptId, payload)}
           onDeleteTool={
             deleting
               ? undefined

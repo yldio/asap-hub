@@ -2,7 +2,7 @@ import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -64,15 +64,19 @@ type TeamProfileWorkspaceProps = Readonly<
     TeamResponse,
     'id' | 'pointOfContact' | 'lastModifiedDate' | 'manuscripts'
   >
-> & {
-  readonly tools: ReadonlyArray<TeamTool>;
-  readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
-  readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
-  readonly isComplianceReviewer?: boolean;
-};
+> &
+  Pick<
+    ComponentProps<typeof ManuscriptCard>,
+    'onUpdateManuscript' | 'isComplianceReviewer'
+  > & {
+    readonly tools: ReadonlyArray<TeamTool>;
+    readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
+    readonly setEligibilityReasons: (newEligibilityReason: Set<string>) => void;
+  };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
+  onUpdateManuscript,
   pointOfContact,
   lastModifiedDate,
   manuscripts,
@@ -142,6 +146,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   {...manuscript}
                   teamId={id}
                   isComplianceReviewer={isComplianceReviewer}
+                  onUpdateManuscript={onUpdateManuscript}
                 />
               </div>
             ))}

@@ -1,4 +1,7 @@
-import { manuscriptPostRequestSchema } from '@asap-hub/model';
+import {
+  manuscriptPostRequestSchema,
+  manuscriptPutRequestSchema,
+} from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
@@ -26,6 +29,14 @@ export const validateManuscriptParameters = validateInput(
 
 export const validateManuscriptPostRequestParameters = validateInput(
   manuscriptPostRequestSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
+export const validateManuscriptPutRequestParameters = validateInput(
+  manuscriptPutRequestSchema,
   {
     skipNull: true,
     coerce: true,

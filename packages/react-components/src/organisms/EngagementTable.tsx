@@ -424,7 +424,7 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
               <p css={rowValueStyles}>
                 {`${row.uniqueAllRolesCount} (${row.uniqueAllRolesCountPercentage}%)`}{' '}
                 {getPerformanceIcon(
-                  row.uniqueAllRolesCount,
+                  row.uniqueAllRolesCountPercentage,
                   performance.uniqueAllRoles,
                 )}
               </p>
@@ -435,7 +435,7 @@ const EngagementTable: React.FC<EngagementTableProps> = ({
               <p css={rowValueStyles}>
                 {`${row.uniqueKeyPersonnelCount} (${row.uniqueKeyPersonnelCountPercentage}%)`}{' '}
                 {getPerformanceIcon(
-                  row.uniqueKeyPersonnelCount,
+                  row.uniqueKeyPersonnelCountPercentage,
                   performance.uniqueKeyPersonnel,
                 )}
               </p>

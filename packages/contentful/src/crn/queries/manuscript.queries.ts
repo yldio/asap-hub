@@ -50,21 +50,53 @@ export const manuscriptContentQueryFragment = gql`
         submissionDate
         otherDetails
         acknowledgedGrantNumber
-        acknowledgedGrantNumberDetails
+        acknowledgedGrantNumberDetails {
+          message {
+            text
+          }
+        }
         asapAffiliationIncluded
-        asapAffiliationIncludedDetails
+        asapAffiliationIncludedDetails {
+          message {
+            text
+          }
+        }
         manuscriptLicense
-        manuscriptLicenseDetails
+        manuscriptLicenseDetails {
+          message {
+            text
+          }
+        }
         datasetsDeposited
-        datasetsDepositedDetails
+        datasetsDepositedDetails {
+          message {
+            text
+          }
+        }
         codeDeposited
-        codeDepositedDetails
+        codeDepositedDetails {
+          message {
+            text
+          }
+        }
         protocolsDeposited
-        protocolsDepositedDetails
+        protocolsDepositedDetails {
+          message {
+            text
+          }
+        }
         labMaterialsRegistered
-        labMaterialsRegisteredDetails
+        labMaterialsRegisteredDetails {
+          message {
+            text
+          }
+        }
         availabilityStatement
-        availabilityStatementDetails
+        availabilityStatementDetails {
+          message {
+            text
+          }
+        }
         teamsCollection(limit: 10) {
           items {
             sys {

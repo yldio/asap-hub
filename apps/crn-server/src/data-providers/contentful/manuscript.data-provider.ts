@@ -11,6 +11,7 @@ import {
   getLinkEntities,
   getLinkEntity,
   GraphQLClient,
+  Link,
 } from '@asap-hub/contentful';
 import {
   ListResponse,
@@ -22,6 +23,8 @@ import {
   ManuscriptType,
   manuscriptTypes,
   ManuscriptVersion,
+  QuickCheckDetails,
+  QuickCheckDetailsObject,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
@@ -105,6 +108,23 @@ export class ManuscriptContentfulDataProvider
       await additionalFileAsset.publish();
     });
 
+    const quickCheckDetails = {
+      asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
+      acknowledgedGrantNumberDetails: version.acknowledgedGrantNumberDetails,
+      availabilityStatementDetails: version.availabilityStatementDetails,
+      codeDepositedDetails: version.codeDepositedDetails,
+      datasetsDepositedDetails: version.datasetsDepositedDetails,
+      labMaterialsRegisteredDetails: version.labMaterialsRegisteredDetails,
+      manuscriptLicenseDetails: version.manuscriptLicenseDetails,
+      protocolsDepositedDetails: version.protocolsDepositedDetails,
+    };
+
+    const quickCheckDiscussions = await createQuickCheckDiscussions(
+      environment,
+      quickCheckDetails,
+      userId,
+    );
+
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
       {
@@ -128,6 +148,7 @@ export class ManuscriptContentfulDataProvider
               )
             : null,
           createdBy: getLinkEntity(userId),
+          ...quickCheckDiscussions,
         }),
       },
     );
@@ -204,35 +225,35 @@ export const parseGraphqlManuscriptVersion = (
       otherDetails: version?.otherDetails,
       acknowledgedGrantNumberDetails:
         version?.acknowledgedGrantNumber === 'No'
-          ? version?.acknowledgedGrantNumberDetails
+          ? version?.acknowledgedGrantNumberDetails?.message?.text
           : undefined,
       asapAffiliationIncludedDetails:
         version?.asapAffiliationIncluded === 'No'
-          ? version?.asapAffiliationIncludedDetails
+          ? version?.asapAffiliationIncludedDetails?.message?.text
           : undefined,
       manuscriptLicenseDetails:
         version?.manuscriptLicense === 'No'
-          ? version?.manuscriptLicenseDetails
+          ? version?.manuscriptLicenseDetails?.message?.text
           : undefined,
       datasetsDepositedDetails:
         version?.datasetsDeposited === 'No'
-          ? version?.datasetsDepositedDetails
+          ? version?.datasetsDepositedDetails?.message?.text
           : undefined,
       codeDepositedDetails:
         version?.codeDeposited === 'No'
-          ? version?.codeDepositedDetails
+          ? version?.codeDepositedDetails?.message?.text
           : undefined,
       protocolsDepositedDetails:
         version?.protocolsDeposited === 'No'
-          ? version?.protocolsDepositedDetails
+          ? version?.protocolsDepositedDetails?.message?.text
           : undefined,
       labMaterialsRegisteredDetails:
         version?.labMaterialsRegistered === 'No'
-          ? version?.labMaterialsRegisteredDetails
+          ? version?.labMaterialsRegisteredDetails?.message?.text
           : undefined,
       availabilityStatementDetails:
         version?.availabilityStatement === 'No'
-          ? version?.availabilityStatementDetails
+          ? version?.availabilityStatementDetails?.message?.text
           : undefined,
       createdBy: {
         id: version?.createdBy?.sys.id,
@@ -285,3 +306,46 @@ const parseComplianceReport = (
     url: complianceReport.url,
     description: complianceReport.description,
   };
+
+const createQuickCheckDiscussions = async (
+  environment: Environment,
+  quickCheckDetails: QuickCheckDetailsObject,
+  userId: string,
+) => {
+  const generatedDiscussions = {} as Record<
+    QuickCheckDetails,
+    Link<'Entry'> | null
+  >;
+  await Promise.all(
+    Object.entries(quickCheckDetails).map(
+      async ([quickCheckDetail, fieldValue]) => {
+        if (fieldValue) {
+          const user = getLinkEntity(userId);
+          const messageEntry = await environment.createEntry('messages', {
+            fields: addLocaleToFields({
+              text: fieldValue,
+              createdBy: user,
+            }),
+          });
+
+          await messageEntry.publish();
+
+          const messageId = messageEntry.sys.id;
+          const discussionEntry = await environment.createEntry('discussions', {
+            fields: addLocaleToFields({
+              message: getLinkEntity(messageId),
+            }),
+          });
+
+          await discussionEntry.publish();
+
+          generatedDiscussions[quickCheckDetail as QuickCheckDetails] =
+            getLinkEntity(discussionEntry.sys.id);
+        } else {
+          generatedDiscussions[quickCheckDetail as QuickCheckDetails] = null;
+        }
+      },
+    ),
+  );
+  return generatedDiscussions;
+};

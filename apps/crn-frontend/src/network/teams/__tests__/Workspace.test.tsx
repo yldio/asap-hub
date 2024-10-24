@@ -1,26 +1,34 @@
-import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  render,
-  waitFor,
-  getByText as getChildByText,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { TeamResponse } from '@asap-hub/model';
-import { createTeamResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
-import { ToastContext } from '@asap-hub/react-context';
-import { mockAlert } from '@asap-hub/dom-test-utils';
-
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import Workspace from '../Workspace';
-import { patchTeam } from '../api';
+import { mockAlert } from '@asap-hub/dom-test-utils';
+import {
+  createManuscriptResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
+import { enable } from '@asap-hub/flags';
+import { TeamResponse } from '@asap-hub/model';
+import { ToastContext } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
+import {
+  getByText as getChildByText,
+  render,
+  waitFor,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ReactNode, Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
-jest.mock('../api');
+import { patchTeam, updateManuscript } from '../api';
+import Workspace from '../Workspace';
+
+jest.mock('../api', () => ({
+  patchTeam: jest.fn(),
+  updateManuscript: jest.fn().mockResolvedValue({}),
+}));
+
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
@@ -53,9 +61,36 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
     </RecoilRoot>,
   );
 
-const mockPatchTeamImpl = mockPatchTeam.getMockImplementation();
-afterEach(() => {
-  mockPatchTeam.mockClear().mockImplementation(mockPatchTeamImpl);
+afterEach(jest.resetAllMocks);
+
+describe('Manuscript', () => {
+  it('status can be changed', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+
+    const screen = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [],
+          manuscripts: [createManuscriptResponse()],
+        }}
+      />,
+    );
+
+    userEvent.click(await screen.findByTestId('status-button'));
+    userEvent.click(screen.getByText('Manuscript Resubmitted'));
+    userEvent.click(
+      screen.getByRole('button', { name: 'Update Status and Notify' }),
+    );
+    await waitFor(() => {
+      expect(updateManuscript).toHaveBeenCalledWith(
+        'manuscript_0',
+        { status: 'Manuscript Resubmitted' },
+        expect.anything(),
+      );
+    });
+  });
 });
 
 describe('a tool', () => {

@@ -1,5 +1,5 @@
 import { createManuscriptResponse } from '@asap-hub/fixtures';
-import { render } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { Router, Route } from 'react-router-dom';
@@ -11,6 +11,7 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   teamIdCode: 'TI1',
   grantId: '000123',
   isComplianceReviewer: false,
+  onUpdateManuscript: jest.fn(),
 };
 
 it('displays manuscript version card when expanded', () => {
@@ -76,16 +77,36 @@ it('redirects to compliance report form when user clicks on share compliance rep
   );
 });
 
-it('allows to change the manuscript status if isComplianceReviewer is true', () => {
-  const { getByRole, getByTestId } = render(
-    <ManuscriptCard {...props} isComplianceReviewer />,
+it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', () => {
+  const { getByRole, getByTestId, getByText } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      status="Addendum Required"
+    />,
   );
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: /Compliant/i }));
-  expect(statusButton.textContent).toContain('Compliant');
+  userEvent.click(getByRole('button', { name: 'Manuscript Resubmitted' }));
+  expect(getByText('Update status and notify?')).toBeInTheDocument();
+});
+
+it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', () => {
+  const { getByRole, getByTestId, queryByText } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      status="Addendum Required"
+    />,
+  );
+
+  const statusButton = getByTestId('status-button');
+  expect(statusButton).toBeEnabled();
+  userEvent.click(statusButton);
+  userEvent.click(getByRole('button', { name: 'Addendum Required' }));
+  expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 
 it('does not allow to change the manuscript status if isComplianceReviewer is false', () => {
@@ -93,4 +114,43 @@ it('does not allow to change the manuscript status if isComplianceReviewer is fa
 
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeDisabled();
+});
+
+it('calls onUpdateManuscript when user confirms status change', async () => {
+  const onUpdateManuscript = jest.fn();
+
+  const { getByRole, getByTestId, queryByText, queryByRole } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      status="Addendum Required"
+      id="manuscript-1"
+      onUpdateManuscript={onUpdateManuscript}
+    />,
+  );
+
+  const statusButton = getByTestId('status-button');
+  userEvent.click(statusButton);
+  userEvent.click(getByRole('button', { name: 'Manuscript Resubmitted' }));
+
+  await act(async () => {
+    userEvent.click(
+      getByRole('button', {
+        name: 'Update Status and Notify',
+      }),
+    );
+  });
+
+  await waitFor(() => {
+    expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
+      status: 'Manuscript Resubmitted',
+    });
+  });
+
+  expect(
+    queryByRole('button', {
+      name: 'Update Status and Notify',
+    }),
+  ).not.toBeInTheDocument();
+  expect(queryByText('Addendum Required')).not.toBeVisible();
 });

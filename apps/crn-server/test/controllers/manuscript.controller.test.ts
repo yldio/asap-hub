@@ -14,6 +14,7 @@ import {
   getManuscriptCreateDataObject,
   getManuscriptFileResponse,
   getManuscriptCreateControllerDataObject,
+  getManuscriptUpdateDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
@@ -282,6 +283,59 @@ describe('Manuscript controller', () => {
         contentType: manuscriptFileCreateData.contentType,
         publish: false,
       } satisfies AssetCreateData);
+    });
+  });
+
+  describe('Update method', () => {
+    beforeEach(jest.resetAllMocks);
+
+    test('Should throw when fails to create the manuscript', async () => {
+      const manuscriptId = 'manuscript-id-1';
+
+      manuscriptDataProviderMock.update.mockRejectedValueOnce(
+        new GenericError(),
+      );
+
+      await expect(
+        manuscriptController.update(
+          manuscriptId,
+          getManuscriptUpdateDataObject(),
+        ),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should throw when the manuscript does not exist', async () => {
+      const manuscriptId = 'manuscript-id-1';
+
+      manuscriptDataProviderMock.update.mockRejectedValueOnce(
+        new NotFoundError(),
+      );
+
+      await expect(
+        manuscriptController.update(
+          manuscriptId,
+          getManuscriptUpdateDataObject(),
+        ),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should update the manuscript and return it', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.fetchById.mockResolvedValue(
+        getManuscriptResponse(),
+      );
+      manuscriptDataProviderMock.update.mockResolvedValueOnce();
+
+      const result = await manuscriptController.update(
+        manuscriptId,
+        getManuscriptUpdateDataObject(),
+      );
+
+      expect(result).toEqual(getManuscriptResponse());
+      expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
+        manuscriptId,
+        getManuscriptUpdateDataObject(),
+      );
     });
   });
 });

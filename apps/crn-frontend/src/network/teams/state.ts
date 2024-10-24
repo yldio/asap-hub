@@ -8,6 +8,7 @@ import {
   ManuscriptResponse,
   ManuscriptFileType,
   ComplianceReportPostRequest,
+  ManuscriptPutRequest,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
@@ -30,6 +31,7 @@ import {
   getTeam,
   getTeams,
   patchTeam,
+  updateManuscript,
   uploadManuscriptFile,
 } from './api';
 
@@ -197,6 +199,17 @@ export const usePostManuscript = () => {
   return async (payload: ManuscriptPostRequest) => {
     const manuscript = await createManuscript(payload, authorization);
     setManuscriptItem(manuscript);
+    return manuscript;
+  };
+};
+
+export const usePutManuscript = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setManuscriptItem = useSetManuscriptItem();
+  return async (id: string, payload: ManuscriptPutRequest) => {
+    const manuscript = await updateManuscript(id, payload, authorization);
+    setManuscriptItem(manuscript);
+
     return manuscript;
   };
 };

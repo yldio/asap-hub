@@ -595,7 +595,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
   {
     type: 'object',
     properties: {
-      status: { type: 'string', nullable: true },
+      status: { enum: manuscriptStatus, type: 'string', nullable: true },
     },
     additionalProperties: false,
   };

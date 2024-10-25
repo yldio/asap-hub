@@ -289,7 +289,7 @@ describe('Manuscript controller', () => {
   describe('Update method', () => {
     beforeEach(jest.resetAllMocks);
 
-    test('Should throw when fails to create the manuscript', async () => {
+    test('Should throw when fails to update the manuscript', async () => {
       const manuscriptId = 'manuscript-id-1';
 
       manuscriptDataProviderMock.update.mockRejectedValueOnce(

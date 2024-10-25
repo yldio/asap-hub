@@ -1250,6 +1250,7 @@ export type DiscussionsFilter = {
 
 export type DiscussionsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
 };
 
 export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
@@ -1258,6 +1259,61 @@ export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export type DiscussionsLinkingCollectionsManuscriptVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  RequestingApcCoverageAsc = 'requestingApcCoverage_ASC',
+  RequestingApcCoverageDesc = 'requestingApcCoverage_DESC',
+  SubmissionDateAsc = 'submissionDate_ASC',
+  SubmissionDateDesc = 'submissionDate_DESC',
+  SubmitterNameAsc = 'submitterName_ASC',
+  SubmitterNameDesc = 'submitterName_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
 
 export enum DiscussionsOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -2294,20 +2350,12 @@ export enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
 }
 
 export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -2316,22 +2364,16 @@ export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -3612,20 +3654,12 @@ export type LabsLinkingCollectionsUsersCollectionArgs = {
 };
 
 export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -3634,22 +3668,16 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -3810,36 +3838,36 @@ export type ManuscriptVersions = Entry &
   _Node & {
     _id: Scalars['ID'];
     acknowledgedGrantNumber?: Maybe<Scalars['String']>;
-    acknowledgedGrantNumberDetails?: Maybe<Scalars['String']>;
+    acknowledgedGrantNumberDetails?: Maybe<Discussions>;
     additionalAuthorsCollection?: Maybe<ManuscriptVersionsAdditionalAuthorsCollection>;
     additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
-    asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
+    asapAffiliationIncludedDetails?: Maybe<Discussions>;
     availabilityStatement?: Maybe<Scalars['String']>;
-    availabilityStatementDetails?: Maybe<Scalars['String']>;
+    availabilityStatementDetails?: Maybe<Discussions>;
     codeDeposited?: Maybe<Scalars['String']>;
-    codeDepositedDetails?: Maybe<Scalars['String']>;
+    codeDepositedDetails?: Maybe<Discussions>;
     contentfulMetadata: ContentfulMetadata;
     correspondingAuthorCollection?: Maybe<ManuscriptVersionsCorrespondingAuthorCollection>;
     count?: Maybe<Scalars['Int']>;
     createdBy?: Maybe<Users>;
     datasetsDeposited?: Maybe<Scalars['String']>;
-    datasetsDepositedDetails?: Maybe<Scalars['String']>;
+    datasetsDepositedDetails?: Maybe<Discussions>;
     description?: Maybe<Scalars['String']>;
     firstAuthorsCollection?: Maybe<ManuscriptVersionsFirstAuthorsCollection>;
     keyResourceTable?: Maybe<Asset>;
     labMaterialsRegistered?: Maybe<Scalars['String']>;
-    labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
+    labMaterialsRegisteredDetails?: Maybe<Discussions>;
     labsCollection?: Maybe<ManuscriptVersionsLabsCollection>;
     lifecycle?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
     manuscriptFile?: Maybe<Asset>;
     manuscriptLicense?: Maybe<Scalars['String']>;
-    manuscriptLicenseDetails?: Maybe<Scalars['String']>;
+    manuscriptLicenseDetails?: Maybe<Discussions>;
     otherDetails?: Maybe<Scalars['String']>;
     preprintDoi?: Maybe<Scalars['String']>;
     protocolsDeposited?: Maybe<Scalars['String']>;
-    protocolsDepositedDetails?: Maybe<Scalars['String']>;
+    protocolsDepositedDetails?: Maybe<Discussions>;
     publicationDoi?: Maybe<Scalars['String']>;
     requestingApcCoverage?: Maybe<Scalars['String']>;
     submissionDate?: Maybe<Scalars['DateTime']>;
@@ -3857,6 +3885,8 @@ export type ManuscriptVersionsAcknowledgedGrantNumberArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAcknowledgedGrantNumberDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3884,6 +3914,8 @@ export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3894,6 +3926,8 @@ export type ManuscriptVersionsAvailabilityStatementArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAvailabilityStatementDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3904,6 +3938,8 @@ export type ManuscriptVersionsCodeDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsCodeDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3935,6 +3971,8 @@ export type ManuscriptVersionsDatasetsDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsDatasetsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -3965,6 +4003,8 @@ export type ManuscriptVersionsLabMaterialsRegisteredArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsLabMaterialsRegisteredDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4001,6 +4041,8 @@ export type ManuscriptVersionsManuscriptLicenseArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsManuscriptLicenseDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4021,6 +4063,8 @@ export type ManuscriptVersionsProtocolsDepositedArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsProtocolsDepositedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4135,17 +4179,8 @@ export type ManuscriptVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
   acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
+  acknowledgedGrantNumberDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  acknowledgedGrantNumberDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
   acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4158,17 +4193,8 @@ export type ManuscriptVersionsFilter = {
   additionalAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
+  asapAffiliationIncludedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  asapAffiliationIncludedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4178,17 +4204,8 @@ export type ManuscriptVersionsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   availabilityStatement?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
+  availabilityStatementDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  availabilityStatementDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   availabilityStatement_contains?: InputMaybe<Scalars['String']>;
   availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4198,15 +4215,8 @@ export type ManuscriptVersionsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   codeDeposited?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  codeDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   codeDeposited_contains?: InputMaybe<Scalars['String']>;
   codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4228,17 +4238,8 @@ export type ManuscriptVersionsFilter = {
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  datasetsDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  datasetsDepositedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4256,17 +4257,8 @@ export type ManuscriptVersionsFilter = {
   firstAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
+  labMaterialsRegisteredDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  labMaterialsRegisteredDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4286,17 +4278,8 @@ export type ManuscriptVersionsFilter = {
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
+  manuscriptLicenseDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  manuscriptLicenseDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4318,17 +4301,8 @@ export type ManuscriptVersionsFilter = {
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   protocolsDeposited?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
+  protocolsDepositedDetails?: InputMaybe<CfDiscussionsNestedFilter>;
   protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  protocolsDepositedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
   protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4498,20 +4472,12 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
 }
 
 export enum ManuscriptVersionsOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -4520,22 +4486,16 @@ export enum ManuscriptVersionsOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -4761,20 +4721,12 @@ export type ManuscriptsVersionsCollection = {
 };
 
 export enum ManuscriptsVersionsCollectionOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -4783,22 +4735,16 @@ export enum ManuscriptsVersionsCollectionOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -8709,20 +8655,12 @@ export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
 }
 
 export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -8731,22 +8669,16 @@ export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -10275,20 +10207,12 @@ export enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
-  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
-  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
   AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
-  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
-  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
   AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
   AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
-  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
-  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
   AvailabilityStatementAsc = 'availabilityStatement_ASC',
   AvailabilityStatementDesc = 'availabilityStatement_DESC',
-  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
-  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
   CodeDepositedAsc = 'codeDeposited_ASC',
   CodeDepositedDesc = 'codeDeposited_DESC',
   CountAsc = 'count_ASC',
@@ -10297,22 +10221,16 @@ export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
   DatasetsDepositedAsc = 'datasetsDeposited_ASC',
   DatasetsDepositedDesc = 'datasetsDeposited_DESC',
-  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
-  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
   LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
   LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
   LifecycleAsc = 'lifecycle_ASC',
   LifecycleDesc = 'lifecycle_DESC',
-  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
-  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
   ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
   ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
   OtherDetailsAsc = 'otherDetails_ASC',
   OtherDetailsDesc = 'otherDetails_DESC',
   PreprintDoiAsc = 'preprintDoi_ASC',
   PreprintDoiDesc = 'preprintDoi_DESC',
-  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
-  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
   ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
   ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
   PublicationDoiAsc = 'publicationDoi_ASC',
@@ -11343,6 +11261,15 @@ export type CfCalendarsNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type CfDiscussionsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfDiscussionsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  message_exists?: InputMaybe<Scalars['Boolean']>;
+  repliesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfEventSpeakersNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfEventSpeakersNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfEventSpeakersNestedFilter>>>;
@@ -11645,17 +11572,7 @@ export type CfManuscriptVersionsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfManuscriptVersionsNestedFilter>>>;
   acknowledgedGrantNumber?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumberDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  acknowledgedGrantNumberDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  acknowledgedGrantNumberDetails_not?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_not_contains?: InputMaybe<Scalars['String']>;
-  acknowledgedGrantNumberDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   acknowledgedGrantNumber_contains?: InputMaybe<Scalars['String']>;
   acknowledgedGrantNumber_exists?: InputMaybe<Scalars['Boolean']>;
   acknowledgedGrantNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11667,17 +11584,7 @@ export type CfManuscriptVersionsNestedFilter = {
   additionalAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   additionalFilesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncludedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  asapAffiliationIncludedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  asapAffiliationIncludedDetails_not?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  asapAffiliationIncludedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   asapAffiliationIncluded_contains?: InputMaybe<Scalars['String']>;
   asapAffiliationIncluded_exists?: InputMaybe<Scalars['Boolean']>;
   asapAffiliationIncluded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11687,17 +11594,7 @@ export type CfManuscriptVersionsNestedFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   availabilityStatement?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  availabilityStatementDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  availabilityStatementDetails_not?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_not_contains?: InputMaybe<Scalars['String']>;
-  availabilityStatementDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   availabilityStatement_contains?: InputMaybe<Scalars['String']>;
   availabilityStatement_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11707,15 +11604,7 @@ export type CfManuscriptVersionsNestedFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   codeDeposited?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   codeDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  codeDepositedDetails_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  codeDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  codeDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   codeDeposited_contains?: InputMaybe<Scalars['String']>;
   codeDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   codeDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11735,17 +11624,7 @@ export type CfManuscriptVersionsNestedFilter = {
   count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   datasetsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  datasetsDepositedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  datasetsDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  datasetsDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   datasetsDeposited_contains?: InputMaybe<Scalars['String']>;
   datasetsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   datasetsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11762,17 +11641,7 @@ export type CfManuscriptVersionsNestedFilter = {
   firstAuthorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   keyResourceTable_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegisteredDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  labMaterialsRegisteredDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  labMaterialsRegisteredDetails_not?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_not_contains?: InputMaybe<Scalars['String']>;
-  labMaterialsRegisteredDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   labMaterialsRegistered_contains?: InputMaybe<Scalars['String']>;
   labMaterialsRegistered_exists?: InputMaybe<Scalars['Boolean']>;
   labMaterialsRegistered_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11791,17 +11660,7 @@ export type CfManuscriptVersionsNestedFilter = {
   lifecycle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   manuscriptFile_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicenseDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  manuscriptLicenseDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  manuscriptLicenseDetails_not?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_not_contains?: InputMaybe<Scalars['String']>;
-  manuscriptLicenseDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   manuscriptLicense_contains?: InputMaybe<Scalars['String']>;
   manuscriptLicense_exists?: InputMaybe<Scalars['Boolean']>;
   manuscriptLicense_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -11823,17 +11682,7 @@ export type CfManuscriptVersionsNestedFilter = {
   preprintDoi_not_contains?: InputMaybe<Scalars['String']>;
   preprintDoi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   protocolsDeposited?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_contains?: InputMaybe<Scalars['String']>;
   protocolsDepositedDetails_exists?: InputMaybe<Scalars['Boolean']>;
-  protocolsDepositedDetails_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
-  protocolsDepositedDetails_not?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_not_contains?: InputMaybe<Scalars['String']>;
-  protocolsDepositedDetails_not_in?: InputMaybe<
-    Array<InputMaybe<Scalars['String']>>
-  >;
   protocolsDeposited_contains?: InputMaybe<Scalars['String']>;
   protocolsDeposited_exists?: InputMaybe<Scalars['Boolean']>;
   protocolsDeposited_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -17494,21 +17343,13 @@ export type ManuscriptsContentFragment = Pick<
           | 'submissionDate'
           | 'otherDetails'
           | 'acknowledgedGrantNumber'
-          | 'acknowledgedGrantNumberDetails'
           | 'asapAffiliationIncluded'
-          | 'asapAffiliationIncludedDetails'
           | 'manuscriptLicense'
-          | 'manuscriptLicenseDetails'
           | 'datasetsDeposited'
-          | 'datasetsDepositedDetails'
           | 'codeDeposited'
-          | 'codeDepositedDetails'
           | 'protocolsDeposited'
-          | 'protocolsDepositedDetails'
           | 'labMaterialsRegistered'
-          | 'labMaterialsRegisteredDetails'
           | 'availabilityStatement'
-          | 'availabilityStatementDetails'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
           manuscriptFile?: Maybe<
@@ -17521,6 +17362,30 @@ export type ManuscriptsContentFragment = Pick<
             items: Array<
               Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
             >;
+          }>;
+          acknowledgedGrantNumberDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          asapAffiliationIncludedDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          manuscriptLicenseDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          datasetsDepositedDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          codeDepositedDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          protocolsDepositedDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          labMaterialsRegisteredDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
+          }>;
+          availabilityStatementDetails?: Maybe<{
+            message?: Maybe<Pick<Messages, 'text'>>;
           }>;
           teamsCollection?: Maybe<{
             items: Array<
@@ -17591,21 +17456,13 @@ export type FetchManuscriptByIdQuery = {
               | 'submissionDate'
               | 'otherDetails'
               | 'acknowledgedGrantNumber'
-              | 'acknowledgedGrantNumberDetails'
               | 'asapAffiliationIncluded'
-              | 'asapAffiliationIncludedDetails'
               | 'manuscriptLicense'
-              | 'manuscriptLicenseDetails'
               | 'datasetsDeposited'
-              | 'datasetsDepositedDetails'
               | 'codeDeposited'
-              | 'codeDepositedDetails'
               | 'protocolsDeposited'
-              | 'protocolsDepositedDetails'
               | 'labMaterialsRegistered'
-              | 'labMaterialsRegisteredDetails'
               | 'availabilityStatement'
-              | 'availabilityStatementDetails'
             > & {
               sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
               manuscriptFile?: Maybe<
@@ -17620,6 +17477,30 @@ export type FetchManuscriptByIdQuery = {
                     Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
                   >
                 >;
+              }>;
+              acknowledgedGrantNumberDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              asapAffiliationIncludedDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              manuscriptLicenseDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              datasetsDepositedDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              codeDepositedDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              protocolsDepositedDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              labMaterialsRegisteredDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
+              }>;
+              availabilityStatementDetails?: Maybe<{
+                message?: Maybe<Pick<Messages, 'text'>>;
               }>;
               teamsCollection?: Maybe<{
                 items: Array<
@@ -19299,21 +19180,13 @@ export type FetchTeamByIdQuery = {
                         | 'submissionDate'
                         | 'otherDetails'
                         | 'acknowledgedGrantNumber'
-                        | 'acknowledgedGrantNumberDetails'
                         | 'asapAffiliationIncluded'
-                        | 'asapAffiliationIncludedDetails'
                         | 'manuscriptLicense'
-                        | 'manuscriptLicenseDetails'
                         | 'datasetsDeposited'
-                        | 'datasetsDepositedDetails'
                         | 'codeDeposited'
-                        | 'codeDepositedDetails'
                         | 'protocolsDeposited'
-                        | 'protocolsDepositedDetails'
                         | 'labMaterialsRegistered'
-                        | 'labMaterialsRegisteredDetails'
                         | 'availabilityStatement'
-                        | 'availabilityStatementDetails'
                       > & {
                         sys: Pick<
                           Sys,
@@ -19337,6 +19210,30 @@ export type FetchTeamByIdQuery = {
                               }
                             >
                           >;
+                        }>;
+                        acknowledgedGrantNumberDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        asapAffiliationIncludedDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        manuscriptLicenseDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        datasetsDepositedDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        codeDepositedDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        protocolsDepositedDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        labMaterialsRegisteredDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
+                        }>;
+                        availabilityStatementDetails?: Maybe<{
+                          message?: Maybe<Pick<Messages, 'text'>>;
                         }>;
                         teamsCollection?: Maybe<{
                           items: Array<
@@ -23228,6 +23125,24 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'acknowledgedGrantNumberDetails',
                         },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -23242,6 +23157,24 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'asapAffiliationIncludedDetails',
                         },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -23252,6 +23185,24 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'manuscriptLicenseDetails',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
                         },
                       },
                       {
@@ -23264,6 +23215,24 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'datasetsDepositedDetails',
                         },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -23272,6 +23241,24 @@ export const ManuscriptsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'codeDepositedDetails' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -23282,6 +23269,24 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'protocolsDepositedDetails',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
                         },
                       },
                       {
@@ -23294,6 +23299,24 @@ export const ManuscriptsContentFragmentDoc = {
                           kind: 'Name',
                           value: 'labMaterialsRegisteredDetails',
                         },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -23304,6 +23327,24 @@ export const ManuscriptsContentFragmentDoc = {
                         name: {
                           kind: 'Name',
                           value: 'availabilityStatementDetails',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'message' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'text' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
                         },
                       },
                       {

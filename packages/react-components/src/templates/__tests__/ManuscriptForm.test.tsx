@@ -166,6 +166,7 @@ test.each`
   field                        | fieldDetails
   ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
   ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
   ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
   ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
   ${'codeDeposited'}           | ${'codeDepositedDetails'}
@@ -263,6 +264,7 @@ test.each`
   field                        | fieldDetails
   ${'acknowledgedGrantNumber'} | ${'acknowledgedGrantNumberDetails'}
   ${'asapAffiliationIncluded'} | ${'asapAffiliationIncludedDetails'}
+  ${'availabilityStatement'}   | ${'availabilityStatementDetails'}
   ${'manuscriptLicense'}       | ${'manuscriptLicenseDetails'}
   ${'datasetsDeposited'}       | ${'datasetsDepositedDetails'}
   ${'codeDeposited'}           | ${'codeDepositedDetails'}

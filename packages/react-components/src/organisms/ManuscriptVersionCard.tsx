@@ -1,4 +1,8 @@
-import { ManuscriptVersion, quickCheckQuestions } from '@asap-hub/model';
+import {
+  ManuscriptLifecycle,
+  ManuscriptVersion,
+  quickCheckQuestions,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -113,10 +117,12 @@ const hasAdditionalInfo = (version: ManuscriptVersion) =>
   version.requestingApcCoverage ||
   version.otherDetails;
 
-export const getLifecycleCode = (
-  version: Pick<ManuscriptVersion, 'type' | 'lifecycle'>,
-) => {
-  switch (version.lifecycle) {
+export const getLifecycleCode = ({
+  lifecycle,
+}: {
+  lifecycle: ManuscriptLifecycle;
+}) => {
+  switch (lifecycle) {
     case 'Draft Manuscript (prior to Publication)':
       return 'G';
     case 'Preprint':
@@ -133,7 +139,7 @@ export const getLifecycleCode = (
   }
 };
 
-export const getManuscriptversionUID = ({
+export const getManuscriptVersionUID = ({
   version,
   teamId,
   grantId,
@@ -198,7 +204,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
           <Pill accent="gray">{version.type}</Pill>
           <Pill accent="gray">{version.lifecycle}</Pill>
           <Pill accent="blue">
-            {getManuscriptversionUID({
+            {getManuscriptVersionUID({
               version,
               teamId,
               grantId,

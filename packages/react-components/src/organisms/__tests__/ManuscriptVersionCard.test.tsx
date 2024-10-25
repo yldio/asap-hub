@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import React, { ComponentProps } from 'react';
 import ManuscriptVersionCard, {
   getLifecycleCode,
-  getManuscriptversionUID,
+  getManuscriptVersionUID,
 } from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {
@@ -383,8 +383,7 @@ it('displays manuscript description', () => {
 });
 
 describe('getLifecycleCode', () => {
-  it('returns all appropriate values for Original Research', () => {
-    const type = 'Original Research';
+  it('returns all appropriate values', () => {
     const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
       { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
       { name: 'Preprint', value: 'P' },
@@ -394,20 +393,7 @@ describe('getLifecycleCode', () => {
       { name: 'Other', value: 'O' },
     ];
     lifecyclePairs.forEach(({ name, value }) => {
-      expect(getLifecycleCode({ type, lifecycle: name })).toBe(value);
-    });
-  });
-  it('returns all appropriate values for Review / Op-Ed / Letter / Hot Topic', () => {
-    const type = 'Review / Op-Ed / Letter / Hot Topic';
-    const lifecyclePairs: { name: ManuscriptLifecycle; value: string }[] = [
-      { name: 'Draft Manuscript (prior to Publication)', value: 'G' },
-      { name: 'Typeset proof', value: 'T' },
-      { name: 'Publication', value: 'D' },
-      { name: 'Publication with addendum or corrigendum', value: 'C' },
-      { name: 'Other', value: 'O' },
-    ];
-    lifecyclePairs.forEach(({ name, value }) => {
-      expect(getLifecycleCode({ type, lifecycle: name })).toBe(value);
+      expect(getLifecycleCode({ lifecycle: name })).toBe(value);
     });
   });
 });
@@ -415,7 +401,7 @@ describe('getLifecycleCode', () => {
 describe('getManuscriptversionUID', () => {
   it('outputs a manuscript ID in the required format', () => {
     expect(
-      getManuscriptversionUID({
+      getManuscriptVersionUID({
         version: { type: 'Original Research', lifecycle: 'Preprint' },
         grantId: '000AAA',
         teamId: 'AT1',
@@ -425,7 +411,7 @@ describe('getManuscriptversionUID', () => {
     ).toBe('AT1-000AAA-234-org-P-9');
 
     expect(
-      getManuscriptversionUID({
+      getManuscriptVersionUID({
         version: {
           type: 'Review / Op-Ed / Letter / Hot Topic',
           lifecycle: 'Preprint',

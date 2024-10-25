@@ -8,6 +8,8 @@ import ManuscriptCard from '../ManuscriptCard';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
+  teamIdCode: 'TI1',
+  grantId: '000123',
   isComplianceReviewer: false,
 };
 

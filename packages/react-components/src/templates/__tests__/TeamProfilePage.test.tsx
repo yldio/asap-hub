@@ -7,6 +7,8 @@ const boilerplateProps: Omit<
   'children'
 > = {
   id: '42',
+  teamId: 'TI1',
+  grantId: '000123',
   projectTitle: 'Unknown',
   displayName: 'Doe, J',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),

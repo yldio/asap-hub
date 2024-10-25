@@ -316,6 +316,8 @@ export const parseContentfulGraphQlTeam = (
 
   return {
     id: item.sys.id ?? '',
+    grantId: item.grantId ?? undefined,
+    teamId: item.teamId ?? undefined,
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     projectTitle: item.projectTitle ?? '',
@@ -326,6 +328,7 @@ export const parseContentfulGraphQlTeam = (
     manuscripts: cleanArray(item.linkedFrom?.manuscriptsCollection?.items).map(
       (manuscript): TeamDataObject['manuscripts'][number] => ({
         id: manuscript.sys.id,
+        count: manuscript.count || 1,
         title: manuscript.title || '',
         status: manuscriptMapStatus(manuscript.status) || undefined,
         versions: parseGraphqlManuscriptVersion(

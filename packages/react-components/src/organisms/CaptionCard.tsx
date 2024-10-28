@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import { largeDesktopScreen, rem, smallDesktopScreen } from '../pixels';
+import { largeDesktopScreen, rem } from '../pixels';
 import { Card, Paragraph } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { lead } from '../colors';

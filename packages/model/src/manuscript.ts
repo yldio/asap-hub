@@ -337,6 +337,9 @@ export type ManuscriptPostRequest = Pick<
   }[];
 };
 
+export type ManuscriptPutRequest = Pick<ManuscriptDataObject, 'status'>;
+export type ManuscriptUpdateDataObject = ManuscriptPutRequest;
+
 type MultiselectOption = {
   label: string;
   value: string;
@@ -585,6 +588,15 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
       },
     },
     required: ['title', 'teamId', 'versions'],
+    additionalProperties: false,
+  };
+
+export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
+  {
+    type: 'object',
+    properties: {
+      status: { enum: manuscriptStatus, type: 'string', nullable: true },
+    },
     additionalProperties: false,
   };
 

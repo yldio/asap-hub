@@ -1,4 +1,10 @@
-import { TeamManuscript, manuscriptStatus } from '@asap-hub/model';
+import {
+  ManuscriptPutRequest,
+  ManuscriptResponse,
+  ManuscriptStatus,
+  manuscriptStatus,
+  TeamManuscript,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -6,13 +12,14 @@ import { useHistory } from 'react-router-dom';
 import {
   Button,
   colors,
-  StatusButton,
   complianceReportIcon,
   minusRectIcon,
   plusRectIcon,
+  StatusButton,
   Subtitle,
 } from '..';
 import { mobileScreen, perRem, rem } from '../pixels';
+import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 type ManuscriptCardProps = Pick<
@@ -23,6 +30,10 @@ type ManuscriptCardProps = Pick<
   teamIdCode: string;
   grantId: string;
   isComplianceReviewer: boolean;
+  onUpdateManuscript: (
+    manuscriptId: string,
+    payload: ManuscriptPutRequest,
+  ) => Promise<ManuscriptResponse>;
 };
 
 const manuscriptContainerStyles = css({
@@ -80,9 +91,15 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   teamIdCode,
   grantId,
   isComplianceReviewer,
+  onUpdateManuscript,
 }) => {
+  const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
+    useState(false);
+
   const [expanded, setExpanded] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(status || '');
+  const [newSelectedStatus, setNewSelectedStatus] =
+    useState<ManuscriptStatus>();
   const history = useHistory();
 
   const complianceReportRoute = network({})
@@ -95,72 +112,99 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     history.push(complianceReportRoute);
   };
 
+  const handleStatusClick = (statusItem: ManuscriptStatus) => {
+    if (statusItem !== selectedStatus) {
+      setDisplayConfirmStatusChangeModal(true);
+    }
+  };
+
   const hasActiveComplianceReport = !!versions[0]?.complianceReport;
 
+  const handleStatusChange = async () => {
+    if (newSelectedStatus) {
+      await onUpdateManuscript(id, { status: newSelectedStatus });
+      setSelectedStatus(newSelectedStatus);
+    }
+  };
   return (
-    <div css={manuscriptContainerStyles}>
-      <div
-        css={[
-          { borderBottom: expanded ? `1px solid ${colors.steel.rgb}` : 'none' },
-          toastStyles,
-        ]}
-      >
-        <span css={toastHeaderStyles}>
-          <span css={[iconStyles]}>
-            <Button
-              data-testid="collapsible-button"
-              linkStyle
-              onClick={() => setExpanded(!expanded)}
-            >
-              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
-            </Button>
-          </span>
-          <Subtitle noMargin>{title}</Subtitle>
-        </span>
-        <span css={buttonsContainerStyles}>
-          <StatusButton
-            buttonChildren={() => <span>{selectedStatus}</span>}
-            canEdit={isComplianceReviewer}
-          >
-            {manuscriptStatus.map((statusItem) => ({
-              item: statusItem,
-              onClick: () => {
-                setSelectedStatus(statusItem);
-              },
-            }))}
-          </StatusButton>
-          {isComplianceReviewer && (
-            <span>
+    <>
+      {displayConfirmStatusChangeModal && newSelectedStatus && (
+        <ConfirmStatusChangeModal
+          onDismiss={() => setDisplayConfirmStatusChangeModal(false)}
+          onConfirm={handleStatusChange}
+          newStatus={newSelectedStatus}
+        />
+      )}
+      <div css={manuscriptContainerStyles}>
+        <div
+          css={[
+            {
+              borderBottom: expanded ? `1px solid ${colors.steel.rgb}` : 'none',
+            },
+            toastStyles,
+          ]}
+        >
+          <span css={toastHeaderStyles}>
+            <span css={[iconStyles]}>
               <Button
-                primary
-                small
-                noMargin
-                onClick={handleShareComplianceReport}
-                enabled={!hasActiveComplianceReport}
+                data-testid="collapsible-button"
+                linkStyle
+                onClick={() => setExpanded(!expanded)}
               >
-                <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
-                  {complianceReportIcon}
-                </span>
+                <span>{expanded ? minusRectIcon : plusRectIcon}</span>
               </Button>
             </span>
-          )}
-        </span>
-      </div>
-
-      {expanded && (
-        <div>
-          {versions.map((version, index) => (
-            <ManuscriptVersionCard
-              key={index}
-              version={version}
-              teamId={teamIdCode}
-              grantId={grantId}
-              manuscriptCount={count}
-            />
-          ))}
+            <Subtitle noMargin>{title}</Subtitle>
+          </span>
+          <span css={buttonsContainerStyles}>
+            <StatusButton
+              buttonChildren={() => <span>{selectedStatus}</span>}
+              canEdit={
+                isComplianceReviewer &&
+                !['Closed (other)', 'Compliant'].includes(selectedStatus)
+              }
+            >
+              {manuscriptStatus.map((statusItem) => ({
+                item: statusItem,
+                onClick: () => {
+                  setNewSelectedStatus(statusItem);
+                  handleStatusClick(statusItem);
+                },
+              }))}
+            </StatusButton>
+            {isComplianceReviewer && (
+              <span>
+                <Button
+                  primary
+                  small
+                  noMargin
+                  onClick={handleShareComplianceReport}
+                  enabled={!hasActiveComplianceReport}
+                >
+                  <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
+                    {complianceReportIcon}
+                  </span>
+                </Button>
+              </span>
+            )}
+          </span>
         </div>
-      )}
-    </div>
+
+        {expanded && (
+          <div>
+            {versions.map((version, index) => (
+              <ManuscriptVersionCard
+                key={index}
+                version={version}
+                teamId={teamIdCode}
+                grantId={grantId}
+                manuscriptCount={count}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

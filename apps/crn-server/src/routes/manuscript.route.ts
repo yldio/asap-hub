@@ -11,6 +11,7 @@ import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateManuscriptParameters,
   validateManuscriptPostRequestParameters,
+  validateManuscriptPutRequestParameters,
 } from '../validation/manuscript.validation';
 
 const upload = multer();
@@ -93,6 +94,27 @@ export const manuscriptRouteFactory = (
 
     res.status(201).json(manuscript);
   });
+
+  manuscriptRoutes.put<{ manuscriptId: string }>(
+    '/manuscripts/:manuscriptId',
+    async (req, res: Response<ManuscriptResponse>) => {
+      const { params, loggedInUser, body } = req;
+
+      if (
+        !loggedInUser ||
+        !(loggedInUser.role === 'Staff' && loggedInUser.openScienceTeamMember)
+      )
+        throw Boom.forbidden();
+
+      const { manuscriptId } = params;
+
+      const payload = validateManuscriptPutRequestParameters(body);
+
+      const result = await manuscriptController.update(manuscriptId, payload);
+
+      res.json(result);
+    },
+  );
 
   return manuscriptRoutes;
 };

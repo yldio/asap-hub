@@ -12,6 +12,7 @@ import {
   getLinkEntity,
   GraphQLClient,
   Link,
+  patchAndPublish,
 } from '@asap-hub/contentful';
 import {
   ListResponse,
@@ -22,6 +23,7 @@ import {
   manuscriptMapStatus,
   ManuscriptType,
   manuscriptTypes,
+  ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
   QuickCheckDetailsObject,
@@ -171,6 +173,16 @@ export class ManuscriptContentfulDataProvider
     await manuscriptEntry.publish();
 
     return manuscriptEntry.sys.id;
+  }
+
+  async update(
+    id: string,
+    manuscriptData: ManuscriptUpdateDataObject,
+  ): Promise<void> {
+    const environment = await this.getRestClient();
+    const entry = await environment.getEntry(id);
+
+    await patchAndPublish(entry, { status: manuscriptData.status });
   }
 }
 

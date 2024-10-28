@@ -1,5 +1,8 @@
 import { TeamProfileWorkspace } from '@asap-hub/react-components';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createManuscriptResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 
 export default {
   title: 'Templates / Team Profile / Workspace',
@@ -18,5 +21,6 @@ export const Normal = () => (
       },
     ]}
     isComplianceReviewer={false}
+    onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
   />
 );

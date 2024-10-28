@@ -11,6 +11,7 @@ import {
   ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptPostRequest,
+  ManuscriptPutRequest,
   ManuscriptResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -178,6 +179,31 @@ export const createManuscript = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to create manuscript. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
+export const updateManuscript = async (
+  manuscriptId: string,
+  manuscript: ManuscriptPutRequest,
+  authorization: string,
+): Promise<ManuscriptResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/${manuscriptId}`, {
+    method: 'PUT',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(manuscript),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update manuscript with id ${manuscriptId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,
       resp.status,
     );

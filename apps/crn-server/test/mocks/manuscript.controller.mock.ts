@@ -4,4 +4,5 @@ export const manuscriptControllerMock = {
   fetchById: jest.fn(),
   create: jest.fn(),
   createFile: jest.fn(),
+  update: jest.fn(),
 } as unknown as jest.Mocked<ManuscriptController>;

@@ -5,6 +5,7 @@ import {
   ManuscriptFileType,
   ManuscriptPostAuthor,
   ManuscriptResponse,
+  ManuscriptUpdateDataObject,
 } from '@asap-hub/model';
 
 import {
@@ -134,6 +135,21 @@ export default class ManuscriptController {
         return null;
       }),
     );
+
+  async update(
+    id: string,
+    manuscriptData: ManuscriptUpdateDataObject,
+  ): Promise<ManuscriptResponse> {
+    const currentManuscript = await this.manuscriptDataProvider.fetchById(id);
+
+    if (!currentManuscript) {
+      throw new NotFoundError(undefined, `manuscript with id ${id} not found`);
+    }
+
+    await this.manuscriptDataProvider.update(id, manuscriptData);
+
+    return this.fetchById(id);
+  }
 }
 
 export type ManuscruptFileCreateDataObject = {

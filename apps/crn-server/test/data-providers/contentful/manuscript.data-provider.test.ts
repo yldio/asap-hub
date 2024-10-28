@@ -19,6 +19,7 @@ import {
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
+  getManuscriptUpdateDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
   getContentfulGraphql,
@@ -26,6 +27,11 @@ import {
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  patch: jest.fn().mockResolvedValue(undefined),
+}));
 
 describe('Manuscripts Contentful Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -646,6 +652,40 @@ describe('Manuscripts Contentful Data Provider', () => {
           expect(result).toEqual(manuscriptId);
         },
       );
+    });
+  });
+
+  describe('Update', () => {
+    const patch: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+    const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
+
+    test('can update the manuscript', async () => {
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {},
+        patch,
+        publish,
+      } as unknown as Entry;
+      environmentMock.getEntry.mockResolvedValue(entry);
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      const manuscriptId = 'manuscript-id-1';
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        getManuscriptUpdateDataObject(),
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(patch).toHaveBeenCalledWith([
+        {
+          op: 'add',
+          path: '/fields/status',
+          value: { 'en-US': 'Manuscript Resubmitted' },
+        },
+      ]);
     });
   });
 });

@@ -10,6 +10,7 @@ import {
   getManuscriptFileResponse,
   getManuscriptPostBody,
   getManuscriptResponse,
+  getManuscriptUpdateDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
@@ -325,5 +326,91 @@ describe('/manuscripts/ route', () => {
         expect(response.status).toBe(400);
       },
     );
+  });
+
+  describe('PUT /manuscripts/{id}', () => {
+    const manuscriptId = 'manuscript-id-1';
+    const manuscriptResponse = getManuscriptResponse();
+    const manuscriptPutRequest = getManuscriptUpdateDataObject();
+
+    test('Should return 403 when not allowed to update a manuscript because user is not onboarded', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return 403 when not allowed to update a manuscript because user is not a staff', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Grantee',
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return 403 when not allowed to update a manuscript because user is not a staff belonging to open science team', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+        openScienceTeamMember: false,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should send the data to the controller and return status 200 along with all the manuscript data', async () => {
+      manuscriptControllerMock.update.mockResolvedValueOnce(manuscriptResponse);
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        role: 'Staff',
+        openScienceTeamMember: true,
+      });
+
+      const response = await supertest(app)
+        .put(`/manuscripts/${manuscriptId}`)
+        .send(manuscriptPutRequest)
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
+        manuscriptId,
+        manuscriptPutRequest,
+      );
+      expect(response.body).toEqual(manuscriptResponse);
+    });
+
+    describe('validation', () => {
+      test('Should return 400 when additional parameters are sent', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          role: 'Staff',
+          openScienceTeamMember: true,
+        });
+
+        const response = await supertest(app)
+          .put(`/manuscripts/${manuscriptId}`)
+          .send({ ...manuscriptPutRequest, title: 'New title' })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+    });
   });
 });

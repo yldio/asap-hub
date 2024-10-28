@@ -8,12 +8,11 @@ import { analytics } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 
-import { CaptionItem, PageControls, PercentageIcon } from '..';
+import { CaptionItem, PageControls } from '..';
 import { Headline3, Paragraph } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { CaptionCard, EngagementTable } from '../organisms';
 import { rem } from '../pixels';
-import { lead } from '../colors';
 
 const tableHeaderStyles = css({
   paddingBottom: rem(24),
@@ -23,20 +22,6 @@ const pageControlsStyles = css({
   justifySelf: 'center',
   paddingTop: rem(36),
   paddingBottom: rem(36),
-});
-
-const captionLegend = css({
-  display: 'grid',
-  gridColumn: '1 / span 2',
-  gridTemplateColumns: `${rem(20)} auto`,
-  gridTemplateRows: 'auto',
-  gap: rem(14),
-  alignItems: 'start',
-  '& p': {
-    color: lead.rgb,
-    marginBlockStart: 0,
-    marginBlockEnd: 0,
-  },
 });
 
 type AnalyticsEngagementPageBodyProps = Pick<
@@ -89,7 +74,10 @@ const AnalyticsEngagementPageBody: React.FC<
       href={analytics({}).engagement({}).$}
       exportResults={exportResults}
     />
-    <CaptionCard>
+    <CaptionCard
+      legend={`'Unique Speakers: All Roles' and 'Unique Speakers: Key Personnel'
+            percentage is based on 'Members'`}
+    >
       <>
         <CaptionItem label="Events" {...performance.events} />
         <CaptionItem label="Total Speakers" {...performance.totalSpeakers} />
@@ -103,13 +91,6 @@ const AnalyticsEngagementPageBody: React.FC<
           percentage
           {...performance.uniqueKeyPersonnel}
         />
-        <div css={captionLegend}>
-          <PercentageIcon title="percentage" color={lead.rgb} />
-          <Paragraph>
-            'Unique Speakers: All Roles' and 'Unique Speakers: Key Personnel'
-            percentage is based on 'Members'
-          </Paragraph>
-        </div>
       </>
     </CaptionCard>
     <EngagementTable

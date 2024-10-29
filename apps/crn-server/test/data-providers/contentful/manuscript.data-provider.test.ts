@@ -14,6 +14,7 @@ import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
 
 import { ManuscriptContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript.data-provider';
+import { getContentfulGraphqlDiscussion } from '../../fixtures/discussions.fixtures';
 import {
   getContentfulGraphqlManuscript,
   getContentfulGraphqlManuscriptVersions,
@@ -120,10 +121,10 @@ describe('Manuscripts Contentful Data Provider', () => {
         fieldDetails: QuickCheckDetails;
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
+        const discussion = getContentfulGraphqlDiscussion();
+
         manuscript.versionsCollection!.items[0]![field] = 'No';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = {
-          message: { text: 'Explanation' },
-        };
+        manuscript.versionsCollection!.items[0]![fieldDetails] = discussion;
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,
@@ -131,7 +132,9 @@ describe('Manuscripts Contentful Data Provider', () => {
 
         const result = await manuscriptDataProvider.fetchById('1');
 
-        expect(result!.versions[0]![fieldDetails]).toEqual('Explanation');
+        expect(result!.versions[0]![fieldDetails]).toEqual(
+          discussion?.message?.text,
+        );
       },
     );
 
@@ -155,10 +158,10 @@ describe('Manuscripts Contentful Data Provider', () => {
         fieldDetails: QuickCheckDetails;
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
+        const discussion = getContentfulGraphqlDiscussion();
+
         manuscript.versionsCollection!.items[0]![field] = 'Yes';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = {
-          message: { text: 'Explanation' },
-        };
+        manuscript.versionsCollection!.items[0]![fieldDetails] = discussion;
 
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: manuscript,

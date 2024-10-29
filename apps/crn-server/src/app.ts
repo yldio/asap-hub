@@ -36,6 +36,7 @@ import CalendarController from './controllers/calendar.controller';
 import ComplianceReportController from './controllers/compliance-report.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
+import DiscussionController from './controllers/discussion.controller';
 import EventController from './controllers/event.controller';
 import GuideController from './controllers/guide.controller';
 import InterestGroupController from './controllers/interest-group.controller';
@@ -55,6 +56,7 @@ import { CalendarContentfulDataProvider } from './data-providers/contentful/cale
 import { ComplianceReportContentfulDataProvider } from './data-providers/contentful/compliance-report.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
+import { DiscussionContentfulDataProvider } from './data-providers/contentful/discussion.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
@@ -76,6 +78,7 @@ import {
   ComplianceReportDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
+  DiscussionDataProvider,
   GuideDataProvider,
   InterestGroupDataProvider,
   LabDataProvider,
@@ -93,8 +96,10 @@ import { getContentfulRestClientFactory } from './dependencies/clients.dependenc
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { analyticsRouteFactory } from './routes/analytics.route';
 import { calendarRouteFactory } from './routes/calendar.route';
+import { complianceReportRouteFactory } from './routes/compliance-report.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
+import { discussionRouteFactory } from './routes/discussion.route';
 import { eventRouteFactory } from './routes/event.route';
 import { guideRouteFactory } from './routes/guide.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
@@ -116,7 +121,6 @@ import { ExternalAuthorDataProvider } from './data-providers/types/external-auth
 import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 import { AnalyticsContentfulDataProvider } from './data-providers/contentful/analytics.data-provider';
 import { GenerativeContentDataProvider } from './data-providers/contentful/generative-content.data-provider';
-import { complianceReportRouteFactory } from './routes/compliance-report.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -234,6 +238,13 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.discoverDataProvider ||
     new DiscoverContentfulDataProvider(contentfulGraphQLClient);
 
+  const discussionDataProvider =
+    libs.discussionDataProvider ||
+    new DiscussionContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+
   const guideDataProvider =
     libs.guideDataProvider ||
     new GuideContentfulDataProvider(contentfulGraphQLClient);
@@ -280,6 +291,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.newsController || new NewsController(newsDataProvider);
   const discoverController =
     libs.discoverController || new DiscoverController(discoverDataProvider);
+  const discussionController =
+    libs.discussionController ||
+    new DiscussionController(discussionDataProvider);
   const eventController =
     libs.eventController || new EventController(eventDataProvider);
   const guideController =
@@ -347,6 +361,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
+  const discussionRoutes = discussionRouteFactory(discussionController);
   const guideRoutes = guideRouteFactory(guideController);
   const eventRoutes = eventRouteFactory(eventController);
   const interestGroupRoutes = interestGroupRouteFactory(
@@ -416,6 +431,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(complianceReportRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
+  app.use(discussionRoutes);
   app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
@@ -454,6 +470,7 @@ export type Libs = {
   complianceReportController?: ComplianceReportController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
+  discussionController?: DiscussionController;
   guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
@@ -473,6 +490,7 @@ export type Libs = {
   complianceReportDataProvider?: ComplianceReportDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
   discoverDataProvider?: DiscoverDataProvider;
+  discussionDataProvider?: DiscussionDataProvider;
   guideDataProvider?: GuideDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   interestGroupDataProvider?: InterestGroupDataProvider;

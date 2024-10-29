@@ -31,6 +31,7 @@ import {
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { ManuscriptDataProvider } from '../types';
+import { parseGraphqlDiscussion } from './discussion.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ComplianceReport = NonNullable<
@@ -236,36 +237,41 @@ export const parseGraphqlManuscriptVersion = (
       submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
       acknowledgedGrantNumberDetails:
-        version?.acknowledgedGrantNumber === 'No'
-          ? version?.acknowledgedGrantNumberDetails?.message?.text
+        version?.acknowledgedGrantNumber === 'No' &&
+        version?.acknowledgedGrantNumberDetails
+          ? parseGraphqlDiscussion(version.acknowledgedGrantNumberDetails)
           : undefined,
       asapAffiliationIncludedDetails:
-        version?.asapAffiliationIncluded === 'No'
-          ? version?.asapAffiliationIncludedDetails?.message?.text
+        version?.asapAffiliationIncluded === 'No' &&
+        version?.asapAffiliationIncludedDetails
+          ? parseGraphqlDiscussion(version?.asapAffiliationIncludedDetails)
           : undefined,
       manuscriptLicenseDetails:
-        version?.manuscriptLicense === 'No'
-          ? version?.manuscriptLicenseDetails?.message?.text
+        version?.manuscriptLicense === 'No' && version?.manuscriptLicenseDetails
+          ? parseGraphqlDiscussion(version.manuscriptLicenseDetails)
           : undefined,
       datasetsDepositedDetails:
-        version?.datasetsDeposited === 'No'
-          ? version?.datasetsDepositedDetails?.message?.text
+        version?.datasetsDeposited === 'No' && version?.datasetsDepositedDetails
+          ? parseGraphqlDiscussion(version.datasetsDepositedDetails)
           : undefined,
       codeDepositedDetails:
-        version?.codeDeposited === 'No'
-          ? version?.codeDepositedDetails?.message?.text
+        version?.codeDeposited === 'No' && version?.codeDepositedDetails
+          ? parseGraphqlDiscussion(version.codeDepositedDetails)
           : undefined,
       protocolsDepositedDetails:
-        version?.protocolsDeposited === 'No'
-          ? version?.protocolsDepositedDetails?.message?.text
+        version?.protocolsDeposited === 'No' &&
+        version?.protocolsDepositedDetails
+          ? parseGraphqlDiscussion(version.protocolsDepositedDetails)
           : undefined,
       labMaterialsRegisteredDetails:
-        version?.labMaterialsRegistered === 'No'
-          ? version?.labMaterialsRegisteredDetails?.message?.text
+        version?.labMaterialsRegistered === 'No' &&
+        version?.labMaterialsRegisteredDetails
+          ? parseGraphqlDiscussion(version.labMaterialsRegisteredDetails)
           : undefined,
       availabilityStatementDetails:
-        version?.availabilityStatement === 'No'
-          ? version?.availabilityStatementDetails?.message?.text
+        version?.availabilityStatement === 'No' &&
+        version?.availabilityStatementDetails
+          ? parseGraphqlDiscussion(version.availabilityStatementDetails)
           : undefined,
       createdBy: {
         id: version?.createdBy?.sys.id,

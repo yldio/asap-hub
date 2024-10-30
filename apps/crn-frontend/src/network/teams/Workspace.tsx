@@ -22,6 +22,7 @@ import {
   useReplyToDiscussion,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
+import { useManuscriptToast } from './useManuscriptToast';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -38,6 +39,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const replyToDiscussion = useReplyToDiscussion();
   const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
+
+  const { setFormType } = useManuscriptToast();
 
   return (
     <>
@@ -70,9 +73,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
-          onReplyToDiscussion={(id: string, patch: DiscussionPatchRequest) =>
-            replyToDiscussion(id, patch)
-          }
+          onReplyToDiscussion={async (
+            id: string,
+            patch: DiscussionPatchRequest,
+          ) => {
+            await replyToDiscussion(id, patch);
+            setFormType('quick-check');
+          }}
           getDiscussion={getDiscussion}
         />
       </Route>

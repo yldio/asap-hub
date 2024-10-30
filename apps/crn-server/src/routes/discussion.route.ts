@@ -35,9 +35,7 @@ export const discussionRouteFactory = (
       const { discussionId } = validateDiscussionParameters(params);
       const { replyText } = validateDiscussionPatchRequest(body);
 
-      if (!req.loggedInUser) {
-        throw Boom.forbidden();
-      }
+      if (!req.loggedInUser) throw Boom.forbidden();
 
       const reply = { text: replyText, userId: req.loggedInUser.id };
 

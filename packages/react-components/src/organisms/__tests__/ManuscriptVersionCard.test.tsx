@@ -91,6 +91,7 @@ it('displays quick checks when present', () => {
     },
     createdDate: '2024-06-20T11:06:58.899Z',
     publishedAt: '2024-06-21T11:06:58.899Z',
+    otherDetails: 'Necessary info',
   };
 
   rerender(

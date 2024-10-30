@@ -47,3 +47,16 @@ it('displays reply modal when user clicks reply button', () => {
 
   expect(getByRole('button', { name: /Send/i })).toBeVisible();
 });
+
+it('removes reply modal when user clicks cancel button', () => {
+  const { getByText, getByRole, queryByText } = render(
+    <Discussion {...props} />,
+  );
+
+  userEvent.click(getByRole('button', { name: /Reply Icon/i }));
+
+  expect(getByText(/Reply to quick check/i)).toBeVisible();
+  userEvent.click(getByRole('button', { name: /Cancel/i }));
+
+  expect(queryByText(/Reply to quick check/i)).not.toBeInTheDocument();
+});

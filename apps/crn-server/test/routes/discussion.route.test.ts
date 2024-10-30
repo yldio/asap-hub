@@ -9,29 +9,6 @@ import { discussionControllerMock } from '../mocks/discussion.controller.mock';
 import { getDiscussionDataObject } from '../fixtures/discussions.fixtures';
 
 describe('/discussions/ route', () => {
-  //   const loggedUser: User = {
-  //     ...createAuthUser(),
-  //     teams: [
-  //       {
-  //         id: 'team-id-1',
-  //         role: 'Project Manager',
-  //       },
-  //     ],
-  //   };
-  //   const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
-  //   const authHandlerMock: AuthHandler = (req, _res, next) => {
-  //     req.loggedInUser = getLoggedUser();
-  //     next();
-  //   };
-  //   const app = appFactory({
-  //     discussionController: discussionControllerMock,
-  //     authHandler: authHandlerMock,
-  //     logger: loggerMock,
-  //   });
-
-  //   afterEach(() => {
-  //     jest.clearAllMocks();
-  //   });
   const userMockFactory = jest.fn<UserResponse, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
     req.loggedInUser = userMockFactory();

@@ -132,7 +132,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
         const result = await manuscriptDataProvider.fetchById('1');
 
-        expect(result!.versions[0]![fieldDetails]).toEqual(
+        expect(result!.versions[0]![fieldDetails]?.message.text).toEqual(
           discussion?.message?.text,
         );
       },

@@ -33,13 +33,12 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
-  version: ManuscriptVersion &
-  Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
-  Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
+  version: ManuscriptVersion;
   grantId: string;
   teamId: string;
   manuscriptCount: number;
-};
+} & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
+  Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
 const toastStyles = css({
   padding: `${15 / perRem}em ${24 / perRem}em`,
@@ -164,13 +163,13 @@ export const getManuscriptVersionUID = ({
   return `${teamId}-${grantId}-${manuscriptCount}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
-const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({{
-  onReplyToDiscussion,
-  getDiscussion,
-  ...version
-}  teamId,
+const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
+  version,
+  teamId,
   grantId,
   manuscriptCount,
+  onReplyToDiscussion,
+  getDiscussion,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -217,15 +216,15 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({{
             <Pill accent="gray">{version.type}</Pill>
             <Pill accent="gray">{version.lifecycle}</Pill>
             <Pill accent="blue">
-            {getManuscriptVersionUID({
-              version,
-              teamId,
-              grantId,
-              manuscriptCount,
-              manuscriptVersionCount: 1,
-            })}
-          </Pill>
-        </div>
+              {getManuscriptVersionUID({
+                version,
+                teamId,
+                grantId,
+                manuscriptCount,
+                manuscriptVersionCount: 1,
+              })}
+            </Pill>
+          </div>
         </div>
 
         {expanded && (

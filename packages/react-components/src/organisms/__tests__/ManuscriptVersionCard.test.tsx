@@ -94,7 +94,11 @@ it('displays quick checks when present', () => {
   };
 
   rerender(
-    <ManuscriptVersionCard {...props} version={updatedVersion} getDiscussion={getDiscussion} />,
+    <ManuscriptVersionCard
+      {...props}
+      version={updatedVersion}
+      getDiscussion={getDiscussion}
+    />,
   );
 
   expect(

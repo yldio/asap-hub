@@ -31,13 +31,13 @@ type ManuscriptCardProps = Pick<
     'onReplyToDiscussion' | 'getDiscussion'
   > & {
     teamId: string;
-  teamIdCode: string;
-  grantId: string;
+    teamIdCode: string;
+    grantId: string;
     isComplianceReviewer: boolean;
-  onUpdateManuscript: (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => Promise<ManuscriptResponse>;
+    onUpdateManuscript: (
+      manuscriptId: string,
+      payload: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse>;
   };
 
 const manuscriptContainerStyles = css({
@@ -200,12 +200,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <div>
             {versions.map((version, index) => (
               <ManuscriptVersionCard
-             
-               
-              onReplyToDiscussion={onReplyToDiscussion}
-              getDiscussion={getDiscussion}
-              key={index}
-           
+                onReplyToDiscussion={onReplyToDiscussion}
+                getDiscussion={getDiscussion}
+                key={index}
                 version={version}
                 teamId={teamIdCode}
                 grantId={grantId}

@@ -7,7 +7,8 @@ import {
 } from '@asap-hub/react-components';
 import {
   TeamTool,
-  TeamResponse, ManuscriptPutRequest,
+  TeamResponse,
+  ManuscriptPutRequest,
   DiscussionPatchRequest,
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';

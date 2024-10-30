@@ -25,5 +25,7 @@ export const Normal = () => (
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
     getDiscussion={() => createDiscussionResponse()}
     onReplyToDiscussion={() => Promise.resolve()}
+    teamId={'team-id'}
+    grantId={'grant-id'}
   />
 );

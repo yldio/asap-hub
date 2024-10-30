@@ -23,33 +23,22 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { mockAlert } from '@asap-hub/dom-test-utils';
-import {
-  createManuscriptResponse,
-  createTeamResponse,
-} from '@asap-hub/fixtures';
 import { enable } from '@asap-hub/flags';
-import { TeamResponse } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
-import {
-  getByText as getChildByText,
-  render,
-  waitFor,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
-import { patchTeam, updateManuscript } from '../api';
-import { enable } from '@asap-hub/flags';
+import {
+  patchTeam,
+  updateManuscript,
+  getDiscussion,
+  updateDiscussion,
+} from '../api';
+
 import Workspace from '../Workspace';
-import { getDiscussion, patchTeam, updateDiscussion } from '../api';
 
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),
+  getDiscussion: jest.fn(),
+  updateDiscussion: jest.fn(),
 }));
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
@@ -406,6 +395,8 @@ describe('manuscript quick check discussion', () => {
 
   it('replies to a quick check discussion', async () => {
     enable('DISPLAY_MANUSCRIPTS');
+    mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     const { findByTestId, getByRole, getByTestId } = renderWithWrapper(
       <Workspace
         team={{

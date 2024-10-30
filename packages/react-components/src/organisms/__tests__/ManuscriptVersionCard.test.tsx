@@ -143,10 +143,15 @@ it('displays Additional Information section when present', () => {
     queryByRole('heading', { name: /Additional Information/i }),
   ).not.toBeInTheDocument();
 
+  const getDiscussion = jest
+    .fn()
+    .mockReturnValueOnce(createDiscussionResponse());
+
   rerender(
     <ManuscriptVersionCard
       {...props}
       version={{ ...baseVersion, otherDetails: 'Necessary info' }}
+      getDiscussion={getDiscussion}
     />,
   );
 

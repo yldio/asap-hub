@@ -132,6 +132,21 @@ describe('/discussions/ route', () => {
       expect(response.status).toBe(404);
     });
 
+    test('Should return 403 when user not allowed to update the discussion', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}`)
+        .send({
+          replyText: 'response',
+        });
+
+      expect(response.status).toEqual(403);
+    });
+
     test('Should return the results correctly', async () => {
       discussionControllerMock.update.mockResolvedValueOnce(discussionResponse);
 

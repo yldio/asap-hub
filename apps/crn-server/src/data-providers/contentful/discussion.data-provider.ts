@@ -43,7 +43,7 @@ export class DiscussionContentfulDataProvider
       return null;
     }
 
-    return parseGraphqlDiscussion(discussions);
+    return parseGraphQLDiscussion(discussions);
   }
 
   async create(input: MessageCreateDataObject): Promise<string> {
@@ -102,7 +102,7 @@ const createAndPublishMessage = async (
   return messageEntry.sys.id;
 };
 
-const parseGraphqlMessage = (message: MessageItem): Message => ({
+const parseGraphQLMessage = (message: MessageItem): Message => ({
   text: message?.text || '',
   createdBy: {
     id: message?.createdBy?.sys.id || '',
@@ -125,10 +125,10 @@ const parseGraphqlMessage = (message: MessageItem): Message => ({
   createdDate: message?.sys.publishedAt,
 });
 
-export const parseGraphqlDiscussion = (
+export const parseGraphQLDiscussion = (
   discussion: Discussion,
 ): DiscussionDataObject => ({
   id: discussion.sys.id,
-  message: parseGraphqlMessage(discussion.message),
-  replies: discussion.repliesCollection?.items.map(parseGraphqlMessage),
+  message: parseGraphQLMessage(discussion.message),
+  replies: discussion.repliesCollection?.items.map(parseGraphQLMessage),
 });

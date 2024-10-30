@@ -31,7 +31,7 @@ import {
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { ManuscriptDataProvider } from '../types';
-import { parseGraphqlDiscussion } from './discussion.data-provider';
+import { parseGraphQLDiscussion } from './discussion.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ComplianceReport = NonNullable<
@@ -239,39 +239,39 @@ export const parseGraphqlManuscriptVersion = (
       acknowledgedGrantNumberDetails:
         version?.acknowledgedGrantNumber === 'No' &&
         version?.acknowledgedGrantNumberDetails
-          ? parseGraphqlDiscussion(version.acknowledgedGrantNumberDetails)
+          ? parseGraphQLDiscussion(version.acknowledgedGrantNumberDetails)
           : undefined,
       asapAffiliationIncludedDetails:
         version?.asapAffiliationIncluded === 'No' &&
         version?.asapAffiliationIncludedDetails
-          ? parseGraphqlDiscussion(version?.asapAffiliationIncludedDetails)
+          ? parseGraphQLDiscussion(version?.asapAffiliationIncludedDetails)
           : undefined,
       manuscriptLicenseDetails:
         version?.manuscriptLicense === 'No' && version?.manuscriptLicenseDetails
-          ? parseGraphqlDiscussion(version.manuscriptLicenseDetails)
+          ? parseGraphQLDiscussion(version.manuscriptLicenseDetails)
           : undefined,
       datasetsDepositedDetails:
         version?.datasetsDeposited === 'No' && version?.datasetsDepositedDetails
-          ? parseGraphqlDiscussion(version.datasetsDepositedDetails)
+          ? parseGraphQLDiscussion(version.datasetsDepositedDetails)
           : undefined,
       codeDepositedDetails:
         version?.codeDeposited === 'No' && version?.codeDepositedDetails
-          ? parseGraphqlDiscussion(version.codeDepositedDetails)
+          ? parseGraphQLDiscussion(version.codeDepositedDetails)
           : undefined,
       protocolsDepositedDetails:
         version?.protocolsDeposited === 'No' &&
         version?.protocolsDepositedDetails
-          ? parseGraphqlDiscussion(version.protocolsDepositedDetails)
+          ? parseGraphQLDiscussion(version.protocolsDepositedDetails)
           : undefined,
       labMaterialsRegisteredDetails:
         version?.labMaterialsRegistered === 'No' &&
         version?.labMaterialsRegisteredDetails
-          ? parseGraphqlDiscussion(version.labMaterialsRegisteredDetails)
+          ? parseGraphQLDiscussion(version.labMaterialsRegisteredDetails)
           : undefined,
       availabilityStatementDetails:
         version?.availabilityStatement === 'No' &&
         version?.availabilityStatementDetails
-          ? parseGraphqlDiscussion(version.availabilityStatementDetails)
+          ? parseGraphQLDiscussion(version.availabilityStatementDetails)
           : undefined,
       createdBy: {
         id: version?.createdBy?.sys.id,

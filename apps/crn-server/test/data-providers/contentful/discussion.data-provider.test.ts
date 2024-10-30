@@ -1,7 +1,10 @@
 import { Entry, Environment } from '@asap-hub/contentful';
 
 import { when } from 'jest-when';
-import { DiscussionContentfulDataProvider } from '../../../src/data-providers/contentful/discussion.data-provider';
+import {
+  DiscussionContentfulDataProvider,
+  parseGraphQLDiscussion,
+} from '../../../src/data-providers/contentful/discussion.data-provider';
 
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
@@ -266,6 +269,23 @@ describe('Discussions Contentful Data Provider', () => {
       ]);
 
       expect(discussionMockUpdated.publish).toHaveBeenCalled();
+    });
+  });
+
+  describe('parseGraphqlDiscussion', () => {
+    test('Should parse graphql discussion', async () => {
+      const graphqlDiscussion = getContentfulGraphqlDiscussion();
+      graphqlDiscussion!.message!.createdBy!.teamsCollection = null;
+
+      const parsedDiscussion = parseGraphQLDiscussion(graphqlDiscussion!);
+
+      expect(parsedDiscussion.id).toBe(graphqlDiscussion?.sys.id);
+      expect(parsedDiscussion.message.text).toBe(
+        graphqlDiscussion?.message?.text,
+      );
+      expect(parsedDiscussion.message.createdBy.firstName).toBe(
+        graphqlDiscussion?.message?.createdBy?.firstName,
+      );
     });
   });
 });

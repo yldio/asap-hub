@@ -103,6 +103,7 @@ export { default as previousPageIcon } from './previous-page';
 export { default as ProductivityIcon } from './productivity';
 export { default as protocol } from './protocol';
 export { default as protocolsIcon } from './protocols';
+export { default as replyIcon } from './reply';
 export { default as reportIcon } from './report';
 export { default as ResearcherIdIcon } from './researcher-id';
 export { default as ResearchGateIcon } from './research-gate';

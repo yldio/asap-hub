@@ -8,6 +8,7 @@ import {
   ManuscriptPostRequest,
   ManuscriptResponse,
   ManuscriptUpdateDataObject,
+  ManuscriptVersion,
 } from '@asap-hub/model';
 
 export const getManuscriptDataObject = (
@@ -165,6 +166,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
         correspondingAuthor: undefined,
         additionalAuthors: [],
         submissionDate: undefined,
+        ...getQuickCheckDetailsText(version),
       },
     ],
   };
@@ -214,6 +216,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
         correspondingAuthor: [],
         additionalAuthors: [],
         submissionDate: undefined,
+        ...getQuickCheckDetailsText(version),
       },
     ],
     userId: 'user-id-0',
@@ -228,3 +231,18 @@ export const getManuscriptUpdateDataObject = (
     ...overrides,
   };
 };
+
+const getQuickCheckDetailsText = (version: Partial<ManuscriptVersion>) => ({
+  acknowledgedGrantNumberDetails:
+    version.acknowledgedGrantNumberDetails?.message.text,
+  asapAffiliationIncludedDetails:
+    version.asapAffiliationIncludedDetails?.message.text,
+  manuscriptLicenseDetails: version.manuscriptLicenseDetails?.message.text,
+  datasetsDepositedDetails: version.datasetsDepositedDetails?.message.text,
+  codeDepositedDetails: version.codeDepositedDetails?.message.text,
+  protocolsDepositedDetails: version.protocolsDepositedDetails?.message.text,
+  labMaterialsRegisteredDetails:
+    version.labMaterialsRegisteredDetails?.message.text,
+  availabilityStatementDetails:
+    version.availabilityStatementDetails?.message.text,
+});

@@ -1,4 +1,7 @@
-import { createManuscriptResponse } from '@asap-hub/fixtures';
+import {
+  createDiscussionResponse,
+  createManuscriptResponse,
+} from '@asap-hub/fixtures';
 import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -30,11 +33,38 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   grantId: '000123',
   teamId: 'TI1',
   manuscriptCount: 1,
+  onReplyToDiscussion: jest.fn(),
+  getDiscussion: jest.fn(),
 };
 
 it('displays quick checks when present', () => {
+  const asapAffiliationIncludedDetails =
+    "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.";
+  const commenter = {
+    id: 'user-2',
+    firstName: 'John',
+    lastName: 'Doe',
+    displayName: 'John Doe',
+    teams: [
+      {
+        id: 'team-b',
+        name: 'Team B',
+      },
+    ],
+  };
+
+  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
+    asapAffiliationIncludedDetails,
+  );
+  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
+  asapAffiliationIncludedDiscussion.message.createdDate =
+    '2024-06-21T11:06:58.899Z';
+
+  const getDiscussion = jest.fn();
+  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
+
   const { getByText, queryByText, getByRole, rerender, getAllByText } = render(
-    <ManuscriptVersionCard {...props} />,
+    <ManuscriptVersionCard {...props} getDiscussion={getDiscussion} />,
   );
   userEvent.click(getByRole('button'));
 
@@ -46,10 +76,7 @@ it('displays quick checks when present', () => {
 
   const updatedVersion = {
     ...baseVersion,
-    asapAffiliationIncludedDetails:
-      "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.",
-    codeDepositedDetails:
-      "This hasn't been done due to time constraints, pending review, and ensuring proper documentation.",
+    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
     createdBy: {
       id: 'user-1',
       firstName: 'Joe',
@@ -66,7 +93,9 @@ it('displays quick checks when present', () => {
     publishedAt: '2024-06-21T11:06:58.899Z',
   };
 
-  rerender(<ManuscriptVersionCard {...props} version={updatedVersion} />);
+  rerender(
+    <ManuscriptVersionCard {...props} version={updatedVersion} getDiscussion={getDiscussion} />,
+  );
 
   expect(
     getByText(
@@ -79,18 +108,11 @@ it('displays quick checks when present', () => {
     ),
   ).toBeVisible();
 
-  expect(
-    getByText(/Deposited all newly generated code and analysis scripts/i),
-  ).toBeVisible();
-  expect(
-    getByText(
-      /This hasn't been done due to time constraints, pending review, and ensuring proper documentation./i,
-    ),
-  ).toBeVisible();
-
-  expect(getAllByText('Joe Doe').length).toEqual(3);
-  expect(getAllByText('Team A').length).toEqual(3);
-  expect(getAllByText('21st June 2024').length).toEqual(2);
+  expect(getAllByText('Joe Doe').length).toEqual(1);
+  expect(getAllByText('John Doe').length).toEqual(1);
+  expect(getAllByText('Team A').length).toEqual(1);
+  expect(getAllByText('Team B').length).toEqual(1);
+  expect(getAllByText('21st June 2024').length).toEqual(1);
   expect(getAllByText('20th June 2024').length).toEqual(1);
 
   expect(getAllByText('Joe Doe')[0]!.closest('a')!.href!).toContain(
@@ -98,6 +120,13 @@ it('displays quick checks when present', () => {
   );
   expect(getAllByText('Team A')[0]!.closest('a')!.href!).toContain(
     '/network/teams/team-a',
+  );
+
+  expect(getAllByText('John Doe')[0]!.closest('a')!.href!).toContain(
+    '/network/users/user-2',
+  );
+  expect(getAllByText('Team B')[0]!.closest('a')!.href!).toContain(
+    '/network/teams/team-b',
   );
 });
 

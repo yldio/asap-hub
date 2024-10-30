@@ -1,12 +1,15 @@
 import {
+  createDiscussionResponse,
   createListLabsResponse,
   createListTeamResponse,
   createManuscriptResponse,
   createTeamResponse,
+  createMessage,
 } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ComplianceReportPostRequest,
+  DiscussionResponse,
   ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
@@ -21,12 +24,14 @@ import {
   createComplianceReport,
   createManuscript,
   createResearchOutput,
+  getDiscussion,
   getLabs,
   getManuscript,
   getTeam,
   getTeams,
   patchTeam,
   updateManuscript,
+  updateDiscussion,
   updateTeamResearchOutput,
   uploadManuscriptFile,
 } from '../api';
@@ -471,6 +476,78 @@ describe('Compliance Report', () => {
         createComplianceReport(payload, 'Bearer x'),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to create compliance report. Expected status 201. Received status 500."`,
+      );
+    });
+  });
+});
+
+describe('Discussion', () => {
+  describe('getDiscussion', () => {
+    it('makes an authorized GET request for the discussion id', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .get('/discussions/42')
+        .reply(200, {});
+      await getDiscussion('42', 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully fetched discussion', async () => {
+      const discussion = createDiscussionResponse();
+      nock(API_BASE_URL).get('/discussions/42').reply(200, discussion);
+      expect(await getDiscussion('42', '')).toEqual(discussion);
+    });
+
+    it('returns undefined for a 404', async () => {
+      nock(API_BASE_URL).get('/discussions/42').reply(404);
+      expect(await getDiscussion('42', '')).toBe(undefined);
+    });
+
+    it('errors for another status', async () => {
+      nock(API_BASE_URL).get('/discussions/42').reply(500);
+      await expect(
+        getDiscussion('42', ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to fetch discussion with id 42. Expected status 2xx or 404. Received status 500."`,
+      );
+    });
+  });
+
+  describe('updateDiscussion', () => {
+    const patch = {
+      replyText: 'test reply',
+    };
+    it('makes an authorized PATCH request for the discussion id', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .patch('/discussions/42')
+        .reply(200, {});
+
+      await updateDiscussion('42', patch, 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('passes the patch object in the body', async () => {
+      nock(API_BASE_URL).patch('/discussions/42', patch).reply(200, {});
+
+      await updateDiscussion('42', patch, '');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully updated discussion', async () => {
+      const updated: Partial<DiscussionResponse> = {
+        replies: [createMessage('')],
+      };
+      nock(API_BASE_URL).patch('/discussions/42', patch).reply(200, updated);
+
+      expect(await updateDiscussion('42', patch, '')).toEqual(updated);
+    });
+
+    it('errors for an error status', async () => {
+      nock(API_BASE_URL).patch('/discussions/42', patch).reply(500, {});
+
+      await expect(
+        updateDiscussion('42', patch, ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to update discussion with id 42. Expected status 200. Received status 500."`,
       );
     });
   });

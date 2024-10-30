@@ -1,6 +1,7 @@
 import { JSONSchemaType } from 'ajv';
 import { AuthorAlgoliaResponse } from './authors';
 import { ComplianceReportDataObject } from './compliance-report';
+import { DiscussionDataObject } from './discussion';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -89,14 +90,14 @@ export type ManuscriptVersion = {
   labMaterialsRegistered?: string;
   availabilityStatement?: string;
 
-  acknowledgedGrantNumberDetails?: string;
-  asapAffiliationIncludedDetails?: string;
-  manuscriptLicenseDetails?: string;
-  datasetsDepositedDetails?: string;
-  codeDepositedDetails?: string;
-  protocolsDepositedDetails?: string;
-  labMaterialsRegisteredDetails?: string;
-  availabilityStatementDetails?: string;
+  acknowledgedGrantNumberDetails?: DiscussionDataObject;
+  asapAffiliationIncludedDetails?: DiscussionDataObject;
+  manuscriptLicenseDetails?: DiscussionDataObject;
+  datasetsDepositedDetails?: DiscussionDataObject;
+  codeDepositedDetails?: DiscussionDataObject;
+  protocolsDepositedDetails?: DiscussionDataObject;
+  labMaterialsRegisteredDetails?: DiscussionDataObject;
+  availabilityStatementDetails?: DiscussionDataObject;
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string }[];
@@ -320,14 +321,14 @@ export type ManuscriptPostRequest = Pick<
     labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
     availabilityStatement?: ManuscriptVersion['availabilityStatement'];
 
-    acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
-    asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
-    manuscriptLicenseDetails?: ManuscriptVersion['manuscriptLicenseDetails'];
-    datasetsDepositedDetails?: ManuscriptVersion['datasetsDepositedDetails'];
-    codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
-    protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
-    labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
-    availabilityStatementDetails?: ManuscriptVersion['availabilityStatementDetails'];
+    acknowledgedGrantNumberDetails?: string;
+    asapAffiliationIncludedDetails?: string;
+    manuscriptLicenseDetails?: string;
+    datasetsDepositedDetails?: string;
+    codeDepositedDetails?: string;
+    protocolsDepositedDetails?: string;
+    labMaterialsRegisteredDetails?: string;
+    availabilityStatementDetails?: string;
 
     teams: string[];
     labs?: string[];
@@ -630,7 +631,7 @@ interface QuickCheckQuestions {
 }
 
 export type QuickCheckDetailsObject = Pick<
-  ManuscriptVersion,
+  ManuscriptPostRequest['versions'][number],
   | 'acknowledgedGrantNumberDetails'
   | 'asapAffiliationIncludedDetails'
   | 'availabilityStatementDetails'

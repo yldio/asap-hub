@@ -1,3 +1,24 @@
+import { ReactNode, Suspense } from 'react';
+import { RecoilRoot } from 'recoil';
+import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  render,
+  waitFor,
+  getByText as getChildByText,
+  act,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { TeamResponse } from '@asap-hub/model';
+import {
+  createDiscussionResponse,
+  createManuscriptResponse,
+  createMessage,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { ToastContext } from '@asap-hub/react-context';
+import { mockAlert } from '@asap-hub/dom-test-utils';
+
 import {
   Auth0Provider,
   WhenReady,
@@ -22,7 +43,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { patchTeam, updateManuscript } from '../api';
+import { enable } from '@asap-hub/flags';
 import Workspace from '../Workspace';
+import { getDiscussion, patchTeam, updateDiscussion } from '../api';
 
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
@@ -30,6 +53,12 @@ jest.mock('../api', () => ({
 }));
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
+const mockGetDiscussion = getDiscussion as jest.MockedFunction<
+  typeof getDiscussion
+>;
+const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
+  typeof updateDiscussion
+>;
 
 const id = '42';
 
@@ -331,6 +360,89 @@ describe('the edit tool dialog', () => {
         ],
       },
       expect.any(String),
+    );
+  });
+});
+
+describe('manuscript quick check discussion', () => {
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.acknowledgedGrantNumber = 'No';
+  const reply = createMessage('when can this be completed?');
+  const quickCheckResponse = 'We have not been able to complete this yet';
+  const acknowledgedGrantNumberDiscussion = createDiscussionResponse(
+    quickCheckResponse,
+    [reply],
+  );
+  manuscript.versions[0]!.acknowledgedGrantNumberDetails =
+    acknowledgedGrantNumberDiscussion;
+
+  it('fetches quick check discussion details', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+
+    mockGetDiscussion.mockResolvedValueOnce(acknowledgedGrantNumberDiscussion);
+    const { getByText, findByTestId, getByTestId } = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          manuscripts: [manuscript],
+          tools: [],
+        }}
+      />,
+    );
+
+    await act(async () => {
+      userEvent.click(await findByTestId('collapsible-button'));
+      userEvent.click(getByTestId('version-collapsible-button'));
+    });
+
+    expect(getByText(quickCheckResponse)).toBeVisible();
+    expect(getByText(reply.text)).toBeVisible();
+    expect(mockGetDiscussion).toHaveBeenLastCalledWith(
+      acknowledgedGrantNumberDiscussion.id,
+      expect.anything(),
+    );
+  });
+
+  it('replies to a quick check discussion', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    const { findByTestId, getByRole, getByTestId } = renderWithWrapper(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          manuscripts: [manuscript],
+          tools: [],
+        }}
+      />,
+    );
+
+    await act(async () => {
+      userEvent.click(await findByTestId('collapsible-button'));
+      userEvent.click(getByTestId('version-collapsible-button'));
+    });
+
+    const replyButton = getByRole('button', { name: /Reply/i });
+    userEvent.click(replyButton);
+
+    userEvent.type(
+      getByRole('textbox', { name: /Please provide details/i }),
+      'new reply',
+    );
+
+    const sendButton = getByRole('button', { name: /Send/i });
+
+    await waitFor(() => {
+      expect(sendButton).toBeEnabled();
+    });
+    await act(async () => {
+      userEvent.click(sendButton);
+    });
+
+    expect(mockUpdateDiscussion).toHaveBeenLastCalledWith(
+      acknowledgedGrantNumberDiscussion.id,
+      { replyText: 'new reply' },
+      expect.anything(),
     );
   });
 });

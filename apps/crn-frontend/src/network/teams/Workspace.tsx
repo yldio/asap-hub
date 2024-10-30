@@ -5,14 +5,20 @@ import {
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import { TeamTool, TeamResponse, ManuscriptPutRequest } from '@asap-hub/model';
+import {
+  TeamTool,
+  TeamResponse, ManuscriptPutRequest,
+  DiscussionPatchRequest,
+} from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
 import {
+  useDiscussionById,
   useIsComplianceReviewer,
   usePatchTeamById,
   usePutManuscript,
+  useReplyToDiscussion,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 
@@ -28,6 +34,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
+  const replyToDiscussion = useReplyToDiscussion();
+  const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
 
   return (
@@ -61,6 +69,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
+          onReplyToDiscussion={(id: string, patch: DiscussionPatchRequest) =>
+            replyToDiscussion(id, patch)
+          }
+          getDiscussion={getDiscussion}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

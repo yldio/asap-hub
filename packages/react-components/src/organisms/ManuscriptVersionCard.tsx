@@ -1,11 +1,12 @@
 import {
   ManuscriptLifecycle,
   ManuscriptVersion,
+  Message,
   quickCheckQuestions,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, Suspense, useState } from 'react';
 import {
   article,
   AssociationList,
@@ -17,20 +18,24 @@ import {
   formatDateAndWeekday,
   lead,
   Link,
+  Loading,
   minusRectIcon,
   Pill,
   plusRectIcon,
+  QuickCheckReplyModal,
   Subtitle,
 } from '..';
 import { paddingStyles } from '../card';
-import { UserCommentHeader } from '../molecules';
+import { Discussion } from '../molecules';
 import ManuscriptFileSection from '../molecules/ManuscriptFileSection';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, perRem, rem } from '../pixels';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
-  version: ManuscriptVersion;
+  version: ManuscriptVersion &
+  Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
+  Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
   grantId: string;
   teamId: string;
   manuscriptCount: number;
@@ -159,51 +164,59 @@ export const getManuscriptVersionUID = ({
   return `${teamId}-${grantId}-${manuscriptCount}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
-const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
-  version,
-  teamId,
+const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({{
+  onReplyToDiscussion,
+  getDiscussion,
+  ...version
+}  teamId,
   grantId,
   manuscriptCount,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
-    ({ field }) => version[`${field}Details`]?.length,
+    ({ field }) => version[`${field}Details`]?.message?.text?.length,
   );
-  const userHref =
-    version.createdBy.id &&
-    network({}).users({}).user({ userId: version.createdBy.id }).$;
-  const teams = version.createdBy.teams.map((team) => ({
-    href: network({}).teams({}).team({ teamId: team.id }).$,
-    name: team.name,
-  }));
+
+  const getUserHref = (id: string) =>
+    network({}).users({}).user({ userId: id }).$;
+  const getTeams = (teams: Message['createdBy']['teams']) =>
+    teams.map((team) => ({
+      href: network({}).teams({}).team({ teamId: team.id }).$,
+      name: team.name,
+    }));
 
   return (
-    <div>
-      {version.complianceReport && (
-        <ComplianceReportCard {...version.complianceReport} />
-      )}
-      <div css={toastStyles}>
-        <span css={toastHeaderStyles}>
-          <span css={[iconStyles]}>
-            <Button linkStyle onClick={() => setExpanded(!expanded)}>
-              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
-            </Button>
+    <>
+      <div>
+        {version.complianceReport && (
+          <ComplianceReportCard {...version.complianceReport} />
+        )}
+        <div css={toastStyles}>
+          <span css={toastHeaderStyles}>
+            <span css={[iconStyles]}>
+              <Button
+                data-testid="version-collapsible-button"
+                linkStyle
+                onClick={() => setExpanded(!expanded)}
+              >
+                <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+              </Button>
+            </span>
+            <span css={[iconStyles]}>{article}</span>
+            <Subtitle noMargin>Manuscript</Subtitle>
           </span>
-          <span css={[iconStyles]}>{article}</span>
-          <Subtitle noMargin>Manuscript</Subtitle>
-        </span>
-        <div
-          style={{
-            display: 'flex',
-            gap: rem(10),
-            marginTop: rem(15),
-            paddingLeft: rem(40),
-          }}
-        >
-          <Pill accent="gray">{version.type}</Pill>
-          <Pill accent="gray">{version.lifecycle}</Pill>
-          <Pill accent="blue">
+          <div
+            style={{
+              display: 'flex',
+              gap: rem(10),
+              marginTop: rem(15),
+              paddingLeft: rem(40),
+            }}
+          >
+            <Pill accent="gray">{version.type}</Pill>
+            <Pill accent="gray">{version.lifecycle}</Pill>
+            <Pill accent="blue">
             {getManuscriptVersionUID({
               version,
               teamId,
@@ -213,190 +226,198 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             })}
           </Pill>
         </div>
-      </div>
+        </div>
 
-      {expanded && (
-        <div>
-          <div css={[paddingStyles, toastContentStyles]}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: rem(12),
-                marginTop: rem(2),
-                marginBottom: rem(16),
-              }}
-            >
-              <AssociationList
-                type="Team"
-                inline
-                associations={version.teams}
-              />
-              <AssociationList
-                type="Lab"
-                inline
-                associations={version.labs.map(({ name, id }) => ({
-                  displayName: name,
-                  id,
-                }))}
-              />
-            </div>
-            <ExpandableText>{version.description}</ExpandableText>
-            <div>
-              <ManuscriptFileSection
-                filename={version.manuscriptFile.filename}
-                url={version.manuscriptFile.url}
-              />
-              {version.keyResourceTable && (
-                <ManuscriptFileSection
-                  filename={version.keyResourceTable.filename}
-                  url={version.keyResourceTable.url}
+        {expanded && (
+          <div>
+            <div css={[paddingStyles, toastContentStyles]}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: rem(12),
+                  marginTop: rem(2),
+                  marginBottom: rem(16),
+                }}
+              >
+                <AssociationList
+                  type="Team"
+                  inline
+                  associations={version.teams}
                 />
-              )}
-              {version.additionalFiles &&
-                version.additionalFiles.length > 0 &&
-                version.additionalFiles.map((additionalFile) => (
-                  <ManuscriptFileSection
-                    filename={additionalFile.filename}
-                    url={additionalFile.url}
-                    key={additionalFile.id}
-                  />
-                ))}
-              {quickCheckDetails.length > 0 && (
-                <span css={fileDividerStyles}>
-                  <Divider />
-                </span>
-              )}
-            </div>
-            {quickCheckDetails.map(({ field, question }) => (
-              <div css={quickCheckStyles} key={field}>
-                <Subtitle>{question}</Subtitle>
-                <UserCommentHeader
-                  {...version.createdBy}
-                  userHref={userHref}
-                  teams={teams}
-                  date={version.publishedAt}
+                <AssociationList
+                  type="Lab"
+                  inline
+                  associations={version.labs.map(({ name, id }) => ({
+                    displayName: name,
+                    id,
+                  }))}
                 />
-                <span>{version[`${field}Details`]}</span>
               </div>
-            ))}
-            {hasAdditionalInfo(version) && (
+              <ExpandableText>{version.description}</ExpandableText>
               <div>
-                <span
-                  css={
-                    /* istanbul ignore next */
-                    quickCheckDetails.length ? dividerStyles : fileDividerStyles
-                  }
-                >
-                  <Divider />
-                </span>
-                <span
-                  css={{
-                    fontStyle: 'italic',
-                    marginBottom: rem(12),
-                    display: 'block',
-                  }}
-                >
-                  <Subtitle>Additional Information</Subtitle>
-                </span>
+                <ManuscriptFileSection
+                  filename={version.manuscriptFile.filename}
+                  url={version.manuscriptFile.url}
+                />
+                {version.keyResourceTable && (
+                  <ManuscriptFileSection
+                    filename={version.keyResourceTable.filename}
+                    url={version.keyResourceTable.url}
+                  />
+                )}
+                {version.additionalFiles &&
+                  version.additionalFiles.length > 0 &&
+                  version.additionalFiles.map((additionalFile) => (
+                    <ManuscriptFileSection
+                      filename={additionalFile.filename}
+                      url={additionalFile.url}
+                      key={additionalFile.id}
+                    />
+                  ))}
+                {quickCheckDetails.length > 0 && (
+                  <span css={fileDividerStyles}>
+                    <Divider />
+                  </span>
+                )}
+              </div>
+              {quickCheckDetails.map(({ field, question }) => {
+                const discussion = version[`${field}Details`];
+                return (
+                  discussion !== undefined && (
+                    <div css={quickCheckStyles} key={field}>
+                      <Subtitle>{question}</Subtitle>
+                      <Suspense fallback={<Loading />}>
+                        <Discussion
+                          id={discussion.id}
+                          getDiscussion={getDiscussion}
+                          onReplyToDiscussion={onReplyToDiscussion}
+                          key={discussion.id}
+                        />
+                      </Suspense>
+                    </div>
+                  )
+                );
+              })}
+              {hasAdditionalInfo(version) && (
+                <div>
+                  <span
+                    css={
+                      quickCheckDetails.length
+                        ? dividerStyles
+                        : fileDividerStyles
+                    }
+                  >
+                    <Divider />
+                  </span>
+                  <span
+                    css={{
+                      fontStyle: 'italic',
+                      marginBottom: rem(12),
+                      display: 'block',
+                    }}
+                  >
+                    <Subtitle>Additional Information</Subtitle>
+                  </span>
 
-                <ol css={additionalInformationListStyles}>
-                  {version.preprintDoi && (
-                    <li css={additionalInformationEntryStyles}>
-                      <strong>Preprint DOI</strong>
-                      <span css={additionalInformationValueStyles}>
-                        <Link
-                          href={new URL(
-                            `https://doi.org/${version.preprintDoi}`,
-                          ).toString()}
-                        >
-                          {version.preprintDoi}
-                        </Link>
-                      </span>
-                    </li>
-                  )}
-
-                  {version.publicationDoi && (
-                    <>
-                      {version.preprintDoi && <Divider />}
+                  <ol css={additionalInformationListStyles}>
+                    {version.preprintDoi && (
                       <li css={additionalInformationEntryStyles}>
-                        <strong>Publication DOI</strong>
+                        <strong>Preprint DOI</strong>
                         <span css={additionalInformationValueStyles}>
                           <Link
                             href={new URL(
-                              `https://doi.org/${version.publicationDoi}`,
+                              `https://doi.org/${version.preprintDoi}`,
                             ).toString()}
                           >
-                            {version.publicationDoi}
+                            {version.preprintDoi}
                           </Link>
                         </span>
                       </li>
-                    </>
-                  )}
-                  {version.requestingApcCoverage && (
-                    <>
-                      {(version.preprintDoi || version.publicationDoi) && (
-                        <Divider />
-                      )}
-                      <li css={additionalInformationEntryStyles}>
-                        <strong>Requested APC Coverage?</strong>
-                        <span css={additionalInformationValueStyles}>
-                          {version.requestingApcCoverage}
-                        </span>
-                      </li>
-                      {version?.submitterName ? (
+                    )}
+
+                    {version.publicationDoi && (
+                      <>
+                        {version.preprintDoi && <Divider />}
                         <li css={additionalInformationEntryStyles}>
-                          <strong>Submitter's Name</strong>
+                          <strong>Publication DOI</strong>
                           <span css={additionalInformationValueStyles}>
-                            {version.submitterName}
+                            <Link
+                              href={new URL(
+                                `https://doi.org/${version.publicationDoi}`,
+                              ).toString()}
+                            >
+                              {version.publicationDoi}
+                            </Link>
                           </span>
                         </li>
-                      ) : null}
-                      {version?.submissionDate ? (
+                      </>
+                    )}
+                    {version.requestingApcCoverage && (
+                      <>
+                        {(version.preprintDoi || version.publicationDoi) && (
+                          <Divider />
+                        )}
                         <li css={additionalInformationEntryStyles}>
-                          <strong>Submission Date</strong>
+                          <strong>Requested APC Coverage?</strong>
                           <span css={additionalInformationValueStyles}>
-                            {formatDateAndWeekday(
-                              new Date(version.submissionDate),
-                            )}
+                            {version.requestingApcCoverage}
                           </span>
                         </li>
-                      ) : null}
-                    </>
-                  )}
-                  {version.otherDetails && (
-                    <>
-                      {(version.preprintDoi ||
-                        version.publicationDoi ||
-                        version.requestingApcCoverage) && <Divider />}
-                      <li css={additionalInformationEntryStyles}>
-                        <strong>Other details</strong>
-                        <span css={additionalInformationValueStyles}>
-                          {version.otherDetails}
-                        </span>
-                      </li>
-                    </>
-                  )}
-                </ol>
-              </div>
-            )}
-            <Caption accent="lead" noMargin>
-              <div css={userContainerStyles}>
-                Date added:
-                <span>{formatDate(new Date(version.createdDate))}</span>
-                <span> · </span>
-                Submitted by:
-                <UserTeamInfo
-                  displayName={version.createdBy.displayName}
-                  userHref={userHref}
-                  teams={teams}
-                />
-              </div>
-            </Caption>
+                        {version?.submitterName ? (
+                          <li css={additionalInformationEntryStyles}>
+                            <strong>Submitter's Name</strong>
+                            <span css={additionalInformationValueStyles}>
+                              {version.submitterName}
+                            </span>
+                          </li>
+                        ) : null}
+                        {version?.submissionDate ? (
+                          <li css={additionalInformationEntryStyles}>
+                            <strong>Submission Date</strong>
+                            <span css={additionalInformationValueStyles}>
+                              {formatDateAndWeekday(
+                                new Date(version.submissionDate),
+                              )}
+                            </span>
+                          </li>
+                        ) : null}
+                      </>
+                    )}
+                    {version.otherDetails && (
+                      <>
+                        {(version.preprintDoi ||
+                          version.publicationDoi ||
+                          version.requestingApcCoverage) && <Divider />}
+                        <li css={additionalInformationEntryStyles}>
+                          <strong>Other details</strong>
+                          <span css={additionalInformationValueStyles}>
+                            {version.otherDetails}
+                          </span>
+                        </li>
+                      </>
+                    )}
+                  </ol>
+                </div>
+              )}
+              <Caption accent="lead" noMargin>
+                <div css={userContainerStyles}>
+                  Date added:
+                  <span>{formatDate(new Date(version.createdDate))}</span>
+                  <span> · </span>
+                  Submitted by:
+                  <UserTeamInfo
+                    displayName={version.createdBy.displayName}
+                    userHref={getUserHref(version.createdBy.id)}
+                    teams={getTeams(version.createdBy.teams)}
+                  />
+                </div>
+              </Caption>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

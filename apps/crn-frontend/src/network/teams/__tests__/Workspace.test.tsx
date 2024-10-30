@@ -33,6 +33,7 @@ import {
 } from '../api';
 
 import Workspace from '../Workspace';
+import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
@@ -398,14 +399,16 @@ describe('manuscript quick check discussion', () => {
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     const { findByTestId, getByRole, getByTestId } = renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          manuscripts: [manuscript],
-          tools: [],
-        }}
-      />,
+      <ManuscriptToastProvider>
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            manuscripts: [manuscript],
+            tools: [],
+          }}
+        />
+      </ManuscriptToastProvider>,
     );
 
     await act(async () => {

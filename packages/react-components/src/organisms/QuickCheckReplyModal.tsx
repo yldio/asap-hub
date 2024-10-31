@@ -52,9 +52,6 @@ const dismissButtonStyles = css({
     gridRow: '1',
   },
 });
-export const asapFunded = ['Yes', 'No'] as const;
-
-export type ASAPFunded = (typeof asapFunded)[number];
 
 type QuickCheckReplyModalProps = {
   onDismiss: () => void;

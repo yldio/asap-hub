@@ -6,6 +6,7 @@ import {
   waitFor,
   getByText as getChildByText,
   act,
+  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TeamResponse } from '@asap-hub/model';
@@ -419,10 +420,11 @@ describe('manuscript quick check discussion', () => {
     const replyButton = getByRole('button', { name: /Reply/i });
     userEvent.click(replyButton);
 
-    userEvent.type(
-      getByRole('textbox', { name: /Please provide details/i }),
-      'new reply',
-    );
+    const replyEditor = getByTestId('editor');
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, { data: 'new reply' });
+    userEvent.tab();
 
     const sendButton = getByRole('button', { name: /Send/i });
 

@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button, Headline3 } from '../atoms';
 import { paddingStyles } from '../card';
 import { crossIcon } from '../icons';
-import { LabeledTextArea, Modal } from '../molecules';
+import { LabeledTextEditor, Modal } from '../molecules';
 import { mobileScreen, perRem } from '../pixels';
 
 const headerStyles = css(paddingStyles, {
@@ -104,19 +104,16 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
             name="replyText"
             control={control}
             rules={{
-              required: 'Please provide details.',
+              required: true,
             }}
-            render={({
-              field: { value, onChange, onBlur },
-              fieldState: { error },
-            }) => (
-              <LabeledTextArea
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <LabeledTextEditor
                 title="Please provide details"
                 subtitle="(required)"
-                customValidationMessage={error?.message}
-                value={value || ''}
                 onChange={onChange}
-                onBlur={onBlur}
+                customValidationMessage={error?.message}
+                required
+                value={value || ''}
                 enabled={!isSubmitting}
               />
             )}

@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 import QuickCheckReplyModal from '../QuickCheckReplyModal';
@@ -26,11 +32,14 @@ it('data is sent on form submission', async () => {
     />,
   );
 
-  const input = screen.getByRole('textbox', {
-    name: /details/i,
+  const replyEditor = screen.getByTestId('editor');
+  await act(async () => {
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, { data: 'test reply' });
+    userEvent.tab();
   });
 
-  userEvent.type(input, 'test reply');
   const shareButton = screen.getByRole('button', { name: /Send/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
   userEvent.click(shareButton);
@@ -41,22 +50,20 @@ it('data is sent on form submission', async () => {
   });
 });
 
-it('displays error message when reply is missing', async () => {
+it('send button is enabled when reply is provided', async () => {
   render(<QuickCheckReplyModal {...defaultProps} />);
 
-  const input = screen.getByRole('textbox', {
-    name: /details/i,
-  });
-  fireEvent.blur(input);
+  const sendButton = screen.getByRole('button', { name: /Send/i });
 
-  await waitFor(() => {
-    expect(screen.getAllByText(/Please provide details./i).length).toBe(1);
+  expect(sendButton).toBeDisabled();
+
+  const replyEditor = screen.getByTestId('editor');
+  await act(async () => {
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, { data: 'test reply' });
+    userEvent.tab();
   });
 
-  userEvent.type(input, 'test reply');
-  fireEvent.blur(input);
-
-  await waitFor(() => {
-    expect(screen.queryByText(/Please provide details./i)).toBeNull();
-  });
+  expect(sendButton).toBeEnabled();
 });

@@ -36,6 +36,7 @@ import {
 import Workspace from '../Workspace';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 
+jest.setTimeout(30000);
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),

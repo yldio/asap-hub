@@ -18,7 +18,7 @@ import {
 import { parseUserDisplayName } from '@asap-hub/server-common';
 import { DiscussionDataProvider } from '../types';
 
-type Discussion = NonNullable<FetchDiscussionByIdQuery['discussions']>;
+export type Discussion = NonNullable<FetchDiscussionByIdQuery['discussions']>;
 type MessageItem = Discussion['message'];
 
 export class DiscussionContentfulDataProvider

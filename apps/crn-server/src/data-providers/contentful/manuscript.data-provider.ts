@@ -12,6 +12,7 @@ import {
   getLinkEntity,
   GraphQLClient,
   Link,
+  Maybe,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
@@ -31,7 +32,7 @@ import {
 import { parseUserDisplayName } from '@asap-hub/server-common';
 
 import { ManuscriptDataProvider } from '../types';
-import { parseGraphQLDiscussion } from './discussion.data-provider';
+import { Discussion, parseGraphQLDiscussion } from './discussion.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ComplianceReport = NonNullable<
@@ -236,43 +237,38 @@ export const parseGraphqlManuscriptVersion = (
       submitterName: version?.submitterName,
       submissionDate: version?.submissionDate,
       otherDetails: version?.otherDetails,
-      acknowledgedGrantNumberDetails:
-        version?.acknowledgedGrantNumber === 'No' &&
-        version?.acknowledgedGrantNumberDetails
-          ? parseGraphQLDiscussion(version.acknowledgedGrantNumberDetails)
-          : undefined,
-      asapAffiliationIncludedDetails:
-        version?.asapAffiliationIncluded === 'No' &&
-        version?.asapAffiliationIncludedDetails
-          ? parseGraphQLDiscussion(version?.asapAffiliationIncludedDetails)
-          : undefined,
-      manuscriptLicenseDetails:
-        version?.manuscriptLicense === 'No' && version?.manuscriptLicenseDetails
-          ? parseGraphQLDiscussion(version.manuscriptLicenseDetails)
-          : undefined,
-      datasetsDepositedDetails:
-        version?.datasetsDeposited === 'No' && version?.datasetsDepositedDetails
-          ? parseGraphQLDiscussion(version.datasetsDepositedDetails)
-          : undefined,
-      codeDepositedDetails:
-        version?.codeDeposited === 'No' && version?.codeDepositedDetails
-          ? parseGraphQLDiscussion(version.codeDepositedDetails)
-          : undefined,
-      protocolsDepositedDetails:
-        version?.protocolsDeposited === 'No' &&
-        version?.protocolsDepositedDetails
-          ? parseGraphQLDiscussion(version.protocolsDepositedDetails)
-          : undefined,
-      labMaterialsRegisteredDetails:
-        version?.labMaterialsRegistered === 'No' &&
-        version?.labMaterialsRegisteredDetails
-          ? parseGraphQLDiscussion(version.labMaterialsRegisteredDetails)
-          : undefined,
-      availabilityStatementDetails:
-        version?.availabilityStatement === 'No' &&
-        version?.availabilityStatementDetails
-          ? parseGraphQLDiscussion(version.availabilityStatementDetails)
-          : undefined,
+      acknowledgedGrantNumberDetails: parseQuickCheckDetails(
+        version?.acknowledgedGrantNumber,
+        version?.acknowledgedGrantNumberDetails,
+      ),
+      asapAffiliationIncludedDetails: parseQuickCheckDetails(
+        version?.asapAffiliationIncluded,
+        version?.asapAffiliationIncludedDetails,
+      ),
+      manuscriptLicenseDetails: parseQuickCheckDetails(
+        version?.manuscriptLicense,
+        version?.manuscriptLicenseDetails,
+      ),
+      datasetsDepositedDetails: parseQuickCheckDetails(
+        version?.datasetsDeposited,
+        version?.datasetsDepositedDetails,
+      ),
+      codeDepositedDetails: parseQuickCheckDetails(
+        version?.codeDeposited,
+        version?.codeDepositedDetails,
+      ),
+      protocolsDepositedDetails: parseQuickCheckDetails(
+        version?.protocolsDeposited,
+        version?.protocolsDepositedDetails,
+      ),
+      labMaterialsRegisteredDetails: parseQuickCheckDetails(
+        version?.labMaterialsRegistered,
+        version?.labMaterialsRegisteredDetails,
+      ),
+      availabilityStatementDetails: parseQuickCheckDetails(
+        version?.availabilityStatement,
+        version?.availabilityStatementDetails,
+      ),
       createdBy: {
         id: version?.createdBy?.sys.id,
         firstName: version?.createdBy?.firstName || '',
@@ -367,3 +363,8 @@ const createQuickCheckDiscussions = async (
   );
   return generatedDiscussions;
 };
+
+const parseQuickCheckDetails = (
+  field: Maybe<string> | undefined,
+  details: Maybe<Discussion> | undefined,
+) => (field === 'No' && details ? parseGraphQLDiscussion(details) : undefined);

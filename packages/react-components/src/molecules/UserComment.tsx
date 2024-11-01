@@ -3,6 +3,7 @@ import { network } from '@asap-hub/routing';
 import { FC } from 'react';
 
 import { UserCommentHeader } from '.';
+import { Markdown } from '../atoms';
 
 type UserCommentProps = Message;
 
@@ -26,7 +27,7 @@ const UserComment: FC<UserCommentProps> = ({
       teams={getTeams(createdBy.teams)}
       date={createdDate}
     />
-    <span>{text}</span>
+    <Markdown value={text} />
   </>
 );
 export default UserComment;

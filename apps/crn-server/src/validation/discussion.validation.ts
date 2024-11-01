@@ -28,7 +28,7 @@ const discussionPatchRequestValidationSchema: JSONSchemaType<DiscussionPatchRequ
   {
     type: 'object',
     properties: {
-      replyText: { type: 'string' },
+      replyText: { type: 'string', maxLength: 256 },
     },
     required: ['replyText'],
     additionalProperties: false,

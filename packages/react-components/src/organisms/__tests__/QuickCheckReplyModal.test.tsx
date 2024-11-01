@@ -67,3 +67,25 @@ it('send button is enabled when reply is provided', async () => {
 
   expect(sendButton).toBeEnabled();
 });
+
+it('displays error message when reply is bigger than 256 characters', async () => {
+  render(<QuickCheckReplyModal {...defaultProps} />);
+
+  const sendButton = screen.getByRole('button', { name: /Send/i });
+
+  expect(sendButton).toBeDisabled();
+
+  const replyEditor = screen.getByTestId('editor');
+  await act(async () => {
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, {
+      data: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec dapibus est, a ultrices magna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In hac habitasse platea dictumst. Praesent sodales venenatis ipsum, dignissim lacinia tellus eleifend et.',
+    });
+    userEvent.tab();
+  });
+
+  expect(
+    screen.getAllByText(/Reply cannot exceed 256 characters./i).length,
+  ).toBeGreaterThanOrEqual(1);
+});

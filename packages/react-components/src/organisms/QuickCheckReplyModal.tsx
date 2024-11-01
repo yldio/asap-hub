@@ -71,7 +71,7 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
   onReplyToDiscussion,
 }) => {
   const methods = useForm<QuickCheckReplyModalData>({
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       replyText: '',
     },
@@ -105,6 +105,10 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
             control={control}
             rules={{
               required: true,
+              maxLength: {
+                value: 256,
+                message: 'Reply cannot exceed 256 characters.',
+              },
             }}
             render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledTextEditor
@@ -113,6 +117,7 @@ const QuickCheckReplyModal: React.FC<QuickCheckReplyModalProps> = ({
                 onChange={onChange}
                 customValidationMessage={error?.message}
                 required
+                maxLength={256}
                 value={value || ''}
                 enabled={!isSubmitting}
               />

@@ -151,5 +151,17 @@ describe('/discussions/ route', () => {
         reply,
       );
     });
+
+    test('Should not accept a string of over 256 characters for the reply', async () => {
+      const discussionId = 'discussion-id-1';
+
+      const response = await supertest(app)
+        .patch(`/discussions/${discussionId}`)
+        .send({
+          replyText: 'x'.repeat(257),
+        });
+
+      expect(response.status).toBe(400);
+    });
   });
 });

@@ -24520,7 +24520,7 @@ export const DiscussionsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '1' },
+                            value: { kind: 'IntValue', value: '3' },
                           },
                         ],
                         selectionSet: {

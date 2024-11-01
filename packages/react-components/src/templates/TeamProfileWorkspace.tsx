@@ -63,6 +63,7 @@ type TeamProfileWorkspaceProps = Readonly<
   Pick<
     TeamResponse,
     | 'id'
+    | 'inactiveSince'
     | 'pointOfContact'
     | 'lastModifiedDate'
     | 'manuscripts'
@@ -81,6 +82,7 @@ type TeamProfileWorkspaceProps = Readonly<
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
+  inactiveSince,
   teamId,
   grantId,
   onUpdateManuscript,
@@ -130,16 +132,18 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
             <div css={complianceContainerStyles}>
               <div css={complianceHeaderStyles}>
                 <Display styleAsHeading={3}>Compliance Review</Display>
-                <div css={css(manuscriptButtonStyles)}>
-                  <Button
-                    onClick={handleShareManuscript}
-                    primary
-                    noMargin
-                    small
-                  >
-                    {plusIcon} Submit Manuscript
-                  </Button>
-                </div>
+                {!inactiveSince && (
+                  <div css={css(manuscriptButtonStyles)}>
+                    <Button
+                      onClick={handleShareManuscript}
+                      primary
+                      noMargin
+                      small
+                    >
+                      {plusIcon} Submit Manuscript
+                    </Button>
+                  </div>
+                )}
               </div>
               <Paragraph accent="lead">
                 Submit your manuscript to receive a report outlining where your

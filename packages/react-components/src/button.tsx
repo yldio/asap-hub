@@ -3,6 +3,8 @@ import { css, Theme } from '@emotion/react';
 import {
   charcoal,
   color,
+  error500,
+  error900,
   fern,
   lead,
   OpaqueColor,
@@ -171,6 +173,19 @@ export const secondaryStyles = css({
     boxShadow: 'none',
   },
 });
+
+export const warningStyles = css({
+  backgroundColor: error500.rgb,
+  color: paper.rgb,
+  borderColor: error900.rgb,
+  boxShadow: boxShadow(steel),
+
+  ':hover, :focus, :active': {
+    backgroundColor: error900.rgb,
+    boxShadow: 'none',
+  },
+});
+
 const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
@@ -218,6 +233,7 @@ export const activeSecondaryStyles = css({
 
 export const getButtonStyles = ({
   primary = false,
+  warning = false,
   small = false,
   enabled = true,
   active = false,
@@ -228,6 +244,7 @@ export const getButtonStyles = ({
 }: {
   colors?: Theme['colors'];
   primary?: boolean;
+  warning?: boolean;
   small?: boolean;
   enabled?: boolean;
   active?: boolean;
@@ -249,6 +266,7 @@ export const getButtonStyles = ({
           ? primaryStyles(colors)
           : secondaryStyles
       : disabledStyles,
+    warning && enabled && warningStyles,
     (Array.isArray(children)
       ? children.some((child) => child && typeof child === 'object')
       : children && typeof children === 'object') ||

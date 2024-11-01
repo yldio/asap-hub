@@ -205,6 +205,16 @@ describe('compliance section', () => {
     );
   });
 
+  it('does not show the submit manuscript button when team is inactive', () => {
+    const { queryByRole } = render(
+      <TeamProfileWorkspace {...team} inactiveSince="a date" tools={[]} />,
+    );
+
+    expect(
+      queryByRole('button', { name: /submit manuscript/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it('renders eligibility modal when user clicks on Share Manuscript', () => {
     const { container, getByRole } = render(
       <TeamProfileWorkspace {...team} tools={[]} />,

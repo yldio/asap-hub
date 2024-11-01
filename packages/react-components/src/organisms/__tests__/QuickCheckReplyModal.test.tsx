@@ -19,7 +19,8 @@ const defaultProps: ComponentProps<typeof QuickCheckReplyModal> = {
 
 it('renders the form', async () => {
   render(<QuickCheckReplyModal {...defaultProps} />);
-  expect(screen.getByText(/Reply to quick check/i)).toBeVisible();
+
+  expect(await screen.findByText(/Reply to quick check/i)).toBeVisible();
   expect(screen.getByRole('button', { name: /Send/i })).toBeVisible();
 });
 

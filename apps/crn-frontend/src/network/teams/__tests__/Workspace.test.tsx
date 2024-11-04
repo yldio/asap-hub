@@ -372,7 +372,7 @@ describe('manuscript quick check discussion', () => {
     enable('DISPLAY_MANUSCRIPTS');
 
     mockGetDiscussion.mockResolvedValueOnce(acknowledgedGrantNumberDiscussion);
-    const { getByText, findByTestId, getByTestId } = renderWithWrapper(
+    const { getByText, findByTestId, getByLabelText } = renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -385,7 +385,7 @@ describe('manuscript quick check discussion', () => {
 
     await act(async () => {
       userEvent.click(await findByTestId('collapsible-button'));
-      userEvent.click(getByTestId('version-collapsible-button'));
+      userEvent.click(getByLabelText('Expand Version'));
     });
 
     userEvent.click(getByTestId('discussion-collapsible-button'));
@@ -402,22 +402,23 @@ describe('manuscript quick check discussion', () => {
     enable('DISPLAY_MANUSCRIPTS');
     mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
     mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
-    const { findByTestId, getByRole, getByTestId } = renderWithWrapper(
-      <ManuscriptToastProvider>
-        <Workspace
-          team={{
-            ...createTeamResponse(),
-            id,
-            manuscripts: [manuscript],
-            tools: [],
-          }}
-        />
-      </ManuscriptToastProvider>,
-    );
+    const { findByTestId, getByRole, getByTestId, getByLabelText } =
+      renderWithWrapper(
+        <ManuscriptToastProvider>
+          <Workspace
+            team={{
+              ...createTeamResponse(),
+              id,
+              manuscripts: [manuscript],
+              tools: [],
+            }}
+          />
+        </ManuscriptToastProvider>,
+      );
 
     await act(async () => {
       userEvent.click(await findByTestId('collapsible-button'));
-      userEvent.click(getByTestId('version-collapsible-button'));
+      userEvent.click(getByLabelText('Expand Version'));
     });
 
     userEvent.click(getByTestId('discussion-collapsible-button'));

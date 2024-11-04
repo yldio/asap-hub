@@ -194,6 +194,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
   userEvent.click(screen.getByText(/Submit Manuscript/i));
+
   userEvent.click(screen.getByText(/Yes/i));
 
   userEvent.click(
@@ -202,6 +203,10 @@ it('displays manuscript success toast message and user can dismiss toast', async
     ),
   );
   userEvent.click(screen.getByText(/Continue/i));
+
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 
   const submitButton = screen.getByRole('button', { name: /Submit/i });
 

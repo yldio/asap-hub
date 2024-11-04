@@ -4,7 +4,9 @@ import { UserResponse } from './user';
 export type ExternalAuthorDataObject = Pick<
   UserResponse,
   'id' | 'displayName' | 'orcid'
->;
+> & {
+  email?: string;
+};
 
 export type ListExternalAuthorDataObject =
   ListResponse<ExternalAuthorDataObject>;

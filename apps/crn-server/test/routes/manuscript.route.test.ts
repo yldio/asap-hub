@@ -10,7 +10,7 @@ import {
   getManuscriptFileResponse,
   getManuscriptPostBody,
   getManuscriptResponse,
-  getManuscriptUpdateDataObject,
+  getManuscriptUpdateStatusDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
 import { manuscriptControllerMock } from '../mocks/manuscript.controller.mock';
@@ -331,7 +331,7 @@ describe('/manuscripts/ route', () => {
   describe('PUT /manuscripts/{id}', () => {
     const manuscriptId = 'manuscript-id-1';
     const manuscriptResponse = getManuscriptResponse();
-    const manuscriptPutRequest = getManuscriptUpdateDataObject();
+    const manuscriptPutRequest = getManuscriptUpdateStatusDataObject();
 
     test('Should return 403 when not allowed to update a manuscript because user is not onboarded', async () => {
       userMockFactory.mockReturnValueOnce({
@@ -392,6 +392,7 @@ describe('/manuscripts/ route', () => {
       expect(manuscriptControllerMock.update).toHaveBeenCalledWith(
         manuscriptId,
         manuscriptPutRequest,
+        'user-id-0',
       );
       expect(response.body).toEqual(manuscriptResponse);
     });
@@ -406,7 +407,10 @@ describe('/manuscripts/ route', () => {
 
         const response = await supertest(app)
           .put(`/manuscripts/${manuscriptId}`)
-          .send({ ...manuscriptPutRequest, title: 'New title' })
+          .send({
+            ...manuscriptPutRequest,
+            eligibilityReasons: ['New reason'],
+          })
           .set('Accept', 'application/json');
 
         expect(response.status).toEqual(400);

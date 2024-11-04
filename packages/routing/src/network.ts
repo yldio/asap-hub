@@ -92,6 +92,11 @@ const team = (() => {
   const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
   const createManuscript = route('/create-manuscript', {}, {});
+  const editManuscript = route(
+    '/edit-manuscript/:manuscriptId',
+    { manuscriptId: stringParser },
+    {},
+  );
   const createComplianceReport = route(
     '/create-compliance-report/:manuscriptId',
     { manuscriptId: stringParser },
@@ -100,7 +105,7 @@ const team = (() => {
   const workspace = route(
     '/workspace',
     {},
-    { tools, createManuscript, createComplianceReport },
+    { tools, createManuscript, editManuscript, createComplianceReport },
   );
   const createOutput = route(
     '/create-output/:outputDocumentType',

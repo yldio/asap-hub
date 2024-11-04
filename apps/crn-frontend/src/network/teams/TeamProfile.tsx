@@ -149,6 +149,13 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   <TeamManuscript teamId={teamId} />
                 </Frame>
               </Route>
+              <Route
+                path={workspace({}).$ + workspace({}).editManuscript.template}
+              >
+                <Frame title="Edit Manuscript">
+                  <TeamManuscript teamId={teamId} />
+                </Frame>
+              </Route>
               {canCreateComplianceReport && (
                 <Route
                   path={

@@ -35,6 +35,14 @@ export const getContentfulGraphql = (teamById = false) => ({
     getContentfulGraphqlManuscriptVersions().items[0]?.teamsCollection,
   ManuscriptVersionsLabsCollection: () =>
     getContentfulGraphqlManuscriptVersions().items[0]?.labsCollection,
+  ManuscriptVersionsFirstAuthorsCollection: () =>
+    getContentfulGraphqlManuscriptVersions().items[0]?.firstAuthorsCollection,
+  ManuscriptVersionsCorrespondingAuthorCollection: () =>
+    getContentfulGraphqlManuscriptVersions().items[0]
+      ?.correspondingAuthorCollection,
+  ManuscriptVersionsAdditionalAuthorsCollection: () =>
+    getContentfulGraphqlManuscriptVersions().items[0]
+      ?.additionalAuthorsCollection,
 });
 
 export const getUsersTeamsCollection = () => ({
@@ -223,6 +231,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           description: 'A good description',
           createdBy: manuscriptAuthor,
+          updatedBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
@@ -242,6 +251,9 @@ export const getTeamDataObject = (): TeamDataObject => ({
             },
           ],
           labs: [{ id: 'lab-1', name: 'Lab 1' }],
+          firstAuthors: [],
+          correspondingAuthor: [],
+          additionalAuthors: [],
         },
       ],
     },
@@ -256,6 +268,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
           type: 'Original Research',
           description: 'A good description',
           createdBy: manuscriptAuthor,
+          updatedBy: manuscriptAuthor,
           createdDate: '2020-09-23T20:45:22.000Z',
           publishedAt: '2020-09-23T20:45:22.000Z',
           manuscriptFile: {
@@ -275,6 +288,9 @@ export const getTeamDataObject = (): TeamDataObject => ({
             },
           ],
           labs: [{ id: 'lab-1', name: 'Lab 1' }],
+          firstAuthors: [],
+          correspondingAuthor: [],
+          additionalAuthors: [],
         },
       ],
     },

@@ -25,6 +25,7 @@ export const getManuscriptDataObject = (
       type: 'Original Research',
       description: 'A good description',
       createdBy: manuscriptAuthor,
+      updatedBy: manuscriptAuthor,
       createdDate: '2020-09-23T20:45:22.000Z',
       publishedAt: '2020-09-23T20:45:22.000Z',
       manuscriptFile: {
@@ -41,6 +42,9 @@ export const getManuscriptDataObject = (
         { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
       ],
       labs: [{ id: 'lab-1', name: 'Lab 1' }],
+      firstAuthors: [],
+      correspondingAuthor: [],
+      additionalAuthors: [],
     },
   ],
   ...data,
@@ -115,7 +119,38 @@ export const getContentfulGraphqlManuscriptVersions: () => NonNullable<
           },
         ],
       },
+      firstAuthorsCollection: {
+        items: [],
+      },
+      correspondingAuthorCollection: {
+        items: [],
+      },
+      additionalAuthorsCollection: {
+        items: [],
+      },
       createdBy: {
+        sys: {
+          id: manuscriptAuthor.id,
+        },
+        firstName: manuscriptAuthor.firstName,
+        lastName: manuscriptAuthor.lastName,
+        nickname: 'Tim',
+        alumniSinceDate: manuscriptAuthor.alumniSinceDate,
+        avatar: { url: manuscriptAuthor.avatarUrl },
+        teamsCollection: {
+          items: [
+            {
+              team: {
+                sys: {
+                  id: manuscriptAuthor.teams[0]!.id,
+                },
+                displayName: manuscriptAuthor.teams[0]!.name,
+              },
+            },
+          ],
+        },
+      },
+      updatedBy: {
         sys: {
           id: manuscriptAuthor.id,
         },
@@ -145,11 +180,12 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
   const { title, teamId, versions } = getManuscriptDataObject();
 
   const {
-    createdBy: _,
-    createdDate: __,
-    id: ___,
-    publishedAt: ____,
-    teams: _____,
+    createdBy: __,
+    updatedBy: ___,
+    createdDate: ____,
+    id: _____,
+    publishedAt: ______,
+    teams: _______,
     ...version
   } = versions[0]!;
   return {
@@ -223,7 +259,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
   };
 };
 
-export const getManuscriptUpdateDataObject = (
+export const getManuscriptUpdateStatusDataObject = (
   overrides?: Partial<ManuscriptUpdateDataObject>,
 ): ManuscriptUpdateDataObject => {
   return {

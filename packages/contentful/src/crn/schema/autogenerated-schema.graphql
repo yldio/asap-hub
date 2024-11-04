@@ -2820,6 +2820,7 @@ type ManuscriptVersions implements Entry & _Node {
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
+  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type ManuscriptVersionsAdditionalAuthorsCollection {
@@ -3055,6 +3056,8 @@ input ManuscriptVersionsFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+  updatedBy: cfUsersNestedFilter
+  updatedBy_exists: Boolean
 }
 
 type ManuscriptVersionsFirstAuthorsCollection {
@@ -8048,6 +8051,7 @@ input cfManuscriptVersionsNestedFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+  updatedBy_exists: Boolean
 }
 
 input cfMessagesNestedFilter {

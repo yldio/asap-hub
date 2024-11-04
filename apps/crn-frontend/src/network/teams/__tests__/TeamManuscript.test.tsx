@@ -35,6 +35,7 @@ jest.mock('../../users/api');
 
 jest.mock('../api', () => ({
   createManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
+  getManuscript: jest.fn().mockResolvedValue(null),
   uploadManuscriptFile: jest.fn().mockResolvedValue({
     filename: 'manuscript.pdf',
     url: 'https://example.com/manuscript.pdf',

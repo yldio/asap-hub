@@ -80,20 +80,13 @@ export class ManuscriptContentfulDataProvider
 
     return parseGraphQLManuscript(manuscripts);
   }
-
-  async create(input: ManuscriptCreateDataObject): Promise<string> {
+  private async createManuscriptAssets(
+    version: Pick<
+      ManuscriptCreateDataObject['versions'][number],
+      'manuscriptFile' | 'keyResourceTable' | 'additionalFiles'
+    >,
+  ) {
     const environment = await this.getRestClient();
-
-    const {
-      teamId,
-      userId,
-      versions: [version],
-      ...plainFields
-    } = input;
-
-    if (!version) {
-      throw new Error('No versions provided');
-    }
 
     const manuscriptFileAsset = await environment.getAsset(
       version.manuscriptFile.id,
@@ -111,6 +104,16 @@ export class ManuscriptContentfulDataProvider
       const additionalFileAsset = await environment.getAsset(additionalFile.id);
       await additionalFileAsset.publish();
     });
+  }
+
+  private async createQuickChecks(
+    version: Pick<
+      ManuscriptCreateDataObject['versions'][number],
+      QuickCheckDetails
+    >,
+    userId: string,
+  ) {
+    const environment = await this.getRestClient();
 
     const quickCheckDetails = {
       asapAffiliationIncludedDetails: version.asapAffiliationIncludedDetails,
@@ -128,6 +131,26 @@ export class ManuscriptContentfulDataProvider
       quickCheckDetails,
       userId,
     );
+
+    return quickCheckDiscussions;
+  }
+
+  async create(input: ManuscriptCreateDataObject): Promise<string> {
+    const environment = await this.getRestClient();
+
+    const {
+      teamId,
+      userId,
+      versions: [version],
+      ...plainFields
+    } = input;
+
+    if (!version) {
+      throw new Error('No versions provided');
+    }
+
+    await this.createManuscriptAssets(version);
+    const quickCheckDiscussions = await this.createQuickChecks(version, userId);
 
     const manuscriptVersionEntry = await environment.createEntry(
       'manuscriptVersions',
@@ -152,6 +175,7 @@ export class ManuscriptContentfulDataProvider
               )
             : null,
           createdBy: getLinkEntity(userId),
+          updatedBy: getLinkEntity(userId),
           ...quickCheckDiscussions,
         }),
       },
@@ -180,11 +204,55 @@ export class ManuscriptContentfulDataProvider
   async update(
     id: string,
     manuscriptData: ManuscriptUpdateDataObject,
+    userId: string,
   ): Promise<void> {
     const environment = await this.getRestClient();
-    const entry = await environment.getEntry(id);
+    const manuscriptEntry = await environment.getEntry(id);
 
-    await patchAndPublish(entry, { status: manuscriptData.status });
+    if ('status' in manuscriptData) {
+      await patchAndPublish(manuscriptEntry, {
+        status: manuscriptData.status,
+      });
+    }
+
+    if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
+      const version = manuscriptData.versions[0];
+
+      await this.createManuscriptAssets(version);
+      const quickCheckDiscussions = await this.createQuickChecks(
+        version,
+        userId,
+      );
+
+      const versionId = manuscriptEntry.fields.versions['en-US'][0].sys.id;
+
+      const versionEntry = await environment.getEntry(versionId);
+      await patchAndPublish(manuscriptEntry, {
+        title: manuscriptData.title,
+      });
+
+      await patchAndPublish(versionEntry, {
+        ...version,
+        teams: getLinkEntities(version.teams),
+        labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
+        firstAuthors: getLinkEntities(version.firstAuthors),
+        correspondingAuthor: getLinkEntities(version.correspondingAuthor),
+        additionalAuthors: getLinkEntities(version.additionalAuthors),
+        manuscriptFile: getLinkAsset(version.manuscriptFile.id),
+        keyResourceTable: version.keyResourceTable
+          ? getLinkAsset(version.keyResourceTable.id)
+          : null,
+        additionalFiles: version.additionalFiles?.length
+          ? getLinkAssets(
+              version.additionalFiles.map(
+                (additionalFile) => additionalFile.id,
+              ),
+            )
+          : null,
+        updatedBy: getLinkEntity(userId),
+        ...quickCheckDiscussions,
+      });
+    }
   }
 }
 
@@ -200,6 +268,58 @@ const parseGraphQLManuscript = (
     manuscripts.versionsCollection?.items || [],
   ),
 });
+
+type ManuscriptVersionItem = NonNullable<
+  NonNullable<
+    NonNullable<FetchManuscriptByIdQuery['manuscripts']>['versionsCollection']
+  >['items'][number]
+>;
+
+type FirstAuthorItem = NonNullable<
+  NonNullable<ManuscriptVersionItem['firstAuthorsCollection']>['items'][number]
+>;
+
+type CorrespondingAuthorItem = NonNullable<
+  NonNullable<
+    ManuscriptVersionItem['correspondingAuthorCollection']
+  >['items'][number]
+>;
+
+type AdditionalAuthorItem = NonNullable<
+  NonNullable<
+    ManuscriptVersionItem['additionalAuthorsCollection']
+  >['items'][number]
+>;
+
+const parseGraphqlAuthor = (
+  authorItems:
+    | FirstAuthorItem[]
+    | CorrespondingAuthorItem[]
+    | AdditionalAuthorItem[],
+) =>
+  authorItems.map((author) => {
+    if (author.__typename === 'Users') {
+      return {
+        id: author.sys.id,
+        firstName: author.firstName || '',
+        lastName: author.lastName || '',
+        email: author.email || '',
+        displayName: parseUserDisplayName(
+          author.firstName || '',
+          author.lastName || '',
+          undefined,
+          author.nickname || '',
+        ),
+        avatarUrl: author.avatar?.url || undefined,
+      };
+    }
+
+    return {
+      id: author.sys.id,
+      displayName: author?.name || '',
+      email: author.email || '',
+    };
+  });
 
 export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
@@ -286,6 +406,23 @@ export const parseGraphqlManuscriptVersion = (
           name: teamItem?.team?.displayName,
         })),
       },
+      updatedBy: {
+        id: version?.updatedBy?.sys.id || '',
+        firstName: version?.updatedBy?.firstName || '',
+        lastName: version?.updatedBy?.lastName || '',
+        displayName: parseUserDisplayName(
+          version?.updatedBy?.firstName || '',
+          version?.updatedBy?.lastName || '',
+          undefined,
+          version?.updatedBy?.nickname || '',
+        ),
+        avatarUrl: version?.updatedBy?.avatar?.url || undefined,
+        alumniSinceDate: version?.updatedBy?.alumniSinceDate || undefined,
+        teams: version?.updatedBy?.teamsCollection?.items.map((teamItem) => ({
+          id: teamItem?.team?.sys.id,
+          name: teamItem?.team?.displayName,
+        })),
+      },
       createdDate: version?.sys.firstPublishedAt,
       publishedAt: version?.sys.publishedAt,
       teams: version?.teamsCollection?.items.map((teamItem) => ({
@@ -299,6 +436,21 @@ export const parseGraphqlManuscriptVersion = (
       })),
       complianceReport: parseComplianceReport(
         version?.linkedFrom?.complianceReportsCollection?.items[0],
+      ),
+      firstAuthors: parseGraphqlAuthor(
+        (version?.firstAuthorsCollection?.items || []).filter(
+          (author): author is FirstAuthorItem => author !== null,
+        ),
+      ),
+      additionalAuthors: parseGraphqlAuthor(
+        (version?.additionalAuthorsCollection?.items || []).filter(
+          (author): author is AdditionalAuthorItem => author !== null,
+        ),
+      ),
+      correspondingAuthor: parseGraphqlAuthor(
+        (version?.correspondingAuthorCollection?.items || []).filter(
+          (author): author is CorrespondingAuthorItem => author !== null,
+        ),
       ),
     }))
     .filter(

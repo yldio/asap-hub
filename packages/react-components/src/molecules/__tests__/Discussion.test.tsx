@@ -1,4 +1,8 @@
-import { createDiscussionResponse, createMessage } from '@asap-hub/fixtures';
+import {
+  createDiscussionReplies,
+  createDiscussionResponse,
+  createMessage,
+} from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -25,17 +29,15 @@ it('handles case when discussion is not found', () => {
   expect(queryByText(/Reply/i)).not.toBeInTheDocument();
 });
 
-it('displays discussion details', () => {
+it('displays discussion message', () => {
   const message = 'test message';
-  const replies = [createMessage('test reply')];
-  const discussion = createDiscussionResponse(message, replies);
+  const discussion = createDiscussionResponse(message);
   const getDiscussion = jest.fn().mockReturnValueOnce(discussion);
   const { getByText } = render(
     <Discussion {...props} getDiscussion={getDiscussion} />,
   );
 
   expect(getByText(message)).toBeVisible();
-  expect(getByText(replies[0]!.text)).toBeVisible();
 });
 
 it('displays reply modal when user clicks reply button', () => {
@@ -59,4 +61,78 @@ it('removes reply modal when user clicks cancel button', () => {
   userEvent.click(getByRole('button', { name: /Cancel/i }));
 
   expect(queryByText(/Reply to quick check/i)).not.toBeInTheDocument();
+});
+
+describe('when there are replies', () => {
+  describe('when collapsed', () => {
+    const getDiscussion = jest.fn();
+    const propsWithReplies = {
+      ...props,
+      getDiscussion,
+    };
+    const message = 'test message';
+
+    beforeEach(() => {
+      const replies = [createMessage('test reply')];
+      const discussion = createDiscussionResponse(message, replies);
+      getDiscussion.mockReturnValue(discussion);
+    });
+
+    it('displays replies when expanded', async () => {
+      const { getByText, getByTestId, queryByText } = render(
+        <Discussion {...propsWithReplies} />,
+      );
+
+      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+
+      userEvent.click(getByTestId('discussion-collapsible-button'));
+      expect(getByText(/test reply/i)).toBeVisible();
+    });
+
+    it('displays number of replies', () => {
+      const { getByText } = render(<Discussion {...propsWithReplies} />);
+
+      expect(getByText(/1 reply/i)).toBeVisible();
+    });
+
+    it('displays count of extra replies when there are more than 5 replies', () => {
+      const replies = createDiscussionReplies(6);
+      const discussion = createDiscussionResponse(message, replies);
+      getDiscussion.mockReturnValue(discussion);
+      const { getByLabelText, getByText } = render(
+        <Discussion {...propsWithReplies} />,
+      );
+
+      expect(getByText(/6 replies/i)).toBeVisible();
+
+      expect(getByLabelText(/\+1/)).toBeVisible();
+    });
+
+    it('clicking on number of replies expands replies list', () => {
+      const { getByText, queryByText } = render(
+        <Discussion {...propsWithReplies} />,
+      );
+
+      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+
+      userEvent.click(getByText(/1 reply/i));
+
+      expect(getByText(/test reply/i)).toBeVisible();
+    });
+
+    it('clicking on count of extra replies expands replies list', () => {
+      const replies = createDiscussionReplies(6);
+      const discussion = createDiscussionResponse(message, replies);
+      getDiscussion.mockReturnValue(discussion);
+
+      const { getByLabelText, getByText, queryByText, debug } = render(
+        <Discussion {...propsWithReplies} />,
+      );
+
+      expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
+      userEvent.click(getByLabelText(/\+1/));
+      debug(undefined, 5000000);
+      expect(getByText(/test reply 1/i)).toBeVisible();
+    });
+  });
 });

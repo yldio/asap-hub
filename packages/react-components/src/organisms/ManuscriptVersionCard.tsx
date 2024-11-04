@@ -47,9 +47,9 @@ const toastStyles = css({
 
 const iconStyles = css({
   display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  width: rem(24),
+  height: rem(24),
+  paddingRight: rem(12),
 });
 
 const toastHeaderStyles = css({

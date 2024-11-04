@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { discussionContentQueryFragment } from './discussions.queries';
 
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
@@ -51,51 +52,35 @@ export const manuscriptContentQueryFragment = gql`
         otherDetails
         acknowledgedGrantNumber
         acknowledgedGrantNumberDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         asapAffiliationIncluded
         asapAffiliationIncludedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         manuscriptLicense
         manuscriptLicenseDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         datasetsDeposited
         datasetsDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         codeDeposited
         codeDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         protocolsDeposited
         protocolsDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         labMaterialsRegistered
         labMaterialsRegisteredDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         availabilityStatement
         availabilityStatementDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         teamsCollection(limit: 10) {
           items {
@@ -147,10 +132,11 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
+  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!) {
+  query FetchManuscriptById($id: String!, $fetchReplies: Boolean = false) {
     manuscripts(id: $id) {
       ...ManuscriptsContent
       teamsCollection(limit: 10) {

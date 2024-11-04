@@ -6,6 +6,8 @@ import {
 import {
   ComplianceReportPostRequest,
   ComplianceReportResponse,
+  DiscussionPatchRequest,
+  DiscussionResponse,
   ListLabsResponse,
   ListTeamResponse,
   ManuscriptFileResponse,
@@ -286,4 +288,50 @@ export const createComplianceReport = async (
     );
   }
   return response;
+};
+
+export const updateDiscussion = async (
+  discussionId: string,
+  discussion: DiscussionPatchRequest,
+  authorization: string,
+): Promise<DiscussionResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/discussions/${discussionId}`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(discussion),
+  });
+  const response = await resp.json();
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update discussion with id ${discussionId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
+    );
+  }
+  return response;
+};
+
+export const getDiscussion = async (
+  id: string,
+  authorization: string,
+): Promise<DiscussionResponse | undefined> => {
+  const resp = await fetch(`${API_BASE_URL}/discussions/${id}`, {
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+    },
+  });
+  if (!resp.ok) {
+    if (resp.status === 404) {
+      return undefined;
+    }
+    throw new Error(
+      `Failed to fetch discussion with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
 };

@@ -3,6 +3,7 @@ export * from './analytics';
 export * from './calendars';
 export * from './dashboard';
 export * from './discover';
+export * from './discussions';
 export * from './events';
 export * as gp2 from './gp2';
 export * from './interest-groups';

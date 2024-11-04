@@ -8,6 +8,7 @@ export * from './controllers';
 export * from './dashboard';
 export * from './data-providers';
 export * from './discover';
+export * from './discussion';
 export * from './error';
 export * from './event';
 export * from './event-common';

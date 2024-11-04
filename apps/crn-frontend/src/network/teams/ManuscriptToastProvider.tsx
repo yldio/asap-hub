@@ -1,7 +1,7 @@
 import { Toast } from '@asap-hub/react-components';
 import React, { createContext, useState } from 'react';
 
-type FormType = 'manuscript' | 'compliance-report' | '';
+type FormType = 'manuscript' | 'compliance-report' | 'quick-check' | '';
 
 type ManuscriptToastContextData = {
   setFormType: React.Dispatch<React.SetStateAction<FormType>>;
@@ -19,8 +19,9 @@ export const ManuscriptToastProvider = ({
   const [formType, setFormType] = useState<FormType>('');
 
   const formTypeMapping = {
-    manuscript: 'Manuscript',
-    'compliance-report': 'Compliance Report',
+    manuscript: 'Manuscript submitted successfully.',
+    'compliance-report': 'Compliance Report submitted successfully.',
+    'quick-check': 'Replied to quick check successfully.',
   };
 
   return (
@@ -28,7 +29,7 @@ export const ManuscriptToastProvider = ({
       <>
         {!!formType && (
           <Toast accent="successLarge" onClose={() => setFormType('')}>
-            {formTypeMapping[formType]} submitted successfully.
+            {formTypeMapping[formType]}
           </Toast>
         )}
         {children}

@@ -5,16 +5,24 @@ import {
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import { TeamTool, TeamResponse, ManuscriptPutRequest } from '@asap-hub/model';
+import {
+  TeamTool,
+  TeamResponse,
+  ManuscriptPutRequest,
+  DiscussionPatchRequest,
+} from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
 import {
+  useDiscussionById,
   useIsComplianceReviewer,
   usePatchTeamById,
   usePutManuscript,
+  useReplyToDiscussion,
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
+import { useManuscriptToast } from './useManuscriptToast';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -28,7 +36,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
   const updateManuscript = usePutManuscript();
+  const replyToDiscussion = useReplyToDiscussion();
+  const getDiscussion = useDiscussionById;
   const toast = useContext(ToastContext);
+
+  const { setFormType } = useManuscriptToast();
 
   return (
     <>
@@ -61,6 +73,14 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                 }
           }
           isComplianceReviewer={isComplianceReviewer}
+          onReplyToDiscussion={async (
+            id: string,
+            patch: DiscussionPatchRequest,
+          ) => {
+            await replyToDiscussion(id, patch);
+            setFormType('quick-check');
+          }}
+          getDiscussion={getDiscussion}
         />
       </Route>
       <Route exact path={path + route.tools.template}>

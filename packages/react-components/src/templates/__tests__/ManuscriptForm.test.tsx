@@ -185,7 +185,7 @@ test.each`
     const props = {
       ...defaultProps,
       [field]: 'No',
-      [fieldDetails]: 'Explanation',
+      [fieldDetails]: { message: { text: 'Explanation' } },
     };
     render(
       <StaticRouter>
@@ -283,7 +283,7 @@ test.each`
     const props = {
       ...defaultProps,
       [field]: 'Yes',
-      [fieldDetails]: 'Explanation',
+      [fieldDetails]: { message: { text: 'Explanation' } },
     };
     render(
       <StaticRouter>

@@ -73,6 +73,10 @@ type TeamProfileWorkspaceProps = Readonly<
   Pick<
     ComponentProps<typeof ManuscriptCard>,
     'onUpdateManuscript' | 'isComplianceReviewer'
+  > &
+  Pick<
+    ComponentProps<typeof ManuscriptCard>,
+    'onReplyToDiscussion' | 'isComplianceReviewer' | 'getDiscussion'
   > & {
     readonly tools: ReadonlyArray<TeamTool>;
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
@@ -89,6 +93,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   manuscripts,
   tools,
   onDeleteTool,
+  onReplyToDiscussion,
+  getDiscussion,
   setEligibilityReasons,
   isComplianceReviewer = false,
 }) => {
@@ -156,6 +162,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   grantId={grantId || ''}
                   isComplianceReviewer={isComplianceReviewer}
                   onUpdateManuscript={onUpdateManuscript}
+                  onReplyToDiscussion={onReplyToDiscussion}
+                  getDiscussion={getDiscussion}
                 />
               </div>
             ))}

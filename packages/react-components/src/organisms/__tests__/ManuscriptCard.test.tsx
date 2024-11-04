@@ -12,6 +12,8 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   grantId: '000123',
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
+  onReplyToDiscussion: jest.fn(),
+  getDiscussion: jest.fn(),
 };
 
 it('displays manuscript version card when expanded', () => {

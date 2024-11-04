@@ -159,6 +159,7 @@ export type TextEditorProps = {
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
   readonly id?: string;
   readonly required?: boolean;
+  readonly maxLength?: number;
   readonly value: string;
   readonly enabled?: boolean;
   onChange: (content: string) => void;
@@ -177,6 +178,7 @@ const TextEditor = ({
   value,
   onChange,
   required,
+  maxLength,
   customValidationMessage = '',
   enabled = true,
   getValidationMessage,
@@ -247,6 +249,7 @@ const TextEditor = ({
             onChange={noop}
             css={{ display: 'none' }}
             required={required}
+            maxLength={maxLength}
             value={value}
           />
           <ListPlugin />

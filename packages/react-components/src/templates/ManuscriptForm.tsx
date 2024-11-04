@@ -343,14 +343,21 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           protocolsDeposited: protocolsDeposited || '',
           labMaterialsRegistered: labMaterialsRegistered || '',
           availabilityStatement: availabilityStatement || '',
-          acknowledgedGrantNumberDetails: acknowledgedGrantNumberDetails || '',
-          asapAffiliationIncludedDetails: asapAffiliationIncludedDetails || '',
-          manuscriptLicenseDetails: manuscriptLicenseDetails || '',
-          datasetsDepositedDetails: datasetsDepositedDetails || '',
-          codeDepositedDetails: codeDepositedDetails || '',
-          protocolsDepositedDetails: protocolsDepositedDetails || '',
-          labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
-          availabilityStatementDetails: availabilityStatementDetails || '',
+          acknowledgedGrantNumberDetails:
+            acknowledgedGrantNumberDetails?.message.text || '',
+          asapAffiliationIncludedDetails:
+            asapAffiliationIncludedDetails?.message.text || '',
+          manuscriptLicenseDetails:
+            manuscriptLicenseDetails?.message.text || '',
+          datasetsDepositedDetails:
+            datasetsDepositedDetails?.message.text || '',
+          codeDepositedDetails: codeDepositedDetails?.message.text || '',
+          protocolsDepositedDetails:
+            protocolsDepositedDetails?.message.text || '',
+          labMaterialsRegisteredDetails:
+            labMaterialsRegisteredDetails?.message.text || '',
+          availabilityStatementDetails:
+            availabilityStatementDetails?.message.text || '',
           teams: selectedTeams || [],
           description: description || '',
           firstAuthors: firstAuthors || [],

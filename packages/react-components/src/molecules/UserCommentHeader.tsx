@@ -14,7 +14,7 @@ const containerStyles = css({
   flexDirection: 'row',
   flexWrap: 'wrap',
   alignItems: 'center',
-  gap: rem(12),
+  gap: rem(6),
 });
 
 const userContainerStyles = css({

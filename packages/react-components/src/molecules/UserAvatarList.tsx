@@ -55,7 +55,7 @@ const UserAvatarList: React.FC<UserAvatarListProps> = ({
 }) => (
   <div
     css={membersContainerStyles(
-      small === true ? 24 : 36,
+      small ? 24 : 36,
       members.length > MAX_USER_AVATARS ? MAX_USER_AVATARS + 1 : members.length,
     )}
   >

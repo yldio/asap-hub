@@ -388,6 +388,8 @@ describe('manuscript quick check discussion', () => {
       userEvent.click(getByTestId('version-collapsible-button'));
     });
 
+    userEvent.click(getByTestId('discussion-collapsible-button'));
+
     expect(getByText(quickCheckResponse)).toBeVisible();
     expect(getByText(reply.text)).toBeVisible();
     expect(mockGetDiscussion).toHaveBeenLastCalledWith(
@@ -417,6 +419,8 @@ describe('manuscript quick check discussion', () => {
       userEvent.click(await findByTestId('collapsible-button'));
       userEvent.click(getByTestId('version-collapsible-button'));
     });
+
+    userEvent.click(getByTestId('discussion-collapsible-button'));
 
     const replyButton = getByRole('button', { name: /Reply/i });
     userEvent.click(replyButton);

@@ -64,74 +64,72 @@ it('removes reply modal when user clicks cancel button', () => {
 });
 
 describe('when there are replies', () => {
-  describe('when collapsed', () => {
-    const getDiscussion = jest.fn();
-    const propsWithReplies = {
-      ...props,
-      getDiscussion,
-    };
-    const message = 'test message';
+  const getDiscussion = jest.fn();
+  const propsWithReplies = {
+    ...props,
+    getDiscussion,
+  };
+  const message = 'test message';
 
-    beforeEach(() => {
-      const replies = [createMessage('test reply')];
-      const discussion = createDiscussionResponse(message, replies);
-      getDiscussion.mockReturnValue(discussion);
-    });
+  beforeEach(() => {
+    const replies = [createMessage('test reply')];
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+  });
 
-    it('displays replies when expanded', async () => {
-      const { getByText, getByTestId, queryByText } = render(
-        <Discussion {...propsWithReplies} />,
-      );
+  it('displays replies when expanded', async () => {
+    const { getByText, getByTestId, queryByText } = render(
+      <Discussion {...propsWithReplies} />,
+    );
 
-      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    expect(queryByText(/test reply/i)).not.toBeInTheDocument();
 
-      userEvent.click(getByTestId('discussion-collapsible-button'));
-      expect(getByText(/test reply/i)).toBeVisible();
-    });
+    userEvent.click(getByTestId('discussion-collapsible-button'));
+    expect(getByText(/test reply/i)).toBeVisible();
+  });
 
-    it('displays number of replies', () => {
-      const { getByText } = render(<Discussion {...propsWithReplies} />);
+  it('displays number of replies', () => {
+    const { getByText } = render(<Discussion {...propsWithReplies} />);
 
-      expect(getByText(/1 reply/i)).toBeVisible();
-    });
+    expect(getByText(/1 reply/i)).toBeVisible();
+  });
 
-    it('displays count of extra replies when there are more than 5 replies', () => {
-      const replies = createDiscussionReplies(6);
-      const discussion = createDiscussionResponse(message, replies);
-      getDiscussion.mockReturnValue(discussion);
-      const { getByLabelText, getByText } = render(
-        <Discussion {...propsWithReplies} />,
-      );
+  it('displays count of extra replies when there are more than 5 replies', () => {
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
+    const { getByLabelText, getByText } = render(
+      <Discussion {...propsWithReplies} />,
+    );
 
-      expect(getByText(/6 replies/i)).toBeVisible();
+    expect(getByText(/6 replies/i)).toBeVisible();
 
-      expect(getByLabelText(/\+1/)).toBeVisible();
-    });
+    expect(getByLabelText(/\+1/)).toBeVisible();
+  });
 
-    it('clicking on number of replies expands replies list', () => {
-      const { getByText, queryByText } = render(
-        <Discussion {...propsWithReplies} />,
-      );
+  it('clicking on number of replies expands replies list', () => {
+    const { getByText, queryByText } = render(
+      <Discussion {...propsWithReplies} />,
+    );
 
-      expect(queryByText(/test reply/i)).not.toBeInTheDocument();
+    expect(queryByText(/test reply/i)).not.toBeInTheDocument();
 
-      userEvent.click(getByText(/1 reply/i));
+    userEvent.click(getByText(/1 reply/i));
 
-      expect(getByText(/test reply/i)).toBeVisible();
-    });
+    expect(getByText(/test reply/i)).toBeVisible();
+  });
 
-    it('clicking on count of extra replies expands replies list', () => {
-      const replies = createDiscussionReplies(6);
-      const discussion = createDiscussionResponse(message, replies);
-      getDiscussion.mockReturnValue(discussion);
+  it('clicking on count of extra replies expands replies list', () => {
+    const replies = createDiscussionReplies(6);
+    const discussion = createDiscussionResponse(message, replies);
+    getDiscussion.mockReturnValue(discussion);
 
-      const { getByLabelText, getByText, queryByText, debug } = render(
-        <Discussion {...propsWithReplies} />,
-      );
+    const { getByLabelText, getByText, queryByText } = render(
+      <Discussion {...propsWithReplies} />,
+    );
 
-      expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
-      userEvent.click(getByLabelText(/\+1/));
-      expect(getByText(/test reply 1/i)).toBeVisible();
-    });
+    expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
+    userEvent.click(getByLabelText(/\+1/));
+    expect(getByText(/test reply 1/i)).toBeVisible();
   });
 });

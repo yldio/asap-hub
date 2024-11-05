@@ -20,7 +20,8 @@ import {
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
   getManuscriptDataObject,
-  getManuscriptUpdateDataObject,
+  getManuscriptFileResponse,
+  getManuscriptUpdateStatusDataObject,
 } from '../../fixtures/manuscript.fixtures';
 import {
   getContentfulGraphql,
@@ -56,6 +57,15 @@ describe('Manuscripts Contentful Data Provider', () => {
         getContentfulGraphqlManuscriptVersions().items[0]?.teamsCollection,
       ManuscriptVersionsLabsCollection: () =>
         getContentfulGraphqlManuscriptVersions().items[0]?.labsCollection,
+      ManuscriptVersionsFirstAuthorsCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]
+          ?.firstAuthorsCollection,
+      ManuscriptVersionsCorrespondingAuthorCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]
+          ?.correspondingAuthorCollection,
+      ManuscriptVersionsAdditionalAuthorsCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]
+          ?.additionalAuthorsCollection,
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -172,6 +182,117 @@ describe('Manuscripts Contentful Data Provider', () => {
         expect(result!.versions[0]![fieldDetails]).toBeUndefined();
       },
     );
+
+    test('returns authors', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+        {
+          __typename: 'Users',
+          sys: {
+            id: 'user-id-1',
+          },
+          avatar: null,
+          firstName: 'Fiona',
+          lastName: 'First',
+          nickname: null,
+          email: 'fiona.first@email.com',
+        },
+        {
+          __typename: 'ExternalAuthors',
+          sys: {
+            id: 'external-id-1',
+          },
+          name: 'First External',
+          email: 'first.external@email.com',
+        },
+      ];
+
+      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
+        [
+          {
+            __typename: 'Users',
+            sys: {
+              id: 'corresponding-id-1',
+            },
+            avatar: null,
+            firstName: 'Connor',
+            lastName: 'Corresponding',
+            nickname: null,
+            email: 'connor.corresponding@email.com',
+          },
+        ];
+
+      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
+        [
+          {
+            __typename: 'Users',
+            sys: {
+              id: 'additional-id-1',
+            },
+            avatar: null,
+            firstName: 'Adele',
+            lastName: 'Additional',
+            nickname: null,
+            email: 'adele.additional@email.com',
+          },
+          {
+            __typename: 'ExternalAuthors',
+            sys: {
+              id: 'external-id-1',
+            },
+            name: 'Second External',
+            email: 'second.external@email.com',
+          },
+        ];
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1');
+      expect(result!.versions[0]!.firstAuthors).toEqual([
+        {
+          avatarUrl: undefined,
+          displayName: 'Fiona First',
+          email: 'fiona.first@email.com',
+          firstName: 'Fiona',
+          id: 'user-id-1',
+          lastName: 'First',
+        },
+        {
+          displayName: 'First External',
+          email: 'first.external@email.com',
+          id: 'external-id-1',
+        },
+      ]);
+
+      expect(result!.versions[0]!.correspondingAuthor).toEqual([
+        {
+          avatarUrl: undefined,
+          displayName: 'Connor Corresponding',
+          email: 'connor.corresponding@email.com',
+          firstName: 'Connor',
+          id: 'corresponding-id-1',
+          lastName: 'Corresponding',
+        },
+      ]);
+
+      expect(result!.versions[0]!.additionalAuthors).toEqual([
+        {
+          avatarUrl: undefined,
+          displayName: 'Adele Additional',
+          email: 'adele.additional@email.com',
+          firstName: 'Adele',
+          id: 'additional-id-1',
+          lastName: 'Additional',
+        },
+        {
+          displayName: 'Second External',
+          email: 'second.external@email.com',
+          id: 'external-id-1',
+        },
+      ]);
+    });
 
     test('should default null values to empty strings and arrays', async () => {
       const manuscript = getContentfulGraphqlManuscript();
@@ -299,6 +420,15 @@ describe('Manuscripts Contentful Data Provider', () => {
           ],
         },
         createdBy: {
+          'en-US': {
+            sys: {
+              id: 'user-id-0',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        },
+        updatedBy: {
           'en-US': {
             sys: {
               id: 'user-id-0',
@@ -662,7 +792,7 @@ describe('Manuscripts Contentful Data Provider', () => {
     const patch: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
     const publish: jest.MockedFunction<() => Promise<Entry>> = jest.fn();
 
-    test('can update the manuscript', async () => {
+    test('can update the manuscript status', async () => {
       const entry = {
         sys: {
           publishedVersion: 1,
@@ -678,7 +808,8 @@ describe('Manuscripts Contentful Data Provider', () => {
       const manuscriptId = 'manuscript-id-1';
       await manuscriptDataProvider.update(
         manuscriptId,
-        getManuscriptUpdateDataObject(),
+        getManuscriptUpdateStatusDataObject(),
+        'user-id-1',
       );
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
@@ -689,6 +820,324 @@ describe('Manuscripts Contentful Data Provider', () => {
           value: { 'en-US': 'Manuscript Resubmitted' },
         },
       ]);
+    });
+
+    test('can update the manuscript version content and title', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const versionId = 'version-id-1';
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          versions: {
+            'en-US': [{ sys: { id: versionId } }],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {},
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+
+      when(environmentMock.getEntry)
+        .calledWith(manuscriptId)
+        .mockResolvedValue(manuscriptEntry);
+
+      when(environmentMock.getEntry)
+        .calledWith(versionId)
+        .mockResolvedValue(entry);
+
+      environmentMock.getAsset.mockResolvedValue(assetMock);
+
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          title: 'New Title',
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1'],
+              manuscriptFile: getManuscriptFileResponse(),
+              description: 'edited description',
+              firstAuthors: ['author-1'],
+              correspondingAuthor: ['author-2'],
+              additionalAuthors: ['external-1'],
+              keyResourceTable: {
+                filename: 'manuscript.csv',
+                url: 'https://example.com/manuscript.csv',
+                id: 'file-table-id',
+              },
+              additionalFiles: [
+                {
+                  filename: 'manuscript.csv',
+                  url: 'https://example.com/manuscript.csv',
+                  id: 'file-additional-id',
+                },
+              ],
+            },
+          ],
+        },
+        'user-id-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(patch).toHaveBeenCalledTimes(2);
+      expect(patch).toHaveBeenNthCalledWith(1, [
+        {
+          op: 'add',
+          path: '/fields/title',
+          value: { 'en-US': 'New Title' },
+        },
+      ]);
+
+      expect(patch).toHaveBeenNthCalledWith(
+        2,
+        expect.arrayContaining([
+          {
+            op: 'add',
+            path: '/fields/lifecycle',
+            value: {
+              'en-US': 'Preprint',
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/type',
+            value: {
+              'en-US': 'Original Research',
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/teams',
+            value: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'team-1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/manuscriptFile',
+            value: {
+              'en-US': {
+                sys: {
+                  id: 'file-id',
+                  linkType: 'Asset',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/keyResourceTable',
+            value: {
+              'en-US': {
+                sys: {
+                  id: 'file-table-id',
+                  linkType: 'Asset',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/additionalFiles',
+            value: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'file-additional-id',
+                    linkType: 'Asset',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/description',
+            value: {
+              'en-US': 'edited description',
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/firstAuthors',
+            value: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'author-1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/correspondingAuthor',
+            value: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'author-2',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/additionalAuthors',
+            value: {
+              'en-US': [
+                {
+                  sys: {
+                    id: 'external-1',
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          },
+
+          {
+            op: 'add',
+            path: '/fields/updatedBy',
+            value: {
+              'en-US': {
+                sys: {
+                  id: 'user-id-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+        ]),
+      );
+    });
+
+    test('can update the manuscript when keyResourceTable and additionalFiles are not passed', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      const versionId = 'version-id-1';
+      const manuscriptEntry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {
+          versions: {
+            'en-US': [{ sys: { id: versionId } }],
+          },
+        },
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const entry = {
+        sys: {
+          publishedVersion: 1,
+        },
+        fields: {},
+        patch,
+        publish,
+      } as unknown as Entry;
+
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+
+      when(environmentMock.getEntry)
+        .calledWith(manuscriptId)
+        .mockResolvedValue(manuscriptEntry);
+
+      when(environmentMock.getEntry)
+        .calledWith(versionId)
+        .mockResolvedValue(entry);
+
+      environmentMock.getAsset.mockResolvedValue(assetMock);
+
+      patch.mockResolvedValue(entry);
+      publish.mockResolvedValue(entry);
+
+      await manuscriptDataProvider.update(
+        manuscriptId,
+        {
+          title: 'New Title',
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1'],
+              manuscriptFile: getManuscriptFileResponse(),
+              description: 'edited description',
+              firstAuthors: ['author-1'],
+              correspondingAuthor: ['author-2'],
+              additionalAuthors: ['external-1'],
+            },
+          ],
+        },
+        'user-id-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(manuscriptId);
+      expect(patch).toHaveBeenCalledTimes(2);
+      expect(patch).toHaveBeenNthCalledWith(1, [
+        {
+          op: 'add',
+          path: '/fields/title',
+          value: { 'en-US': 'New Title' },
+        },
+      ]);
+
+      expect(patch).toHaveBeenNthCalledWith(
+        2,
+        expect.arrayContaining([
+          {
+            op: 'add',
+            path: '/fields/keyResourceTable',
+            value: { 'en-US': null },
+          },
+          {
+            op: 'add',
+            path: '/fields/additionalFiles',
+            value: { 'en-US': null },
+          },
+        ]),
+      );
     });
   });
 });

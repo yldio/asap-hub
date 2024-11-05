@@ -207,6 +207,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 teamId={teamIdCode}
                 grantId={grantId}
                 manuscriptCount={count}
+                manuscriptId={id}
               />
             ))}
           </div>

@@ -15,6 +15,7 @@ export type LabeledRadioButtonGroupProps<V extends string> = {
   readonly description?: React.ReactNode;
   readonly options: ReadonlyArray<Option<V>>;
   readonly validationMessage?: string;
+  readonly testId?: string;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -51,10 +52,11 @@ export default function LabeledRadioButtonGroup<V extends string>({
   onChange = noop,
   tooltipText,
   validationMessage,
+  testId,
 }: LabeledRadioButtonGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
   return (
-    <fieldset css={containerStyles}>
+    <fieldset css={containerStyles} data-testid={testId}>
       {title || subtitle || description ? (
         <legend>
           <strong>{title}</strong>

@@ -31,6 +31,7 @@ export const createManuscriptResponse = (
       type: 'Original Research',
       description: 'A good description',
       createdBy: manuscriptAuthor,
+      updatedBy: manuscriptAuthor,
       createdDate: '2020-12-10T20:36:54Z',
       publishedAt: '2020-12-10T20:36:54Z',
       manuscriptFile: {
@@ -57,6 +58,9 @@ export const createManuscriptResponse = (
         },
       ],
       labs: [{ name: 'Lab 1', id: 'lab-1' }],
+      firstAuthors: [],
+      correspondingAuthor: [],
+      additionalAuthors: [],
     },
   ],
 });

@@ -14,7 +14,7 @@ import {
   getManuscriptCreateDataObject,
   getManuscriptFileResponse,
   getManuscriptCreateControllerDataObject,
-  getManuscriptUpdateDataObject,
+  getManuscriptUpdateStatusDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
@@ -299,7 +299,8 @@ describe('Manuscript controller', () => {
       await expect(
         manuscriptController.update(
           manuscriptId,
-          getManuscriptUpdateDataObject(),
+          { status: 'Manuscript Resubmitted' },
+          'user-id',
         ),
       ).rejects.toThrow(GenericError);
     });
@@ -314,12 +315,13 @@ describe('Manuscript controller', () => {
       await expect(
         manuscriptController.update(
           manuscriptId,
-          getManuscriptUpdateDataObject(),
+          { status: 'Manuscript Resubmitted' },
+          'user-id',
         ),
       ).rejects.toThrow(NotFoundError);
     });
 
-    test('Should update the manuscript and return it', async () => {
+    test('Should update the manuscript status and return it', async () => {
       const manuscriptId = 'manuscript-id-1';
       manuscriptDataProviderMock.fetchById.mockResolvedValue(
         getManuscriptResponse(),
@@ -328,13 +330,120 @@ describe('Manuscript controller', () => {
 
       const result = await manuscriptController.update(
         manuscriptId,
-        getManuscriptUpdateDataObject(),
+        { status: 'Manuscript Resubmitted' },
+        'user-id',
       );
 
       expect(result).toEqual(getManuscriptResponse());
       expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
         manuscriptId,
-        getManuscriptUpdateDataObject(),
+        getManuscriptUpdateStatusDataObject(),
+        'user-id',
+      );
+    });
+
+    test('Should update the manuscript version and return it', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.fetchById.mockResolvedValue(
+        getManuscriptResponse(),
+      );
+      manuscriptDataProviderMock.update.mockResolvedValueOnce();
+
+      const result = await manuscriptController.update(
+        manuscriptId,
+        {
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1'],
+              manuscriptFile: getManuscriptFileResponse(),
+              description: 'edited description',
+              firstAuthors: [{ userId: 'author-1' }],
+              correspondingAuthor: { userId: 'author-2' },
+              additionalAuthors: [
+                {
+                  externalAuthorId: 'external-1',
+                  externalAuthorName: 'External One',
+                  externalAuthorEmail: 'external@one.com',
+                },
+              ],
+            },
+          ],
+        },
+        'user-id',
+      );
+
+      expect(result).toEqual(getManuscriptResponse());
+      expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
+        manuscriptId,
+        {
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1'],
+              manuscriptFile: {
+                filename: 'manuscript.pdf',
+                id: 'file-id',
+                url: 'https://example.com/manuscript.pdf',
+              },
+              description: 'edited description',
+              firstAuthors: ['author-1'],
+              correspondingAuthor: ['author-2'],
+              additionalAuthors: ['external-1'],
+            },
+          ],
+        },
+        'user-id',
+      );
+
+      expect(externalAuthorDataProviderMock.update).toHaveBeenCalledWith(
+        'external-1',
+        {
+          email: 'external@one.com',
+        },
+      );
+    });
+
+    test('Should update the manuscript version when corresponding author and additional authors are empty', async () => {
+      const manuscriptId = 'manuscript-id-1';
+      manuscriptDataProviderMock.fetchById.mockResolvedValue(
+        getManuscriptResponse(),
+      );
+      manuscriptDataProviderMock.update.mockResolvedValueOnce();
+
+      const result = await manuscriptController.update(
+        manuscriptId,
+        {
+          versions: [
+            {
+              lifecycle: 'Preprint',
+              type: 'Original Research',
+              teams: ['team-1'],
+              manuscriptFile: getManuscriptFileResponse(),
+              description: 'edited description',
+              firstAuthors: [{ userId: 'author-1' }],
+              correspondingAuthor: undefined,
+              additionalAuthors: [],
+            },
+          ],
+        },
+        'user-id',
+      );
+
+      expect(result).toEqual(getManuscriptResponse());
+      expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
+        manuscriptId,
+        {
+          versions: [
+            expect.objectContaining({
+              correspondingAuthor: [],
+              additionalAuthors: [],
+            }),
+          ],
+        },
+        'user-id',
       );
     });
   });

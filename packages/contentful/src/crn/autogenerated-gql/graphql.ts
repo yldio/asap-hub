@@ -3873,6 +3873,7 @@ export type ManuscriptVersions = Entry &
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
     type?: Maybe<Scalars['String']>;
+    updatedBy?: Maybe<Users>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -4098,6 +4099,13 @@ export type ManuscriptVersionsTeamsCollectionArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsUpdatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type ManuscriptVersionsAdditionalAuthorsCollection = {
@@ -4349,6 +4357,8 @@ export type ManuscriptVersionsFilter = {
   type_not?: InputMaybe<Scalars['String']>;
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  updatedBy?: InputMaybe<CfUsersNestedFilter>;
+  updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ManuscriptVersionsFirstAuthorsCollection = {
@@ -11720,6 +11730,7 @@ export type CfManuscriptVersionsNestedFilter = {
   type_not?: InputMaybe<Scalars['String']>;
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CfMessagesNestedFilter = {
@@ -17978,6 +17989,75 @@ export type ManuscriptsContentFragment = Pick<
               }>;
             }
           >;
+          updatedBy?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+            > & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    team?: Maybe<
+                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }>
+                >;
+              }>;
+            }
+          >;
+          firstAuthorsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                | ({ __typename: 'ExternalAuthors' } & Pick<
+                    ExternalAuthors,
+                    'name' | 'email'
+                  > & { sys: Pick<Sys, 'id'> })
+                | ({ __typename: 'Users' } & Pick<
+                    Users,
+                    'firstName' | 'lastName' | 'nickname' | 'email'
+                  > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    })
+              >
+            >;
+          }>;
+          additionalAuthorsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                | ({ __typename: 'ExternalAuthors' } & Pick<
+                    ExternalAuthors,
+                    'name' | 'email'
+                  > & { sys: Pick<Sys, 'id'> })
+                | ({ __typename: 'Users' } & Pick<
+                    Users,
+                    'firstName' | 'lastName' | 'nickname' | 'email'
+                  > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    })
+              >
+            >;
+          }>;
+          correspondingAuthorCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                | ({ __typename: 'ExternalAuthors' } & Pick<
+                    ExternalAuthors,
+                    'name' | 'email'
+                  > & { sys: Pick<Sys, 'id'> })
+                | ({ __typename: 'Users' } & Pick<
+                    Users,
+                    'firstName' | 'lastName' | 'nickname' | 'email'
+                  > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    })
+              >
+            >;
+          }>;
           linkedFrom?: Maybe<{
             complianceReportsCollection?: Maybe<{
               items: Array<
@@ -18576,6 +18656,75 @@ export type FetchManuscriptByIdQuery = {
                   }>;
                 }
               >;
+              updatedBy?: Maybe<
+                Pick<
+                  Users,
+                  'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                > & {
+                  sys: Pick<Sys, 'id'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<{
+                        team?: Maybe<
+                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                        >;
+                      }>
+                    >;
+                  }>;
+                }
+              >;
+              firstAuthorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'ExternalAuthors' } & Pick<
+                        ExternalAuthors,
+                        'name' | 'email'
+                      > & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        'firstName' | 'lastName' | 'nickname' | 'email'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        })
+                  >
+                >;
+              }>;
+              additionalAuthorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'ExternalAuthors' } & Pick<
+                        ExternalAuthors,
+                        'name' | 'email'
+                      > & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        'firstName' | 'lastName' | 'nickname' | 'email'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        })
+                  >
+                >;
+              }>;
+              correspondingAuthorCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'ExternalAuthors' } & Pick<
+                        ExternalAuthors,
+                        'name' | 'email'
+                      > & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        'firstName' | 'lastName' | 'nickname' | 'email'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        })
+                  >
+                >;
+              }>;
               linkedFrom?: Maybe<{
                 complianceReportsCollection?: Maybe<{
                   items: Array<
@@ -20795,6 +20944,89 @@ export type FetchTeamByIdQuery = {
                             }>;
                           }
                         >;
+                        updatedBy?: Maybe<
+                          Pick<
+                            Users,
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                            teamsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<{
+                                  team?: Maybe<
+                                    Pick<Teams, 'displayName'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                }>
+                              >;
+                            }>;
+                          }
+                        >;
+                        firstAuthorsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'ExternalAuthors' } & Pick<
+                                  ExternalAuthors,
+                                  'name' | 'email'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'Users' } & Pick<
+                                  Users,
+                                  | 'firstName'
+                                  | 'lastName'
+                                  | 'nickname'
+                                  | 'email'
+                                > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                  })
+                            >
+                          >;
+                        }>;
+                        additionalAuthorsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'ExternalAuthors' } & Pick<
+                                  ExternalAuthors,
+                                  'name' | 'email'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'Users' } & Pick<
+                                  Users,
+                                  | 'firstName'
+                                  | 'lastName'
+                                  | 'nickname'
+                                  | 'email'
+                                > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                  })
+                            >
+                          >;
+                        }>;
+                        correspondingAuthorCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              | ({ __typename: 'ExternalAuthors' } & Pick<
+                                  ExternalAuthors,
+                                  'name' | 'email'
+                                > & { sys: Pick<Sys, 'id'> })
+                              | ({ __typename: 'Users' } & Pick<
+                                  Users,
+                                  | 'firstName'
+                                  | 'lastName'
+                                  | 'nickname'
+                                  | 'email'
+                                > & {
+                                    sys: Pick<Sys, 'id'>;
+                                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                                  })
+                            >
+                          >;
+                        }>;
                         linkedFrom?: Maybe<{
                           complianceReportsCollection?: Maybe<{
                             items: Array<
@@ -25341,6 +25573,561 @@ export const ManuscriptsContentFragmentDoc = {
                                                 },
                                               },
                                             ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'updatedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '3' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstAuthorsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'ExternalAuthors',
+                                      },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Users' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'avatar',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'nickname',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'additionalAuthorsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'ExternalAuthors',
+                                      },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Users' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'avatar',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'nickname',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'correspondingAuthorCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'ExternalAuthors',
+                                      },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Users' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'avatar',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'lastName',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'nickname',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'email',
                                           },
                                         },
                                       ],

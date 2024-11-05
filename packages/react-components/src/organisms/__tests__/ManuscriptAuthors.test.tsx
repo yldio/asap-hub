@@ -46,6 +46,46 @@ const ManuscriptAuthorsComponent = (
 };
 
 it.each([true, false])(
+  'displays pre populated external author email input field and email value when isMultiSelect is %s',
+  async (isMultiSelect) => {
+    render(
+      <ManuscriptAuthorsComponent
+        isMultiSelect={isMultiSelect}
+        getValues={jest.fn().mockReturnValue([
+          {
+            author: { displayName: 'Jane Doe', email: 'jane@doe.com' },
+          },
+        ])}
+      />,
+    );
+
+    const emailInput = screen.getByRole('textbox', { name: /Jane Doe Email/i });
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toHaveValue('jane@doe.com');
+  },
+);
+
+it.each([true, false])(
+  'displays pre populated external author email input field without email value when isMultiSelect is %s',
+  async (isMultiSelect) => {
+    render(
+      <ManuscriptAuthorsComponent
+        isMultiSelect={isMultiSelect}
+        getValues={jest.fn().mockReturnValue([
+          {
+            author: { displayName: 'Jane Doe', email: undefined },
+          },
+        ])}
+      />,
+    );
+
+    const emailInput = screen.getByRole('textbox', { name: /Jane Doe Email/i });
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toHaveValue('');
+  },
+);
+
+it.each([true, false])(
   'displays external author email input field for a non existing external author when isMultiSelect is %s',
   async (isMultiSelect) => {
     render(<ManuscriptAuthorsComponent isMultiSelect={isMultiSelect} />);

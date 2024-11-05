@@ -121,6 +121,100 @@ export const manuscriptContentQueryFragment = gql`
             }
           }
         }
+        updatedBy {
+          sys {
+            id
+          }
+          firstName
+          nickname
+          lastName
+          alumniSinceDate
+          avatar {
+            url
+          }
+          teamsCollection(limit: 3) {
+            items {
+              team {
+                sys {
+                  id
+                }
+                displayName
+              }
+            }
+          }
+        }
+        firstAuthorsCollection(limit: 15) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
+        additionalAuthorsCollection(limit: 15) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
+        correspondingAuthorCollection(limit: 1) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
         linkedFrom {
           complianceReportsCollection(limit: 1) {
             items {

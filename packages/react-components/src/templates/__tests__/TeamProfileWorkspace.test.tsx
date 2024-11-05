@@ -99,6 +99,15 @@ describe('compliance section', () => {
   });
 
   it('renders type and lifecycle values when expanded', () => {
+    const user = {
+      displayName: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
+      id: 'john-doe',
+      teams: [{ id: 'alessi', name: 'Alessi' }],
+      avatarUrl: '',
+      alumniSinceDate: undefined,
+    };
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
       manuscripts: [
@@ -117,15 +126,8 @@ describe('compliance section', () => {
                 filename: 'file.pdf',
                 id: 'file-id',
               },
-              createdBy: {
-                displayName: 'John Doe',
-                firstName: 'John',
-                lastName: 'Doe',
-                id: 'john-doe',
-                teams: [{ id: 'alessi', name: 'Alessi' }],
-                avatarUrl: '',
-                alumniSinceDate: undefined,
-              },
+              createdBy: user,
+              updatedBy: user,
               createdDate: '2020-12-10T20:36:54Z',
               publishedAt: '2020-12-10T20:36:54Z',
               teams: [
@@ -141,6 +143,9 @@ describe('compliance section', () => {
                 },
               ],
               labs: [{ name: 'Lab 1', id: 'lab-1' }],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
             },
           ],
         },
@@ -159,15 +164,8 @@ describe('compliance section', () => {
                 filename: 'file.pdf',
                 id: 'file-id',
               },
-              createdBy: {
-                displayName: 'Jane Doe',
-                firstName: 'Jane',
-                lastName: 'Doe',
-                id: 'jane-doe',
-                teams: [{ id: 'de-camilli', name: 'De Camilli' }],
-                avatarUrl: '',
-                alumniSinceDate: undefined,
-              },
+              createdBy: user,
+              updatedBy: user,
               createdDate: '2020-12-10T20:36:54Z',
               publishedAt: '2020-12-10T20:36:54Z',
               teams: [
@@ -183,6 +181,9 @@ describe('compliance section', () => {
                 },
               ],
               labs: [{ name: 'Lab 1', id: 'lab-1' }],
+              firstAuthors: [],
+              correspondingAuthor: [],
+              additionalAuthors: [],
             },
           ],
         },

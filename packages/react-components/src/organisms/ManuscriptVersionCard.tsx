@@ -7,6 +7,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, Suspense, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   article,
   AssociationList,
@@ -21,6 +22,7 @@ import {
   Loading,
   minusRectIcon,
   Pill,
+  PencilIcon,
   plusRectIcon,
   QuickCheckReplyModal,
   Subtitle,
@@ -37,6 +39,7 @@ type ManuscriptVersionCardProps = {
   grantId: string;
   teamId: string;
   manuscriptCount: number;
+  manuscriptId: string;
 } & Pick<ComponentProps<typeof QuickCheckReplyModal>, 'onReplyToDiscussion'> &
   Pick<ComponentProps<typeof Discussion>, 'getDiscussion'>;
 
@@ -64,6 +67,28 @@ const toastHeaderStyles = css({
 const toastContentStyles = css({
   paddingLeft: `${60 / perRem}em`,
   paddingTop: rem(15),
+});
+
+const titleContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  gap: rem(16),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: rem(8),
+  },
+});
+
+const editIconStyles = css({
+  width: 'min-content',
+  minWidth: 'min-content',
+  flexGrow: 0,
+  height: 'min-content',
 });
 
 const fileDividerStyles = css({
@@ -113,6 +138,35 @@ const userContainerStyles = css({
   alignItems: 'center',
   gap: rem(8),
   paddingTop: rem(32),
+});
+
+const updatedByAndEditContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: rem(16),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+
+const updatedByContainerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-end',
+});
+
+const updatedByTextStyles = css({
+  display: 'inline-flex',
+  flexWrap: 'wrap',
+  justifyContent: 'flex-end',
+  alignSelf: 'flex-end',
+  gap: rem(2),
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    justifyContent: 'flex-start',
+    alignSelf: 'flex-start',
+  },
 });
 
 const hasAdditionalInfo = (version: ManuscriptVersion) =>
@@ -170,7 +224,9 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptCount,
   onReplyToDiscussion,
   getDiscussion,
+  manuscriptId,
 }) => {
+  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
@@ -179,12 +235,48 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const getUserHref = (id: string) =>
     network({}).users({}).user({ userId: id }).$;
+
   const getTeams = (teams: Message['createdBy']['teams']) =>
     teams.map((team) => ({
       href: network({}).teams({}).team({ teamId: team.id }).$,
       name: team.name,
     }));
 
+  const getUpdatedByData = () => {
+    if (
+      version.updatedBy &&
+      version.updatedBy.id &&
+      version.updatedBy.teams &&
+      version.updatedBy.teams.length
+    ) {
+      return {
+        displayName: version.updatedBy.displayName,
+        userHref: getUserHref(version.updatedBy.id),
+        teams: getTeams(version.updatedBy.teams),
+      };
+    }
+    return {
+      displayName: version.createdBy.displayName,
+      userHref: getUserHref(version.createdBy.id),
+      teams: getTeams(version.createdBy.teams),
+    };
+  };
+
+  const updatedByData = getUpdatedByData();
+
+  const editManuscriptRoute =
+    version.createdBy?.teams[0]?.id &&
+    network({})
+      .teams({})
+      .team({ teamId: version.createdBy.teams[0].id })
+      .workspace({})
+      .editManuscript({ manuscriptId }).$;
+
+  const handleEditManuscript = () => {
+    if (editManuscriptRoute) {
+      history.push(editManuscriptRoute);
+    }
+  };
   return (
     <>
       <div>
@@ -193,17 +285,47 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
         )}
         <div css={toastStyles}>
           <span css={toastHeaderStyles}>
-            <span css={[iconStyles]}>
+            <span css={iconStyles}>
               <Button
-                data-testid="version-collapsible-button"
+                aria-label={expanded ? 'Collapse Version' : 'Expand Version'}
                 linkStyle
                 onClick={() => setExpanded(!expanded)}
               >
                 <span>{expanded ? minusRectIcon : plusRectIcon}</span>
               </Button>
             </span>
-            <span css={[iconStyles]}>{article}</span>
-            <Subtitle noMargin>Manuscript</Subtitle>
+            <span css={iconStyles}>{article}</span>
+            <div css={titleContainerStyles}>
+              <Subtitle noMargin>Manuscript</Subtitle>
+
+              <div css={updatedByAndEditContainerStyles}>
+                <Caption accent="lead" noMargin>
+                  <div css={updatedByContainerStyles}>
+                    <span css={updatedByTextStyles}>
+                      Last Updated:
+                      <span>{formatDate(new Date(version.publishedAt))}</span>
+                    </span>
+                    <span css={updatedByTextStyles}>
+                      Updated by:
+                      <UserTeamInfo
+                        displayName={updatedByData.displayName}
+                        userHref={updatedByData.userHref}
+                        teams={updatedByData.teams}
+                      />
+                    </span>
+                  </div>
+                </Caption>
+                <Button
+                  aria-label="Edit"
+                  small
+                  noMargin
+                  onClick={handleEditManuscript}
+                  overrideStyles={editIconStyles}
+                >
+                  <PencilIcon />
+                </Button>
+              </div>
+            </div>
           </span>
           <div
             style={{
@@ -401,10 +523,10 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
               )}
               <Caption accent="lead" noMargin>
                 <div css={userContainerStyles}>
-                  Date added:
+                  Date created:
                   <span>{formatDate(new Date(version.createdDate))}</span>
                   <span> · </span>
-                  Submitted by:
+                  Created by:
                   <UserTeamInfo
                     displayName={version.createdBy.displayName}
                     userHref={getUserHref(version.createdBy.id)}

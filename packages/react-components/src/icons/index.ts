@@ -94,6 +94,7 @@ export { default as OrcidSocialIcon } from './orcid-social';
 export { default as outlookIcon } from './outlook';
 export { default as padlockIcon } from './padlock';
 export { default as paperClipIcon } from './paper-clip';
+export { default as PencilIcon } from './pencil';
 export { default as PercentageIcon } from './percentage';
 export { default as placeholderIcon } from './placeholder';
 export { default as plusIcon } from './plus';

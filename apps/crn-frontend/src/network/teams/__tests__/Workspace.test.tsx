@@ -372,16 +372,17 @@ describe('manuscript quick check discussion', () => {
     enable('DISPLAY_MANUSCRIPTS');
 
     mockGetDiscussion.mockResolvedValueOnce(acknowledgedGrantNumberDiscussion);
-    const { getByText, findByTestId, getByLabelText } = renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          manuscripts: [manuscript],
-          tools: [],
-        }}
-      />,
-    );
+    const { getByText, findByTestId, getByLabelText, getByTestId } =
+      renderWithWrapper(
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            manuscripts: [manuscript],
+            tools: [],
+          }}
+        />,
+      );
 
     await act(async () => {
       userEvent.click(await findByTestId('collapsible-button'));

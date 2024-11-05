@@ -24,7 +24,12 @@ import {
 } from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
-import { navigationGrey, crossQuery, drawerQuery } from '../layout';
+import {
+  navigationGrey,
+  crossQuery,
+  drawerQuery,
+  networkContentTopPadding,
+} from '../layout';
 import { Loading } from '../molecules';
 import { usePrevious } from '../hooks';
 import { tagSearchIcon } from '../icons';
@@ -294,7 +299,9 @@ const Layout: FC<LayoutProps> = ({
           </div>
         </div>
         {onboardable && (
-          <div css={{ gridArea: 'footer' }}>
+          <div
+            css={{ gridArea: 'footer', marginTop: networkContentTopPadding }}
+          >
             <OnboardingFooter
               onboardModalHref={onboardModalHref}
               onboardable={onboardable}

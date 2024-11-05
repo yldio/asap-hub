@@ -7,6 +7,12 @@ export const createMessage = (text: string = 'test message'): Message => ({
   createdBy: { ...manuscriptAuthor },
 });
 
+export const createDiscussionReplies = (repliesLength = 1): Message[] =>
+  Array.from({ length: repliesLength }, (__, replyIndex) => ({
+    ...createMessage(`test reply ${replyIndex}`),
+    id: `dr${replyIndex}`,
+  }));
+
 export const createDiscussionResponse = (
   message: string = 'test message',
   replies: Message[] = [],

@@ -1,11 +1,24 @@
 import { Message } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { css } from '@emotion/react';
 import { FC } from 'react';
 
 import { UserCommentHeader } from '.';
 import { Markdown } from '../atoms';
+import { rem } from '../pixels';
 
 type UserCommentProps = Message;
+
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(8),
+  marginTop: rem(6),
+});
+
+const replyStyles = css({
+  'div > p': { marginTop: 0 },
+});
 
 const getUserHref = (id: string) =>
   network({}).users({}).user({ userId: id }).$;
@@ -20,14 +33,16 @@ const UserComment: FC<UserCommentProps> = ({
   createdDate,
   text,
 }) => (
-  <>
+  <div css={containerStyles}>
     <UserCommentHeader
       {...createdBy}
       userHref={getUserHref(createdBy.id)}
       teams={getTeams(createdBy.teams)}
       date={createdDate}
     />
-    <Markdown value={text} />
-  </>
+    <div css={replyStyles}>
+      <Markdown value={text} />
+    </div>
+  </div>
 );
 export default UserComment;

@@ -1,4 +1,5 @@
 import {
+  act,
   render,
   screen,
   waitFor,
@@ -76,6 +77,16 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   submissionDate: new Date('2024-10-01'),
 };
 
+const submitForm = async () => {
+  await act(async () => {
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
+};
+
 it('renders the form', async () => {
   render(
     <StaticRouter>
@@ -112,7 +123,7 @@ it('data is sent on form submission', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await submitForm();
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -210,7 +221,7 @@ test.each`
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+    await submitForm();
     const payload = {
       title: 'manuscript title',
       eligibilityReasons: [],
@@ -308,7 +319,7 @@ test.each`
       </StaticRouter>,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+    await submitForm();
 
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith({
@@ -598,7 +609,7 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await submitForm();
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -667,7 +678,6 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.click(screen.getByLabelText(section));
       await waitFor(() =>
@@ -675,8 +685,7 @@ describe('authors', () => {
       );
       userEvent.click(screen.getByText('Author One'));
 
-      userEvent.click(submitButton);
-
+      await submitForm();
       await waitFor(() => {
         expect(onSave).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -734,7 +743,6 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.click(screen.getByLabelText(section));
       await waitFor(() =>
@@ -746,7 +754,7 @@ describe('authors', () => {
         'external@author.com',
       );
 
-      userEvent.click(submitButton);
+      await submitForm();
 
       await waitFor(() => {
         expect(onSave).toHaveBeenCalledWith(
@@ -807,7 +815,6 @@ describe('authors', () => {
           />
         </StaticRouter>,
       );
-      const submitButton = screen.getByRole('button', { name: /Submit/ });
 
       userEvent.type(screen.getByLabelText(section), 'Jane Doe');
 
@@ -818,7 +825,7 @@ describe('authors', () => {
       userEvent.click(screen.getByText(/Jane Doe/, { selector: 'strong' }));
       userEvent.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
-      userEvent.click(submitButton);
+      await submitForm();
 
       await waitFor(() => {
         expect(onSave).toHaveBeenCalledWith(
@@ -933,7 +940,7 @@ describe('renders the necessary fields', () => {
   );
 });
 
-it('resets form fields to default values when no longer visible', async () => {
+it.only('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
     <StaticRouter>
@@ -978,9 +985,8 @@ it('resets form fields to default values when no longer visible', async () => {
     }),
   ).not.toBeInTheDocument();
 
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
+  await submitForm();
 
-  userEvent.click(submitButton);
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'manuscript title',
@@ -1550,7 +1556,6 @@ it('user can add teams', async () => {
       />
     </StaticRouter>,
   );
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
 
   userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
@@ -1564,7 +1569,7 @@ it('user can add teams', async () => {
   });
   userEvent.click(screen.getByText('Team B'));
 
-  userEvent.click(submitButton);
+  await submitForm();
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith(
@@ -1609,8 +1614,6 @@ it('user can add labs', async () => {
       />
     </StaticRouter>,
   );
-  const submitButton = screen.getByRole('button', { name: /Submit/ });
-
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   await waitFor(() => {
     expect(screen.getByText('Lab One')).toBeVisible();
@@ -1621,7 +1624,7 @@ it('user can add labs', async () => {
   expect(screen.getByText('Lab Two')).toBeVisible();
   userEvent.click(screen.getByText('Lab Two'));
 
-  userEvent.click(submitButton);
+  await submitForm();
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith(

@@ -131,7 +131,6 @@ describe('when there are replies', () => {
 
       expect(queryByText(/test reply 1/i)).not.toBeInTheDocument();
       userEvent.click(getByLabelText(/\+1/));
-      debug(undefined, 5000000);
       expect(getByText(/test reply 1/i)).toBeVisible();
     });
   });

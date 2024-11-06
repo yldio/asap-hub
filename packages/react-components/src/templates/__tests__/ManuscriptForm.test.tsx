@@ -1706,7 +1706,8 @@ it('calls onUpdate when form is updated', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await submitForm();
+
   await waitFor(() => {
     expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
       teamId: '1',

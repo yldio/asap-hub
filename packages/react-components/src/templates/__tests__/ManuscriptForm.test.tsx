@@ -79,7 +79,9 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 
 const submitForm = async () => {
   await act(async () => {
-    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Submit/ }),
+    );
   });
 
   await userEvent.click(
@@ -940,7 +942,7 @@ describe('renders the necessary fields', () => {
   );
 });
 
-it.only('resets form fields to default values when no longer visible', async () => {
+it('resets form fields to default values when no longer visible', async () => {
   const onSave = jest.fn();
   render(
     <StaticRouter>
@@ -1077,8 +1079,8 @@ it('does not submit when required values are missing', async () => {
   expect(onSave).not.toHaveBeenCalled();
 });
 
-it('should go back when cancel button is clicked', () => {
-  const { getByText } = render(
+it('should go back when cancel button is clicked', async () => {
+  render(
     <MemoryRouter>
       <Router history={history}>
         <Route path="/form">
@@ -1091,9 +1093,13 @@ it('should go back when cancel button is clicked', () => {
   history.push('/another-url');
   history.push('/form');
 
-  const cancelButton = getByText(/cancel/i);
-  expect(cancelButton).toBeInTheDocument();
-  userEvent.click(cancelButton);
+  await act(async () => {
+    await userEvent.click(await screen.findByText(/cancel/i));
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Cancel manuscript submission/i }),
+  );
 
   expect(history.location.pathname).toBe('/another-url');
 });

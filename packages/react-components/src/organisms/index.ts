@@ -51,6 +51,7 @@ export { default as PerformanceCard } from './PerformanceCard';
 export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
+export { default as QuickCheckReplyModal } from './QuickCheckReplyModal';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
 export { default as RelatedEventsCard } from './RelatedEventsCard';
 export { default as RelatedResearchCard } from './RelatedResearchCard';

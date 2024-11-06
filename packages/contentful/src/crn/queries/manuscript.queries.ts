@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { discussionContentQueryFragment } from './discussions.queries';
 
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
@@ -51,51 +52,35 @@ export const manuscriptContentQueryFragment = gql`
         otherDetails
         acknowledgedGrantNumber
         acknowledgedGrantNumberDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         asapAffiliationIncluded
         asapAffiliationIncludedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         manuscriptLicense
         manuscriptLicenseDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         datasetsDeposited
         datasetsDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         codeDeposited
         codeDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         protocolsDeposited
         protocolsDepositedDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         labMaterialsRegistered
         labMaterialsRegisteredDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         availabilityStatement
         availabilityStatementDetails {
-          message {
-            text
-          }
+          ...DiscussionsContent
         }
         teamsCollection(limit: 10) {
           items {
@@ -136,6 +121,100 @@ export const manuscriptContentQueryFragment = gql`
             }
           }
         }
+        updatedBy {
+          sys {
+            id
+          }
+          firstName
+          nickname
+          lastName
+          alumniSinceDate
+          avatar {
+            url
+          }
+          teamsCollection(limit: 3) {
+            items {
+              team {
+                sys {
+                  id
+                }
+                displayName
+              }
+            }
+          }
+        }
+        firstAuthorsCollection(limit: 15) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
+        additionalAuthorsCollection(limit: 15) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
+        correspondingAuthorCollection(limit: 1) {
+          items {
+            __typename
+            ... on ExternalAuthors {
+              sys {
+                id
+              }
+              name
+              email
+            }
+            ... on Users {
+              sys {
+                id
+              }
+              avatar {
+                url
+              }
+              firstName
+              lastName
+              nickname
+              email
+            }
+          }
+        }
         linkedFrom {
           complianceReportsCollection(limit: 1) {
             items {
@@ -147,10 +226,11 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
+  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!) {
+  query FetchManuscriptById($id: String!, $fetchReplies: Boolean = false) {
     manuscripts(id: $id) {
       ...ManuscriptsContent
       teamsCollection(limit: 10) {

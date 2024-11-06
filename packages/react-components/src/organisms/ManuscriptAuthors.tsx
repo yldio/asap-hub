@@ -1,5 +1,5 @@
 import { AuthorAlgoliaResponse, ManuscriptFormData } from '@asap-hub/model';
-import { ComponentProps } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import {
   Control,
   Controller,
@@ -48,6 +48,19 @@ const ManuscriptAuthors = ({
     control,
     name: `versions.0.${fieldName}Emails`,
   });
+
+  useEffect(() => {
+    const authors = getValues(`versions.0.${fieldName}`);
+    (authors || []).forEach(({ author }) => {
+      if (author && !('firstName' in author) && author.displayName) {
+        append({
+          name: author.displayName || '',
+          email: author?.email || '',
+        });
+      }
+    });
+  }, [append, getValues, fieldName]);
+
   return (
     <>
       <Controller

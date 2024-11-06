@@ -1,8 +1,13 @@
-import { createManuscriptResponse } from '@asap-hub/fixtures';
+import {
+  createDiscussionResponse,
+  createManuscriptResponse,
+} from '@asap-hub/fixtures';
 import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { createMemoryHistory } from 'history';
 import React, { ComponentProps } from 'react';
+import { Router } from 'react-router-dom';
 import ManuscriptVersionCard, {
   getLifecycleCode,
   getManuscriptVersionUID,
@@ -30,13 +35,69 @@ const props: ComponentProps<typeof ManuscriptVersionCard> = {
   grantId: '000123',
   teamId: 'TI1',
   manuscriptCount: 1,
+  onReplyToDiscussion: jest.fn(),
+  getDiscussion: jest.fn(),
+  manuscriptId: 'manuscript-1',
 };
 
 it('displays quick checks when present', () => {
-  const { getByText, queryByText, getByRole, rerender, getAllByText } = render(
-    <ManuscriptVersionCard {...props} />,
+  const asapAffiliationIncludedDetails =
+    "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.";
+  const commenter = {
+    id: 'commenter-id',
+    firstName: 'Connor',
+    lastName: 'Commenter',
+    displayName: 'Connor Commenter',
+    teams: [
+      {
+        id: 'team-commenter',
+        name: 'Team Commenter',
+      },
+    ],
+  };
+
+  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
+    asapAffiliationIncludedDetails,
   );
-  userEvent.click(getByRole('button'));
+  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
+  asapAffiliationIncludedDiscussion.message.createdDate =
+    '2024-06-21T11:06:58.899Z';
+
+  const getDiscussion = jest.fn();
+  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
+
+  const author = {
+    id: 'author-id',
+    displayName: 'Arthur Author',
+    firstName: 'Arthur',
+    lastName: 'Author',
+    alumniSinceDate: undefined,
+    avatarUrl: 'http://image',
+    teams: [
+      {
+        id: 'team-author',
+        name: 'Team Author',
+      },
+    ],
+  };
+
+  const editor = {
+    id: 'editor-id',
+    displayName: 'Edith Editor',
+    firstName: 'Edith',
+    lastName: 'Editor',
+    alumniSinceDate: undefined,
+    avatarUrl: 'http://image',
+    teams: [
+      {
+        id: 'team-editor',
+        name: 'Team Editor',
+      },
+    ],
+  };
+  const { getByText, queryByText, getByLabelText, rerender, getAllByText } =
+    render(<ManuscriptVersionCard {...props} getDiscussion={getDiscussion} />);
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(
     queryByText(
@@ -46,27 +107,21 @@ it('displays quick checks when present', () => {
 
   const updatedVersion = {
     ...baseVersion,
-    asapAffiliationIncludedDetails:
-      "Including ASAP as an affiliation hasn't been done due to compliance with journal guidelines, needing agreement from authors and institutions, administrative complexities, and balancing recognition with primary affiliations.",
-    codeDepositedDetails:
-      "This hasn't been done due to time constraints, pending review, and ensuring proper documentation.",
-    createdBy: {
-      id: 'user-1',
-      firstName: 'Joe',
-      lastName: 'Doe',
-      displayName: 'Joe Doe',
-      teams: [
-        {
-          id: 'team-a',
-          name: 'Team A',
-        },
-      ],
-    },
+    asapAffiliationIncludedDetails: asapAffiliationIncludedDiscussion,
+    createdBy: author,
+    updatedBy: editor,
     createdDate: '2024-06-20T11:06:58.899Z',
     publishedAt: '2024-06-21T11:06:58.899Z',
+    otherDetails: 'Necessary info',
   };
 
-  rerender(<ManuscriptVersionCard {...props} version={updatedVersion} />);
+  rerender(
+    <ManuscriptVersionCard
+      {...props}
+      version={updatedVersion}
+      getDiscussion={getDiscussion}
+    />,
+  );
 
   expect(
     getByText(
@@ -79,41 +134,103 @@ it('displays quick checks when present', () => {
     ),
   ).toBeVisible();
 
-  expect(
-    getByText(/Deposited all newly generated code and analysis scripts/i),
-  ).toBeVisible();
-  expect(
-    getByText(
-      /This hasn't been done due to time constraints, pending review, and ensuring proper documentation./i,
-    ),
-  ).toBeVisible();
-
-  expect(getAllByText('Joe Doe').length).toEqual(3);
-  expect(getAllByText('Team A').length).toEqual(3);
+  expect(getAllByText('Arthur Author').length).toEqual(1);
+  expect(getAllByText('Edith Editor').length).toEqual(1);
+  expect(getAllByText('Connor Commenter').length).toEqual(1);
+  expect(getAllByText('Team Author').length).toEqual(1);
+  expect(getAllByText('Team Editor').length).toEqual(1);
+  expect(getAllByText('Team Commenter').length).toEqual(1);
   expect(getAllByText('21st June 2024').length).toEqual(2);
   expect(getAllByText('20th June 2024').length).toEqual(1);
 
-  expect(getAllByText('Joe Doe')[0]!.closest('a')!.href!).toContain(
-    '/network/users/user-1',
+  expect(getAllByText('Arthur Author')[0]!.closest('a')!.href!).toContain(
+    '/network/users/author-id',
   );
-  expect(getAllByText('Team A')[0]!.closest('a')!.href!).toContain(
-    '/network/teams/team-a',
+  expect(getAllByText('Team Author')[0]!.closest('a')!.href!).toContain(
+    '/network/teams/team-author',
+  );
+
+  expect(getAllByText('Connor Commenter')[0]!.closest('a')!.href!).toContain(
+    '/network/users/commenter-id',
+  );
+  expect(getAllByText('Team Commenter')[0]!.closest('a')!.href!).toContain(
+    '/network/teams/team-commenter',
+  );
+});
+it('displays createdBy as fallback for updatedBy when updatedBy is well defined', () => {
+  const author = {
+    id: 'author-id',
+    displayName: 'Arthur Author',
+    firstName: 'Arthur',
+    lastName: 'Author',
+    alumniSinceDate: undefined,
+    avatarUrl: 'http://image',
+    teams: [
+      {
+        id: 'team-author',
+        name: 'Team Author',
+      },
+    ],
+  };
+
+  const screen = render(
+    <ManuscriptVersionCard
+      {...props}
+      version={{
+        ...baseVersion,
+        createdBy: author,
+        updatedBy: {
+          ...author,
+          id: '',
+        },
+      }}
+    />,
+  );
+
+  userEvent.click(screen.getByLabelText('Expand Version'));
+
+  expect(screen.getAllByText('Arthur Author').length).toEqual(2);
+  expect(
+    screen.getAllByText('Arthur Author')[0]!.closest('a')!.href!,
+  ).toContain('/network/users/author-id');
+  expect(screen.getAllByText('Team Author')[0]!.closest('a')!.href!).toContain(
+    '/network/teams/team-author',
+  );
+});
+
+it('navigates to edit form page when clicking on edit button', () => {
+  const history = createMemoryHistory();
+  const pushSpy = jest.spyOn(history, 'push');
+
+  const { getByLabelText } = render(
+    <Router history={history}>
+      <ManuscriptVersionCard {...props} />
+    </Router>,
+  );
+  userEvent.click(getByLabelText('Edit'));
+  expect(pushSpy).toHaveBeenCalledWith(
+    '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
   );
 });
 
 it('displays Additional Information section when present', () => {
-  const { getByRole, queryByRole, rerender } = render(
+  const { getByRole, queryByRole, rerender, getByLabelText } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Additional Information/i }),
   ).not.toBeInTheDocument();
+
+  const getDiscussion = jest
+    .fn()
+    .mockReturnValueOnce(createDiscussionResponse());
 
   rerender(
     <ManuscriptVersionCard
       {...props}
       version={{ ...baseVersion, otherDetails: 'Necessary info' }}
+      getDiscussion={getDiscussion}
     />,
   );
 
@@ -123,7 +240,7 @@ it('displays Additional Information section when present', () => {
 });
 
 it('renders a divider between fields in Additional Information section and files section', () => {
-  const { getByRole, queryAllByRole } = render(
+  const { queryAllByRole, getByLabelText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -136,7 +253,7 @@ it('renders a divider between fields in Additional Information section and files
     />,
   );
 
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
   expect(queryAllByRole('separator').length).toEqual(6);
 });
 
@@ -147,10 +264,10 @@ it.each`
   ${'requestingApcCoverage'} | ${'Requested APC Coverage?'} | ${'Yes'}
   ${'otherDetails'}          | ${'Other details'}           | ${'new details'}
 `(`displays field $field when present`, async ({ field, title, newValue }) => {
-  const { getByRole, getByText, queryByText, rerender } = render(
+  const { getByLabelText, getByText, queryByText, rerender } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
   expect(queryByText(title)).not.toBeInTheDocument();
 
   const updatedVersion = {
@@ -174,7 +291,7 @@ it('builds the correct href for doi fields', () => {
     `https://doi.org/${publicationDoiValue}`,
   ).toString();
 
-  const { getByText, getByRole } = render(
+  const { getByText, getByLabelText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -184,7 +301,7 @@ it('builds the correct href for doi fields', () => {
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText(preprintDoiValue)?.closest('a')).toHaveAttribute(
     'href',
@@ -197,7 +314,7 @@ it('builds the correct href for doi fields', () => {
 });
 
 it('renders manuscript main file details and download link', () => {
-  const { getByText, getByRole } = render(
+  const { getByText, getByLabelText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -211,7 +328,7 @@ it('renders manuscript main file details and download link', () => {
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('manuscript_file.pdf')).toBeVisible();
   expect(getByText('Download').closest('a')).toHaveAttribute(
@@ -221,7 +338,7 @@ it('renders manuscript main file details and download link', () => {
 });
 
 it('renders key resource table file details and download link', () => {
-  const { getAllByText, getByText, getByRole } = render(
+  const { getAllByText, getByText, getByLabelText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -239,7 +356,7 @@ it('renders key resource table file details and download link', () => {
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('key_resource_table.csv')).toBeVisible();
   expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
@@ -249,7 +366,7 @@ it('renders key resource table file details and download link', () => {
 });
 
 it("does not display Submitter's Name and Submission Date if submitterName and submissionDate are not defined", () => {
-  const { getByRole, getByText, queryByText } = render(
+  const { getByLabelText, getByText, queryByText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -260,7 +377,7 @@ it("does not display Submitter's Name and Submission Date if submitterName and s
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
   expect(getByText(/No/i)).toBeInTheDocument();
@@ -271,7 +388,7 @@ it("does not display Submitter's Name and Submission Date if submitterName and s
 });
 
 it('displays apc coverage information', () => {
-  const { getByRole, getByText } = render(
+  const { getByLabelText, getByText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -282,7 +399,7 @@ it('displays apc coverage information', () => {
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText(/Requested APC Coverage/i)).toBeInTheDocument();
   expect(getByText(/Already submitted/i)).toBeInTheDocument();
@@ -295,7 +412,7 @@ it('displays apc coverage information', () => {
 });
 
 it('renders additional files details and download link when provided', () => {
-  const { getAllByText, getByText, getByRole } = render(
+  const { getAllByText, getByText, getByLabelText } = render(
     <ManuscriptVersionCard
       {...props}
       version={{
@@ -316,7 +433,7 @@ it('renders additional files details and download link when provided', () => {
       }}
     />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
 
   expect(getByText('additional_file.pdf')).toBeVisible();
   expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
@@ -326,10 +443,10 @@ it('renders additional files details and download link when provided', () => {
 });
 
 it('displays compliance report section when present', () => {
-  const { getByRole, queryByRole, rerender } = render(
+  const { getByLabelText, queryByRole, rerender, getByRole } = render(
     <ManuscriptVersionCard {...props} />,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByLabelText('Expand Version'));
   expect(
     queryByRole('heading', { name: /Compliance Report/i }),
   ).not.toBeInTheDocument();
@@ -355,16 +472,17 @@ it('displays manuscript description', () => {
   const longDescription = 'A veeery long description.'.repeat(200);
 
   setScrollHeightMock(100);
-  const { getByRole, rerender, getByText, queryByRole } = render(
-    <ManuscriptVersionCard
-      {...props}
-      version={{
-        ...baseVersion,
-        description: shortDescription,
-      }}
-    />,
-  );
-  userEvent.click(getByRole('button'));
+  const { getByRole, rerender, getByText, queryByRole, getByLabelText } =
+    render(
+      <ManuscriptVersionCard
+        {...props}
+        version={{
+          ...baseVersion,
+          description: shortDescription,
+        }}
+      />,
+    );
+  userEvent.click(getByLabelText('Expand Version'));
   expect(getByText(shortDescription)).toBeInTheDocument();
   expect(queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
 

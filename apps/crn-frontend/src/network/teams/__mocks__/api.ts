@@ -1,10 +1,14 @@
 import {
+  createDiscussionResponse,
   createListLabsResponse,
   createListTeamResponse,
+  createMessage,
   createResearchOutputResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 import {
+  DiscussionPatchRequest,
+  DiscussionResponse,
   ListLabsResponse,
   ListTeamResponse,
   TeamPatchRequest,
@@ -54,4 +58,22 @@ export const updateTeamResearchOutput: jest.Mocked<
 
 export const getLabs = jest.fn(
   async (): Promise<ListLabsResponse> => createListLabsResponse(5),
+);
+
+export const getDiscussion = jest.fn(
+  async (id: string): Promise<DiscussionResponse> => ({
+    ...createDiscussionResponse(),
+    id,
+  }),
+);
+
+export const updateDiscussion = jest.fn(
+  async (
+    id: string,
+    patch: DiscussionPatchRequest,
+  ): Promise<DiscussionResponse> => {
+    const discussion = await getDiscussion(id);
+    discussion.replies = [createMessage(patch.replyText)];
+    return discussion;
+  },
 );

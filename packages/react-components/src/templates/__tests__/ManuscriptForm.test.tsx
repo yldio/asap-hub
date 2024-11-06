@@ -4,12 +4,15 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import {
+  AuthorResponse,
+  AuthorSelectOption,
   ManuscriptFileType,
   manuscriptFormFieldsMapping,
   ManuscriptLifecycle,
@@ -43,11 +46,14 @@ getTeamSuggestions.mockResolvedValue([
 ]);
 
 const defaultProps: ComponentProps<typeof ManuscriptForm> = {
-  onSave: jest.fn(() => Promise.resolve()),
+  manuscriptId: undefined,
+  onCreate: jest.fn(() => Promise.resolve()),
+  onUpdate: jest.fn(() => Promise.resolve()),
   getAuthorSuggestions: jest.fn(),
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
+  selectedLabs: [],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -71,8 +77,12 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
     {
       label: 'Author 1',
       value: 'author-1',
-    },
+      id: 'author-1',
+      displayName: 'Author 1',
+    } as AuthorResponse & AuthorSelectOption,
   ],
+  correspondingAuthor: [],
+  additionalAuthors: [],
   submitterName: 'John Doe',
   submissionDate: new Date('2024-10-01'),
 };
@@ -102,7 +112,7 @@ it('renders the form', async () => {
 });
 
 it('data is sent on form submission', async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   render(
     <StaticRouter>
       <ManuscriptForm
@@ -120,14 +130,14 @@ it('data is sent on form submission', async () => {
           filename: 'test.csv',
           url: 'http://example.com/test.csv',
         }}
-        onSave={onSave}
+        onCreate={onCreate}
       />
     </StaticRouter>,
   );
 
   await submitForm();
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith({
+    expect(onCreate).toHaveBeenCalledWith({
       title: 'manuscript title',
       eligibilityReasons: [],
       versions: [
@@ -194,11 +204,11 @@ test.each`
     field: QuickCheck;
     fieldDetails: QuickCheckDetails;
   }) => {
-    const onSave = jest.fn();
+    const onCreate = jest.fn();
     const props = {
       ...defaultProps,
       [field]: 'No',
-      [fieldDetails]: 'Explanation',
+      [fieldDetails]: { message: { text: 'Explanation' } },
     };
     render(
       <StaticRouter>
@@ -218,7 +228,7 @@ test.each`
             filename: 'test.csv',
             url: 'http://example.com/test.csv',
           }}
-          onSave={onSave}
+          onCreate={onCreate}
         />
       </StaticRouter>,
     );
@@ -268,7 +278,7 @@ test.each`
     payload.versions[0]![field] = 'No';
     payload.versions[0]![fieldDetails] = 'Explanation';
     await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith(payload);
+      expect(onCreate).toHaveBeenCalledWith(payload);
     });
   },
 );
@@ -292,17 +302,17 @@ test.each`
     field: QuickCheck;
     fieldDetails: QuickCheckDetails;
   }) => {
-    const onSave = jest.fn();
+    const onCreate = jest.fn();
     const props = {
       ...defaultProps,
       [field]: 'Yes',
-      [fieldDetails]: 'Explanation',
+      [fieldDetails]: { message: { text: 'Explanation' } },
     };
     render(
       <StaticRouter>
         <ManuscriptForm
           {...props}
-          title="manuscript title"
+          title={undefined}
           type="Original Research"
           publicationDoi="10.0777"
           lifecycle="Publication"
@@ -316,27 +326,29 @@ test.each`
             filename: 'test.csv',
             url: 'http://example.com/test.csv',
           }}
-          onSave={onSave}
+          onCreate={onCreate}
         />
       </StaticRouter>,
     );
 
+    userEvent.type(
+      screen.getByRole('textbox', { name: /Title of Manuscript/i }),
+      'manuscript title',
+    );
+    const quickCheckFields = quickCheckQuestions.map((q) => q.field);
+
+    quickCheckFields.forEach((f) => {
+      within(screen.getByTestId(f)).getByText('Yes').click();
+    });
+
     await submitForm();
 
     await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith({
+      expect(onCreate).toHaveBeenCalledWith({
         title: 'manuscript title',
         eligibilityReasons: [],
         versions: [
-          {
-            type: 'Original Research',
-            lifecycle: 'Publication',
-            manuscriptFile: expect.anything(),
-            keyResourceTable: expect.anything(),
-            publicationDoi: '10.0777',
-            requestingApcCoverage: 'Already submitted',
-            submissionDate: '2024-10-01T00:00:00.000Z',
-            submitterName: 'John Doe',
+          expect.objectContaining({
             acknowledgedGrantNumber: 'Yes',
             asapAffiliationIncluded: 'Yes',
             manuscriptLicense: 'Yes',
@@ -354,14 +366,7 @@ test.each`
             protocolsDepositedDetails: '',
             labMaterialsRegisteredDetails: '',
             availabilityStatementDetails: '',
-
-            teams: ['1'],
-            labs: [],
-
-            description: 'Some description',
-            firstAuthors: [],
-            additionalAuthors: [],
-          },
+          }),
         ],
         teamId,
       });
@@ -370,16 +375,11 @@ test.each`
 );
 
 it('displays an error message when user selects no in a quick check and does not provide details', async () => {
-  const onSave = jest.fn();
-  const props = {
-    ...defaultProps,
-    acknowledgedGrantNumber: 'No',
-    acknowledgedGrantNumberDetails: undefined,
-  };
+  const onCreate = jest.fn();
   render(
     <StaticRouter>
       <ManuscriptForm
-        {...props}
+        {...defaultProps}
         title="manuscript title"
         type="Original Research"
         publicationDoi="10.0777"
@@ -389,13 +389,23 @@ it('displays an error message when user selects no in a quick check and does not
           filename: 'test.pdf',
           url: 'http://example.com/test.pdf',
         }}
-        onSave={onSave}
+        onCreate={onCreate}
       />
     </StaticRouter>,
   );
   expect(
     screen.queryByText(/Please enter the details./i),
   ).not.toBeInTheDocument();
+
+  const quickCheckFields = quickCheckQuestions.map((q) => q.field);
+
+  quickCheckFields
+    .filter((f) => f !== 'acknowledgedGrantNumber')
+    .forEach((f) => {
+      within(screen.getByTestId(f)).getByText('Yes').click();
+    });
+
+  within(screen.getByTestId('acknowledgedGrantNumber')).getByText('No').click();
 
   userEvent.click(screen.getByRole('button', { name: /Submit/ }));
 
@@ -588,7 +598,7 @@ it('displays error message when other details is bigger than 256 characters', as
 });
 
 it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   render(
     <StaticRouter>
       <ManuscriptForm
@@ -606,14 +616,14 @@ it(`sets requestingApcCoverage to 'Already submitted' by default`, async () => {
           filename: 'test.csv',
           url: 'http://example.com/test.csv',
         }}
-        onSave={onSave}
+        onCreate={onCreate}
       />
     </StaticRouter>,
   );
 
   await submitForm();
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith({
+    expect(onCreate).toHaveBeenCalledWith({
       title: 'manuscript title',
       eligibilityReasons: [],
       teamId,
@@ -638,7 +648,7 @@ describe('authors', () => {
   `(
     'submits an existing internal author in $section',
     async ({ section, submittedValue }) => {
-      const onSave = jest.fn();
+      const onCreate = jest.fn();
 
       const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
         {
@@ -661,7 +671,7 @@ describe('authors', () => {
           <ManuscriptForm
             {...defaultProps}
             title="manuscript title"
-            onSave={onSave}
+            onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
             preprintDoi="10.4444/test"
@@ -689,7 +699,7 @@ describe('authors', () => {
 
       await submitForm();
       await waitFor(() => {
-        expect(onSave).toHaveBeenCalledWith(
+        expect(onCreate).toHaveBeenCalledWith(
           expect.objectContaining({
             versions: [expect.objectContaining(submittedValue)],
           }),
@@ -705,7 +715,7 @@ describe('authors', () => {
   `(
     'submits an existing external author in $section',
     async ({ section, submittedValue }) => {
-      const onSave = jest.fn();
+      const onCreate = jest.fn();
 
       const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
         {
@@ -726,7 +736,7 @@ describe('authors', () => {
           <ManuscriptForm
             {...defaultProps}
             title="manuscript title"
-            onSave={onSave}
+            onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
             preprintDoi="10.4444/test"
@@ -759,7 +769,7 @@ describe('authors', () => {
       await submitForm();
 
       await waitFor(() => {
-        expect(onSave).toHaveBeenCalledWith(
+        expect(onCreate).toHaveBeenCalledWith(
           expect.objectContaining({
             versions: [expect.objectContaining(submittedValue)],
           }),
@@ -775,7 +785,7 @@ describe('authors', () => {
   `(
     'submits a non existing external author in $section',
     async ({ section, submittedValue }) => {
-      const onSave = jest.fn();
+      const onCreate = jest.fn();
 
       const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
         {
@@ -798,7 +808,7 @@ describe('authors', () => {
           <ManuscriptForm
             {...defaultProps}
             title="manuscript title"
-            onSave={onSave}
+            onCreate={onCreate}
             type="Original Research"
             lifecycle="Publication"
             preprintDoi="10.4444/test"
@@ -830,7 +840,7 @@ describe('authors', () => {
       await submitForm();
 
       await waitFor(() => {
-        expect(onSave).toHaveBeenCalledWith(
+        expect(onCreate).toHaveBeenCalledWith(
           expect.objectContaining({
             versions: [expect.objectContaining(submittedValue)],
           }),
@@ -910,7 +920,6 @@ describe('renders the necessary fields', () => {
 
     teams: 'Add other teams that contributed to this manuscript.',
     labs: 'Add ASAP labs that contributed to this manuscript.',
-    firstAuthors: '',
   };
 
   describe.each(Object.keys(manuscriptFormFieldsMapping))(
@@ -943,13 +952,13 @@ describe('renders the necessary fields', () => {
 });
 
 it('resets form fields to default values when no longer visible', async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   render(
     <StaticRouter>
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
-        onSave={onSave}
+        onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
         preprintDoi="10.4444/test"
@@ -990,7 +999,7 @@ it('resets form fields to default values when no longer visible', async () => {
   await submitForm();
 
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith({
+    expect(onCreate).toHaveBeenCalledWith({
       title: 'manuscript title',
       eligibilityReasons: [],
       versions: [
@@ -1058,10 +1067,10 @@ it('maintains values provided when lifecycle changes but field is still visible'
 });
 
 it('does not submit when required values are missing', async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   render(
     <StaticRouter>
-      <ManuscriptForm {...defaultProps} onSave={onSave} />
+      <ManuscriptForm {...defaultProps} onCreate={onCreate} />
     </StaticRouter>,
   );
 
@@ -1076,7 +1085,7 @@ it('does not submit when required values are missing', async () => {
   expect(
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
   ).toBeInvalid();
-  expect(onSave).not.toHaveBeenCalled();
+  expect(onCreate).not.toHaveBeenCalled();
 });
 
 it('should go back when cancel button is clicked', async () => {
@@ -1348,13 +1357,13 @@ describe('key resource table', () => {
 
 describe('additional files', () => {
   it('user can upload additional files', async () => {
-    const onSave = jest.fn();
+    const onCreate = jest.fn();
     render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
           title="manuscript title"
-          onSave={onSave}
+          onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
           preprintDoi="10.4444/test"
@@ -1419,13 +1428,13 @@ describe('additional files', () => {
   });
 
   it('user cannot upload the same file multiple times', async () => {
-    const onSave = jest.fn();
+    const onCreate = jest.fn();
     render(
       <StaticRouter>
         <ManuscriptForm
           {...defaultProps}
           title="manuscript title"
-          onSave={onSave}
+          onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
           preprintDoi="10.4444/test"
@@ -1533,7 +1542,7 @@ describe('additional files', () => {
 });
 
 it('user can add teams', async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
     { label: 'Team A', value: 'team-a' },
     { label: 'Team B', value: 'team-b' },
@@ -1543,7 +1552,7 @@ it('user can add teams', async () => {
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
-        onSave={onSave}
+        onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
         preprintDoi="10.4444/test"
@@ -1578,7 +1587,7 @@ it('user can add teams', async () => {
   await submitForm();
 
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith(
+    expect(onCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         versions: [
           expect.objectContaining({
@@ -1591,7 +1600,7 @@ it('user can add teams', async () => {
 });
 
 it('user can add labs', async () => {
-  const onSave = jest.fn();
+  const onCreate = jest.fn();
   const getLabSuggestions = jest.fn().mockResolvedValue([
     { label: 'Lab One', value: 'lab-1' },
     { label: 'Lab Two', value: 'lab-2' },
@@ -1601,7 +1610,7 @@ it('user can add labs', async () => {
       <ManuscriptForm
         {...defaultProps}
         title="manuscript title"
-        onSave={onSave}
+        onCreate={onCreate}
         type="Original Research"
         lifecycle="Publication"
         preprintDoi="10.4444/test"
@@ -1633,7 +1642,7 @@ it('user can add labs', async () => {
   await submitForm();
 
   await waitFor(() => {
-    expect(onSave).toHaveBeenCalledWith(
+    expect(onCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         versions: [
           expect.objectContaining({
@@ -1670,4 +1679,83 @@ it('displays error message when no lab is found', async () => {
   userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
+});
+
+it('calls onUpdate when form is updated', async () => {
+  const onUpdate = jest.fn();
+  render(
+    <StaticRouter>
+      <ManuscriptForm
+        {...defaultProps}
+        title="manuscript title"
+        type="Original Research"
+        lifecycle="Draft Manuscript (prior to Publication)"
+        manuscriptFile={{
+          id: '123',
+          filename: 'test.pdf',
+          url: 'http://example.com/test.pdf',
+        }}
+        keyResourceTable={{
+          id: '124',
+          filename: 'test.csv',
+          url: 'http://example.com/test.csv',
+        }}
+        onUpdate={onUpdate}
+        manuscriptId="manuscript-id"
+      />
+    </StaticRouter>,
+  );
+
+  userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+  await waitFor(() => {
+    expect(onUpdate).toHaveBeenCalledWith('manuscript-id', {
+      teamId: '1',
+      title: 'manuscript title',
+      versions: [
+        {
+          acknowledgedGrantNumber: 'Yes',
+          acknowledgedGrantNumberDetails: '',
+          additionalAuthors: [],
+          additionalFiles: undefined,
+          asapAffiliationIncluded: 'Yes',
+          asapAffiliationIncludedDetails: '',
+          availabilityStatement: 'Yes',
+          availabilityStatementDetails: '',
+          codeDeposited: 'Yes',
+          codeDepositedDetails: '',
+          correspondingAuthor: undefined,
+          datasetsDeposited: 'Yes',
+          datasetsDepositedDetails: '',
+          description: 'Some description',
+          firstAuthors: [],
+          keyResourceTable: {
+            filename: 'test.csv',
+            id: '124',
+            url: 'http://example.com/test.csv',
+          },
+          labMaterialsRegistered: 'Yes',
+          labMaterialsRegisteredDetails: '',
+          labs: [],
+          lifecycle: 'Draft Manuscript (prior to Publication)',
+          manuscriptFile: {
+            filename: 'test.pdf',
+            id: '123',
+            url: 'http://example.com/test.pdf',
+          },
+          manuscriptLicense: undefined,
+          manuscriptLicenseDetails: '',
+          otherDetails: undefined,
+          preprintDoi: undefined,
+          protocolsDeposited: 'Yes',
+          protocolsDepositedDetails: '',
+          publicationDoi: undefined,
+          requestingApcCoverage: undefined,
+          submissionDate: undefined,
+          submitterName: undefined,
+          teams: ['1'],
+          type: 'Original Research',
+        },
+      ],
+    });
+  });
 });

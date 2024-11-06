@@ -4,8 +4,8 @@ import {
   ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptPostAuthor,
+  ManuscriptPutRequest,
   ManuscriptResponse,
-  ManuscriptUpdateDataObject,
 } from '@asap-hub/model';
 
 import {
@@ -138,7 +138,8 @@ export default class ManuscriptController {
 
   async update(
     id: string,
-    manuscriptData: ManuscriptUpdateDataObject,
+    manuscriptData: ManuscriptPutRequest,
+    userId: string,
   ): Promise<ManuscriptResponse> {
     const currentManuscript = await this.manuscriptDataProvider.fetchById(id);
 
@@ -146,7 +147,49 @@ export default class ManuscriptController {
       throw new NotFoundError(undefined, `manuscript with id ${id} not found`);
     }
 
-    await this.manuscriptDataProvider.update(id, manuscriptData);
+    if ('status' in manuscriptData && manuscriptData.status) {
+      await this.manuscriptDataProvider.update(id, manuscriptData, userId);
+      return this.fetchById(id);
+    }
+
+    if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
+      const {
+        firstAuthors,
+        correspondingAuthor,
+        additionalAuthors,
+        ...versionData
+      } = manuscriptData.versions[0];
+
+      const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
+        firstAuthors ?? [],
+      );
+      const correspondingAuthorValues = correspondingAuthor
+        ? await this.mapAuthorsPostRequestToId([correspondingAuthor] ?? [])
+        : [];
+
+      const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
+        additionalAuthors ?? [],
+      );
+
+      const getValidAuthorIds = (authorIds: (string | null)[]) =>
+        authorIds.filter((authorId): authorId is string => authorId !== null);
+
+      await this.manuscriptDataProvider.update(
+        id,
+        {
+          ...manuscriptData,
+          versions: [
+            {
+              ...versionData,
+              firstAuthors: getValidAuthorIds(firstAuthorsValues),
+              correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
+              additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
+            },
+          ],
+        },
+        userId,
+      );
+    }
 
     return this.fetchById(id);
   }

@@ -9,6 +9,7 @@ import {
   ManuscriptLifecycle,
   ManuscriptPostAuthor,
   ManuscriptPostRequest,
+  ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptType,
   manuscriptTypeLifecycles,
@@ -90,8 +91,12 @@ type OptionalVersionFields = Array<
     | 'lifecycle'
     | 'complianceReport'
     | 'createdBy'
+    | 'updatedBy'
     | 'createdDate'
     | 'publishedAt'
+    | 'firstAuthors'
+    | 'correspondingAuthor'
+    | 'additionalAuthors'
   >
 >;
 
@@ -235,6 +240,7 @@ type ManuscriptFormProps = Omit<
   | 'additionalFiles'
   | 'description'
   | 'createdBy'
+  | 'updatedBy'
   | 'createdDate'
   | 'publishedAt'
   | 'teams'
@@ -248,9 +254,14 @@ type ManuscriptFormProps = Omit<
     additionalFiles?: ManuscriptFileResponse[];
     description?: string | '';
     eligibilityReasons: Set<string>;
-    onSave: (
+    onCreate: (
       output: ManuscriptPostRequest,
     ) => Promise<ManuscriptResponse | void>;
+    onUpdate: (
+      id: string,
+      output: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse | void>;
+    manuscriptId?: string;
     onSuccess: () => void;
     handleFileUpload: (
       file: File,
@@ -262,6 +273,7 @@ type ManuscriptFormProps = Omit<
       typeof LabeledMultiSelect
     >['loadOptions'];
     selectedTeams: MultiSelectOptionsType[];
+    selectedLabs: MultiSelectOptionsType[];
     getLabSuggestions?: ComponentProps<
       typeof LabeledMultiSelect
     >['loadOptions'];
@@ -274,7 +286,9 @@ type ManuscriptFormProps = Omit<
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
-  onSave,
+  manuscriptId,
+  onCreate,
+  onUpdate,
   onSuccess,
   handleFileUpload,
   teamId,
@@ -291,14 +305,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   preprintDoi,
   publicationDoi,
   otherDetails,
-  acknowledgedGrantNumber,
-  asapAffiliationIncluded,
-  manuscriptLicense,
-  datasetsDeposited,
-  codeDeposited,
-  protocolsDeposited,
-  labMaterialsRegistered,
-  availabilityStatement,
   acknowledgedGrantNumberDetails,
   asapAffiliationIncludedDetails,
   manuscriptLicenseDetails,
@@ -310,12 +316,23 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getTeamSuggestions,
   selectedTeams,
   getLabSuggestions,
+  selectedLabs,
   getAuthorSuggestions,
   description,
   firstAuthors,
   correspondingAuthor,
   additionalAuthors,
 }) => {
+  const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
+    const isEditing = !!title;
+
+    if (isEditing) {
+      return quickCheckDetails ? 'No' : 'Yes';
+    }
+
+    return undefined;
+  };
+
   const methods = useForm<ManuscriptFormData>({
     mode: 'onBlur',
     defaultValues: {
@@ -327,29 +344,54 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           preprintDoi: preprintDoi || '',
           requestingApcCoverage: requestingApcCoverage || '',
           submitterName: submitterName || undefined,
-          submissionDate: submissionDate || undefined,
+          submissionDate: submissionDate ? new Date(submissionDate) : undefined,
           publicationDoi: publicationDoi || '',
           otherDetails: otherDetails || '',
           manuscriptFile: manuscriptFile || undefined,
           keyResourceTable: keyResourceTable || undefined,
           additionalFiles: additionalFiles || undefined,
-          acknowledgedGrantNumber: acknowledgedGrantNumber || '',
-          asapAffiliationIncluded: asapAffiliationIncluded || '',
-          manuscriptLicense: manuscriptLicense || '',
-          datasetsDeposited: datasetsDeposited || '',
-          codeDeposited: codeDeposited || '',
-          protocolsDeposited: protocolsDeposited || '',
-          labMaterialsRegistered: labMaterialsRegistered || '',
-          availabilityStatement: availabilityStatement || '',
-          acknowledgedGrantNumberDetails: acknowledgedGrantNumberDetails || '',
-          asapAffiliationIncludedDetails: asapAffiliationIncludedDetails || '',
-          manuscriptLicenseDetails: manuscriptLicenseDetails || '',
-          datasetsDepositedDetails: datasetsDepositedDetails || '',
-          codeDepositedDetails: codeDepositedDetails || '',
-          protocolsDepositedDetails: protocolsDepositedDetails || '',
-          labMaterialsRegisteredDetails: labMaterialsRegisteredDetails || '',
-          availabilityStatementDetails: availabilityStatementDetails || '',
+
+          acknowledgedGrantNumber: getDefaultQuickCheckValue(
+            acknowledgedGrantNumberDetails?.message.text,
+          ),
+          asapAffiliationIncluded: getDefaultQuickCheckValue(
+            asapAffiliationIncludedDetails?.message.text,
+          ),
+          manuscriptLicense: getDefaultQuickCheckValue(
+            manuscriptLicenseDetails?.message.text,
+          ),
+          datasetsDeposited: getDefaultQuickCheckValue(
+            datasetsDepositedDetails?.message.text,
+          ),
+          codeDeposited: getDefaultQuickCheckValue(
+            codeDepositedDetails?.message.text,
+          ),
+          protocolsDeposited: getDefaultQuickCheckValue(
+            protocolsDepositedDetails?.message.text,
+          ),
+          labMaterialsRegistered: getDefaultQuickCheckValue(
+            labMaterialsRegisteredDetails?.message.text,
+          ),
+          availabilityStatement: getDefaultQuickCheckValue(
+            availabilityStatementDetails?.message.text,
+          ),
+          acknowledgedGrantNumberDetails:
+            acknowledgedGrantNumberDetails?.message.text || '',
+          asapAffiliationIncludedDetails:
+            asapAffiliationIncludedDetails?.message.text || '',
+          manuscriptLicenseDetails:
+            manuscriptLicenseDetails?.message.text || '',
+          datasetsDepositedDetails:
+            datasetsDepositedDetails?.message.text || '',
+          codeDepositedDetails: codeDepositedDetails?.message.text || '',
+          protocolsDepositedDetails:
+            protocolsDepositedDetails?.message.text || '',
+          labMaterialsRegisteredDetails:
+            labMaterialsRegisteredDetails?.message.text || '',
+          availabilityStatementDetails:
+            availabilityStatementDetails?.message.text || '',
           teams: selectedTeams || [],
+          labs: selectedLabs || [],
           description: description || '',
           firstAuthors: firstAuthors || [],
           firstAuthorsEmails: [],
@@ -420,7 +462,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               ...getValues().versions[0],
               ...fieldDefaultValueMap,
               teams: selectedTeams,
-              labs: [],
+              labs: selectedLabs,
               manuscriptFile: undefined,
               keyResourceTable: undefined,
               additionalFiles: undefined,
@@ -432,6 +474,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         { keepDefaultValues: true },
       );
     }
+    // TODO: when edit remove reset?
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getValues, reset, watchType, watchLifecycle, selectedTeams]);
 
   const onSubmit = async (data: ManuscriptFormData) => {
@@ -442,96 +486,109 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         firstAuthorsEmails,
         correspondingAuthorEmails,
         additionalAuthorsEmails,
-        ...postRequestVersionData
+        ...requestVersionData
       } = versionData;
 
-      await onSave({
-        ...data,
-        teamId,
-        eligibilityReasons: [...eligibilityReasons],
-        versions: [
-          {
-            ...postRequestVersionData,
-            publicationDoi: versionData?.publicationDoi || undefined,
-            preprintDoi: versionData?.preprintDoi || undefined,
-            otherDetails: versionData?.otherDetails || undefined,
-            requestingApcCoverage:
-              versionData?.requestingApcCoverage || undefined,
-            description: versionData.description || '',
-            submitterName:
-              versionData?.requestingApcCoverage === 'Already submitted' &&
-              versionData?.submitterName
-                ? versionData.submitterName
-                : undefined,
-            submissionDate:
-              versionData?.requestingApcCoverage === 'Already submitted' &&
-              versionData.submissionDate
-                ? versionData.submissionDate.toISOString()
-                : undefined,
+      const versionDataPayload = {
+        publicationDoi: versionData?.publicationDoi || undefined,
+        preprintDoi: versionData?.preprintDoi || undefined,
+        otherDetails: versionData?.otherDetails || undefined,
+        requestingApcCoverage: versionData?.requestingApcCoverage || undefined,
+        description: versionData.description || '',
+        submitterName:
+          versionData?.requestingApcCoverage === 'Already submitted' &&
+          versionData?.submitterName
+            ? versionData.submitterName
+            : undefined,
+        submissionDate:
+          versionData?.requestingApcCoverage === 'Already submitted' &&
+          versionData.submissionDate
+            ? versionData.submissionDate.toISOString()
+            : undefined,
 
-            acknowledgedGrantNumber:
-              versionData.acknowledgedGrantNumber || undefined,
-            asapAffiliationIncluded:
-              versionData.asapAffiliationIncluded || undefined,
-            availabilityStatement:
-              versionData.availabilityStatement || undefined,
-            manuscriptLicense: versionData.manuscriptLicense || undefined,
-            datasetsDeposited: versionData.datasetsDeposited || undefined,
-            codeDeposited: versionData.codeDeposited || undefined,
-            protocolsDeposited: versionData.protocolsDeposited || undefined,
-            labMaterialsRegistered:
-              versionData.labMaterialsRegistered || undefined,
+        acknowledgedGrantNumber:
+          versionData.acknowledgedGrantNumber || undefined,
+        asapAffiliationIncluded:
+          versionData.asapAffiliationIncluded || undefined,
+        availabilityStatement: versionData.availabilityStatement || undefined,
+        manuscriptLicense: versionData.manuscriptLicense || undefined,
+        datasetsDeposited: versionData.datasetsDeposited || undefined,
+        codeDeposited: versionData.codeDeposited || undefined,
+        protocolsDeposited: versionData.protocolsDeposited || undefined,
+        labMaterialsRegistered: versionData.labMaterialsRegistered || undefined,
 
-            acknowledgedGrantNumberDetails:
-              versionData?.acknowledgedGrantNumber === 'No'
-                ? versionData.acknowledgedGrantNumberDetails
-                : '',
-            asapAffiliationIncludedDetails:
-              versionData?.asapAffiliationIncluded === 'No'
-                ? versionData.asapAffiliationIncludedDetails
-                : '',
-            availabilityStatementDetails:
-              versionData?.availabilityStatement === 'No'
-                ? versionData.availabilityStatementDetails
-                : '',
-            manuscriptLicenseDetails:
-              versionData?.manuscriptLicense === 'No'
-                ? versionData.manuscriptLicenseDetails
-                : '',
-            datasetsDepositedDetails:
-              versionData?.datasetsDeposited === 'No'
-                ? versionData.datasetsDepositedDetails
-                : '',
-            codeDepositedDetails:
-              versionData?.codeDeposited === 'No'
-                ? versionData.codeDepositedDetails
-                : '',
-            protocolsDepositedDetails:
-              versionData?.protocolsDeposited === 'No'
-                ? versionData.protocolsDepositedDetails
-                : '',
-            labMaterialsRegisteredDetails:
-              versionData?.labMaterialsRegistered === 'No'
-                ? versionData.labMaterialsRegisteredDetails
-                : '',
+        acknowledgedGrantNumberDetails:
+          versionData?.acknowledgedGrantNumber === 'No'
+            ? versionData.acknowledgedGrantNumberDetails
+            : '',
+        asapAffiliationIncludedDetails:
+          versionData?.asapAffiliationIncluded === 'No'
+            ? versionData.asapAffiliationIncludedDetails
+            : '',
+        availabilityStatementDetails:
+          versionData?.availabilityStatement === 'No'
+            ? versionData.availabilityStatementDetails
+            : '',
+        manuscriptLicenseDetails:
+          versionData?.manuscriptLicense === 'No'
+            ? versionData.manuscriptLicenseDetails
+            : '',
+        datasetsDepositedDetails:
+          versionData?.datasetsDeposited === 'No'
+            ? versionData.datasetsDepositedDetails
+            : '',
+        codeDepositedDetails:
+          versionData?.codeDeposited === 'No'
+            ? versionData.codeDepositedDetails
+            : '',
+        protocolsDepositedDetails:
+          versionData?.protocolsDeposited === 'No'
+            ? versionData.protocolsDepositedDetails
+            : '',
+        labMaterialsRegisteredDetails:
+          versionData?.labMaterialsRegistered === 'No'
+            ? versionData.labMaterialsRegisteredDetails
+            : '',
 
-            teams: versionData.teams.map((team) => team.value),
-            labs: versionData.labs.map((lab) => lab.value),
-            firstAuthors: getPostAuthors(
-              versionData.firstAuthors,
-              firstAuthorsEmails,
-            ),
-            correspondingAuthor: getPostAuthors(
-              versionData.correspondingAuthor,
-              correspondingAuthorEmails,
-            )?.[0],
-            additionalAuthors: getPostAuthors(
-              versionData.additionalAuthors,
-              additionalAuthorsEmails,
-            ),
-          },
-        ],
-      });
+        teams: versionData.teams.map((team) => team.value),
+        labs: versionData.labs.map((lab) => lab.value),
+        firstAuthors: getPostAuthors(
+          versionData.firstAuthors,
+          firstAuthorsEmails,
+        ),
+        correspondingAuthor: getPostAuthors(
+          versionData.correspondingAuthor,
+          correspondingAuthorEmails,
+        )?.[0],
+        additionalAuthors: getPostAuthors(
+          versionData.additionalAuthors,
+          additionalAuthorsEmails,
+        ),
+      };
+      if (!manuscriptId) {
+        await onCreate({
+          ...data,
+          teamId,
+          eligibilityReasons: [...eligibilityReasons],
+          versions: [
+            {
+              ...requestVersionData,
+              ...versionDataPayload,
+            },
+          ],
+        });
+      } else {
+        await onUpdate(manuscriptId, {
+          title: data.title,
+          teamId,
+          versions: [
+            {
+              ...requestVersionData,
+              ...versionDataPayload,
+            },
+          ],
+        });
+      }
 
       onSuccess();
     }
@@ -1156,6 +1213,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           fieldState: { error },
                         }) => (
                           <LabeledRadioButtonGroup<QuestionChecksOption | ''>
+                            testId={field}
                             title={question}
                             subtitle="(required)"
                             description={getQuickCheckDescription(field)}

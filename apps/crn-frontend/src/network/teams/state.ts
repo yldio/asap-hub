@@ -9,8 +9,11 @@ import {
   ManuscriptFileType,
   ComplianceReportPostRequest,
   ManuscriptPutRequest,
+  DiscussionPatchRequest,
+  DiscussionResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCallback } from 'react';
 import {
   atom,
   atomFamily,
@@ -27,11 +30,13 @@ import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import {
   createComplianceReport,
   createManuscript,
+  getDiscussion,
   getManuscript,
   getTeam,
   getTeams,
   patchTeam,
   updateManuscript,
+  updateDiscussion,
   uploadManuscriptFile,
 } from './api';
 
@@ -182,6 +187,14 @@ export const manuscriptState = atomFamily<
   default: fetchManuscriptState,
 });
 
+export const useInvalidateManuscriptIndex = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
+
+  return useCallback(() => {
+    setRefresh(refresh + 1);
+  }, [refresh, setRefresh]);
+};
+
 export const useManuscriptById = (id: string) =>
   useRecoilValue(manuscriptState(id));
 
@@ -206,10 +219,12 @@ export const usePostManuscript = () => {
 export const usePutManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
+  const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
+
   return async (id: string, payload: ManuscriptPutRequest) => {
     const manuscript = await updateManuscript(id, payload, authorization);
     setManuscriptItem(manuscript);
-
+    invalidateManuscriptIndex();
     return manuscript;
   };
 };
@@ -238,4 +253,49 @@ export const useUploadManuscriptFile = () => {
     fileType: ManuscriptFileType,
     handleError: (errorMessage: string) => void,
   ) => uploadManuscriptFile(file, fileType, authorization, handleError);
+};
+
+export const refreshDiscussionState = atomFamily<number, string>({
+  key: 'refreshDiscussion',
+  default: 0,
+});
+
+const fetchDiscussionState = selectorFamily<
+  DiscussionResponse | undefined,
+  string
+>({
+  key: 'fetchDiscussion',
+  get:
+    (id) =>
+    ({ get }) => {
+      get(refreshDiscussionState(id));
+      const authorization = get(authorizationState);
+      return getDiscussion(id, authorization);
+    },
+});
+
+export const discussionState = atomFamily<
+  DiscussionResponse | undefined,
+  string
+>({
+  key: 'discussion',
+  default: fetchDiscussionState,
+});
+
+export const useSetDiscussion = () =>
+  useRecoilCallback(({ set }) => (discussion: DiscussionResponse) => {
+    set(discussionState(discussion.id), discussion);
+  });
+
+export const useDiscussionById = (id: string) =>
+  useRecoilValue(discussionState(id));
+
+export const useReplyToDiscussion = () => {
+  const authorization = useRecoilValue(authorizationState);
+  const setDiscussion = useSetDiscussion();
+
+  return async (id: string, patch: DiscussionPatchRequest) => {
+    const discussion = await updateDiscussion(id, patch, authorization);
+    setDiscussion(discussion);
+  };
 };

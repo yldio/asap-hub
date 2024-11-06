@@ -1,6 +1,7 @@
 import { TeamProfileWorkspace } from '@asap-hub/react-components';
 import {
   createManuscriptResponse,
+  createDiscussionResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
 
@@ -22,5 +23,9 @@ export const Normal = () => (
     ]}
     isComplianceReviewer={false}
     onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
+    getDiscussion={() => createDiscussionResponse()}
+    onReplyToDiscussion={() => Promise.resolve()}
+    teamId={'team-id'}
+    grantId={'grant-id'}
   />
 );

@@ -1,35 +1,56 @@
+import { ReactNode, Suspense } from 'react';
+import { RecoilRoot } from 'recoil';
+import { MemoryRouter, Route } from 'react-router-dom';
+import {
+  render,
+  waitFor,
+  getByText as getChildByText,
+  act,
+  fireEvent,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { TeamResponse } from '@asap-hub/model';
+import {
+  createDiscussionResponse,
+  createManuscriptResponse,
+  createMessage,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
+import { ToastContext } from '@asap-hub/react-context';
+import { mockAlert } from '@asap-hub/dom-test-utils';
+
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { mockAlert } from '@asap-hub/dom-test-utils';
-import {
-  createManuscriptResponse,
-  createTeamResponse,
-} from '@asap-hub/fixtures';
 import { enable } from '@asap-hub/flags';
-import { TeamResponse } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+
 import {
-  getByText as getChildByText,
-  render,
-  waitFor,
-} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+  patchTeam,
+  updateManuscript,
+  getDiscussion,
+  updateDiscussion,
+} from '../api';
 
-import { patchTeam, updateManuscript } from '../api';
 import Workspace from '../Workspace';
+import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 
+jest.setTimeout(30000);
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),
+  getDiscussion: jest.fn(),
+  updateDiscussion: jest.fn(),
 }));
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
+const mockGetDiscussion = getDiscussion as jest.MockedFunction<
+  typeof getDiscussion
+>;
+const mockUpdateDiscussion = updateDiscussion as jest.MockedFunction<
+  typeof updateDiscussion
+>;
 
 const id = '42';
 
@@ -331,6 +352,100 @@ describe('the edit tool dialog', () => {
         ],
       },
       expect.any(String),
+    );
+  });
+});
+
+describe('manuscript quick check discussion', () => {
+  const manuscript = createManuscriptResponse();
+  manuscript.versions[0]!.acknowledgedGrantNumber = 'No';
+  const reply = createMessage('when can this be completed?');
+  const quickCheckResponse = 'We have not been able to complete this yet';
+  const acknowledgedGrantNumberDiscussion = createDiscussionResponse(
+    quickCheckResponse,
+    [reply],
+  );
+  manuscript.versions[0]!.acknowledgedGrantNumberDetails =
+    acknowledgedGrantNumberDiscussion;
+
+  it('fetches quick check discussion details', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+
+    mockGetDiscussion.mockResolvedValueOnce(acknowledgedGrantNumberDiscussion);
+    const { getByText, findByTestId, getByLabelText, getByTestId } =
+      renderWithWrapper(
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            manuscripts: [manuscript],
+            tools: [],
+          }}
+        />,
+      );
+
+    await act(async () => {
+      userEvent.click(await findByTestId('collapsible-button'));
+      userEvent.click(getByLabelText('Expand Version'));
+    });
+
+    userEvent.click(getByTestId('discussion-collapsible-button'));
+
+    expect(getByText(quickCheckResponse)).toBeVisible();
+    expect(getByText(reply.text)).toBeVisible();
+    expect(mockGetDiscussion).toHaveBeenLastCalledWith(
+      acknowledgedGrantNumberDiscussion.id,
+      expect.anything(),
+    );
+  });
+
+  it('replies to a quick check discussion', async () => {
+    enable('DISPLAY_MANUSCRIPTS');
+    mockGetDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    mockUpdateDiscussion.mockResolvedValue(acknowledgedGrantNumberDiscussion);
+    const { findByTestId, getByRole, getByTestId, getByLabelText } =
+      renderWithWrapper(
+        <ManuscriptToastProvider>
+          <Workspace
+            team={{
+              ...createTeamResponse(),
+              id,
+              manuscripts: [manuscript],
+              tools: [],
+            }}
+          />
+        </ManuscriptToastProvider>,
+      );
+
+    await act(async () => {
+      userEvent.click(await findByTestId('collapsible-button'));
+      userEvent.click(getByLabelText('Expand Version'));
+    });
+
+    userEvent.click(getByTestId('discussion-collapsible-button'));
+
+    const replyButton = getByRole('button', { name: /Reply/i });
+    userEvent.click(replyButton);
+
+    const replyEditor = getByTestId('editor');
+    userEvent.click(replyEditor);
+    userEvent.tab();
+    fireEvent.input(replyEditor, { data: 'new reply' });
+    userEvent.tab();
+
+    const sendButton = getByRole('button', { name: /Send/i });
+
+    await waitFor(() => {
+      expect(sendButton).toBeEnabled();
+    });
+    await act(async () => {
+      userEvent.click(sendButton);
+    });
+
+    expect(mockUpdateDiscussion).toHaveBeenLastCalledWith(
+      acknowledgedGrantNumberDiscussion.id,
+      { replyText: 'new reply' },
+      expect.anything(),
     );
   });
 });

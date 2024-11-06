@@ -896,6 +896,8 @@ enum DiscussionsLinkingCollectionsManuscriptVersionsCollectionOrder {
   availabilityStatement_DESC
   codeDeposited_ASC
   codeDeposited_DESC
+  count_ASC
+  count_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -1669,8 +1671,6 @@ enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -2612,8 +2612,6 @@ enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -2822,6 +2820,7 @@ type ManuscriptVersions implements Entry & _Node {
   sys: Sys!
   teamsCollection(limit: Int = 100, locale: String, order: [ManuscriptVersionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ManuscriptVersionsTeamsCollection
   type(locale: String): String
+  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type ManuscriptVersionsAdditionalAuthorsCollection {
@@ -3057,6 +3056,8 @@ input ManuscriptVersionsFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+  updatedBy: cfUsersNestedFilter
+  updatedBy_exists: Boolean
 }
 
 type ManuscriptVersionsFirstAuthorsCollection {
@@ -3156,8 +3157,6 @@ enum ManuscriptVersionsOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -3346,8 +3345,6 @@ enum ManuscriptsVersionsCollectionOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -5722,8 +5719,6 @@ enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -6778,8 +6773,6 @@ enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
   codeDeposited_DESC
   count_ASC
   count_DESC
-  datasetsDepositedDetails_ASC
-  datasetsDepositedDetails_DESC
   datasetsDeposited_ASC
   datasetsDeposited_DESC
   labMaterialsRegistered_ASC
@@ -8058,6 +8051,7 @@ input cfManuscriptVersionsNestedFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+  updatedBy_exists: Boolean
 }
 
 input cfMessagesNestedFilter {

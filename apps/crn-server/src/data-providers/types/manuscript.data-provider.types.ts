@@ -9,7 +9,11 @@ export type ManuscriptDataProvider = DataProvider<
   ManuscriptDataObject,
   ManuscriptDataObject,
   null,
-  ManuscriptCreateDataObject,
-  null,
-  ManuscriptUpdateDataObject
->;
+  ManuscriptCreateDataObject
+> & {
+  update(
+    id: string,
+    data: ManuscriptUpdateDataObject,
+    userId: string,
+  ): Promise<void>;
+};

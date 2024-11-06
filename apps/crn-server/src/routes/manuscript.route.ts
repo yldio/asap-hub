@@ -99,18 +99,25 @@ export const manuscriptRouteFactory = (
     '/manuscripts/:manuscriptId',
     async (req, res: Response<ManuscriptResponse>) => {
       const { params, loggedInUser, body } = req;
+      const payload = validateManuscriptPutRequestParameters(body);
 
       if (
         !loggedInUser ||
-        !(loggedInUser.role === 'Staff' && loggedInUser.openScienceTeamMember)
+        ('status' in payload &&
+          payload.status &&
+          !(
+            loggedInUser.role === 'Staff' && loggedInUser.openScienceTeamMember
+          ))
       )
         throw Boom.forbidden();
 
       const { manuscriptId } = params;
 
-      const payload = validateManuscriptPutRequestParameters(body);
-
-      const result = await manuscriptController.update(manuscriptId, payload);
+      const result = await manuscriptController.update(
+        manuscriptId,
+        payload,
+        loggedInUser.id,
+      );
 
       res.json(result);
     },

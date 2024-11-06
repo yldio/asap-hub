@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -25,16 +25,20 @@ import ManuscriptVersionCard from './ManuscriptVersionCard';
 type ManuscriptCardProps = Pick<
   TeamManuscript,
   'id' | 'title' | 'versions' | 'status' | 'count'
-> & {
-  teamId: string;
-  teamIdCode: string;
-  grantId: string;
-  isComplianceReviewer: boolean;
-  onUpdateManuscript: (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => Promise<ManuscriptResponse>;
-};
+> &
+  Pick<
+    ComponentProps<typeof ManuscriptVersionCard>,
+    'onReplyToDiscussion' | 'getDiscussion'
+  > & {
+    teamId: string;
+    teamIdCode: string;
+    grantId: string;
+    isComplianceReviewer: boolean;
+    onUpdateManuscript: (
+      manuscriptId: string,
+      payload: ManuscriptPutRequest,
+    ) => Promise<ManuscriptResponse>;
+  };
 
 const manuscriptContainerStyles = css({
   marginTop: rem(12),
@@ -92,6 +96,8 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   grantId,
   isComplianceReviewer,
   onUpdateManuscript,
+  getDiscussion,
+  onReplyToDiscussion,
 }) => {
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
@@ -194,11 +200,14 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <div>
             {versions.map((version, index) => (
               <ManuscriptVersionCard
+                onReplyToDiscussion={onReplyToDiscussion}
+                getDiscussion={getDiscussion}
                 key={index}
                 version={version}
                 teamId={teamIdCode}
                 grantId={grantId}
                 manuscriptCount={count}
+                manuscriptId={id}
               />
             ))}
           </div>

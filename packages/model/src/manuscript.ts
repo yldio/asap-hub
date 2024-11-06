@@ -1,6 +1,7 @@
 import { JSONSchemaType } from 'ajv';
-import { AuthorAlgoliaResponse } from './authors';
+import { AuthorAlgoliaResponse, AuthorResponse } from './authors';
 import { ComplianceReportDataObject } from './compliance-report';
+import { DiscussionDataObject } from './discussion';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -89,14 +90,14 @@ export type ManuscriptVersion = {
   labMaterialsRegistered?: string;
   availabilityStatement?: string;
 
-  acknowledgedGrantNumberDetails?: string;
-  asapAffiliationIncludedDetails?: string;
-  manuscriptLicenseDetails?: string;
-  datasetsDepositedDetails?: string;
-  codeDepositedDetails?: string;
-  protocolsDepositedDetails?: string;
-  labMaterialsRegisteredDetails?: string;
-  availabilityStatementDetails?: string;
+  acknowledgedGrantNumberDetails?: DiscussionDataObject;
+  asapAffiliationIncludedDetails?: DiscussionDataObject;
+  manuscriptLicenseDetails?: DiscussionDataObject;
+  datasetsDepositedDetails?: DiscussionDataObject;
+  codeDepositedDetails?: DiscussionDataObject;
+  protocolsDepositedDetails?: DiscussionDataObject;
+  labMaterialsRegisteredDetails?: DiscussionDataObject;
+  availabilityStatementDetails?: DiscussionDataObject;
 
   teams: { displayName: string; id: string; inactiveSince?: string }[];
   labs: { name: string; id: string }[];
@@ -112,9 +113,23 @@ export type ManuscriptVersion = {
   > & {
     teams: { id: string; name: string }[];
   };
+  updatedBy: Pick<
+    UserResponse,
+    | 'id'
+    | 'firstName'
+    | 'lastName'
+    | 'displayName'
+    | 'avatarUrl'
+    | 'alumniSinceDate'
+  > & {
+    teams: { id: string; name: string }[];
+  };
   createdDate: string;
   publishedAt: string;
   complianceReport?: ComplianceReportDataObject;
+  firstAuthors: AuthorResponse[];
+  correspondingAuthor: AuthorResponse[];
+  additionalAuthors: AuthorResponse[];
 };
 
 export const manuscriptFormFieldsMapping: Record<
@@ -124,7 +139,15 @@ export const manuscriptFormFieldsMapping: Record<
     Array<
       keyof Omit<
         ManuscriptVersion,
-        'complianceReport' | 'createdBy' | 'createdDate' | 'id' | 'publishedAt'
+        | 'complianceReport'
+        | 'createdBy'
+        | 'createdDate'
+        | 'id'
+        | 'publishedAt'
+        | 'updatedBy'
+        | 'firstAuthors'
+        | 'correspondingAuthor'
+        | 'additionalAuthors'
       >
     >
   >
@@ -320,14 +343,14 @@ export type ManuscriptPostRequest = Pick<
     labMaterialsRegistered?: ManuscriptVersion['labMaterialsRegistered'];
     availabilityStatement?: ManuscriptVersion['availabilityStatement'];
 
-    acknowledgedGrantNumberDetails?: ManuscriptVersion['acknowledgedGrantNumberDetails'];
-    asapAffiliationIncludedDetails?: ManuscriptVersion['asapAffiliationIncludedDetails'];
-    manuscriptLicenseDetails?: ManuscriptVersion['manuscriptLicenseDetails'];
-    datasetsDepositedDetails?: ManuscriptVersion['datasetsDepositedDetails'];
-    codeDepositedDetails?: ManuscriptVersion['codeDepositedDetails'];
-    protocolsDepositedDetails?: ManuscriptVersion['protocolsDepositedDetails'];
-    labMaterialsRegisteredDetails?: ManuscriptVersion['labMaterialsRegisteredDetails'];
-    availabilityStatementDetails?: ManuscriptVersion['availabilityStatementDetails'];
+    acknowledgedGrantNumberDetails?: string;
+    asapAffiliationIncludedDetails?: string;
+    manuscriptLicenseDetails?: string;
+    datasetsDepositedDetails?: string;
+    codeDepositedDetails?: string;
+    protocolsDepositedDetails?: string;
+    labMaterialsRegisteredDetails?: string;
+    availabilityStatementDetails?: string;
 
     teams: string[];
     labs?: string[];
@@ -337,8 +360,26 @@ export type ManuscriptPostRequest = Pick<
   }[];
 };
 
-export type ManuscriptPutRequest = Pick<ManuscriptDataObject, 'status'>;
-export type ManuscriptUpdateDataObject = ManuscriptPutRequest;
+export type ManuscriptUpdateStatus = Pick<ManuscriptDataObject, 'status'>;
+export type ManuscriptUpdateContent = Partial<ManuscriptPostRequest>;
+export type ManuscriptPutRequest =
+  | ManuscriptUpdateStatus
+  | ManuscriptUpdateContent;
+
+export type ManuscriptUpdateDataObject =
+  | ManuscriptUpdateStatus
+  | Partial<
+      Omit<ManuscriptPostRequest, 'versions'> & {
+        versions: (Omit<
+          ManuscriptPostRequest['versions'][number],
+          'firstAuthors' | 'correspondingAuthor' | 'additionalAuthors'
+        > & {
+          firstAuthors: string[];
+          correspondingAuthor: string[];
+          additionalAuthors: string[];
+        })[];
+      }
+    >;
 
 type MultiselectOption = {
   label: string;
@@ -422,6 +463,155 @@ export type ManuscriptCreateDataObject = Omit<
   })[];
 };
 
+export const manuscriptVersionSchema = {
+  type: 'object',
+  properties: {
+    type: { enum: manuscriptTypes, type: 'string' },
+    lifecycle: { enum: manuscriptLifecycles, type: 'string' },
+    preprintDoi: { type: 'string', nullable: true },
+    publicationDoi: { type: 'string', nullable: true },
+    requestingApcCoverage: {
+      enum: apcCoverageOptions,
+      type: 'string',
+      nullable: true,
+    },
+    submitterName: { type: 'string', nullable: true },
+    submissionDate: {
+      type: 'string',
+      format: 'date-time',
+      nullable: true,
+    },
+
+    otherDetails: { type: 'string', nullable: true },
+    description: { type: 'string' },
+    manuscriptFile: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        filename: { type: 'string', nullable: true },
+        url: { type: 'string', nullable: true },
+      },
+      nullable: true,
+      required: ['id'],
+    },
+    keyResourceTable: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        filename: { type: 'string', nullable: true },
+        url: { type: 'string', nullable: true },
+      },
+      nullable: true,
+      required: ['id'],
+    },
+    additionalFiles: {
+      type: 'array',
+      nullable: true,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          id: { type: 'string' },
+          filename: { type: 'string', nullable: true },
+          url: { type: 'string', nullable: true },
+        },
+        required: ['id'],
+      },
+    },
+    acknowledgedGrantNumber: { type: 'string', nullable: true },
+    asapAffiliationIncluded: { type: 'string', nullable: true },
+    manuscriptLicense: { type: 'string', nullable: true },
+    datasetsDeposited: { type: 'string', nullable: true },
+    codeDeposited: { type: 'string', nullable: true },
+    protocolsDeposited: { type: 'string', nullable: true },
+    labMaterialsRegistered: { type: 'string', nullable: true },
+    availabilityStatement: { type: 'string', nullable: true },
+    acknowledgedGrantNumberDetails: { type: 'string', nullable: true },
+    asapAffiliationIncludedDetails: { type: 'string', nullable: true },
+    manuscriptLicenseDetails: { type: 'string', nullable: true },
+    datasetsDepositedDetails: { type: 'string', nullable: true },
+    codeDepositedDetails: { type: 'string', nullable: true },
+    protocolsDepositedDetails: { type: 'string', nullable: true },
+    labMaterialsRegisteredDetails: { type: 'string', nullable: true },
+    availabilityStatementDetails: { type: 'string', nullable: true },
+
+    teams: { type: 'array', minItems: 1, items: { type: 'string' } },
+    labs: { type: 'array', nullable: true, items: { type: 'string' } },
+    firstAuthors: {
+      type: 'array',
+      items: {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              userId: { type: 'string' },
+            },
+            required: ['userId'],
+          },
+          {
+            type: 'object',
+            properties: {
+              externalAuthorId: { type: 'string', nullable: true },
+              externalAuthorName: { type: 'string' },
+              externalAuthorEmail: { type: 'string' },
+            },
+            required: ['externalAuthorName', 'externalAuthorEmail'],
+          },
+        ],
+      },
+    },
+    correspondingAuthor: {
+      type: 'object',
+      nullable: true,
+      oneOf: [
+        {
+          type: 'object',
+          properties: {
+            userId: { type: 'string' },
+          },
+          required: ['userId'],
+        },
+        {
+          type: 'object',
+          properties: {
+            externalAuthorId: { type: 'string', nullable: true },
+            externalAuthorName: { type: 'string' },
+            externalAuthorEmail: { type: 'string' },
+          },
+          required: ['externalAuthorName', 'externalAuthorEmail'],
+        },
+      ],
+    },
+    additionalAuthors: {
+      type: 'array',
+      nullable: true,
+
+      items: {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              userId: { type: 'string' },
+            },
+            required: ['userId'],
+          },
+          {
+            type: 'object',
+            properties: {
+              externalAuthorId: { type: 'string', nullable: true },
+              externalAuthorName: { type: 'string' },
+              externalAuthorEmail: { type: 'string' },
+            },
+            required: ['externalAuthorName', 'externalAuthorEmail'],
+          },
+        ],
+      },
+    },
+  },
+  required: ['type', 'lifecycle'],
+  additionalProperties: false,
+} as const;
+
 export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> =
   {
     type: 'object',
@@ -437,154 +627,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         type: 'array',
         maxItems: 1,
         minItems: 1,
-        items: {
-          type: 'object',
-          properties: {
-            type: { enum: manuscriptTypes, type: 'string' },
-            lifecycle: { enum: manuscriptLifecycles, type: 'string' },
-            preprintDoi: { type: 'string', nullable: true },
-            publicationDoi: { type: 'string', nullable: true },
-            requestingApcCoverage: {
-              enum: apcCoverageOptions,
-              type: 'string',
-              nullable: true,
-            },
-            submitterName: { type: 'string', nullable: true },
-            submissionDate: {
-              type: 'string',
-              format: 'date-time',
-              nullable: true,
-            },
-
-            otherDetails: { type: 'string', nullable: true },
-            description: { type: 'string' },
-            manuscriptFile: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-                filename: { type: 'string', nullable: true },
-                url: { type: 'string', nullable: true },
-              },
-              nullable: true,
-              required: ['id'],
-            },
-            keyResourceTable: {
-              type: 'object',
-              properties: {
-                id: { type: 'string' },
-                filename: { type: 'string', nullable: true },
-                url: { type: 'string', nullable: true },
-              },
-              nullable: true,
-              required: ['id'],
-            },
-            additionalFiles: {
-              type: 'array',
-              nullable: true,
-              items: {
-                type: 'object',
-                additionalProperties: false,
-                properties: {
-                  id: { type: 'string' },
-                  filename: { type: 'string', nullable: true },
-                  url: { type: 'string', nullable: true },
-                },
-                required: ['id'],
-              },
-            },
-            acknowledgedGrantNumber: { type: 'string', nullable: true },
-            asapAffiliationIncluded: { type: 'string', nullable: true },
-            manuscriptLicense: { type: 'string', nullable: true },
-            datasetsDeposited: { type: 'string', nullable: true },
-            codeDeposited: { type: 'string', nullable: true },
-            protocolsDeposited: { type: 'string', nullable: true },
-            labMaterialsRegistered: { type: 'string', nullable: true },
-            availabilityStatement: { type: 'string', nullable: true },
-            acknowledgedGrantNumberDetails: { type: 'string', nullable: true },
-            asapAffiliationIncludedDetails: { type: 'string', nullable: true },
-            manuscriptLicenseDetails: { type: 'string', nullable: true },
-            datasetsDepositedDetails: { type: 'string', nullable: true },
-            codeDepositedDetails: { type: 'string', nullable: true },
-            protocolsDepositedDetails: { type: 'string', nullable: true },
-            labMaterialsRegisteredDetails: { type: 'string', nullable: true },
-            availabilityStatementDetails: { type: 'string', nullable: true },
-
-            teams: { type: 'array', minItems: 1, items: { type: 'string' } },
-            labs: { type: 'array', nullable: true, items: { type: 'string' } },
-            firstAuthors: {
-              type: 'array',
-              items: {
-                oneOf: [
-                  {
-                    type: 'object',
-                    properties: {
-                      userId: { type: 'string' },
-                    },
-                    required: ['userId'],
-                  },
-                  {
-                    type: 'object',
-                    properties: {
-                      externalAuthorId: { type: 'string', nullable: true },
-                      externalAuthorName: { type: 'string' },
-                      externalAuthorEmail: { type: 'string' },
-                    },
-                    required: ['externalAuthorName', 'externalAuthorEmail'],
-                  },
-                ],
-              },
-            },
-            correspondingAuthor: {
-              type: 'object',
-              nullable: true,
-              oneOf: [
-                {
-                  type: 'object',
-                  properties: {
-                    userId: { type: 'string' },
-                  },
-                  required: ['userId'],
-                },
-                {
-                  type: 'object',
-                  properties: {
-                    externalAuthorId: { type: 'string', nullable: true },
-                    externalAuthorName: { type: 'string' },
-                    externalAuthorEmail: { type: 'string' },
-                  },
-                  required: ['externalAuthorName', 'externalAuthorEmail'],
-                },
-              ],
-            },
-            additionalAuthors: {
-              type: 'array',
-              nullable: true,
-
-              items: {
-                oneOf: [
-                  {
-                    type: 'object',
-                    properties: {
-                      userId: { type: 'string' },
-                    },
-                    required: ['userId'],
-                  },
-                  {
-                    type: 'object',
-                    properties: {
-                      externalAuthorId: { type: 'string', nullable: true },
-                      externalAuthorName: { type: 'string' },
-                      externalAuthorEmail: { type: 'string' },
-                    },
-                    required: ['externalAuthorName', 'externalAuthorEmail'],
-                  },
-                ],
-              },
-            },
-          },
-          required: ['type', 'lifecycle'],
-          additionalProperties: false,
-        },
+        items: manuscriptVersionSchema,
       },
     },
     required: ['title', 'teamId', 'versions'],
@@ -595,7 +638,15 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
   {
     type: 'object',
     properties: {
+      title: { type: 'string', nullable: true },
+      teamId: { type: 'string', nullable: true },
       status: { enum: manuscriptStatus, type: 'string', nullable: true },
+      versions: {
+        type: 'array',
+        maxItems: 1,
+        items: manuscriptVersionSchema,
+        nullable: true,
+      },
     },
     additionalProperties: false,
   };
@@ -630,7 +681,7 @@ interface QuickCheckQuestions {
 }
 
 export type QuickCheckDetailsObject = Pick<
-  ManuscriptVersion,
+  ManuscriptPostRequest['versions'][number],
   | 'acknowledgedGrantNumberDetails'
   | 'asapAffiliationIncludedDetails'
   | 'availabilityStatementDetails'

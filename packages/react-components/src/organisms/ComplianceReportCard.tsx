@@ -11,6 +11,7 @@ import {
   colors,
   externalLinkIcon,
   Markdown,
+  ExpandableText,
 } from '..';
 import { paddingStyles } from '../card';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -80,7 +81,9 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
       {expanded && (
         <div>
           <div css={[paddingStyles, toastContentStyles]}>
-            <Markdown value={description}></Markdown>
+            <ExpandableText>
+              <Markdown value={description}></Markdown>
+            </ExpandableText>
             <div css={buttonStyles}>
               <Link buttonStyle fullWidth small primary href={url}>
                 <span css={externalIconStyle}>

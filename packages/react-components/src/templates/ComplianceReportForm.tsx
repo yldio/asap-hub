@@ -5,12 +5,13 @@ import {
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { GlobeIcon, LabeledTextArea, LabeledTextField } from '..';
 import { Button, Card, Paragraph } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { ShareComplianceReportModal } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
 const mainStyles = css({
@@ -95,9 +96,20 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
     onSuccess();
   };
 
+  const [
+    displayShareComplianceReportModal,
+    setDisplayShareComplianceReportModal,
+  ] = useState(false);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <main css={mainStyles}>
+        {displayShareComplianceReportModal && (
+          <ShareComplianceReportModal
+            onDismiss={() => setDisplayShareComplianceReportModal(false)}
+            onConfirm={() => handleSubmit(onSubmit)()}
+          />
+        )}
         <div css={contentStyles}>
           <Card overrideStyles={cardStyles}>
             <Paragraph noMargin>
@@ -173,9 +185,8 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
               <Button
                 primary
                 noMargin
-                submit
                 enabled={!isSubmitting && isValid}
-                preventDefault={false}
+                onClick={() => setDisplayShareComplianceReportModal(true)}
               >
                 Share
               </Button>

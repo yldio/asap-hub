@@ -124,7 +124,11 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     }
   };
 
-  const hasActiveComplianceReport = !!versions[0]?.complianceReport;
+  const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
+  const canSubmitComplianceReport = !(
+    closedManuscriptStatuses.includes(status ?? '') ||
+    !!versions[0]?.complianceReport
+  );
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
@@ -167,7 +171,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
               buttonChildren={() => <span>{selectedStatus}</span>}
               canEdit={
                 isComplianceReviewer &&
-                !['Closed (other)', 'Compliant'].includes(selectedStatus)
+                !closedManuscriptStatuses.includes(selectedStatus)
               }
             >
               {manuscriptStatus.map((statusItem) => ({
@@ -185,7 +189,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   small
                   noMargin
                   onClick={handleShareComplianceReport}
-                  enabled={!hasActiveComplianceReport}
+                  enabled={canSubmitComplianceReport}
                 >
                   <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
                     {complianceReportIcon}

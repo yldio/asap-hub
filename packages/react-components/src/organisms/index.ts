@@ -66,6 +66,7 @@ export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
+export { default as ShareComplianceReportModal } from './ShareComplianceReportModal';
 export {
   default as SharedOutputDropdown,
   SharedOutputDropdownBase,

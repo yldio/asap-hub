@@ -11,6 +11,10 @@ const footerStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
   padding: `${6 / perRem}em ${24 / perRem}em`,
   display: 'flex',
+  position: 'fixed',
+  left: '0px',
+  right: '0px',
+  bottom: '0px',
 });
 
 const containerStyles = css({

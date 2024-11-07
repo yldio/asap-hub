@@ -62,6 +62,7 @@ type ConfirmModalProps = {
   readonly description?: string | React.ReactNode;
   readonly confirmText?: string;
   readonly cancelText?: string;
+  readonly confirmButtonStyle?: 'primary' | 'warning';
 
   readonly successHref?: string;
   readonly onSave?: () => void | Promise<void>;
@@ -83,6 +84,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   error = 'There was an error',
   backHref,
   successHref,
+  confirmButtonStyle = 'primary',
   onCancel = noop,
   onSave = noop,
 }) => {
@@ -124,7 +126,9 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </div>
           <div css={saveStyles}>
             <Button
-              primary
+              {...(confirmButtonStyle === 'primary'
+                ? { primary: true }
+                : { warning: true })}
               enabled={status !== 'isSaving'}
               onClick={async () => {
                 setStatus('isSaving');

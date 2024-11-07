@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -131,8 +137,8 @@ it('should go back when cancel button is clicked', () => {
   const confirmCancellationButton = getByRole('button', {
     name: /cancel compliance report sharing/i,
   });
-  userEvent.click(confirmCancellationButton);
 
+  act(() => userEvent.click(confirmCancellationButton));
   expect(history.location.pathname).toBe('/another-url');
 });
 

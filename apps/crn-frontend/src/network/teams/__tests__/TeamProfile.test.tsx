@@ -14,6 +14,7 @@ import { enable } from '@asap-hub/flags';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import {
+  act,
   render,
   screen,
   waitFor,
@@ -275,14 +276,18 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
   });
-  userEvent.click(submitButton);
-
-  await waitFor(() => {
-    expect(submitButton).not.toBeVisible();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Submit/ }),
+    );
   });
 
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
+
   expect(
-    screen.getByText('Manuscript submitted successfully.'),
+    await screen.findByText('Manuscript submitted successfully.'),
   ).toBeInTheDocument();
 
   userEvent.click(screen.getByLabelText('Close'));

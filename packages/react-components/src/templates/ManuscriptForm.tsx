@@ -23,7 +23,6 @@ import { isInternalUser } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 import {
   AuthorSelect,
   FormCard,
@@ -38,6 +37,7 @@ import {
 } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
+import { ManuscriptFormModals } from '../organisms';
 import { mobileScreen, rem } from '../pixels';
 
 const MAX_FILE_SIZE = 25_000_000;
@@ -323,8 +323,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   correspondingAuthor,
   additionalAuthors,
 }) => {
-  const history = useHistory();
-
   const getDefaultQuickCheckValue = (quickCheckDetails: string | undefined) => {
     const isEditing = !!title;
 
@@ -606,8 +604,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             label: lifecycleSuggestion,
           }));
 
+  const [modal, setModal] = useState<'submit' | 'cancel' | null>(null);
+  const handleSubmitConfirmation = () => setModal('submit');
+  const handleCancelConfirmation = () => setModal('cancel');
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
+      <ManuscriptFormModals
+        modal={modal}
+        setModal={setModal}
+        handleSubmit={handleSubmit(onSubmit)}
+      />
       <main css={mainStyles}>
         <div css={contentStyles}>
           <FormCard title="What are you sharing?">
@@ -1261,7 +1268,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Button
                 noMargin
                 enabled={!isSubmitting}
-                onClick={() => history.goBack()}
+                onClick={handleCancelConfirmation}
               >
                 Cancel
               </Button>

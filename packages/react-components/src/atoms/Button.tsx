@@ -25,6 +25,7 @@ const buttonAsLinkStyles = css({
 interface NormalButtonProps {
   readonly enabled?: boolean;
   readonly primary?: boolean;
+  readonly warning?: boolean;
   readonly active?: boolean;
   readonly small?: boolean;
   readonly linkStyle?: undefined;
@@ -36,6 +37,7 @@ interface LinkStyleButtonProps {
   readonly linkStyle: true;
   readonly enabled?: undefined;
   readonly primary?: undefined;
+  readonly warning?: boolean;
   readonly active?: undefined;
   readonly small?: undefined;
   readonly theme?: ThemeVariant;
@@ -52,6 +54,7 @@ type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
   primary = false,
+  warning = false,
   small = false,
   linkStyle = false,
   active = false,
@@ -81,6 +84,7 @@ const Button: React.FC<ButtonProps> = ({
         ? [linkStyles, buttonAsLinkStyles, getLinkColors(colors, theme)]
         : getButtonStyles({
             primary,
+            warning,
             small,
             enabled,
             active,

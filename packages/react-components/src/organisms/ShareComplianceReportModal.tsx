@@ -52,13 +52,30 @@ const dismissButtonStyles = css({
   },
 });
 
+type FormAction = 'cancel' | 'confirm';
+
 type ShareComplianceReportModalProps = {
   onDismiss: () => void;
   onSuccess: () => void;
   onConfirm: () => Promise<void>;
   onCancel: () => void;
-  action: 'cancel' | 'confirm';
+  action: FormAction;
 };
+
+const getModalContent = (formAction: FormAction) =>
+  formAction === 'confirm'
+    ? {
+        title: 'Share compliance report?',
+        content:
+          'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+        confirmButtonText: 'Share Compliance Report',
+      }
+    : {
+        title: 'Cancel sharing of compliance report?',
+        content:
+          'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.',
+        confirmButtonText: 'Cancel Compliance Report Sharing',
+      };
 
 const ShareComplianceReportModal: React.FC<ShareComplianceReportModalProps> = ({
   onDismiss,
@@ -69,20 +86,7 @@ const ShareComplianceReportModal: React.FC<ShareComplianceReportModalProps> = ({
 }) => {
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
-  const title =
-    action === 'confirm'
-      ? 'Share compliance report?'
-      : 'Cancel sharing of compliance report?';
-
-  const content =
-    action === 'confirm'
-      ? 'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.'
-      : 'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.';
-
-  const confirmButtonText =
-    action === 'confirm'
-      ? 'Share Compliance Report'
-      : 'Cancel Compliance Report Sharing';
+  const { title, confirmButtonText, content } = getModalContent(action);
 
   const handleFormAction = async () => {
     if (action === 'confirm') {

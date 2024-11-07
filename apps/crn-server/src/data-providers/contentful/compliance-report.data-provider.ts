@@ -48,9 +48,9 @@ export class ComplianceReportContentfulDataProvider
     const { manuscriptVersionId, ...payload } = input;
 
     const currentComplianceReportCount =
-      (await this.fetchComplianceReportCountByManuscriptVersionId(
+      await this.fetchComplianceReportCountByManuscriptVersionId(
         manuscriptVersionId,
-      )) || 0;
+      );
 
     const complianceReport = await environment.createEntry(
       'complianceReports',

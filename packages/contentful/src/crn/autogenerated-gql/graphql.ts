@@ -32518,13 +32518,6 @@ export const FetchComplianceReportsByManuscriptVersionIdDocument = {
                           kind: 'Name',
                           value: 'complianceReportsCollection',
                         },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '15' },
-                          },
-                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

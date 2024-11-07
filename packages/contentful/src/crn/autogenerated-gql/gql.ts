@@ -33,7 +33,7 @@ const documents = {
     types.FetchCalendarByIdDocument,
   '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContent\n      }\n    }\n  }\n  \n':
     types.FetchCalendarsDocument,
-  '\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection(limit: 15) {\n          total\n        }\n      }\n    }\n  }\n':
+  '\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection {\n          total\n        }\n      }\n    }\n  }\n':
     types.FetchComplianceReportsByManuscriptVersionIdDocument,
   '\n  query FetchDashboard {\n    dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        newsCollection(limit: 10) {\n          items {\n            ...NewsContent\n          }\n        }\n\n        pagesCollection(limit: 10) {\n          items {\n            ...PageContent\n          }\n        }\n\n        announcementsCollection(order: sys_firstPublishedAt_DESC) {\n          items {\n            description\n            deadline\n            link\n            sys {\n              id\n            }\n          }\n        }\n      }\n    }\n  }\n  \n  \n':
     types.FetchDashboardDocument,
@@ -221,8 +221,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection(limit: 15) {\n          total\n        }\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection(limit: 15) {\n          total\n        }\n      }\n    }\n  }\n'];
+  source: '\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection {\n          total\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchComplianceReportsByManuscriptVersionID($id: String!) {\n    manuscriptVersions(id: $id) {\n      linkedFrom {\n        complianceReportsCollection {\n          total\n        }\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

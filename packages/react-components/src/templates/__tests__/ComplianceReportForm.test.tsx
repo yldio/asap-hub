@@ -110,7 +110,7 @@ it('displays error message when description is missing', async () => {
 });
 
 it('should go back when cancel button is clicked', () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <MemoryRouter>
       <Router history={history}>
         <Route path="/form">
@@ -123,15 +123,39 @@ it('should go back when cancel button is clicked', () => {
   history.push('/another-url');
   history.push('/form');
 
-  const cancelButton = getByText(/cancel/i);
-  expect(cancelButton).toBeInTheDocument();
-
+  const cancelButton = getByRole('button', {
+    name: /cancel/i,
+  });
   userEvent.click(cancelButton);
 
-  const confirmCancellationButton = getByText(
-    /cancel compliance report sharing/i,
-  );
+  const confirmCancellationButton = getByRole('button', {
+    name: /cancel compliance report sharing/i,
+  });
   userEvent.click(confirmCancellationButton);
 
   expect(history.location.pathname).toBe('/another-url');
+});
+
+it('should dismiss confirmation modal when Keep Editing button is clicked', () => {
+  const { getByText, getByRole, queryByText } = render(
+    <StaticRouter>
+      <ComplianceReportForm {...defaultProps} />
+    </StaticRouter>,
+  );
+
+  const cancelButton = getByRole('button', {
+    name: /cancel/i,
+  });
+  userEvent.click(cancelButton);
+
+  expect(getByText(/Cancel sharing of compliance report?/i)).toBeVisible();
+
+  const keepEditingButton = getByRole('button', {
+    name: /keep editing/i,
+  });
+  userEvent.click(keepEditingButton);
+
+  expect(
+    queryByText(/Cancel sharing of compliance report?/i),
+  ).not.toBeInTheDocument();
 });

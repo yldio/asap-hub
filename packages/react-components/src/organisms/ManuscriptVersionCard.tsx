@@ -214,7 +214,10 @@ export const getManuscriptVersionUID = ({
     version.type === 'Original Research' ? 'org' : 'rev';
 
   const lifecycleCode = getLifecycleCode(version);
-  return `${teamId}-${grantId}-${manuscriptCount}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
+  return `${teamId}-${grantId}-${String(manuscriptCount).padStart(
+    3,
+    '0',
+  )}-${manuscriptTypeCode}-${lifecycleCode}-${manuscriptVersionCount}`;
 };
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({

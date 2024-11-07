@@ -541,4 +541,15 @@ describe('getManuscriptversionUID', () => {
       }),
     ).toBe('AT1-000AAA-234-rev-P-9');
   });
+  it('pads manuscript count with leading 0s', () => {
+    expect(
+      getManuscriptVersionUID({
+        version: { type: 'Original Research', lifecycle: 'Preprint' },
+        grantId: '000AAA',
+        teamId: 'AT1',
+        manuscriptVersionCount: 9,
+        manuscriptCount: 4,
+      }),
+    ).toBe('AT1-000AAA-004-org-P-9');
+  });
 });

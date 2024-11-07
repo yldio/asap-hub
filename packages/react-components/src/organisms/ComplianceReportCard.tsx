@@ -62,6 +62,7 @@ const buttonStyles = css({
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   url,
   description,
+  count,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -75,7 +76,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             </Button>
           </span>
           <span css={[iconStyles]}>{crnReportIcon}</span>
-          <Subtitle noMargin>Compliance Report</Subtitle>
+          <Subtitle noMargin>Compliance Report #{count}</Subtitle>
         </span>
       </div>
       {expanded && (

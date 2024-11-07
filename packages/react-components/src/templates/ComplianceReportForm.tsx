@@ -92,22 +92,22 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
       ...data,
       manuscriptVersionId,
     });
-
-    onSuccess();
   };
 
-  const [
-    displayShareComplianceReportModal,
-    setDisplayShareComplianceReportModal,
-  ] = useState(false);
+  const [complianceReportFormAction, setComplianceReportFormAction] = useState<
+    'confirm' | 'cancel' | ''
+  >('');
 
   return (
     <form>
       <main css={mainStyles}>
-        {displayShareComplianceReportModal && (
+        {complianceReportFormAction && (
           <ShareComplianceReportModal
-            onDismiss={() => setDisplayShareComplianceReportModal(false)}
+            onDismiss={() => setComplianceReportFormAction('')}
+            onSuccess={onSuccess}
+            onCancel={() => history.goBack()}
             onConfirm={() => handleSubmit(onSubmit)()}
+            action={complianceReportFormAction}
           />
         )}
         <div css={contentStyles}>
@@ -178,7 +178,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
               <Button
                 noMargin
                 enabled={!isSubmitting}
-                onClick={() => history.goBack()}
+                onClick={() => setComplianceReportFormAction('cancel')}
               >
                 Cancel
               </Button>
@@ -186,7 +186,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 primary
                 noMargin
                 enabled={!isSubmitting && isValid}
-                onClick={() => setDisplayShareComplianceReportModal(true)}
+                onClick={() => setComplianceReportFormAction('confirm')}
               >
                 Share
               </Button>

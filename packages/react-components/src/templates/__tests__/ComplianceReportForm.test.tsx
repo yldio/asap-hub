@@ -44,6 +44,12 @@ it('data is sent on form submission', async () => {
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
   userEvent.click(shareButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Share Compliance Report/i,
+  });
+  userEvent.click(confirmButton);
+
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       url: 'http://example.com',
@@ -119,7 +125,13 @@ it('should go back when cancel button is clicked', () => {
 
   const cancelButton = getByText(/cancel/i);
   expect(cancelButton).toBeInTheDocument();
+
   userEvent.click(cancelButton);
+
+  const confirmCancellationButton = getByText(
+    /cancel compliance report sharing/i,
+  );
+  userEvent.click(confirmCancellationButton);
 
   expect(history.location.pathname).toBe('/another-url');
 });

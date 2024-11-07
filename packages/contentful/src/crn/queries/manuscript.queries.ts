@@ -220,6 +220,7 @@ export const manuscriptContentQueryFragment = gql`
             items {
               url
               description
+              count
             }
           }
         }

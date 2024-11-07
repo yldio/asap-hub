@@ -610,12 +610,18 @@ export type ComplianceReports = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    count?: Maybe<Scalars['Int']>;
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
     manuscriptVersion?: Maybe<ManuscriptVersions>;
     sys: Sys;
     url?: Maybe<Scalars['String']>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
 export type ComplianceReportsDescriptionArgs = {
@@ -650,6 +656,15 @@ export type ComplianceReportsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_exists?: InputMaybe<Scalars['Boolean']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
@@ -681,6 +696,8 @@ export type ComplianceReportsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ComplianceReportsOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4450,6 +4467,8 @@ export type ManuscriptVersionsLinkingCollectionsManuscriptsCollectionArgs = {
 };
 
 export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -13356,6 +13375,20 @@ export type FetchCalendarsQuery = {
   >;
 };
 
+export type FetchComplianceReportsByManuscriptVersionIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchComplianceReportsByManuscriptVersionIdQuery = {
+  manuscriptVersions?: Maybe<{
+    linkedFrom?: Maybe<{
+      complianceReportsCollection?: Maybe<
+        Pick<ComplianceReportsCollection, 'total'>
+      >;
+    }>;
+  }>;
+};
+
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDashboardQuery = {
@@ -18061,7 +18094,7 @@ export type ManuscriptsContentFragment = Pick<
           linkedFrom?: Maybe<{
             complianceReportsCollection?: Maybe<{
               items: Array<
-                Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+                Maybe<Pick<ComplianceReports, 'url' | 'description' | 'count'>>
               >;
             }>;
           }>;
@@ -18728,7 +18761,9 @@ export type FetchManuscriptByIdQuery = {
               linkedFrom?: Maybe<{
                 complianceReportsCollection?: Maybe<{
                   items: Array<
-                    Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+                    Maybe<
+                      Pick<ComplianceReports, 'url' | 'description' | 'count'>
+                    >
                   >;
                 }>;
               }>;
@@ -21031,7 +21066,10 @@ export type FetchTeamByIdQuery = {
                           complianceReportsCollection?: Maybe<{
                             items: Array<
                               Maybe<
-                                Pick<ComplianceReports, 'url' | 'description'>
+                                Pick<
+                                  ComplianceReports,
+                                  'url' | 'description' | 'count'
+                                >
                               >
                             >;
                           }>;
@@ -25702,7 +25740,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '15' },
                           },
                         ],
                         selectionSet: {
@@ -25851,7 +25889,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '15' },
                           },
                         ],
                         selectionSet: {
@@ -26000,7 +26038,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '1' },
                           },
                         ],
                         selectionSet: {
@@ -26176,6 +26214,13 @@ export const ManuscriptsContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'description',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
                                           },
                                         },
                                       ],
@@ -32419,6 +32464,91 @@ export const FetchCalendarsDocument = {
     ...CalendarsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
+export const FetchComplianceReportsByManuscriptVersionIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {
+        kind: 'Name',
+        value: 'FetchComplianceReportsByManuscriptVersionID',
+      },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscriptVersions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'complianceReportsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '15' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchComplianceReportsByManuscriptVersionIdQuery,
+  FetchComplianceReportsByManuscriptVersionIdQueryVariables
+>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [

@@ -214,7 +214,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const complianceReportDataProvider =
     libs.complianceReportDataProvider ||
-    new ComplianceReportContentfulDataProvider(getContentfulRestClientFactory);
+    new ComplianceReportContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||

@@ -54,20 +54,45 @@ const dismissButtonStyles = css({
 
 type ShareComplianceReportModalProps = {
   onDismiss: () => void;
+  onSuccess: () => void;
   onConfirm: () => Promise<void>;
+  onCancel: () => void;
+  action: 'cancel' | 'confirm';
 };
 
 const ShareComplianceReportModal: React.FC<ShareComplianceReportModalProps> = ({
   onDismiss,
+  onSuccess,
   onConfirm,
+  onCancel,
+  action,
 }) => {
   const [isRequestInProgress, setIsRequestInProgress] = useState(false);
 
-  const handleConfirm = async () => {
-    setIsRequestInProgress(true);
-    await onConfirm();
-    setIsRequestInProgress(false);
-    onDismiss();
+  const title =
+    action === 'confirm'
+      ? 'Share compliance report?'
+      : 'Cancel sharing of compliance report?';
+
+  const content =
+    action === 'confirm'
+      ? 'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.'
+      : 'Cancelling now will result in the loss of all entered data and will exit you from the sharing compliance report form.';
+
+  const confirmButtonText =
+    action === 'confirm'
+      ? 'Share Compliance Report'
+      : 'Cancel Compliance Report Sharing';
+
+  const handleFormAction = async () => {
+    if (action === 'confirm') {
+      setIsRequestInProgress(true);
+      await onConfirm();
+      setIsRequestInProgress(false);
+      onSuccess();
+    } else {
+      onCancel();
+    }
   };
 
   return (
@@ -78,15 +103,10 @@ const ShareComplianceReportModal: React.FC<ShareComplianceReportModalProps> = ({
             {crossIcon}
           </Button>
         </div>
-        <Headline3>Share compliance report?</Headline3>
+        <Headline3>{title}</Headline3>
       </header>
       <div css={[paddingStyles, { paddingTop: 0 }]}>
-        <Paragraph accent="lead">
-          If you elect to share the compliance report, all associated team
-          members (First Author(s), PM, PIs, Corresponding Author and Additional
-          Authors) will receive a reminder on the CRN Hub and an email to notify
-          them that this report is now available.{' '}
-        </Paragraph>
+        <Paragraph accent="lead">{content}</Paragraph>
         <div css={buttonContainerStyles}>
           <div css={dismissButtonStyles}>
             <Button enabled={!isRequestInProgress} onClick={onDismiss}>
@@ -95,11 +115,13 @@ const ShareComplianceReportModal: React.FC<ShareComplianceReportModalProps> = ({
           </div>
           <div css={confirmButtonStyles}>
             <Button
-              primary
               enabled={!isRequestInProgress}
-              onClick={handleConfirm}
+              onClick={handleFormAction}
+              {...(action === 'confirm'
+                ? { primary: true }
+                : { warning: true })}
             >
-              Share Compliance Report
+              {confirmButtonText}
             </Button>
           </div>
         </div>

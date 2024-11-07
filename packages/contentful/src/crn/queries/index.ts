@@ -1,5 +1,6 @@
 export * from './analytics.queries';
 export * from './calendars.queries';
+export * from './compliance-reports.queries';
 export * from './dashboard.queries';
 export * from './discover.queries';
 export * from './discussions.queries';

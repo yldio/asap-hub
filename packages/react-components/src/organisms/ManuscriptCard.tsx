@@ -125,10 +125,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   };
 
   const closedManuscriptStatuses = ['Closed (other)', 'Compliant'];
-  const canSubmitComplianceReport = !(
-    closedManuscriptStatuses.includes(status ?? '') ||
-    !!versions[0]?.complianceReport
-  );
+  const canSubmitComplianceReport =
+    !closedManuscriptStatuses.includes(status ?? '') &&
+    !versions[0]?.complianceReport;
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {

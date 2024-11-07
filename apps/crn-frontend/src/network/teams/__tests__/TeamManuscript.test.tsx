@@ -4,6 +4,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { network } from '@asap-hub/routing';
 import {
+  act,
   render,
   screen,
   waitFor,
@@ -172,7 +173,15 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       userEvent.click(button);
     });
 
-  userEvent.click(submitButton);
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Submit/ }),
+    );
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: /Submit Manuscript/ }),
+  );
 
   await waitFor(() => {
     expect(createManuscript).toHaveBeenCalledWith(

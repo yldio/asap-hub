@@ -9,7 +9,6 @@ export const DashboardIcon = () => components.dashboardIcon;
 export const DateIcon = () => components.dateIcon;
 export const EditIcon = () => components.editIcon;
 export const ExportIcon = () => components.exportIcon;
-export const Gp2LogoFull = () => components.gp2LogoFull;
 export const Gp2LogoSmall = () => components.gp2LogoSmall;
 export const LeftArrowIcon = () => components.leftArrowIcon;
 export const LocationIcon = () => components.locationIcon;

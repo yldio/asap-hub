@@ -1,0 +1,108 @@
+import { renderHook, act } from '@testing-library/react-hooks';
+import Cookies from 'js-cookie';
+import {
+  useCookieConsent,
+  setConsentCookie,
+  getConsentCookie,
+  hasGivenCookieConsent,
+} from '../index';
+
+const COOKIE_NAME = 'consentPreferences';
+jest.mock('js-cookie');
+
+jest.mock('uuid', () => ({
+  v4: jest.fn().mockReturnValue('mocked-uuid'),
+}));
+
+beforeEach(jest.clearAllMocks);
+
+describe('setConsentCookie', () => {
+  it('sets the consent cookie with the given preferences', () => {
+    const preferences = { essential: true, analytics: false };
+    setConsentCookie(COOKIE_NAME, { cookieId: 'id', preferences });
+    expect(Cookies.set).toHaveBeenCalledWith(
+      COOKIE_NAME,
+      JSON.stringify({ cookieId: 'id', preferences }),
+      { expires: 365 },
+    );
+  });
+});
+
+describe('getConsentCookie', () => {
+  it('returns the consent preferences from the cookie', () => {
+    const preferences = { essential: true, analytics: false };
+
+    Cookies.get = jest.fn().mockReturnValueOnce(JSON.stringify(preferences));
+    expect(getConsentCookie(COOKIE_NAME)).toEqual(preferences);
+  });
+
+  it('returns null if the cookie is not set', () => {
+    Cookies.get = jest.fn().mockReturnValueOnce(undefined);
+
+    expect(getConsentCookie(COOKIE_NAME)).toBeNull();
+  });
+});
+
+describe('hasGivenCookieConsent', () => {
+  it('returns true if the consent preferences are set and valid', () => {
+    const preferences = { essential: true, analytics: false };
+    Cookies.get = jest
+      .fn()
+      .mockReturnValueOnce(JSON.stringify({ cookieId: 'id', preferences }));
+    expect(hasGivenCookieConsent(COOKIE_NAME)).toBe(true);
+  });
+
+  it('returns false if the consent preferences are not set', () => {
+    Cookies.get = jest.fn().mockReturnValueOnce(undefined);
+    expect(hasGivenCookieConsent(COOKIE_NAME)).toBe(false);
+  });
+
+  it('returns false if the cookie id is not set', () => {
+    Cookies.get = jest
+      .fn()
+      .mockReturnValueOnce(
+        JSON.stringify({ preferences: { essential: true, analytics: false } }),
+      );
+    expect(hasGivenCookieConsent(COOKIE_NAME)).toBe(false);
+  });
+
+  it('returns false if the consent preferences are invalid', () => {
+    Cookies.get = jest
+      .fn()
+      .mockReturnValueOnce(JSON.stringify({ essential: true }));
+    expect(hasGivenCookieConsent(COOKIE_NAME)).toBe(false);
+  });
+});
+
+describe('useCookieConsent', () => {
+  it('initially shows the cookie modal if consent has not been given', () => {
+    Cookies.get = jest.fn().mockReturnValueOnce(undefined);
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
+    expect(result.current.showCookieModal).toBe(true);
+  });
+
+  it('initially hides the cookie modal if consent has been given', () => {
+    const preferences = { essential: true, analytics: false };
+    Cookies.get = jest
+      .fn()
+      .mockReturnValueOnce(JSON.stringify({ cookieId: 'id', preferences }));
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
+    expect(result.current.showCookieModal).toBe(false);
+  });
+
+  it('saves the cookie preferences and hides the modal when onSaveCookiePreferences is called', () => {
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
+    act(() => {
+      result.current.onSaveCookiePreferences(true);
+    });
+    expect(Cookies.set).toHaveBeenCalledWith(
+      COOKIE_NAME,
+      JSON.stringify({
+        cookieId: 'mocked-uuid',
+        preferences: { essential: true, analytics: true },
+      }),
+      { expires: 365 },
+    );
+    expect(result.current.showCookieModal).toBe(false);
+  });
+});

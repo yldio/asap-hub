@@ -3,7 +3,7 @@ import { FC, ReactNode, useState } from 'react';
 import { css } from '@emotion/react';
 import { Headline5, Link, Paragraph } from '..';
 import { lineHeight, perRem, tabletScreen } from '../pixels';
-import { chevronDownIcon, externalLinkIcon, infoInfoIcon } from '../icons';
+import { chevronDownIcon, ExternalLinkIcon, infoInfoIcon } from '../icons';
 import { isInternalLink } from '../utils';
 import { info500, info100, silver, steel, neutral900 } from '../colors';
 
@@ -147,7 +147,8 @@ const Accordion: FC<AccordionProps> = ({ items, info }) => {
                 {href && (
                   <div css={{ width: 'fit-content' }}>
                     <Link buttonStyle small primary href={href}>
-                      {hrefText} {!isInternalLink(href)[0] && externalLinkIcon}
+                      {hrefText}{' '}
+                      {!isInternalLink(href)[0] && <ExternalLinkIcon />}
                     </Link>
                   </div>
                 )}

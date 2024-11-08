@@ -30,7 +30,7 @@ export const Edit = () => components.editIcon;
 export const Error = () => components.errorIcon;
 export const Event = () => <components.EventIcon />;
 export const EventPlaceholder = () => components.eventPlaceholderIcon;
-export const ExternalLink = () => components.externalLinkIcon;
+export const ExternalLink = () => <components.ExternalLinkIcon />;
 export const Feedback = () => components.feedbackIcon;
 export const Filter = () => components.filterIcon;
 export const FirstPage = () => components.firstPageIcon;
@@ -43,6 +43,7 @@ export const GoogleDrive = () => components.googleDriveIcon;
 export const GoogleScholar = () => <components.GoogleScholarIcon />;
 export const GoogleSigninLightNormal = () =>
   components.googleSigninLightNormalIcon;
+export const Gp2LogoFull = () => components.gp2LogoFull;
 export const HidePassword = () => components.hidePasswordIcon;
 export const Info = () => components.infoIcon;
 export const InfoCircle = () => components.infoCircleIcon;

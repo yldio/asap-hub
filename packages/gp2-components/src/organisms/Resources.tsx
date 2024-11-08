@@ -4,7 +4,7 @@ import {
   Card,
   chevronCircleDownIcon,
   chevronCircleUpIcon,
-  externalLinkIcon,
+  ExternalLinkIcon,
   Headline3,
   infoCircleYellowIcon,
   Link,
@@ -174,7 +174,7 @@ const Resources: React.FC<ResourcesProps> = ({
                     >
                       <span css={resourceLinkStyles}>
                         {resource.title}
-                        {externalLinkIcon}
+                        <ExternalLinkIcon />
                       </span>
                     </LinkHeadline>
                   ) : (

@@ -1,6 +1,7 @@
 import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import {
   GoogleTagManager,
+  LogoProvider,
   ToastStack,
   UtilityBar,
 } from '@asap-hub/react-components';
@@ -78,63 +79,65 @@ const App: FC<Record<string, never>> = () => {
   }, [setCurrentOverrides, setEnvironment]);
 
   return (
-    <Frame title="GP2 Hub">
-      <Theme>
-        <GoogleTagManager containerId={GTM_CONTAINER_ID} />
-        <AuthProvider>
-          <SentryAuth0 />
-          <Router history={history}>
-            <LastLocationProvider>
-              <Frame title={null}>
-                <Switch>
-                  <Route path={welcome.template}>
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  </Route>
-                  <Route path={logout.template}>
-                    <Frame title="Logout">
-                      <Logout />
-                    </Frame>
-                  </Route>
-                  <Route exact path={staticPages({}).terms.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
+    <LogoProvider appName="GP2">
+      <Frame title="GP2 Hub">
+        <Theme>
+          <GoogleTagManager containerId={GTM_CONTAINER_ID} />
+          <AuthProvider>
+            <SentryAuth0 />
+            <Router history={history}>
+              <LastLocationProvider>
+                <Frame title={null}>
+                  <Switch>
+                    <Route path={welcome.template}>
+                      <UtilityBar>
+                        <ToastStack>
+                          <Welcome />
+                        </ToastStack>
+                      </UtilityBar>
+                    </Route>
+                    <Route path={logout.template}>
+                      <Frame title="Logout">
+                        <Logout />
                       </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route exact path={staticPages({}).privacyPolicy.template}>
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-policy" />
-                      </Frame>
-                    </BasicLayout>
-                  </Route>
-                  <Route>
-                    <CheckAuth>
-                      {({ isAuthenticated }) =>
-                        !isAuthenticated ? (
-                          <Frame title={null}>
-                            <Signin />
-                          </Frame>
-                        ) : (
-                          <Frame title={null}>
-                            <AuthenticatedApp />
-                          </Frame>
-                        )
-                      }
-                    </CheckAuth>
-                  </Route>
-                </Switch>
-              </Frame>
-            </LastLocationProvider>
-          </Router>
-        </AuthProvider>
-      </Theme>
-    </Frame>
+                    </Route>
+                    <Route exact path={staticPages({}).terms.template}>
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="terms-and-conditions" />
+                        </Frame>
+                      </BasicLayout>
+                    </Route>
+                    <Route exact path={staticPages({}).privacyPolicy.template}>
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="privacy-policy" />
+                        </Frame>
+                      </BasicLayout>
+                    </Route>
+                    <Route>
+                      <CheckAuth>
+                        {({ isAuthenticated }) =>
+                          !isAuthenticated ? (
+                            <Frame title={null}>
+                              <Signin />
+                            </Frame>
+                          ) : (
+                            <Frame title={null}>
+                              <AuthenticatedApp />
+                            </Frame>
+                          )
+                        }
+                      </CheckAuth>
+                    </Route>
+                  </Switch>
+                </Frame>
+              </LastLocationProvider>
+            </Router>
+          </AuthProvider>
+        </Theme>
+      </Frame>
+    </LogoProvider>
   );
 };
 

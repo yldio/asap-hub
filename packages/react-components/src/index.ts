@@ -28,6 +28,7 @@ export {
   Headline6,
   Label,
   Link,
+  LogoProvider,
   Markdown,
   MultiSelect,
   NavigationLink,
@@ -43,6 +44,7 @@ export {
   Toggle,
   Tooltip,
   MaterialAvailability,
+  Switch,
   StateTag,
   ScrollToTop,
 } from './atoms';
@@ -297,7 +299,7 @@ export {
   considerEndedAfter,
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
-export type { AccentVariant } from './atoms';
+export type { AccentVariant, SwitchProps } from './atoms';
 export type { ItemType, StatusType } from './molecules';
 export type {
   Association,

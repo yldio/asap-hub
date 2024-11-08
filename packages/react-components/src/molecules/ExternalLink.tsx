@@ -2,7 +2,7 @@
 import { css, CSSObject, Theme } from '@emotion/react';
 
 import { Anchor } from '../atoms';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { getLinkColors } from '../atoms/Link';
@@ -90,7 +90,7 @@ type ExternalLinkProps = {
 };
 const ExternalLink: React.FC<ExternalLinkProps> = ({
   href,
-  icon = externalLinkIcon,
+  icon = <ExternalLinkIcon />,
   label,
   noMargin = false,
   full = false,

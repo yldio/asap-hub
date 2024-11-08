@@ -9,7 +9,7 @@ import {
   Link,
   crnReportIcon,
   colors,
-  externalLinkIcon,
+  ExternalLinkIcon,
   Markdown,
   ExpandableText,
 } from '..';
@@ -88,7 +88,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             <div css={buttonStyles}>
               <Link buttonStyle fullWidth small primary href={url}>
                 <span css={externalIconStyle}>
-                  {externalLinkIcon} View Report
+                  {<ExternalLinkIcon />} View Report
                 </span>
               </Link>
             </div>

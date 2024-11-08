@@ -9,14 +9,26 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => <WelcomePage onClick={action('sign-in-click')} />;
+const onSaveCookiePreferences = () => {};
+
+export const Normal = () => (
+  <WelcomePage
+    onClick={action('sign-in-click')}
+    onSaveCookiePreferences={onSaveCookiePreferences}
+  />
+);
 export const AllowSignup = () => (
-  <WelcomePage allowSignup onClick={action('create-account-click')} />
+  <WelcomePage
+    allowSignup
+    onClick={action('create-account-click')}
+    onSaveCookiePreferences={onSaveCookiePreferences}
+  />
 );
 export const AuthError = () => (
   <WelcomePage
     onClick={action('sign-in-click')}
     authFailed={'invalid'}
     onCloseAuthFailedToast={action('close-auth-failed-toast-click')}
+    onSaveCookiePreferences={onSaveCookiePreferences}
   />
 );

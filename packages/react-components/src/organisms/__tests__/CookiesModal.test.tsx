@@ -78,9 +78,9 @@ describe('CookiesModal', () => {
     expect(mockOnSaveCookiePreferences).toHaveBeenCalledWith(true);
   });
 
-  it('displays the third party cookie pills', async () => {
+  it('displays the third party cookie pill', async () => {
     await renderCookiesModal();
 
-    expect(screen.getAllByText(/third party cookie/i)).toHaveLength(3);
+    expect(screen.getByText('Google Advertising Products')).toBeInTheDocument();
   });
 });

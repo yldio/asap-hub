@@ -172,16 +172,8 @@ const CookiesModal: React.FC<CookiesModalProps> = ({
                 </Paragraph>
                 <div css={thirdPartyCookieLinkStyles}>
                   <ThirdPartyCookieLink
-                    link="https://www.google.com"
-                    label="third party cookie 1"
-                  />
-                  <ThirdPartyCookieLink
-                    link="https://www.apple.com"
-                    label="third party cookie 2"
-                  />
-                  <ThirdPartyCookieLink
-                    link="https://www.microsoft.com"
-                    label="third party cookie 3"
+                    link="https://business.safety.google/privacy/"
+                    label="Google Advertising Products"
                   />
                 </div>
               </div>

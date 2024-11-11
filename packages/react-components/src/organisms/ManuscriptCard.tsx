@@ -1,6 +1,5 @@
 import {
   ManuscriptPutRequest,
-  ManuscriptResponse,
   ManuscriptStatus,
   manuscriptStatus,
   TeamManuscript,
@@ -37,7 +36,7 @@ type ManuscriptCardProps = Pick<
     onUpdateManuscript: (
       manuscriptId: string,
       payload: ManuscriptPutRequest,
-    ) => Promise<ManuscriptResponse>;
+    ) => Promise<void>;
   };
 
 const manuscriptContainerStyles = css({
@@ -124,7 +123,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     }
   };
 
-  const hasActiveComplianceReport = !!versions[0]?.complianceReport;
+  const isComplianceReportButtonEnabled =
+    !versions[0]?.complianceReport &&
+    !['Closed (other)', 'Compliant'].includes(selectedStatus);
 
   const handleStatusChange = async () => {
     if (newSelectedStatus) {
@@ -185,7 +186,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   small
                   noMargin
                   onClick={handleShareComplianceReport}
-                  enabled={!hasActiveComplianceReport}
+                  enabled={isComplianceReportButtonEnabled}
                 >
                   <span css={{ '> svg': { stroke: 'none' }, height: rem(24) }}>
                     {complianceReportIcon}

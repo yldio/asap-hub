@@ -5,6 +5,7 @@ import { ComponentProps } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import ManuscriptCard from '../ManuscriptCard';
+import { ManuscriptStatus } from '@asap-hub/model';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
@@ -59,6 +60,83 @@ it('displays share compliance report button if user has permission', () => {
     getByRole('button', { name: /Share Compliance Report Icon/i }),
   ).toBeVisible();
 });
+
+it('compliance report button is disabled if there is a compliance report', () => {
+  const { getByRole } = render(
+    <ManuscriptCard
+      {...props}
+      isComplianceReviewer
+      status="Waiting for Grantee's Reply"
+      versions={[
+        {
+          ...props.versions[0]!,
+          complianceReport: {
+            description: 'Some description',
+            url: 'https://example.com/compliance-report',
+          },
+        },
+      ]}
+    />,
+  );
+
+  expect(
+    getByRole('button', { name: /Share Compliance Report Icon/i }),
+  ).toBeDisabled();
+});
+
+it.each(['Compliant', 'Closed (other)'])(
+  'compliance report button is disabled if status is %s',
+  (status) => {
+    const { getByRole } = render(
+      <ManuscriptCard
+        {...props}
+        isComplianceReviewer
+        versions={[
+          {
+            ...props.versions[0]!,
+            complianceReport: undefined,
+          },
+        ]}
+        status={status as ManuscriptStatus}
+      />,
+    );
+
+    expect(
+      getByRole('button', { name: /Share Compliance Report Icon/i }),
+    ).toBeDisabled();
+  },
+);
+
+it.each([
+  'Waiting for Report',
+  'Review Compliance Report',
+  'Waiting for ASAP Reply',
+  "Waiting for Grantee's Reply",
+  'Manuscript Resubmitted',
+  'Submit Final Publication',
+  'Addendum Required',
+])(
+  'compliance report button is enabled if there is no compliance report and status is %s',
+  (status) => {
+    const { getByRole } = render(
+      <ManuscriptCard
+        {...props}
+        isComplianceReviewer
+        versions={[
+          {
+            ...props.versions[0]!,
+            complianceReport: undefined,
+          },
+        ]}
+        status={status as ManuscriptStatus}
+      />,
+    );
+
+    expect(
+      getByRole('button', { name: /Share Compliance Report Icon/i }),
+    ).toBeEnabled();
+  },
+);
 
 it('redirects to compliance report form when user clicks on share compliance report button', () => {
   const history = createMemoryHistory({});

@@ -15,6 +15,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
 
 import {
+  refreshTeamState,
   useDiscussionById,
   useIsComplianceReviewer,
   usePatchTeamById,
@@ -23,6 +24,7 @@ import {
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
+import { useSetRecoilState } from 'recoil';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -30,6 +32,8 @@ interface WorkspaceProps {
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
   const { path } = useRouteMatch();
+  const setRefreshTeamState = useSetRecoilState(refreshTeamState(team.id));
+
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
 
@@ -49,10 +53,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           {...team}
           setEligibilityReasons={setEligibilityReasons}
           tools={team.tools}
-          onUpdateManuscript={(
+          onUpdateManuscript={async (
             manuscriptId: string,
             payload: ManuscriptPutRequest,
-          ) => updateManuscript(manuscriptId, payload)}
+          ) => {
+            await updateManuscript(manuscriptId, payload);
+            setRefreshTeamState((value) => value + 1);
+          }}
           onDeleteTool={
             deleting
               ? undefined

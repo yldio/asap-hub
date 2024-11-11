@@ -1,18 +1,19 @@
-import { useContext, useState } from 'react';
-import { useRouteMatch, Route } from 'react-router-dom';
+import {
+  DiscussionPatchRequest,
+  ManuscriptPutRequest,
+  TeamResponse,
+  TeamTool,
+} from '@asap-hub/model';
 import {
   NotFoundPage,
   TeamProfileWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
-import {
-  TeamTool,
-  TeamResponse,
-  ManuscriptPutRequest,
-  DiscussionPatchRequest,
-} from '@asap-hub/model';
-import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
+import { network, useRouteParams } from '@asap-hub/routing';
+import { useContext, useState } from 'react';
+import { Route, useRouteMatch } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 
 import {
   refreshTeamState,
@@ -24,7 +25,6 @@ import {
 } from './state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
-import { useSetRecoilState } from 'recoil';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;

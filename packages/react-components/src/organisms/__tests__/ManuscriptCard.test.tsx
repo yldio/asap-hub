@@ -1,11 +1,11 @@
 import { createManuscriptResponse } from '@asap-hub/fixtures';
+import { ManuscriptStatus } from '@asap-hub/model';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
+import { ComponentProps } from 'react';
+import { Route, Router } from 'react-router-dom';
 import ManuscriptCard from '../ManuscriptCard';
-import { ManuscriptStatus } from '@asap-hub/model';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),

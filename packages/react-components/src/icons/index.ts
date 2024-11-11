@@ -117,6 +117,7 @@ export { default as showPasswordIcon } from './show-password';
 export { default as slackIcon } from './slack';
 export { default as speakerIcon } from './speaker';
 export { default as successIcon } from './success';
+export { default as successIconNew } from './success-icon';
 export { default as successLargeIcon } from './success-large';
 export { default as systemCalendarIcon } from './system-calendar';
 export { default as tagSearchIcon } from './tag-search';

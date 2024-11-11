@@ -78,7 +78,9 @@ describe('cookie modal', () => {
         onSaveCookiePreferences={onSaveCookiePreferences}
       />,
     );
-    expect(screen.queryByText(/cookie/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
   });
 
   it('does not show the cookie modal if the DISPLAY_COOKIES flag is enabled but showCookieModal is false', () => {
@@ -89,7 +91,9 @@ describe('cookie modal', () => {
         showCookieModal={false}
       />,
     );
-    expect(screen.queryByText(/cookie/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Privacy Preference Center'),
+    ).not.toBeInTheDocument();
   });
 
   it('shows the cookie modal if the DISPLAY_COOKIES flag is enabled and showCookieModal is true', () => {
@@ -100,6 +104,6 @@ describe('cookie modal', () => {
         showCookieModal={true}
       />,
     );
-    expect(screen.getAllByText(/cookie/i).length).toBeGreaterThan(0);
+    expect(screen.getByText('Privacy Preference Center')).toBeInTheDocument();
   });
 });

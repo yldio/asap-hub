@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@emotion/react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { LogoProvider } from '../..';
@@ -33,7 +33,9 @@ describe('CookiesModal', () => {
   it('renders the modal with all essential elements', async () => {
     await renderCookiesModal();
 
-    expect(screen.getByTitle('CRN Logo')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTitle('CRN Logo')).toBeInTheDocument();
+    });
 
     expect(screen.getByText('Privacy Preference Center')).toBeInTheDocument();
     expect(

@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
@@ -44,6 +50,12 @@ it('data is sent on form submission', async () => {
   const shareButton = screen.getByRole('button', { name: /Share/i });
   await waitFor(() => expect(shareButton).toBeEnabled());
   userEvent.click(shareButton);
+
+  const confirmButton = screen.getByRole('button', {
+    name: /Share Compliance Report/i,
+  });
+  userEvent.click(confirmButton);
+
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       url: 'http://example.com',
@@ -104,7 +116,7 @@ it('displays error message when description is missing', async () => {
 });
 
 it('should go back when cancel button is clicked', () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <MemoryRouter>
       <Router history={history}>
         <Route path="/form">
@@ -117,9 +129,39 @@ it('should go back when cancel button is clicked', () => {
   history.push('/another-url');
   history.push('/form');
 
-  const cancelButton = getByText(/cancel/i);
-  expect(cancelButton).toBeInTheDocument();
+  const cancelButton = getByRole('button', {
+    name: /cancel/i,
+  });
   userEvent.click(cancelButton);
 
+  const confirmCancellationButton = getByRole('button', {
+    name: /cancel compliance report sharing/i,
+  });
+
+  act(() => userEvent.click(confirmCancellationButton));
   expect(history.location.pathname).toBe('/another-url');
+});
+
+it('should dismiss confirmation modal when Keep Editing button is clicked', () => {
+  const { getByText, getByRole, queryByText } = render(
+    <StaticRouter>
+      <ComplianceReportForm {...defaultProps} />
+    </StaticRouter>,
+  );
+
+  const cancelButton = getByRole('button', {
+    name: /cancel/i,
+  });
+  userEvent.click(cancelButton);
+
+  expect(getByText(/Cancel sharing of compliance report?/i)).toBeVisible();
+
+  const keepEditingButton = getByRole('button', {
+    name: /keep editing/i,
+  });
+  userEvent.click(keepEditingButton);
+
+  expect(
+    queryByText(/Cancel sharing of compliance report?/i),
+  ).not.toBeInTheDocument();
 });

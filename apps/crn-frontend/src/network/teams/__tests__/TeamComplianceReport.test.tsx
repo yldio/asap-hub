@@ -125,6 +125,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
 
   userEvent.click(shareButton);
 
+  const confirmButton = screen.getByRole('button', {
+    name: /Share Compliance Report/i,
+  });
+  userEvent.click(confirmButton);
+
   await waitFor(() => {
     expect(createComplianceReport).toHaveBeenCalledWith(
       {

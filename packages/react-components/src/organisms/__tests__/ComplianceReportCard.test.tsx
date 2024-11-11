@@ -6,6 +6,7 @@ it('displays compliance report description and url when expanded', () => {
   const props = {
     url: 'http://example.com/',
     description: 'compliance report description',
+    count: 1,
   };
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,

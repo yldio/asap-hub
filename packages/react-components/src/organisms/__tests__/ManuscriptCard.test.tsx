@@ -16,6 +16,12 @@ const props: ComponentProps<typeof ManuscriptCard> = {
   getDiscussion: jest.fn(),
 };
 
+const complianceReport = {
+  url: 'https://example.com',
+  description: 'description',
+  count: '1',
+};
+
 it('displays manuscript version card when expanded', () => {
   const { getByText, queryByText, getByTestId, rerender } = render(
     <ManuscriptCard {...props} />,
@@ -196,5 +202,33 @@ it.each`
     ).not.toBeInTheDocument();
 
     expect(statusButton).toBeDisabled();
+  },
+);
+
+it.each`
+  status                  | report
+  ${'Compliant'}          | ${complianceReport}
+  ${'Waiting for Report'} | ${complianceReport}
+  ${'Closed (other)'}     | ${null}
+`(
+  'submit compliance report button is disabled based on manuscript status and existing compliance report',
+  async ({ status, report }) => {
+    const manuscriptVersions = createManuscriptResponse().versions;
+    manuscriptVersions[0]!.complianceReport = report;
+
+    const { getByRole } = render(
+      <ManuscriptCard
+        {...props}
+        isComplianceReviewer
+        status={status}
+        id="manuscript-1"
+        versions={manuscriptVersions}
+      />,
+    );
+
+    const complianceReportButton = getByRole('button', {
+      name: /Share Compliance Report Icon/i,
+    });
+    expect(complianceReportButton).toBeDisabled();
   },
 );

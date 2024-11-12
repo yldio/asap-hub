@@ -1,1 +1,2 @@
-export * from './save-cookie-preferences-handler-factory.ts';
+export * from './get-cookie-preferences-handler-factory';
+export * from './save-cookie-preferences-handler-factory';

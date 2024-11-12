@@ -1,10 +1,9 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 
 import { Logger } from '../../utils';
-import { validateCookieData } from '../../validation';
 
-export const saveCookiePreferencesHandlerFactory =
+export const getCookiePreferencesHandlerFactory =
   (
     logger: Logger,
     tableName: string,
@@ -14,22 +13,18 @@ export const saveCookiePreferencesHandlerFactory =
   async (request: lambda.Request) => {
     logger.info(`request: ${JSON.stringify(request)}`);
 
-    const { cookieId, preferences } = validateCookieData(
-      request.payload as Record<string, unknown>,
-    );
+    if (!request.params?.cookieId) {
+      return {
+        statusCode: 400,
+        body: 'cookieId is required',
+      };
+    }
 
     const client = new DynamoDBClient();
-    const command = new PutItemCommand({
+    const command = new GetItemCommand({
       TableName: tableName,
-      Item: {
-        cookieId: { S: cookieId },
-        preferences: {
-          M: {
-            essential: { BOOL: preferences.essential },
-            analytics: { BOOL: preferences.analytics },
-          },
-        },
-        createdAt: { S: new Date().toISOString() },
+      Key: {
+        cookieId: { S: request.params.cookieId },
       },
     });
 

@@ -8,7 +8,7 @@ export type CookieData = {
     essential: boolean;
   };
 };
-const cookieDataSchema: JSONSchemaType<CookieData> = {
+const cookieCreateDataSchema: JSONSchemaType<CookieData> = {
   type: 'object',
   properties: {
     cookieId: { type: 'string' },
@@ -24,4 +24,4 @@ const cookieDataSchema: JSONSchemaType<CookieData> = {
   required: ['cookieId', 'preferences'],
   additionalProperties: false,
 };
-export const validateCookieData = validateInput(cookieDataSchema);
+export const validateCookieCreateData = validateInput(cookieCreateDataSchema);

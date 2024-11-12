@@ -991,6 +991,23 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    getCookiePreferences: {
+      handler:
+        './src/handlers/cookie-preferences/get-cookie-preferences-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/cookie-preferences/{cookieId}',
+          },
+        },
+      ],
+      environment: {
+        COOKIE_PREFERENCES_TABLE_NAME:
+          '${self:service}-${self:provider.stage}-cookie-preferences',
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
 
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',

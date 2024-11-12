@@ -53,7 +53,7 @@ const AboutPageBody: React.FC<AboutPageBodyProps> = ({
               primary
               href="https://parkinsonsroadmap.org/"
             >
-              Read more on ASAP’s website {<ExternalLinkIcon />}
+              Read more on ASAP’s website <ExternalLinkIcon />
             </Link>
           </div>
         </Card>

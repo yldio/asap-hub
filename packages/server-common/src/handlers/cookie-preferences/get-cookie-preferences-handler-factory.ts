@@ -11,7 +11,7 @@ export const getCookiePreferencesHandlerFactory =
     request: lambda.Request,
   ) => Promise<{ statusCode: number; body: string }>) =>
   async (request: lambda.Request) => {
-    logger.info(`request: ${JSON.stringify(request)}`);
+    logger.debug(`request: ${JSON.stringify(request)}`);
 
     if (!request.params?.cookieId) {
       return {
@@ -30,10 +30,8 @@ export const getCookiePreferencesHandlerFactory =
 
     const response = await client.send(command);
 
-    logger.info(`response: ${JSON.stringify(response)}`);
-
     return {
       statusCode: 200,
-      body: JSON.stringify(response),
+      body: JSON.stringify(response.Item ? response.Item.preferences : {}),
     };
   };

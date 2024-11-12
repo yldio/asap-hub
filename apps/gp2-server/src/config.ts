@@ -19,6 +19,7 @@ const {
   CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
+  COOKIE_PREFERENCES_TABLE_NAME,
   CURRENT_REVISION,
   EMAIL_BCC,
   EMAIL_RETURN,
@@ -63,6 +64,8 @@ export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
   'contentful-webhook-authentication-token';
+export const cookiePreferencesTableName =
+  COOKIE_PREFERENCES_TABLE_NAME || 'asap-hub-dev-cookie-preferences';
 export const currentRevision = CURRENT_REVISION || 'default';
 export const environment = ENVIRONMENT
   ? ENVIRONMENT.toLowerCase()

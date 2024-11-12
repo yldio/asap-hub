@@ -177,7 +177,12 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
-            Action: ['dynamodb:PutItem', 'dynamodb:Get*', 'dynamodb:Update*'],
+            Action: [
+              'dynamodb:PutItem',
+              'dynamodb:Get*',
+              'dynamodb:Update*',
+              'dynamodb:Delete*',
+            ],
             Resource: {
               'Fn::Join': [
                 ':',

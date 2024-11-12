@@ -21,6 +21,7 @@ const {
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_POLLER_QUEUE_URL,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
+  COOKIE_PREFERENCES_TABLE_NAME,
   CRN_MEETING_MATERIALS_DRIVE,
   CURRENT_REVISION,
   EMAIL_BCC,
@@ -71,6 +72,8 @@ export const contentfulPollerQueueUrl =
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
   'contentful-webhook-authentication-token';
+export const cookiePreferencesTableName =
+  COOKIE_PREFERENCES_TABLE_NAME || 'asap-hub-dev-cookie-preferences';
 export const crnMeetingMaterialsDrive =
   CRN_MEETING_MATERIALS_DRIVE ||
   'https://drive.google.com/drive/u/0/folders/0AKtA9ScsuPjTUk9PVA?pli=1';
@@ -82,6 +85,7 @@ export const eventBridgeAccessKey = EVENT_BRIDGE_ACCESS_KEY || '';
 export const eventBridgeEndpoint = EVENT_BRIDGE_ENDPOINT;
 export const eventBridgeSecret = EVENT_BRIDGE_SECRET || '';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
+
 export const eventSource = EVENT_SOURCE || '';
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';

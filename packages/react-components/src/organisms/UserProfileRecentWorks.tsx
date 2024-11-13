@@ -14,7 +14,7 @@ import {
   Link,
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { externalLinkIcon, OrcidIcon } from '../icons';
+import { ExternalLinkIcon, OrcidIcon } from '../icons';
 import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
 import { LinkHeadline } from '../molecules';
@@ -169,7 +169,9 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
             applyIconTheme
           >
             Learn how to add works.
-            <span css={{ verticalAlign: 'top' }}>{externalLinkIcon}</span>
+            <span css={{ verticalAlign: 'top' }}>
+              <ExternalLinkIcon />
+            </span>
           </Link>
           <br />
           <br />

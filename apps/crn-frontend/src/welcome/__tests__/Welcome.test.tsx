@@ -1,19 +1,21 @@
-import { render, waitFor, RenderResult } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
-import nock from 'nock';
-import { authTestUtils } from '@asap-hub/react-components';
 import { mockLocation } from '@asap-hub/dom-test-utils';
+import { disable } from '@asap-hub/flags';
+import { authTestUtils } from '@asap-hub/react-components';
 import { ToastContext } from '@asap-hub/react-context';
+import { render, RenderResult, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+import { MemoryRouter, Route } from 'react-router-dom';
 
-import Welcome from '../Welcome';
 import { API_BASE_URL } from '../../config';
+import Welcome from '../Welcome';
 
 describe('the welcome page', () => {
   // fetch user by code request
   beforeEach(() => {
     nock.cleanAll();
     nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
+    disable('DISPLAY_COOKIES');
   });
   afterEach(async () => {
     await waitFor(() => expect(nock.isDone()).toBe(true));

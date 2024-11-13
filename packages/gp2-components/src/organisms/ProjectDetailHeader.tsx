@@ -3,7 +3,7 @@ import {
   Card,
   CopyButton,
   drawerQuery,
-  externalLinkIcon,
+  ExternalLinkIcon,
   informationIcon,
   Link,
   mail,
@@ -137,7 +137,9 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
                     >
                       {opportunitiesLinkName ?? 'Read more'}{' '}
                       {isExternalOpportunityLink(opportunitiesLink) && (
-                        <span css={infoIconStyles}>{externalLinkIcon}</span>
+                        <span css={infoIconStyles}>
+                          <ExternalLinkIcon />
+                        </span>
                       )}
                     </span>
                   </Link>

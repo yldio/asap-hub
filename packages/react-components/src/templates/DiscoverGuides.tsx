@@ -5,7 +5,7 @@ import { HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Headline2, Icon, Link, Paragraph } from '../atoms';
 import { Accordion } from '../molecules';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 import { isInternalLink } from '../utils';
 
 const styles = css({
@@ -33,7 +33,7 @@ const DiscoverGuides: React.FC<DiscoverGuidesProps> = ({
             <div css={{ width: 'fit-content' }}>
               <Link buttonStyle small primary href={content.linkUrl}>
                 {content.linkText}{' '}
-                {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
+                {!isInternalLink(content.linkUrl)[0] && <ExternalLinkIcon />}
               </Link>
             </div>
           )}

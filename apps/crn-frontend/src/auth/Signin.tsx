@@ -1,10 +1,13 @@
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0CRN } from '@asap-hub/react-context';
 import { useHistory, useLocation } from 'react-router-dom';
+import { COOKIE_CONSENT_NAME } from '../config';
 
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
+  const { showCookieModal, onSaveCookiePreferences } =
+    useCookieConsent(COOKIE_CONSENT_NAME);
 
   const { pathname, search, hash } = useLocation();
   const searchParams = new URLSearchParams(search);
@@ -30,6 +33,8 @@ const Signin: React.FC<Record<string, never>> = () => {
     <Frame title="Sign in">
       <UtilityBar>
         <WelcomePage
+          showCookieModal={showCookieModal}
+          onSaveCookiePreferences={onSaveCookiePreferences}
           onClick={signin}
           authFailed={getAuthFailureCode(
             searchParams.has('state') && searchParams.has('error'),

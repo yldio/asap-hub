@@ -1,4 +1,4 @@
-import { Link, externalLinkIcon, pixels } from '@asap-hub/react-components';
+import { Link, ExternalLinkIcon, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { projectsImage } from '../images';
 import PageBanner from './PageBanner';
@@ -35,7 +35,9 @@ const ProjectsHeader: React.FC = () => (
         small
       >
         Request New Project
-        <span css={externalIconStyle}>{externalLinkIcon}</span>
+        <span css={externalIconStyle}>
+          <ExternalLinkIcon />
+        </span>
       </Link>
     </div>
   </PageBanner>

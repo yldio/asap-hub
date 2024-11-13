@@ -1239,17 +1239,21 @@ __metadata:
     "@sentry/react": 6.19.7
     "@testing-library/dom": 9.3.4
     "@testing-library/react": 12.1.4
+    "@testing-library/react-hooks": 8.0.1
     "@types/history": 4.7.11
     "@types/jest": 29.5.12
+    "@types/js-cookie": ^3
     "@types/node": 20.10.5
     "@types/react": 17.0.65
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.4
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
+    "@types/uuid": 8.3.4
     csv-stringify: 6.4.5
     date-fns: 2.30.0
     history: 4.10.1
+    js-cookie: ^3.0.5
     react: 17.0.2
     react-dom: 17.0.2
     react-error-boundary: 3.1.4
@@ -1258,13 +1262,13 @@ __metadata:
     react-test-renderer: 17.0.2
     react-titled: 1.1.1
     streamsaver: 2.0.6
+    uuid: 8.3.2
     web-streams-polyfill: 3.2.1
   peerDependencies:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@sentry/react": 6.19.7
     core-js: 3.34.0
-    react: ^17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
     react-router-last-location: 2.0.1
@@ -17116,6 +17120,13 @@ __metadata:
     expect: ^29.0.0
     pretty-format: ^29.0.0
   checksum: 19b1efdeed9d9a60a81edc8226cdeae5af7479e493eaed273e01243891c9651f7b8b4c08fc633a7d0d1d379b091c4179bbaa0807af62542325fd72f2dd17ce1c
+  languageName: node
+  linkType: hard
+
+"@types/js-cookie@npm:^3":
+  version: 3.0.6
+  resolution: "@types/js-cookie@npm:3.0.6"
+  checksum: 272d551687547445cb210213c73e72e0e5d58ad73e2e444a65d688b8ff9425529779ee0cd6492aaa1f070161916d4254ef2b1a76d64179100437f60749d094ef
   languageName: node
   linkType: hard
 
@@ -33801,6 +33812,13 @@ __metadata:
   version: 2.2.1
   resolution: "js-cookie@npm:2.2.1"
   checksum: 9b1fb980a1c5e624fd4b28ea4867bb30c71e04c4484bb3a42766344c533faa684de9498e443425479ec68609e96e27b60614bfe354877c449c631529b6d932f2
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 2dbd2809c6180fbcf060c6957cb82dbb47edae0ead6bd71cbeedf448aa6b6923115003b995f7d3e3077bfe2cb76295ea6b584eb7196cca8ba0a09f389f64967a
   languageName: node
   linkType: hard
 

@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import {
   formatDateToTimezone,
-  externalLinkIcon,
+  ExternalLinkIcon,
   Card,
   Divider,
   Headline2,
@@ -96,7 +96,7 @@ const OutputAdditionalInformationCard: React.FC<
               >
                 <div css={externalLinkStyle}>
                   <span>{doi}</span>
-                  {externalLinkIcon}
+                  <ExternalLinkIcon />
                 </div>
               </Link>
             </span>
@@ -117,7 +117,7 @@ const OutputAdditionalInformationCard: React.FC<
               >
                 <div css={externalLinkStyle}>
                   <span>{rrid}</span>
-                  {externalLinkIcon}
+                  <ExternalLinkIcon />
                 </div>
               </Link>
             </span>

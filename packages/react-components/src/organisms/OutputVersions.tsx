@@ -14,7 +14,7 @@ import {
   steel,
 } from '../colors';
 import { formatDateToTimezone } from '../date';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import { ThemeVariant } from '../theme';
@@ -204,7 +204,10 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
                     <span css={[titleStyles, rowTitleStyles]}>Link</span>
                     <p css={paragraphStyle}>
                       <Link ellipsed href={link} applyIconTheme>
-                        Output <span css={iconsStyles}>{externalLinkIcon}</span>
+                        Output{' '}
+                        <span css={iconsStyles}>
+                          <ExternalLinkIcon />
+                        </span>
                       </Link>
                     </p>
                   </div>

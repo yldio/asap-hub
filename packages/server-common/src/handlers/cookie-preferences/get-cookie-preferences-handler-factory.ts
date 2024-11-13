@@ -43,8 +43,14 @@ export const getCookiePreferencesHandlerFactory =
 
     if (
       !Item ||
-      typeof Item.preferences?.M?.analytics?.BOOL !== 'boolean' ||
-      typeof !Item.preferences?.M?.essential?.BOOL !== 'boolean' ||
+      !(
+        Item.preferences?.M?.analytics?.BOOL &&
+        typeof Item.preferences.M.analytics.BOOL === 'boolean'
+      ) ||
+      !(
+        Item.preferences?.M?.essential?.BOOL &&
+        typeof Item.preferences.M.essential.BOOL === 'boolean'
+      ) ||
       !Item.cookieId?.S ||
       !Item.createdAt?.S
     ) {

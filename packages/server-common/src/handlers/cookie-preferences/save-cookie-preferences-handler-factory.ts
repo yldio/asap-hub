@@ -12,7 +12,7 @@ export const saveCookiePreferencesHandlerFactory =
     request: lambda.Request,
   ) => Promise<{ statusCode: number; body: string }>) =>
   async (request: lambda.Request) => {
-    logger.info(`request: ${JSON.stringify(request)}`);
+    logger.debug(`request: ${JSON.stringify(request)}`);
 
     const { cookieId, preferences } = validateCookieCreateData(
       request.payload as Record<string, unknown>,
@@ -34,8 +34,6 @@ export const saveCookiePreferencesHandlerFactory =
     });
 
     const response = await client.send(command);
-
-    logger.info(`response: ${JSON.stringify(response)}`);
 
     return {
       statusCode: 200,

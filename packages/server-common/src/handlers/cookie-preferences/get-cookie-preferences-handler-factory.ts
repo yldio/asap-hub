@@ -1,10 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  GetItemCommandOutput,
-} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 
 import { Logger } from '../../utils';
 
@@ -14,7 +10,16 @@ export const getCookiePreferencesHandlerFactory =
     tableName: string,
   ): ((request: lambda.Request) => Promise<{
     statusCode: number;
-    body: string | GetItemCommandOutput['Item'];
+    body:
+      | string
+      | {
+          createdAt: string;
+          cookieId: string;
+          preferences: {
+            analytics: boolean;
+            essential: boolean;
+          };
+        };
   }>) =>
   async (request: lambda.Request) => {
     logger.debug(`request: ${JSON.stringify(request)}`);
@@ -36,7 +41,13 @@ export const getCookiePreferencesHandlerFactory =
 
     const { Item } = await client.send(command);
 
-    if (!Item || !Item.preferences) {
+    if (
+      !Item ||
+      typeof Item.preferences?.M?.analytics?.BOOL !== 'boolean' ||
+      typeof !Item.preferences?.M?.essential?.BOOL !== 'boolean' ||
+      !Item.cookieId?.S ||
+      !Item.createdAt?.S
+    ) {
       throw new NotFoundError(
         undefined,
         `Cookie with id ${request.params.cookieId} not found`,
@@ -47,6 +58,13 @@ export const getCookiePreferencesHandlerFactory =
 
     return {
       statusCode: 200,
-      body: Item,
+      body: {
+        createdAt: Item.createdAt.S,
+        cookieId: Item.cookieId.S,
+        preferences: {
+          analytics: Item.preferences.M?.analytics?.BOOL,
+          essential: Item.preferences.M?.essential?.BOOL,
+        },
+      },
     };
   };

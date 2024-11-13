@@ -109,7 +109,6 @@ describe('Save cookie preferences handler', () => {
       {},
     ) as jest.Mocked<DynamoDBClient>;
 
-    const mockResponse = { metadata: { httpStatusCode: 200 } };
     (mockDynamoClient.send as jest.Mock).mockRejectedValueOnce(
       new Error('DynamoDB error'),
     );

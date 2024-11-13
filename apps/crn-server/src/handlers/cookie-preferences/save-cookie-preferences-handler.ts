@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { saveCookiePreferencesHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from 'aws-lambda';

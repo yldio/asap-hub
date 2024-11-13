@@ -10,7 +10,7 @@ export const getCookiePreferencesHandlerFactory =
     tableName: string,
   ): ((request: lambda.Request) => Promise<{
     statusCode: number;
-    body:
+    payload:
       | string
       | {
           createdAt: string;
@@ -27,7 +27,7 @@ export const getCookiePreferencesHandlerFactory =
     if (!request.params?.cookieId) {
       return {
         statusCode: 400,
-        body: 'cookieId is required',
+        payload: 'cookieId is required',
       };
     }
 
@@ -44,11 +44,11 @@ export const getCookiePreferencesHandlerFactory =
     if (
       !Item ||
       !(
-        Item.preferences?.M?.analytics?.BOOL &&
+        Item.preferences?.M?.analytics?.BOOL !== undefined &&
         typeof Item.preferences.M.analytics.BOOL === 'boolean'
       ) ||
       !(
-        Item.preferences?.M?.essential?.BOOL &&
+        Item.preferences?.M?.essential?.BOOL !== undefined &&
         typeof Item.preferences.M.essential.BOOL === 'boolean'
       ) ||
       !Item.cookieId?.S ||
@@ -64,7 +64,7 @@ export const getCookiePreferencesHandlerFactory =
 
     return {
       statusCode: 200,
-      body: {
+      payload: {
         createdAt: Item.createdAt.S,
         cookieId: Item.cookieId.S,
         preferences: {

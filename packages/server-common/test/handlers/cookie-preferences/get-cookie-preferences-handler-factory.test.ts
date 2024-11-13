@@ -52,7 +52,7 @@ describe('Get cookie preferences handler', () => {
     const response = await handler(request);
 
     expect(response.statusCode).toBe(400);
-    expect(response.body).toEqual('cookieId is required');
+    expect(response.payload).toEqual('cookieId is required');
   });
 
   it('should successfully get cookie', async () => {
@@ -70,7 +70,7 @@ describe('Get cookie preferences handler', () => {
     const response = await handler(request);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({
+    expect(response.payload).toEqual({
       cookieId: 'cookie-id',
       createdAt: '2024-11-12T10:18:49.670Z',
       preferences: {

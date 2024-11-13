@@ -30,7 +30,7 @@ export const getCookiePreferencesHandlerFactory =
 
     const response = await client.send(command);
 
-    logger.info(`${JSON.stringify(request)}`);
+    logger.info(`${JSON.stringify(response)}`);
 
     return {
       statusCode: 200,

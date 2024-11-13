@@ -1,5 +1,10 @@
+import { NotFoundError } from '@asap-hub/errors';
 import { framework as lambda } from '@asap-hub/services-common';
-import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import {
+  DynamoDBClient,
+  GetItemCommand,
+  GetItemCommandOutput,
+} from '@aws-sdk/client-dynamodb';
 
 import { Logger } from '../../utils';
 
@@ -7,9 +12,10 @@ export const getCookiePreferencesHandlerFactory =
   (
     logger: Logger,
     tableName: string,
-  ): ((
-    request: lambda.Request,
-  ) => Promise<{ statusCode: number; body: string }>) =>
+  ): ((request: lambda.Request) => Promise<{
+    statusCode: number;
+    body: string | GetItemCommandOutput['Item'];
+  }>) =>
   async (request: lambda.Request) => {
     logger.debug(`request: ${JSON.stringify(request)}`);
 
@@ -28,12 +34,19 @@ export const getCookiePreferencesHandlerFactory =
       },
     });
 
-    const response = await client.send(command);
+    const { Item } = await client.send(command);
 
-    logger.info(`${JSON.stringify(response)}`);
+    if (!Item || !Item.preferences) {
+      throw new NotFoundError(
+        undefined,
+        `Cookie with id ${request.params.cookieId} not found`,
+      );
+    }
+
+    logger.info(`${JSON.stringify(Item)}`);
 
     return {
       statusCode: 200,
-      body: JSON.stringify(response.Item ? response.Item.preferences : {}),
+      body: Item,
     };
   };

@@ -68,9 +68,7 @@ describe('Get cookie preferences handler', () => {
     const response = await handler(request);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(
-      JSON.stringify(mockResponse.Item.preferences),
-    );
+    expect(response.body).toEqual(mockResponse.Item);
 
     expect(GetItemCommand).toHaveBeenCalledWith({
       TableName: tableName,
@@ -78,6 +76,31 @@ describe('Get cookie preferences handler', () => {
         cookieId: { S: 'cookie-id' },
       },
     });
+  });
+
+  it('should handle cookie not found error', async () => {
+    const mockDynamoClient = new DynamoDBClient(
+      {},
+    ) as jest.Mocked<DynamoDBClient>;
+
+    const mockResponse = {
+      $metadata: {
+        httpStatusCode: 200,
+        requestId: '12Q346P86IADEQDVG61R23T4R3VV4KQNSO5AEMVJF66Q9ASUAAJG',
+        attempts: 1,
+        totalRetryDelay: 0,
+      },
+      Item: null,
+    };
+    (mockDynamoClient.send as jest.Mock).mockResolvedValueOnce(mockResponse);
+
+    const request = getLambdaGetRequest({
+      cookieId: 'cookie-id',
+    });
+
+    await expect(handler(request)).rejects.toThrow(
+      'Cookie with id cookie-id not found',
+    );
   });
 
   it('should handle DynamoDB errors', async () => {

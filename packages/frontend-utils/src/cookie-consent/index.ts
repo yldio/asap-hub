@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { BackendError } from '../api-util';
 
 type CookieData = {
   cookieId: string;
@@ -53,23 +52,13 @@ export const useCookieConsent = (name: string, url: string) => {
 
     setConsentCookie(name, updatedCookieData);
 
-    const resp = await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
       body: JSON.stringify(updatedCookieData),
     });
-
-    const response = await resp.json();
-
-    if (!resp.ok) {
-      throw new BackendError(
-        `Failed to save cookie preferences. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-        response,
-        resp.status,
-      );
-    }
 
     setShowCookieModal(false);
   };

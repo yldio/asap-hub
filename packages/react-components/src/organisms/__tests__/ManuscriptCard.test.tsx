@@ -97,7 +97,9 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Information Manuscript Resubmitted' }));
+  userEvent.click(
+    getByRole('button', { name: 'Information Manuscript Resubmitted' }),
+  );
   expect(getByText('Update status and notify?')).toBeInTheDocument();
 });
 
@@ -113,7 +115,9 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
   const statusButton = getByTestId('status-button');
   expect(statusButton).toBeEnabled();
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Information Addendum Required' }));
+  userEvent.click(
+    getByRole('button', { name: 'Information Addendum Required' }),
+  );
   expect(queryByText('Update status and notify?')).not.toBeInTheDocument();
 });
 
@@ -139,7 +143,9 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
 
   const statusButton = getByTestId('status-button');
   userEvent.click(statusButton);
-  userEvent.click(getByRole('button', { name: 'Information Manuscript Resubmitted' }));
+  userEvent.click(
+    getByRole('button', { name: 'Information Manuscript Resubmitted' }),
+  );
 
   await act(async () => {
     userEvent.click(

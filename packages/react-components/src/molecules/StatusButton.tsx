@@ -8,7 +8,13 @@ import {
   ComponentProps,
 } from 'react';
 import { css } from '@emotion/react';
-import { Button, chevronUpIcon, chevronDownIcon } from '..';
+import {
+  Button,
+  chevronUpIcon,
+  chevronDownIcon,
+  successIconNew,
+  informationIcon,
+} from '..';
 
 import { perRem, mobileScreen, formTargetWidth } from '../pixels';
 
@@ -74,13 +80,15 @@ const listStyles = css({
   },
 });
 
-export type StatusType = 'warning' | 'final' | 'default';
+export type StatusType = 'warning' | 'final' | 'default' | 'none';
 
-const itemContentStyles = (type: StatusType = 'default') =>
+export const itemContentStyles = (type: StatusType = 'default') =>
   css({
     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'start',
     columnGap: `${15 / perRem}rem`,
-    padding: `${4 / perRem}rem ${16 / perRem}rem`,
+    padding: `${4 / perRem}rem ${14 / perRem}rem`,
     fontWeight: 'normal',
     fontSize: '14px',
     margin: `${8 / perRem}em ${16 / perRem}em !important`,
@@ -89,16 +97,15 @@ const itemContentStyles = (type: StatusType = 'default') =>
     borderRadius: `${24 / perRem}em`,
     alignSelf: 'initial',
     maxWidth: 'fit-content',
-    ...(type === 'warning'
+    ...(type === 'warning' || type === 'final'
       ? {
-          color: warning500.rgba,
-          backgroundColor: warning100.rgba,
-        }
-      : {}),
-    ...(type === 'final'
-      ? {
-          color: success500.rgba,
-          backgroundColor: success100.rgba,
+          color: type === 'warning' ? warning500.rgba : success500.rgba,
+          backgroundColor:
+            type === 'warning' ? warning100.rgba : success100.rgba,
+          columnGap: `${6 / perRem}rem`,
+          padding: `${4 / perRem}rem ${16 / perRem}rem ${4 / perRem}rem ${
+            8 / perRem
+          }rem`,
         }
       : {}),
   });
@@ -121,32 +128,67 @@ const alignLeftStyles = css({
   left: 0,
 });
 
-const statusButtonStyles = css({
-  borderRadius: `${24 / perRem}em`,
-  fontWeight: 400,
-  border: 'none',
-  background: info100.rgba,
-  color: info500.rgba,
-  'svg #Group-7': {
-    stroke: info500.rgba,
-  },
-  paddingLeft: `${16 / perRem}em`,
-  paddingRight: `${8 / perRem}em !important`,
-  textWrap: 'nowrap',
-  maxWidth: 'fit-content',
-});
+const statusButtonStyles = (type: StatusType, isComplianceReviewer: boolean) =>
+  css({
+    borderRadius: `${24 / perRem}em`,
+    fontWeight: 400,
+    border: 'none',
+    background: info100.rgba,
+    color: info500.rgba,
+    ...(type === 'warning'
+      ? {
+          background: warning100.rgba,
+          color: warning500.rgba,
+        }
+      : type === 'final'
+        ? {
+            background: success100.rgba,
+            color: success500.rgba,
+          }
+        : {}),
+    'svg #Group-7': {
+      stroke: info500.rgba,
+      ...([isComplianceReviewer ? 'warning' : 'default', 'final'].includes(type)
+        ? {
+            stroke: warning500.rgba,
+          }
+        : {}),
+    },
+    paddingLeft: `${16 / perRem}em`,
+    paddingRight: `${8 / perRem}em !important`,
+    textWrap: 'nowrap',
+    maxWidth: 'fit-content',
+    display: 'flex',
+    alignItems: 'center',
+    gap: `${8 / perRem}em`,
+  });
 
-const statusTagStyles = css({
-  borderRadius: `${24 / perRem}em`,
-  fontWeight: 400,
-  border: 'none',
-  background: info100.rgba,
-  color: info500.rgba,
-  paddingLeft: `${16 / perRem}em`,
-  paddingRight: `${16 / perRem}em`,
-  textWrap: 'nowrap',
-  maxWidth: 'fit-content',
-});
+const statusTagStyles = (type: StatusType) =>
+  css({
+    borderRadius: `${24 / perRem}em`,
+    fontWeight: 400,
+    border: 'none',
+    background: info100.rgba,
+    color: info500.rgba,
+    ...(type === 'default'
+      ? {
+          background: warning100.rgba,
+          color: warning500.rgba,
+        }
+      : type === 'final'
+        ? {
+            background: success100.rgba,
+            color: success500.rgba,
+          }
+        : {}),
+    paddingLeft: `${16 / perRem}em`,
+    paddingRight: `${16 / perRem}em`,
+    textWrap: 'nowrap',
+    maxWidth: 'fit-content',
+    display: 'flex',
+    alignItems: 'center',
+    gap: `${8 / perRem}em`,
+  });
 
 const itemStyles = css({
   color: lead.rgb,
@@ -155,6 +197,42 @@ const itemStyles = css({
     backgroundColor: neutral200.rgba,
   },
 });
+
+export const iconStyles = (type: string, isComplianceReviewer: boolean) =>
+  css({
+    display: 'flex',
+    alignSelf: 'center',
+
+    '& > svg': {
+      width: '16px',
+      height: '16px',
+      filter: 'revert!important',
+      '-webkit-filter': 'revert!important',
+      ...((type === 'warning' && isComplianceReviewer) ||
+      (type === 'default' && !isComplianceReviewer)
+        ? {
+            '& > g > path': {
+              fill: warning500.rgba,
+            },
+          }
+        : {}),
+      '& > rect:first-of-type': {
+        ...(type === 'final' ? { fill: success500.rgba } : {}),
+      },
+      '& > rect:last-of-type': {
+        stroke: info500.rgba,
+        ...(type === 'final' ? { stroke: success500.rgba } : {}),
+      },
+    },
+  });
+
+export const statusIcon = (type: StatusType, isComplianceReviewer: boolean) =>
+  ({
+    warning: isComplianceReviewer ? informationIcon : '',
+    final: successIconNew,
+    default: isComplianceReviewer ? '' : informationIcon,
+    none: '',
+  })[type];
 
 type ButtonItemData = {
   item: ReactNode;
@@ -168,6 +246,7 @@ type StatusButtonProps = {
   buttonChildren: (menuShown: boolean) => ReactNode;
   alignLeft?: boolean;
   canEdit?: boolean;
+  selectedStatusType?: StatusType;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const StatusButton: React.FC<StatusButtonProps> = ({
@@ -176,6 +255,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({
   alignLeft = false,
   primary,
   canEdit = false,
+  selectedStatusType = 'none',
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
@@ -197,6 +277,10 @@ const StatusButton: React.FC<StatusButtonProps> = ({
     };
   }, [reference]);
 
+  const hasIcon = ['final', canEdit ? 'warning' : 'default'].includes(
+    selectedStatusType,
+  );
+
   return (
     <div css={containerStyles} ref={reference}>
       <Button
@@ -206,12 +290,19 @@ const StatusButton: React.FC<StatusButtonProps> = ({
         primary={primary}
         onClick={handleClick}
         enabled={canEdit}
-        overrideStyles={canEdit ? statusButtonStyles : statusTagStyles}
+        overrideStyles={
+          canEdit
+            ? statusButtonStyles(selectedStatusType, canEdit)
+            : statusTagStyles(selectedStatusType)
+        }
       >
-        <>
-          {buttonChildren(menuShown)}
-          {canEdit ? (menuShown ? chevronUpIcon : chevronDownIcon) : null}
-        </>
+        {hasIcon && (
+          <span css={iconStyles(selectedStatusType, canEdit)}>
+            {statusIcon(selectedStatusType, canEdit)}
+          </span>
+        )}
+        {buttonChildren(menuShown)}
+        {canEdit ? (menuShown ? chevronUpIcon : chevronDownIcon) : null}
       </Button>
       <div css={menuWrapperStyles}>
         <div
@@ -237,7 +328,14 @@ const StatusButton: React.FC<StatusButtonProps> = ({
                       onClick && onClick(e);
                     }}
                   >
-                    <span css={itemContentStyles(type)}>{item}</span>
+                    <span css={itemContentStyles(type)}>
+                      {['warning', 'final'].includes(type) && (
+                        <span css={iconStyles(type, canEdit)}>
+                          {statusIcon(type, canEdit)}
+                        </span>
+                      )}
+                      <span>{item}</span>
+                    </span>
                   </button>
                 </li>
               ),

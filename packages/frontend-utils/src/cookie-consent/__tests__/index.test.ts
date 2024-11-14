@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/dom';
 import { renderHook, act } from '@testing-library/react-hooks';
 import Cookies from 'js-cookie';
 import {
@@ -102,7 +101,7 @@ describe('useCookieConsent', () => {
     );
     const { result } = renderHook(() => useCookieConsent(COOKIE_NAME, apiUrl));
 
-    result.current.onSaveCookiePreferences(true);
+    await act(async () => result.current.onSaveCookiePreferences(true));
 
     const expectedCookieData = JSON.stringify({
       cookieId: 'mocked-uuid',
@@ -117,10 +116,6 @@ describe('useCookieConsent', () => {
       expect.objectContaining({ body: expectedCookieData }),
     );
 
-    await act(() =>
-      waitFor(() => expect(result.current.showCookieModal).toBe(false)),
-    );
-
-    // expect(result.current.showCookieModal).toBe(false);
+    expect(result.current.showCookieModal).toBe(false);
   });
 });

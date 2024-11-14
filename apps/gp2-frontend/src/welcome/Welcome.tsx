@@ -7,8 +7,10 @@ import { API_BASE_URL, COOKIE_CONSENT_NAME } from '../config';
 
 const Welcome: React.FC<Record<string, never>> = () => {
   const { code } = useRouteParams(welcome({}).invited);
-  const { showCookieModal, onSaveCookiePreferences } =
-    useCookieConsent(COOKIE_CONSENT_NAME);
+  const { showCookieModal, onSaveCookiePreferences } = useCookieConsent(
+    COOKIE_CONSENT_NAME,
+    `${API_BASE_URL}/cookie-preferences/save`,
+  );
 
   const { loginWithRedirect } = useAuth0GP2();
 

@@ -207,7 +207,7 @@ export const iconStyles = (type: string, isComplianceReviewer: boolean) =>
       width: '16px',
       height: '16px',
       filter: 'revert!important',
-      '-webkit-filter': 'revert!important',
+      WebkitFilter: 'revert!important',
       ...((type === 'warning' && isComplianceReviewer) ||
       (type === 'default' && !isComplianceReviewer)
         ? {

@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { HelpSection, RichText, TeamMembersSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Link } from '../atoms';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 
 const styles = css({
   display: 'grid',
@@ -53,7 +53,7 @@ const AboutPageBody: React.FC<AboutPageBodyProps> = ({
               primary
               href="https://parkinsonsroadmap.org/"
             >
-              Read more on ASAP’s website {externalLinkIcon}
+              Read more on ASAP’s website <ExternalLinkIcon />
             </Link>
           </div>
         </Card>

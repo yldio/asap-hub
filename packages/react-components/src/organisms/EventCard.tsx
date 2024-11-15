@@ -14,7 +14,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -93,7 +93,9 @@ const EventCard: React.FC<EventCardProps> = ({
                   small
                 >
                   Join now
-                  <span css={externalIconStyle}>{externalLinkIcon}</span>
+                  <span css={externalIconStyle}>
+                    <ExternalLinkIcon />
+                  </span>
                 </Link>
               </div>
             )}

@@ -145,9 +145,9 @@ const gp2LogoFull = (
       <linearGradient
         id="paint0_linear_173_8289"
         x1="0"
-        y1="32"
+        y1="16"
         x2="63.3469"
-        y2="32"
+        y2="16"
         gradientUnits="userSpaceOnUse"
       >
         <stop stopColor="#0C8DC4" />

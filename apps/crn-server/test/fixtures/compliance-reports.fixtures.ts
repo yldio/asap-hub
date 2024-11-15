@@ -7,11 +7,12 @@ export const getComplianceReportDataObject =
   (): ComplianceReportDataObject => ({
     url: 'http://example.com',
     description: 'compliance report description',
+    count: 1,
   });
 
 export const getComplianceReportCreateDataObject =
   (): ComplianceReportCreateDataObject => {
-    const complianceReport = getComplianceReportDataObject();
+    const { count, ...complianceReport } = getComplianceReportDataObject();
 
     return {
       ...complianceReport,

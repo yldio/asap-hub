@@ -586,6 +586,7 @@ it('displays compliance report section when present', () => {
         complianceReport: {
           url: 'http://example.com',
           description: 'compliance report description',
+          count: 1,
         },
       }}
     />,

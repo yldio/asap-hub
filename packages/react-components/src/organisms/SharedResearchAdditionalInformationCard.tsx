@@ -2,7 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Card, Divider, Headline2, Link } from '../atoms';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 import { mobileScreen, perRem } from '../pixels';
 import { isLink } from '../utils';
 
@@ -91,7 +91,7 @@ const SharedResearchAdditionalInformationCard: React.FC<
               >
                 <div css={externalLinkStyle}>
                   <span>{doi}</span>
-                  {externalLinkIcon}
+                  <ExternalLinkIcon />
                 </div>
               </Link>
             </span>
@@ -112,7 +112,7 @@ const SharedResearchAdditionalInformationCard: React.FC<
               >
                 <div css={externalLinkStyle}>
                   <span>{rrid}</span>
-                  {externalLinkIcon}
+                  <ExternalLinkIcon />
                 </div>
               </Link>
             </span>
@@ -141,7 +141,7 @@ const SharedResearchAdditionalInformationCard: React.FC<
                 >
                   <div css={externalLinkStyle}>
                     <span>External Link</span>
-                    {externalLinkIcon}
+                    <ExternalLinkIcon />
                   </div>
                 </Link>
               ) : (

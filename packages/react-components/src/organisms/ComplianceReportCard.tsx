@@ -9,8 +9,9 @@ import {
   Link,
   crnReportIcon,
   colors,
-  externalLinkIcon,
+  ExternalLinkIcon,
   Markdown,
+  ExpandableText,
 } from '..';
 import { paddingStyles } from '../card';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -61,6 +62,7 @@ const buttonStyles = css({
 const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   url,
   description,
+  count,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -74,17 +76,19 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
             </Button>
           </span>
           <span css={[iconStyles]}>{crnReportIcon}</span>
-          <Subtitle noMargin>Compliance Report</Subtitle>
+          <Subtitle noMargin>Compliance Report #{count}</Subtitle>
         </span>
       </div>
       {expanded && (
         <div>
           <div css={[paddingStyles, toastContentStyles]}>
-            <Markdown value={description}></Markdown>
+            <ExpandableText>
+              <Markdown value={description}></Markdown>
+            </ExpandableText>
             <div css={buttonStyles}>
               <Link buttonStyle fullWidth small primary href={url}>
                 <span css={externalIconStyle}>
-                  {externalLinkIcon} View Report
+                  <ExternalLinkIcon /> View Report
                 </span>
               </Link>
             </div>

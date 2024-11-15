@@ -145,7 +145,7 @@ describe('after a failed flow', () => {
 
   describe('when closing the error message', () => {
     beforeEach(() => {
-      userEvent.click(result.getByText(/close/i));
+      userEvent.click(result.getByText('Close'));
     });
 
     it('hides the error message', () => {

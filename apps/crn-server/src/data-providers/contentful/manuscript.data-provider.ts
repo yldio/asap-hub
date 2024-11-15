@@ -475,6 +475,7 @@ const parseComplianceReport = (
   complianceReport && {
     url: complianceReport.url,
     description: complianceReport.description,
+    count: complianceReport.count,
   };
 
 const createQuickCheckDiscussions = async (

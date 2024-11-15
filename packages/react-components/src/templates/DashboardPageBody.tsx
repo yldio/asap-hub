@@ -28,7 +28,7 @@ import { rem } from '../pixels';
 import { Link, Headline2, Card, Paragraph, Icon } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
-import { externalLinkIcon } from '../icons';
+import { ExternalLinkIcon } from '../icons';
 import { getIconForDocumentType, isInternalLink } from '../utils';
 
 const styles = css({
@@ -94,7 +94,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <div css={{ width: 'fit-content' }}>
               <Link buttonStyle small primary href={content.linkUrl}>
                 {content.linkText}{' '}
-                {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
+                {!isInternalLink(content.linkUrl)[0] && <ExternalLinkIcon />}
               </Link>
             </div>
           )}

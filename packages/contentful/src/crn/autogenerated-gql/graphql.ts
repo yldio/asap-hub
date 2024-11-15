@@ -13375,6 +13375,20 @@ export type FetchCalendarsQuery = {
   >;
 };
 
+export type FetchComplianceReportsByManuscriptVersionIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchComplianceReportsByManuscriptVersionIdQuery = {
+  manuscriptVersions?: Maybe<{
+    linkedFrom?: Maybe<{
+      complianceReportsCollection?: Maybe<
+        Pick<ComplianceReportsCollection, 'total'>
+      >;
+    }>;
+  }>;
+};
+
 export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDashboardQuery = {
@@ -18091,7 +18105,7 @@ export type ManuscriptsContentFragment = Pick<
           linkedFrom?: Maybe<{
             complianceReportsCollection?: Maybe<{
               items: Array<
-                Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+                Maybe<Pick<ComplianceReports, 'url' | 'description' | 'count'>>
               >;
             }>;
           }>;
@@ -18767,7 +18781,9 @@ export type FetchManuscriptByIdQuery = {
               linkedFrom?: Maybe<{
                 complianceReportsCollection?: Maybe<{
                   items: Array<
-                    Maybe<Pick<ComplianceReports, 'url' | 'description'>>
+                    Maybe<
+                      Pick<ComplianceReports, 'url' | 'description' | 'count'>
+                    >
                   >;
                 }>;
               }>;
@@ -21081,7 +21097,10 @@ export type FetchTeamByIdQuery = {
                           complianceReportsCollection?: Maybe<{
                             items: Array<
                               Maybe<
-                                Pick<ComplianceReports, 'url' | 'description'>
+                                Pick<
+                                  ComplianceReports,
+                                  'url' | 'description' | 'count'
+                                >
                               >
                             >;
                           }>;
@@ -26291,6 +26310,13 @@ export const ManuscriptsContentFragmentDoc = {
                                           name: {
                                             kind: 'Name',
                                             value: 'description',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
                                           },
                                         },
                                       ],
@@ -32534,6 +32560,84 @@ export const FetchCalendarsDocument = {
     ...CalendarsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
+export const FetchComplianceReportsByManuscriptVersionIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: {
+        kind: 'Name',
+        value: 'FetchComplianceReportsByManuscriptVersionID',
+      },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscriptVersions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'complianceReportsCollection',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchComplianceReportsByManuscriptVersionIdQuery,
+  FetchComplianceReportsByManuscriptVersionIdQueryVariables
+>;
 export const FetchDashboardDocument = {
   kind: 'Document',
   definitions: [

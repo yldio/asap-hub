@@ -34,6 +34,7 @@ const styles = css({
   gridColumnGap: rem(18),
   alignItems: 'center',
   justifySelf: 'center',
+  width: '100%',
 });
 
 type TagsPageHeaderProps = {

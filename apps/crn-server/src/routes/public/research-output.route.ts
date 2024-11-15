@@ -66,7 +66,7 @@ const mapToPublicResearchOutput = (
   teams: researchOutput.teams.map((team) => team.displayName),
   authors: researchOutput.authors.map((author) => author.displayName),
   title: researchOutput.title,
-  description: researchOutput.descriptionMD ?? researchOutput.description,
+  description: researchOutput.descriptionMD || researchOutput.description,
   shortDescription: researchOutput.shortDescription,
   tags: [
     ...researchOutput.methods,

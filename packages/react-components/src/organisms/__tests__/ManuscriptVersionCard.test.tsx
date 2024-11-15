@@ -2,8 +2,13 @@ import {
   createDiscussionResponse,
   createManuscriptResponse,
   createUserResponse,
+  createUserTeams,
 } from '@asap-hub/fixtures';
-import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
+import {
+  ManuscriptLifecycle,
+  ManuscriptVersion,
+  UserTeam,
+} from '@asap-hub/model';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
@@ -204,14 +209,16 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 });
 
 describe('edit', () => {
+  const baseUser = createUserResponse({}, 1);
   const user = {
-    ...createUserResponse({}, 1),
+    ...baseUser,
     teams: [
       {
+        ...baseUser.teams[0],
         id: 'team-1',
         role: 'Project Manager',
       },
-    ],
+    ] as UserTeam[],
     algoliaApiKey: 'algolia-mock-key',
   };
   it('does not display the edit button when no user is set', () => {

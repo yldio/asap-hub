@@ -375,6 +375,7 @@ enum CalendarsOrder {
 type ComplianceReports implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  count(locale: String): Int
   description(locale: String): String
   linkedFrom(allowedLocales: [String]): ComplianceReportsLinkingCollections
   manuscriptVersion(locale: String, preview: Boolean, where: ManuscriptVersionsFilter): ManuscriptVersions
@@ -393,6 +394,15 @@ input ComplianceReportsFilter {
   AND: [ComplianceReportsFilter]
   OR: [ComplianceReportsFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  count: Int
+  count_exists: Boolean
+  count_gt: Int
+  count_gte: Int
+  count_in: [Int]
+  count_lt: Int
+  count_lte: Int
+  count_not: Int
+  count_not_in: [Int]
   description: String
   description_contains: String
   description_exists: Boolean
@@ -417,6 +427,8 @@ type ComplianceReportsLinkingCollections {
 }
 
 enum ComplianceReportsOrder {
+  count_ASC
+  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3117,6 +3129,8 @@ type ManuscriptVersionsLinkingCollections {
 }
 
 enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
+  count_ASC
+  count_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC

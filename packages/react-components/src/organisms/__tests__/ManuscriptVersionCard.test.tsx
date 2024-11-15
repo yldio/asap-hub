@@ -1,6 +1,7 @@
 import {
   createDiscussionResponse,
   createManuscriptResponse,
+  createUserResponse,
 } from '@asap-hub/fixtures';
 import { ManuscriptLifecycle, ManuscriptVersion } from '@asap-hub/model';
 import { render } from '@testing-library/react';
@@ -11,6 +12,9 @@ import { Router } from 'react-router-dom';
 import ManuscriptVersionCard, {
   getLifecycleCode,
   getManuscriptVersionUID,
+  isManuscriptAuthor,
+  isManuscriptLabPI,
+  isManuscriptLead,
 } from '../ManuscriptVersionCard';
 
 const setScrollHeightMock = (height: number) => {
@@ -31,6 +35,7 @@ afterAll(jest.clearAllMocks);
 
 const baseVersion = createManuscriptResponse().versions[0] as ManuscriptVersion;
 const props: ComponentProps<typeof ManuscriptVersionCard> = {
+  user: null,
   version: baseVersion,
   grantId: '000123',
   teamId: 'TI1',
@@ -198,19 +203,141 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
   );
 });
 
-it('navigates to edit form page when clicking on edit button', () => {
-  const history = createMemoryHistory();
-  const pushSpy = jest.spyOn(history, 'push');
+describe('edit', () => {
+  const user = {
+    ...createUserResponse({}, 1),
+    algoliaApiKey: 'algolia-mock-key',
+  };
+  it('does not display the edit button when no user is set', () => {
+    const { queryByLabelText } = render(
+      <ManuscriptVersionCard {...props} user={null} />,
+    );
+    expect(queryByLabelText('Edit')).not.toBeInTheDocument();
+  });
 
-  const { getByLabelText } = render(
-    <Router history={history}>
-      <ManuscriptVersionCard {...props} />
-    </Router>,
-  );
-  userEvent.click(getByLabelText('Edit'));
-  expect(pushSpy).toHaveBeenCalledWith(
-    '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
-  );
+  it('navigates to edit form page when clicking on edit button', () => {
+    const history = createMemoryHistory();
+    const pushSpy = jest.spyOn(history, 'push');
+
+    const { getByLabelText } = render(
+      <Router history={history}>
+        <ManuscriptVersionCard {...props} user={user} />
+      </Router>,
+    );
+    userEvent.click(getByLabelText('Edit'));
+    expect(pushSpy).toHaveBeenCalledWith(
+      '/network/teams/team-id-0/workspace/edit-manuscript/manuscript-1',
+    );
+  });
+
+  describe('isManuscriptLabPI', () => {
+    it('returns true when user is lab PI', () => {
+      expect(
+        isManuscriptLabPI({
+          version: {
+            ...baseVersion,
+            labs: [{ name: 'lab', id: 'lab-1', userIds: ['lab-user'] }],
+            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
+          },
+          user: {
+            ...user,
+            id: 'lab-user',
+            teams: [
+              {
+                displayName: 'lab',
+                id: 'team-id-4',
+                role: 'Project Manager',
+              },
+            ],
+          },
+        }),
+      ).toBeTruthy();
+    });
+    it('returns false when user is not lab PI', () => {
+      expect(
+        isManuscriptLabPI({
+          version: {
+            ...baseVersion,
+            labs: [{ name: 'lab', id: 'lab-1', userIds: ['lab-user'] }],
+            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
+          },
+          user: {
+            ...user,
+            id: 'not-lab-user',
+            teams: [
+              {
+                displayName: 'lab',
+                id: 'team-id-4',
+                role: 'Project Manager',
+              },
+            ],
+          },
+        }),
+      ).not.toBeTruthy();
+    });
+  });
+
+  describe('isManuscriptAuthor', () => {
+    it('returns true when user is author', () => {
+      expect(
+        isManuscriptAuthor({
+          version: {
+            ...baseVersion,
+            firstAuthors: [{ ...createUserResponse(), id: 'user-test' }],
+          },
+          user: {
+            ...user,
+            id: 'user-test',
+          },
+        }),
+      ).toBeTruthy();
+    });
+    it('returns false when user is not author', () => {
+      expect(
+        isManuscriptAuthor({
+          version: baseVersion,
+          user: {
+            ...user,
+          },
+        }),
+      ).not.toBeTruthy();
+    });
+  });
+
+  describe('isManuscriptLead', () => {
+    it.only('returns true when user is team lead', () => {
+      expect(
+        isManuscriptLead({
+          version: baseVersion,
+          user: {
+            ...user,
+            teams: [
+              {
+                id: 'team-1',
+                role: 'Project Manager',
+              },
+            ],
+          },
+        }),
+      ).toBeTruthy();
+    });
+    it('returns false when user is not team lead', () => {
+      expect(
+        isManuscriptLead({
+          version: baseVersion,
+          user: {
+            ...user,
+            teams: [
+              {
+                id: 'team-1',
+                role: 'Scientific Advisory Board',
+              },
+            ],
+          },
+        }),
+      ).not.toBeTruthy();
+    });
+  });
 });
 
 it('displays Additional Information section when present', () => {

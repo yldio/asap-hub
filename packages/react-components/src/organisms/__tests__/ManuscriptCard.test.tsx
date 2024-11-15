@@ -1,4 +1,7 @@
-import { createManuscriptResponse } from '@asap-hub/fixtures';
+import {
+  createManuscriptResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -8,6 +11,7 @@ import ManuscriptCard from '../ManuscriptCard';
 
 const props: ComponentProps<typeof ManuscriptCard> = {
   ...createManuscriptResponse(),
+  user: { ...createUserResponse({}, 1), algoliaApiKey: 'algolia-mock-key' },
   teamIdCode: 'TI1',
   grantId: '000123',
   isComplianceReviewer: false,

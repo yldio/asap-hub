@@ -153,8 +153,14 @@ export const getContentfulGraphqlTeamMembers = () => ({
 export const getContentfulGraphqlTeamMemberLabs = () => ({
   total: 2,
   items: [
-    { sys: { id: 'cd7be4902' }, name: 'Brighton' },
-    { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+    {
+      sys: { id: 'cd7be4902' },
+      name: 'Brighton',
+    },
+    {
+      sys: { id: 'cd7be4903' },
+      name: 'Liverpool',
+    },
   ],
 });
 
@@ -250,7 +256,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
               displayName: 'Test 1',
             },
           ],
-          labs: [{ id: 'lab-1', name: 'Lab 1' }],
+          labs: [{ id: 'lab-1', name: 'Lab 1', userIds: ['user-id-1'] }],
           firstAuthors: [],
           correspondingAuthor: [],
           additionalAuthors: [],
@@ -287,7 +293,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
               displayName: 'Test 1',
             },
           ],
-          labs: [{ id: 'lab-1', name: 'Lab 1' }],
+          labs: [{ id: 'lab-1', name: 'Lab 1', userIds: ['user-id-1'] }],
           firstAuthors: [],
           correspondingAuthor: [],
           additionalAuthors: [],

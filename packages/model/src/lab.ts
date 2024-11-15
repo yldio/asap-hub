@@ -3,6 +3,7 @@ import { ListResponse } from './common';
 export type LabDataObject = {
   id: string;
   name: string;
+  userIds?: string[];
 };
 export type ListLabDataObject = ListResponse<LabDataObject>;
 

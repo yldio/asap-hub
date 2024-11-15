@@ -610,12 +610,18 @@ export type ComplianceReports = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    count?: Maybe<Scalars['Int']>;
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ComplianceReportsLinkingCollections>;
     manuscriptVersion?: Maybe<ManuscriptVersions>;
     sys: Sys;
     url?: Maybe<Scalars['String']>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
+export type ComplianceReportsCountArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/complianceReports) */
 export type ComplianceReportsDescriptionArgs = {
@@ -650,6 +656,15 @@ export type ComplianceReportsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  count?: InputMaybe<Scalars['Int']>;
+  count_exists?: InputMaybe<Scalars['Boolean']>;
+  count_gt?: InputMaybe<Scalars['Int']>;
+  count_gte?: InputMaybe<Scalars['Int']>;
+  count_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  count_lt?: InputMaybe<Scalars['Int']>;
+  count_lte?: InputMaybe<Scalars['Int']>;
+  count_not?: InputMaybe<Scalars['Int']>;
+  count_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
@@ -681,6 +696,8 @@ export type ComplianceReportsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum ComplianceReportsOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4450,6 +4467,8 @@ export type ManuscriptVersionsLinkingCollectionsManuscriptsCollectionArgs = {
 };
 
 export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -17969,7 +17988,18 @@ export type ManuscriptsContentFragment = Pick<
             >;
           }>;
           labsCollection?: Maybe<{
-            items: Array<Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>>;
+            items: Array<
+              Maybe<
+                Pick<Labs, 'name'> & {
+                  sys: Pick<Sys, 'id'>;
+                  linkedFrom?: Maybe<{
+                    usersCollection?: Maybe<{
+                      items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                    }>;
+                  }>;
+                }
+              >
+            >;
           }>;
           createdBy?: Maybe<
             Pick<
@@ -18635,7 +18665,16 @@ export type FetchManuscriptByIdQuery = {
               }>;
               labsCollection?: Maybe<{
                 items: Array<
-                  Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                  Maybe<
+                    Pick<Labs, 'name'> & {
+                      sys: Pick<Sys, 'id'>;
+                      linkedFrom?: Maybe<{
+                        usersCollection?: Maybe<{
+                          items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                        }>;
+                      }>;
+                    }
+                  >
                 >;
               }>;
               createdBy?: Maybe<
@@ -20918,7 +20957,18 @@ export type FetchTeamByIdQuery = {
                         }>;
                         labsCollection?: Maybe<{
                           items: Array<
-                            Maybe<Pick<Labs, 'name'> & { sys: Pick<Sys, 'id'> }>
+                            Maybe<
+                              Pick<Labs, 'name'> & {
+                                sys: Pick<Sys, 'id'>;
+                                linkedFrom?: Maybe<{
+                                  usersCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{ sys: Pick<Sys, 'id'> }>
+                                    >;
+                                  }>;
+                                }>;
+                              }
+                            >
                           >;
                         }>;
                         createdBy?: Maybe<
@@ -25467,6 +25517,71 @@ export const ManuscriptsContentFragmentDoc = {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'name' },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'usersCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '50',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -25702,7 +25817,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '15' },
                           },
                         ],
                         selectionSet: {
@@ -25851,7 +25966,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '15' },
                           },
                         ],
                         selectionSet: {
@@ -26000,7 +26115,7 @@ export const ManuscriptsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '20' },
+                            value: { kind: 'IntValue', value: '1' },
                           },
                         ],
                         selectionSet: {

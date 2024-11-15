@@ -1,3 +1,4 @@
+import { User } from '@asap-hub/auth';
 import {
   ManuscriptLifecycle,
   ManuscriptVersion,
@@ -35,6 +36,7 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import ComplianceReportCard from './ComplianceReportCard';
 
 type ManuscriptVersionCardProps = {
+  user: User | null;
   version: ManuscriptVersion;
   grantId: string;
   teamId: string;
@@ -197,6 +199,42 @@ export const getLifecycleCode = ({
   }
 };
 
+export type VersionUserProps = {
+  version: Pick<ManuscriptVersion, 'teams' | 'firstAuthors' | 'labs'>;
+  user: User | null;
+};
+
+export const isManuscriptLead = ({ version, user }: VersionUserProps) =>
+  user &&
+  user.teams.find((team) =>
+    version.teams.find(
+      (versionTeam) =>
+        versionTeam.id === team.id &&
+        (team.role === 'Lead PI (Core Leadership)' ||
+          team.role === 'Project Manager'),
+    ),
+  );
+
+export const isManuscriptAuthor = ({ version, user }: VersionUserProps) =>
+  user && version.firstAuthors.find((author) => author.id === user.id);
+
+export const isManuscriptLabPI = ({ version, user }: VersionUserProps) =>
+  user &&
+  user.teams.find(
+    (team) =>
+      team.role === 'Lead PI (Core Leadership)' ||
+      team.role === 'Project Manager',
+  ) &&
+  version.labs.find((lab) => lab.userIds.find((id) => id === user.id));
+
+export const canEditManuscript = ({ version, user }: VersionUserProps) => {
+  return (
+    isManuscriptLead({ version, user }) ||
+    isManuscriptAuthor({ version, user }) ||
+    isManuscriptLabPI({ version, user })
+  );
+};
+
 export const getManuscriptVersionUID = ({
   version,
   teamId,
@@ -221,6 +259,7 @@ export const getManuscriptVersionUID = ({
 };
 
 const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
+  user,
   version,
   teamId,
   grantId,
@@ -230,6 +269,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   manuscriptId,
 }) => {
   const history = useHistory();
+
   const [expanded, setExpanded] = useState(false);
 
   const quickCheckDetails = quickCheckQuestions.filter(
@@ -318,15 +358,17 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     </span>
                   </div>
                 </Caption>
-                <Button
-                  aria-label="Edit"
-                  small
-                  noMargin
-                  onClick={handleEditManuscript}
-                  overrideStyles={editIconStyles}
-                >
-                  <PencilIcon />
-                </Button>
+                {canEditManuscript({ version, user }) && (
+                  <Button
+                    aria-label="Edit"
+                    small
+                    noMargin
+                    onClick={handleEditManuscript}
+                    overrideStyles={editIconStyles}
+                  >
+                    <PencilIcon />
+                  </Button>
+                )}
               </div>
             </div>
           </span>

@@ -1,5 +1,6 @@
 import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
@@ -102,6 +103,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const history = useHistory();
+  const user = useCurrentUserCRN();
 
   const toolsRoute = network({})
     .teams({})
@@ -161,6 +163,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               <div key={manuscript.id}>
                 <ManuscriptCard
                   {...manuscript}
+                  user={user}
                   teamId={id}
                   teamIdCode={teamId || ''}
                   grantId={grantId || ''}

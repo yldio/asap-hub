@@ -128,7 +128,10 @@ const alignLeftStyles = css({
   left: 0,
 });
 
-const statusButtonStyles = (type: StatusType, isComplianceReviewer: boolean) =>
+export const statusButtonStyles = (
+  type: StatusType,
+  isComplianceReviewer: boolean,
+) =>
   css({
     borderRadius: `${24 / perRem}em`,
     fontWeight: 400,
@@ -163,7 +166,7 @@ const statusButtonStyles = (type: StatusType, isComplianceReviewer: boolean) =>
     gap: `${8 / perRem}em`,
   });
 
-const statusTagStyles = (type: StatusType) =>
+export const statusTagStyles = (type: StatusType) =>
   css({
     borderRadius: `${24 / perRem}em`,
     fontWeight: 400,

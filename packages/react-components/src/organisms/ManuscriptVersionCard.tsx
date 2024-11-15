@@ -227,13 +227,10 @@ export const isManuscriptLabPI = ({ version, user }: VersionUserProps) =>
   ) &&
   version.labs.find((lab) => lab.userIds.find((id) => id === user.id));
 
-export const canEditManuscript = ({ version, user }: VersionUserProps) => {
-  return (
-    isManuscriptLead({ version, user }) ||
-    isManuscriptAuthor({ version, user }) ||
-    isManuscriptLabPI({ version, user })
-  );
-};
+export const canEditManuscript = ({ version, user }: VersionUserProps) =>
+  isManuscriptLead({ version, user }) ||
+  isManuscriptAuthor({ version, user }) ||
+  isManuscriptLabPI({ version, user });
 
 export const getManuscriptVersionUID = ({
   version,

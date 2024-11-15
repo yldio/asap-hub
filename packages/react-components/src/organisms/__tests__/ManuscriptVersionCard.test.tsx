@@ -206,6 +206,12 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 describe('edit', () => {
   const user = {
     ...createUserResponse({}, 1),
+    teams: [
+      {
+        id: 'team-1',
+        role: 'Project Manager',
+      },
+    ],
     algoliaApiKey: 'algolia-mock-key',
   };
   it('does not display the edit button when no user is set', () => {
@@ -305,7 +311,7 @@ describe('edit', () => {
   });
 
   describe('isManuscriptLead', () => {
-    it.only('returns true when user is team lead', () => {
+    it('returns true when user is team lead', () => {
       expect(
         isManuscriptLead({
           version: baseVersion,

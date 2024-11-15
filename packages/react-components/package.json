@@ -23,6 +23,7 @@
     "react-router-dom": "5.3.4"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:*",
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
@@ -69,7 +70,6 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:*",
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",

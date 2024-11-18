@@ -16,6 +16,7 @@ import {
   minusRectIcon,
   plusRectIcon,
   StatusButton,
+  StatusType,
   Subtitle,
 } from '..';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -135,6 +136,24 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       setSelectedStatus(newSelectedStatus);
     }
   };
+
+  const getReviewerStatusType = (
+    statusItem: (typeof manuscriptStatus)[number],
+  ): StatusType =>
+    (
+      ({
+        [manuscriptStatus[0]]: 'warning',
+        [manuscriptStatus[1]]: 'default',
+        [manuscriptStatus[2]]: 'warning',
+        [manuscriptStatus[3]]: 'default',
+        [manuscriptStatus[4]]: 'warning',
+        [manuscriptStatus[5]]: 'default',
+        [manuscriptStatus[6]]: 'warning',
+        [manuscriptStatus[7]]: 'final',
+        [manuscriptStatus[8]]: 'final',
+      }) as Record<string, StatusType>
+    )[statusItem] || 'none';
+
   return (
     <>
       {displayConfirmStatusChangeModal && newSelectedStatus && (
@@ -172,9 +191,13 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 isComplianceReviewer &&
                 !closedManuscriptStatuses.includes(selectedStatus)
               }
+              selectedStatusType={getReviewerStatusType(
+                selectedStatus as (typeof manuscriptStatus)[number],
+              )}
             >
               {manuscriptStatus.map((statusItem) => ({
                 item: statusItem,
+                type: getReviewerStatusType(statusItem),
                 onClick: () => {
                   setNewSelectedStatus(statusItem);
                   handleStatusClick(statusItem);

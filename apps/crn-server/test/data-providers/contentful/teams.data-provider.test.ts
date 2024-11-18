@@ -589,30 +589,7 @@ describe('Teams data provider', () => {
 
       const result = await teamDataProvider.fetchById(id);
 
-      const teamObject = getTeamDataObject();
-      expect(result).toEqual({
-        ...teamObject,
-        manuscripts: [
-          {
-            ...teamObject.manuscripts[0],
-            versions: [
-              {
-                ...teamObject.manuscripts[0]?.versions[0],
-                labs: [{ id: 'lab-1', name: 'Lab 1', userIds: [] }],
-              },
-            ],
-          },
-          {
-            ...teamObject.manuscripts[1],
-            versions: [
-              {
-                ...teamObject.manuscripts[1]?.versions[0],
-                labs: [{ id: 'lab-1', name: 'Lab 1', userIds: [] }],
-              },
-            ],
-          },
-        ],
-      });
+      expect(result).toEqual(getTeamDataObject());
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({

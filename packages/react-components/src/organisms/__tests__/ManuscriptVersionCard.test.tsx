@@ -2,7 +2,6 @@ import {
   createDiscussionResponse,
   createManuscriptResponse,
   createUserResponse,
-  createUserTeams,
 } from '@asap-hub/fixtures';
 import {
   ManuscriptLifecycle,

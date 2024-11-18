@@ -13,6 +13,7 @@ import {
   DiscussionResponse,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCallback } from 'react';
 import {
   atom,
   atomFamily,
@@ -186,6 +187,14 @@ export const manuscriptState = atomFamily<
   default: fetchManuscriptState,
 });
 
+export const useInvalidateManuscriptIndex = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
+
+  return useCallback(() => {
+    setRefresh(refresh + 1);
+  }, [refresh, setRefresh]);
+};
+
 export const useManuscriptById = (id: string) =>
   useRecoilValue(manuscriptState(id));
 
@@ -210,13 +219,12 @@ export const usePostManuscript = () => {
 export const usePutManuscript = () => {
   const authorization = useRecoilValue(authorizationState);
   const setManuscriptItem = useSetManuscriptItem();
+  const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
+
   return async (id: string, payload: ManuscriptPutRequest) => {
     const manuscript = await updateManuscript(id, payload, authorization);
     setManuscriptItem(manuscript);
-    refreshTeamState(manuscript.teamId);
-    initialTeamState(manuscript.teamId);
-    teamState(id);
-
+    invalidateManuscriptIndex();
     return manuscript;
   };
 };

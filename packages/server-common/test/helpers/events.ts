@@ -24,6 +24,24 @@ export const getLambdaRequest = <T>(
   rawPayload: JSON.stringify(payload),
 });
 
+export const getLambdaGetRequest = (
+  params:
+    | {
+        [key: string]: string;
+      }
+    | undefined,
+  headers?: Record<string, string>,
+): lambda.Request => ({
+  headers: {
+    'Content-Type': 'application/json',
+    ...headers,
+  },
+  method: 'get',
+  params,
+  payload: {},
+  rawPayload: '',
+});
+
 export const getApiGatewayEvent = (
   event: RecursivePartial<APIGatewayProxyEventV2> = {},
 ): APIGatewayProxyEventV2 =>

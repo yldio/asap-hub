@@ -34,21 +34,32 @@ export const hasGivenCookieConsent = (name: string): boolean => {
   );
 };
 
-export const useCookieConsent = (name: string) => {
+export const useCookieConsent = (name: string, url: string) => {
   const [showCookieModal, setShowCookieModal] = useState(
     !hasGivenCookieConsent(name),
   );
 
   const cookieData = getConsentCookie(name);
 
-  const onSaveCookiePreferences = (analytics: boolean) => {
-    setConsentCookie(name, {
+  const onSaveCookiePreferences = async (analytics: boolean) => {
+    const updatedCookieData = {
       cookieId: cookieData?.cookieId ?? uuidv4(),
       preferences: {
         essential: true,
         analytics,
       },
+    };
+
+    setConsentCookie(name, updatedCookieData);
+
+    await fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(updatedCookieData),
     });
+
     setShowCookieModal(false);
   };
 

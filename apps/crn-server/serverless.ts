@@ -177,6 +177,26 @@ const serverlessConfig: AWS = {
         statements: [
           {
             Effect: 'Allow',
+            Action: [
+              'dynamodb:PutItem',
+              'dynamodb:Get*',
+              'dynamodb:Update*',
+              'dynamodb:Delete*',
+            ],
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:dynamodb',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  'table/${self:service}-${self:provider.stage}-cookie-preferences',
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 'secretsmanager:*',
             Resource: {
               'Fn::Join': [
@@ -959,6 +979,40 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    saveCookiePreferences: {
+      handler:
+        './src/handlers/cookie-preferences/save-cookie-preferences-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/cookie-preferences/save',
+          },
+        },
+      ],
+      environment: {
+        COOKIE_PREFERENCES_TABLE_NAME:
+          '${self:service}-${self:provider.stage}-cookie-preferences',
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    getCookiePreferences: {
+      handler:
+        './src/handlers/cookie-preferences/get-cookie-preferences-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/cookie-preferences/{cookieId}',
+          },
+        },
+      ],
+      environment: {
+        COOKIE_PREFERENCES_TABLE_NAME:
+          '${self:service}-${self:provider.stage}-cookie-preferences',
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
 
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',
@@ -1654,6 +1708,26 @@ const serverlessConfig: AWS = {
         Type: 'AWS::SNS::Topic',
         Properties: {
           TopicName: '${self:custom.apiGateway5xxTopic}',
+        },
+      },
+      CookiePreferencesDynamoDbTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName:
+            '${self:service}-${self:provider.stage}-cookie-preferences',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'cookieId',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'cookieId',
+              KeyType: 'HASH',
+            },
+          ],
+          BillingMode: 'PAY_PER_REQUEST',
         },
       },
     },

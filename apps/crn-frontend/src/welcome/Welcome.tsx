@@ -12,8 +12,10 @@ const Welcome: React.FC<Record<string, never>> = () => {
 
   const toast = useContext(ToastContext);
 
-  const { showCookieModal, onSaveCookiePreferences } =
-    useCookieConsent(COOKIE_CONSENT_NAME);
+  const { showCookieModal, onSaveCookiePreferences } = useCookieConsent(
+    COOKIE_CONSENT_NAME,
+    `${API_BASE_URL}/cookie-preferences/save`,
+  );
 
   const invitationValidityCheck = useRef<Promise<boolean>>();
   useEffect(() => {

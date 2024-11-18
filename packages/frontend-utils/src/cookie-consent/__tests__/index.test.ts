@@ -8,6 +8,7 @@ import {
 } from '../index';
 
 const COOKIE_NAME = 'consentPreferences';
+const apiUrl = 'http://api.example.com';
 jest.mock('js-cookie');
 
 jest.mock('uuid', () => ({
@@ -77,7 +78,7 @@ describe('hasGivenCookieConsent', () => {
 describe('useCookieConsent', () => {
   it('initially shows the cookie modal if consent has not been given', () => {
     Cookies.get = jest.fn().mockReturnValueOnce(undefined);
-    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME, apiUrl));
     expect(result.current.showCookieModal).toBe(true);
   });
 
@@ -86,23 +87,35 @@ describe('useCookieConsent', () => {
     Cookies.get = jest
       .fn()
       .mockReturnValueOnce(JSON.stringify({ cookieId: 'id', preferences }));
-    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME, apiUrl));
     expect(result.current.showCookieModal).toBe(false);
   });
 
-  it('saves the cookie preferences and hides the modal when onSaveCookiePreferences is called', () => {
-    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME));
-    act(() => {
-      result.current.onSaveCookiePreferences(true);
-    });
-    expect(Cookies.set).toHaveBeenCalledWith(
-      COOKIE_NAME,
-      JSON.stringify({
-        cookieId: 'mocked-uuid',
-        preferences: { essential: true, analytics: true },
-      }),
-      { expires: 365 },
+  it('saves the cookie preferences and hides the modal when onSaveCookiePreferences is called', async () => {
+    const fetchMock = jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(),
+      } as Response),
     );
+    const { result } = renderHook(() => useCookieConsent(COOKIE_NAME, apiUrl));
+
+    await act(async () => result.current.onSaveCookiePreferences(true));
+
+    const expectedCookieData = JSON.stringify({
+      cookieId: 'mocked-uuid',
+      preferences: { essential: true, analytics: true },
+    });
+
+    expect(Cookies.set).toHaveBeenCalledWith(COOKIE_NAME, expectedCookieData, {
+      expires: 365,
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      apiUrl,
+      expect.objectContaining({ body: expectedCookieData }),
+    );
+
     expect(result.current.showCookieModal).toBe(false);
   });
 });
